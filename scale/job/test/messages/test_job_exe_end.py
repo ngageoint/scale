@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.utils.timezone import now
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 import job.test.utils as job_test_utils
 from job.messages.job_exe_end import CreateJobExecutionEnd
@@ -10,7 +10,7 @@ from job.models import JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
 
 
-class TestCreateJobExecutionEnd(TestCase):
+class TestCreateJobExecutionEnd(TransactionTestCase):
 
     fixtures = ['basic_errors.json', 'basic_job_errors.json']
 

@@ -107,7 +107,6 @@ class RunningJobs(CommandMessage):
             for job in Job.objects.get_locked_jobs(job_ids):
                 job_models[job.id] = job
 
-            when = now()
             job_ids_for_status_update = []
             for node_id, job_list in self._running_jobs.items():
                 job_ids_for_node_update = []
@@ -115,7 +114,7 @@ class RunningJobs(CommandMessage):
                     job_id = job_tuple[0]
                     exe_num = job_tuple[1]
                     job_model = job_models[job_id]
-                    if job_model.exe_num != exe_num:
+                    if job_model.num_exes != exe_num:
                         continue  # Execution number does not match so this update is out of date, ignore job
                     # Execution numbers match, so this job needs to have its node_id set
                     job_ids_for_node_update.append(job_id)
@@ -127,10 +126,11 @@ class RunningJobs(CommandMessage):
 
                 # Update jobs for this node
                 if job_ids_for_node_update:
-                    Job.objects.update_jobs_node(job_ids_for_node_update, node_id, when)
+                    Job.objects.update_jobs_node(job_ids_for_node_update, node_id, self._started)
 
             # Update jobs that need status set to RUNNING
             if job_ids_for_status_update:
-                Job.objects.update_jobs_to_running(job_ids_for_status_update, when)
+                logger.info('Setting %d job(s) to RUNNING status', len(job_ids_for_status_update))
+                Job.objects.update_jobs_to_running(job_ids_for_status_update, self._started)
 
         return True

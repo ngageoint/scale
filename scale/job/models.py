@@ -594,17 +594,17 @@ class JobManager(models.Manager):
             self.update_status(jobs_to_cancel, 'CANCELED', when)
 
     def update_jobs_node(self, job_ids, node_id, when):
-        """Updates the jobs with the given IDs to have the given node
+        """Updates the jobs with the given IDs to have the given node and start time
 
         :param job_ids: A list of job IDs to update
         :type job_ids: list
         :param node_id: The node ID
         :type node_id: int
-        :param when: The current time
+        :param when: The start time
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=job_ids).update(node_id=node_id, last_modified=when)
+        self.filter(id__in=job_ids).update(node_id=node_id, started=when, last_modified=timezone.now())
 
     @transaction.atomic
     def update_jobs_to_canceled(self, job_ids, when):
@@ -637,7 +637,7 @@ class JobManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, started=when, last_modified=when)
+        self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.

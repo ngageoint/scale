@@ -23,7 +23,7 @@ class CreateJobExecutionEnd(CommandMessage):
         """Constructor
         """
 
-        super(CreateJobExecutionEnd, self).__init__('create_job_exe_end')
+        super(CreateJobExecutionEnd, self).__init__('create_job_exe_ends')
 
         self._job_exe_ends = []
 

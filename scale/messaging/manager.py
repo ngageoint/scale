@@ -116,6 +116,7 @@ class CommandMessageManager(object):
         """
 
         command = self._extract_command(message)
+        logger.info('Processing message of type %s...', command.type)
         success = command.execute()
 
         if not success:
