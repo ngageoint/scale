@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
-from django.utils.timezone import now
 
 from job.models import Job
 from messaging.messages.message import CommandMessage
@@ -17,6 +16,34 @@ MAX_NUM = 100
 
 logger = logging.getLogger(__name__)
 
+
+def create_running_job_messages(running_job_exes):
+    """Creates a list of running job messages for the given running job executions (they must all have the same start
+    time)
+
+    :param running_job_exes: The running job executions
+    :type running_job_exes: list
+    :return: The runnin job messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    started = None
+    for running_job_exe in running_job_exes:
+        if not started:
+            started = running_job_exe.started
+        if not message:
+            message = RunningJobs(started)
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = RunningJobs(started)
+        message.add_running_job(running_job_exe.job_id, running_job_exe.exe_num, running_job_exe.node_id)
+    if message:
+        messages.append(message)
+
+    return messages
 
 class RunningJobs(CommandMessage):
     """Command message that sets RUNNING status for job models

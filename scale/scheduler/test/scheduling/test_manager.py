@@ -7,7 +7,7 @@ from django.utils.timezone import now
 from mock import MagicMock, patch
 
 from job.execution.manager import job_exe_mgr
-from job.models import JobExecution, JobExecutionEnd
+from job.models import JobExecution
 from job.test import utils as job_test_utils
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -226,7 +226,7 @@ class TestSchedulingManager(TestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        job_exe_mgr.schedule_job_exes([running_job_exe_1])
+        job_exe_mgr.schedule_job_exes([running_job_exe_1], [])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
@@ -260,7 +260,11 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
         # Job execution manager should have a message for the canceled job execution
         messages = job_exe_mgr.get_messages()
-        self.assertEqual(len(messages), 1)
+        found_job_exe_end_message = False
+        for message in messages:
+            if message.type == 'create_job_exe_ends':
+                found_job_exe_end_message = True
+        self.assertTrue(found_job_exe_end_message)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_schedule_system_tasks(self, mock_taskinfo):
