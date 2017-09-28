@@ -2639,19 +2639,25 @@ class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
     lock on the model using select_for_update().
 
+    TODO: A large number of fields from the following structure are being removed in Scale 6.0.0. These are being
+    replaced with the Seed Manifest that Job Type relies on to describe its maintainer, resources, interface and errors.
+
     :keyword name: The identifying name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
-    :keyword title: The human-readable name of the job type
+
+    :keyword title: The human-readable name of the job type. Deprecated - removed in v6.
     :type title: :class:`django.db.models.CharField`
-    :keyword description: An optional description of the job type
+    :keyword description: An optional description of the job type. Deprecated - removed in v6.
     :type description: :class:`django.db.models.TextField`
-    :keyword category: An optional overall category of the job type
+    :keyword category: An optional overall category of the job type. Deprecated - removed in v6.
     :type category: :class:`django.db.models.CharField`
-    :keyword author_name: The name of the person or organization that created the associated algorithm
+    :keyword author_name: The name of the person or organization that created the associated algorithm. Deprecated -
+        removed in v6.
     :type author_name: :class:`django.db.models.CharField`
-    :keyword author_url: The address to a home page about the author or associated algorithm
+    :keyword author_url: The address to a home page about the author or associated algorithm. Deprecated - removed in
+        v6.
     :type author_url: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
@@ -2668,20 +2674,22 @@ class JobType(models.Model):
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
 
-    :keyword uses_docker: Whether the job type uses Docker
+    :keyword uses_docker: Whether the job type uses Docker. Deprecated - removed in v6.
     :type uses_docker: :class:`django.db.models.BooleanField`
-    :keyword docker_privileged: Whether the job type uses Docker in privileged mode
+    :keyword docker_privileged: Whether the job type uses Docker in privileged mode. Deprecated - removed in v6.
     :type docker_privileged: :class:`django.db.models.BooleanField`
     :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
     :type docker_image: :class:`django.db.models.CharField`
-    :keyword interface: JSON description defining the interface for running a job of this type
+    :keyword interface: JSON description defining the interface for running a job of this type. Deprecated - removed in
+        v6.
     :type interface: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-        See the mesos prototype file for further information.
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker. See the mesos
+        prototype file for further information. Deprecated - removed in v6.
+
     :type docker_params: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword revision_num: The current revision number of the interface, starts at one
+    :keyword revision_num: The current revision number of the interface, starts at one. Deprecated - removed in v6.
     :type revision_num: :class:`django.db.models.IntegerField`
-    :keyword error_mapping: Mapping for translating an exit code to an error type
+    :keyword error_mapping: Mapping for translating an exit code to an error type. Deprecated - removed in v6.
     :type error_mapping: :class:`django.contrib.postgres.fields.JSONField`
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
@@ -2696,22 +2704,26 @@ class JobType(models.Model):
     :type timeout: :class:`django.db.models.IntegerField`
     :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
     :type max_tries: :class:`django.db.models.IntegerField`
-    :keyword cpus_required: The number of CPUs required for a job of this type
+    :keyword cpus_required: The number of CPUs required for a job of this type. Deprecated - removed in v6.
     :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type
+    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type. Deprecated - removed
+        in v6.
     :type mem_const_required: :class:`django.db.models.FloatField`
     :keyword mem_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine additional
-        RAM in MiB required for a job of this type
+        RAM in MiB required for a job of this type. Deprecated - removed in v6.
     :type mem_mult_required: :class:`django.db.models.FloatField`
-    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type
+    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type.
+        Deprecated - removed in v6.
     :type shared_mem_required: :class:`django.db.models.FloatField`
     :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
-        products) for a job of this type
+        products) for a job of this type. Deprecated - removed in v6.
     :type disk_out_const_required: :class:`django.db.models.FloatField`
     :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
-        additional disk space in MiB required for job output (temp work and products) for a job of this type
+        additional disk space in MiB required for job output (temp work and products) for a job of this type.
+        Deprecated - removed in v6.
     :type disk_out_mult_required: :class:`django.db.models.FloatField`
-    :keyword custom_resources: JSON describing the custom resources required for jobs of this type
+    :keyword custom_resources: JSON describing the custom resources required for jobs of this type. Deprecated -
+        removed in v6.
     :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
@@ -2735,40 +2747,42 @@ class JobType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.TextField(blank=True, null=True)
-    category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
-    author_name = models.CharField(blank=True, max_length=50, null=True)
-    author_url = models.TextField(blank=True, null=True)
+    title = models.CharField(blank=True, max_length=50, null=True, ) # TODO: remove for v6
+    description = models.TextField(blank=True, null=True) # TODO: remove for v6
+    category = models.CharField(db_index=True, blank=True, max_length=50, null=True) # TODO: remove for v6
+    author_name = models.CharField(blank=True, max_length=50, null=True) # TODO: remove for v6
+    author_url = models.TextField(blank=True, null=True) # TODO: remove for v6
 
     is_system = models.BooleanField(default=False)
-    is_long_running = models.BooleanField(default=False)
+    is_long_running = models.BooleanField(default=False) # TODO: remove for v6
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
 
-    uses_docker = models.BooleanField(default=True)
-    docker_privileged = models.BooleanField(default=False)
+    uses_docker = models.BooleanField(default=True) # TODO: remove for v6
+    docker_privileged = models.BooleanField(default=False) # TODO: remove for v6
     docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(default=dict)
-    docker_params = django.contrib.postgres.fields.JSONField(default=dict)
-    revision_num = models.IntegerField(default=1)
-    error_mapping = django.contrib.postgres.fields.JSONField(default=dict)
+    interface = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
+    docker_params = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
+    revision_num = models.IntegerField(default=1) # TODO: remove for v6
+    error_mapping = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
+
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
-    timeout = models.IntegerField(default=1800)
+    timeout = models.IntegerField(default=1800) # TODO: remove for v6
     max_tries = models.IntegerField(default=3)
-    cpus_required = models.FloatField(default=1.0)
-    mem_const_required = models.FloatField(default=64.0)
-    mem_mult_required = models.FloatField(default=0.0)
-    shared_mem_required = models.FloatField(default=0.0)
-    disk_out_const_required = models.FloatField(default=64.0)
-    disk_out_mult_required = models.FloatField(default=0.0)
-    custom_resources = django.contrib.postgres.fields.JSONField(default=dict)
+
+    cpus_required = models.FloatField(default=1.0) # TODO: remove for v6
+    mem_const_required = models.FloatField(default=64.0) # TODO: remove for v6
+    mem_mult_required = models.FloatField(default=0.0) # TODO: remove for v6
+    shared_mem_required = models.FloatField(default=0.0) # TODO: remove for v6
+    disk_out_const_required = models.FloatField(default=64.0) # TODO: remove for v6
+    disk_out_mult_required = models.FloatField(default=0.0) # TODO: remove for v6
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
 
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
