@@ -47,7 +47,7 @@ MIN_DISK = 0.0
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -720,8 +720,7 @@ class JobManager(models.Manager):
 
 class Job(models.Model):
     """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-    model using select_for_update(). If a related job execution model is changing status as well, its model lock must be
-    obtained BEFORE obtaining the lock for the job model.
+    model using select_for_update().
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
