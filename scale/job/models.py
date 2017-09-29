@@ -1222,6 +1222,8 @@ class JobExecution(models.Model):
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
+        if isinstance(self.configuration, basestring):
+            self.configuration = {}
         return ExecutionConfiguration(self.configuration, do_validate=False)
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
@@ -1303,6 +1305,8 @@ class JobExecution(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
+        if isinstance(self.resources, basestring):
+            self.resources = {}
         return Resources(self.resources, do_validate=False).get_node_resources()
 
     def get_status(self):
