@@ -47,7 +47,7 @@ class Command(BaseCommand):
         except TerminatedCommand:
             logger.warning('Scale database update stopped, exiting with code %d', SIGTERM_EXIT_CODE)
             sys.exit(SIGTERM_EXIT_CODE)
-        except Exception as ex:
+        except:
             logger.exception('Scale database update encountered error, exiting with code %d', GENERAL_FAIL_EXIT_CODE)
             sys.exit(GENERAL_FAIL_EXIT_CODE)
 
