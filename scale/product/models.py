@@ -442,10 +442,11 @@ class ProductFileManager(models.GeoManager):
             product_lists[product.id] = product.source_files
 
         source_files = {}  # {source file ID: source file}
-        src_qry = ScaleFile.objects.filter(file_type='SOURCE', descendants__descendant_id__in=product_lists.keys())
+        src_qry = ScaleFile.objects.filter(descendants__descendant_id__in=product_lists.keys())
         src_qry = src_qry.select_related('workspace').defer('workspace__json_config').order_by('id').distinct('id')
         for source in src_qry:
-            source_files[source.id] = source
+            if source.file_type == 'SOURCE':
+                source_files[source.id] = source
 
         link_qry = FileAncestryLink.objects.filter(ancestor_id__in=source_files.keys())
         link_qry = link_qry.filter(descendant_id__in=product_lists.keys())
