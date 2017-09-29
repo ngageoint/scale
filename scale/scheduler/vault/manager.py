@@ -53,6 +53,8 @@ class SecretsManager(object):
                 updated_secrets[job] = job_secrets
             except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsValue) as e:
                 logger.exception('Secrets Error: %s', e.message)
+                
+        self._all_secrets = updated_secrets
 
 
 secrets_mgr = SecretsManager()
