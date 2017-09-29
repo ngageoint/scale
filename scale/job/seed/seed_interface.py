@@ -374,7 +374,7 @@ JOB_INTERFACE_SCHEMA = {
 }
 
 
-class SeedInterface(object):
+class SeedJobInterface(object):
     """Represents the interface defined by an algorithm developer to a Seed job"""
 
     def __init__(self, definition, do_validate=True):
@@ -447,21 +447,29 @@ class SeedInterface(object):
         for file_output_name in self.get_file_output_names():
             job_data.add_output(file_output_name, workspace_id)
 
+    def get_name(self):
+        """Gets the Job name
+        :return: the name
+        :rtype: str
+        """
+
+        return self.definition['job']['name']
+
+    def get_job_version(self):
+        """Gets the Job version
+        :return: the version
+        :rtype: str
+        """
+
+        return self.definition['job']['jobVersion']
+
     def get_command(self):
         """Gets the command
         :return: the command
         :rtype: str
         """
 
-        return self.definition['command']
-
-    def get_command_args(self):
-        """Gets the command arguments
-        :return: the command args
-        :rtype: str
-        """
-
-        return self.definition['command_arguments']
+        return self.get_interface()['command']
 
     def get_interface(self):
         """Gets the interface for the Seed job

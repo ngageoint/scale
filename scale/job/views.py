@@ -20,7 +20,9 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job.job_config import JobConfiguration
+from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
+from job.seed.seed_interface import SeedJobInterface
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
@@ -82,17 +84,26 @@ class JobTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        name = rest_util.parse_string(request, 'name')
-        version = rest_util.parse_string(request, 'version')
+
+        # No longer required as of Seed adoption. TODO: Remove them entirely in v6
+        name = rest_util.parse_string(request, 'name', required=False)
+        version = rest_util.parse_string(request, 'version', required=False)
 
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface')
         interface = None
         try:
             if interface_dict:
-                interface = JobInterface(interface_dict)
+                JobInterfaceSunset.create(self.interface)
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+
+        # Pull down top-level fields from Seed Interface
+        if not name and isinstance(interface, SeedJobInterface):
+            name = interface.get_name()
+
+        if not version and isinstance(interface, SeedJobInterface):
+            version = interface.get_job_version()
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)

@@ -21,9 +21,11 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
+from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
+from job.seed.seed_interface import SeedJobInterface
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
@@ -2112,9 +2114,9 @@ class JobTypeManager(models.Manager):
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
         :type trigger_rule: :class:`trigger.models.TriggerRule`
-        :param error_mapping: Mapping for translating an exit code to an error type
+        :param error_mapping: Mapping for translating an exit code to an error type. Deprecated - removed in v6.
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
-        :param custom_resources: Custom resources required by this job type
+        :param custom_resources: Custom resources required by this job type. Deprecated - removed in v6.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
@@ -2747,25 +2749,26 @@ class JobType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    title = models.CharField(blank=True, max_length=50, null=True, ) # TODO: remove for v6
+    title = models.CharField(blank=True, max_length=50, null=True) # TODO: remove for v6
     description = models.TextField(blank=True, null=True) # TODO: remove for v6
     category = models.CharField(db_index=True, blank=True, max_length=50, null=True) # TODO: remove for v6
     author_name = models.CharField(blank=True, max_length=50, null=True) # TODO: remove for v6
     author_url = models.TextField(blank=True, null=True) # TODO: remove for v6
 
     is_system = models.BooleanField(default=False)
-    is_long_running = models.BooleanField(default=False) # TODO: remove for v6
+    is_long_running = models.BooleanField(default=False, null=True) # TODO: remove for v6
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
 
-    uses_docker = models.BooleanField(default=True) # TODO: remove for v6
-    docker_privileged = models.BooleanField(default=False) # TODO: remove for v6
+    uses_docker = models.BooleanField(default=True, null=True) # TODO: remove for v6
+    docker_privileged = models.BooleanField(default=False, null=True) # TODO: remove for v6
     docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
-    docker_params = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
-    revision_num = models.IntegerField(default=1) # TODO: remove for v6
-    error_mapping = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
+    interface = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
+    revision_num = models.IntegerField(default=1, null=True) # TODO: remove for v6
+    error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
 
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
@@ -2773,16 +2776,16 @@ class JobType(models.Model):
 
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
-    timeout = models.IntegerField(default=1800) # TODO: remove for v6
+    timeout = models.IntegerField(default=1800, null=True) # TODO: remove for v6
     max_tries = models.IntegerField(default=3)
 
-    cpus_required = models.FloatField(default=1.0) # TODO: remove for v6
-    mem_const_required = models.FloatField(default=64.0) # TODO: remove for v6
-    mem_mult_required = models.FloatField(default=0.0) # TODO: remove for v6
-    shared_mem_required = models.FloatField(default=0.0) # TODO: remove for v6
-    disk_out_const_required = models.FloatField(default=64.0) # TODO: remove for v6
-    disk_out_mult_required = models.FloatField(default=0.0) # TODO: remove for v6
-    custom_resources = django.contrib.postgres.fields.JSONField(default=dict) # TODO: remove for v6
+    cpus_required = models.FloatField(default=1.0, null=True) # TODO: remove for v6
+    mem_const_required = models.FloatField(default=64.0, null=True) # TODO: remove for v6
+    mem_mult_required = models.FloatField(default=0.0, null=True) # TODO: remove for v6
+    shared_mem_required = models.FloatField(default=0.0, null=True) # TODO: remove for v6
+    disk_out_const_required = models.FloatField(default=64.0, null=True) # TODO: remove for v6
+    disk_out_mult_required = models.FloatField(default=0.0, null=True) # TODO: remove for v6
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
 
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
@@ -2946,10 +2949,27 @@ class JobTypeRevision(models.Model):
         """Returns the job type interface for this revision
 
         :returns: The job type interface for this revision
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or `job.seed.interface.SeedJobInterface`
         """
 
-        return JobInterface(self.interface)
+        return JobInterfaceSunset.create(self.interface)
+
+    @property
+    def docker_image(self):
+        """Constructs a complete Docker image and tag with the correct packageVersion value
+
+        :return: The complete Docker image and tag
+        :rtype: str
+        """
+        interface = self.get_job_interface()
+        if isinstance(interface, SeedJobInterface):
+            docker_image = self.job_type.docker_image
+            if ':' in docker_image:
+                docker_image = docker_image.split(':', 1)[0]
+            return '%s:%s' % (docker_image, interface['job']['packageVersion'])
+
+        raise NotImplementedError
+
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision
