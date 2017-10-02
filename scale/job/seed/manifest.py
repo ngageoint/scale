@@ -5,7 +5,6 @@ import glob
 import json
 import logging
 import os
-import re
 from collections import namedtuple
 
 from jsonschema import validate
@@ -13,9 +12,9 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.configurators import normalize_env_var_name
 from job.configuration.data.exceptions import InvalidData, InvalidConnection
+from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
@@ -26,9 +25,10 @@ logger = logging.getLogger(__name__)
 MODE_RO = 'ro'
 MODE_RW = 'rw'
 
-SeedInputFile = namedtuple('SeedInputFile', ['name', 'media_types', 'multiple', 'required'])
+SeedInputFile = namedtuple('SeedInputFile', ['name', 'media_types', 'multiple', 'required', 'partial'])
 SeedInputJson = namedtuple('SeedInputJson', ['name', 'type', 'required'])
-SeedOutputFile = namedtuple('SeedOuputFile', ['name', 'media_type', 'multiple', 'required'])
+SeedOutputFile = namedtuple('SeedOuputFile', ['name', 'media_type', 'multiple', 'pattern', 'required'])
+SeedOutputJson = namedtuple('SeedOuputFile', ['name', 'type', 'required'])
 
 SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema/seed.manifest.schema.json')
 with open(SCHEMA_FILENAME) as schema_file:
@@ -50,14 +50,6 @@ class SeedManifest(object):
 
         self.definition = definition
 
-        # Tuples used for validation with other classes
-        self._input_json_validation_dict = {}
-        self._input_file_validation_dict = {}
-        self._output_file_validation_dict = {}
-        self._output_json_validation_dict = {}
-
-        self._output_file_manifest_dict = {}  # str->bool
-
         try:
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
@@ -70,7 +62,7 @@ class SeedManifest(object):
         self._check_mount_name_uniqueness()
 
         self._validate_mount_paths()
-        self._create_validation_dicts()
+        #self._create_validation_dicts()
 
     def add_output_to_connection(self, output_name, job_conn, input_name):
         """Adds the given output from the interface as a new input to the given job connection
@@ -141,6 +133,15 @@ class SeedManifest(object):
 
         return self.definition['job']['interface']
 
+    def get_settings(self):
+        """Gets the settings for the Seed job
+
+        :return: the settings object
+        :rtype: dict
+        """
+
+        return self.definition['job']['interface']['settings']
+
     def get_input_files(self):
         """Gets the list of input files defined in the interface
 
@@ -168,8 +169,8 @@ class SeedManifest(object):
         input_json_list = []
         for input_json in self.get_interface()['inputs']['json']:
             input_json_list.append(SeedInputJson(input_json['name'],
-                                             input_json['type'],
-                                             input_json['required']))
+                                                 input_json['type'],
+                                                 input_json['required']))
 
         return input_json_list
 
@@ -186,13 +187,28 @@ class SeedManifest(object):
         for output_file in self.get_interface()['outputs']['files']:
             output_files.append(SeedOutputFile(output_file['name'],
                                                output_file['mediaType'],
+                                               output_file['multiple'],
                                                output_file['pattern'],
-                                               # TODO: update to multiple if we go that direction
-                                               output_file['count'],
                                                output_file['required']))
 
-
         return output_files
+
+    def get_output_json(self):
+        """Gets the list of output json defined in the interface
+
+        Commonly used when matching globs to capture output files
+
+        :return: the output file definitions for job
+        :rtype: list
+        """
+
+        output_json_list = []
+        for output_json in self.get_interface()['outputs']['json']:
+            output_json_list.append(SeedOutputJson(output_json['name'],
+                                                   output_json['type'],
+                                                   output_json['required']))
+
+        return output_json_list
 
     def get_scalar_resources(self):
         """Gets the scalar resources defined the Seed job
@@ -380,8 +396,8 @@ class SeedManifest(object):
             if value is None:
                 raise MissingSetting('Required setting %s was not provided' % name)
 
-    def _check_for_env_var_collisions(self):
-        """Ensures all the environmental variable names are unique, and throws a
+    def _check_for_name_collisions(self):
+        """Ensures all names that map to environment variables are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique.
 
         Per Seed specification for implementors we must validate that all reserved keywords, settings
@@ -391,7 +407,7 @@ class SeedManifest(object):
         # Include reserved keywords
         env_vars = ["OUTPUT_DIR"]
 
-        env_vars += [normalize_env_var_name(setting['name']) for setting in self._interface['settings']]
+        env_vars += [normalize_env_var_name(setting['name']) for setting in self.get_settings()]
         env_vars += [normalize_env_var_name(input_file.name) for input_file in self.get_input_files()]
         env_vars += [normalize_env_var_name(json['name']) for json in self.get_input_json()]
         env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in self.get_scalar_resources()]
@@ -428,36 +444,6 @@ class SeedManifest(object):
 
         if len(mounts) != len(set(mounts)):
             raise InvalidInterfaceDefinition('Mount names must be unique.')
-
-    def _create_validation_dicts(self):
-        """Creates the validation dicts required by job_data to perform its validation"""
-
-        # TODO: Nametuple at least would be nice as I have no idea what type of tuple I'm passing around
-        for input_json in self.get_input_json():
-            name = input_json['name']
-            # TODO: we are ignoring json[].type for now
-            self._input_json_validation_dict[name] = input_json['required']
-
-        for input_file in self.get_input_files():
-            file_desc = ScaleFileDescription()
-            name = input_file.name
-            required = input_file.required
-            multiple = input_file.multiple
-            for media_type in input_file.media_types:
-                file_desc.add_allowed_media_type(media_type)
-            self._input_file_validation_dict[name] = (required, multiple, file_desc)
-
-        for output_file in self.get_output_files():
-            name =  output_file.name
-            required =  output_file.required
-            count =  output_file.count
-            self._output_file_validation_dict[name] = (required, count)
-
-        for output_json in self.get_output_json():
-            name = output_json['name']
-            required = output_json['required']
-            type = output_json['type']
-            self._output_json_validation_dict[name] = (required, type)
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
@@ -539,12 +525,12 @@ class SeedManifest(object):
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""
         # Populate placeholder for interface if undefined
-        if 'interface' not in self.definition:
-            self.definition['interface'] = {}
+        if 'interface' not in self.definition['job']:
+            self.definition['job']['interface'] = {}
 
         # Populate placeholder for errors
-        if 'errors' not in self.definition:
-            self.definition['errors'] = []
+        if 'errors' not in self.definition['job']:
+            self.definition['job']['errors'] = []
 
         self._populate_resource_defaults()
         self._populate_inputs_defaults()
@@ -556,20 +542,20 @@ class SeedManifest(object):
         """Populates the default values for any missing mounts values"""
 
         # Populate placeholder for mounts
-        if 'mounts' not in self.definition['interface']:
-            self.definition['interface']['mounts'] = []
+        if 'mounts' not in self.definition['job']['interface']:
+            self.definition['job']['interface']['mounts'] = []
 
-        for mount in self.definition['interface']['mounts']:
+        for mount in self.definition['job']['interface']['mounts']:
             if 'mode' not in mount:
                 mount['mode'] = MODE_RO
 
     def _populate_settings_defaults(self):
         """populates the default values for any missing settings values"""
 
-        if 'settings' not in self.definition:
-            self.definition['settings'] = []
+        if 'settings' not in self.get_interface():
+            self.get_interface()['settings'] = []
 
-        for setting in self.definition['settings']:
+        for setting in self.get_settings():
             if 'required' not in setting:
                 setting['required'] = True
 
@@ -580,23 +566,24 @@ class SeedManifest(object):
         """populates the default values for any missing inputs values"""
 
         # Populate placeholders for inputs
-        if 'inputs' not in self.definition['interface']:
-            self.definition['interface']['inputs'] = {}
-        if 'files' not in self.definition['interface']['inputs']:
-            self.definition['interface']['inputs']['files'] = []
-        if 'json' not in self.definition['interface']['inputs']:
-            self.definition['interface']['inputs']['json'] = []
+        if 'inputs' not in self.get_interface():
+            self.get_interface()['inputs'] = {}
+        if 'files' not in self.get_interface()['inputs']:
+            self.get_interface()['inputs']['files'] = []
+        if 'json' not in self.get_interface()['inputs']:
+            self.get_interface()['inputs']['json'] = []
 
-        for input_file in self.definition['inputs']['files']:
+        for input_file in self.get_input_files():
             if 'required' not in input_file:
                 input_file['required'] = True
             if 'mediaType' not in input_file:
                 input_file['mediaTypes'] = []
             if 'multiple' not in input_file:
                 input_file.multiple = False
-            # TODO: Address partial functionality through extended configuration outside of the Seed interface
+            if 'partial' not in input_file:
+                input_file.partial = False
 
-        for input_json in self.definition['inputs']['json']:
+        for input_json in self.get_input_json():
             if 'required' not in input_json:
                 input_json['required'] = True
 
@@ -604,33 +591,33 @@ class SeedManifest(object):
         """populates the default values for any missing outputs values"""
 
         # Populate placeholders for outputs
-        if 'outputs' not in self.definition['interface']:
-            self.definition['interface']['ouputs'] = {}
-        if 'files' not in self.definition['interface']['ouputs']:
-            self.definition['interface']['ouputs']['files'] = []
-        if 'json' not in self.definition['interface']['ouputs']:
-            self.definition['interface']['ouputs']['json'] = []
+        if 'outputs' not in self.get_interface():
+            self.get_interface()['outputs'] = {}
+        if 'files' not in self.get_interface()['outputs']:
+            self.get_interface()['outputs']['files'] = []
+        if 'json' not in self.get_interface()['outputs']:
+            self.get_interface()['outputs']['json'] = []
 
-        for output_file in self.definition['interface']['outputs']:
+        for output_file in self.get_output_files():
             if 'count' not in output_file:
-                output_file['count'] = '1'
+                output_file.multiple = False
             if 'required' not in output_file:
-                output_file['required'] = True
+                output_file.required = True
 
-        for output_json in self.definition['interface']['outputs']:
+        for output_json in self.get_output_json():
             if 'required' not in output_json:
-                output_json['required'] = True
+                output_json.required = True
 
     def _populate_resource_defaults(self):
         """populates the default values for any missing shared_resource values"""
 
         # Populate placeholders for scalar resources
-        if 'resources' not in self.definition:
-            self.definition['resources'] = {}
-        if 'scalar' not in self.definition['resources']:
-            self.definition['resources']['scalar'] = []
+        if 'resources' not in self.definition['job']:
+            self.definition['job']['resources'] = {}
+        if 'scalar' not in self.definition['job']['resources']:
+            self.definition['job']['resources']['scalar'] = []
 
-        for scalar in self.definition['resources']['scalar']:
+        for scalar in self.definition['job']['resources']['scalar']:
             if 'required' not in scalar:
                 scalar['required'] = True
 
@@ -640,7 +627,7 @@ class SeedManifest(object):
         :raises :class:`job.configuration.data.exceptions.InvalidInterfaceDefinition`: If a mount path is invalid
         """
 
-        for mount in self.definition['mounts']:
+        for mount in self.get_mounts():
             name = mount['name']
             path = mount['path']
             if not os.path.isabs(path):
