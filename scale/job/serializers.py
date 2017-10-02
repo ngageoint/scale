@@ -27,8 +27,8 @@ class JobTypeBaseSerializer(ModelIdSerializer):
 
 class JobTypeSerializer(JobTypeBaseSerializer):
     """Converts job type model fields to REST output"""
-    uses_docker = serializers.BooleanField()
-    docker_privileged = serializers.BooleanField()
+    uses_docker = serializers.NullBooleanField()
+    docker_privileged = serializers.NullBooleanField()
     docker_image = serializers.CharField()
     revision_num = serializers.IntegerField()
 

@@ -22,7 +22,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job.job_config import JobConfiguration
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
-from job.seed.seed_interface import SeedJobInterface
+from job.seed.manifest import SeedManifest
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
@@ -94,16 +94,17 @@ class JobTypesView(ListCreateAPIView):
         interface = None
         try:
             if interface_dict:
-                JobInterfaceSunset.create(self.interface)
+                interface = JobInterfaceSunset.create(interface_dict)
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
         # Pull down top-level fields from Seed Interface
-        if not name and isinstance(interface, SeedJobInterface):
-            name = interface.get_name()
+        if isinstance(interface, SeedManifest):
+            if not name:
+                name = interface.get_name()
 
-        if not version and isinstance(interface, SeedJobInterface):
-            version = interface.get_job_version()
+            if not version:
+                version = interface.get_job_version()
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)

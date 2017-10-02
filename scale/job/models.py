@@ -25,7 +25,7 @@ from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.seed.seed_interface import SeedJobInterface
+from job.seed.manifest import SeedManifest
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
@@ -1134,10 +1134,10 @@ class Job(models.Model):
         """Returns the interface for this job
 
         :returns: The interface for this job
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterface(self.job_type_rev.interface)
+        return JobInterfaceSunset.create(self.job_type.interface)
 
     def get_job_results(self):
         """Returns the results for this job
@@ -2369,7 +2369,7 @@ class JobTypeManager(models.Manager):
         # Scrub configuration for secrets
         if job_type.configuration:
             configuration = JobConfiguration(job_type.configuration)
-            interface = JobInterface(job_type.interface)
+            interface = JobInterfaceSunset.create(job_type.interface)
             configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
 
@@ -2756,13 +2756,13 @@ class JobType(models.Model):
     author_url = models.TextField(blank=True, null=True) # TODO: remove for v6
 
     is_system = models.BooleanField(default=False)
-    is_long_running = models.BooleanField(default=False, null=True) # TODO: remove for v6
+    is_long_running = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
 
-    uses_docker = models.BooleanField(default=True, null=True) # TODO: remove for v6
-    docker_privileged = models.BooleanField(default=False, null=True) # TODO: remove for v6
+    uses_docker = models.NullBooleanField(default=True) # TODO: remove for v6
+    docker_privileged = models.NullBooleanField(default=False) # TODO: remove for v6
     docker_image = models.CharField(blank=True, null=True, max_length=500)
     interface = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
@@ -2949,7 +2949,7 @@ class JobTypeRevision(models.Model):
         """Returns the job type interface for this revision
 
         :returns: The job type interface for this revision
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or `job.seed.interface.SeedJobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or `job.seed.manifest.SeedManifest`
         """
 
         return JobInterfaceSunset.create(self.interface)
@@ -2962,7 +2962,7 @@ class JobTypeRevision(models.Model):
         :rtype: str
         """
         interface = self.get_job_interface()
-        if isinstance(interface, SeedJobInterface):
+        if isinstance(interface, SeedManifest):
             docker_image = self.job_type.docker_image
             if ':' in docker_image:
                 docker_image = docker_image.split(':', 1)[0]
