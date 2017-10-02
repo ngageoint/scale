@@ -1137,7 +1137,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterfaceSunset.create(self.job_type.interface)
+        return JobInterfaceSunset.create(self.job_type_rev.interface)
 
     def get_job_results(self):
         """Returns the results for this job
