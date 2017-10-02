@@ -674,7 +674,7 @@ tasks remain.</p>
 <dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.get_messages">
 <code class="descname">get_messages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.get_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all messages related to job executions that need to be sent</p>
+<dd><p>Returns all messages related to jobs and executions that need to be sent</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -789,13 +789,17 @@ tasks remain.</p>
 
 <dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.schedule_job_exes">
-<code class="descname">schedule_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.schedule_job_exes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">schedule_job_exes</code><span class="sig-paren">(</span><em>job_exes</em>, <em>messages</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.schedule_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds newly scheduled running job executions to the manager</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> ([<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]) &#8211; A list of the running job executions to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_exes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of the running job executions to add</li>
+<li><strong>messages</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The messages for the running jobs</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

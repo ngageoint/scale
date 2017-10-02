@@ -12,6 +12,14 @@ job\.messages\.job\_exe\_end module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.running\_jobs module
+-----------------------------------
+
+.. automodule:: job.messages.running_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

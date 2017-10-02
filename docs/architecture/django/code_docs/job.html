@@ -377,6 +377,7 @@
 <li class="toctree-l1"><a class="reference internal" href="job.messages.html">job.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages">Module contents</a></li>
 </ul>
 </li>
@@ -413,6 +414,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0029_auto_20170707_1034">job.migrations.0029_auto_20170707_1034 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0030_remove_job_configuration">job.migrations.0030_remove_job_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0031_auto_20170822_1544">job.migrations.0031_auto_20170822_1544 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0032_job_node">job.migrations.0032_job_node module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -531,6 +533,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job.test.messages.html">job.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -722,8 +725,7 @@ configured type and the registered clock function is executed.</p>
 <em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">Job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-model using select_for_update(). If a related job execution model is changing status as well, its model lock must be
-obtained BEFORE obtaining the lock for the job model.</p>
+model using select_for_update().</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -733,6 +735,7 @@ obtained BEFORE obtaining the lock for the job model.</p>
 <li><strong>job_type_rev</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The revision of the job type when this job was created</li>
 <li><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The status of the job</li>
 <li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>node</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The node on which the job is/was running (should only be set if status is RUNNING or final status)</li>
 <li><strong>error</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The error that caused the failure (should only be set when status is FAILED)</li>
 <li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description defining the data for this job. This field must be populated when the job is first
 queued.</li>
@@ -1235,6 +1238,26 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.Job.mem_required">
 <code class="descname">mem_required</code><a class="headerlink" href="#job.models.Job.mem_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.node">
+<code class="descname">node</code><a class="headerlink" href="#job.models.Job.node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.node_id">
+<code class="descname">node_id</code><a class="headerlink" href="#job.models.Job.node_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -3092,6 +3115,25 @@ job_type and job_type_rev models populated.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobManager.update_jobs_node">
+<code class="descname">update_jobs_node</code><span class="sig-paren">(</span><em>job_ids</em>, <em>node_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the jobs with the given IDs to have the given node and start time</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs to update</li>
+<li><strong>node_id</strong> (<em>int</em>) &#8211; The node ID</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start time</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobManager.update_jobs_to_canceled">
 <code class="descname">update_jobs_to_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
@@ -3112,15 +3154,15 @@ updates occur in an atomic transaction.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.update_jobs_to_running">
-<code class="descname">update_jobs_to_running</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given jobs to the RUNNING status. The number of each job&#8217;s running execution is provided to
-resolve race conditions. All database updates occur in an atomic transaction.</p>
+<code class="descname">update_jobs_to_running</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the jobs with the given IDs to the RUNNING status. The caller must have obtained model locks on the
+job models.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>jobs</strong> (<em>dict</em>) &#8211; A dict where each job ID maps to its running execution number</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs to update</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start time</li>
 </ul>
 </td>

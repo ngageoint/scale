@@ -288,6 +288,89 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.messages.running_jobs">
+<span id="job-messages-running-jobs-module"></span><h2>job.messages.running_jobs module<a class="headerlink" href="#module-job.messages.running_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that sets RUNNING status for job models</p>
+<dl class="class">
+<dt id="job.messages.running_jobs.RunningJobs">
+<em class="property">class </em><code class="descclassname">job.messages.running_jobs.</code><code class="descname">RunningJobs</code><span class="sig-paren">(</span><em>started=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that sets RUNNING status for job models</p>
+<dl class="method">
+<dt id="job.messages.running_jobs.RunningJobs.add_running_job">
+<code class="descname">add_running_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs.add_running_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given running job to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_id</strong> (<em>int</em>) &#8211; The running job ID</li>
+<li><strong>exe_num</strong> (<em>int</em>) &#8211; The running job&#8217;s execution number</li>
+<li><strong>node_id</strong> (<em>int</em>) &#8211; The node ID that the job is running on</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.running_jobs.RunningJobs.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more running jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more running jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.running_jobs.RunningJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.running_jobs.RunningJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.running_jobs.RunningJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.RunningJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.running_jobs.create_running_job_messages">
+<code class="descclassname">job.messages.running_jobs.</code><code class="descname">create_running_job_messages</code><span class="sig-paren">(</span><em>running_job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.running_jobs.create_running_job_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a list of running job messages for the given running job executions (they must all have the same start
+time)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>running_job_exes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The running job executions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The runnin job messages</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.messages">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.messages" title="Permalink to this headline">¶</a></h2>
 </div>

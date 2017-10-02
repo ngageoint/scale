@@ -252,6 +252,14 @@ job\.migrations\.0031\_auto\_20170822\_1544 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0032\_job\_node module
+---------------------------------------
+
+.. automodule:: job.migrations.0032_job_node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
