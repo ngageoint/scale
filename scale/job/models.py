@@ -47,7 +47,7 @@ MIN_DISK = 0.0
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -452,6 +452,7 @@ class JobManager(models.Manager):
             job_ids.add(job.id)
             jobs_to_queue.append(job)
             job.status = 'QUEUED'
+            job.node = None
             job.error = None
             job.queued = when
             job.started = None
@@ -592,6 +593,19 @@ class JobManager(models.Manager):
         if jobs_to_cancel:
             self.update_status(jobs_to_cancel, 'CANCELED', when)
 
+    def update_jobs_node(self, job_ids, node_id, when):
+        """Updates the jobs with the given IDs to have the given node and start time
+
+        :param job_ids: A list of job IDs to update
+        :type job_ids: list
+        :param node_id: The node ID
+        :type node_id: int
+        :param when: The start time
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(node_id=node_id, started=when, last_modified=timezone.now())
+
     @transaction.atomic
     def update_jobs_to_canceled(self, job_ids, when):
         """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
@@ -613,38 +627,17 @@ class JobManager(models.Manager):
             self.filter(id__in=jobs_to_update).update(status='CANCELED', last_status_change=when,
                                                       last_modified=timezone.now())
 
-    @transaction.atomic
-    def update_jobs_to_running(self, jobs, when):
-        """Updates the given jobs to the RUNNING status. The number of each job's running execution is provided to
-        resolve race conditions. All database updates occur in an atomic transaction.
+    def update_jobs_to_running(self, job_ids, when):
+        """Updates the jobs with the given IDs to the RUNNING status. The caller must have obtained model locks on the
+        job models.
 
-        :param jobs: A dict where each job ID maps to its running execution number
-        :type jobs: dict
+        :param job_ids: A list of job IDs to update
+        :type job_ids: list
         :param when: The start time
         :type when: :class:`datetime.datetime`
         """
 
-        jobs_to_update = []
-        jobs_to_update_no_status = []  # These are jobs that need to be updated, but without a status change
-        for locked_job in self.get_locked_jobs(jobs.keys()):
-            exe_num = jobs[locked_job.id]
-            if locked_job.num_exes != exe_num:
-                # If the execution number has changed, this update is obsolete
-                continue
-            if locked_job.status == 'QUEUED':
-                jobs_to_update.append(locked_job.id)
-            else:
-                # The job has already received its final status update, don't update status
-                jobs_to_update_no_status.append(locked_job.id)
-
-        modified = timezone.now()
-        if jobs_to_update:
-            # Update job models in database
-            self.filter(id__in=jobs_to_update).update(status='RUNNING', last_status_change=when, started=when,
-                                                      last_modified=modified)
-        if jobs_to_update_no_status:
-            # Update job models in database except for status change
-            self.filter(id__in=jobs_to_update_no_status).update(started=when, last_modified=modified)
+        self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
@@ -727,8 +720,7 @@ class JobManager(models.Manager):
 
 class Job(models.Model):
     """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-    model using select_for_update(). If a related job execution model is changing status as well, its model lock must be
-    obtained BEFORE obtaining the lock for the job model.
+    model using select_for_update().
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -738,6 +730,8 @@ class Job(models.Model):
     :type status: :class:`django.db.models.CharField`
     :keyword event: The event that triggered the creation of this job
     :type event: :class:`django.db.models.ForeignKey`
+    :keyword node: The node on which the job is/was running (should only be set if status is RUNNING or final status)
+    :type node: :class:`django.db.models.ForeignKey`
     :keyword error: The error that caused the failure (should only be set when status is FAILED)
     :type error: :class:`django.db.models.ForeignKey`
 
@@ -810,9 +804,11 @@ class Job(models.Model):
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
     status = models.CharField(choices=JOB_STATUSES, default='PENDING', max_length=50, db_index=True)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = django.contrib.postgres.fields.JSONField(default=dict)
+    # TODO: rename results to output, will cause breaking REST API changes
     results = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField()

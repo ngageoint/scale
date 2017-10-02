@@ -37,7 +37,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_generate_status_json(self):
         """Tests calling generate_status_json() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
         json_dict = [{'id': self.node_model_1.id}, {'id': self.node_model_2.id}]
         self.job_exe_mgr.generate_status_json(json_dict, now())
 
@@ -60,7 +60,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_handle_task_timeout(self):
         """Tests calling handle_task_timeout() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
         task = self.job_exe_1.start_next_task()
         self.job_exe_mgr.handle_task_timeout(task, now())
@@ -70,7 +70,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_handle_task_update(self):
         """Tests calling handle_task_update() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
         # Start task
         task_1 = self.job_exe_1.start_next_task()
@@ -98,7 +98,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_lost_node(self):
         """Tests calling lost_node() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
         task_1 = self.job_exe_1.start_next_task()
         task_1_started = now() - timedelta(minutes=5)
@@ -113,7 +113,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_schedule_job_exes(self):
         """Tests calling schedule_job_exes() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
         # Both executions should be in the manager and ready
         self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
@@ -123,7 +123,7 @@ class TestJobExecutionManager(TransactionTestCase):
     def test_sync_with_database(self):
         """Tests calling sync_with_database() successfully"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
         task_1 = self.job_exe_1.start_next_task()
         task_1_started = now() - timedelta(minutes=5)

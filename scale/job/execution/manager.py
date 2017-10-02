@@ -22,8 +22,9 @@ class JobExecutionManager(object):
         """Constructor
         """
 
-        self._job_exe_end_models = []
+        self._job_exe_end_models = []  # Holds job_exe_end models to send in next messages
         self._running_job_exes = {}  # {Cluster ID: RunningJobExecution}
+        self._running_job_messages = []  # Holds running job messages to send
         self._lock = threading.Lock()
         self._metrics = TotalJobExeMetrics(now())
 
@@ -57,16 +58,17 @@ class JobExecutionManager(object):
             self._metrics.generate_status_json(nodes_list, when)
 
     def get_messages(self):
-        """Returns all messages related to job executions that need to be sent
+        """Returns all messages related to jobs and executions that need to be sent
 
         :returns: The list of job-related messages to send
         :rtype: list
         """
 
-        messages = []
-        message = None
-
         with self._lock:
+            messages = self._running_job_messages
+            self._running_job_messages = []
+
+            message = None
             for job_exe_end in self._job_exe_end_models:
                 if not message:
                     message = CreateJobExecutionEnd()
@@ -185,16 +187,19 @@ class JobExecutionManager(object):
 
         return lost_exes
 
-    def schedule_job_exes(self, job_exes):
+    def schedule_job_exes(self, job_exes, messages):
         """Adds newly scheduled running job executions to the manager
 
         :param job_exes: A list of the running job executions to add
-        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
+        :type job_exes: list
+        :param messages: The messages for the running jobs
+        :type messages: list
         """
 
         with self._lock:
             for job_exe in job_exes:
                 self._running_job_exes[job_exe.cluster_id] = job_exe
+            self._running_job_messages.extend(messages)
             self._metrics.add_running_job_exes(job_exes)
 
     def sync_with_database(self):

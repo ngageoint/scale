@@ -1,7 +1,8 @@
 """Defines the serializers for jobs and job types"""
 import rest_framework.serializers as serializers
 
-from job.models import Job, JobExecutionEnd
+from job.models import Job
+from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
 
@@ -122,6 +123,7 @@ class JobBaseSerializer(ModelIdSerializer):
     job_type = JobTypeBaseSerializer()
     job_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
+    node = ModelIdSerializer()
     error = ModelIdSerializer()
 
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
@@ -136,6 +138,7 @@ class JobSerializer(JobBaseSerializer):
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventBaseSerializer()
+    node = NodeBaseSerializer()
     error = ErrorBaseSerializer()
 
     timeout = serializers.IntegerField()

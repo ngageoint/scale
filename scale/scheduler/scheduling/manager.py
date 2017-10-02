@@ -13,6 +13,7 @@ from mesos.interface import mesos_pb2
 from job.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
+from job.messages.running_jobs import create_running_job_messages
 from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
@@ -393,7 +394,6 @@ class SchedulingManager(object):
 
             # Create running and canceled job executions
             queue_ids = []
-            job_exe_nums = {}
             canceled_job_exe_end_models = []
             for queued_job_exe in queued_job_executions:
                 queue_ids.append(queued_job_exe.id)
@@ -407,14 +407,10 @@ class SchedulingManager(object):
                     config = scheduled_models[queued_job_exe.id][1]  # May contain secrets!
                     priority = queued_job_exe.priority
                     running_job_exe = RunningJobExecution(agent_id, job_exe_model, job_type, config, priority)
-                    job_exe_nums[running_job_exe.job_id] = running_job_exe.exe_num
                     if running_job_exe.node_id in running_job_exes:
                         running_job_exes[running_job_exe.node_id].append(running_job_exe)
                     else:
                         running_job_exes[running_job_exe.node_id] = [running_job_exe]
-
-            # Update scheduled jobs to RUNNING status
-            Job.objects.update_jobs_to_running(job_exe_nums, started)
 
             # Add canceled job execution end models to manager to be sent to messaging backend
             if canceled_job_exe_end_models:
@@ -515,7 +511,7 @@ class SchedulingManager(object):
             all_running_job_exes = []
             for node_id in running_job_exes:
                 all_running_job_exes.extend(running_job_exes[node_id])
-            job_exe_mgr.schedule_job_exes(all_running_job_exes)
+            job_exe_mgr.schedule_job_exes(all_running_job_exes, create_running_job_messages(all_running_job_exes))
             node_ids = set()
             job_exe_count = 0
             scheduled_resources = NodeResources()
