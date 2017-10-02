@@ -406,7 +406,7 @@ class ScaleFile(models.Model):
     is_deleted = models.BooleanField(default=False)
     uuid = models.CharField(db_index=True, max_length=32)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     deleted = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
