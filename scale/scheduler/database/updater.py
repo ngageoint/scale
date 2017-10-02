@@ -74,7 +74,7 @@ class DatabaseUpdater(object):
         job_exe_end_models = []
         job_exe_output_models = []
         job_exe_qry = JobExecution.objects.select_related('job').filter(job_id__in=job_ids)
-        for job_exe in job_exe_qry.defer('resources', 'configuration').order_by('job_id', 'id'):
+        for job_exe in job_exe_qry.defer('resources', 'configuration', 'stdout', 'stderr').order_by('job_id', 'id'):
             job_exe_count += 1
             if job_exe.job_id == current_job_id:
                 current_exe_num += 1
