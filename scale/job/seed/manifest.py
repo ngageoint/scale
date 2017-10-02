@@ -106,7 +106,15 @@ class SeedManifest(object):
         :rtype: str
         """
 
-        return self.definition['job']['name']
+        return self.get_job()['name']
+
+    def get_job(self):
+        """Gets the Job object within the Seed manifest
+
+        :return: the Job object
+        """
+
+        return self.definition['job']
 
     def get_job_version(self):
         """Gets the Job version
@@ -114,7 +122,7 @@ class SeedManifest(object):
         :rtype: str
         """
 
-        return self.definition['job']['jobVersion']
+        return self.get_job()['jobVersion']
 
     def get_command(self):
         """Gets the command
@@ -122,7 +130,7 @@ class SeedManifest(object):
         :rtype: str
         """
 
-        return self.get_interface()['command']
+        return self.get_interface().get('command', None)
 
     def get_interface(self):
         """Gets the interface for the Seed job
@@ -131,7 +139,7 @@ class SeedManifest(object):
         :rtype: dict
         """
 
-        return self.definition['job']['interface']
+        return self.get_job().get('interface', {})
 
     def get_settings(self):
         """Gets the settings for the Seed job
@@ -140,39 +148,45 @@ class SeedManifest(object):
         :rtype: dict
         """
 
-        return self.definition['job']['interface']['settings']
+        return self.get_interface().get('settings', [])
+
+    def get_inputs(self):
+        """Gets the inputs defined in the interface
+
+        :return: the inputs defined for the job
+        :rtype: dict
+        """
+
+        return self.get_interface().get('inputs', {'files':[], 'json':[]})
+
+    def get_outputs(self):
+        """Gets the ouputs defined in the interface
+
+        :return: the ouputs defined for the job
+        :rtype: dict
+        """
+
+        return self.get_interface().get('outputs', {'files': [], 'json': []})
 
     def get_input_files(self):
         """Gets the list of input files defined in the interface
 
         :return: the input file definitions for job
-        :rtype: [`SeedInputFile`]
+        :rtype: list
         """
 
-        input_files = []
-        for input_file in self.get_interface()['inputs']['files']:
-            input_files.append(SeedInputFile(input_file['name'],
-                                             input_file['mediaTypes'],
-                                             input_file['multiple'],
-                                             input_file['required']))
+        return self.get_inputs().get('files', [])
 
 
-        return input_files
 
     def get_input_json(self):
         """Gets the list of json defined in the interface
 
         :return: the input json definitions for job
-        :rtype: ['SeedInputJson`]
+        :rtype: list
         """
 
-        input_json_list = []
-        for input_json in self.get_interface()['inputs']['json']:
-            input_json_list.append(SeedInputJson(input_json['name'],
-                                                 input_json['type'],
-                                                 input_json['required']))
-
-        return input_json_list
+        return self.get_inputs().get('json', [])
 
     def get_output_files(self):
         """Gets the list of output files defined in the interface
@@ -183,15 +197,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        output_files = []
-        for output_file in self.get_interface()['outputs']['files']:
-            output_files.append(SeedOutputFile(output_file['name'],
-                                               output_file['mediaType'],
-                                               output_file['multiple'],
-                                               output_file['pattern'],
-                                               output_file['required']))
-
-        return output_files
+        return self.get_outputs().get('files', [])
 
     def get_output_json(self):
         """Gets the list of output json defined in the interface
@@ -202,13 +208,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        output_json_list = []
-        for output_json in self.get_interface()['outputs']['json']:
-            output_json_list.append(SeedOutputJson(output_json['name'],
-                                                   output_json['type'],
-                                                   output_json['required']))
-
-        return output_json_list
+        return self.get_outputs().get('json', [])
 
     def get_scalar_resources(self):
         """Gets the scalar resources defined the Seed job
@@ -217,7 +217,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.definition['job']['resources']['scalar']
+        return self.get_job().get('resources', {'scalar':[]})['scalar']
 
     def get_mounts(self):
         """Gets the mounts defined the Seed job
@@ -226,7 +226,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.get_interface()['mounts']
+        return self.get_interface().get('mounts', [])
 
     def get_maintainer(self):
         """Gets the maintainer details for the Seed job
@@ -235,7 +235,7 @@ class SeedManifest(object):
         :rtype: dict
         """
 
-        return self.definition['job']['maintainer']
+        return self.get_job()['maintainer']
 
     def get_errors(self):
         """Get the error mapping defined for the Seed job
@@ -244,7 +244,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.definition['job']['errors']
+        return self.get_job().get('errors', [])
 
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
@@ -439,7 +439,7 @@ class SeedManifest(object):
         """
 
         mounts = []
-        for mount in self.get_interface()['mounts']:
+        for mount in self.get_mounts():
             mounts.append(mount['name'])
 
         if len(mounts) != len(set(mounts)):
@@ -524,14 +524,6 @@ class SeedManifest(object):
 
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""
-        # Populate placeholder for interface if undefined
-        if 'interface' not in self.definition['job']:
-            self.definition['job']['interface'] = {}
-
-        # Populate placeholder for errors
-        if 'errors' not in self.definition['job']:
-            self.definition['job']['errors'] = []
-
         self._populate_resource_defaults()
         self._populate_inputs_defaults()
         self._populate_outputs_defaults()
@@ -541,19 +533,12 @@ class SeedManifest(object):
     def _populate_mounts_defaults(self):
         """Populates the default values for any missing mounts values"""
 
-        # Populate placeholder for mounts
-        if 'mounts' not in self.definition['job']['interface']:
-            self.definition['job']['interface']['mounts'] = []
-
-        for mount in self.definition['job']['interface']['mounts']:
+        for mount in self.get_mounts():
             if 'mode' not in mount:
                 mount['mode'] = MODE_RO
 
     def _populate_settings_defaults(self):
         """populates the default values for any missing settings values"""
-
-        if 'settings' not in self.get_interface():
-            self.get_interface()['settings'] = []
 
         for setting in self.get_settings():
             if 'required' not in setting:
@@ -565,23 +550,15 @@ class SeedManifest(object):
     def _populate_inputs_defaults(self):
         """populates the default values for any missing inputs values"""
 
-        # Populate placeholders for inputs
-        if 'inputs' not in self.get_interface():
-            self.get_interface()['inputs'] = {}
-        if 'files' not in self.get_interface()['inputs']:
-            self.get_interface()['inputs']['files'] = []
-        if 'json' not in self.get_interface()['inputs']:
-            self.get_interface()['inputs']['json'] = []
-
         for input_file in self.get_input_files():
             if 'required' not in input_file:
                 input_file['required'] = True
             if 'mediaType' not in input_file:
                 input_file['mediaTypes'] = []
             if 'multiple' not in input_file:
-                input_file.multiple = False
+                input_file['multiple'] = False
             if 'partial' not in input_file:
-                input_file.partial = False
+                input_file['partial'] = False
 
         for input_json in self.get_input_json():
             if 'required' not in input_json:
@@ -589,35 +566,19 @@ class SeedManifest(object):
 
     def _populate_outputs_defaults(self):
         """populates the default values for any missing outputs values"""
-
-        # Populate placeholders for outputs
-        if 'outputs' not in self.get_interface():
-            self.get_interface()['outputs'] = {}
-        if 'files' not in self.get_interface()['outputs']:
-            self.get_interface()['outputs']['files'] = []
-        if 'json' not in self.get_interface()['outputs']:
-            self.get_interface()['outputs']['json'] = []
-
         for output_file in self.get_output_files():
             if 'count' not in output_file:
-                output_file.multiple = False
+                output_file['multiple'] = False
             if 'required' not in output_file:
-                output_file.required = True
+                output_file['required'] = True
 
         for output_json in self.get_output_json():
             if 'required' not in output_json:
-                output_json.required = True
+                output_json['required'] = True
 
     def _populate_resource_defaults(self):
         """populates the default values for any missing shared_resource values"""
-
-        # Populate placeholders for scalar resources
-        if 'resources' not in self.definition['job']:
-            self.definition['job']['resources'] = {}
-        if 'scalar' not in self.definition['job']['resources']:
-            self.definition['job']['resources']['scalar'] = []
-
-        for scalar in self.definition['job']['resources']['scalar']:
+        for scalar in self.get_scalar_resources():
             if 'required' not in scalar:
                 scalar['required'] = True
 
