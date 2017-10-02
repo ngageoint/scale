@@ -13,7 +13,9 @@ from job.seed.exceptions import InvalidSeedMetadataDefinition
 
 logger = logging.getLogger(__name__)
 
-METADATA_SCHEMA = json.load(os.open('metadata.json'))
+SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema/seed.metadata.schema.json')
+with open(SCHEMA_FILENAME) as schema_file:
+    METADATA_SCHEMA = json.load(schema_file)
 METADATA_SUFFIX = '.metadata.json'
 
 
