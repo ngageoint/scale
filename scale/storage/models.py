@@ -217,10 +217,51 @@ class ScaleFileManager(models.Manager):
             wp_file_downloads = wp_dict[wp_id][1]
             workspace.download_files(wp_file_downloads)
 
-    def filter_files(self, ):
-        """"""
-        pass
-  
+    def filter_files(self, started=None, ended=None, time_field=None, file_name=None):
+        """Returns a query for Scale files that filters on the given fields.
+
+        :param started: Query Scale files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scale files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param file_name: Query Scale files with the given file name.
+        :type file_name: str
+        :returns: The Scale file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        # Fetch a list of source files
+        files = ScaleFile.objects.all()
+        files = files.order_by('last_modified')
+        files = files.select_related('workspace')
+        files = files.defer('workspace__json_config')
+        files = files.prefetch_related('countries')
+
+        # Apply file_name filtering if present
+        if file_name:
+            files = files.filter(file_name=file_name)
+            return files
+
+        # Apply time range filtering
+        if started:
+            if time_field == 'source':
+                files = files.filter(source_started__gte=started)
+            elif time_field == 'data':
+                files = files.filter(data_started__gte=started)
+            else:
+                files = files.filter(last_modified__gte=started)
+        if ended:
+            if time_field == 'source':
+                files = files.filter(source_ended__gte=ended)
+            elif time_field == 'data':
+                files = files.filter(data_ended__gte=ended)
+            else:
+                files = files.filter(last_modified__gte=ended)
+
+        return files
+
     def get_files(self, file_ids):
         """Returns the files with the given IDs. The files will have their related workspace field populated.
 
@@ -400,6 +441,8 @@ class ScaleFile(models.Model):
         ('PRODUCT', 'PRODUCT'),
     )
 
+    VALID_TIME_FIELDS = ['source', 'data', 'last_modified']
+
     file_name = models.CharField(max_length=250, db_index=True)
     file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
     media_type = models.CharField(max_length=250)
@@ -417,6 +460,8 @@ class ScaleFile(models.Model):
     # Optional geospatial fields
     data_started = models.DateTimeField(blank=True, null=True, db_index=True)
     data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
     meta_data = django.contrib.postgres.fields.JSONField(default=dict)
@@ -435,8 +480,6 @@ class ScaleFile(models.Model):
     recipe_job = models.CharField(null=True, blank=True, max_length=250)
     recipe_type = models.ForeignKey('recipe.RecipeType', blank=True, null=True, on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
-    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     is_operational = models.BooleanField(default=True)
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)
