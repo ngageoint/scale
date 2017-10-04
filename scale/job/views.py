@@ -25,10 +25,11 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
                              JobExecutionDetailsSerializer)
-from models import Job, JobExecution, JobType
+from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.models import Queue
+from source.models import SourceFile
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -646,8 +647,11 @@ class JobInputFilesView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
         time_field = rest_util.parse_string(request, 'time_field', required=False,
-                                            accepted_values=ProductFile.VALID_TIME_FIELDS)
+                                            accepted_values=SourceFile.VALID_TIME_FIELDS)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
+        job_input = rest_util.parse_string(request, 'job_input', required=False)
+
+        input_files = JobInputFile.objects.filter()
         
         
         try:
