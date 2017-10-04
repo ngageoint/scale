@@ -349,7 +349,7 @@ class ProductFileManager(models.GeoManager):
 
     def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
                             file_name=None, order=None):
-        """Returns a query for the list of soruces that produced the given product file ID.
+        """Returns a query for the list of sources that produced the given product file ID.
 
         :param product_file_id: The product file ID.
         :type product_file_id: int
