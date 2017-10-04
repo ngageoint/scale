@@ -117,4 +117,11 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
 
 class ScaleFileSerializer(ScaleFileBaseSerializer):
     """Converts Scale file model fields to REST output"""
-    workspace = WorkspaceSerializer()
+
+    file_type = serializers.CharField()
+    data_type = serializers.CharField()
+    file_path = serializers.CharField()
+
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
+    
