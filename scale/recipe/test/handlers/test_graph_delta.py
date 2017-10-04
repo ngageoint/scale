@@ -556,6 +556,163 @@ class TestRecipeGraphDelta(TestCase):
         self.assertDictEqual(delta.get_identical_nodes(), expected_identical)
         self.assertSetEqual(delta.get_new_nodes(), expected_new)
 
+    def test_init_changed(self):
+        """Tests creating a RecipeGraphDelta between two graphs where some nodes were changed (and 1 deleted)"""
+
+        definition_a = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }, {
+                'name': 'Recipe Input 2',
+                'type': 'property'
+            }],
+            'jobs': [{
+                'name': 'Job A',
+                'job_type': {
+                    'name': self.job_a.job_type.name,
+                    'version': self.job_a.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input 1',
+                    'job_input': 'Job Input 1',
+                }]
+            }, {
+                'name': 'Job B',
+                'job_type': {
+                    'name': self.job_b.job_type.name,
+                    'version': self.job_b.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input 2',
+                    'job_input': 'Job Input 1',
+                }]
+            }, {
+                'name': 'Job C',
+                'job_type': {
+                    'name': self.job_c.job_type.name,
+                    'version': self.job_c.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input 2',
+                    'job_input': 'Job Input 1',
+                }]
+            }, {
+                'name': 'Job D',
+                'job_type': {
+                    'name': self.job_d.job_type.name,
+                    'version': self.job_d.job_type.version,
+                },
+                'dependencies': [{
+                    'name': 'Job A',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 1',
+                    }],
+                }, {
+                    'name': 'Job B',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 2',
+                    }],
+                }]
+            }, {
+                'name': 'Job E',
+                'job_type': {
+                    'name': self.job_d.job_type.name,
+                    'version': self.job_d.job_type.version,
+                },
+                'dependencies': [{
+                    'name': 'Job D',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 1',
+                    }],
+                }]
+            }]
+        }
+        graph_a = RecipeDefinition(definition_a).get_graph()
+
+        definition_b = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }, {
+                'name': 'Recipe Input 2',
+                'type': 'property'
+            }],
+            'jobs': [{
+                'name': 'Job A',
+                'job_type': {
+                    'name': self.job_a.job_type.name,
+                    'version': self.job_a.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input 1',
+                    'job_input': 'Job Input 1',
+                }]
+            }, {
+                'name': 'Job B',
+                'job_type': {
+                    'name': self.job_b.job_type.name,
+                    'version': self.job_b.job_type.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input 2',
+                    'job_input': 'Job Input 1',
+                }]
+            }, {
+                'name': 'Job D',
+                'job_type': {
+                    'name': self.job_d.job_type.name,
+                    'version': 'new_version',
+                },
+                'dependencies': [{
+                    'name': 'Job A',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 1',
+                    }],
+                }, {
+                    'name': 'Job B',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 2',
+                    }],
+                }]
+            }, {
+                'name': 'Job E',
+                'job_type': {
+                    'name': self.job_d.job_type.name,
+                    'version': self.job_d.job_type.version,
+                },
+                'dependencies': [{
+                    'name': 'Job D',
+                    'connections': [{
+                        'output': 'Job Output 1',
+                        'input': 'Job Input 1',
+                    }],
+                }]
+            }]
+        }
+        graph_b = RecipeDefinition(definition_b).get_graph()
+
+        delta = RecipeGraphDelta(graph_a, graph_b)
+
+        expected_identical = {'Job A': 'Job A', 'Job B': 'Job B'}
+        expected_changed = {'Job D': 'Job D', 'Job E': 'Job E'}
+        expected_deleted = {'Job C'}
+        expected_new = set()
+        self.assertTrue(delta.can_be_reprocessed)
+        self.assertDictEqual(delta.get_changed_nodes(), expected_changed)
+        self.assertSetEqual(delta.get_deleted_nodes(), expected_deleted)
+        self.assertDictEqual(delta.get_identical_nodes(), expected_identical)
+        self.assertSetEqual(delta.get_new_nodes(), expected_new)
+
     def test_reprocess_identical_node(self):
         """Tests calling RecipeGraphDelta.reprocess_identical_node() to indicate identical nodes that should be marked
         as changed"""

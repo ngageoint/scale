@@ -33,7 +33,7 @@ class RecipeGraphDelta(object):
             return
 
         self._match_identical_nodes()
-        # TODO: add code to actually check for changed nodes (nodes with changed versions, parents, or inputs)
+        self._match_changed_nodes()
         self._new_nodes = self._unresolved_b_nodes
         self._deleted_nodes = self._unresolved_a_nodes
         self._unresolved_a_nodes = set()
@@ -144,6 +144,18 @@ class RecipeGraphDelta(object):
             return False  # A input not defined for B
 
         return True
+
+    def _match_changed_nodes(self):
+        """Compares graphs A and B and matches all nodes that are "changed" (node B supersedes node A). This should be
+        done after matching all identical nodes.
+        """
+
+        # Currently "changed" jobs are detected as nodes with the same job_name but are not identical
+        for job_name in set(self._unresolved_b_nodes):
+            if job_name in self._unresolved_a_nodes:
+                self._changed_nodes[job_name] = job_name
+                self._unresolved_a_nodes.remove(job_name)
+                self._unresolved_b_nodes.remove(job_name)
 
     def _match_identical_nodes(self):
         """Compares graphs A and B and matches all nodes that are identical
