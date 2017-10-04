@@ -5,7 +5,7 @@ import logging
 
 import rest_framework.status as status
 from django.http.response import Http404
-from rest_framework.generics import GenericAPIView, ListCreateAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -13,10 +13,34 @@ from rest_framework.views import APIView
 import util.rest as rest_util
 from util.rest import BadParameter
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
-from storage.models import Workspace
-from storage.serializers import WorkspaceDetailsSerializer, WorkspaceSerializer
+from storage.models import ScaleFile, Workspace
+from storage.serializers import ScaleFileSerializer, WorkspaceDetailsSerializer, WorkspaceSerializer
 
 logger = logging.getLogger(__name__)
+
+
+class FilesView(ListAPIView):
+    """This view is the endpoint for retrieving detailed information about files"""
+    queryset = ScaleFile.objects.all()
+    serializer_class = ScaleFileSerializer
+
+    def get(self, request):
+        """
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
+        file_name = rest_util.parse_string(request, 'file_name', required=False)
+
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+
+        page = self.paginate_queryset(files)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class WorkspacesView(ListCreateAPIView):
