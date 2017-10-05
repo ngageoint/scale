@@ -116,7 +116,7 @@ class CommandMessageManager(object):
         """
 
         command = self._extract_command(message)
-        logger.info('Processing message of type %s...', command.type)
+        logger.info('Processing message of type %s', command.type)
         success = command.execute()
 
         if not success:
@@ -124,6 +124,8 @@ class CommandMessageManager(object):
 
         # If execute is successful, we need to fire off any downstream messages
         self._send_downstream(command.new_messages)
+
+        logger.info('Successfully completed message of type %s', command.type)
 
     def _send_downstream(self, messages):
         """Send any required downstream messages following a CommandMessage.execute

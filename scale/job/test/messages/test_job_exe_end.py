@@ -5,6 +5,7 @@ from django.utils.timezone import now
 from django.test import TransactionTestCase
 
 import job.test.utils as job_test_utils
+from error.models import CACHED_ERRORS
 from job.messages.job_exe_end import CreateJobExecutionEnd
 from job.models import JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
@@ -16,6 +17,9 @@ class TestCreateJobExecutionEnd(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        # Clear error cache so tests work correctly
+        CACHED_ERRORS.clear()
 
     def test_json(self):
         """Tests coverting a CreateJobExecutionEnd message to and from JSON"""
