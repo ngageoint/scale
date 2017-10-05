@@ -254,11 +254,11 @@ class ScaleFileManager(models.Manager):
                 files = files.filter(last_modified__gte=started)
         if ended:
             if time_field == 'source':
-                files = files.filter(source_ended__gte=ended)
+                files = files.filter(source_ended__lte=ended)
             elif time_field == 'data':
-                files = files.filter(data_ended__gte=ended)
+                files = files.filter(data_ended__lte=ended)
             else:
-                files = files.filter(last_modified__gte=ended)
+                files = files.filter(last_modified__lte=ended)
 
         return files
 

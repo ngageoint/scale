@@ -23,7 +23,7 @@ class TestFilesView(TestCase):
         self.f1_source_started = dt.datetime(2016, 1, 1, tzinfo=utc)
         self.f1_source_ended = dt.datetime(2016, 1, 2, tzinfo=utc)
         self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
-                                                    source_ended=self.f1_source_ended, 
+                                                    source_ended=self.f1_source_ended,
                                                     last_modified=self.f1_last_modified)
 
         self.f2_file_name = 'qaz.bar'
@@ -31,7 +31,7 @@ class TestFilesView(TestCase):
         self.f2_source_started = dt.datetime(2016, 1, 2, tzinfo=utc)
         self.f2_source_ended = dt.datetime(2016, 1, 3, tzinfo=utc)
         self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
-                                                    source_ended=self.f2_source_ended, 
+                                                    source_ended=self.f2_source_ended,
                                                     last_modified=self.f2_last_modified)
 
     def test_file_name_successful(self):
@@ -47,7 +47,7 @@ class TestFilesView(TestCase):
 
         self.assertEqual(self.f1_file_name, result[0]['file_name'])
         self.assertEqual('2016-01-01T00:00:00Z', result[0]['source_started'])
-    
+
     def test_file_name_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
 
@@ -58,6 +58,19 @@ class TestFilesView(TestCase):
         results = json.loads(response.content)
         result = results['results']
         self.assertEqual(len(result), 0)
+
+    def test_time_successful(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = rest_util.get_url('/files/?started=%s&ended=%s&time_field=%s' % ('2016-01-01T00:00:00Z',
+                                                                               '2016-01-03T00:00:00Z',
+                                                                               'source'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 2)
 
 
 class TestWorkspacesView(TestCase):
