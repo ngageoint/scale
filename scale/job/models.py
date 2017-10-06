@@ -1776,6 +1776,42 @@ class JobInputFile(models.Model):
     job_input = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
 
+    def get_job_input_files(self, job_id, started=None, ended=None, time_field=None, file_name=None, job_input=None):
+        """Returns a query for Input Files filtered on the given fields.
+
+        :param job_id: The job ID
+        :type job_id: int
+        :param started: Query Scale files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scale files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param file_name: Query Scale files with the given file name.
+        :type file_name: str
+        :param job_input: The name of the job input that the file was passed into
+        :type job_input: str
+        :returns: The Scale file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        job_input_files = JobInputFile.filter(job__id=job_id)
+
+        # if not input_files:
+        #     job_data = Job.object('data', flat=True).filter(id=job_id)
+        #     job_input_files =
+
+        if job_input:
+            job_input_files = job_input_files.filter(job_input=job_input)
+
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+
+        files = files.filter(id__in=job_input_files)
+
+        return files
+
+
     class Meta(object):
         """meta information for the db"""
         db_table = 'job_input_file'

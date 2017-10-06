@@ -596,6 +596,43 @@ class RecipeInputFile(models.Model):
     recipe_input = models.CharField(blank=True, null=True, max_length=250)
     created = models.DateTimeField(auto_now_add=True)
 
+    def get_recipe_input_files(self, recipe_id, started=None, ended=None, time_field=None, file_name=None,
+                               recipe_input=None):
+        """Returns a query for Input Files filtered on the given fields.
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param started: Query Scale files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scale files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param file_name: Query Scale files with the given file name.
+        :type file_name: str
+        :param recipe_input: The name of the job input that the file was passed into
+        :type recipe_input: str
+        :returns: The Scale file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        recipe_input_files = RecipeInputFile.filter(recipe__id=recipe_id)
+
+        # if not input_files:
+        #     job_data = Job.object('data', flat=True).filter(id=job_id)
+        #     job_input_files =
+
+        if recipe_input:
+            recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)
+
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+
+        files = files.filter(id__in=recipe_input_files)
+
+        return files
+
+    
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_input_file'
