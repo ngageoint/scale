@@ -17,7 +17,7 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
+
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
@@ -279,49 +279,12 @@ class SeedManifest(object):
         # For compliance with Seed we must capture all files directly from the output directory.
         # The capture expressions can be found within interface.outputs.files.pattern
 
-
-        output_files = {}
-
-        for output_file in self.get_output_files():
-            # lookup by pattern
-            path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, output_file.pattern)
-            results = glob.glob(path_pattern)
-
-            # Handle required validation
-            if output_file.required and len(results) == 0:
-                raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
-                                         " key '%s'." % (output_file.pattern, output_file.name))
-
-            # Check against count to verify we are matching the files as defined.
-            if  output_file.count is not '*':
-                count = int(output_file.count)
-                if len(results) is not count:
-                    raise OutputCaptureError("Pattern matched %i, which does not match the output count of %i "
-                                             "identified in interface." % (len(results), count))
-
-            file_tuples = []
-            # For files that are detected, check to see if there is side-car metadata files
-            for matched_file in results:
-                ouput_file_key = output_file.name
-
-                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
-                if os.path.isfile(metadata_file):
-                    with open(metadata_file) as metadata_file_handle:
-                        metadata = SeedMetadata(metadata_file_handle.read())
-
-                        geometry = metadata.get_geometry()
-                        timestamp = metadata.get_time()
-
-                if geometry and timestamp:
-                    file_tuples.append((matched_file,  output_file.media_type, geometry, timestamp),)
-                else:
-                    file_tuples.append((matched_file,  output_file.media_type),)
-
-            output_files[ouput_file_key] = file_tuples
+        output_files = job_data.capture_output_files(self.get_output_files())
 
         # TODO: implement JSON capture from seed.ouputs.json
 
         return job_data.store_output_data_files(output_files, job_exe)
+
 
     def perform_pre_steps(self, job_data, job_environment):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.

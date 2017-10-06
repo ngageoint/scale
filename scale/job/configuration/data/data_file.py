@@ -58,9 +58,9 @@ class AbstractDataFileStore(object):
     def store_files(self, data_files, input_file_ids, job_exe):
         """Stores the given data files and writes them to the given workspaces.
 
-        :param data_files: Dict with workspace ID mapping to a list of tuples with absolute local file paths and media
-            type (media type is optionally None)
-        :type data_files: dict of int -> list of tuple(str, str)
+        :param data_files: Dict with workspace ID mapping to a list of ProductFileMetadata elements with absolute local
+            file paths and media type (media type is optionally None)
+        :type data_files: dict of int -> list of ProductFileMetadata elements
         :param input_file_ids: Set of input file IDs
         :type input_file_ids: set of long
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the files

@@ -1,6 +1,7 @@
 """Defines the data needed for executing a job"""
 from __future__ import unicode_literals
 
+import glob
 from abc import ABCMeta
 
 import logging
@@ -9,7 +10,11 @@ from numbers import Integral
 
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
+from job.configuration.results.exceptions import OutputCaptureError
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from job.seed.results.job_results import JobResults
+from product.models import ProductFileMetadata
 
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
@@ -36,11 +41,11 @@ class ValidationWarning(object):
         self.details = details
 
 
-class SeedFile(object):
+class SeedFiles(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, data):
-        """Create a SeedFile from dict input equivalent
+        """Create a SeedFiles from dict input equivalent
 
         :param data:
         :type data: dict
@@ -61,7 +66,7 @@ class SeedFile(object):
         return self.dict['required']
 
 
-class SeedInputFile(SeedFile):
+class SeedInputFiles(SeedFiles):
     """Concrete class for Seed input files elements"""
     @property
     def media_types(self):
@@ -72,7 +77,7 @@ class SeedInputFile(SeedFile):
         return self.dict['partial']
 
 
-class SeedOutputFile(SeedFile):
+class SeedOutputFiles(SeedFiles):
     """Concrete class for Seed ouput files elements"""
 
     @property
@@ -82,6 +87,28 @@ class SeedOutputFile(SeedFile):
     @property
     def pattern(self):
         return self.dict['pattern']
+
+    def get_files(self):
+        """Get a list of absolute paths to files following job execution
+
+        :return: files matched by pattern defined for object
+        :rtype: [str]
+        :raises: OutputCaptureError
+        """
+        path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, self.pattern)
+        results = glob.glob(path_pattern)
+
+        # Handle required validation
+        if self.required and len(results) == 0:
+            raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
+                                     " key '%s'." % (self.pattern, self.name))
+
+        # Check against multiple to verify we are matching the files as defined.
+        if not self.multiple and len(results) > 1:
+            raise OutputCaptureError("Pattern matched %i, which is not consistent with a false value for 'multiple'." %
+                                     (len(results), ))
+
+        return results
 
 
 class SeedJson(object):
@@ -238,6 +265,59 @@ class JobData(object):
         prop_input = {'name': input_name, 'value': value}
         self.data_dict['input_data'].append(prop_input)
         self.data_inputs_by_name[input_name] = prop_input
+
+    @staticmethod
+    def capture_output_files(output_files):
+        """Evaluate files patterns and capture any available side-car metadata associated with matched files
+
+        :param output_files: interface definition of Seed output files that should be captured
+        :type output_files: dict
+        :return: collection of files name keys mapped to a ProductFileMetadata list
+        :rtype: dict
+        """
+
+        seed_output_files = [SeedOutputFiles(x) for x in output_files]
+
+        # Dict of detected files and associated metadata
+        captured_files = {}
+
+        # Iterate over each files object
+        for output_file in seed_output_files:
+            # For files obj that are detected, handle results (may be multiple)
+            product_files = []
+            for matched_file in output_file.get_files():
+
+                product_file_meta = ProductFileMetadata(output_file.name, matched_file, output_file.media_type)
+
+                # check to see if there is side-car metadata files
+                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
+
+                # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
+                if os.path.isfile(metadata_file):
+                    with open(metadata_file) as metadata_file_handle:
+                        metadata = SeedMetadata(metadata_file_handle.read())
+
+                        # Create a GeoJSON object, as the present Seed Metadata schema only uses the Geometry fragment
+                        # TODO: Update if Seed schema updates.  Ref: https://github.com/ngageoint/seed/issues/95
+                        product_file_meta.geojson = \
+                            {
+                                'type': 'Feature',
+                                'geometry': metadata.get_geometry()
+                            }
+
+                        timestamp = metadata.get_time()
+
+                        # Seed Metadata Schema defines start / end as required
+                        # so we do not need to check here.
+                        if timestamp:
+                            product_file_meta.data_start = timestamp['start']
+                            product_file_meta.data_end = timestamp['end']
+
+                product_files.append(product_file_meta)
+
+            captured_files[output_file.name] = product_files
+
+        return captured_files
 
     def get_all_properties(self):
         """Retrieves all properties from this job data and returns them in ascending order of their names

@@ -372,10 +372,8 @@ class JobData(object):
     def store_output_data_files(self, data_files, job_exe):
         """Stores the given data output files
 
-        :param data_files: Dict with each file parameter name mapping to a tuple of absolute local file path and media
-            type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
-            parameter
-        :type data_files: {string: tuple(string, string)} or [tuple(string, string)]
+        :param data_files: Dict with each file parameter name mapping to a list of ProductFileMetadata namedtuples
+        :type data_files: {string: [`ProductFileMetadata`]}
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
         :type job_exe: :class:`job.models.JobExecution`
