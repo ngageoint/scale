@@ -2726,10 +2726,26 @@ class TestJobExecutionSpecificLogView(TestCase):
 class TestJobInputFilesView(TestCase):
 
     def setUp(self):
-        
+
+        self.f1_file_name = 'foo.bar'
+        self.f1_last_modified = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f1_source_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
+                                                    source_ended=self.f1_source_ended,
+                                                    last_modified=self.f1_last_modified)
+
+        self.f2_file_name = 'qaz.bar'
+        self.f2_last_modified = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.f2_source_started = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
+                                                    source_ended=self.f2_source_ended,
+                                                    last_modified=self.f2_last_modified)
+
         self.country = storage_test_utils.create_country()
-        self.file1 = storage_test_utils.create_file(countries=[self.country])
-        self.file2 = storage_test_utils.create_file(countries=[self.country])
+        self.file3 = storage_test_utils.create_file(file_name='some.file', countries=[self.country])
+        self.file4 = storage_test_utils.create_file(file_name='some_other.file', countries=[self.country])
 
         job_interface = {
             'version': '1.0',
@@ -2809,11 +2825,11 @@ class TestJobInputFilesView(TestCase):
             self.product = None
 
     def test_successful_file(self):
-        """Tests successfully calling the job details view for one input/output file."""
+        """Tests successfully calling the job input files view"""
 
         url = rest_util.get_url('/jobs/%i/input_files/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        print result
+        self.assertEqual(len(result), 2)
