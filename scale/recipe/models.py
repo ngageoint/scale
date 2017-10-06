@@ -618,13 +618,22 @@ class RecipeInputFile(models.Model):
 
         recipe_input_files = RecipeInputFile.filter(recipe__id=recipe_id)
 
-        if recipe_input:
-            recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)
+        if recipe_input_files:
+            if recipe_input:
+                recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                file_name=file_name)
 
-        files = files.filter(id__in=recipe_input_files)
+            files = files.filter(id__in=recipe_input_files)
+        
+        else:
+            
+
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                file_name=file_name)
+
+
 
         return files
 

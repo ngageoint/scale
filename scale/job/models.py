@@ -1757,24 +1757,8 @@ class JobExecution(models.Model):
         db_table = 'job_exe'
 
 
-class JobInputFile(models.Model):
-    """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
-    accept multiple input files.
-
-    :keyword job: The job that the input file is linked to
-    :type job: :class:`django.db.models.ForeignKey`
-    :keyword input_file: The input file that is linked to the job
-    :type input_file: :class:`django.db.models.ForeignKey`
-    :keyword job_input: The name of the job input that the file was passed into
-    :type job_input: :class:`django.db.models.CharField`
-    :keyword created: When this link was created
-    :type created: :class:`django.db.models.DateTimeField`
-    """
-
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
-    input_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
-    job_input = models.CharField(max_length=250)
-    created = models.DateTimeField(auto_now_add=True)
+class JobInputFileManager(models.Manager):
+    """Provides additional methods for handleing JobInputFiles"""
 
     def get_job_input_files(self, job_id, started=None, ended=None, time_field=None, file_name=None, job_input=None):
         """Returns a query for Input Files filtered on the given fields.
@@ -1795,28 +1779,49 @@ class JobInputFile(models.Model):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        job_input_files = JobInputFile.filter(job__id=job_id)
+        job_input_files = JobInputFile.objects.filter(job__id=job_id)
 
         # Get input_file data from JobInputData model
         if job_input_files:
             if job_input:
                 job_input_files = job_input_files.filter(job_input=job_input)
 
-            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                                   file_name=file_name)
-
         # Reach back to the job_data to get input_file data for legacy jobs
         else:
             job_data = Job.objects.get(pk=job_id).get_job_data()
             job_input_files = job_data.get_input_file_info()
+
             if job_input:
-                job_input_files = [f_id for name, f_id in job_input_files.items() if name == job_input_files]
+                job_input_files = [f_id for f_id, name in job_input_files if name == job_input_files]
+            else:
+                job_input_files = [f_id for f_id, name in job_input_files]
 
-            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                                   file_name=file_name)
-
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
         files = files.filter(id__in=job_input_files)
         return files
+
+
+class JobInputFile(models.Model):
+    """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
+    accept multiple input files.
+
+    :keyword job: The job that the input file is linked to
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword input_file: The input file that is linked to the job
+    :type input_file: :class:`django.db.models.ForeignKey`
+    :keyword job_input: The name of the job input that the file was passed into
+    :type job_input: :class:`django.db.models.CharField`
+    :keyword created: When this link was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    input_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    job_input = models.CharField(max_length=250)
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = JobInputFileManager()
 
     class Meta(object):
         """meta information for the db"""
