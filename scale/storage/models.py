@@ -234,7 +234,6 @@ class ScaleFileManager(models.Manager):
 
         # Fetch a list of source files
         files = ScaleFile.objects.all()
-        files = files.order_by('last_modified')
         files = files.select_related('workspace')
         files = files.defer('workspace__json_config')
         files = files.prefetch_related('countries')
@@ -260,6 +259,7 @@ class ScaleFileManager(models.Manager):
             else:
                 files = files.filter(last_modified__lte=ended)
 
+        files = files.order_by('last_modified')
         return files
 
     def get_files(self, file_ids):

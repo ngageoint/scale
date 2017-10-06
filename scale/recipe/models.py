@@ -610,17 +610,13 @@ class RecipeInputFile(models.Model):
         :type time_field: string
         :param file_name: Query Scale files with the given file name.
         :type file_name: str
-        :param recipe_input: The name of the job input that the file was passed into
+        :param recipe_input: The name of the recipe input that the file was passed into
         :type recipe_input: str
         :returns: The Scale file query
         :rtype: :class:`django.db.models.QuerySet`
         """
 
         recipe_input_files = RecipeInputFile.filter(recipe__id=recipe_id)
-
-        # if not input_files:
-        #     job_data = Job.object('data', flat=True).filter(id=job_id)
-        #     job_input_files =
 
         if recipe_input:
             recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)

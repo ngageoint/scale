@@ -101,7 +101,7 @@ class FileAncestryLinkManager(models.Manager):
 
                 if job_recipe:
                     link.recipe = job_recipe.recipe
-                else: 
+                else:
                     link.recipe = None
 
                 # Set references to the ancestor execution
@@ -243,7 +243,7 @@ class ProductFileManager(models.GeoManager):
                                   'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
                                   'job_exe__stdout', 'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                   'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__data', 'recipe_type__definition', 
+                                  'job_type__error_mapping', 'recipe__data', 'recipe_type__definition',
                                   'batch__definition')
         products = products.prefetch_related('countries')
 
@@ -299,8 +299,8 @@ class ProductFileManager(models.GeoManager):
         return products
 
     def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None, 
-                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None, 
+                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None,
+                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                      batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
 
@@ -342,9 +342,9 @@ class ProductFileManager(models.GeoManager):
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
-                                    job_ids=None, is_operational=is_operational, is_published=is_published, 
-                                    is_superseded=False, file_name=file_name, job_output=job_output, 
-                                    recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, 
+                                    job_ids=None, is_operational=is_operational, is_published=is_published,
+                                    is_superseded=False, file_name=file_name, job_output=job_output,
+                                    recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
 
     def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
