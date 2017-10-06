@@ -2721,3 +2721,99 @@ class TestJobExecutionSpecificLogView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
+
+
+class TestJobInputFilesView(TestCase):
+
+    def setUp(self):
+        
+        self.country = storage_test_utils.create_country()
+        self.file1 = storage_test_utils.create_file(countries=[self.country])
+        self.file2 = storage_test_utils.create_file(countries=[self.country])
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'property',
+                'name': 'input_field',
+            }, {
+                'type': 'file',
+                'name': 'input_file',
+            }, {
+                'type': 'file',
+                'name': 'other_input_file',
+            }],
+            'output_data': [{
+                'type': 'file',
+                'name': 'output_file',
+            }, {
+                'type': 'files',
+                'name': 'output_files',
+            }],
+            'shared_resources': [],
+        }
+
+        job_data = {
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': self.file1.id,
+            }, {
+                'name': 'other_input_file',
+                'file_id': self.file2.id,
+            }]
+        }
+        job_results = {
+            'output_data': []
+        }
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
+        self.job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
+
+        # Attempt to stage related models
+        self.job_exe = job_test_utils.create_job_exe(job=self.job)
+
+        try:
+            import recipe.test.utils as recipe_test_utils
+            definition = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'Recipe Input',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'jobs': [{
+                    'name': 'Job 1',
+                    'job_type': {
+                        'name': self.job_type.name,
+                        'version': self.job_type.version,
+                    },
+                    'recipe_inputs': [{
+                        'recipe_input': 'Recipe Input',
+                        'job_input': 'input_files',
+                    }]
+                }]
+            }
+            self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+            self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+            self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job=self.job, job_name='Job 1')
+        except:
+            self.recipe_type = None
+            self.recipe = None
+            self.recipe_job = None
+
+        try:
+            import product.test.utils as product_test_utils
+            self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
+        except:
+            self.product = None
+
+    def test_successful_file(self):
+        """Tests successfully calling the job details view for one input/output file."""
+
+        url = rest_util.get_url('/jobs/%i/input_files/' % self.job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        print result
