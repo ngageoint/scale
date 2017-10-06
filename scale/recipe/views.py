@@ -382,8 +382,8 @@ class RecipeInputFilesView(ListAPIView):
                                                                time_field=time_field, file_name=file_name,
                                                                recipe_input=recipe_input)
 
-        page = self.paginate_queryset(files, many=True)
-        serializer = self.get_serializer(page)
+        page = self.paginate_queryset(files)
+        serializer = self.get_serializer(page, many=True)
         return Response(serializer.data)
 
 
