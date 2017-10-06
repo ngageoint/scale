@@ -29,7 +29,8 @@ from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.models import Queue
-from source.models import SourceFile
+from storage.models import ScaleFile
+from storage.serializers import ScaleFileSerializer
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -614,26 +615,48 @@ class JobDetailsView(GenericAPIView):
 
 class JobInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a job."""
-    queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
+    queryset = JobInputFile.objects.all()
+    serializer_class = ScaleFileSerializer
 
     def get(self, request, job_id):
         """Retrieve detailed information about the input files for a job
 
         -*-*-
         parameters:
-            - name: job_id
-            description: ID of job that files need to be fetched for
+          - name: job_id
+            in: path
+            description: The ID of the job the file is associated with
             required: true
-            type: integer
-            paramType: path
+            example: 67302
+          - name: started
+            in: query
+            description: The start time of a start/end time range
+            required: false
+            example: 2016-01-01T00:00:00Z
+          - name: ended
+            in: query
+            description: The end time of a start/end time range
+            required: false
+            example: 2016-01-02T00:00:00Z
+          - name: time_field
+            in: query
+            description: 'The database time field to apply `started` and `ended` time filters
+                          [Valid fields: `source`, `data`, `last_modified`]'
+            required: false
+            example: source
+          - name: file_name
+            in: query
+            description: The name of a specific file in Scale
+            required: false
+            example: some_file_i_need_to_find.zip
+          - name: job_input
+            in: query
+            description: The name of the input the file is passed to in a job
+            required: false
+            example: input_1
         responses:
-            "200":
-                description:
-                content:
-                    application/json:
-                        examples:
-                            $ref: JOB_CONFIGURATION_SCHEMA
+          '200':
+            description: A JSON list of files with metadata
         -*-*-
 
         :param request: the HTTP GET request
@@ -643,25 +666,22 @@ class JobInputFilesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
         time_field = rest_util.parse_string(request, 'time_field', required=False,
-                                            accepted_values=SourceFile.VALID_TIME_FIELDS)
+                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
         job_input = rest_util.parse_string(request, 'job_input', required=False)
 
-        input_files = JobInputFile.objects.filter()
-        
-        
-        try:
-            input_files = Job.objects.get_details(job_id)
-        except Job.DoesNotExist:
-            raise Http404
+        files = JobInputFile.objects.get_job_input_files(job_id, started=started, ended=ended, time_field=time_field,
+                                                         file_name=file_name, job_input=job_input)
 
-        serializer = self.get_serializer(job)
+        page = self.paginate_queryset(files, many=True)
+        serializer = self.get_serializer(page)
         return Response(serializer.data)
-        
+
 
 class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""

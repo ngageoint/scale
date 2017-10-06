@@ -25,7 +25,40 @@ class FilesView(ListAPIView):
     serializer_class = ScaleFileSerializer
 
     def get(self, request):
-        """
+        """Retrieves a list of files based of filters and returns it in JSON form
+
+        -*-*-
+        parameters:
+          - name: started
+            in: query
+            description: The start time of a start/end time range
+            required: false
+            example: 2016-01-01T00:00:00Z
+          - name: ended
+            in: query
+            description: The end time of a start/end time range
+            required: false
+            example: 2016-01-02T00:00:00Z
+          - name: time_field
+            in: query
+            description: 'The database time field to apply `started` and `ended` time filters
+                          [Valid fields: `source`, `data`, `last_modified`]'
+            required: false
+            example: source
+          - name: file_name
+            in: query
+            description: The name of a specific file in Scale
+            required: false
+            example: some_file_i_need_to_find.zip
+        responses:
+          '200':
+            description: A JSON list of files with metadata
+        -*-*-
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
         """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
