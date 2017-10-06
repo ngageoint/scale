@@ -1,6 +1,8 @@
 """Defines the data needed for executing a job"""
 from __future__ import unicode_literals
 
+from abc import ABCMeta
+
 import logging
 import os
 from numbers import Integral
@@ -32,6 +34,89 @@ class ValidationWarning(object):
         """
         self.key = key
         self.details = details
+
+
+class SeedFile(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, data):
+        """Create a SeedFile from dict input equivalent
+
+        :param data:
+        :type data: dict
+        """
+
+        self.dict = data
+
+    @property
+    def name(self):
+        return self.dict['name']
+
+    @property
+    def multiple(self):
+        return self.dict['multiple']
+
+    @property
+    def required(self):
+        return self.dict['required']
+
+
+class SeedInputFile(SeedFile):
+    """Concrete class for Seed input files elements"""
+    @property
+    def media_types(self):
+        return self.dict['mediaTypes']
+
+    @property
+    def partial(self):
+        return self.dict['partial']
+
+
+class SeedOutputFile(SeedFile):
+    """Concrete class for Seed ouput files elements"""
+
+    @property
+    def media_type(self):
+        return self.dict['mediaType']
+
+    @property
+    def pattern(self):
+        return self.dict['pattern']
+
+
+class SeedJson(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, data):
+        """Create a SeedJson from dict input equivalent
+
+        :param data:
+        :type data: dict
+        """
+
+        self.dict = data
+
+    @property
+    def name(self):
+        return self.dict['name']
+
+    @property
+    def type(self):
+        return self.dict['type']
+
+    @property
+    def required(self):
+        return self.dict['required']
+
+
+class SeedInputJson(SeedJson):
+    """Concrete class for Seed input JSON elements"""
+    pass
+
+
+class SeedOuputJson(SeedJson):
+    """Concrete class for Seed output JSON elements"""
+    pass
 
 
 class JobData(object):

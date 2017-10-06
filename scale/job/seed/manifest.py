@@ -25,10 +25,7 @@ logger = logging.getLogger(__name__)
 MODE_RO = 'ro'
 MODE_RW = 'rw'
 
-SeedInputFile = namedtuple('SeedInputFile', ['name', 'media_types', 'multiple', 'required', 'partial'])
-SeedInputJson = namedtuple('SeedInputJson', ['name', 'type', 'required'])
-SeedOutputFile = namedtuple('SeedOuputFile', ['name', 'media_type', 'multiple', 'pattern', 'required'])
-SeedOutputJson = namedtuple('SeedOuputFile', ['name', 'type', 'required'])
+
 
 SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema/seed.manifest.schema.json')
 with open(SCHEMA_FILENAME) as schema_file:
