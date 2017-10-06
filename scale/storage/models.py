@@ -218,7 +218,7 @@ class ScaleFileManager(models.Manager):
             workspace.download_files(wp_file_downloads)
 
     def filter_files(self, started=None, ended=None, time_field=None, file_name=None):
-        """Returns a query for Scale files that filters on the given fields.
+        """Returns a query for Scale files that is filtered on the given fields.
 
         :param started: Query Scale files updated after this amount of time.
         :type started: :class:`datetime.datetime`

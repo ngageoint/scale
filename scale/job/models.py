@@ -1797,20 +1797,26 @@ class JobInputFile(models.Model):
 
         job_input_files = JobInputFile.filter(job__id=job_id)
 
-        # if not input_files:
-        #     job_data = Job.object('data', flat=True).filter(id=job_id)
-        #     job_input_files =
+        # Get input_file data from JobInputData model
+        if job_input_files:
+            if job_input:
+                job_input_files = job_input_files.filter(job_input=job_input)
 
-        if job_input:
-            job_input_files = job_input_files.filter(job_input=job_input)
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                   file_name=file_name)
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
+        # Reach back to the job_data to get input_file data for legacy jobs
+        else:
+            job_data = Job.objects.get(pk=job_id).get_job_data()
+            job_input_files = job_data.get_input_file_info()
+            if job_input:
+                job_input_files = [f_id for name, f_id in job_input_files.items() if name == job_input_files]
+
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                   file_name=file_name)
 
         files = files.filter(id__in=job_input_files)
-
         return files
-
 
     class Meta(object):
         """meta information for the db"""
