@@ -22,7 +22,6 @@ from trigger.models import TriggerEvent, TriggerRule
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -501,7 +500,8 @@ class RecipeManager(models.Manager):
 
 
 class Recipe(models.Model):
-    """Represents a recipe to be run on the cluster
+    """Represents a recipe to be run on the cluster. A model lock must be obtained using select_for_update() on any
+    recipe model before adding new jobs to it or superseding it.
 
     :keyword recipe_type: The type of this recipe
     :type recipe_type: :class:`django.db.models.ForeignKey`

@@ -47,7 +47,6 @@ MIN_DISK = 0.0
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -627,6 +626,18 @@ class JobManager(models.Manager):
             self.filter(id__in=jobs_to_update).update(status='CANCELED', error=None, node=None, last_status_change=when,
                                                       last_modified=timezone.now())
 
+    def update_jobs_to_pending(self, job_ids, when):
+        """Updates the jobs with the given IDs to the PENDING status. The caller must have obtained model locks on the
+        job models.
+
+        :param job_ids: A list of job IDs to update
+        :type job_ids: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(status='PENDING', last_status_change=when, last_modified=timezone.now())
+
     def update_jobs_to_running(self, job_ids, when):
         """Updates the jobs with the given IDs to the RUNNING status. The caller must have obtained model locks on the
         job models.
@@ -719,8 +730,8 @@ class JobManager(models.Manager):
 
 
 class Job(models.Model):
-    """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-    model using select_for_update().
+    """Represents a job to be run on the cluster. A model lock must be obtained using select_for_update() on any job
+    model before updating its status or superseding it.
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -892,6 +903,15 @@ class Job(models.Model):
 
         resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
         return resources
+
+    def has_been_queued(self):
+        """Indicates whether this job has been queued at least once
+
+        :returns: True if the job has been queued at least once, false otherwise.
+        :rtype: bool
+        """
+
+        return self.num_exes > 0
 
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
