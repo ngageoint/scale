@@ -605,6 +605,18 @@ class JobManager(models.Manager):
 
         self.filter(id__in=job_ids).update(node_id=node_id, started=when, last_modified=timezone.now())
 
+    def update_jobs_to_blocked(self, job_ids, when):
+        """Updates the jobs with the given IDs to the BLOCKED status. The caller must have obtained model locks on the
+        job models.
+
+        :param job_ids: A list of job IDs to update
+        :type job_ids: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(status='BLOCKED', last_status_change=when, last_modified=timezone.now())
+
     @transaction.atomic
     def update_jobs_to_canceled(self, job_ids, when):
         """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
