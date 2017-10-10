@@ -624,7 +624,7 @@ class JobManager(models.Manager):
 
         if jobs_to_update:
             # Update job models in database
-            self.filter(id__in=jobs_to_update).update(status='CANCELED', last_status_change=when,
+            self.filter(id__in=jobs_to_update).update(status='CANCELED', error=None, node=None, last_status_change=when,
                                                       last_modified=timezone.now())
 
     def update_jobs_to_running(self, job_ids, when):
