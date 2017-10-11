@@ -384,7 +384,7 @@ class RecipeInputFilesView(ListAPIView):
 
         page = self.paginate_queryset(files)
         serializer = self.get_serializer(page, many=True)
-        return Response(serializer.data)
+        return self.get_paginated_response(serializer.data)
 
 
 class RecipeReprocessView(GenericAPIView):
