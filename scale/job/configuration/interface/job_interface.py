@@ -202,13 +202,16 @@ JOB_INTERFACE_SCHEMA = {
 class JobInterface(object):
     """Represents the interface for executing a job"""
 
-    def __init__(self, definition):
+    def __init__(self, definition, do_validate=True):
         """Creates a job interface from the given definition. If the definition is invalid, a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` exception will be thrown.
 
         :param definition: The interface definition
         :type definition: dict
+        :param do_validate: Whether to perform validation on the JSON schema
+        :type do_validate: bool
         """
+
         self.definition = definition
         self._mount_names = set()
         self._param_names = set()
@@ -227,7 +230,8 @@ class JobInterface(object):
             self.convert_interface(definition)
 
         try:
-            validate(definition, JOB_INTERFACE_SCHEMA)
+            if do_validate:
+                validate(definition, JOB_INTERFACE_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
 
@@ -357,6 +361,14 @@ class JobInterface(object):
         """
 
         return self.definition['command']
+
+    def get_command_args(self):
+        """Gets the command arguments
+        :return: the command args
+        :rtype: str
+        """
+
+        return self.definition['command_arguments']
 
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
@@ -509,30 +521,23 @@ class JobInterface(object):
 
         param_replacements = self._get_settings_values(interface_settings,
                                                        exe_configuration,
-                                                       job_type)
+                                                       job_type, True)
 
         command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
-    def populate_env_vars_arguments(self, exe_configuration, job_type):
+    def populate_env_vars_arguments(self, param_replacements):
         """Populates the environment variables with the requested values.
 
-        :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        :param job_type: The job type definition
-        :type job_type: :class:`job.models.JobType`
+        :param param_replacements: The parameter replacements
+        :type param_replacements: dict
 
         :return: env_vars populated with values
         :rtype: dict
         """
 
         env_vars = self.definition['env_vars']
-        interface_settings = self.definition['settings']
-
-        param_replacements = self._get_settings_values(interface_settings,
-                                                       exe_configuration,
-                                                       job_type)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
         return env_vars
@@ -581,26 +586,9 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        # TODO: this currently checks mount container paths to detect if required mounts have been provided to this
-        # execution. After the execution configuration gets refactored (with mount configurations added) we can directly
-        # check the mount names included
-        interface_mounts = self.definition['mounts']
-
-        for mount in interface_mounts:
-            mount_name = mount['name']
-            container_path = mount['path']
-            mount_is_required = mount['required']
-
-            if mount_is_required:
-                mount_is_provided = False
-                for docker_param in exe_configuration.get_job_task_docker_params():
-                    if docker_param.flag == 'volume':
-                        param_path = docker_param.value.split(':')[1]
-                        if container_path == param_path:
-                            mount_is_provided = True
-                            break
-                if not mount_is_provided:
-                    raise MissingMount('Required mount %s was not provided' % mount_name)
+        for name, mount_volume in exe_configuration.get_mounts('main').items():
+            if mount_volume is None:
+                raise MissingMount('Required mount %s was not provided' % name)
 
     def validate_populated_settings(self, exe_configuration):
         """Ensures that all required settings are defined in the execution configuration
@@ -609,16 +597,9 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        interface_settings = self.definition['settings']
-        config_setting_names = [setting.name for setting in exe_configuration.get_job_task_settings()]
-
-        for setting in interface_settings:
-            setting_name = setting['name']
-            setting_is_required = setting['required']
-
-            if setting_is_required:
-                if setting_name not in config_setting_names:
-                    raise MissingSetting('Required setting %s was not provided' % setting_name)
+        for name, value in exe_configuration.get_settings('main').items():
+            if value is None:
+                raise MissingSetting('Required setting %s was not provided' % name)
 
     def _check_env_var_uniqueness(self):
         """Ensures all the enviornmental variable names are unique, and throws a
@@ -764,14 +745,16 @@ class JobInterface(object):
             if data_item_name == output_data['name']:
                 return output_data
 
-    def _get_settings_values(self, settings, exe_configuration, job_type):
+    def _get_settings_values(self, settings, exe_configuration, job_type, censor):
         """
         :param settings: The settings
-        :type settings: JSON
+        :type settings: dict
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
+        :param censor: Whether to censor secrets
+        :type censor: bool
         :return: settings name and the value to replace it with
         :rtype: dict
         """
@@ -781,8 +764,9 @@ class JobInterface(object):
         secret_settings = {}
 
         # Isolate the job_type settings and convert to list
-        config_settings = config_settings['job_task']['settings']
-        config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
+        for task_dict in config_settings['tasks']:
+            if task_dict['type'] == 'main':
+                config_settings_dict = task_dict['settings']
 
         for setting in settings:
             setting_name = setting['name']
@@ -795,8 +779,10 @@ class JobInterface(object):
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
 
                 if setting_name in secret_settings.keys():
-                    settings_value = secret_settings[setting_name]
-                    exe_configuration.add_job_task_setting(setting_name, '*****')
+                    if censor:
+                        settings_value = '*****'
+                    else:
+                        settings_value = secret_settings[setting_name]
                     param_replacements[setting_name] = settings_value
                 else:
                     param_replacements[setting_name] = ''
@@ -932,10 +918,11 @@ class JobInterface(object):
         :type env_vars: list
         :param param_replacements: The parameter you are searching for
         :type param_replacements: dict
-        :return: The string with all replacements made
-        :rtype: str
+        :return: The env vars with all replacements made
+        :rtype: dict
         """
 
+        env_var_dict = {}
         for env_var in env_vars:
             ret_str = env_var['value']
             for param_name, param_value in param_replacements.iteritems():
@@ -944,15 +931,14 @@ class JobInterface(object):
 
                 match_obj = pattern_prog.search(ret_str)
                 if match_obj:
-                    ret_str = param_value
+                    ret_str = param_value if param_value else ''
                     break
 
             if ret_str == env_var['value']:
-                env_var['value'] = ''
-            else:
-                env_var['value'] = ret_str
+                ret_str = ''
+            env_var_dict[env_var['name']] = ret_str
 
-        return env_vars
+        return env_var_dict
 
     def _validate_command_arguments(self):
         """Ensure the command string is valid, and any parameters used

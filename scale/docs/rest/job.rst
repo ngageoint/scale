@@ -87,6 +87,8 @@ These services provide access to information about "all", "currently running" an
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the job.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .node               | JSON Object       | The node that the job is/was running on.                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .error              | JSON Object       | The error that is associated with the job.                                    |
 |                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -171,6 +173,10 @@ These services provide access to information about "all", "currently running" an
 |                    "rule": null,                                                                                        |
 |                    "occurred": "2015-08-28T17:57:24.261Z"                                                               |
 |                },                                                                                                       |
+|                "node": {                                                                                                |
+|                    "id": 1,                                                                                             |
+|                    "hostname": "my-host.example.domain"                                                                 |
+|                },                                                                                                       |
 |                "error": null,                                                                                           |
 |                "status": "COMPLETED",                                                                                   |
 |                "priority": 10,                                                                                          |
@@ -227,6 +233,8 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | event              | JSON Object       | The trigger event that is associated with the count.                           |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .node               | JSON Object       | The node that the job is/was running on.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | error              | JSON Object       | The error that is associated with the count.                                   |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
@@ -382,6 +390,10 @@ These services provide access to information about "all", "currently running" an
 |                "last_modified": "2015-08-28T18:31:29.282Z"                                                              |
 |            },                                                                                                           |
 |            "occurred": "2015-09-01T17:27:31.467Z"                                                                       |
+|        },                                                                                                               |
+|        "node": {                                                                                                        |
+|            "id": 1,                                                                                                     |
+|            "hostname": "my-host.example.domain"                                                                         |
 |        },                                                                                                               |
 |        "error": null,                                                                                                   |
 |        "status": "COMPLETED",                                                                                           |
@@ -672,6 +684,8 @@ These services provide access to information about "all", "currently running" an
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the job.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .node               | JSON Object       | The node that the job is/was running on.                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .error              | JSON Object       | The error that is associated with the job.                                    |
 |                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -758,6 +772,10 @@ These services provide access to information about "all", "currently running" an
 |                    "type": "STRIKE_TRANSFER",                                                                           |
 |                    "rule": null,                                                                                        |
 |                    "occurred": "2015-08-28T17:57:24.261Z"                                                               |
+|                },                                                                                                       |
+|                "node": {                                                                                                |
+|                    "id": 1,                                                                                             |
+|                    "hostname": "my-host.example.domain"                                                                 |
 |                },                                                                                                       |
 |                "error": null,                                                                                           |
 |                "status": "COMPLETED",                                                                                   |
@@ -882,6 +900,8 @@ These services provide access to information about "all", "currently running" an
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the count.                          |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .node               | JSON Object       | The node that the job is/was running on.                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .error              | JSON Object       | The error that is associated with the count.                                  |
 |                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -971,6 +991,10 @@ These services provide access to information about "all", "currently running" an
 |                    "type": "STRIKE_TRANSFER",                                                                           |
 |                    "rule": null,                                                                                        |
 |                    "occurred": "2015-08-28T17:57:24.261Z"                                                               |
+|                },                                                                                                       |
+|                "node": {                                                                                                |
+|                    "id": 1,                                                                                             |
+|                    "hostname": "my-host.example.domain"                                                                 |
 |                },                                                                                                       |
 |                "error": null,                                                                                           |
 |                "status": "COMPLETED",                                                                                   |

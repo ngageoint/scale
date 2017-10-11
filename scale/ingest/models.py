@@ -127,7 +127,7 @@ class IngestManager(models.Manager):
         ingests = self.select_related('strike', 'scan', 'workspace', 'new_workspace', 'job')
         ingests = ingests.select_related('source_file', 'source_file__workspace')
         ingests = ingests.defer('strike__configuration', 'scan__configuration', 'workspace__json_config')
-        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__configuration', 'job__results')
+        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__results')
         ingests = ingests.defer('source_file__workspace__json_config')
 
         # Apply time range filtering
@@ -305,14 +305,12 @@ class IngestManager(models.Manager):
                 raise Exception('One of scan_id or strike_id must be set')
 
             data = JobData()
-            data.add_property_input('Ingest ID', str(ingest_id))
-
-            exe_configuration = ExecutionConfiguration()
-            if ingest.workspace:
-                exe_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+            data.add_property_input('ingest_id', str(ingest_id))
+            data.add_property_input('workspace', ingest.workspace.name)
             if ingest.new_workspace:
-                exe_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, exe_configuration)
+                data.add_property_input('new_workspace', ingest.new_workspace.name)
+
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
 
             ingest.job = ingest_job
             ingest.status = 'QUEUED'
@@ -784,7 +782,7 @@ class ScanManager(models.Manager):
         scan_type = self.get_scan_job_type()
 
         job_data = JobData()
-        job_data.add_property_input('Scan ID', unicode(scan.id))
+        job_data.add_property_input('Scan ID', str(scan.id))
         job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
 

@@ -68,7 +68,8 @@ class ProductDataFileStore(AbstractDataFileStore):
                     product_file = product_files[i]
                     results[full_local_path] = product_file.id
 
-            FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, set(results.values()), job_exe)
+            FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, set(results.values()), job_exe.job,
+                                                                job_exe.id)
 
         return results
 

@@ -24,7 +24,7 @@ POLYGON_GEOJSON = {"type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 2
 
 class TestSourceFileManager(TestCase):
 
-    fixtures = ['batch_job_types.json']
+    fixtures = ['batch_job_types.json', 'ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -111,6 +111,8 @@ class TestSourceFileManager(TestCase):
 
 
 class TestSourceFileManagerSaveParseResults(TestCase):
+
+    fixtures = ['ingest_job_types.json']
 
     def setUp(self):
         django.setup()

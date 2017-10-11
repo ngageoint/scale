@@ -7,6 +7,9 @@ from unittest.case import skipIf
 from django.test.testcases import TransactionTestCase
 from mock import patch, Mock
 
+from messaging.backends.amqp import AMQPMessagingBackend
+from messaging.backends.factory import add_message_backend
+
 if not sys.platform.startswith('win'):
     import scheduler
 
@@ -18,6 +21,8 @@ class TestScheduler(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+        add_message_backend(AMQPMessagingBackend)
 
         # mock out threading.start
 
@@ -45,8 +50,8 @@ class TestScheduler(TransactionTestCase):
         my_scheduler, driver, master_info = self._get_registered_scheduler_driver_master()
         self.assertTrue(mock_initializer.called, 'initializer should be called on registration')
         self.assertEqual(
-            mock_thread_start.call_count, 6,
-            '6 threads should be started (6 != %d)' % mock_thread_start.call_count
+            mock_thread_start.call_count, 7,
+            '7 threads should be started (7 != %d)' % mock_thread_start.call_count
         )
 
     @patch('scheduler.scale_scheduler.ScaleScheduler._reconcile_running_jobs')

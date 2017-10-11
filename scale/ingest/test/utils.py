@@ -13,7 +13,7 @@ NAME_COUNTER = 1
 
 def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=None, transfer_ended=None,
                   ingest_started=None, ingest_ended=None, data_started=None, data_ended=None, workspace=None,
-                  strike=None, scan=None, source_file=None):
+                  new_workspace=None, strike=None, scan=None, source_file=None):
     if not workspace:
         workspace = storage_test_utils.create_workspace()
     if not source_file:
@@ -26,19 +26,15 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
     if status not in ['QUEUED', 'TRANSFERRING', 'INGESTING'] and not ingest_ended:
         ingest_ended = timezone.now()
 
-    try:
-        job_type = Ingest.objects.get_ingest_job_type()
-    except:
-        job_type = job_utils.create_job_type()
+    job_type = Ingest.objects.get_ingest_job_type()
     job = job_utils.create_job(job_type=job_type)
-    job_utils.create_job_exe(job=job)
 
     return Ingest.objects.create(file_name=file_name, file_size=source_file.file_size, status=status, job=job,
                                  bytes_transferred=source_file.file_size, transfer_started=transfer_started,
                                  transfer_ended=transfer_ended, media_type='text/plain', ingest_started=ingest_started,
                                  ingest_ended=ingest_ended, data_started=source_file.data_started,
-                                 data_ended=source_file.data_ended, workspace=workspace, strike=strike, scan=scan,
-                                 source_file=source_file)
+                                 data_ended=source_file.data_ended, workspace=workspace, new_workspace=new_workspace,
+                                 strike=strike, scan=scan, source_file=source_file)
 
 
 def create_strike(name=None, title=None, description=None, configuration=None, job=None):
@@ -56,7 +52,8 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
                          'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
                                               'workspace_path': 'wksp/path'}]}
     if not job:
-        job = job_utils.create_job()
+        job_type = Strike.objects.get_strike_job_type()
+        job = job_utils.create_job(job_type=job_type)
 
     return Strike.objects.create(name=name, title=title, description=description, configuration=configuration, job=job)
 

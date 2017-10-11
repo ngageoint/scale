@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 
 import datetime
 
-from job.tasks.base_task import AtomicCounter, Task
+from job.tasks.base_task import AtomicCounter
+from job.tasks.node_task import NodeTask
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Mem
 
@@ -12,7 +13,7 @@ CLEANUP_TASK_ID_PREFIX = 'scale_cleanup'
 COUNTER = AtomicCounter()
 
 
-class CleanupTask(Task):
+class CleanupTask(NodeTask):
     """Represents a task that cleans up after job executions. This class is thread-safe.
     """
 
@@ -75,6 +76,11 @@ class CleanupTask(Task):
 
         # Create overall command that deletes containers and volumes for the job executions
         self._command = '%s; %s' % (delete_containers_cmd, delete_volumes_cmd)
+
+        # Node task properties
+        self.task_type = 'cleanup'
+        self.title = 'Node Cleanup'
+        self.description = 'Performs Docker container and volume cleanup on the node'
 
     @property
     def is_initial_cleanup(self):

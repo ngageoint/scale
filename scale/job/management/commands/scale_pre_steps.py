@@ -2,10 +2,10 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import sys
 
 from django.core.management.base import BaseCommand
-from optparse import make_option
 
 from error.exceptions import ScaleError, get_error_by_exception
 from job.models import JobExecution
@@ -24,34 +24,30 @@ class Command(BaseCommand):
 
     help = 'Performs the pre-job steps for a job execution'
 
-    def add_arguments(self, parser):
-        parser.add_argument('-i', '--job-exe-id', action='store', type=int,
-                            help='The ID of the job execution')
-
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the command.
         """
-        job_exe_id = options.get('job_exe_id')
 
-        logger.info('Command starting: scale_pre_steps - Job Execution ID: %i', job_exe_id)
+        job_id = int(os.environ.get('SCALE_JOB_ID'))
+        exe_num = int(os.environ.get('SCALE_EXE_NUM'))
+
+        logger.info('Command starting: scale_pre_steps - Job ID: %d, Execution Number: %d', job_id, exe_num)
         try:
-            job_exe = self._get_job_exe(job_exe_id)
+            job_exe = self._get_job_exe(job_id, exe_num)
 
-            job_interface = job_exe.get_job_interface()
-            job_configuration = job_exe.get_execution_configuration()
-            job_interface.validate_populated_mounts(job_configuration)
-            job_interface.validate_populated_settings(job_configuration)
+            job_interface = job_exe.job_type.get_job_interface()
+            exe_config = job_exe.get_execution_configuration()
+            logger.info('Validating mounts...')
+            job_interface.validate_populated_mounts(exe_config)
+            logger.info('Validating settings...')
+            job_interface.validate_populated_settings(exe_config)
             job_data = job_exe.job.get_job_data()
-            job_environment = job_exe.get_job_environment()
-            job_interface.perform_pre_steps(job_data, job_environment)
-            command_args = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
+            logger.info('Setting up input files...')
+            job_interface.perform_pre_steps(job_data, None)
 
-            command_args = job_interface.populate_command_argument_settings(command_args, job_configuration, job_exe.job.job_type)
-
-            logger.info('Executing job: %i -> %s', job_exe_id, ' '.join(command_args))
-            self._populate_command_arguments(job_exe_id, command_args)
+            logger.info('Ready to execute job: %s', exe_config.get_args('main'))
         except ScaleError as err:
             err.log()
             sys.exit(err.exit_code)
@@ -62,31 +58,21 @@ class Command(BaseCommand):
                 err.log()
                 exit_code = err.exit_code
             else:
-                logger.exception('Job Execution %i: Error performing pre-job steps', job_exe_id)
+                logger.exception('Error performing pre-job steps')
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')
 
     @retry_database_query
-    def _get_job_exe(self, job_exe_id):
+    def _get_job_exe(self, job_id, exe_num):
         """Returns the job execution for the ID with its related job and job type models
 
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The execution number
+        :type exe_num: int
         :returns: The job execution model
         :rtype: :class:`job.models.JobExecution`
         """
 
-        return JobExecution.objects.get_job_exe_with_job_and_job_type(job_exe_id)
-
-    @retry_database_query
-    def _populate_command_arguments(self, job_exe_id, command_args):
-        """Populates the full set of command arguments for the job execution
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param command_args: The new job execution command argument string with pre-job step information filled in
-        :type command_args: str
-        """
-
-        JobExecution.objects.pre_steps_command_arguments(job_exe_id, command_args)
+        return JobExecution.objects.get_job_exe_with_job_and_job_type(job_id, exe_num)

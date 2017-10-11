@@ -192,21 +192,21 @@ class NodeManager(models.Manager):
 
         # Lazy load the the execution model since it is an optional lower level dependency
         try:
-            from job.models import JobExecution
+            from job.models import JobExecution, JobExecutionEnd
         except:
             return [NodeStatus(node) for node in nodes]
 
         # Fetch a list of recent job executions
-        job_exes = JobExecution.objects.select_related('error')
-        job_exes = job_exes.filter(last_modified__gte=started)
+        job_exe_ends = JobExecutionEnd.objects.select_related('error')
+        job_exe_ends = job_exe_ends.filter(created__gte=started)
         if ended:
-            job_exes = job_exes.filter(last_modified__lte=ended)
+            job_exe_ends = job_exe_ends.filter(created__lte=ended)
             
-        job_exes = job_exes.values('node_id', 'last_modified', 'status', 'error__category')
+        job_exe_ends = job_exe_ends.values('node_id', 'created', 'status', 'error__category')
 
         # Build a mapping of node_id -> (status + error category) -> associated counts
         job_exes_dict = {}
-        for job_exe in job_exes:
+        for job_exe in job_exe_ends:
 
             # Make sure the node mapping entry exists
             if job_exe['node_id'] not in job_exes_dict:
@@ -221,14 +221,15 @@ class NodeManager(models.Manager):
             # Update the count based on the status
             status_counts = job_exe_dict[status_key]
             status_counts.count += 1
-            if not status_counts.most_recent or job_exe['last_modified'] > status_counts.most_recent:
-                status_counts.most_recent = job_exe['last_modified']
+            if not status_counts.most_recent or job_exe['created'] > status_counts.most_recent:
+                status_counts.most_recent = job_exe['created']
             if job_exe['error__category']:
                 status_counts.category = job_exe['error__category']
 
         # Build a mapping of node_id -> running job executions
         running_dict = {}
-        running_exes = JobExecution.objects.filter(status='RUNNING').order_by('last_modified')
+        running_exes = JobExecution.objects.exclude(jobexecutionend__status__in=['FAILED', 'COMPLETED', 'CANCELED'])
+        running_exes = running_exes.order_by('created')
         running_exes = running_exes.select_related('job').defer('stdout', 'stderr')
         for job_exe in running_exes:
             if job_exe.node_id not in running_dict:

@@ -65,7 +65,7 @@ class Task(object):
         # Basic attributes
         self._task_id = task_id
         self._task_name = task_name
-        self._agent_id = agent_id
+        self.agent_id = agent_id
         self._container_name = None
         self._lock = threading.Lock()
         self._has_been_launched = False
@@ -76,6 +76,7 @@ class Task(object):
         self._has_timed_out = False
         self._has_ended = False
         self._ended = None
+        self.final_status = None
         self._exit_code = None
 
         # These values will vary by different task subclasses
@@ -87,16 +88,6 @@ class Task(object):
         self._command_arguments = None
         self._running_timeout_threshold = BASE_RUNNING_TIMEOUT_THRESHOLD
         self._staging_timeout_threshold = BASE_STAGING_TIMEOUT_THRESHOLD
-
-    @property
-    def agent_id(self):
-        """Returns the ID of the agent that the task is running on
-
-        :returns: The agent ID
-        :rtype: string
-        """
-
-        return self._agent_id
 
     @property
     def command(self):
@@ -143,10 +134,30 @@ class Task(object):
         """Returns the Docker parameters used to run this task
 
         :returns: The Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
+        :rtype: list
         """
 
         return self._docker_params
+
+    @property
+    def ended(self):
+        """When this task ended, possibly None
+
+        :returns: When this task ended
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._ended
+
+    @property
+    def exit_code(self):
+        """Returns the exit code for this task, possibly None
+
+        :returns: The exit code
+        :rtype: int
+        """
+
+        return self._exit_code
 
     @property
     def has_been_launched(self):
@@ -179,6 +190,16 @@ class Task(object):
         return self._has_started
 
     @property
+    def has_timed_out(self):
+        """Indicates whether this task has timed out
+
+        :returns: True if this task has timed out, False otherwise
+        :rtype: bool
+        """
+
+        return self._has_timed_out
+
+    @property
     def id(self):
         """Returns the unique ID of the task
 
@@ -197,6 +218,16 @@ class Task(object):
         """
 
         return self._is_docker_privileged
+
+    @property
+    def launched(self):
+        """When this task launched, possibly None
+
+        :returns: When this task launched
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._launched
 
     @property
     def name(self):
@@ -239,7 +270,7 @@ class Task(object):
         """
 
         with self._lock:
-            if not self._has_been_launched or self._has_ended:
+            if not self._has_been_launched or self._has_timed_out or self._has_ended:
                 return self._has_timed_out
 
             if self._has_started:
@@ -256,8 +287,6 @@ class Task(object):
 
             if timed_out:
                 self._has_timed_out = True
-                self._has_ended = True
-                self._ended = when
 
             return self._has_timed_out
 
@@ -335,6 +364,7 @@ class Task(object):
                 # Mark task as having ended
                 self._has_ended = True
                 self._ended = task_update.timestamp
+                self.final_status = task_update.status
                 self._exit_code = task_update.exit_code
 
     def _create_scale_image_name(self):

@@ -3,14 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.conf import settings
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.job_parameter import DockerParam, TaskWorkspace
-from job.execution.container import get_workspace_volume_name
-from storage.container import get_workspace_volume_path
 
 
 logger = logging.getLogger(__name__)
@@ -85,6 +81,22 @@ EXE_CONFIG_SCHEMA = {
 }
 
 
+class TaskWorkspace(object):
+    """Represents a workspace needed by a job task
+    """
+
+    def __init__(self, name, mode):
+        """Creates a task workspace
+        :param name: The name of the workspace
+        :type name: string
+        :param mode: The mode to use for the workspace, either 'ro' or 'rw'
+        :type mode: string
+        """
+
+        self.name = name
+        self.mode = mode
+
+
 class ExecutionConfiguration(object):
     """Represents a job configuration
     """
@@ -115,36 +127,6 @@ class ExecutionConfiguration(object):
             raise InvalidExecutionConfiguration('%s is an unsupported version number' % self._configuration['version'])
 
         self._validate_workspace_names()
-
-    def add_job_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's job task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        for param in params:
-            self._configuration['job_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
-
-    def add_post_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's post task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        for param in params:
-            self._configuration['post_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
-
-    def add_pre_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's pre task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        for param in params:
-            self._configuration['pre_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
 
     def add_job_task_workspace(self, name, mode):
         """Adds a needed workspace to this job's job task
@@ -246,71 +228,11 @@ class ExecutionConfiguration(object):
         params = self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True, docker_volumes)
         self.add_post_task_docker_params(params)
 
-    def configure_logging_docker_params(self, job_exe):
-        """Configures the Docker parameters needed for job execution logging
-
-        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-
-        :raises Exception: If the job execution is still queued
-        """
-
-        es_urls = None
-        # Use connection pool to get up-to-date list of elasticsearch nodes
-        if settings.ELASTICSEARCH:
-            hosts = [host.host for host in settings.ELASTICSEARCH.transport.connection_pool.connections]
-            es_urls = ','.join(hosts)
-
-        if settings.LOGGING_ADDRESS is not None:
-            log_driver = DockerParam('log-driver', 'syslog')
-            # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
-            syslog_format = DockerParam('log-opt', 'syslog-format=rfc3164')
-            log_address = DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
-            if not job_exe.is_system:
-                pre_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_pre_task_id())
-                self.add_pre_task_docker_params([log_driver, syslog_format, log_address, pre_task_tag])
-                post_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_post_task_id())
-                # Post task needs ElasticSearch URL to grab logs for old artifact registration
-                es_urls = DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
-                self.add_post_task_docker_params([log_driver, syslog_format, log_address, post_task_tag, es_urls])
-            job_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_job_task_id())
-            self.add_job_task_docker_params([log_driver, syslog_format, log_address, job_task_tag])
-
-    def get_job_task_docker_params(self):
-        """Returns the Docker parameters needed for the job task
-
-        :returns: The job task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        params = self._configuration['job_task']['docker_params']
-        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
-
-    def get_post_task_docker_params(self):
-        """Returns the Docker parameters needed for the post task
-
-        :returns: The post task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        params = self._configuration['post_task']['docker_params']
-        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
-
-    def get_pre_task_docker_params(self):
-        """Returns the Docker parameters needed for the pre task
-
-        :returns: The pre task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        params = self._configuration['pre_task']['docker_params']
-        return [DockerParam(param_dict['flag'], param_dict['value']) for param_dict in params]
-
     def get_job_task_workspaces(self):
         """Returns the workspaces needed for the job task
 
         :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['job_task']['workspaces']
@@ -320,7 +242,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the post task
 
         :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['post_task']['workspaces']
@@ -330,7 +252,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the pre task
 
         :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['pre_task']['workspaces']
@@ -344,49 +266,6 @@ class ExecutionConfiguration(object):
         """
 
         return self._configuration
-
-    def _get_workspace_docker_params(self, job_exe, task_workspaces, workspaces, volume_create, docker_volumes):
-        """Returns the Docker parameters needed for the given task workspaces
-
-        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-        :param task_workspaces: List of the task workspaces
-        :type task_workspaces: [:class:`job.configuration.job_parameter.TaskWorkspace`]
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :param volume_create: Indicates if new volumes need to be created for these workspaces
-        :type volume_create: bool
-        :param docker_volumes: A list to add Docker volume names to
-        :type docker_volumes: [string]
-        :returns: The Docker parameters needed by the given workspaces
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-
-        :raises Exception: If the job execution is still queued
-        """
-
-        params = []
-        for task_workspace in task_workspaces:
-            name = task_workspace.name
-            mode = task_workspace.mode
-            if name in workspaces:
-                workspace = workspaces[name]
-                if workspace.volume:
-                    vol = workspace.volume
-                    if vol.host:
-                        # Host mount is special, no volume name, just the host mount path
-                        volume_name = vol.remote_path
-                    elif volume_create:
-                        # Create job_exe workspace volume for first time
-                        volume_create_cmd = '$(docker volume create --driver=%s --name=%s %s)'
-                        volume_name = get_workspace_volume_name(job_exe, name)
-                        docker_volumes.append(volume_name)
-                        volume_name = volume_create_cmd % (vol.driver, volume_name, vol.remote_path)
-                    else:
-                        # Volume already created, re-use name
-                        volume_name = get_workspace_volume_name(job_exe, name)
-                    workspace_volume = '%s:%s:%s' % (volume_name, get_workspace_volume_path(name), mode)
-                    params.append(DockerParam('volume', workspace_volume))
-        return params
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values

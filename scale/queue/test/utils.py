@@ -2,6 +2,7 @@
 import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from queue.models import JobLoad, Queue
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -25,7 +26,7 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
                                   total_count=pending_count + queued_count + running_count)
 
 
-def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
+def create_queue(job_type=None, priority=1, timeout=3600, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
                  disk_out_required=100.0, disk_total_required=300.0, queued=timezone.now()):
     """Creates a queue model for unit testing
 
@@ -33,6 +34,8 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     :type job_type: :class:`job.models.JobType`
     :param priority: The priority
     :type priority: int
+    :param timeout: The timeout
+    :type timeout: int
     :param cpus_required: The CPUs required in MiB
     :type cpus_required: float
     :param mem_required: The memory required in MiB
@@ -48,9 +51,10 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     """
 
     job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
-    job_exe = job_test_utils.create_job_exe(job=job, status='QUEUED')
     resources = NodeResources([Cpus(cpus_required), Mem(mem_required), Disk(disk_total_required)])
 
-    return Queue.objects.create(job_exe=job_exe, job=job, job_type=job.job_type, priority=priority,
-                                input_file_size=disk_in_required, resources=resources.get_json().get_dict(),
-                                queued=queued)
+    return Queue.objects.create(job_type=job.job_type, job=job, exe_num=job.num_exes, priority=priority,
+                                timeout=timeout, input_file_size=disk_in_required,
+                                interface=job.get_job_interface().get_dict(),
+                                configuration=ExecutionConfiguration().get_dict(),
+                                resources=resources.get_json().get_dict(), queued=queued)

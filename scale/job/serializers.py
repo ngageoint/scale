@@ -1,7 +1,8 @@
 """Defines the serializers for jobs and job types"""
 import rest_framework.serializers as serializers
 
-from job.models import Job, JobExecution
+from job.models import Job
+from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
 
@@ -122,6 +123,7 @@ class JobBaseSerializer(ModelIdSerializer):
     job_type = JobTypeBaseSerializer()
     job_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
+    node = ModelIdSerializer()
     error = ModelIdSerializer()
 
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
@@ -136,6 +138,7 @@ class JobSerializer(JobBaseSerializer):
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventBaseSerializer()
+    node = NodeBaseSerializer()
     error = ErrorBaseSerializer()
 
     timeout = serializers.IntegerField()
@@ -168,7 +171,7 @@ class JobRevisionSerializer(JobSerializer):
 
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
-    status = serializers.ChoiceField(choices=JobExecution.JOB_EXE_STATUSES)
+    status = serializers.CharField(source='get_status')
     command_arguments = serializers.CharField()
     timeout = serializers.IntegerField()
 
@@ -187,8 +190,8 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
-    ended = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
+    ended = serializers.DateTimeField(source='jobexecutionend.ended')
+    last_modified = serializers.DateTimeField(source='created')
 
     job = ModelIdSerializer()
     node = ModelIdSerializer()
@@ -275,7 +278,7 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
 
     job = JobBaseSerializer()
     node = NodeBaseSerializerV4()
-    error = ErrorBaseSerializer()
+    error = ErrorBaseSerializer(source='jobexecutionend.error')
 
 
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
@@ -285,16 +288,16 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
 
     job = JobSerializer()
     node = NodeSerializerV4()
-    error = ErrorSerializer()
+    error = ErrorSerializer(source='jobexecutionend.error')
 
     environment = serializers.JSONField(default=dict)
     cpus_scheduled = serializers.FloatField()
     mem_scheduled = serializers.FloatField()
-    disk_in_scheduled = serializers.FloatField()
+    disk_in_scheduled = serializers.FloatField(source='input_file_size')
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
-    results = serializers.JSONField(default=dict)
+    results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
     results_manifest = serializers.JSONField(default=dict)
 

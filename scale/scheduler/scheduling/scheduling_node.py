@@ -30,6 +30,7 @@ class SchedulingNode(object):
         self.node_id = node.id
         self.is_ready_for_new_job = node.is_ready_for_new_job()  # Cache this for consistency
         self.is_ready_for_next_job_task = node.is_ready_for_next_job_task()  # Cache this for consistency
+        self.is_ready_for_system_task = node.is_ready_for_system_task()  # Cache this for consistency
         self.allocated_offers = []
         self.allocated_resources = NodeResources()
         self.allocated_tasks = []  # Tasks that have been allocated resources from this node
@@ -94,7 +95,7 @@ class SchedulingNode(object):
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
-            job_exe.accepted(self.agent_id, self.node_id, resources)
+            job_exe.scheduled(self.agent_id, self.node_id, resources)
             return True
 
         return False
@@ -122,6 +123,28 @@ class SchedulingNode(object):
                 waiting_tasks.append(task)
                 result = True
         return result
+
+    def accept_system_task(self, system_task):
+        """Asks the node if it can accept the given system task
+
+        :param system_task: The system task
+        :type system_task: :class:`job.tasks.base_task.Task`
+        :returns: True if the system task was accepted, False otherwise
+        :rtype: bool
+        """
+
+        if not self.is_ready_for_system_task:
+            return False
+
+        task_resources = system_task.get_resources()
+        if self._remaining_resources.is_sufficient_to_meet(task_resources):
+            system_task.agent_id = self.agent_id  # Must set agent ID for task
+            self.allocated_tasks.append(system_task)
+            self.allocated_resources.add(task_resources)
+            self._remaining_resources.subtract(task_resources)
+            return True
+
+        return False
 
     def add_allocated_offers(self, offers):
         """Adds the resource offers that have been allocated to run this node's tasks. If the offer resources are not
@@ -201,14 +224,14 @@ class SchedulingNode(object):
             if not isinstance(running_task, JobExecutionTask):
                 available_resources.subtract(running_task.get_resources())
         for running_job_exe in self._running_job_exes:  # Remove resources for existing jobs of equal/higher priority
-            if running_job_exe.priority <= job_exe.queue.priority:
+            if running_job_exe.priority <= job_exe.priority:
                 task = running_job_exe.current_task
                 if not task:
                     task = running_job_exe.next_task()
                 if task:
                     available_resources.subtract(task.get_resources())
         for queued_job_exe in self._allocated_queued_job_exes:  # Remove resources for new jobs of equal/higher priority
-            if queued_job_exe.queue.priority <= job_exe.queue.priority:
+            if queued_job_exe.priority <= job_exe.priority:
                 available_resources.subtract(queued_job_exe.required_resources)
 
         # If there are enough resources (unused plus used by lower priority jobs) to eventually run this job, then
@@ -238,25 +261,21 @@ class SchedulingNode(object):
         :rtype: int
         """
 
-        if not self._remaining_resources.is_sufficient_to_meet(job_exe.required_resources):
-            return None
+        return self._score_resources_for_scheduling(job_exe.required_resources, job_type_resources)
 
-        # Calculate our best guess of the total resources still available to Scale on this node by starting with the
-        # watermark resource level and subtracting resources for currently running and allocated tasks
-        total_resources_available = NodeResources()
-        total_resources_available.add(self._watermark_resources)
-        total_resources_available.subtract(self._task_resources)
-        total_resources_available.subtract(self.allocated_resources)
-        total_resources_available.subtract(job_exe.required_resources)
+    def score_system_task_for_scheduling(self, system_task, job_type_resources):
+        """Returns an integer score (lower is better) indicating how well the given system task fits on this node for
+        scheduling. If the system task cannot be scheduled on this node, None is returned.
 
-        # Score is the number of job types that can fit within the estimated resources on this node still available to
-        # Scale. A better (lower) score indicates a higher utilization of this node, reducing resource fragmentation.
-        score = 0
-        for job_type_resource in job_type_resources:
-            if total_resources_available.is_sufficient_to_meet(job_type_resource):
-                score += 1
+        :param system_task: The system task to score
+        :type system_task: :class:`job.tasks.base_task.Task`
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
+        :returns: The integer score indicating how good of a fit this system task is for this node, possibly None
+        :rtype: int
+        """
 
-        return score
+        return self._score_resources_for_scheduling(system_task.get_resources(), job_type_resources)
 
     def start_job_exe_tasks(self):
         """Tells the node to start the next task on all scheduled job executions
@@ -267,3 +286,35 @@ class SchedulingNode(object):
             if task:
                 self.allocated_tasks.append(task)
         self._allocated_running_job_exes = []
+
+    def _score_resources_for_scheduling(self, resources, job_type_resources):
+        """Returns an integer score (lower is better) indicating how well the given resources fit on this node for
+        scheduling. If the resources cannot be scheduled on this node, None is returned.
+
+        :param resources: The resources to score
+        :type resources: :class:`node.resources.node_resources.NodeResources`
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
+        :returns: The integer score indicating how good of a fit these resources are for this node, possibly None
+        :rtype: int
+        """
+
+        if not self._remaining_resources.is_sufficient_to_meet(resources):
+            return None
+
+        # Calculate our best guess of the total resources still available to Scale on this node by starting with the
+        # watermark resource level and subtracting resources for currently running and allocated tasks
+        total_resources_available = NodeResources()
+        total_resources_available.add(self._watermark_resources)
+        total_resources_available.subtract(self._task_resources)
+        total_resources_available.subtract(self.allocated_resources)
+        total_resources_available.subtract(resources)
+
+        # Score is the number of job types that can fit within the estimated resources on this node still available to
+        # Scale. A better (lower) score indicates a higher utilization of this node, reducing resource fragmentation.
+        score = 0
+        for job_type_resource in job_type_resources:
+            if total_resources_available.is_sufficient_to_meet(job_type_resource):
+                score += 1
+
+        return score

@@ -264,15 +264,15 @@ class ScaleFileManager(models.Manager):
         return files
 
     def get_files(self, file_ids):
-        """Returns the files with the given IDs. The files will have their related workspace field populated.
+        """Returns the files with the given IDs. Each scale_file model will have its related workspace field populated.
 
         :param file_ids: The file IDs
-        :type file_ids: list[int]
-        :returns: The files that match the given IDs
-        :rtype: [:class:`storage.models.ScaleFile`]
+        :type file_ids: list
+        :returns: The scale_file models that match the given IDs
+        :rtype: list
         """
 
-        return self.filter(id__in=file_ids).select_related('workspace').iterator()
+        return self.select_related('workspace').filter(id__in=file_ids).iterator()
 
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace
@@ -454,7 +454,7 @@ class ScaleFile(models.Model):
     is_deleted = models.BooleanField(default=False)
     uuid = models.CharField(db_index=True, max_length=32)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     deleted = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 

@@ -24,7 +24,7 @@ class MessagingConfig(AppConfig):
     verbose_name = 'Message passing'
 
     def ready(self):
-        # # Register message types
+        # Register message types
         add_message_type(ChainCommandMessage)
         add_message_type(EchoCommandMessage)
         add_message_type(FailCommandMessage)

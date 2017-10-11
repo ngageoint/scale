@@ -5,8 +5,9 @@ import datetime
 import logging
 from collections import namedtuple
 
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
-from job.models import JobExecution
+from job.models import JobExecutionEnd
 from util.retry import retry_database_query
 
 logger = logging.getLogger(__name__)
@@ -454,14 +455,12 @@ class TotalJobExeMetrics(object):
         """
 
         oldest_time = self._finished_metrics_over_time.time_blocks[0].start
-        # TODO: this should be in the manager, but the JobExecution model is going to be completely re-worked anyway
-        job_exe_query = JobExecution.objects.select_related('error')
-        job_exe_query = job_exe_query.filter(status__in=['COMPLETED', 'FAILED'], ended__gte=oldest_time)
-        for job_exe_model in job_exe_query:
-            job_exe = RunningJobExecution('', job_exe_model)
-            job_exe._set_finished_status(job_exe_model.status, job_exe_model.ended, job_exe_model.error)
-            self._finished_metrics.add_job_execution(job_exe)
-            self._finished_metrics_over_time.add_job_execution(job_exe)
+        blank_config = ExecutionConfiguration()
+        for job_exe_end in JobExecutionEnd.objects.get_recent_job_exe_end_metrics(oldest_time):
+            running_job_exe = RunningJobExecution('', job_exe_end.job_exe, job_exe_end.job_type, blank_config, 0)
+            running_job_exe._set_final_status(job_exe_end.status, job_exe_end.ended, job_exe_end.error)
+            self._finished_metrics.add_job_execution(running_job_exe)
+            self._finished_metrics_over_time.add_job_execution(running_job_exe)
 
     def job_exe_finished(self, job_exe):
         """Handles a running job execution that has finished

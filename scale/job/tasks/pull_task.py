@@ -5,7 +5,8 @@ import datetime
 
 from django.conf import settings
 
-from job.tasks.base_task import AtomicCounter, Task
+from job.tasks.base_task import AtomicCounter
+from job.tasks.node_task import NodeTask
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Mem
 
@@ -48,7 +49,7 @@ def create_pull_command(image_name, check_exists=False):
     return command
 
 
-class PullTask(Task):
+class PullTask(NodeTask):
     """Represents a task that pulls Docker images from the registry. This class is thread-safe.
     """
 
@@ -71,6 +72,11 @@ class PullTask(Task):
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
 
         self._command = create_pull_command(self._create_scale_image_name(), check_exists=True)
+
+        # Node task properties
+        self.task_type = 'image-pull'
+        self.title = 'Scale Image Pull'
+        self.description = 'Pulls the Scale image onto the node'
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

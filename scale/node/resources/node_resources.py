@@ -136,7 +136,7 @@ class NodeResources(object):
         resources_dict = {}
         for resource in self._resources.values():
             resources_dict[resource.name] = resource.value  # Assumes SCALAR type
-        return Resources({'resources': resources_dict})
+        return Resources({'resources': resources_dict}, do_validate=False)
 
     def increase_up_to(self, node_resources):
         """Increases each resource up to the value in the given node resources

@@ -30,9 +30,8 @@ class TestIngestJobType(TestCase):
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         ingest_job_type.max_tries = 1
         ingest_job_type.save()
-        job = job_test_utils.create_job(job_type=ingest_job_type, num_exes=1)
-        job_exe = job_test_utils.create_job_exe(job=job)
-        running_job_exe = RunningJobExecution('agent_1', job_exe)
+        running_job_exe = job_test_utils.create_running_job_exe(agent_id='agent_1', job_type=ingest_job_type,
+                                                                num_exes=1)
 
         # Start job-task and then task times out
         when_launched = now() + timedelta(seconds=1)
@@ -45,10 +44,22 @@ class TestIngestJobType(TestCase):
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
         running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertTrue(running_job_exe.is_finished())
+
+        self.assertFalse(running_job_exe.is_finished())  # Not finished until killed task update arrives
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
+        self.assertEqual(running_job_exe.error.name, 'ingest-timeout')
+        self.assertEqual(running_job_exe.finished, when_timed_out)
         self.assertFalse(running_job_exe.is_next_task_ready())
 
-        job_exe = JobExecution.objects.get(id=job_exe.id)
-        self.assertEqual('FAILED', job_exe.status)
-        self.assertEqual('ingest-timeout', job_exe.error.name)
-        self.assertEqual(when_timed_out, job_exe.ended)
+        # Killed task update arrives, job execution is now finished
+        job_task_kill = when_timed_out + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.KILLED, job_task_kill)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
+        self.assertEqual(running_job_exe.error.name, 'ingest-timeout')
+        self.assertEqual(running_job_exe.finished, when_timed_out)
+        self.assertFalse(running_job_exe.is_next_task_ready())

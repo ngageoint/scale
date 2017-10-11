@@ -22,7 +22,7 @@ class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
     queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
-    update_fields = ('is_paused', )
+    update_fields = ('is_paused', 'num_message_handlers')
 
     def get(self, request):
         """Gets scheduler info
@@ -61,8 +61,7 @@ class SchedulerView(GenericAPIView):
             raise Http404
 
         serializer = self.get_serializer(scheduler)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers={'Location': request.build_absolute_uri()})
+        return Response(serializer.data)
 
 
 class StatusView(GenericAPIView):

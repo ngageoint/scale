@@ -5,16 +5,17 @@ import datetime
 
 from django.conf import settings
 
-from job.tasks.base_task import AtomicCounter, Task
+from job.tasks.base_task import AtomicCounter
+from job.tasks.node_task import NodeTask
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Mem
 
 
 HEALTH_TASK_ID_PREFIX = 'scale_health'
 COUNTER = AtomicCounter()
 
 
-class HealthTask(Task):
+class HealthTask(NodeTask):
     """Represents a task that performs a health check on a node. This class is thread-safe.
     """
 
@@ -68,6 +69,11 @@ class HealthTask(Task):
             health_check_commands.append(logstash_check)
 
         self._command = ' && '.join(health_check_commands)
+
+        # Node task properties
+        self.task_type = 'health-check'
+        self.title = 'Node Health Check'
+        self.description = 'Checks the health status of the node'
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

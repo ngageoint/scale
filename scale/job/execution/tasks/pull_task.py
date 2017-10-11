@@ -5,34 +5,41 @@ import datetime
 
 from error.models import Error
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.tasks.pull_task import create_pull_command
 
 
 class PullTask(JobExecutionTask):
     """Represents a job execution pull-task. This class is thread-safe.
     """
 
-    def __init__(self, agent_id, job_exe):
+    def __init__(self, agent_id, job_exe, job_type, configuration):
         """Constructor
 
-        :param agent_id: The ID of the agent on which the task is launched
+        :param agent_id: The ID of the agent on which the execution is running
         :type agent_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
-        models populated
+        :param job_exe: The job execution model, related fields will only have IDs populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param configuration: The job execution configuration, including secret values
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        super(PullTask, self).__init__(job_exe.get_pull_task_id(), agent_id, job_exe)
+        super(PullTask, self).__init__(configuration.get_task_id('pull'), agent_id, job_exe, job_type)
 
+        # Set base task fields
         self._uses_docker = False
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
-        self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
+        self._command = configuration.get_args('pull')
+        self._running_timeout_threshold = datetime.timedelta(minutes=30)
 
+        # Set job execution task fields
+        self.task_type = 'pull'
         self.timeout_error_name = 'pull-timeout'
-        self._command = create_pull_command(job_exe.get_docker_image())
+
+        # Private fields for this class
+        self._resources = configuration.get_resources('pull')
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
@@ -42,7 +49,7 @@ class PullTask(JobExecutionTask):
             if self._task_id != task_update.task_id:
                 return None
 
-            return Error.objects.get_builtin_error('pull')
+            return Error.objects.get_error('pull')
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

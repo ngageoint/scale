@@ -10,7 +10,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import Error
+from error.models import CACHED_ERRORS, Error
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -705,6 +705,9 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
 
     def test_blocked_job(self):
         """Tests reprocessing a recipe where a new job should be blocked due to a previously failed job"""
+
+        # Clear error cache so test works correctly
+        CACHED_ERRORS.clear()
 
         handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event)

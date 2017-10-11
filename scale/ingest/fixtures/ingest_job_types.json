@@ -16,12 +16,14 @@
 			"docker_privileged": false,
 			"docker_image": "scale",
 			"interface": {
-			     "version": "1.0",
+			     "version": "1.4",
                  "command": "",
-			     "command_arguments": "scale_ingest ${-i :Ingest ID}",
-			     "input_data": [ { "name": "Ingest ID", "type": "property" } ]
+			     "command_arguments": "scale_ingest ${-i :ingest_id}",
+			     "input_data": [ { "name": "ingest_id", "type": "property" },
+                                 { "name": "workspace", "type": "property" },
+                                 { "name": "new_workspace", "type": "property", "required": false } ]
 			},
-			"revision_num": 2,
+			"revision_num": 3,
             "error_mapping": {},
 			"priority": 10,
             "max_scheduled": 50,
@@ -33,7 +35,7 @@
 			"disk_out_const_required": 0.0,
 			"disk_out_mult_required": 0.0,
 			"created": "2015-03-11T00:00:00.0Z",
-			"last_modified": "2015-03-11T00:00:00.0Z",
+			"last_modified": "2017-08-03T00:00:00.0Z",
 			"icon_code": "f0f5"
 		}
     },
@@ -66,6 +68,23 @@
 			     "input_data": [ { "name": "Ingest ID", "type": "property" } ]
 			},
             "created": "2016-07-12T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-ingest", "1.0"],
+            "revision_num": 3,
+            "interface": {
+			     "version": "1.4",
+                 "command": "",
+			     "command_arguments": "scale_ingest ${-i :ingest_id}",
+			     "input_data": [ { "name": "ingest_id", "type": "property" },
+                                 { "name": "workspace", "type": "property" },
+                                 { "name": "new_workspace", "type": "property", "required": false } ]
+			},
+            "created": "2017-08-03T00:00:00.0Z"
         }
     },
     {

@@ -22,7 +22,7 @@ from trigger.models import TriggerEvent, TriggerRule
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: JobExecution, Queue, Job, Recipe
+# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 

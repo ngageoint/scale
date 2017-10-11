@@ -80,15 +80,15 @@ class QueueNewJobView(GenericAPIView):
             raise Http404
 
         try:
-            job_id, job_exe_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
+            job_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
         except InvalidData as err:
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         job_details = Job.objects.get_details(job_id)
 
         serializer = self.get_serializer(job_details)
-        job_exe_url = reverse('job_execution_details_view', args=[job_exe_id], request=request)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_exe_url))
+        job_url = reverse('job_details_view', args=[job_id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
 
 class QueueNewRecipeView(GenericAPIView):

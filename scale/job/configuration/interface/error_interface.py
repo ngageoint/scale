@@ -96,7 +96,7 @@ class ErrorInterface(object):
 
             if not error:
                 # No exit code match, so return the given default error
-                error = Error.objects.get_builtin_error(default_error_name)
+                error = Error.objects.get_error(default_error_name)
 
         return error
 
@@ -137,7 +137,7 @@ class ErrorInterface(object):
         :rtype: :class:`error.models.Error`
         """
         try:
-            return Error.objects.get_builtin_error(name)
+            return Error.objects.get_error(name)
         except Error.DoesNotExist:
             logger.exception('Unable to find error mapping: %s', name)
             return None

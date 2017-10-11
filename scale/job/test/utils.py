@@ -1,17 +1,24 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
+import datetime
+
 import django.utils.timezone as timezone
 
+import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
+from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision, TaskUpdate
+from job.configuration.results.job_results import JobResults
+from job.execution.job_exe import RunningJobExecution
+from job.execution.tasks.json.results.task_results import TaskResults
+from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
-from node.resources.node_resources import NodeResources
 from node.test import utils as node_utils
 import storage.test.utils as storage_test_utils
+from storage.models import ScaleFile, Workspace
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
@@ -80,9 +87,51 @@ register_trigger_rule_handler(MockTriggerRuleHandler())
 register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 
+def create_clock_rule(name=None, rule_type='CLOCK', event_type=None, schedule='PT1H0M0S', is_active=True):
+    """Creates a scale clock trigger rule model for unit testing
+
+    :returns: The trigger rule model
+    :rtype: :class:`trigger.models.TriggerRule`
+    """
+
+    if not event_type:
+        global RULE_EVENT_COUNTER
+        event_type = 'TEST_EVENT_%i' % RULE_EVENT_COUNTER
+        RULE_EVENT_COUNTER += 1
+
+    config = {
+        'version': '1.0',
+        'event_type': event_type,
+        'schedule': schedule,
+    }
+
+    return trigger_test_utils.create_trigger_rule(name=name, trigger_type=rule_type, configuration=config,
+                                                  is_active=is_active)
+
+
+def create_clock_event(rule=None, occurred=None):
+    """Creates a scale clock trigger event model for unit testing
+
+    :returns: The trigger event model
+    :rtype: :class:`trigger.models.TriggerEvent`
+    """
+
+    if not rule:
+        rule = create_clock_rule()
+
+    if not occurred:
+        occurred = timezone.now()
+
+    event_type = None
+    if rule.configuration and 'event_type' in rule.configuration:
+        event_type = rule.configuration['event_type']
+
+    return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
+
+
 def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
                started=None, ended=None, last_status_change=None, priority=100, results=None, superseded_job=None,
-               delete_superseded=True, is_superseded=False, superseded=None):
+               delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -122,48 +171,81 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.results = results
     job.is_superseded = is_superseded
     job.superseded = superseded
+    job.disk_in_required = input_file_size
     job.save()
     return job
 
 
-def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None, error=None,
-                   command_arguments='test_arg', timeout=None, node=None, created=None, queued=None, started=None,
-                   pre_started=None, pre_completed=None, job_started=None, job_completed=None, post_started=None,
-                   post_completed=None, ended=None, last_modified=None, input_file_size=0.0, resources=None):
-    """Creates a job execution model for unit testing
+def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=None, input_file_size=10.0, queued=None,
+                   started=None, status='RUNNING', error=None, ended=None, output=None, task_results=None):
+    """Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
+    status
 
-    :returns: The job execution model
-    :rtype: :class:`job.models.JobExecution`
+    :returns: The job_exe model
+    :rtype: :class:`job.execution.job_exe.RunningJobExecution`
     """
 
     when = timezone.now()
     if not job:
-        job = create_job(job_type=job_type)
-    if not configuration:
-        configuration = ExecutionConfiguration().get_dict()
-    if not timeout:
-        timeout = job.timeout
+        job = create_job(job_type=job_type, input_file_size=input_file_size)
+    job_type = job.job_type
+
+    job_exe = JobExecution()
+    job_exe.job = job
+    job_exe.job_type = job_type
+    if not exe_num:
+        exe_num = job.num_exes
+    job_exe.exe_num = exe_num
+    job_exe.set_cluster_id('1234', job.id, job.num_exes)
     if not node:
         node = node_utils.create_node()
-    if not created:
-        created = when
+    job_exe.node = node
+    if not timeout:
+        timeout = job.timeout
+    job_exe.timeout = timeout
+    job_exe.input_file_size = input_file_size
+    job_exe.resources = job.get_resources().get_json().get_dict()
+    job_exe.configuration = ExecutionConfiguration().get_dict()
     if not queued:
         queued = when
+    job_exe.queued = queued
     if not started:
-        started = when
-    if not last_modified:
-        last_modified = when
-    if not resources:
-        resources = NodeResources()
+        started = when + datetime.timedelta(seconds=1)
+    job_exe.started = started
+    job_exe.save()
 
-    job_exe = JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
-                                          resources=resources.get_json().get_dict(), disk_in_scheduled=input_file_size,
-                                          command_arguments=command_arguments, timeout=timeout, node=node,
-                                          created=created, queued=queued, started=started, pre_started=pre_started,
-                                          pre_completed=pre_completed, job_started=job_started,
-                                          job_completed=job_completed, post_started=post_started,
-                                          post_completed=post_completed, ended=ended, last_modified=last_modified)
-    job_exe.set_cluster_id('1234')
+    if status in ['COMPLETED', 'FAILED', 'CANCELED']:
+        job_exe_end = JobExecutionEnd()
+        job_exe_end.job_exe_id = job_exe.id
+        job_exe_end.job = job
+        job_exe_end.job_type = job_type
+        job_exe_end.exe_num = exe_num
+        if not task_results:
+            task_results = TaskResults()
+        job_exe_end.task_results = task_results.get_dict()
+        job_exe_end.status = status
+        if status == 'FAILED' and not error:
+            error = error_test_utils.create_error()
+        job_exe_end.error = error
+        job_exe_end.node = node
+        job_exe_end.queued = queued
+        job_exe_end.started = started
+        if not ended:
+            ended = started + datetime.timedelta(seconds=1)
+        job_exe_end.ended = ended
+        job_exe_end.save()
+
+    if status == 'COMPLETED':
+        job_exe_output = JobExecutionOutput()
+        job_exe_output.job_exe_id = job_exe.id
+        job_exe_output.job = job
+        job_exe_output.job_type = job_type
+        job_exe_output.exe_num = exe_num
+        if not output:
+            output = JobResults()
+        job_exe_output.output = output.get_dict()
+        job_exe_output.save()
+
     return job_exe
 
 
@@ -221,51 +303,67 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
                                       priority=priority, timeout=timeout, max_tries=max_tries,
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
-                                      is_operational=is_operational, trigger_rule=trigger_rule, configuration=configuration)
+                                      is_operational=is_operational, trigger_rule=trigger_rule,
+                                      configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
 
-def create_clock_rule(name=None, rule_type='CLOCK', event_type=None, schedule='PT1H0M0S', is_active=True):
-    """Creates a scale clock trigger rule model for unit testing
+def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
+                           queued=None, started=None, resources=None, priority=None, num_exes=1):
+    """Creates a running job execution for unit testing
 
-    :returns: The trigger rule model
-    :rtype: :class:`trigger.models.TriggerRule`
+    :returns: The running job execution
+    :rtype: :class:`job.execution.job_exe.RunningJobExecution`
     """
 
-    if not event_type:
-        global RULE_EVENT_COUNTER
-        event_type = 'TEST_EVENT_%i' % RULE_EVENT_COUNTER
-        RULE_EVENT_COUNTER += 1
+    when = timezone.now()
+    if not job:
+        job = create_job(job_type=job_type, input_file_size=input_file_size, num_exes=num_exes)
+    job_type = job.job_type
 
-    config = {
-        'version': '1.0',
-        'event_type': event_type,
-        'schedule': schedule,
-    }
+    # Configuration that occurs at queue time
+    input_files = {}
+    input_file_ids = job.get_job_data().get_input_file_ids()
+    if input_file_ids:
+        for input_file in ScaleFile.objects.get_files(input_file_ids):
+            input_files[input_file.id] = input_file
+    exe_config = QueuedExecutionConfigurator(input_files).configure_queued_job(job)
 
-    return trigger_test_utils.create_trigger_rule(name=name, trigger_type=rule_type, configuration=config,
-                                                  is_active=is_active)
+    job_exe = JobExecution()
+    job_exe.set_cluster_id('1234', job.id, job.num_exes)
+    job_exe.job = job
+    job_exe.job_type = job_type
+    job_exe.exe_num = job.num_exes
+    if not node:
+        node = node_utils.create_node()
+    job_exe.node = node
+    if not timeout:
+        timeout = job.timeout
+    job_exe.timeout = timeout
+    job_exe.input_file_size = input_file_size
+    if not resources:
+        resources = job.get_resources()
+    job_exe.resources = resources.get_json().get_dict()
+    job_exe.configuration = exe_config.get_dict()
+    if not queued:
+        queued = when
+    job_exe.queued = queued
+    if not started:
+        started = when + datetime.timedelta(seconds=1)
+    job_exe.started = started
+    job_exe.save()
 
+    if not priority:
+        priority = job.priority
 
-def create_clock_event(rule=None, occurred=None):
-    """Creates a scale clock trigger event model for unit testing
-
-    :returns: The trigger event model
-    :rtype: :class:`trigger.models.TriggerEvent`
-    """
-
-    if not rule:
-        rule = create_clock_rule()
-
-    if not occurred:
-        occurred = timezone.now()
-
-    event_type = None
-    if rule.configuration and 'event_type' in rule.configuration:
-        event_type = rule.configuration['event_type']
-
-    return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
+    # Configuration that occurs at schedule time
+    workspaces = {}
+    for workspace in Workspace.objects.all():
+        workspaces[workspace.name] = workspace
+    secret_config = ScheduledExecutionConfigurator(workspaces).configure_scheduled_job(job_exe, job_type,
+                                                                                       job_type.get_job_interface())
+    return RunningJobExecution(agent_id, job_exe, job_type, secret_config, priority)
 
 
 def create_task_status_update(task_id, agent_id, status, when, exit_code=None, reason=None, source=None, message=None,
@@ -305,7 +403,7 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None, r
     task_update_model.reason = reason
     update = TaskStatusUpdate(task_update_model, agent_id, data)
     update.status = status
-    if exit_code:
+    if exit_code is not None:
         update.exit_code = exit_code
     return update
 

@@ -1,9 +1,12 @@
-"""Defines the class that represents queued job executions being considered to be scheduled"""
+"""Defines the class that represents queued job executions being considered for scheduling"""
 from __future__ import unicode_literals
+
+from job.models import JobExecution
+from node.resources.node_resources import NodeResources
 
 
 class QueuedJobExecution(object):
-    """This class represents a queued job execution that is being considered to be scheduled."""
+    """This class represents a queued job execution that is being considered for scheduling"""
 
     def __init__(self, queue):
         """Constructor
@@ -12,87 +15,63 @@ class QueuedJobExecution(object):
         :type queue: :class:`queue.models.Queue`
         """
 
+        self.id = queue.id
+        self.is_canceled = queue.is_canceled
+        self.configuration = queue.get_execution_configuration()
+        self.interface = queue.get_job_interface()
+        self.priority = queue.priority
+        self.required_resources = queue.get_resources()
+        self.scheduled_agent_id = None
+
         self._queue = queue
+        self._scheduled_node_id = None
+        self._scheduled_resources = None
 
-        self.input_file_size = queue.input_file_size
-        self._required_resources = queue.get_resources()
+    def create_job_exe_model(self, framework_id, when):
+        """Creates and returns a scheduled job execution model
 
-        self._provided_agent_id = None
-        self._provided_node_id = None
-        self._provided_resources = None
-
-    @property
-    def id(self):
-        """Returns the ID of this job execution
-
-        :returns: The ID of this job execution
-        :rtype: int
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        :param when: The start time
+        :type when: :class:`datetime.datetime`
+        :returns: The job execution model
+        :rtype: :class:`job.models.JobExecution`
         """
 
-        return self._queue.job_exe_id
+        job_exe = JobExecution()
+        job_exe.job_id = self._queue.job_id
+        job_exe.job_type_id = self._queue.job_type_id
+        job_exe.exe_num = self._queue.exe_num
+        job_exe.timeout = self._queue.timeout
+        job_exe.input_file_size = self._queue.input_file_size
+        job_exe.configuration = self.configuration.get_dict()
+        job_exe.queued = self._queue.queued
 
-    @property
-    def provided_agent_id(self):
-        """Returns the ID of the agent that has been provided to run this job execution
+        if self.is_canceled:
+            job_exe.node_id = None
+            job_exe.resources = NodeResources().get_json().get_dict()
+            job_exe.started = None
+        else:
+            job_exe.node_id = self._scheduled_node_id
+            job_exe.resources = self._scheduled_resources.get_json().get_dict()
+            job_exe.started = when
 
-        :returns: The ID of the agent that has been provided to run this job execution
-        :rtype: string
-        """
+        job_exe.set_cluster_id(framework_id, self._queue.job_id, self._queue.exe_num)
 
-        return self._provided_agent_id
+        return job_exe
 
-    @property
-    def provided_node_id(self):
-        """Returns the ID of the node that has been provided to run this job execution
-
-        :returns: The ID of the node that has been provided to run this job execution
-        :rtype: int
-        """
-
-        return self._provided_node_id
-
-    @property
-    def provided_resources(self):
-        """Returns the resources that have been provided to run this job execution
-
-        :returns: The resources that have been provided to run this job execution
-        :rtype: :class:`node.resources.node_resources.NodeResources`
-        """
-
-        return self._provided_resources
-
-    @property
-    def queue(self):
-        """Returns the queue model for this job execution
-
-        :returns: The queue model for this job execution
-        :rtype: :class:`queue.models.Queue`
-        """
-
-        return self._queue
-
-    @property
-    def required_resources(self):
-        """Returns the resources required by this job execution
-
-        :returns: The resources required by this job execution
-        :rtype: :class:`node.resources.node_resources.NodeResources`
-        """
-
-        return self._required_resources
-
-    def accepted(self, agent_id, node_id, resources):
-        """Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
-        provided
+    def scheduled(self, agent_id, node_id, resources):
+        """Indicates that this job execution has been scheduled on a node and passes the agent, node, and resource
+        information
 
         :param agent_id: The agent ID
         :type agent_id: string
         :param node_id: The node ID
         :type node_id: int
-        :param resources: The provided resources
+        :param resources: The scheduled resources
         :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
-        self._provided_agent_id = agent_id
-        self._provided_node_id = node_id
-        self._provided_resources = resources
+        self.scheduled_agent_id = agent_id
+        self._scheduled_node_id = node_id
+        self._scheduled_resources = resources

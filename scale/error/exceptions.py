@@ -28,7 +28,7 @@ def get_error_by_exit_code(exit_code):
 
     if exit_code not in REGISTERED_ERRORS:
         return None
-    return Error.objects.get_builtin_error(REGISTERED_ERRORS[exit_code].error_name)
+    return Error.objects.get_error(REGISTERED_ERRORS[exit_code].error_name)
 
 
 def get_error_by_exception(wrapped_ex):

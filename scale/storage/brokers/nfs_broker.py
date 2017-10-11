@@ -66,8 +66,7 @@ class NfsBroker(Broker):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`
         """
 
-        # The docker-volume-netshare plugin requires the : separator between the NFS host and path to be removed
-        self._volume = BrokerVolume('nfs', config['nfs_path'].replace(':', ''))
+        self._volume = BrokerVolume('nfs', config['nfs_path'])
 
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`

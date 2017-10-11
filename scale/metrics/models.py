@@ -10,7 +10,7 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 from error.models import Error
-from job.models import Job, JobExecution, JobType
+from job.models import Job, JobExecutionEnd, JobType
 from ingest.models import Ingest, Strike
 from metrics.registry import MetricsPlotData, MetricsType, MetricsTypeGroup, MetricsTypeFilter
 
@@ -77,18 +77,17 @@ class MetricsErrorManager(models.Manager):
         ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
 
         # Fetch all the job executions with an error for the requested day
-        job_exes = JobExecution.objects.filter(error__is_builtin=True, ended__gte=started, ended__lte=ended)
-        job_exes = job_exes.select_related('error')
-        job_exes = job_exes.defer('environment', 'results', 'results_manifest', 'stdout', 'stderr')
+        job_exe_ends = JobExecutionEnd.objects.filter(error__is_builtin=True, ended__gte=started, ended__lte=ended)
+        job_exe_ends = job_exe_ends.select_related('error')
 
         # Calculate the overall counts based on job status
         entry_map = {}
-        for job_exe in job_exes.iterator():
-            if job_exe.error not in entry_map:
-                entry = MetricsError(error=job_exe.error, occurred=date, created=timezone.now())
+        for job_exe_end in job_exe_ends.iterator():
+            if job_exe_end.error not in entry_map:
+                entry = MetricsError(error=job_exe_end.error, occurred=date, created=timezone.now())
                 entry.total_count = 0
-                entry_map[job_exe.error] = entry
-            entry = entry_map[job_exe.error]
+                entry_map[job_exe_end.error] = entry
+            entry = entry_map[job_exe_end.error]
             entry.total_count += 1
 
         # Save the new metrics to the database
@@ -444,7 +443,7 @@ class MetricsJobTypeManager(models.Manager):
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type', 'error').defer('data', 'configuration', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
 
         # Calculate the overall counts based on job status
         entry_map = {}
@@ -463,15 +462,13 @@ class MetricsJobTypeManager(models.Manager):
             self._update_counts(date, job, entry)
 
         # Fetch all the completed job executions for the requested day
-        job_exes = JobExecution.objects.filter(status__in=['COMPLETED'], ended__gte=started, ended__lte=ended)
-        job_exes = job_exes.select_related('job__job_type')
-        job_exes = job_exes.defer('environment', 'results', 'results_manifest', 'stdout', 'stderr')
+        job_exe_ends = JobExecutionEnd.objects.filter(status__in=['COMPLETED'], ended__gte=started, ended__lte=ended)
+        job_exe_ends = job_exe_ends.select_related('job_type')
 
         # Calculate the metrics per job execution grouped by job type
-        for job_exe in job_exes.iterator():
-            job_type = job_exe.job.job_type
-            entry = entry_map[job_type]
-            self._update_times(date, job_exe, entry)
+        for job_exe_end in job_exe_ends.iterator():
+            entry = entry_map[job_exe_end.job_type]
+            self._update_times(date, job_exe_end, entry)
 
         # Save the new metrics to the database
         self._replace_entries(date, entry_map.values())
@@ -538,30 +535,38 @@ class MetricsJobTypeManager(models.Manager):
             elif job.error.category == 'ALGORITHM':
                 entry.error_algorithm_count += 1
 
-    def _update_times(self, date, job_exe, entry):
+    def _update_times(self, date, job_exe_end, entry):
         """Updates the metrics model attributes for a single job execution.
 
         :param date: The date when job executions associated with the metrics ended.
         :type date: datetime.date
-        :param job_exe: The job execution from which to derive statistics.
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job_exe_end: The job execution from which to derive statistics.
+        :type job_exe_end: :class:`job.models.JobExecutionEnd`
         :param entry: The metrics model to update.
         :type entry: :class:`metrics.models.MetricsJobType`
         """
 
         # Update elapsed queue time metrics
         queue_secs = None
-        if job_exe.queued and job_exe.started:
-            queue_secs = max((job_exe.started - job_exe.queued).total_seconds(), 0)
+        if job_exe_end.queued and job_exe_end.started:
+            queue_secs = max((job_exe_end.started - job_exe_end.queued).total_seconds(), 0)
             entry.queue_time_sum = (entry.queue_time_sum or 0) + queue_secs
             entry.queue_time_min = min(entry.queue_time_min or sys.maxint, queue_secs)
             entry.queue_time_max = max(entry.queue_time_max or 0, queue_secs)
             entry.queue_time_avg = entry.queue_time_sum / entry.completed_count
 
+        task_results = job_exe_end.get_task_results()
+
+        pull_secs = None
+        pull_task_length = task_results.get_task_run_length('pull')
+        if pull_task_length:
+            pull_secs = max(pull_task_length.total_seconds(), 0)
+
         # Update elapsed pre-task time metrics
         pre_secs = None
-        if job_exe.pre_started and job_exe.pre_completed:
-            pre_secs = max((job_exe.pre_completed - job_exe.pre_started).total_seconds(), 0)
+        pre_task_length = task_results.get_task_run_length('pre')
+        if pre_task_length:
+            pre_secs = max(pre_task_length.total_seconds(), 0)
             entry.pre_time_sum = (entry.pre_time_sum or 0) + pre_secs
             entry.pre_time_min = min(entry.pre_time_min or sys.maxint, pre_secs)
             entry.pre_time_max = max(entry.pre_time_max or 0, pre_secs)
@@ -569,8 +574,9 @@ class MetricsJobTypeManager(models.Manager):
 
         # Update elapsed actual job time metrics
         job_secs = None
-        if job_exe.job_started and job_exe.job_completed:
-            job_secs = max((job_exe.job_completed - job_exe.job_started).total_seconds(), 0)
+        job_task_length = task_results.get_task_run_length('main')
+        if job_task_length:
+            job_secs = max(job_task_length.total_seconds(), 0)
             entry.job_time_sum = (entry.job_time_sum or 0) + job_secs
             entry.job_time_min = min(entry.job_time_min or sys.maxint, job_secs)
             entry.job_time_max = max(entry.job_time_max or 0, job_secs)
@@ -578,22 +584,23 @@ class MetricsJobTypeManager(models.Manager):
 
         # Update elapsed post-task time metrics
         post_secs = None
-        if job_exe.post_started and job_exe.post_completed:
-            post_secs = max((job_exe.post_completed - job_exe.post_started).total_seconds(), 0)
+        post_task_length = task_results.get_task_run_length('post')
+        if post_task_length:
+            post_secs = max(post_task_length.total_seconds(), 0)
             entry.post_time_sum = (entry.post_time_sum or 0) + post_secs
             entry.post_time_min = min(entry.post_time_min or sys.maxint, post_secs)
             entry.post_time_max = max(entry.post_time_max or 0, post_secs)
             entry.post_time_avg = entry.post_time_sum / entry.completed_count
 
         # Update elapsed overall run and stage time metrics
-        if job_exe.started and job_exe.ended:
-            run_secs = max((job_exe.ended - job_exe.started).total_seconds(), 0)
+        if job_exe_end.started and job_exe_end.ended:
+            run_secs = max((job_exe_end.ended - job_exe_end.started).total_seconds(), 0)
             entry.run_time_sum = (entry.run_time_sum or 0) + run_secs
             entry.run_time_min = min(entry.run_time_min or sys.maxint, run_secs)
             entry.run_time_max = max(entry.run_time_max or 0, run_secs)
             entry.run_time_avg = entry.run_time_sum / entry.completed_count
 
-            stage_secs = max(run_secs - ((pre_secs or 0) + (job_secs or 0) + (post_secs or 0)), 0)
+            stage_secs = max(run_secs - ((pull_secs or 0) + (pre_secs or 0) + (job_secs or 0) + (post_secs or 0)), 0)
             entry.stage_time_sum = (entry.stage_time_sum or 0) + stage_secs
             entry.stage_time_min = min(entry.stage_time_min or sys.maxint, stage_secs)
             entry.stage_time_max = max(entry.stage_time_max or 0, stage_secs)
