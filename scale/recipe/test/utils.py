@@ -10,8 +10,9 @@ from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeInputFile, RecipeJob, RecipeType, RecipeTypeRevision
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
+import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
@@ -220,3 +221,27 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
 
     return Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe=superseded_recipe,
                                         delta=delta, superseded_jobs=superseded_jobs)
+
+def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
+                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
+                      last_modified=None, source_started=None, source_ended=None):
+    """Creates a Scale file and recipe input file model for unit testing
+
+    :returns: The file model
+    :rtype: :class:`storage.models.ScaleFile`
+    """
+
+    if not recipe:
+        recipe = create_recipe()
+    if not recipe_input:
+        recipe_input = 'test_input'
+    if not input_file:
+        input_file = storage_test_utils.create_file(file_name=file_name, media_type=media_type, file_size=file_size,
+                                                    file_path=file_path, workspace=workspace, countries=countries,
+                                                    is_deleted=is_deleted, data_type=data_type,
+                                                    last_modified=last_modified, source_started=source_started,
+                                                    source_ended=source_ended)
+
+    RecipeInputFile.objects.create(recipe=recipe, scale_file=input_file, recipe_input=recipe_input)
+
+    return input_file
