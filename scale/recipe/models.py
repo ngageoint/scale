@@ -577,24 +577,8 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
-class RecipeInputFile(models.Model):
-    """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
-    accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
-
-    :keyword recipe: The recipe that the input file is linked to
-    :type recipe: :class:`django.db.models.ForeignKey`
-    :keyword scale_file: The input file that the recipe is linked to
-    :type scale_file: :class:`django.db.models.ForeignKey`
-    :keyword recipe_input: The name of the recipe input parameter
-    :type recipe_input: :class:`django.db.models.CharField`
-    :keyword created: When the recipe was created
-    :type created: :class:`django.db.models.DateTimeField`
-    """
-
-    recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
-    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
-    recipe_input = models.CharField(blank=True, null=True, max_length=250)
-    created = models.DateTimeField(auto_now_add=True)
+class RecipeInputFileManager(models.Manager):
+    """Provides additional methods for handleing RecipeInputFiles"""
 
     def get_recipe_input_files(self, recipe_id, started=None, ended=None, time_field=None, file_name=None,
                                recipe_input=None):
@@ -616,28 +600,55 @@ class RecipeInputFile(models.Model):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        recipe_input_files = RecipeInputFile.filter(recipe__id=recipe_id)
+        recipe_input_files = RecipeInputFile.objects.filter(recipe__id=recipe_id)
 
+        # Get input_file data from RecipeInputData model
         if recipe_input_files:
             if recipe_input:
                 recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)
 
-            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                                file_name=file_name)
+            recipe_input_file_ids = recipe_input_files.values_list('scale_file__id', flat=True)
 
-            files = files.filter(id__in=recipe_input_files)
-        
+        # Reach back to the recipe_data to get input_file data for legacy recipes
         else:
-            
+            recipe_data = Recipe.objects.get(pk=recipe_id).get_recipe_data()
+            recipe_input_files = recipe_data.get_input_file_info()
 
-            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                                file_name=file_name)
+            if recipe_input:
+                recipe_input_file_ids = [f_id for f_id, name in recipe_input_files if name == recipe_input]
+            else:
+                recipe_input_file_ids = [f_id for f_id, name in recipe_input_files]
 
-
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+        files = files.filter(id__in=recipe_input_file_ids)
+        files = files.order_by('last_modified')
 
         return files
 
-    
+
+
+class RecipeInputFile(models.Model):
+    """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
+    accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
+
+    :keyword recipe: The recipe that the input file is linked to
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword scale_file: The input file that the recipe is linked to
+    :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword recipe_input: The name of the recipe input parameter
+    :type recipe_input: :class:`django.db.models.CharField`
+    :keyword created: When the recipe was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
+    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    recipe_input = models.CharField(blank=True, null=True, max_length=250)
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = RecipeInputFileManager()
+
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_input_file'

@@ -1786,19 +1786,23 @@ class JobInputFileManager(models.Manager):
             if job_input:
                 job_input_files = job_input_files.filter(job_input=job_input)
 
+            job_input_file_ids = job_input_files.values_list('input_file__id', flat=True)
+
         # Reach back to the job_data to get input_file data for legacy jobs
         else:
             job_data = Job.objects.get(pk=job_id).get_job_data()
             job_input_files = job_data.get_input_file_info()
 
             if job_input:
-                job_input_files = [f_id for f_id, name in job_input_files if name == job_input_files]
+                job_input_file_ids = [f_id for f_id, name in job_input_files if name == job_input]
             else:
-                job_input_files = [f_id for f_id, name in job_input_files]
+                job_input_file_ids = [f_id for f_id, name in job_input_files]
 
         files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
                                                file_name=file_name)
-        files = files.filter(id__in=job_input_files)
+        files = files.filter(id__in=job_input_file_ids)
+        files = files.order_by('last_modified')
+
         return files
 
 
