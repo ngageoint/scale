@@ -389,7 +389,7 @@ class SeedManifest(object):
             input_name = input_file.name
             input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
             # TODO: Determine how we are going to address partial support in Seed
-            retrieve_files_dict[input_name] = (input_file.multiple, input_path, False)
+            retrieve_files_dict[input_name] = (input_file.multiple, input_path, input_file.partial)
 
         return retrieve_files_dict
 

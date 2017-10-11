@@ -372,7 +372,7 @@ class JobData(object):
     def store_output_data_files(self, data_files, job_exe):
         """Stores the given data output files
 
-        :param data_files: Dict with each file parameter name mapping to a list of ProductFileMetadata namedtuples
+        :param data_files: Dict with each file parameter name mapping to a list of ProductFileMetadata classes
         :type data_files: {string: [`ProductFileMetadata`]}
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
