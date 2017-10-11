@@ -48,7 +48,7 @@ class TestFilesView(TestCase):
         self.assertEqual(self.f1_file_name, result[0]['file_name'])
         self.assertEqual('2016-01-01T00:00:00Z', result[0]['source_started'])
 
-    def test_file_name_bad_file_name(self):
+    def test_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
 
         url = rest_util.get_url('/files/?file_name=%s' % ('not_a.file'))

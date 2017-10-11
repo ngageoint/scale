@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 
+import datetime
 import django
 import json
 
-from django.test.testcases import TransactionTestCase
+from django.test.testcases import TestCase, TransactionTestCase
+from django.utils.timezone import utc
 
 import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
@@ -1060,3 +1062,180 @@ class TestRecipeReprocessView(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestRecipeInputFilesView(TestCase):
+
+    def setUp(self):
+
+        # Create legacy test files
+        self.f1_file_name = 'legacy_foo.bar'
+        self.f1_last_modified = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f1_source_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
+                                                    source_ended=self.f1_source_ended,
+                                                    last_modified=self.f1_last_modified)
+
+        self.f2_file_name = 'legacy_qaz.bar'
+        self.f2_recipe_input = 'legacy_input_1'
+        self.f2_last_modified = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.f2_source_started = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
+                                                    source_ended=self.f2_source_ended,
+                                                    last_modified=self.f2_last_modified)
+
+        self.job_type1 = job_test_utils.create_job_type()
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'media_types': [
+                    'image/x-hdf5-image',
+                ],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'jobs': [{
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+                'name': 'kml',
+                'recipe_inputs': [{
+                    'job_input': 'input_file',
+                    'recipe_input': 'input_file',
+                }],
+            }],
+        }
+
+        workspace1 = storage_test_utils.create_workspace()
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': self.file1.id,
+            }, {
+                'name': self.f2_recipe_input,
+                'file_id': self.file2.id,
+            }],
+            'workspace_id': workspace1.id,
+        }
+
+        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        self.legacy_recipe = recipe_handler.recipe
+        self.recipe = recipe_test_utils.create_recipe()
+
+        # Create RecipeInputFile entry files
+        self.f3_file_name = 'foo.bar'
+        self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f3_source_started = datetime.datetime(2016, 1, 10, tzinfo=utc)
+        self.f3_source_ended = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.file3 = recipe_test_utils.create_input_file(file_name=self.f3_file_name,
+                                                         source_started=self.f3_source_started,
+                                                         source_ended=self.f3_source_ended, recipe=self.recipe,
+                                                         last_modified=self.f3_last_modified)
+
+        self.f4_file_name = 'qaz.bar'
+        self.f4_recipe_input = 'input_1'
+        self.f4_last_modified = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.f4_source_started = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f4_source_ended = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.file4 = recipe_test_utils.create_input_file(file_name=self.f4_file_name,
+                                                         source_started=self.f4_source_started,
+                                                         source_ended=self.f4_source_ended, recipe=self.recipe,
+                                                         last_modified=self.f4_last_modified,
+                                                         recipe_input=self.f4_recipe_input)
+
+    def test_successful_file(self):
+        """Tests successfully calling the recipe input files view"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/' % self.recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+
+    def test_legacy_successful_file(self):
+        """Tests successfully calling the recipe input files view for legacy files with recipe_data"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/' % self.legacy_recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+
+    def test_filter_recipe_input(self):
+        """Tests successfully calling the recipe inputs files view with recipe_input string filtering"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/?recipe_input=%s' % (self.recipe.id, self.f4_recipe_input))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file4.id)
+
+    def test_legacy_filter_recipe_input(self):
+        """Tests successfully calling the recipe inputs files view for legacy files with recipe_input string filtering"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/?recipe_input=%s' % (self.legacy_recipe.id,
+                                                                              self.f2_recipe_input))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file2.id)
+
+    def test_file_name_successful(self):
+        """Tests successfully calling the get files by name view"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/?file_name=%s' % (self.recipe.id, self.f3_file_name))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 1)
+
+        self.assertEqual(self.f3_file_name, result[0]['file_name'])
+        self.assertEqual('2016-01-10T00:00:00Z', result[0]['source_started'])
+
+    def test_bad_file_name(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/?file_name=%s' % (self.recipe.id, 'not_a.file'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 0)
+
+    def test_time_successful(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = rest_util.get_url('/recipes/%i/input_files/?started=%s&ended=%s&time_field=%s' % (self.recipe.id,
+                                                                                                '2016-01-10T00:00:00Z',
+                                                                                                '2016-01-13T00:00:00Z',
+                                                                                                'source'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 2)
