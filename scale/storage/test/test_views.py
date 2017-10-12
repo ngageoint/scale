@@ -47,6 +47,7 @@ class TestFilesView(TestCase):
 
         self.assertEqual(self.f1_file_name, result[0]['file_name'])
         self.assertEqual('2016-01-01T00:00:00Z', result[0]['source_started'])
+        self.assertEqual(self.file1.id, result[0]['id'])
 
     def test_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
@@ -68,9 +69,11 @@ class TestFilesView(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        results = json.loads(response.content)
-        result = results['results']
-        self.assertEqual(len(result), 2)
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
 
 
 class TestWorkspacesView(TestCase):
