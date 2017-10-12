@@ -41,16 +41,17 @@ class TestQueuedExecutionConfigurator(TestCase):
         file_3 = storage_test_utils.create_file()
         input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
         interface_dict = {'version': '1.4', 'command': 'foo',
-                          'command_arguments': '${-a :input_1} ${-b :input_2} ${input_3} ${job_output_dir}',
+                          'command_arguments': '${-a :input_1} ${-b :input_2} ${input_3} ${input_4} ${job_output_dir}',
                           'input_data': [{'name': 'input_1', 'type': 'property'}, {'name': 'input_2', 'type': 'file'},
-                                         {'name': 'input_3', 'type': 'files'}],
+                                         {'name': 'input_3', 'type': 'files'}, {'name': 'input_4', 'type': 'files',
+                                         'required': False}],
                           'output_data': [{'name': 'output_1', 'type': 'file'}]}
         data_dict = {'input_data': [{'name': 'input_1', 'value': 'my_val'}, {'name': 'input_2', 'file_id': file_1.id},
                                     {'name': 'input_3', 'file_ids': [file_2.id, file_3.id]}],
                      'output_data': [{'name': 'output_1', 'workspace_id': workspace.id}]}
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
-        expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
+        expected_args = '-a my_val -b %s %s  ${job_output_dir}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
         job_type = job_test_utils.create_job_type(interface=interface_dict)
