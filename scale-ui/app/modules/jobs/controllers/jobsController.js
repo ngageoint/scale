@@ -165,13 +165,32 @@
             });
         };
 
-        vm.requeueJobs = function (jobsParams) {
-            if (!jobsParams) {
-                jobsParams = vm.jobsParams ? vm.jobsParams : { started: vm.lastModifiedStart.toISOString(), ended: vm.lastModifiedStop.toISOString() };
+        vm.requeueJobs = function (requeueParams) {
+            if (!requeueParams) {
+                if (vm.jobsParams) {
+                    // requeue all jobs with filters
+                    requeueParams = {
+                        started: vm.jobsParams.started,
+                        ended: vm.jobsParams.ended,
+                        status: vm.jobsParams.status,
+                        job_type_ids: vm.jobsParams.job_type_id ? [vm.jobsParams.job_type_id] : null,
+                        error_categories: vm.jobsParams.error_category ? [vm.jobsParams.error_category] : null
+                    };
+                } else {
+                    // requeue all jobs between start and end dates
+                    requeueParams = {
+                        started: vm.lastModifiedStart.toISOString(),
+                        ended: vm.lastModifiedStop.toISOString()
+                    };
+                }
             }
+            // remove empty/null/undefined values from jobsParams
+            requeueParams = _.pick(requeueParams, _.identity);
+
             vm.actionClicked = true;
             vm.loading = true;
-            loadService.requeueJobs(jobsParams).then(function () {
+
+            loadService.requeueJobs(requeueParams).then(function () {
                 toastr['success']('Requeue Successful');
                 vm.getJobs();
             }).catch(function (error) {
