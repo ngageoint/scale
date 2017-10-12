@@ -230,6 +230,7 @@ class RecipeManager(models.Manager):
             return None
         return recipe_job
 
+    # TODO: remove this once job failure, completion, and cancellation have moved to messaging system
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
@@ -247,6 +248,30 @@ class RecipeManager(models.Manager):
             return handlers[0]
         return None
 
+    def get_recipe_handlers(self, recipes):
+        """Returns the handlers for the given recipes
+
+        :param recipes: The recipe models with recipe_type_rev models populated
+        :type recipes: list
+        :returns: The recipe handlers
+        :rtype: list
+        """
+
+        recipe_dict = {recipe.id: recipe for recipe in recipes}
+        handlers = {}  # {Recipe ID: Recipe handler}
+
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
+        for recipe_id in recipe_dict.keys():
+            if recipe_id in recipe_jobs_dict:
+                recipe_jobs = recipe_jobs_dict[recipe_id]
+                if recipe_jobs:
+                    recipe = recipe_dict[recipe_id]
+                    handler = RecipeHandler(recipe, recipe_jobs)
+                    handlers[recipe_id] = handler
+
+        return handlers
+
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def get_recipe_handlers_for_jobs(self, job_ids):
         """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
         have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
@@ -341,6 +366,17 @@ class RecipeManager(models.Manager):
         else:
             recipes = recipes.order_by('last_modified')
         return recipes
+
+    def get_recipes_with_definitions(self, recipe_ids):
+        """Returns a list of recipes with their definitions (recipe_type_rev models populated) for the given recipe IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: The list of recipes with their recipe_type_rev models populated
+        :rtype: list
+        """
+
+        return Recipe.objects.select_related('recipe_type_rev').filter(id__in=recipe_ids)
 
     def get_details(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.
@@ -445,6 +481,7 @@ class RecipeManager(models.Manager):
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
         the results.
@@ -456,7 +493,7 @@ class RecipeManager(models.Manager):
         """
 
         handlers = {}  # {Recipe ID: Recipe handler}
-        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_ids)
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs_old(recipe_ids)
         for recipe_id in recipe_ids:
             if recipe_id in recipe_jobs_dict:
                 recipe_jobs = recipe_jobs_dict[recipe_id]
@@ -606,6 +643,26 @@ class RecipeJobManager(models.Manager):
     """
 
     def get_recipe_jobs(self, recipe_ids):
+        """Returns the recipe_job models with related job and job_type_rev models for the given recipe IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: Dict where each recipe ID maps to a list of corresponding recipe_job models
+        :rtype: dict
+        """
+
+        recipe_jobs = {}  # {Recipe ID: [Recipe job]}
+
+        for recipe_job in self.select_related('job__job_type_rev').filter(recipe_id__in=recipe_ids):
+            if recipe_job.recipe_id in recipe_jobs:
+                recipe_jobs[recipe_job.recipe_id].append(recipe_job)
+            else:
+                recipe_jobs[recipe_job.recipe_id] = [recipe_job]
+
+        return recipe_jobs
+
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
+    def get_recipe_jobs_old(self, recipe_ids):
         """Returns the recipe_job models with related recipe, recipe_type, recipe_type_rev, job, job_type, and
         job_type_rev models for the given recipe IDs
 

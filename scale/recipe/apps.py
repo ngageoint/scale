@@ -10,3 +10,12 @@ class RecipeConfig(AppConfig):
     name = 'recipe'
     label = 'recipe'
     verbose_name = 'Recipe'
+
+    def ready(self):
+        """Registers components related to recipes"""
+
+        # Register recipe message types
+        from messaging.messages.factory import add_message_type
+        from recipe.messages.update_recipes import UpdateRecipes
+
+        add_message_type(UpdateRecipes)
