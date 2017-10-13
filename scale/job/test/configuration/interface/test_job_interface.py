@@ -651,7 +651,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 
@@ -673,7 +673,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, 'property-value', 'expected a different command from pre_steps')
 
@@ -695,7 +695,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '-f property-value', 'expected a different command from pre_steps')
 
@@ -734,7 +734,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_data = JobData(job_data_dict)
         job_environment = job_environment_dict
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, input_file_path, 'expected a different command from pre_steps')
 
@@ -769,7 +769,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         expected_command_arguments = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'files1')
         self.assertEqual(job_command_arguments, expected_command_arguments,
@@ -785,7 +785,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe_id = 1
         job_output_dir = SCALE_JOB_EXE_OUTPUT_PATH
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, job_output_dir, 'expected a different command from pre_steps')
 
@@ -804,7 +804,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
                                                                                              job_environment,
                                                                                              job_exe_id))
@@ -824,7 +824,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 
@@ -843,7 +843,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
                                                                                              job_environment,
                                                                                              job_exe_id))
@@ -863,7 +863,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_environment = job_environment_dict
         job_exe_id = 1
 
-        job_interface.perform_pre_steps(job_data, job_environment)
+        job_interface.perform_pre_steps(job_data)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 

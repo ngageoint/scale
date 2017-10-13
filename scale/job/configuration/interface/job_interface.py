@@ -469,7 +469,7 @@ class JobInterface(object):
         job_data.save_parse_results(job_data_parse_results)
         return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
 
-    def perform_pre_steps(self, job_data, job_environment):
+    def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
