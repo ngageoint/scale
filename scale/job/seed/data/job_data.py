@@ -1,29 +1,24 @@
 """Defines the data needed for executing a job"""
 from __future__ import unicode_literals
 
-import glob
-from abc import ABCMeta
-
+import json
 import logging
 import os
+from abc import ABCMeta
 from numbers import Integral
 
-from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
+from job.configuration.data.data_file import DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.results.exceptions import OutputCaptureError
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from job.seed.results.job_results import JobResults
 from job.seed.types import SeedInputFiles, SeedOutputFiles
 from product.models import ProductFileMetadata
-
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
 
-
 logger = logging.getLogger(__name__)
-
 
 DEFAULT_VERSION = '2.0'
 
@@ -41,7 +36,6 @@ class ValidationWarning(object):
         """
         self.key = key
         self.details = details
-
 
 
 class JobDataFields(object):
@@ -94,10 +88,10 @@ class JobData(object):
             data = {}
 
         self._data = data
-        self._data_names = {} # str -> `JobDataFields`
-        self._output_files = {} # str -> `JobDataOutputFiles`
-        self._input_json = {} # str -> `JobDataInputJson`
-        self._input_files = {} # str -> `JobDataInputFiles`
+        self._data_names = {}  # str -> `JobDataFields`
+        self._output_files = {}  # str -> `JobDataOutputFiles`
+        self._input_json = {}  # str -> `JobDataInputJson`
+        self._input_files = {}  # str -> `JobDataInputFiles`
 
         if 'version' not in self._data:
             self._data['version'] = DEFAULT_VERSION
@@ -139,7 +133,7 @@ class JobData(object):
         self._data_names[input.name] = input
         self._input_files[input.name] = input
 
-    def add_json_input(self, data , add_to_internal=True):
+    def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
 
         :param data: The json parameter dict
@@ -171,8 +165,7 @@ class JobData(object):
         self._data_names[output.name] = output
         self._output_files[output.name] = output
 
-    @staticmethod
-    def capture_output_files(output_files):
+    def capture_output_files(self, output_files):
         """Evaluate files patterns and capture any available side-car metadata associated with matched files
 
         :param output_files: interface definition of Seed output files that should be captured
@@ -200,7 +193,7 @@ class JobData(object):
                 # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
                 if os.path.isfile(metadata_file):
                     with open(metadata_file) as metadata_file_handle:
-                        metadata = SeedMetadata(metadata_file_handle.read())
+                        metadata = SeedMetadata(json.load(metadata_file_handle))
 
                         # Create a GeoJSON object, as the present Seed Metadata schema only uses the Geometry fragment
                         # TODO: Update if Seed schema updates.  Ref: https://github.com/ngageoint/seed/issues/95
@@ -300,7 +293,7 @@ class JobData(object):
 
         workspace_ids = set()
         for output in self._output_files.itervalues():
-            workspace_ids(output.workspace_id)
+            workspace_ids.add(output.workspace_id)
 
         return list(workspace_ids)
 
@@ -313,7 +306,7 @@ class JobData(object):
 
         workspaces = {}
         for output in self._output_files.itervalues():
-                workspaces[output.name] = output.workspace_id
+            workspaces[output.name] = output.workspace_id
 
         return workspaces
 
@@ -331,7 +324,7 @@ class JobData(object):
 
         for name in property_names:
             if name in self._input_json:
-                property_values[name] =  self._input_json[name].value
+                property_values[name] = self._input_json[name].value
 
         return property_values
 
@@ -360,11 +353,11 @@ class JobData(object):
             file_input = self._data_names[data_file.name]
             file_ids = []
             if not multiple and len(file_input) > 1:
-                raise Exception('Multiple inputs detected for input %s that does not support.' % (data_file.name, ))
+                raise Exception('Multiple inputs detected for input %s that does not support.' % (data_file.name,))
             for file_id in file_input:
                 file_id = long(file_id)
                 file_ids.append(file_id)
-                files_to_retrieve[file_id]  = (dir_path, partial)
+                files_to_retrieve[file_id] = (dir_path, partial)
             param_file_ids[data_file.name] = file_ids
 
         # Retrieve all files
@@ -530,7 +523,6 @@ class JobData(object):
 
         # Handle extra inputs in the data that are not defined in the interface
         for name in list(self._input_json.keys()):
-            data_input = self._input_json[name]
             if name not in [x.name for x in input_json]:
                 warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
                 warnings.append(warn)
@@ -552,7 +544,7 @@ class JobData(object):
         warnings = []
         workspace_ids = set()
         output_files = self._data['output_data']['files']
-        outputs_by_name = {k.name: output_files[k] for k in output_files} # Output Name -> `JobDataOuputFiles`
+        outputs_by_name = {k.name: output_files[k] for k in output_files}  # Output Name -> `JobDataOutputFiles`
         for name in files:
             if name not in outputs_by_name:
                 raise InvalidData('Invalid job data: Data output %s was not provided' % name)
@@ -602,7 +594,7 @@ class JobData(object):
 
         :param collection: Original list to removal dict from
         :type collection: [dict]
-        :param name: Value for name key that should be ommitted
+        :param name: Value for name key that should be omitted
         :type name: str
         :return: List without dict matching on 'name' key value
         :rtype: [dict]
@@ -693,7 +685,7 @@ class JobData(object):
         :param data: Input or output data field
         :type data: dict
         :param field_name: Name of field that describes additional input / output metadata
-        :type field_name: str
+        :type field_name: basestring
         :return:
         """
         if 'name' not in data:

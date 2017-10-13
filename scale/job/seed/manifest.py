@@ -1,11 +1,9 @@
 """Defines the interface for executing a job"""
 from __future__ import unicode_literals
 
-import glob
 import json
 import logging
 import os
-from collections import namedtuple
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -14,20 +12,14 @@ from job.configuration.configurators import normalize_env_var_name
 from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
-from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.results.exceptions import OutputCaptureError
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.seed.data.job_data import JobData
+#from job.seed.data.job_data import JobData
 from job.seed.types import SeedInputFiles, SeedInputJson
-
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
 
 MODE_RO = 'ro'
 MODE_RW = 'rw'
-
-
 
 SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema/seed.manifest.schema.json')
 with open(SCHEMA_FILENAME) as schema_file:
@@ -61,7 +53,7 @@ class SeedManifest(object):
         self._check_mount_name_uniqueness()
 
         self._validate_mount_paths()
-        #self._create_validation_dicts()
+        # self._create_validation_dicts()
 
     def add_output_to_connection(self, output_name, job_conn, input_name):
         """Adds the given output from the interface as a new input to the given job connection
@@ -156,12 +148,12 @@ class SeedManifest(object):
         :rtype: dict
         """
 
-        return self.get_interface().get('inputs', {'files':[], 'json':[]})
+        return self.get_interface().get('inputs', {'files': [], 'json': []})
 
     def get_outputs(self):
-        """Gets the ouputs defined in the interface
+        """Gets the outputs defined in the interface
 
-        :return: the ouputs defined for the job
+        :return: the outputs defined for the job
         :rtype: dict
         """
 
@@ -175,8 +167,6 @@ class SeedManifest(object):
         """
 
         return self.get_inputs().get('files', [])
-
-
 
     def get_input_json(self):
         """Gets the list of json defined in the interface
@@ -216,7 +206,7 @@ class SeedManifest(object):
         :rtype: list
         """
 
-        return self.get_job().get('resources', {'scalar':[]})['scalar']
+        return self.get_job().get('resources', {'scalar': []})['scalar']
 
     def get_mounts(self):
         """Gets the mounts defined the Seed job
@@ -281,20 +271,17 @@ class SeedManifest(object):
         # For compliance with Seed we must capture all files directly from the output directory.
         # The capture expressions can be found within interface.outputs.files.pattern
 
-        output_files = JobData.capture_output_files(self.get_output_files())
+        output_files = job_data.capture_output_files(self.get_output_files())
 
-        # TODO: implement JSON capture from seed.ouputs.json
+        # TODO: implement JSON capture from seed.outputs.json
 
         return job_data.store_output_data_files(output_files, job_exe)
-
 
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
-        :param job_environment: The job environment
-        :type job_environment: dict
         """
         job_data.setup_job_dir(self.get_input_files())
 
@@ -371,7 +358,8 @@ class SeedManifest(object):
         env_vars += [normalize_env_var_name(setting['name']) for setting in self.get_settings()]
         env_vars += [normalize_env_var_name(input_file.name) for input_file in self.get_input_files()]
         env_vars += [normalize_env_var_name(json['name']) for json in self.get_input_json()]
-        env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in self.get_scalar_resources()]
+        env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in
+                     self.get_scalar_resources()]
 
         if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Collisions are not allowed between reserved keywords, resources, settings'
@@ -414,7 +402,7 @@ class SeedManifest(object):
         # TODO: Handle JSON output
 
         for output_file in self.get_output_files():
-            if data_item_name ==  output_file.name:
+            if data_item_name == output_file.name:
                 return output_file
 
     def _get_settings_values(self, settings, exe_configuration, job_type, censor):

@@ -44,7 +44,7 @@ class SeedInputFiles(SeedFiles):
 
 
 class SeedOutputFiles(SeedFiles):
-    """Concrete class for Seed ouput files elements"""
+    """Concrete class for Seed output files elements"""
 
     @property
     def media_type(self):
@@ -126,6 +126,6 @@ class SeedInputJson(SeedJson):
     pass
 
 
-class SeedOuputJson(SeedJson):
+class SeedOutputJson(SeedJson):
     """Concrete class for Seed output JSON elements"""
     pass
