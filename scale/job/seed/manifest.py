@@ -17,7 +17,6 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.seed.data.job_data import SeedInputFiles
 
 from scheduler.vault.manager import secrets_mgr
 
@@ -287,13 +286,16 @@ class SeedManifest(object):
         return job_data.store_output_data_files(output_files, job_exe)
 
 
-    def perform_pre_steps(self, job_data):
-        """Performs prep work before a job can actually be run.  This includes downloading input files.
+    def perform_pre_steps(self, job_data, job_environment):
+        """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
+        :param job_environment: The job environment
+        :type job_environment: dict
         """
-        job_data.setup_job_dir(self.get_input_files())
+        retrieve_files_dict = self._create_retrieve_files_dict()
+        job_data.setup_job_dir(retrieve_files_dict)
 
     def validate_connection(self, job_conn):
         """Validates the given job connection to ensure that the connection will provide sufficient data to run a job
@@ -381,9 +383,9 @@ class SeedManifest(object):
         :return: a dictionary representing the files to retrieve
         :rtype:  dist of str->tuple with input_name->(is_multiple, input_path)
         """
+
         retrieve_files_dict = {}
         for input_file in self.get_input_files():
-            input_file = SeedInputFiles(input_file)
             input_name = input_file.name
             input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
             # TODO: Determine how we are going to address partial support in Seed
