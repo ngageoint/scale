@@ -453,21 +453,22 @@ class JobData(object):
         # Organize the data files
         param_file_ids = {}  # Parameter name -> [file IDs]
         files_to_retrieve = {}  # File ID -> tuple(string, bool) for relative dir path and if partially accessed
-        for name in data_files:
-            multiple = data_files[name][0]
-            dir_path = data_files[name][1]
-            partial = data_files[name][2]
-            if name not in self._data_names:
+        for data_file in data_files:
+            input_name = data_file.name
+            multiple = data_file.multiple
+            dir_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, self._input_files[input_name])
+            partial = data_file.partial
+            if data_file.name not in self._data_names:
                 continue
-            file_input = self._data_names[name]
+            file_input = self._data_names[data_file.name]
             file_ids = []
             if not multiple and len(file_input) > 1:
-                raise Exception('Multiple inputs detected for input %s that does not support.' % (name, ))
+                raise Exception('Multiple inputs detected for input %s that does not support.' % (data_file.name, ))
             for file_id in file_input:
                 file_id = long(file_id)
                 file_ids.append(file_id)
                 files_to_retrieve[file_id]  = (dir_path, partial)
-            param_file_ids[name] = file_ids
+            param_file_ids[data_file.name] = file_ids
 
         # Retrieve all files
         retrieved_files = self._retrieve_files(files_to_retrieve)
@@ -497,6 +498,7 @@ class JobData(object):
         :rtype: {string: [string]}
         """
 
+        data_files = [SeedInputFiles(x) for x in data_files]
         # Download the job execution input files
         self.retrieve_input_data_files(data_files)
 

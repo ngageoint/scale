@@ -294,8 +294,7 @@ class SeedManifest(object):
         :param job_environment: The job environment
         :type job_environment: dict
         """
-        retrieve_files_dict = self._create_retrieve_files_dict()
-        job_data.setup_job_dir(retrieve_files_dict)
+        job_data.setup_job_dir(self.get_input_files())
 
     def validate_connection(self, job_conn):
         """Validates the given job connection to ensure that the connection will provide sufficient data to run a job
@@ -375,23 +374,6 @@ class SeedManifest(object):
         if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Collisions are not allowed between reserved keywords, resources, settings'
                                              'and input names.')
-
-    def _create_retrieve_files_dict(self):
-        """Creates parameter folders and returns the dict needed to call
-        :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
-
-        :return: a dictionary representing the files to retrieve
-        :rtype:  dist of str->tuple with input_name->(is_multiple, input_path)
-        """
-
-        retrieve_files_dict = {}
-        for input_file in self.get_input_files():
-            input_name = input_file.name
-            input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-            # TODO: Determine how we are going to address partial support in Seed
-            retrieve_files_dict[input_name] = (input_file.multiple, input_path, input_file.partial)
-
-        return retrieve_files_dict
 
     def _check_mount_name_uniqueness(self):
         """Ensures all the mount names are unique, and throws a
