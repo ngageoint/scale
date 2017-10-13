@@ -17,6 +17,8 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.seed.data.job_data import JobData
+from job.seed.types import SeedInputFiles, SeedInputJson
 
 from scheduler.vault.manager import secrets_mgr
 
@@ -279,7 +281,7 @@ class SeedManifest(object):
         # For compliance with Seed we must capture all files directly from the output directory.
         # The capture expressions can be found within interface.outputs.files.pattern
 
-        output_files = job_data.capture_output_files(self.get_output_files())
+        output_files = JobData.capture_output_files(self.get_output_files())
 
         # TODO: implement JSON capture from seed.ouputs.json
 
@@ -309,8 +311,8 @@ class SeedManifest(object):
         """
 
         warnings = []
-        warnings.extend(job_conn.validate_input_files(self._input_file_validation_dict))
-        warnings.extend(job_conn.validate_properties(self._property_validation_dict))
+        warnings.extend(job_conn.validate_input_files([SeedInputFiles(x) for x in self.get_input_files()]))
+        warnings.extend(job_conn.validate_properties([SeedInputJson(x) for x in self.get_input_json()]))
         # Make sure connection has a workspace if the interface has any output files
         if self._output_file_validation_list and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')

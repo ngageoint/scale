@@ -10,10 +10,12 @@ from numbers import Integral
 
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
+from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from job.seed.results.job_results import JobResults
+from job.seed.types import SeedInputFiles, SeedOutputFiles
 from product.models import ProductFileMetadata
 
 from storage.brokers.broker import FileDownload
@@ -40,110 +42,6 @@ class ValidationWarning(object):
         self.key = key
         self.details = details
 
-
-class SeedFiles(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, data):
-        """Create a SeedFiles from dict input equivalent
-
-        :param data:
-        :type data: dict
-        """
-
-        self.dict = data
-
-    @property
-    def name(self):
-        return self.dict['name']
-
-    @property
-    def multiple(self):
-        return self.dict['multiple']
-
-    @property
-    def required(self):
-        return self.dict['required']
-
-
-class SeedInputFiles(SeedFiles):
-    """Concrete class for Seed input files elements"""
-    @property
-    def media_types(self):
-        return self.dict['mediaTypes']
-
-    @property
-    def partial(self):
-        return self.dict['partial']
-
-
-class SeedOutputFiles(SeedFiles):
-    """Concrete class for Seed ouput files elements"""
-
-    @property
-    def media_type(self):
-        return self.dict['mediaType']
-
-    @property
-    def pattern(self):
-        return self.dict['pattern']
-
-    def get_files(self):
-        """Get a list of absolute paths to files following job execution
-
-        :return: files matched by pattern defined for object
-        :rtype: [str]
-        :raises: OutputCaptureError
-        """
-        path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, self.pattern)
-        results = glob.glob(path_pattern)
-
-        # Handle required validation
-        if self.required and len(results) == 0:
-            raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
-                                     " key '%s'." % (self.pattern, self.name))
-
-        # Check against multiple to verify we are matching the files as defined.
-        if not self.multiple and len(results) > 1:
-            raise OutputCaptureError("Pattern matched %i, which is not consistent with a false value for 'multiple'." %
-                                     (len(results), ))
-
-        return results
-
-
-class SeedJson(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, data):
-        """Create a SeedJson from dict input equivalent
-
-        :param data:
-        :type data: dict
-        """
-
-        self.dict = data
-
-    @property
-    def name(self):
-        return self.dict['name']
-
-    @property
-    def type(self):
-        return self.dict['type']
-
-    @property
-    def required(self):
-        return self.dict['required']
-
-
-class SeedInputJson(SeedJson):
-    """Concrete class for Seed input JSON elements"""
-    pass
-
-
-class SeedOuputJson(SeedJson):
-    """Concrete class for Seed output JSON elements"""
-    pass
 
 
 class JobDataFields(object):
@@ -250,7 +148,6 @@ class JobData(object):
         :type add_to_internal: bool
         """
 
-
         self._validate_job_data_field(data, 'value')
         input = JobDataInputJson(data)
         if add_to_internal:
@@ -279,7 +176,7 @@ class JobData(object):
         """Evaluate files patterns and capture any available side-car metadata associated with matched files
 
         :param output_files: interface definition of Seed output files that should be captured
-        :type output_files: dict
+        :type output_files: list
         :return: collection of files name keys mapped to a ProductFileMetadata list. { name : [`ProductFileMetadata`]
         :rtype: dict
         """
@@ -561,9 +458,8 @@ class JobData(object):
     def validate_input_files(self, files):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.
 
-        :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
-            (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
-        :type files: {string: tuple(bool, bool, :class:`job.configuration.interface.scale_file.ScaleFileDescription`)}
+        :param files: List of Seed Input Files
+        :type files: [:class:`job.seed.types.SeedInputFiles`]
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -571,45 +467,26 @@ class JobData(object):
         """
 
         warnings = []
-        for name in files:
-            required = files[name][0]
-            multiple = files[name][1]
-            file_desc = files[name][2]
-            if name in self._data_names:
+        for input_file in files:
+            name = input_file.name
+            required = input_file.required
+            file_desc = ScaleFileDescription()
+
+            if name in self._input_files:
                 # Have this input, make sure it is valid
-                file_input = self._data_names[name]
+                file_input = self._input_files[name]
                 file_ids = []
-                if multiple:
-                    if 'file_ids' not in file_input:
-                        if 'file_id' in file_input:
-                            file_input['file_ids'] = [file_input['file_id']]
-                        else:
-                            msg = ('Invalid job data: Data input %s is a list of files and must have a "file_ids" or '
-                                   '"file_id" field')
-                            raise InvalidData(msg % name)
-                    if 'file_id' in file_input:
-                        del file_input['file_id']
-                    value = file_input['file_ids']
-                    if not isinstance(value, list):
-                        msg = 'Invalid job data: Data input %s must have a list of integers in its "file_ids" field'
-                        raise InvalidData(msg % name)
-                    for file_id in value:
-                        if not isinstance(file_id, Integral):
-                            msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
-                                   'field')
-                            raise InvalidData(msg % name)
-                        file_ids.append(long(file_id))
-                else:
-                    if 'file_id' not in file_input:
-                        msg = 'Invalid job data: Data input %s is a file and must have a "file_id" field' % name
-                        raise InvalidData(msg)
-                    if 'file_ids' in file_input:
-                        del file_input['file_ids']
-                    file_id = file_input['file_id']
+
+                for media_type in input_file.media_type:
+                    file_desc.add_allowed_media_type(media_type)
+
+                for file_id in file_input.file_ids:
                     if not isinstance(file_id, Integral):
-                        msg = 'Invalid job data: Data input %s must have an integer in its "file_id" field' % name
-                        raise InvalidData(msg)
+                        msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
+                               'field')
+                        raise InvalidData(msg % name)
                     file_ids.append(long(file_id))
+
                 warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
                 # Don't have this input, check if it is required
@@ -618,7 +495,43 @@ class JobData(object):
 
         # Handle extra inputs in the data that are not defined in the interface
         for name in self._input_files:
-            if name not in files:
+            if name not in [x.name for x in files]:
+                warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
+                warnings.append(warn)
+                self._delete_input(name)
+
+        return warnings
+
+    def validate_input_json(self, input_json):
+        """Validates the given property names to ensure they are all populated correctly and exist if they are required.
+
+        :param input_json: List of Seed input json fields
+        :type input_json: [:class:`job.seed.types.SeedInputJson`]
+        :returns: A list of warnings discovered during validation.
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
+
+        :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
+        """
+
+        warnings = []
+        for in_js in input_json:
+            name = in_js.name
+            if name in self._input_json:
+                # Have this input, make sure it is a valid property
+                property_input = self._input_json[name]
+                value = property_input.value
+                if not isinstance(value, in_js.python_type):
+                    raise InvalidData('Invalid job data: Data input %s must have a json type %s in its "value" field' %
+                                      (name, in_js.type))
+            else:
+                # Don't have this input, check if it is required
+                if in_js.required:
+                    raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
+
+        # Handle extra inputs in the data that are not defined in the interface
+        for name in list(self._input_json.keys()):
+            data_input = self._input_json[name]
+            if name not in [x.name for x in input_json]:
                 warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
                 warnings.append(warn)
                 self._delete_input(name)
@@ -666,44 +579,6 @@ class JobData(object):
         # Check if there were any workspace IDs that weren't found
         if workspace_ids:
             raise InvalidData('Invalid job data: Workspace for ID(s): %s do not exist' % str(workspace_ids))
-        return warnings
-
-    def validate_properties(self, property_names):
-        """Validates the given property names to ensure they are all populated correctly and exist if they are required.
-
-        :param property_names: Dict of property names mapped to a bool indicating if they are required
-        :type property_names: {string: bool}
-        :returns: A list of warnings discovered during validation.
-        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
-
-        :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
-        """
-
-        warnings = []
-        for name in property_names:
-            if name in self._data_names:
-                # Have this input, make sure it is a valid property
-                property_input = self._data_names[name]
-                if 'value' not in property_input:
-                    msg = 'Invalid job data: Data input %s is a property and must have a "value" field' % name
-                    raise InvalidData(msg)
-                value = property_input['value']
-                if not isinstance(value, basestring):
-                    raise InvalidData('Invalid job data: Data input %s must have a string in its "value" field' % name)
-            else:
-                # Don't have this input, check if it is required
-                if property_names[name]:
-                    raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
-
-        # Handle extra inputs in the data that are not defined in the interface
-        for name in list(self._data_names.keys()):
-            data_input = self._data_names[name]
-            if 'value' in data_input:
-                if name not in property_names:
-                    warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
-                    warnings.append(warn)
-                    self._delete_input(name)
-
         return warnings
 
     def _delete_input(self, name):

@@ -1,6 +1,12 @@
 """Defines the results obtained after executing a job"""
 from __future__ import unicode_literals
 
+import os
+
+from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
+from job.seed.types import SeedOutputFiles
+from product.models import ProductFileMetadata
+
 
 class JobResults(object):
     """Represents the results obtained after executing a job
@@ -70,3 +76,5 @@ class JobResults(object):
         """
 
         return self.results_dict
+
+
