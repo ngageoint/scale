@@ -16,7 +16,7 @@ class JobResults(object):
         if results_dict:
             self.results_dict = results_dict
         else:
-            self.results_dict = {'version': '1.0', 'output_data': []}
+            self.results_dict = {'version': '2.0', 'output_data': []}
         self.output_data = self.results_dict['output_data']
 
     def add_file_list_parameter(self, name, file_ids):
@@ -61,6 +61,18 @@ class JobResults(object):
                     file_ids = output_data['file_ids']
                     job_data.add_file_list_input(input_name, file_ids)
                 break
+
+    def add_output_json(self, output_name, value):
+        """Adds the given output json from the seed.outputs.json file
+
+        :param output_name: Output JSON key used to capture from output file
+        :type output_name: str
+        :param value: Raw value provided by job
+        :type value: float or str or dict or array
+        """
+
+        self.output_data.append({'name': output_name, 'json': value})
+
 
     def get_dict(self):
         """Returns the internal dictionary that represents these job results

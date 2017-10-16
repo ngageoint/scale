@@ -13,6 +13,7 @@ from job.configuration.interface.scale_file import ScaleFileDescription
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from job.seed.results.job_results import JobResults
+from job.seed.results.outputs_json import SeedOutputsJson, SEED_OUPUTS_JSON_FILENAME
 from job.seed.types import SeedInputFiles, SeedOutputFiles
 from product.models import ProductFileMetadata
 from storage.brokers.broker import FileDownload
@@ -392,11 +393,36 @@ class JobData(object):
         # Download the job execution input files
         self.retrieve_input_data_files(data_files)
 
-    def store_output_data_files(self, data_files, job_exe):
-        """Stores the given data output files
+
+    def capture_output_json(self, output_json_interface):
+        """
+
+        :param output_json_interface:
+        :return:
+        """
+        # Identify any outputs from seed.outputs.json
+        SeedOutputsJson.construct_schema(output_json_interface)
+        outputs = SeedOutputsJson.read_outputs()
+        seed_outputs_json = outputs.get_values()
+
+        json_results = {}
+        for key, value in seed_outputs_json.iteritems():
+
+            if key in [x.json_key for x in output_json_interface]:
+                json_results[key] = value
+            else:
+                logger.warning("Skipping capture of key '%s' in %s not found in interface." %
+                               (key, SEED_OUPUTS_JSON_FILENAME))
+
+        return json_results
+
+    def store_output_data_files(self, data_files, outputs_json_interface, job_exe):
+        """Stores the given output data
 
         :param data_files: Dict with each file parameter name mapping to a ProductFileMetadata class
         :type data_files: {string: ProductFileMetadata)
+        :param outputs_json_interface: List of output json interface objects
+        :type outputs_json_interface: [:class:`job.seed.types.SeedOutputJson`]
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
         :type job_exe: :class:`job.models.JobExecution`
@@ -445,6 +471,17 @@ class JobData(object):
         for name in param_file_ids:
             param_entry = param_file_ids[name]
             results.add_file_list_parameter(name, param_entry)
+
+        # Identify any outputs from seed.outputs.json
+        try:
+            schema = SeedOutputsJson.construct_schema(outputs_json_interface)
+            outputs = SeedOutputsJson.read_outputs(schema)
+            seed_outputs_json = outputs.get_values()
+
+            for key in seed_outputs_json:
+                results.add_output_json(key, seed_outputs_json[key])
+        except IOError:
+            logger.exception('No seed.outputs.json file found to process.')
 
         return results
 

@@ -128,4 +128,26 @@ class SeedInputJson(SeedJson):
 
 class SeedOutputJson(SeedJson):
     """Concrete class for Seed output JSON elements"""
-    pass
+
+    @property
+    def key(self):
+        value = None
+        if 'key' in self.dict:
+            value = self.dict['key']
+
+        return value
+
+    @property
+    def json_key(self):
+        """Get the preferred key to match in seed.outputs.json for this JSON output
+
+        The `key` member supercedes the `name` member when specified.
+
+        :return: Key used to capture output JSON
+        :rtype: str
+        """
+        value = self.name
+        if self.key:
+            value = self.key
+
+        return value
