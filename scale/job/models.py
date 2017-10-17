@@ -1503,17 +1503,16 @@ class JobInputFileManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        job_input_files = JobInputFile.objects.filter(job__id=job_id)
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
 
-        # Get input_file data from JobInputData model
-        if job_input_files:
-            if job_input:
-                job_input_files = job_input_files.filter(job_input=job_input)
+        files = files.filter(jobinputfile__job=job_id).order_by('last_modified')
 
-            job_input_file_ids = job_input_files.values_list('input_file__id', flat=True)
+        if job_input:
+            files = files.filter(jobinputfile__job_input=job_input)
 
         # Reach back to the job_data to get input_file data for legacy jobs
-        else:
+        if not files:
             job_data = Job.objects.get(pk=job_id).get_job_data()
             job_input_files = job_data.get_input_file_info()
 
@@ -1522,10 +1521,10 @@ class JobInputFileManager(models.Manager):
             else:
                 job_input_file_ids = [f_id for f_id, name in job_input_files]
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
-        files = files.filter(id__in=job_input_file_ids)
-        files = files.order_by('last_modified')
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                   file_name=file_name)
+
+            files = files.filter(id__in=job_input_file_ids).order_by('last_modified')
 
         return files
 

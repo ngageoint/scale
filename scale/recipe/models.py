@@ -600,17 +600,16 @@ class RecipeInputFileManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        recipe_input_files = RecipeInputFile.objects.filter(recipe__id=recipe_id)
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
 
-        # Get input_file data from RecipeInputData model
-        if recipe_input_files:
-            if recipe_input:
-                recipe_input_files = recipe_input_files.filter(recipe_input=recipe_input)
+        files = files.filter(recipeinputfile__recipe=recipe_id).order_by('last_modified')                          
 
-            recipe_input_file_ids = recipe_input_files.values_list('scale_file__id', flat=True)
+        if recipe_input:
+            files = files.filter(recipeinputfile__recipe_input=recipe_input)
 
         # Reach back to the recipe_data to get input_file data for legacy recipes
-        else:
+        if not files:
             recipe_data = Recipe.objects.get(pk=recipe_id).get_recipe_data()
             recipe_input_files = recipe_data.get_input_file_info()
 
@@ -619,10 +618,10 @@ class RecipeInputFileManager(models.Manager):
             else:
                 recipe_input_file_ids = [f_id for f_id, name in recipe_input_files]
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
-        files = files.filter(id__in=recipe_input_file_ids)
-        files = files.order_by('last_modified')
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                    file_name=file_name)
+                                                    
+            files = files.filter(id__in=recipe_input_file_ids).order_by('last_modified')
 
         return files
 
