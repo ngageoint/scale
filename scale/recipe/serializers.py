@@ -110,8 +110,8 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
         return result
 
     class Meta:
-        from storage.serializers import ScaleFileBaseSerializer
-        FILE_SERIALIZER = ScaleFileBaseSerializer
+        from storage.serializers import ScaleFileSerializer
+        FILE_SERIALIZER = ScaleFileSerializer
 
 
 class RecipeDetailsSerializer(RecipeSerializer):

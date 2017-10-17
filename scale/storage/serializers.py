@@ -96,6 +96,7 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
 
     file_name = serializers.CharField()
     media_type = serializers.CharField()
+    file_type = serializers.CharField()
     file_size = serializers.IntegerField()  # TODO: BigIntegerField?
     data_type = DataTypeField()
     is_deleted = serializers.BooleanField()
@@ -106,22 +107,19 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
     deleted = serializers.DateTimeField()
     data_started = serializers.DateTimeField()
     data_ended = serializers.DateTimeField()
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
 
-    # TODO: update to use GeoJson instead of WKT
-    geometry = WktField()
-    center_point = WktField()
-    meta_data = serializers.JSONField(default=dict)
-    countries = serializers.StringRelatedField(many=True, read_only=True)
     last_modified = serializers.DateTimeField()
 
 
 class ScaleFileSerializer(ScaleFileBaseSerializer):
     """Converts Scale file model fields to REST output"""
 
-    file_type = serializers.CharField()
-    data_type = serializers.CharField()
     file_path = serializers.CharField()
 
-    source_started = serializers.DateTimeField()
-    source_ended = serializers.DateTimeField()
-    
+    # TODO: update to use GeoJson instead of WKT
+    geometry = WktField()
+    center_point = WktField()
+    meta_data = serializers.JSONField(default=dict)
+    countries = serializers.StringRelatedField(many=True, read_only=True)
