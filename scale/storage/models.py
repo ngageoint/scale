@@ -241,8 +241,6 @@ class ScaleFileManager(models.Manager):
         # Apply file_name filtering if present
         if file_name:
             files = files.filter(file_name=file_name)
-            files = files.order_by('last_modified')
-            return files
 
         # Apply time range filtering
         if started:
