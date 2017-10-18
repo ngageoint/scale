@@ -95,9 +95,10 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
- # Strip out extra apache files
+ # Strip out extra apache files and stupid centos-logos
  && rm -f /etc/httpd/conf.d/*.conf \
  && rm -rf /usr/share/httpd \
+ && rm -rf /usr/share/{anaconda,backgrounds,kde4,plymouth,wallpapers}/* \
  && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
  # Patch access logs to show originating IP instead of reverse proxy.
  && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
@@ -108,7 +109,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum -y history undo last \
- && yum clean all
+ && rm -rf /var/cache/yum 
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
@@ -137,7 +138,7 @@ RUN yum install -y nodejs \
  && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
  && if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi \
  && yum -y history undo last \
- && yum clean all \
+ && rm -rf /var/cache/yum \
  && rm -fr /tmp/*
 
 WORKDIR /opt/scale
