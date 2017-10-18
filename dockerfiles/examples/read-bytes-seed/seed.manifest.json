@@ -1,0 +1,34 @@
+{
+  "seedVersion": "0.1.0",
+  "job": {
+    "name": "read-bytes",
+    "jobVersion": "1.0.0",
+    "packageVersion": "1.0.0",
+    "title": "Read Bytes",
+    "description": "Reads x bytes of an input file and writes to output dir",
+    "maintainer": {
+      "name": "Jonathan Meyer",
+      "organization": "Applied Information Sciences",
+      "email": "jon@gisjedi.com"
+    },
+    "timeout": 3600,
+    "interface": {
+      "command": "1024 ${INPUT_FILE} ${OUTPUT_DIR}",
+      "inputs": {
+        "files": [
+          {
+            "name": "INPUT_FILE"
+          }
+        ]
+      },
+      "outputs": {
+        "files": [
+          {
+            "name": "OUTPUT_FILE",
+            "pattern": "output_file/.*"
+          }
+        ]
+      }
+    }
+  }
+}
