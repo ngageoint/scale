@@ -16,3 +16,4 @@ then
 fi
 
 docker build $BUILD_ARGS --label VERSION=$CACHE_TAG -t $IMAGE_NAME .
+
