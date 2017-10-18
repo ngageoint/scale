@@ -711,13 +711,18 @@ These services provide access to information about recipes.
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| time_field         | String            | Optional | The time series that the given time range is applied to.            |
-|                    |                   |          | Valid fields: 'source','data', and 'last_modified'                  |
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
+|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          | - *source* - collection time of source file (*source_started*,      |
+|                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| file_name          | String            | Optional | The name of a specific file to be returned.                         |
+| file_name          | String            | Optional | Returns only input files with this file name.                       |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| recipe_input       | String            | Optional | The `input_data` entry name in the `recipe_data` JSON definition    |
-|                    |                   |          | of the recipe                                                       |
+| recipe_input       | String            | Optional | Returns files for this recipe input.                                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -780,30 +785,37 @@ These services provide access to information about recipes.
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
-|        "id": 7,                                                                                                         |
-|        "file_name": "foo.bar",                                                                                          |
-|        "file_path": "file/path/foo.bar",                                                                                |
-|        "file_type": "SOURCE",                                                                                           |
-|        "file_size": 100,                                                                                                |
-|        "media_type": "text/plain",                                                                                      |
-|        "data_type": "",                                                                                                 |
-|        "meta_data": {...},                                                                                              |
-|        "url": null,                                                                                                     |
-|        "source_started": "2016-01-10T00:00:00Z",                                                                        |
-|        "source_ended": "2016-01-11T00:00:00Z",                                                                          |
-|        "data_started": "2016-01-10T00:00:00Z",                                                                          |
-|        "data_ended": "2016-01-11T00:00:00Z",                                                                            |
-|        "created": "2017-10-12T18:59:24.398334Z",                                                                        |
-|        "deleted": null,                                                                                                 |
-|        "last_modified": "2017-10-12T18:59:24.398379Z",                                                                  |
-|        "uuid": "",                                                                                                      |
-|        "is_deleted": false,                                                                                             |
-|        "workspace": {                                                                                                   |
-|            "id": 19,                                                                                                    |
-|            "name": "workspace-19"                                                                                       |
-|        },                                                                                                               |
-|        "countries": ["TCY", "TCT"],                                                                                     |
-|        "geometry" :null,                                                                                                |
-|        "center_point": null                                                                                             |
+|         "count": 68,                                                                                                    |
+|         "next": null,                                                                                                   |
+|         "previous": null,                                                                                               |
+|         "results": [                                                                                                    |
+|             {                                                                                                           |
+|                 "id": 7,                                                                                                |
+|                 "file_name": "foo.bar",                                                                                 |
+|                 "file_path": "file/path/foo.bar",                                                                       |
+|                 "file_type": "SOURCE",                                                                                  |
+|                 "file_size": 100,                                                                                       |
+|                 "media_type": "text/plain",                                                                             |
+|                 "data_type": "",                                                                                        |
+|                 "meta_data": {...},                                                                                     |
+|                 "url": null,                                                                                            |
+|                 "source_started": "2016-01-10T00:00:00Z",                                                               |
+|                 "source_ended": "2016-01-11T00:00:00Z",                                                                 |
+|                 "data_started": "2016-01-10T00:00:00Z",                                                                 |
+|                 "data_ended": "2016-01-11T00:00:00Z",                                                                   |
+|                 "created": "2017-10-12T18:59:24.398334Z",                                                               |
+|                 "deleted": null,                                                                                        |
+|                 "last_modified": "2017-10-12T18:59:24.398379Z",                                                         |
+|                 "uuid": "",                                                                                             |
+|                 "is_deleted": false,                                                                                    |
+|                 "workspace": {                                                                                          |
+|                     "id": 19,                                                                                           |
+|                     "name": "workspace-19"                                                                              |
+|                 },                                                                                                      |
+|                 "countries": ["TCY", "TCT"],                                                                            |
+|                 "geometry" :null,                                                                                       |
+|                 "center_point": null                                                                                    |
+|             }                                                                                                           |
+|        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
