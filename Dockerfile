@@ -1,13 +1,11 @@
 ARG IMAGE=centos:centos7
 FROM $IMAGE
-MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
+MAINTAINER Scale Developers "https://github.com/ngageoint/scale"
 
 LABEL \
-    VERSION="5.1.1-snapshot" \
     RUN="docker run -d geoint/scale scale_scheduler" \
     SOURCE="https://github.com/ngageoint/scale" \
-    DESCRIPTION="Processing framework for containerized algorithms" \
-    CLASSIFICATION="UNCLASSIFIED"
+    DESCRIPTION="Processing framework for containerized algorithms" 
 
 EXPOSE 80
 
