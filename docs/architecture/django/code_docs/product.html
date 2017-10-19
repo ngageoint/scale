@@ -721,7 +721,7 @@ to be pre-fetched as part of the query.</p>
 <dl class="method">
 <dt id="product.models.ProductFileManager.get_product_sources">
 <code class="descname">get_product_sources</code><span class="sig-paren">(</span><em>product_file_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_product_sources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a query for the list of soruces that produced the given product file ID.</p>
+<dd><p>Returns a query for the list of sources that produced the given product file ID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -873,7 +873,7 @@ storing the file, media_type, output_name)</li>
 <dl class="class">
 <dt id="product.serializers.ProductFileBaseSerializer">
 <em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileSerializer" title="storage.serializers.ScaleFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializer</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 </dd></dl>
 
@@ -955,7 +955,7 @@ storing the file, media_type, output_name)</li>
 <dl class="class">
 <dt id="product.serializers.ProductFileUpdateSerializer.SourceFileBaseSerializer">
 <em class="property">class </em><code class="descname">SourceFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileUpdateSerializer.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileSerializer" title="storage.serializers.ScaleFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializer</span></code></a></p>
 <p>Converts source file model fields to REST output</p>
 </dd></dl>
 

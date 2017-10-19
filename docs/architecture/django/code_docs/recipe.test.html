@@ -532,6 +532,59 @@ has one identical node, and deletes another node to replace it with a new one.</
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeInputFilesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_bad_file_name">
+<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_file_name_successful">
+<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_filter_recipe_input">
+<code class="descname">test_filter_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_filter_recipe_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe inputs files view with recipe_input string filtering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_legacy_filter_recipe_input">
+<code class="descname">test_legacy_filter_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_legacy_filter_recipe_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe inputs files view for legacy files with recipe_input string filtering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_legacy_successful_file">
+<code class="descname">test_legacy_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_legacy_successful_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe input files view for legacy files with recipe_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_successful_file">
+<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_successful_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe input files view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeInputFilesView.test_time_successful">
+<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeInputFilesView.test_time_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_views.TestRecipeReprocessView">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeReprocessView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -875,6 +928,22 @@ has one identical node, and deletes another node to replace it with a new one.</
 <code class="descname">create_configuration</code><span class="sig-paren">(</span><em>config_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.MockTriggerRuleHandler.create_configuration" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_input_file">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_input_file</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>input_file=None</em>, <em>recipe_input=None</em>, <em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em>, <em>data_type=u''</em>, <em>last_modified=None</em>, <em>source_started=None</em>, <em>source_ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Scale file and recipe input file model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">

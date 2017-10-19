@@ -618,6 +618,35 @@
 <div class="section" id="module-storage.test.test_views">
 <span id="storage-test-test-views-module"></span><h2>storage.test.test_views module<a class="headerlink" href="#module-storage.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="storage.test.test_views.TestFilesView">
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesView.test_bad_file_name">
+<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesView.test_file_name_successful">
+<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesView.test_time_successful">
+<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_time_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="storage.test.test_views.TestWorkspaceCreateView">
 <em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestWorkspaceCreateView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestWorkspaceCreateView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -792,7 +821,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em>, <em>data_type=u''</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em>, <em>data_type=u''</em>, <em>last_modified=None</em>, <em>source_started=None</em>, <em>source_ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

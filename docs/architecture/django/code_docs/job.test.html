@@ -1021,6 +1021,59 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="job.test.test_views.TestJobInputFilesView">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobInputFilesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_bad_file_name">
+<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_file_name_successful">
+<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get files by name view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_filter_job_input">
+<code class="descname">test_filter_job_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_filter_job_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job inputs files view with job_input string filtering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_legacy_filter_job_input">
+<code class="descname">test_legacy_filter_job_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_legacy_filter_job_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job inputs files view for legacy files with job_input string filtering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_legacy_successful_file">
+<code class="descname">test_legacy_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_legacy_successful_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job input files view for legacy files with job_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_successful_file">
+<code class="descname">test_successful_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_successful_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job input files view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobInputFilesView.test_time_successful">
+<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobInputFilesView.test_time_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.test.test_views.TestJobTypeDetailsView">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -1715,6 +1768,22 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The trigger rule model</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.test.utils.create_input_file">
+<code class="descclassname">job.test.utils.</code><code class="descname">create_input_file</code><span class="sig-paren">(</span><em>job=None</em>, <em>input_file=None</em>, <em>job_input=None</em>, <em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em>, <em>data_type=u''</em>, <em>last_modified=None</em>, <em>source_started=None</em>, <em>source_ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Scale file and job input file model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></td>
 </tr>
 </tbody>
 </table>
