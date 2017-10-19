@@ -194,6 +194,10 @@ class TestProductDetailsView(TestCase):
         self.assertFalse('ancestors' in result)
         self.assertFalse('descendants' in result)
         self.assertFalse('sources' in result)
+        self.assertEqual(result['countries'][0], self.country.iso3)
+        self.assertEqual(result['file_type'], self.product.file_type)
+        self.assertEqual(result['file_path'], self.product.file_path)
+
     def test_missing(self):
         """Tests calling the product files view with an invalid id"""
 

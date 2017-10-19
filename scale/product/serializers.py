@@ -6,11 +6,11 @@ import rest_framework.serializers as serializers
 
 from batch.serializers import BatchBaseSerializer
 from recipe.serializers import RecipeTypeBaseSerializer
-from storage.serializers import ScaleFileBaseSerializer
+from storage.serializers import ScaleFileSerializer
 from util.rest import ModelIdSerializer
 
 
-class ProductFileBaseSerializer(ScaleFileBaseSerializer):
+class ProductFileBaseSerializer(ScaleFileSerializer):
     """Converts product file model fields to REST output"""
     is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()

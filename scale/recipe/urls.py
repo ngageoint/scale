@@ -13,5 +13,6 @@ urlpatterns = [
     # Recipe views
     url(r'^recipes/$', recipe.views.RecipesView.as_view(), name='recipes_view'),
     url(r'^recipes/(\d+)/$', recipe.views.RecipeDetailsView.as_view(), name='recipe_details_view'),
+    url(r'^recipes/(\d+)/input_files/$', recipe.views.RecipeInputFilesView.as_view(), name='recipe_input_files_view'),
     url(r'^recipes/(\d+)/reprocess/$', recipe.views.RecipeReprocessView.as_view(), name='recipe_reprocess_view'),
 ]

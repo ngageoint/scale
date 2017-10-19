@@ -1481,6 +1481,54 @@ class JobExecutionOutput(models.Model):
         index_together = ['job', 'exe_num']
 
 
+class JobInputFileManager(models.Manager):
+    """Provides additional methods for handleing JobInputFiles"""
+
+    def get_job_input_files(self, job_id, started=None, ended=None, time_field=None, file_name=None, job_input=None):
+        """Returns a query for Input Files filtered on the given fields.
+
+        :param job_id: The job ID
+        :type job_id: int
+        :param started: Query Scale files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scale files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param file_name: Query Scale files with the given file name.
+        :type file_name: str
+        :param job_input: The name of the job input that the file was passed into
+        :type job_input: str
+        :returns: The Scale file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+
+        files = files.filter(jobinputfile__job=job_id).order_by('last_modified')
+
+        if job_input:
+            files = files.filter(jobinputfile__job_input=job_input)
+
+        # Reach back to the job_data to get input_file data for legacy jobs
+        if not files:
+            job_data = Job.objects.get(pk=job_id).get_job_data()
+            job_input_files = job_data.get_input_file_info()
+
+            if job_input:
+                job_input_file_ids = [f_id for f_id, name in job_input_files if name == job_input]
+            else:
+                job_input_file_ids = [f_id for f_id, name in job_input_files]
+
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                   file_name=file_name)
+
+            files = files.filter(id__in=job_input_file_ids).order_by('last_modified')
+
+        return files
+
+
 class JobInputFile(models.Model):
     """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
     accept multiple input files.
@@ -1499,6 +1547,8 @@ class JobInputFile(models.Model):
     input_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     job_input = models.CharField(max_length=250)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = JobInputFileManager()
 
     class Meta(object):
         """meta information for the db"""

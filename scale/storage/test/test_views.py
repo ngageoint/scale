@@ -1,14 +1,79 @@
 from __future__ import unicode_literals
 
+import datetime as dt
 import json
 
 import django
 from django.test import TestCase
+from django.utils.timezone import utc
 from rest_framework import status
 
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from storage.models import Workspace
+
+
+class TestFilesView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.f1_file_name = 'foo.bar'
+        self.f1_last_modified = dt.datetime(2016, 1, 2, tzinfo=utc)
+        self.f1_source_started = dt.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = dt.datetime(2016, 1, 2, tzinfo=utc)
+        self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
+                                                    source_ended=self.f1_source_ended,
+                                                    last_modified=self.f1_last_modified)
+
+        self.f2_file_name = 'qaz.bar'
+        self.f2_last_modified = dt.datetime(2016, 1, 3, tzinfo=utc)
+        self.f2_source_started = dt.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = dt.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
+                                                    source_ended=self.f2_source_ended,
+                                                    last_modified=self.f2_last_modified)
+
+    def test_file_name_successful(self):
+        """Tests successfully calling the get files by name view"""
+
+        url = rest_util.get_url('/files/?file_name=%s' % (self.f1_file_name))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 1)
+
+        self.assertEqual(self.f1_file_name, result[0]['file_name'])
+        self.assertEqual('2016-01-01T00:00:00Z', result[0]['source_started'])
+        self.assertEqual(self.file1.id, result[0]['id'])
+
+    def test_bad_file_name(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = rest_util.get_url('/files/?file_name=%s' % ('not_a.file'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 0)
+
+    def test_time_successful(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = rest_util.get_url('/files/?started=%s&ended=%s&time_field=%s' % ('2016-01-01T00:00:00Z',
+                                                                               '2016-01-03T00:00:00Z',
+                                                                               'source'))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
 
 
 class TestWorkspacesView(TestCase):
