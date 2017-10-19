@@ -121,7 +121,8 @@ class TestSourceDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.source = source_test_utils.create_source()
+        self.country = storage_test_utils.create_country()
+        self.source = source_test_utils.create_source(countries=[self.country])
 
     def test_id(self):
         """Tests successfully calling the source files view by id"""
@@ -137,6 +138,9 @@ class TestSourceDetailsView(TestCase):
         self.assertEqual(result['file_name'], self.source.file_name)
         self.assertFalse('ingests' in result)
         self.assertFalse('products' in result)
+        self.assertEqual(result['countries'][0], self.country.iso3)
+        self.assertEqual(result['file_type'], self.source.file_type)
+        self.assertEqual(result['file_path'], self.source.file_path)
 
     def test_missing(self):
         """Tests calling the source files view with an invalid id"""
