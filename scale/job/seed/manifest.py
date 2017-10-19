@@ -357,7 +357,7 @@ class SeedManifest(object):
         env_vars = ["OUTPUT_DIR"]
 
         env_vars += [normalize_env_var_name(setting['name']) for setting in self.get_settings()]
-        env_vars += [normalize_env_var_name(input_file.name) for input_file in self.get_input_files()]
+        env_vars += [normalize_env_var_name(input_file['name']) for input_file in self.get_input_files()]
         env_vars += [normalize_env_var_name(json['name']) for json in self.get_input_json()]
         env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in
                      self.get_scalar_resources()]
