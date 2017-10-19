@@ -99,6 +99,14 @@ class SeedManifest(object):
 
         return self.get_job()['name']
 
+    def get_title(self):
+        """Gets the Job title
+        :return: the title
+        :rtype: str
+        """
+
+        return self.get_job()['title']
+
     def get_job(self):
         """Gets the Job object within the Seed manifest
 

@@ -106,6 +106,9 @@ class JobTypesView(ListCreateAPIView):
             if not version:
                 version = interface.get_job_version()
 
+            if not title:
+                title = interface.get_title()
+
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
@@ -155,7 +158,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'title', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
