@@ -1075,7 +1075,7 @@ These services provide access to information about "all", "currently running" an
 |                    |                   |          | time filtering. Valid values are:                                   |
 |                    |                   |          |                                                                     |
 |                    |                   |          | - *last_modified* - last modification of source file meta-data      |
-|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          | - *data* - data time of input file (*data_started*, *data_ended*)   |
 |                    |                   |          | - *source* - collection time of source file (*source_started*,      |
 |                    |                   |          |              *source_ended*)                                        |
 |                    |                   |          | The default value is *last_modified*.                               |
