@@ -241,7 +241,7 @@ class TestWorkspaceDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
 
-        url = rest_util.get_url('/workspaces/100/')
+        url = rest_util.get_url('/workspaces/999999/')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
