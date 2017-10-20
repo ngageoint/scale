@@ -53,19 +53,19 @@ class TestJobData(TransactionTestCase):
             "required": True
         }
 
-    @patch('job.seed.data.job_data.SeedOutputFiles.get_files')
+    @patch('job.data.job_data.SeedOutputFiles.get_files')
     def test_capture_output_files_missing(self, get_files):
         get_files.side_effect = OutputCaptureError('message')
 
         with self.assertRaises(OutputCaptureError) as exc:
-            JobData.capture_output_files([self.test_output_snippet])
+            JobData().capture_output_files([self.test_output_snippet])
 
-    @patch('job.seed.data.job_data.SeedOutputFiles.get_files')
+    @patch('job.data.job_data.SeedOutputFiles.get_files')
     def test_capture_output_files_multiple(self, get_files):
         name = 'OUTPUT_TIFFS'
         get_files.return_value = ['outfile0.tif', 'outfile1.tif']
 
-        outputs = JobData.capture_output_files([self.test_output_snippet])
+        outputs = JobData().capture_output_files([self.test_output_snippet])
 
         self.assertIn(name, outputs)
         files = outputs[name]
@@ -74,7 +74,7 @@ class TestJobData(TransactionTestCase):
         self.assertEqual(files[1].__dict__, ProductFileMetadata(name, 'outfile1.tif', media_type='image/tiff').__dict__)
 
     @patch('os.path.isfile', return_value=True)
-    @patch('job.seed.data.job_data.DATA_FILE_STORE',
+    @patch('job.data.job_data.DATA_FILE_STORE',
            new_callable=lambda: {'DATA_FILE_STORE': DummyDataFileStore()})
     def test_store_output_files(self, dummy_store, isfile):
         data = {'output_data':
@@ -83,7 +83,7 @@ class TestJobData(TransactionTestCase):
                            'workspace_id': 1}]}}
         files = {'OUTPUT_TIFFS': [ProductFileMetadata('OUTPUT_TIFFS', 'outfile0.tif', media_type='image/tiff')]}
 
-        results = JobData(data).store_output_data_files(files, None)
+        results = JobData(data).store_output_data_files(files, {}, None)
         self.assertEqual([{'name':'OUTPUT_TIFFS', 'file_ids': [1]}], results.output_data)
 
 
