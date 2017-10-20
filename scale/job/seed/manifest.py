@@ -301,16 +301,16 @@ class SeedManifest(object):
         :param job_conn: The job data
         :type job_conn: :class:`job.seed.data.job_connection.JobConnection`
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.seed.data.job_data.ValidationWarning`]
+        :rtype: list[:class:`job.data.job_data.ValidationWarning`]
 
-        :raises :class:`job.seed.data.exceptions.InvalidConnection`: If there is a configuration problem.
+        :raises :class:`job.data.exceptions.InvalidConnection`: If there is a configuration problem.
         """
 
         warnings = []
         warnings.extend(job_conn.validate_input_files([SeedInputFiles(x) for x in self.get_input_files()]))
         warnings.extend(job_conn.validate_properties([SeedInputJson(x) for x in self.get_input_json()]))
         # Make sure connection has a workspace if the interface has any output files
-        if self._output_file_validation_list and not job_conn.has_workspace():
+        if len(self.get_output_files()) and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')
         return warnings
 
@@ -326,9 +326,9 @@ class SeedManifest(object):
         """
 
         warnings = []
-        warnings.extend(job_data.validate_input_files(self._input_file_validation_dict))
-        warnings.extend(job_data.validate_properties(self._property_validation_dict))
-        warnings.extend(job_data.validate_output_files(self._output_file_validation_list))
+        warnings.extend(job_data.validate_input_files([SeedInputFiles(x) for x in self.get_input_files()]))
+        warnings.extend(job_data.validate_input_json([SeedInputJson(x) for x in self.get_input_json()]))
+        warnings.extend(job_data.validate_output_files([x['name'] for x in self.get_output_files()]))
         return warnings
 
     def validate_populated_mounts(self, exe_configuration):

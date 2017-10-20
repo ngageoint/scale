@@ -388,7 +388,7 @@ class QueueManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in data and '2.0.0' == data['version']:
+        if 'version' in data and '2.0' == data['version']:
             job_data = JobData(data)
         else:
             job_data = JobData_1_0(data)

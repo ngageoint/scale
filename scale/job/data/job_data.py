@@ -401,8 +401,8 @@ class JobData(object):
         :return:
         """
         # Identify any outputs from seed.outputs.json
-        SeedOutputsJson.construct_schema(output_json_interface)
-        outputs = SeedOutputsJson.read_outputs()
+        schema = SeedOutputsJson.construct_schema(output_json_interface)
+        outputs = SeedOutputsJson.read_outputs(schema)
         seed_outputs_json = outputs.get_values()
 
         json_results = {}
@@ -507,7 +507,7 @@ class JobData(object):
                 file_input = self._input_files[name]
                 file_ids = []
 
-                for media_type in input_file.media_type:
+                for media_type in input_file.media_types:
                     file_desc.add_allowed_media_type(media_type)
 
                 for file_id in file_input.file_ids:

@@ -88,10 +88,12 @@ class JobTypesView(ListCreateAPIView):
         # No longer required as of Seed adoption. TODO: Remove them entirely in v6
         name = rest_util.parse_string(request, 'name', required=False)
         version = rest_util.parse_string(request, 'version', required=False)
+        title = None
 
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface')
         interface = None
+
         try:
             if interface_dict:
                 interface = JobInterfaceSunset.create(interface_dict)
@@ -106,8 +108,7 @@ class JobTypesView(ListCreateAPIView):
             if not version:
                 version = interface.get_job_version()
 
-            if not title:
-                title = interface.get_title()
+            title = interface.get_title()
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
@@ -158,11 +159,13 @@ class JobTypesView(ListCreateAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'title', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
+        if title:
+            extra_fields['title'] = title
         # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
         if 'mem_required' in extra_fields:
             extra_fields['mem_const_required'] = extra_fields['mem_required']
