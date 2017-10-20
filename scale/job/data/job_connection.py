@@ -1,8 +1,9 @@
 """Defines connections that will provide data to execute jobs"""
 from __future__ import unicode_literals
 
-from job.seed.data.exceptions import InvalidConnection
 from job.seed.data.job_data import ValidationWarning
+
+from job.data.exceptions import InvalidConnection
 from storage.media_type import UNKNOWN_MEDIA_TYPE
 
 

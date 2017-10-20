@@ -1,23 +1,13 @@
 from __future__ import unicode_literals
-import datetime
 
 import django
-from django.test import TestCase, TransactionTestCase
-from django.utils.timezone import utc
-from mock import MagicMock, patch
+from django.test import TransactionTestCase
+from mock import patch
 
-import job.clock as clock
-import job.test.utils as job_test_utils
-from job.clock import ClockEventError, ClockEventProcessor
 from job.configuration.data.data_file import AbstractDataFileStore
-
 from job.configuration.results.exceptions import OutputCaptureError
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.data.job_data import JobData
 from product.models import ProductFileMetadata
-from trigger.models import TriggerEvent
-
-
-from job.seed.data.job_data import JobData
 
 
 class DummyDataFileStore(AbstractDataFileStore):

@@ -9,10 +9,10 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configurators import normalize_env_var_name
-from job.configuration.data.exceptions import InvalidData, InvalidConnection
+from job.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.exceptions import MissingMount, MissingSetting
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition
-#from job.seed.data.job_data import JobData
+from job.seed.exceptions import InvalidSeedManifestDefinition
+
 from job.seed.types import SeedInputFiles, SeedInputJson
 from scheduler.vault.manager import secrets_mgr
 
@@ -31,7 +31,7 @@ class SeedManifest(object):
 
     def __init__(self, definition, do_validate=True):
         """Creates a seed interface from the given definition. If the definition is invalid, a
-        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` exception will be thrown.
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` exception will be thrown.
 
         :param definition: The interface definition
         :type definition: dict
@@ -45,7 +45,7 @@ class SeedManifest(object):
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidInterfaceDefinition(validation_error)
+            raise InvalidSeedManifestDefinition(validation_error)
 
         self._populate_default_values()
 
@@ -83,13 +83,13 @@ class SeedManifest(object):
         """Adds the given workspace ID to the given job data for every output in this job interface
 
         :param job_data: The job data
-        :type job_data: :class:`job.configuration.data.job_data.JobData`
+        :type job_data: :class:`job.data.job_data.JobData`
         :param workspace_id: The workspace ID
         :type workspace_id: int
         """
 
         for file_output_name in self.get_file_output_names():
-            job_data.add_output(file_output_name, workspace_id)
+            job_data.add_file_output({'name':file_output_name, 'workspace_id': workspace_id})
 
     def get_name(self):
         """Gets the Job name
@@ -290,7 +290,7 @@ class SeedManifest(object):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
-        :type job_data: :class:`job.configuration.data.job_data.JobData`
+        :type job_data: :class:`job.data.job_data.JobData`
         """
         job_data.setup_job_dir(self.get_input_files())
 
@@ -318,11 +318,11 @@ class SeedManifest(object):
         """Ensures that the job_data matches the job_interface description
 
         :param job_data: The job data
-        :type job_data: :class:`job.configuration.data.job_data.JobData`
+        :type job_data: :class:`job.data.job_data.JobData`
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: list[:class:`job.data.job_data.ValidationWarning`]
 
-        :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
+        :raises :class:`job.data.exceptions.InvalidData`: If there is a configuration problem.
         """
 
         warnings = []
@@ -355,7 +355,7 @@ class SeedManifest(object):
 
     def _check_for_name_collisions(self):
         """Ensures all names that map to environment variables are unique, and throws a
-        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique.
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` if they are not unique.
 
         Per Seed specification for implementors we must validate that all reserved keywords, settings
         and inputs are unique as they are ultimately injected as environment variables.
@@ -371,12 +371,12 @@ class SeedManifest(object):
                      self.get_scalar_resources()]
 
         if len(env_vars) != len(set(env_vars)):
-            raise InvalidInterfaceDefinition('Collisions are not allowed between reserved keywords, resources, settings'
+            raise InvalidSeedManifestDefinition('Collisions are not allowed between reserved keywords, resources, settings'
                                              'and input names.')
 
     def _check_mount_name_uniqueness(self):
         """Ensures all the mount names are unique, and throws a
-        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
+        :class:`job.seed.exceptions.InvalidInterfaceDefinition` if they are not unique
         """
 
         mounts = []
@@ -384,12 +384,12 @@ class SeedManifest(object):
             mounts.append(mount['name'])
 
         if len(mounts) != len(set(mounts)):
-            raise InvalidInterfaceDefinition('Mount names must be unique.')
+            raise InvalidSeedManifestDefinition('Mount names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
         """Checks a directory for one and only one file.  If there is not one file, raise a
-        :exception:`job.configuration.data.exceptions.InvalidData`.  If there is one file, this method
+        :exception:`job.data.exceptions.InvalidData`.  If there is one file, this method
         returns the full path of that file.
 
         :param dir_path: The directories path
@@ -526,11 +526,11 @@ class SeedManifest(object):
     def _validate_mount_paths(self):
         """Ensures that all mount paths are valid
 
-        :raises :class:`job.configuration.data.exceptions.InvalidInterfaceDefinition`: If a mount path is invalid
+        :raises :class:`job.seed.exceptions.InvalidSeedManifestDefinition`: If a mount path is invalid
         """
 
         for mount in self.get_mounts():
             name = mount['name']
             path = mount['path']
             if not os.path.isabs(path):
-                raise InvalidInterfaceDefinition('%s mount must have an absolute path' % name)
+                raise InvalidSeedManifestDefinition('%s mount must have an absolute path' % name)

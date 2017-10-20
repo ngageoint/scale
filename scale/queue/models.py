@@ -11,9 +11,10 @@ from django.db import models, transaction
 from error.models import Error
 from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
-from job.configuration.data.job_data import JobData
+from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.data.job_data import JobData
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
@@ -386,7 +387,13 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job(job_type, JobData(data), event).id
+        # TODO: Remove old JobData in v6 when we transition to only Seed job types
+        if 'version' in data and '2.0.0' == data['version']:
+            job_data = JobData(data)
+        else:
+            job_data = JobData_1_0(data)
+
+        job_id = self.queue_new_job(job_type, job_data, event).id
         return job_id
 
     @transaction.atomic
