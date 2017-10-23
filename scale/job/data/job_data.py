@@ -250,9 +250,9 @@ class JobData(object):
         """
 
         file_ids = set()
-        for data_input in self._data['input_data']['files']:
-            if 'file_ids' in data_input:
-                file_ids.add(data_input.file_ids)
+        for data_input in self._input_files.itervalues():
+            for id in data_input.file_ids:
+                file_ids.add(id)
         return file_ids
 
     def get_input_file_ids_by_input(self):
@@ -263,10 +263,9 @@ class JobData(object):
         """
 
         file_ids = {}
-        for data_input in self._data['input_data']['files']:
+        for data_input in self._input_files.itervalues():
             if data_input.file_ids:
                 file_ids[data_input.name] = data_input.file_ids
-                file_ids[data_input['name']] = [data_input['file_id']]
         return file_ids
 
     def get_input_file_info(self):
@@ -278,7 +277,7 @@ class JobData(object):
 
         file_info = set()
 
-        for data_input in self._data['input_data']['files']:
+        for data_input in self._input_files.itervalues():
             if data_input.file_ids:
                 for file_id in data_input.file_ids:
                     file_info.add((file_id, data_input.name))
@@ -580,15 +579,11 @@ class JobData(object):
 
         warnings = []
         workspace_ids = set()
-        output_files = self._data['output_data']['files']
-        outputs_by_name = {k.name: output_files[k] for k in output_files}  # Output Name -> `JobDataOutputFiles`
         for name in files:
-            if name not in outputs_by_name:
+            if name not in self._output_files:
                 raise InvalidData('Invalid job data: Data output %s was not provided' % name)
-            file_output = outputs_by_name[name]
-            if 'workspace_id' not in file_output:
-                raise InvalidData('Invalid job data: Data output %s must have a "workspace_id" field' % name)
-            workspace_id = file_output['workspace_id']
+            file_output = self._output_files[name]
+            workspace_id = file_output.workspace_id
             if not isinstance(workspace_id, Integral):
                 msg = 'Invalid job data: Data output %s must have an integer in its "workspace_id" field' % name
                 raise InvalidData(msg)

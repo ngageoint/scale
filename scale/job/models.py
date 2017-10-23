@@ -15,7 +15,7 @@ from django.utils import dateparse, timezone
 
 import util.parse
 from error.models import Error
-from job.configuration.data.job_data import JobData
+from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
@@ -301,7 +301,7 @@ class JobManager(models.Manager):
 
             recipe_job = RecipeJob.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
                                                           'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                          'recipe__event__rule').get(job=job, 
+                                                          'recipe__event__rule').get(job=job,
                                                                                      recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
         except RecipeJob.DoesNotExist:
@@ -629,11 +629,11 @@ class JobManager(models.Manager):
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
-            
+
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started, 
+            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started,
                                           source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
@@ -899,7 +899,7 @@ class JobManager(models.Manager):
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
                                                last_modified=modified)
 
-    # TODO: remove this function when API REST v5 is removed 
+    # TODO: remove this function when API REST v5 is removed
     def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
         """Merges data for a single job instance with its job interface to produce a mapping of key/values.
 
@@ -1128,7 +1128,13 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.data.job_data.JobData`
         """
 
-        return JobData(self.input)
+
+        # TODO: Remove old JobData in v6 when we transition to only Seed job types
+        # if 'version' in self.data and '2.0' == self.data['version']:
+        #    job_data = JobData(self.data)
+        # else:
+        job_data = JobData_1_0(self.input)
+        return job_data
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1181,7 +1187,7 @@ class Job(models.Model):
         :returns: The job resources dict
         :rtype: dict
         """
-        
+
         return self.get_resources().get_json().get_dict()
 
     def has_been_queued(self):

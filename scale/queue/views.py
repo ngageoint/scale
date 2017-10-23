@@ -91,6 +91,7 @@ class QueueNewJobView(GenericAPIView):
         try:
             job_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
         except InvalidData as err:
+            logger.exception('Invalid job data.')
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
