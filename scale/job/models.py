@@ -372,7 +372,7 @@ class JobManager(models.Manager):
         job_interface_dict = job.get_job_interface().get_dict()
         job_data_dict = job.get_job_data().get_dict()
         job_results_dict = job.get_job_results().get_dict()
-        
+
         # TODO: Fix this to be forward / backward compatible with pre / post Seed Interface
         job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
         job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
@@ -2828,10 +2828,11 @@ class JobType(models.Model):
         """Returns the interface for running jobs of this type
 
         :returns: The job interface for this type
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or
+                :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterface(self.interface)
+        return JobInterfaceSunset(self.interface)
 
     def get_error_interface(self):
         """Returns the interface for mapping a job's exit code or

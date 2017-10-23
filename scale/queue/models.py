@@ -15,6 +15,7 @@ from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
+from job.deprecation import JobInterfaceSunset
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
@@ -592,7 +593,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
-        return JobInterface(self.interface, do_validate=False)
+        return JobInterfaceSunset(self.interface, do_validate=False)
 
     def get_resources(self):
         """Returns the resources required by this queued job
