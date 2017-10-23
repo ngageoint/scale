@@ -366,15 +366,17 @@ class BatchManager(models.Manager):
         batch_jobs = []
         now = timezone.now()
         for new_recipe_job in handler.recipe_jobs:
-            batch_job = BatchJob()
-            batch_job.batch = batch
-            batch_job.job = new_recipe_job.job
-            batch_job.created = now
+            if new_recipe_job.is_original:
+                batch_job = BatchJob()
+                batch_job.batch = batch
+                batch_job.job = new_recipe_job.job
+                batch_job.created = now
 
-            # Associate it to a superseded job when possible
-            if superseded_jobs and new_recipe_job.job_name in superseded_jobs:
-                batch_job.superseded_job = superseded_jobs[new_recipe_job.job_name]
-            batch_jobs.append(batch_job)
+                # Associate it to a superseded job when possible
+                if superseded_jobs and new_recipe_job.job_name in superseded_jobs:
+                    batch_job.superseded_job = superseded_jobs[new_recipe_job.job_name]
+                
+                batch_jobs.append(batch_job)
         BatchJob.objects.bulk_create(batch_jobs)
 
         # Create a batch recipe for the new recipe
