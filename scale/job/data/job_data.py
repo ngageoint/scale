@@ -373,7 +373,7 @@ class JobData(object):
         :rtype: {str, str}
         """
         env_vars = {}
-        for file_input in self._input_files:
+        for file_input in self._input_files.itervalues():
             env_var_name = normalize_env_var_name(file_input.name)
             if len(file_input.file_ids) > 1:
                 # When we have input for multiple files, map in the entire directory
