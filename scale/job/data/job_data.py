@@ -4,18 +4,18 @@ from __future__ import unicode_literals
 import json
 import logging
 import os
-from abc import ABCMeta
 from numbers import Integral
 
 from job.configuration.data.data_file import DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.data.types import JobDataInputFiles, JobDataInputJson, JobDataOutputFiles
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from job.seed.results.job_results import JobResults
 from job.seed.results.outputs_json import SeedOutputsJson, SEED_OUPUTS_JSON_FILENAME
 from job.seed.types import SeedInputFiles, SeedOutputFiles
-from product.models import ProductFileMetadata
+from product.types import ProductFileMetadata
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
 
@@ -37,38 +37,6 @@ class ValidationWarning(object):
         """
         self.key = key
         self.details = details
-
-
-class JobDataFields(object):
-    __metaclass__ = ABCMeta
-
-    def __init__(self, data):
-        self.dict = data
-
-    def __repr__(self):
-        return self.dict
-
-    @property
-    def name(self):
-        return self.dict['name']
-
-
-class JobDataInputFiles(JobDataFields):
-    @property
-    def file_ids(self):
-        return self.dict['file_ids']
-
-
-class JobDataInputJson(JobDataFields):
-    @property
-    def value(self):
-        return self.dict['value']
-
-
-class JobDataOutputFiles(JobDataFields):
-    @property
-    def workspace_id(self):
-        return self.dict['workspace_id']
 
 
 class JobData(object):

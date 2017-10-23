@@ -7,7 +7,7 @@ from mock import patch
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.results.exceptions import OutputCaptureError
 from job.data.job_data import JobData
-from product.models import ProductFileMetadata
+from product.types import ProductFileMetadata
 
 
 class DummyDataFileStore(AbstractDataFileStore):

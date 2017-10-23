@@ -21,7 +21,8 @@ from batch.models import BatchRecipe, BatchJob
 from batch.test import utils as batch_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobManager
-from product.models import FileAncestryLink, ProductFile, ProductFileMetadata
+from product.models import FileAncestryLink, ProductFile
+from product.types import ProductFileMetadata
 from recipe.models import RecipeManager
 from storage.models import ScaleFile
 
