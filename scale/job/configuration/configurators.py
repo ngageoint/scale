@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import math
-import os
 
 from django.conf import settings
 
@@ -19,21 +18,10 @@ from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
+from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace
-from scheduler.vault.manager import secrets_mgr
-
-
-def normalize_env_var_name(name):
-    """Returns a normalized version of the given string name so it can be used as the name of an environment variable
-
-    :param name: The string name to normalize
-    :type name: string
-    :returns: The normalized environment variable name
-    :rtype: string
-    """
-
-    return name.replace('-', '_').upper()
+from util.environment import normalize_env_var_name
 
 
 class QueuedExecutionConfigurator(object):
@@ -69,29 +57,8 @@ class QueuedExecutionConfigurator(object):
         config.set_input_files(input_files_dict)
 
         # Set up env vars for job's input data
-        env_vars = {}
-        input_values = {}
-        # TODO: refactor after Seed upgrade
-        # This step makes sure that all inputs get replaced with blank if a value is not provided
-        for input_data_dict in job.get_job_interface().definition['input_data']:
-            input_values[input_data_dict['name']] = ''  # Everything gets a blank value by default
-        # TODO: refactor this to use JobData method after Seed upgrade
-        for data_input in data.get_dict()['input_data']:
-            input_name = data_input['name']
-            env_var_name = normalize_env_var_name(input_name)
-            if 'value' in data_input:
-                env_vars[env_var_name] = data_input['value']
-                input_values[input_name] = data_input['value']
-            if 'file_id' in data_input:
-                input_file = input_files_dict[input_name][0]
-                file_name = os.path.basename(input_file.workspace_path)
-                if input_file.local_file_name:
-                    file_name = input_file.local_file_name
-                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
-                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
-            elif 'file_ids' in data_input:
-                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        input_values = data.get_injected_input_values(input_files_dict)
+        env_vars = data.get_injected_env_vars(input_files_dict)
 
         task_workspaces = {}
         if job.job_type.is_system:
@@ -108,12 +75,11 @@ class QueuedExecutionConfigurator(object):
             config.set_output_workspaces(output_workspaces)
 
         # Create main task with fields populated from input data
-        args = job.get_job_interface().get_command_args()
-        # TODO: command arg input param replacement can be removed when old-style job type support is dropped
-        args = JobInterface._replace_command_parameters(args, input_values)
+        args = job.get_job_interface().get_injected_command_args(input_values)
         config.create_tasks(['main'])
         config.add_to_task('main', args=args, env_vars=env_vars, workspaces=task_workspaces)
         return config
+
 
     def _cache_workspace_names(self, workspace_ids):
         """Queries and caches the workspace names for the given IDs
@@ -150,6 +116,7 @@ class QueuedExecutionConfigurator(object):
                 input_file = InputFile(scale_file_model)
                 # Check for file name collision and use Scale file ID to ensure names are unique
                 file_name = scale_file_model.file_name
+
                 if file_name in file_names:
                     file_name = '%d.%s' % (scale_file_model.id, file_name)
                     input_file.local_file_name = file_name

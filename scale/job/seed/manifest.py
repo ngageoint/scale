@@ -8,13 +8,12 @@ import os
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.configurators import normalize_env_var_name
 from job.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.exceptions import MissingMount, MissingSetting
 from job.seed.exceptions import InvalidSeedManifestDefinition
-
 from job.seed.types import SeedInputFiles, SeedInputJson
 from scheduler.vault.manager import secrets_mgr
+from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
 
@@ -130,6 +129,20 @@ class SeedManifest(object):
         """
 
         return self.get_interface().get('command', None)
+
+    def get_injected_command_args(self, values):
+        """Gets the command and ignores the values parameter
+
+        TODO: Remove once old style job types are removed.
+        This method exists as a placeholder for compatibility until old style job types are removed.
+        Once this occurs get_command should be used in its place.
+        :param values: Input values to replace named placeholders in command value
+        :type values: {str, str}
+        :return: the command
+        :rtype: str
+        """
+
+        return self.get_command()
 
     def get_interface(self):
         """Gets the interface for the Seed job

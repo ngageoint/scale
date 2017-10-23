@@ -8,10 +8,11 @@ from numbers import Integral
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.results.job_results import JobResults
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
-
+from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
 
@@ -276,6 +277,52 @@ class JobData(object):
                 property_values[name] = property_input['value']
 
         return property_values
+
+    def get_injected_input_values(self, input_files_dict):
+        """Apply all execution time values to job data
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        input_values = {}
+        for data_input in self.get_dict()['input_data']:
+            input_name = data_input['name']
+            if 'value' in data_input:
+                input_values[input_name] = data_input['value']
+            if 'file_id' in data_input:
+                input_file = input_files_dict[input_name][0]
+                file_name = os.path.basename(input_file.workspace_path)
+                if input_file.local_file_name:
+                    file_name = input_file.local_file_name
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+            elif 'file_ids' in data_input:
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        return input_values
+
+    def get_injected_env_vars(self, input_files_dict):
+        """Apply all execution time values to job data
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        env_vars = {}
+        for data_input in self.get_dict()['input_data']:
+            input_name = data_input['name']
+            if 'value' in data_input:
+                env_vars[normalize_env_var_name(input_name)] = data_input['value']
+            if 'file_id' in data_input:
+                input_file = input_files_dict[input_name][0]
+                file_name = os.path.basename(input_file.workspace_path)
+                if input_file.local_file_name:
+                    file_name = input_file.local_file_name
+                env_vars[normalize_env_var_name(input_name)] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+            elif 'file_ids' in data_input:
+                env_vars[normalize_env_var_name(input_name)] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        return env_vars
 
     def retrieve_input_data_files(self, data_files):
         """Retrieves the given data input files and writes them to the given local directories. Any given file

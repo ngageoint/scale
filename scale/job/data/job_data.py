@@ -18,6 +18,7 @@ from job.seed.types import SeedInputFiles, SeedOutputFiles
 from product.types import ProductFileMetadata
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
+from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
 
@@ -345,6 +346,48 @@ class JobData(object):
             retrieved_params[name] = file_path_list
 
         return retrieved_params
+
+    def get_injected_input_values(self, input_files):
+        """Apply all execution time values to job data
+
+        TODO: Remove with v6 when old style Job Types are removed
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        input_values = {}
+
+        # No data is created here, as this is only used for parameter injection into command args.
+        # Environment variables injection is done under get_injected_env_vars
+
+        return input_values
+
+    def get_injected_env_vars(self, input_files):
+        """Inject all execution time values to job data mappings
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        env_vars = {}
+        for file_input in self._input_files:
+            env_var_name = normalize_env_var_name(file_input.name)
+            if len(file_input.file_ids) > 1:
+                # When we have input for multiple files, map in the entire directory
+                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
+            else:
+                input_file = input_files[file_input.name][0]
+                file_name = os.path.basename(input_file.workspace_path)
+                if input_file.local_file_name:
+                    file_name = input_file.local_file_name
+                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
+        for json_input in self._input_json:
+            env_vars[normalize_env_var_name(json_input.name)] = json_input.value
+
+        return env_vars
 
     def setup_job_dir(self, data_files):
         """Sets up the directory structure for a job execution and downloads the given files

@@ -21,6 +21,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
+from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
@@ -1125,15 +1126,15 @@ class Job(models.Model):
         """Returns the data for this job
 
         :returns: The data for this job
-        :rtype: :class:`job.configuration.data.job_data.JobData`
+        :rtype: :class:`job.configuration.data.job_data.JobData` or :class:`job.data.job_data.JobData`
         """
 
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        # if 'version' in self.data and '2.0' == self.data['version']:
-        #    job_data = JobData(self.data)
-        # else:
-        job_data = JobData_1_0(self.input)
+        if 'version' in self.data and '2.0' == self.data['version']:
+            job_data = JobData(self.data)
+        else:
+            job_data = JobData_1_0(self.data)
         return job_data
 
     def get_job_interface(self):

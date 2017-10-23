@@ -370,6 +370,17 @@ class JobInterface(object):
 
         return self.definition['command_arguments']
 
+    def get_injected_command_args(self, values):
+        """Gets the command arguments with values injected
+
+        :param values: Input values to replace named placeholders in command value
+        :type values: {str, str}
+        :return: the command args
+        :rtype: str
+        """
+
+        return self._replace_command_parameters(self.get_command_args(), values)
+
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
 
@@ -991,3 +1002,5 @@ class JobInterface(object):
             path = mount['path']
             if not os.path.isabs(path):
                 raise InvalidInterfaceDefinition('%s mount must have an absolute path' % name)
+
+
