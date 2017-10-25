@@ -137,8 +137,10 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
             media_type = self._dict['condition']['media_type']
 
         data_types = set(self._dict['condition']['data_types'])
+        any_data_types = set(self._dict['condition']['any_of_data_types'])
+        not_data_types = set(self._dict['condition']['not_data_types'])
 
-        return ParseTriggerCondition(media_type, data_types)
+        return ParseTriggerCondition(media_type, data_types, any_data_types, not_data_types)
 
     def get_input_data_name(self):
         """Returns the name of the input data that the parsed file should be passed to
