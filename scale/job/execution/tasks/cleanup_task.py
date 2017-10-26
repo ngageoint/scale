@@ -47,7 +47,7 @@ class CleanupTask(NodeTask):
         all_nonrunning_containers_cmd = 'docker ps %s --format \'{{.Names}}\'' % nonrunning_filters
         all_volumes_cmd = 'docker volume ls -q'
         all_scale_dangling_volumes_cmd = 'docker volume ls -f dangling=true -q | grep scale_'
-        container_delete_cmd = 'docker rm $cont || true'
+        container_delete_cmd = 'docker rm $cont'
         volume_delete_cmd = 'docker volume rm $vol'
 
         # Create commands that list the containers/volumes to delete
