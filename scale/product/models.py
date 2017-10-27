@@ -77,12 +77,12 @@ class FileAncestryLinkManager(models.Manager):
 
                 # Set references to the current execution
                 link.job_exe_id = job_exe_id
-                link.job = job
+                link.job_id = job.id
                 link.batch_id = batch_id
                 new_links.append(link)
 
                 if job_recipe:
-                    link.recipe = job_recipe.recipe
+                    link.recipe_id = job_recipe.recipe_id
                 else:
                     link.recipe = None
 
@@ -97,17 +97,17 @@ class FileAncestryLinkManager(models.Manager):
 
                 # Set references to the current execution
                 link.job_exe_id = job_exe_id
-                link.job = job
+                link.job_id = job.id
                 link.batch_id = batch_id
 
                 if job_recipe:
-                    link.recipe = job_recipe.recipe
-                else: 
+                    link.recipe_id = job_recipe.recipe_id
+                else:
                     link.recipe = None
 
                 # Set references to the ancestor execution
-                link.ancestor_job = ancestor_link.job
-                link.ancestor_job_exe = ancestor_link.job_exe
+                link.ancestor_job_id = ancestor_link.job_id
+                link.ancestor_job_exe_id = ancestor_link.job_exe_id
                 new_links.append(link)
 
         FileAncestryLink.objects.bulk_create(new_links)
@@ -245,7 +245,7 @@ class ProductFileManager(models.GeoManager):
                                   'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                   'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                   'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__data', 'recipe_type__definition', 
+                                  'job_type__error_mapping', 'recipe__data', 'recipe_type__definition',
                                   'batch__definition')
         products = products.prefetch_related('countries')
 
@@ -301,8 +301,8 @@ class ProductFileManager(models.GeoManager):
         return products
 
     def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None, 
-                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None, 
+                     job_type_categories=None, job_ids=None, is_operational=None, is_published=None,
+                     file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                      batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
 
@@ -344,14 +344,14 @@ class ProductFileManager(models.GeoManager):
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
-                                    job_ids=None, is_operational=is_operational, is_published=is_published, 
-                                    is_superseded=False, file_name=file_name, job_output=job_output, 
-                                    recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, 
+                                    job_ids=None, is_operational=is_operational, is_published=is_published,
+                                    is_superseded=False, file_name=file_name, job_output=job_output,
+                                    recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
 
     def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
                             file_name=None, order=None):
-        """Returns a query for the list of soruces that produced the given product file ID.
+        """Returns a query for the list of sources that produced the given product file ID.
 
         :param product_file_id: The product file ID.
         :type product_file_id: int
@@ -442,11 +442,13 @@ class ProductFileManager(models.GeoManager):
             product_lists[product.id] = product.source_files
 
         source_files = {}  # {source file ID: source file}
-        src_qry = ScaleFile.objects.filter(descendants__descendant_id__in=product_lists.keys())
-        src_qry = src_qry.select_related('workspace').defer('workspace__json_config').order_by('id').distinct('id')
+        ancestor_ids = set()
+        for link in FileAncestryLink.objects.filter(descendant_id__in=product_lists).only('ancestor_id'):
+            ancestor_ids.add(link.ancestor_id)
+        src_qry = ScaleFile.objects.filter(file_type='SOURCE', id__in=ancestor_ids)
+        src_qry = src_qry.select_related('workspace').defer('workspace__json_config')
         for source in src_qry:
-            if source.file_type == 'SOURCE':
-                source_files[source.id] = source
+            source_files[source.id] = source
 
         link_qry = FileAncestryLink.objects.filter(ancestor_id__in=source_files.keys())
         link_qry = link_qry.filter(descendant_id__in=product_lists.keys())

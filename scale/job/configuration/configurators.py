@@ -71,6 +71,10 @@ class QueuedExecutionConfigurator(object):
         # Set up env vars for job's input data
         env_vars = {}
         input_values = {}
+        # TODO: refactor after Seed upgrade
+        # This step makes sure that all inputs get replaced with blank if a value is not provided
+        for input_data_dict in job.get_job_interface().definition['input_data']:
+            input_values[input_data_dict['name']] = ''  # Everything gets a blank value by default
         # TODO: refactor this to use JobData method after Seed upgrade
         for data_input in data.get_dict()['input_data']:
             input_name = data_input['name']

@@ -34,7 +34,8 @@ def create_country(name=None, fips='TT', gmi='TT', iso2='TT', iso3='TST', iso_nu
 
 
 def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size=100, file_path=None, workspace=None,
-                countries=None, is_deleted=False, data_type=''):
+                countries=None, is_deleted=False, data_type='', last_modified=None, source_started=None,
+                source_ended=None):
     """Creates a Scale file model for unit testing
 
     :returns: The file model
@@ -50,7 +51,9 @@ def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size
 
     scale_file = ScaleFile.objects.create(file_name=file_name, media_type=media_type, file_size=file_size,
                                           file_path=file_path or 'file/path/' + file_name, workspace=workspace,
-                                          is_deleted=is_deleted, deleted=deleted, data_type=data_type)
+                                          is_deleted=is_deleted, deleted=deleted, data_type=data_type,
+                                          last_modified=last_modified, source_started=source_started,
+                                          source_ended=source_ended)
     if countries:
         scale_file.countries = countries
         scale_file.save()
