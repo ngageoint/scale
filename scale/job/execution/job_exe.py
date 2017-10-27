@@ -6,7 +6,7 @@ import threading
 
 from django.utils.timezone import now
 
-from error.models import Error
+from error.models import Error, get_builtin_error, get_unknown_error
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
@@ -172,7 +172,7 @@ class RunningJobExecution(object):
         :type when: :class:`datetime.datetime`
         """
 
-        error = Error.objects.get_error('node-lost')
+        error = get_builtin_error('node-lost')
 
         with self._lock:
             self._current_task = None
@@ -191,7 +191,7 @@ class RunningJobExecution(object):
             error_name = task.timeout_error_name
         else:
             error_name = 'launch-timeout'
-        error = Error.objects.get_error(error_name)
+        error = get_builtin_error(error_name)
 
         with self._lock:
             self._set_final_status('FAILED', when, error)
@@ -317,7 +317,7 @@ class RunningJobExecution(object):
                 when = now()
                 error = self._current_task.determine_error(task_update)
                 if not error:
-                    error = Error.objects.get_unknown_error()
+                    error = get_unknown_error()
                 self._current_task = None
                 self._set_final_status('FAILED', when, error)
 

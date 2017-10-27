@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from error.models import CACHED_ERRORS
+from error.models import reset_error_cache
 from job.execution.manager import JobExecutionManager
 from job.messages.job_exe_end import MAX_NUM
 from job.models import Job
@@ -23,8 +23,8 @@ class TestJobExecutionManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
+        # Clear error cache so tests work correctly
+        reset_error_cache()
 
         self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()

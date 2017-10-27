@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from error.models import CACHED_ERRORS
+from error.models import reset_error_cache
 from job.tasks.base_task import RUNNING_RECON_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
@@ -22,6 +22,8 @@ class TestRunningJobExecution(TestCase):
 
     def setUp(self):
         django.setup()
+
+        reset_error_cache()
 
         Scheduler.objects.initialize_scheduler()
         job_type = job_test_utils.create_job_type(max_tries=1)
@@ -684,9 +686,6 @@ class TestRunningJobExecution(TestCase):
     def test_pre_task_launch_error(self):
         """Tests running through a job execution where a pre-task fails to launch"""
 
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
-
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -719,9 +718,6 @@ class TestRunningJobExecution(TestCase):
 
     def test_job_task_launch_error(self):
         """Tests running through a job execution where a Docker-based job-task fails to launch"""
-
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -774,9 +770,6 @@ class TestRunningJobExecution(TestCase):
 
     def test_post_task_launch_error(self):
         """Tests running through a job execution where a post-task fails to launch"""
-
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -849,9 +842,6 @@ class TestRunningJobExecution(TestCase):
     def test_docker_pull_error(self):
         """Tests running through a job execution where the Docker image pull fails"""
 
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
-
         # Start pull-task
         task = self.running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -879,9 +869,6 @@ class TestRunningJobExecution(TestCase):
     def test_general_algorithm_error(self):
         """Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)
         """
-
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -943,9 +930,6 @@ class TestRunningJobExecution(TestCase):
 
     def test_docker_terminated_error(self):
         """Tests running through a job execution where a Docker container terminates"""
-
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()

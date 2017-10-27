@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 import error.test.utils as error_test_utils
-from error.models import CACHED_ERRORS
+from error.models import reset_error_cache
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 
@@ -19,6 +19,9 @@ class TestErrorInterfaceValidate(TestCase):
         self.error_1 = error_test_utils.create_error(name='error_1', category='SYSTEM')
         self.error_2 = error_test_utils.create_error(name='error_2', category='SYSTEM')
         self.error_3 = error_test_utils.create_error(name='error_3', category='ALGORITHM')
+
+        # Clear error cache so tests work correctly
+        reset_error_cache()
 
     def test_get_error_zero(self):
         """ Tests that no error is returned when the exit_code is 0"""
@@ -58,9 +61,6 @@ class TestErrorInterfaceValidate(TestCase):
     def test_get_error_missing(self):
         """Tests that general algorithm error is returned when a non-registered name is found in the mapping"""
 
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
-
         error_interface_dict = {
             'version': '1.0',
             'exit_codes': {
@@ -78,9 +78,6 @@ class TestErrorInterfaceValidate(TestCase):
 
     def test_get_error_missing_default(self):
         """Tests that custom error is returned when a non-registered name is found in the mapping"""
-
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
 
         error_interface_dict = {
             'version': '1.0',

@@ -16,7 +16,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import CACHED_ERRORS, Error
+from error.models import Error, get_builtin_error, get_unknown_error, reset_error_cache
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job, JobExecution, JobExecutionOutput
@@ -112,7 +112,7 @@ class TestQueueManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        CACHED_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+        reset_error_cache()
 
     def test_get_queue_fifo(self):
         """Tests calling QueueManager.get_queue() in FIFO mode"""
@@ -153,7 +153,7 @@ class TestQueueManager(TransactionTestCase):
 
         job_type = job_test_utils.create_job_type(max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        unknown_error = Error.objects.get_unknown_error()
+        unknown_error = get_unknown_error()
 
         # Call method to test
         Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=unknown_error)
@@ -168,7 +168,7 @@ class TestQueueManager(TransactionTestCase):
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_error('database-operation')
+        error = get_builtin_error('database-operation')
 
         # Call method to test
         Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
@@ -185,7 +185,7 @@ class TestQueueManager(TransactionTestCase):
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_unknown_error()
+        error = get_unknown_error()
 
         # Call method to test
         Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
@@ -200,7 +200,7 @@ class TestQueueManager(TransactionTestCase):
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_error('database-operation')
+        error = get_builtin_error('database-operation')
 
         Job.objects.supersede_jobs([job], now())
 

@@ -831,7 +831,7 @@ class Job(models.Model):
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = django.contrib.postgres.fields.JSONField(default=dict)
-    # TODO: rename results to output, will cause breaking REST API changes
+    # TODO: rename results to output and make default nullable, will cause breaking REST API changes
     results = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField()
