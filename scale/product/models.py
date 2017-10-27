@@ -77,12 +77,12 @@ class FileAncestryLinkManager(models.Manager):
 
                 # Set references to the current execution
                 link.job_exe_id = job_exe_id
-                link.job = job
+                link.job_id = job.id
                 link.batch_id = batch_id
                 new_links.append(link)
 
                 if job_recipe:
-                    link.recipe = job_recipe.recipe
+                    link.recipe_id = job_recipe.recipe_id
                 else:
                     link.recipe = None
 
@@ -97,17 +97,17 @@ class FileAncestryLinkManager(models.Manager):
 
                 # Set references to the current execution
                 link.job_exe_id = job_exe_id
-                link.job = job
+                link.job_id = job.id
                 link.batch_id = batch_id
 
                 if job_recipe:
-                    link.recipe = job_recipe.recipe
+                    link.recipe_id = job_recipe.recipe_id
                 else:
                     link.recipe = None
 
                 # Set references to the ancestor execution
-                link.ancestor_job = ancestor_link.job
-                link.ancestor_job_exe = ancestor_link.job_exe
+                link.ancestor_job_id = ancestor_link.job_id
+                link.ancestor_job_exe_id = ancestor_link.job_exe_id
                 new_links.append(link)
 
         FileAncestryLink.objects.bulk_create(new_links)
@@ -442,11 +442,13 @@ class ProductFileManager(models.GeoManager):
             product_lists[product.id] = product.source_files
 
         source_files = {}  # {source file ID: source file}
-        src_qry = ScaleFile.objects.filter(descendants__descendant_id__in=product_lists.keys())
-        src_qry = src_qry.select_related('workspace').defer('workspace__json_config').order_by('id').distinct('id')
+        ancestor_ids = set()
+        for link in FileAncestryLink.objects.filter(descendant_id__in=product_lists).only('ancestor_id'):
+            ancestor_ids.add(link.ancestor_id)
+        src_qry = ScaleFile.objects.filter(file_type='SOURCE', id__in=ancestor_ids)
+        src_qry = src_qry.select_related('workspace').defer('workspace__json_config')
         for source in src_qry:
-            if source.file_type == 'SOURCE':
-                source_files[source.id] = source
+            source_files[source.id] = source
 
         link_qry = FileAncestryLink.objects.filter(ancestor_id__in=source_files.keys())
         link_qry = link_qry.filter(descendant_id__in=product_lists.keys())
