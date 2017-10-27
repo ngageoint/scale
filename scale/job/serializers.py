@@ -219,8 +219,8 @@ class JobDetailsInputSerializer(serializers.Serializer):
         return result
 
     class Meta:
-        from storage.serializers import ScaleFileBaseSerializer
-        FILE_SERIALIZER = ScaleFileBaseSerializer
+        from storage.serializers import ScaleFileSerializer
+        FILE_SERIALIZER = ScaleFileSerializer
 
 
 class JobDetailsOutputSerializer(JobDetailsInputSerializer):
@@ -266,9 +266,9 @@ class JobDetailsSerializer(JobSerializer):
 
 class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
-    from storage.serializers import ScaleFileBaseSerializer
+    from storage.serializers import ScaleFileSerializer
 
-    input_files = ScaleFileBaseSerializer(many=True)
+    input_files = ScaleFileSerializer(many=True)
 
 
 class JobExecutionSerializer(JobExecutionBaseSerializer):

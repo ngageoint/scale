@@ -577,6 +577,56 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
+class RecipeInputFileManager(models.Manager):
+    """Provides additional methods for handleing RecipeInputFiles"""
+
+    def get_recipe_input_files(self, recipe_id, started=None, ended=None, time_field=None, file_name=None,
+                               recipe_input=None):
+        """Returns a query for Input Files filtered on the given fields.
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param started: Query Scale files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scale files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param file_name: Query Scale files with the given file name.
+        :type file_name: str
+        :param recipe_input: The name of the recipe input that the file was passed into
+        :type recipe_input: str
+        :returns: The Scale file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                               file_name=file_name)
+
+        files = files.filter(recipeinputfile__recipe=recipe_id).order_by('last_modified')                          
+
+        if recipe_input:
+            files = files.filter(recipeinputfile__recipe_input=recipe_input)
+
+        # Reach back to the recipe_data to get input_file data for legacy recipes
+        if not files:
+            recipe_data = Recipe.objects.get(pk=recipe_id).get_recipe_data()
+            recipe_input_files = recipe_data.get_input_file_info()
+
+            if recipe_input:
+                recipe_input_file_ids = [f_id for f_id, name in recipe_input_files if name == recipe_input]
+            else:
+                recipe_input_file_ids = [f_id for f_id, name in recipe_input_files]
+
+            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+                                                    file_name=file_name)
+                                                    
+            files = files.filter(id__in=recipe_input_file_ids).order_by('last_modified')
+
+        return files
+
+
+
 class RecipeInputFile(models.Model):
     """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
     accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
@@ -595,6 +645,8 @@ class RecipeInputFile(models.Model):
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     recipe_input = models.CharField(blank=True, null=True, max_length=250)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = RecipeInputFileManager()
 
     class Meta(object):
         """meta information for the db"""

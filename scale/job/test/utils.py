@@ -13,10 +13,11 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobType, JobTypeRevision, TaskUpdate
+from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
+import storage.test.utils as storage_test_utils
 from storage.models import ScaleFile, Workspace
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
@@ -405,3 +406,27 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None, r
     if exit_code is not None:
         update.exit_code = exit_code
     return update
+
+def create_input_file(job=None, input_file=None, job_input=None, file_name='my_test_file.txt', media_type='text/plain',
+                      file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
+                      last_modified=None, source_started=None, source_ended=None):
+    """Creates a Scale file and job input file model for unit testing
+
+    :returns: The file model
+    :rtype: :class:`storage.models.ScaleFile`
+    """
+
+    if not job:
+        job = create_job()
+    if not job_input:
+        job_input = 'test_input'
+    if not input_file:
+        input_file = storage_test_utils.create_file(file_name=file_name, media_type=media_type, file_size=file_size,
+                                                    file_path=file_path, workspace=workspace, countries=countries,
+                                                    is_deleted=is_deleted, data_type=data_type,
+                                                    last_modified=last_modified, source_started=source_started,
+                                                    source_ended=source_ended)
+
+    JobInputFile.objects.create(job=job, input_file=input_file, job_input=job_input)
+
+    return input_file

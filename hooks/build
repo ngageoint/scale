@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [[ "${BUILD_DOCS}x" != "x" ]]
+then
+    BUILD_ARGS="--build-arg BUILD_DOCS=${BUILD_DOCS}"
+fi
+
+if [[ "${BASE_IMAGE}x" != "x" ]]
+then
+    BUILD_ARGS="--build-arg BASE_IMAGE=${BASE_IMAGE}"
+fi
+
+if [[ "${GOSU_URL}x" != "x" ]]
+then
+    BUILD_ARGS="$BUILD_ARGS --build-arg GOSU_URL=${GOSU_URL}"
+fi
+
+docker build $BUILD_ARGS --label VERSION=$CACHE_TAG -t $IMAGE_NAME .
+

@@ -12,13 +12,15 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
-from recipe.models import Recipe, RecipeType
+from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
                                 RecipeTypeSerializer)
+from storage.models import ScaleFile
+from storage.serializers import ScaleFileSerializer
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
 
@@ -312,6 +314,77 @@ class RecipeDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(recipe)
         return Response(serializer.data)
+
+
+class RecipeInputFilesView(ListAPIView):
+    """This is the endpoint for retrieving details about input files associated with a given recipe."""
+    queryset = RecipeInputFile.objects.all()
+    serializer_class = ScaleFileSerializer
+
+    def get(self, request, recipe_id):
+        """Retrieve detailed information about the input files for a recipe
+
+        -*-*-
+        parameters:
+          - name: recipe_id
+            in: path
+            description: The ID of the recipe the file is associated with
+            required: true
+            example: 113
+          - name: started
+            in: query
+            description: The start time of a start/end time range
+            required: false
+            example: 2016-01-01T00:00:00Z
+          - name: ended
+            in: query
+            description: The end time of a start/end time range
+            required: false
+            example: 2016-01-02T00:00:00Z
+          - name: time_field
+            in: query
+            description: 'The database time field to apply `started` and `ended` time filters
+                          [Valid fields: `source`, `data`, `last_modified`]'
+            required: false
+            example: source
+          - name: file_name
+            in: query
+            description: The name of a specific file in Scale
+            required: false
+            example: some_file_i_need_to_find.zip
+          - name: recipe_input
+            in: query
+            description: The name of the input the file is passed to in a recipe
+            required: false
+            example: input_1
+        responses:
+          '200':
+            description: A JSON list of files with metadata
+        -*-*-
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The ID for the recipe.
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
+        file_name = rest_util.parse_string(request, 'file_name', required=False)
+        recipe_input = rest_util.parse_string(request, 'recipe_input', required=False)
+
+        files = RecipeInputFile.objects.get_recipe_input_files(recipe_id, started=started, ended=ended,
+                                                               time_field=time_field, file_name=file_name,
+                                                               recipe_input=recipe_input)
+
+        page = self.paginate_queryset(files)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class RecipeReprocessView(GenericAPIView):
