@@ -30,7 +30,7 @@ def create_pull_command(image_name, check_exists=False):
     pull_echo_cmd = 'echo \'Pulling image...\''
     pull_cmd = 'docker pull %s' % image_name
     delete_echo_cmd = 'echo \'Cleaning up dangling images...\''
-    delete_cmd = 'for img in `docker images -q -f dangling=true`; do docker rmi $img; done'
+    delete_cmd = 'for img in `docker images -q -f dangling=true`; do docker rmi $img || true; done'
     command = '%s && %s && %s && %s' % (pull_echo_cmd, pull_cmd, delete_echo_cmd, delete_cmd)
 
     # Setting DOCKER_CONFIG env var is needed if CONFIG_URI is set for custom Docker configuration
