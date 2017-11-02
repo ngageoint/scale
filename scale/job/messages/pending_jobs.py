@@ -75,20 +75,16 @@ class PendingJobs(CommandMessage):
         """
 
         with transaction.atomic():
-            job_ids_for_status_update = []
+            jobs_to_pending = []
             # Retrieve locked job models
             for job_model in Job.objects.get_locked_jobs(self._pending_job_ids):
-                if job_model.has_been_queued():
-                    continue  # Jobs that have already been queued cannot go back to PENDING state, ignore job
-                if job_model.status == 'PENDING':
-                    continue  # Job is already PENDING, so ignore
                 if job_model.last_status_change < self.status_change:
                     # Status update is not old, so perform the update
-                    job_ids_for_status_update.append(job_model.id)
+                    jobs_to_pending.append(job_model)
 
             # Update jobs that need status set to PENDING
-            if job_ids_for_status_update:
-                logger.info('Setting %d job(s) to PENDING status', len(job_ids_for_status_update))
-                Job.objects.update_jobs_to_pending(job_ids_for_status_update, self.status_change)
+            if jobs_to_pending:
+                job_ids = Job.objects.update_jobs_to_pending(jobs_to_pending, self.status_change)
+                logger.info('Set %d job(s) to PENDING status', len(job_ids))
 
         return True

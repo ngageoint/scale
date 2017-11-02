@@ -17,3 +17,9 @@ class QueueConfig(AppConfig):
         from queue.job_load import JobLoadProcessor
 
         clock.register_processor('scale-job-load', JobLoadProcessor)
+
+        # Register queue message types
+        from queue.messages.queued_jobs import QueuedJobs
+        from messaging.messages.factory import add_message_type
+
+        add_message_type(QueuedJobs)

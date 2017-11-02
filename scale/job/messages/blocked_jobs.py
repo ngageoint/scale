@@ -75,20 +75,16 @@ class BlockedJobs(CommandMessage):
         """
 
         with transaction.atomic():
-            job_ids_for_status_update = []
+            jobs_to_blocked = []
             # Retrieve locked job models
             for job_model in Job.objects.get_locked_jobs(self._blocked_job_ids):
-                if job_model.has_been_queued():
-                    continue  # Jobs that have already been queued cannot go back to BLOCKED state, ignore job
-                if job_model.status == 'BLOCKED':
-                    continue  # Job is already BLOCKED, so ignore
                 if job_model.last_status_change < self.status_change:
                     # Status update is not old, so perform the update
-                    job_ids_for_status_update.append(job_model.id)
+                    jobs_to_blocked.append(job_model)
 
             # Update jobs that need status set to BLOCKED
-            if job_ids_for_status_update:
-                logger.info('Setting %d job(s) to BLOCKED status', len(job_ids_for_status_update))
-                Job.objects.update_jobs_to_blocked(job_ids_for_status_update, self.status_change)
+            if jobs_to_blocked:
+                job_ids = Job.objects.update_jobs_to_blocked(jobs_to_blocked, self.status_change)
+                logger.info('Set %d job(s) to BLOCKED status', len(job_ids))
 
         return True

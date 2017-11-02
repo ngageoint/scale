@@ -272,6 +272,20 @@ class ScaleFileManager(models.Manager):
 
         return self.select_related('workspace').filter(id__in=file_ids).iterator()
 
+    def get_files_for_queued_jobs(self, file_ids):
+        """Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
+        configuring queued jobs.
+
+        :param file_ids: The file IDs
+        :type file_ids: list
+        :returns: The scale_file models that match the given IDs
+        :rtype: list
+        """
+
+        file_qry = self.select_related('workspace').filter(id__in=file_ids)
+        file_qry = file_qry.only('id', 'file_type', 'file_path', 'is_deleted', 'workspace__name')
+        return file_qry.iterator()
+
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace
         field populated. This method will update the file_path field in each ScaleFile model to the new path (it may

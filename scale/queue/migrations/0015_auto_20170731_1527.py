@@ -157,7 +157,7 @@ class Migration(migrations.Migration):
                 input_file_ids.update(job.get_job_data().get_input_file_ids())
 
             if input_file_ids:
-                for input_file in ScaleFile.objects.get_files(input_file_ids):
+                for input_file in ScaleFile.objects.get_files_for_queued_jobs(input_file_ids):
                     input_files[input_file.id] = input_file
 
             # Bulk create queue models

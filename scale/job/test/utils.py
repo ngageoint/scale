@@ -326,7 +326,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
     input_files = {}
     input_file_ids = job.get_job_data().get_input_file_ids()
     if input_file_ids:
-        for input_file in ScaleFile.objects.get_files(input_file_ids):
+        for input_file in ScaleFile.objects.get_files_for_queued_jobs(input_file_ids):
             input_files[input_file.id] = input_file
     exe_config = QueuedExecutionConfigurator(input_files).configure_queued_job(job)
 

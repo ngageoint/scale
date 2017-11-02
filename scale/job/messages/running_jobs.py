@@ -138,7 +138,7 @@ class RunningJobs(CommandMessage):
             for job in Job.objects.get_locked_jobs(job_ids):
                 job_models[job.id] = job
 
-            job_ids_for_status_update = []
+            jobs_to_running = []
             for node_id, job_list in self._running_jobs.items():
                 job_ids_for_node_update = []
                 for job_tuple in job_list:
@@ -149,19 +149,16 @@ class RunningJobs(CommandMessage):
                         continue  # Execution number does not match so this update is out of date, ignore job
                     # Execution numbers match, so this job needs to have its node_id set
                     job_ids_for_node_update.append(job_id)
-                    # Check status because if it is not QUEUED, then this update came too late (after job already
-                    # reached a final status) and we don't want to update status then
-                    if job_model.status == 'QUEUED':
-                        # Job status is still QUEUED, so update to RUNNING
-                        job_ids_for_status_update.append(job_id)
+                    # Job will later be set to RUNNING
+                    jobs_to_running.append(job_model)
 
                 # Update jobs for this node
                 if job_ids_for_node_update:
                     Job.objects.update_jobs_node(job_ids_for_node_update, node_id, self._started)
 
             # Update jobs that need status set to RUNNING
-            if job_ids_for_status_update:
-                logger.info('Setting %d job(s) to RUNNING status', len(job_ids_for_status_update))
-                Job.objects.update_jobs_to_running(job_ids_for_status_update, self._started)
+            if jobs_to_running:
+                running_job_ids = Job.objects.update_jobs_to_running(jobs_to_running, self._started)
+                logger.info('Set %d job(s) to RUNNING status', len(running_job_ids))
 
         return True

@@ -212,6 +212,22 @@ class RecipeManager(models.Manager):
         RecipeJob.objects.bulk_create(recipe_jobs_to_create)
         return recipe_jobs_to_create
 
+    def get_latest_recipe_ids_for_jobs(self, job_ids):
+        """Returns the IDs of the latest (non-superseded) recipes that contain the jobs with the given IDs
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The recipe IDs
+        :rtype: list
+        """
+
+        recipe_ids = set()
+        # A job should match at most one non-superseded recipe
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids, recipe__is_superseded=False).only('recipe_id'):
+            recipe_ids.add(recipe_job.recipe_id)
+
+        return list(recipe_ids)
+
     def get_recipe_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
         returned model will have its related recipe_type and recipe_type_rev models populated. If the job exists in

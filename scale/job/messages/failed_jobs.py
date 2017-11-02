@@ -108,32 +108,89 @@ class FailedJobs(CommandMessage):
             for job in Job.objects.get_locked_jobs(job_ids):
                 job_models[job.id] = job
 
-            # TODO: implement
-            job_ids_for_status_update = []
+            # Get job models with related fields
+            # TODO: once long running job types are gone, the related fields are not needed
+            for job in Job.objects.get_jobs_with_related(job_ids):
+                job_models[job.id] = job
+
+            jobs_to_retry = []
+            all_failed_job_ids = []
             for error_id, job_list in self._failed_jobs.items():
                 error = get_error(error_id)
-                job_ids_for_node_update = []
-                for job_tuple in job_list:
-                    job_id = job_tuple[0]
-                    exe_num = job_tuple[1]
-                    job_model = job_models[job_id]
-                    if job_model.num_exes != exe_num:
-                        continue  # Execution number does not match so this update is out of date, ignore job
-                    # Execution numbers match, so this job needs to have its node_id set
-                    job_ids_for_node_update.append(job_id)
-                    # Check status because if it is not QUEUED, then this update came too late (after job already
-                    # reached a final status) and we don't want to update status then
-                    if job_model.status == 'QUEUED':
-                        # Job status is still QUEUED, so update to RUNNING
-                        job_ids_for_status_update.append(job_id)
+                jobs_to_fail = []
+                for failed_job in job_list:
+                    job_model = job_models[failed_job.job_id]
+                    # If execution number does not match, then this update is obsolete
+                    if job_model.num_exes != failed_job.exe_num:
+                        # Ignore this job
+                        continue
 
-                # Update jobs for this node
-                if job_ids_for_node_update:
-                    Job.objects.update_jobs_node(job_ids_for_node_update, node_id, self._started)
+                    # Re-try job if error supports re-try and there are more tries left
+                    retry = error.should_be_retried and job_model.num_exes < job_model.max_tries
+                    # Also re-try long running jobs
+                    retry = retry or job_model.job_type.is_long_running
+                    # Do not re-try superseded jobs
+                    retry = retry and not job_model.is_superseded
 
-            # Update jobs that need status set to RUNNING
-            if job_ids_for_status_update:
-                logger.info('Setting %d job(s) to RUNNING status', len(job_ids_for_status_update))
-                Job.objects.update_jobs_to_running(job_ids_for_status_update, self._started)
+                    if retry:
+                        jobs_to_retry.append(job_model)
+                    else:
+                        jobs_to_fail.append(job_model)
+
+                # Update jobs that failed with this error
+                if jobs_to_fail:
+                    failed_job_ids = Job.objects.update_jobs_to_failed(jobs_to_fail, error_id, self.ended)
+                    logger.info('Set %d job(s) to FAILED status with error %s', len(failed_job_ids), error.name)
+                    all_failed_job_ids.extend(failed_job_ids)
+
+            # Need to update recipes of failed jobs so that dependent jobs are BLOCKED
+            if all_failed_job_ids:
+                self._create_update_recipes_messages(all_failed_job_ids)
+
+            # Place jobs to retry back onto the queue
+            if jobs_to_retry:
+                self._create_queued_jobs_messages(jobs_to_retry)
 
         return True
+
+    def _create_queued_jobs_messages(self, jobs):
+        """Creates messages to queue the given jobs that should be retried
+
+        :param jobs: The job models to queue
+        :type jobs: list
+        """
+
+        from queue.messages.queued_jobs import QueuedJobs
+
+        message = None
+        for job in jobs:
+            if not message:
+                message = QueuedJobs()
+            elif not message.can_fit_more():
+                self.new_messages.append(message)
+                message = QueuedJobs()
+            message.add_job(job.id, job.num_exes)
+        if message:
+            self.new_messages.append(message)
+
+    def _create_update_recipes_messages(self, failed_job_ids):
+        """Creates messages to update the the recipes for the given failed jobs
+
+        :param failed_job_ids: The job IDs
+        :type failed_job_ids: list
+        """
+
+        from recipe.messages.update_recipes import UpdateRecipes
+        from recipe.models import Recipe
+        recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(failed_job_ids)
+
+        message = None
+        for recipe_id in recipe_ids:
+            if not message:
+                message = UpdateRecipes()
+            elif not message.can_fit_more():
+                self.new_messages.append(message)
+                message = UpdateRecipes()
+            message.add_recipe(recipe_id)
+        if message:
+            self.new_messages.append(message)
