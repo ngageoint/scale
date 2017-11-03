@@ -916,7 +916,8 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return self.status == 'RUNNING'
+        # QUEUED is allowed because the RUNNING update may come after the failure
+        return self.status in ['QUEUED', 'RUNNING']
 
     def can_be_pending(self):
         """Indicates whether this job can be set to PENDING status
@@ -934,7 +935,8 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return self.status not in ['QUEUED', 'COMPLETED'] and self.data and not self.is_superseded
+        # QUEUED is allowed because the RUNNING update may come after the failure
+        return self.status != 'COMPLETED' and self.data and not self.is_superseded
 
     def can_be_running(self):
         """Indicates whether this job can be set to RUNNING status

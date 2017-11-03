@@ -94,21 +94,21 @@ class TestQueuedJobs(TransactionTestCase):
 
         self.assertTrue(result)
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-        # Job 1 should have been successfully updated QUEUED
+        # Job 1 should have been successfully QUEUED
         self.assertEqual(jobs[0].status, 'QUEUED')
         self.assertEqual(jobs[0].num_exes, 1)
-        # Job 2 should have been successfully updated QUEUED
+        # Job 2 should have been successfully QUEUED
         self.assertEqual(jobs[1].status, 'QUEUED')
         self.assertEqual(jobs[1].num_exes, 2)
-        # Job 3 should have been successfully updated QUEUED
+        # Job 3 should have been successfully QUEUED
         self.assertEqual(jobs[2].status, 'QUEUED')
         self.assertEqual(jobs[2].num_exes, 2)
-        # Job 4 should have been successfully updated QUEUED
+        # Job 4 should have been successfully QUEUED
         self.assertEqual(jobs[3].status, 'QUEUED')
         self.assertEqual(jobs[3].num_exes, 1)
-        # Job 5 should not have been queued since it is already queued
+        # Job 5 should have been successfully QUEUED
         self.assertEqual(jobs[4].status, 'QUEUED')
-        self.assertEqual(jobs[4].num_exes, 1)
+        self.assertEqual(jobs[4].num_exes, 2)
         # Job 6 should not have been queued since it is already completed
         self.assertEqual(jobs[5].status, 'COMPLETED')
         self.assertEqual(jobs[5].num_exes, 1)
