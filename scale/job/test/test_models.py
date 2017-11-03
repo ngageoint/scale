@@ -169,7 +169,8 @@ class TestJobManager(TransactionTestCase):
         """Tests that job attributes are updated when a job is queued."""
         job = job_test_utils.create_job(num_exes=1, data={}, started=timezone.now(), ended=timezone.now())
 
-        Job.objects.queue_jobs([job], timezone.now())
+        Job.objects.update_jobs_to_queued([job], timezone.now())
+        job = Job.objects.get(pk=job.id)
 
         self.assertEqual(job.status, 'QUEUED')
         self.assertIsNotNone(job.queued)
@@ -177,15 +178,15 @@ class TestJobManager(TransactionTestCase):
         self.assertIsNone(job.ended)
 
     def test_queue_superseded_jobs(self):
-        """Tests that JobManager.queue_jobs() does not queue superseded jobs"""
+        """Tests that JobManager.update_jobs_to_queued() does not queue superseded jobs"""
 
         job = job_test_utils.create_job(status='FAILED')
         Job.objects.supersede_jobs([job], timezone.now())
 
-        job_exes = Job.objects.queue_jobs([job], timezone.now())
+        job_ids = Job.objects.update_jobs_to_queued([job], timezone.now())
         job = Job.objects.get(pk=job.id)
 
-        self.assertListEqual(job_exes, [])
+        self.assertListEqual(job_ids, [])
         self.assertEqual(job.status, 'FAILED')
         self.assertTrue(job.is_superseded)
 

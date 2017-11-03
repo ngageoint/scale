@@ -447,6 +447,7 @@ class QueueManager(models.Manager):
         # No lock needed for this job since it doesn't exist outside this transaction yet
         Job.objects.populate_job_data(job, data)
         self.queue_jobs([job])
+        job = Job.objects.get(id=job.id)
 
         return job
 

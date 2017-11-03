@@ -89,6 +89,10 @@ class TestErrorInterfaceValidate(TestCase):
         }
 
         default_error = error_test_utils.create_error()
+        default_error.is_builtin = True
+        default_error.save()
+        # Reset error cache so tests work correctly
+        reset_error_cache()
         error_interface = ErrorInterface(error_interface_dict)
         error = error_interface.get_error(4, default_error.name)
 

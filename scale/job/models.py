@@ -581,10 +581,10 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        job_ids = set()
+        job_ids = []
         for job in jobs:
             if job.can_be_blocked():
-                job_ids.add(job.id)
+                job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='BLOCKED', last_status_change=when, last_modified=timezone.now())
         return job_ids
@@ -625,10 +625,10 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        job_ids = set()
+        job_ids = []
         for job in jobs:
             if job.can_be_failed():
-                job_ids.add(job.id)
+                job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='FAILED', error_id=error_id, ended=when, last_status_change=when,
                                            last_modified=timezone.now())
@@ -647,10 +647,10 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        job_ids = set()
+        job_ids = []
         for job in jobs:
             if job.can_be_pending():
-                job_ids.add(job.id)
+                job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='PENDING', last_status_change=when, last_modified=timezone.now())
         return job_ids
@@ -668,10 +668,10 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        job_ids = set()
+        job_ids = []
         for job in jobs:
             if job.can_be_queued():
-                job_ids.add(job.id)
+                job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='QUEUED', node=None, error=None, queued=when_queued, started=None,
                                            ended=None, last_status_change=when_queued,
@@ -691,10 +691,10 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        job_ids = set()
+        job_ids = []
         for job in jobs:
-            if job.can_be_pending():
-                job_ids.add(job.id)
+            if job.can_be_running():
+                job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
         return job_ids
