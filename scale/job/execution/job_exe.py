@@ -88,7 +88,7 @@ class RunningJobExecution(object):
         """Returns this job execution's error, None if there is no error
 
         :returns: The error, possibly None
-        :rtype: :class:`error.objects.Error`
+        :rtype: :class:`error.models.Error`
         """
 
         return self._error

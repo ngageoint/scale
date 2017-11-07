@@ -502,7 +502,8 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs)
+        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs,
+                                               priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -513,7 +514,7 @@ class QueueManager(models.Manager):
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
         if jobs_to_queue:
-            self.queue_jobs(jobs_to_queue, priority=priority)
+            self.queue_jobs(jobs_to_queue)
 
         return handler
 

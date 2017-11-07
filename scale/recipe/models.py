@@ -50,7 +50,8 @@ class RecipeManager(models.Manager):
             batch_recipe = None
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
+    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
+                      priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
         must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
@@ -70,6 +71,8 @@ class RecipeManager(models.Manager):
             supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
             actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to set the priority of the new recipe jobs
+        :type priority: int
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
@@ -129,7 +132,7 @@ class RecipeManager(models.Manager):
         RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
+        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs, priority)
         handler = RecipeHandler(recipe, recipe_jobs)
         # Block any new jobs that need to be blocked
         jobs_to_blocked = handler.get_blocked_jobs()
@@ -137,7 +140,7 @@ class RecipeManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
         return handler
 
-    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs):
+    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs, priority=None):
         """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
         an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
         all job models in superseded_jobs.
@@ -154,6 +157,8 @@ class RecipeManager(models.Manager):
             supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
             actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to set the priority of the new recipe jobs
+        :type priority: int
         :returns: The list of newly created recipe_job models (without id field populated)
         :rtype: [:class:`recipe.models.RecipeJob`]
 
@@ -184,6 +189,8 @@ class RecipeManager(models.Manager):
                     jobs_to_supersede.append(superseded_job)
 
             job = Job.objects.create_job(job_type, event, superseded_job)
+            if priority is not None:
+                job.priority = priority
             job.save()
             recipe_job = RecipeJob()
             recipe_job.job = job
@@ -274,7 +281,7 @@ class RecipeManager(models.Manager):
         """
 
         recipe_dict = {recipe.id: recipe for recipe in recipes}
-        handlers = {}  # {Recipe ID: Recipe handler}
+        handlers = []
 
         recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
         for recipe_id in recipe_dict.keys():
@@ -283,7 +290,7 @@ class RecipeManager(models.Manager):
                 if recipe_jobs:
                     recipe = recipe_dict[recipe_id]
                     handler = RecipeHandler(recipe, recipe_jobs)
-                    handlers[recipe_id] = handler
+                    handlers.append(handler)
 
         return handlers
 

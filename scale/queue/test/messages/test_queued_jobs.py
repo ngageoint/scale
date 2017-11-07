@@ -1,9 +1,6 @@
 from __future__ import unicode_literals
 
-import datetime
-
 import django
-from django.utils.timezone import now
 from django.test import TransactionTestCase
 
 from job.configuration.data.job_data import JobData
@@ -92,7 +89,6 @@ class TestQueuedJobs(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        self.assertTrue(result)
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         # Job 1 should have been successfully QUEUED
         self.assertEqual(jobs[0].status, 'QUEUED')
@@ -116,5 +112,32 @@ class TestQueuedJobs(TransactionTestCase):
         self.assertEqual(jobs[6].status, 'RUNNING')
         self.assertEqual(jobs[6].num_exes, 1)
         # Job 8 should not have been queued since it doesn't have any input data
+        self.assertEqual(jobs[7].status, 'CANCELED')
+        self.assertEqual(jobs[7].num_exes, 0)
+        # Ensure priority is correctly set
+        queue = Queue.objects.get(job_id=job_1.id)
+        self.assertEqual(queue.priority, 101)
+
+        # Test executing message again
+        result = message.execute()
+        self.assertTrue(result)
+
+        self.assertTrue(result)
+        # All results should be the same
+        jobs = Job.objects.filter(id__in=job_ids).order_by('id')
+        self.assertEqual(jobs[0].status, 'QUEUED')
+        self.assertEqual(jobs[0].num_exes, 1)
+        self.assertEqual(jobs[1].status, 'QUEUED')
+        self.assertEqual(jobs[1].num_exes, 2)
+        self.assertEqual(jobs[2].status, 'QUEUED')
+        self.assertEqual(jobs[2].num_exes, 2)
+        self.assertEqual(jobs[3].status, 'QUEUED')
+        self.assertEqual(jobs[3].num_exes, 1)
+        self.assertEqual(jobs[4].status, 'QUEUED')
+        self.assertEqual(jobs[4].num_exes, 2)
+        self.assertEqual(jobs[5].status, 'COMPLETED')
+        self.assertEqual(jobs[5].num_exes, 1)
+        self.assertEqual(jobs[6].status, 'RUNNING')
+        self.assertEqual(jobs[6].num_exes, 1)
         self.assertEqual(jobs[7].status, 'CANCELED')
         self.assertEqual(jobs[7].num_exes, 0)

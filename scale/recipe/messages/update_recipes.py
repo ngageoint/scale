@@ -79,7 +79,7 @@ class UpdateRecipes(CommandMessage):
         pending_job_ids = set()
 
         # Process all recipe handlers
-        recipes = Recipe.objects.get_recipes_with_definitions(self._recipe_ids)
+        recipes = list(Recipe.objects.get_recipes_with_definitions(self._recipe_ids))
         while len(recipes) > 0:
             # Gather up a list of recipes that doesn't exceed the job number limit
             recipe_list = [recipes.pop()]

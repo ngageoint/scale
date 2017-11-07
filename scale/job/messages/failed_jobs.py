@@ -120,8 +120,8 @@ class FailedJobs(CommandMessage):
                 jobs_to_fail = []
                 for failed_job in job_list:
                     job_model = job_models[failed_job.job_id]
-                    # If execution number does not match, then this update is obsolete
-                    if job_model.num_exes != failed_job.exe_num:
+                    # If job cannot be failed or execution number does not match, then this update is obsolete
+                    if not job_model.can_be_failed() or job_model.num_exes != failed_job.exe_num:
                         # Ignore this job
                         continue
 

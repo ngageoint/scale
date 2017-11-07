@@ -167,7 +167,7 @@ class TestQueueManager(TransactionTestCase):
         """Tests calling QueueManager.handle_job_failure() when the job retries"""
 
         job_type = job_test_utils.create_job_type(max_tries=2)
-        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1, max_tries=2)
         error = get_builtin_error('database-operation')
 
         # Call method to test
@@ -250,7 +250,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Queue the job
         job = job_test_utils.create_job()
-        Queue.objects._queue_jobs([job])
+        Queue.objects.queue_jobs([job])
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
@@ -628,7 +628,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job')
         recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, job_name='Job 1')
-        Job.objects.update_jobs_to_running({recipe_job_1.job.id: recipe_job_1.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([recipe_job_1.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=recipe_job_1.job, status='COMPLETED', output=results)
@@ -700,12 +700,12 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.assertTrue(new_recipe_job_2.is_original)
 
         # Complete both the old and new job 2 and check that only the new recipe completes
-        Job.objects.update_jobs_to_running({recipe_job_2.job.id: recipe_job_2.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([recipe_job_2.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=recipe_job_2.job, status='COMPLETED', output=results)
         Queue.objects.handle_job_completion(recipe_job_2.job_id, recipe_job_2.job.num_exes, now())
-        Job.objects.update_jobs_to_running({new_recipe_job_2.job.id: new_recipe_job_2.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([new_recipe_job_2.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=new_recipe_job_2.job, status='COMPLETED', output=results)
@@ -798,8 +798,8 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         }
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
         self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
-        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED')
-        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED')
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0)
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0)
         data_b = {
             'version': '1.0',
             'input_data': [],
@@ -822,12 +822,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
         self.assertEqual(standalone_failed_job.max_tries, 4)
-        self.assertEqual(standalone_failed_job.priority, self.new_priority)
 
         standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
         self.assertEqual(standalone_canceled_job.status, 'QUEUED')
         self.assertEqual(standalone_canceled_job.max_tries, 2)
-        self.assertEqual(standalone_canceled_job.priority, self.new_priority)
 
         # Superseded job should not be re-queued
         standalone_superseded_job = Job.objects.get(id=self.standalone_superseded_job.id)
