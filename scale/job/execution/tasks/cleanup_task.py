@@ -62,7 +62,7 @@ class CleanupTask(NodeTask):
             # Initial clean up deletes all dangling Docker volumes named with "scale_" prefix
             volume_list_cmd = all_scale_dangling_volumes_cmd
 
-            #We do not need to delete any stuck containers on initial cleanup
+            # We do not need to delete any stuck containers on initial cleanup
             delete_stuck_container_cmd = ':'
         else:
             # Deletes all containers and volumes for the given job executions
@@ -76,7 +76,7 @@ class CleanupTask(NodeTask):
             container_list_cmd = '%s | grep -e %s' % (all_containers_cmd, ' -e '.join(containers))
             volume_list_cmd = '%s | grep -e %s' % (all_volumes_cmd, ' -e '.join(volumes))
 
-            #Delete containers that are stuck so that volumes can be cleaned up properly
+            # Delete containers that are stuck so that volumes can be cleaned up properly
             delete_stuck_container_cmd = for_cmd % ('cont',
                                                     all_nonrunning_containers_cmd,
                                                     if_cmd % (is_scale_container, container_delete_cmd, ':'))
