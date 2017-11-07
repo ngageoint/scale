@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.messages.failed_jobs import FailedJobs
 from job.messages.job_exe_end import CreateJobExecutionEnd
 from job.models import Job, JobExecution
 
@@ -22,9 +23,13 @@ class JobExecutionManager(object):
         """Constructor
         """
 
-        self._job_exe_end_models = []  # Holds job_exe_end models to send in next messages
+        # Execution information to be sent in command messages
+        self._finished_job_exes = []  # Holds finished executions
+        self._job_exe_end_models = []  # Holds job_exe_end models to create
+        self._running_job_messages = []  # Holds running job messages
+
+        # Current running state
         self._running_job_exes = {}  # {Cluster ID: RunningJobExecution}
-        self._running_job_messages = []  # Holds running job messages to send
         self._lock = threading.Lock()
         self._metrics = TotalJobExeMetrics(now())
 
@@ -64,21 +69,26 @@ class JobExecutionManager(object):
         :rtype: list
         """
 
+        running_job_messages = None
+        job_exe_end_models = None
+        finished_job_exes = None
+
         with self._lock:
-            messages = self._running_job_messages
+            finished_job_exes = self._finished_job_exes
+            job_exe_end_models = self._job_exe_end_models
+            running_job_messages = self._running_job_messages
+            self._finished_job_exes = []
+            self._job_exe_end_models = []
             self._running_job_messages = []
 
-            message = None
-            for job_exe_end in self._job_exe_end_models:
-                if not message:
-                    message = CreateJobExecutionEnd()
-                elif not message.can_fit_more():
-                    messages.append(message)
-                    message = CreateJobExecutionEnd()
-                message.add_job_exe_end(job_exe_end)
-            if message:
-                messages.append(message)
-            self._job_exe_end_models = []
+        # Start with running job messages
+        messages = running_job_messages
+
+        # Add messages for creating job_exe_end models
+        messages.extend(self._create_job_exe_end_messages(job_exe_end_models))
+
+         # Add messages for finished job executions
+        messages.extend(self._create_finished_job_exe_messages(finished_job_exes))
 
         return messages
 
@@ -247,6 +257,58 @@ class JobExecutionManager(object):
 
         return canceled_tasks
 
+    def _create_finished_job_exe_messages(self, finished_job_exes):
+        """Creates messages for finished job executions
+
+        :param finished_job_exes: The finished job executions
+        :type finished_job_exes: list
+        :returns: The messages
+        :rtype: list
+        """
+
+        when = now()
+        messages = []
+
+        message = None
+        for job_exe in finished_job_exes:
+            if job_exe.status == 'FAILED':
+                if not message:
+                    message = FailedJobs()
+                    message.ended = when
+                elif not message.can_fit_more():
+                    messages.append(message)
+                    message = FailedJobs()
+                    message.ended = when
+                message.add_failed_job(job_exe.job_id, job_exe.exe_num, job_exe.error.id)
+        if message:
+            messages.append(message)
+
+        return messages
+
+    def _create_job_exe_end_messages(self, job_exe_end_models):
+        """Creates messages to create job_exe_end models
+
+        :param job_exe_end_models: The job_exe_end models to create
+        :type job_exe_end_models: list
+        :returns: The job_exe_end messages
+        :rtype: list
+        """
+
+        messages = []
+
+        message = None
+        for job_exe_end in job_exe_end_models:
+            if not message:
+                message = CreateJobExecutionEnd()
+            elif not message.can_fit_more():
+                messages.append(message)
+                message = CreateJobExecutionEnd()
+            message.add_job_exe_end(job_exe_end)
+        if message:
+            messages.append(message)
+
+        return messages
+
     def _handle_finished_job_exe(self, running_job_exe):
         """Handles the finished job execution. Caller must have obtained the manager lock.
 
@@ -269,7 +331,7 @@ class JobExecutionManager(object):
         :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
-        # TODO: handling job completion and failure here for now, later these will be sent via messaging backend in a
+        # TODO: handling job completion here for now, later this will be sent via messaging backend in a
         # background thread
         from queue.models import Queue
         job_id = running_job_exe.job_id
@@ -277,8 +339,6 @@ class JobExecutionManager(object):
         when = running_job_exe.finished
         if running_job_exe.status == 'COMPLETED':
             Queue.objects.handle_job_completion(job_id, exe_num, when)
-        elif running_job_exe.status == 'FAILED':
-            Queue.objects.handle_job_failure(job_id, exe_num, when, running_job_exe.error)
 
 
 job_exe_mgr = JobExecutionManager()
