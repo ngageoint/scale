@@ -4,7 +4,13 @@ import re
 
 from .exceptions import InvalidBrokerUrl
 
-REGEX_PATTERN = r'^(?P<type>[a-zA-Z]+):\/\/((?P<user_name>[^@:]+):(?P<password>[^@:]+)@)?(?P<address>[^@]+(:[0-9]+)?)\/\/$'
+# Accepts broker URLs of decreasing specificity, as follows:
+# transport://user:pass@host:port/vhost
+# transport://host:port/vhost
+# transport://host:port
+# transport://host
+
+REGEX_PATTERN = r'^(?P<type>[a-zA-Z]+):\/\/((?P<user_name>[^@:]+):(?P<password>[^@:]+)@)?(?P<address>[^@\/]+(:[0-9]+)?)\/?(?P<vhost>.+)?$'
 
 
 class BrokerDetails(object):
@@ -13,6 +19,7 @@ class BrokerDetails(object):
         self.password = None
         self.address = None
         self.type = None
+        self.vhost = None
 
     @staticmethod
     def from_broker_url(broker_url):
@@ -34,6 +41,9 @@ class BrokerDetails(object):
             if 'user_name' in groups and 'password' in groups:
                 this.user_name = groups['user_name']
                 this.password = groups['password']
+
+            if 'vhost' in groups:
+                this.vhost = groups['vhost']
 
             return this
 
@@ -58,7 +68,10 @@ class BrokerDetails(object):
         return self.password
 
     def get_type(self):
-        """
+        """Get the transport broker type defined in URL
+
+        :return: Transport type for broker connection
+        :rtype: string
         """
         return self.type
 
@@ -71,3 +84,13 @@ class BrokerDetails(object):
         :rtype: string or None
         """
         return self.user_name
+
+    def get_virtual_host(self):
+        """Get extracted virtual host of broker backend
+
+        May be None if virtual host is not specified in broker URL
+
+        :return: Virtual host for broker connection
+        :rtype: string or None
+        """
+        return self.vhost
