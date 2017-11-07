@@ -197,7 +197,7 @@ from the DCOS Universe package. While this will get you up and running quickly, 
 Our general recommendation is to use Amazon SQS, as this will require the least maintenence.</p>
 <p><em>SCALE_BROKER_URL</em> environment variable is used by Scale to configure your chosen message broker. When left unset, RabbitMQ will be deployed alongside.
 Specific examples of this format will be given for each message broker below. This variable is provided in the format:</p>
-<p><code class="docutils literal"><span class="pre">transport://[userid:password&#64;]hostname[:port]//</span></code></p>
+<p><code class="docutils literal"><span class="pre">transport://[userid:password&#64;]hostname[:port][/virtualhost]</span></code></p>
 <p><em>SCALE_QUEUE_NAME</em> environment variable is used to modify the default queue name of <code class="docutils literal"><span class="pre">scale-command-messages</span></code>. It applies to all message brokers.</p>
 <div class="section" id="amazon-sqs">
 <h2>Amazon SQS<a class="headerlink" href="#amazon-sqs" title="Permalink to this headline">¶</a></h2>
@@ -229,11 +229,11 @@ Specific examples of this format will be given for each message broker below. Th
 <p>If you are using API keys the Access Key ID and Secret Access Key will be placed in the SCALE_BROKER_URL userid and password placeholders respectively. When using IAM roles,
 this section can be entirely omitted. Based on the above examples your environment variables passed to Scale should be set as follows:</p>
 <p><strong>API Keys:</strong></p>
-<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://accesskeyid:secretaccesskey&#64;us-east-1//</span></code>
-SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
+<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://accesskeyid:secretaccesskey&#64;us-east-1</span></code></p>
+<p>SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
 <p><strong>IAM Roles:</strong></p>
-<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://us-east-1//</span></code>
-SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
+<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://us-east-1</span></code></p>
+<p>SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
 </div>
 <div class="section" id="rabbitmq">
 <h2>RabbitMQ<a class="headerlink" href="#rabbitmq" title="Permalink to this headline">¶</a></h2>
