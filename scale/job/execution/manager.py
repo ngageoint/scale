@@ -254,7 +254,7 @@ class JobExecutionManager(object):
         :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
-        # Create job_exe_end model for the finished job execution and send it in next messages
+        # Create job_exe_end model for the finished job execution and send it in a future message
         self._job_exe_end_models.append(running_job_exe.create_job_exe_end_model())
 
         # Remove the finished job execution and update the metrics
