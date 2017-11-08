@@ -38,7 +38,7 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 5.2.1-snapshot documentation" href="../index.html"/>
-        <link rel="next" title="System Dependencies" href="system_dependencies.html"/>
+        <link rel="next" title="Development" href="../development/index.html"/>
         <link rel="prev" title="Workspace Services" href="../rest/workspace.html"/>
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -103,13 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../rest/index.html">REST API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="system_dependencies.html">System Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="deploy_script.html">Deploy Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scale_configuration.html">Scale Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scale_configuration.html#mesos-configuration">Mesos Configuration</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
 </ul>
 
@@ -176,16 +170,13 @@
             
   <div class="section" id="install">
 <span id="id1"></span><h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="system_dependencies.html">System Dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="deploy_script.html">Deploy Script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scale_configuration.html">Scale Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="scale_configuration.html#mesos-configuration">Mesos Configuration</a></li>
-</ul>
-</div>
-<p>To perform an installation of scale, you will need to install the necessary system dependencies.  After installing the <a class="reference internal" href="system_dependencies.html"><span class="doc">System Dependencies</span></a> run the <a class="reference internal" href="deploy_script.html"><span class="doc">Deploy Script</span></a> to install scale to the correct location</p>
-<p>See <a class="reference internal" href="scale_configuration.html"><span class="doc">Scale Configuration</span></a> for configuration details.</p>
+<p>The Scale team has been purposeful in minimizing the effort required to deploy the scheduler and supporting services.
+With this goal in mind, Scale and all components are Docker containerized. While deployment of Scale within a standalone
+installation of Apache Mesos is possible, this is strongly discouraged and unsupported. Deployment within Mesosphere
+DC/OS provides a push-button path to a fully functional data processing cluster.
+Our quick start instructions cover both the underlying DC/OS cluster deployment and installation of Scale.
+These can be found at:</p>
+<p><a class="reference external" href="http://ngageoint.github.io/scale/quickstart.html">http://ngageoint.github.io/scale/quickstart.html</a></p>
 </div>
 
 
@@ -198,7 +189,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="system_dependencies.html" class="btn btn-neutral float-right" title="System Dependencies" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../development/index.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../rest/workspace.html" class="btn btn-neutral" title="Workspace Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
