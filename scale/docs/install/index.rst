@@ -5,13 +5,11 @@
 Install
 ===============================================================================
 
-.. toctree::
-   :maxdepth: 1
-   
-   system_dependencies
-   deploy_script
-   scale_configuration
+The Scale team has been purposeful in minimizing the effort required to deploy the scheduler and supporting services.
+With this goal in mind, Scale and all components are Docker containerized. While deployment of Scale within a standalone
+installation of Apache Mesos is possible, this is strongly discouraged and unsupported. Deployment within Mesosphere
+DC/OS provides a push-button path to a fully functional data processing cluster.
+Our quick start instructions cover both the underlying DC/OS cluster deployment and installation of Scale.
+These can be found at:
 
-To perform an installation of scale, you will need to install the necessary system dependencies.  After installing the :doc:`system_dependencies` run the :doc:`deploy_script` to install scale to the correct location
-
-See :doc:`scale_configuration` for configuration details.
+`http://ngageoint.github.io/scale/quickstart.html <http://ngageoint.github.io/scale/quickstart.html>`_

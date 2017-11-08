@@ -16,7 +16,7 @@ Our general recommendation is to use Amazon SQS, as this will require the least 
 *SCALE_BROKER_URL* environment variable is used by Scale to configure your chosen message broker. When left unset, RabbitMQ will be deployed alongside.
 Specific examples of this format will be given for each message broker below. This variable is provided in the format:
 
-``transport://[userid:password@]hostname[:port]//``
+``transport://[userid:password@]hostname[:port][/virtualhost]``
 
 *SCALE_QUEUE_NAME* environment variable is used to modify the default queue name of ``scale-command-messages``. It applies to all message brokers.
 
@@ -56,12 +56,14 @@ this section can be entirely omitted. Based on the above examples your environme
 
 **API Keys:** 
 
-SCALE_BROKER_URL: ``sqs://accesskeyid:secretaccesskey@us-east-1//``
+SCALE_BROKER_URL: ``sqs://accesskeyid:secretaccesskey@us-east-1``
+
 SCALE_QUEUE_NAME: ``scale-command-message``
 
 **IAM Roles:** 
 
-SCALE_BROKER_URL: ``sqs://us-east-1//``
+SCALE_BROKER_URL: ``sqs://us-east-1``
+
 SCALE_QUEUE_NAME: ``scale-command-message``
 
 --------------------------------------------------------------------------------
