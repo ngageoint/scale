@@ -319,6 +319,9 @@ class JobExecutionManager(object):
         # Create job_exe_end model for the finished job execution and send it in a future message
         self._job_exe_end_models.append(running_job_exe.create_job_exe_end_model())
 
+        # Collect finished job execution to send a future job update message
+        self._finished_job_exes.append(running_job_exe)
+
         # Remove the finished job execution and update the metrics
         del self._running_job_exes[running_job_exe.cluster_id]
         self._metrics.job_exe_finished(running_job_exe)

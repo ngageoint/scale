@@ -87,12 +87,19 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FAILED, task_1_failed,
                                                           exit_code=1)
 
-        # Job execution is finished, so it should be returned and a create_job_exe_ends message is available
+        # Job execution is finished, so it should be returned and a create_job_exe_ends message and a failed_jobs
+        # message is available
         result = self.job_exe_mgr.handle_task_update(update)
         self.assertEqual(self.job_exe_1.id, result.id)
-        message = self.job_exe_mgr.get_messages()[0]
-        self.assertEqual(message.type, 'create_job_exe_ends')
-        self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+
+        messages = self.job_exe_mgr.get_messages()
+        self.assertEqual(len(messages), 2)
+        job_exe_ends_msg = messages[0]
+        self.assertEqual(job_exe_ends_msg.type, 'create_job_exe_ends')
+        self.assertEqual(job_exe_ends_msg._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+        failed_jobs_msg = messages[1]
+        self.assertEqual(failed_jobs_msg.type, 'failed_jobs')
+        self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, self.job_exe_1.job_id)
 
     def test_init_with_database(self):
         """Tests calling init_with_database() successfully"""
