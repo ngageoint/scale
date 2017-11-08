@@ -393,7 +393,7 @@ class ScaleScheduler(MesosScheduler):
 
         duration = now() - started
         msg = 'Scheduler slaveLost() took %.3f seconds'
-        if duration > ScaleScheduler.DATABASE_WARN_THRESHOLD:
+        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())

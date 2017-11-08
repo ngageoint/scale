@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from error.models import reset_error_cache
+from error.models import get_builtin_error, reset_error_cache
 from job.execution.manager import JobExecutionManager
 from job.messages.job_exe_end import MAX_NUM
 from job.models import Job
@@ -120,10 +120,17 @@ class TestJobExecutionManager(TransactionTestCase):
         self.assertEqual(lost_job_exe.id, self.job_exe_1.id)
         self.assertEqual(lost_job_exe.status, 'FAILED')
         self.assertEqual(lost_job_exe._error.name, 'node-lost')
-        # Make sure a create_job_exe_ends message exists for the lost job execution
-        message = self.job_exe_mgr.get_messages()[0]
-        self.assertEqual(message.type, 'create_job_exe_ends')
-        self.assertEqual(message._job_exe_ends[0].job_exe_id, lost_job_exe.id)
+
+        # Make sure a create_job_exe_ends message and failed_jobs message exists for the lost job execution
+        messages = self.job_exe_mgr.get_messages()
+        self.assertEqual(len(messages), 2)
+        job_exe_ends_msg = messages[0]
+        self.assertEqual(job_exe_ends_msg.type, 'create_job_exe_ends')
+        self.assertEqual(job_exe_ends_msg._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+        failed_jobs_msg = messages[1]
+        self.assertEqual(failed_jobs_msg.type, 'failed_jobs')
+        self.assertTrue(get_builtin_error('node-lost').id in failed_jobs_msg._failed_jobs)
+        self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, self.job_exe_1.job_id)
 
     def test_schedule_job_exes(self):
         """Tests calling schedule_job_exes() successfully"""
