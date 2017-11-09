@@ -8,7 +8,6 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 from error.models import reset_error_cache
-from job.tasks.base_task import RUNNING_RECON_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
@@ -665,8 +664,8 @@ class TestRunningJobExecution(TestCase):
         job_task = self.running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([job_task], now())
         when_canceled = pre_task_completed + timedelta(seconds=1)
-        canceled_task = self.running_job_exe.execution_canceled(when_canceled)
-        self.assertEqual(job_task.id, canceled_task.id)
+        self.running_job_exe.execution_canceled(when_canceled)
+        self.assertTrue(job_task.needs_killed())
         self.assertFalse(self.running_job_exe.is_finished())  # Not finished until killed task update arrives
         self.assertEqual(self.running_job_exe.status, 'CANCELED')
         self.assertEqual(self.running_job_exe.finished, when_canceled)
@@ -674,8 +673,7 @@ class TestRunningJobExecution(TestCase):
 
         # Killed task update arrives
         when_task_kill = when_canceled + timedelta(seconds=1)
-        update = job_test_utils.create_task_status_update(canceled_task.id, 'agent', TaskStatusUpdate.KILLED,
-                                                          when_task_kill)
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.KILLED, when_task_kill)
         self.task_mgr.handle_task_update(update)
         self.running_job_exe.task_update(update)
         self.assertTrue(self.running_job_exe.is_finished())
@@ -968,40 +966,3 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
         self.assertEqual(self.running_job_exe.error.name, 'docker-terminated')
         self.assertFalse(self.running_job_exe.is_next_task_ready())
-
-    def test_need_reconciliation(self):
-        """Tests calling RunningJobExecution.need_reconciliation()"""
-
-        running_job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_id)
-        task_1 = running_job_exe_1.start_next_task()
-        running_job_exe_2 = job_test_utils.create_running_job_exe(agent_id=self.agent_id)
-        task_2 = running_job_exe_2.start_next_task()
-        running_job_exe_3 = job_test_utils.create_running_job_exe(agent_id=self.agent_id)
-        task_3 = running_job_exe_3.start_next_task()
-        running_job_exe_4 = job_test_utils.create_running_job_exe(agent_id=self.agent_id)
-        task_4 = running_job_exe_4.start_next_task()
-
-        task_1_and_2_launch_time = now()
-        task_3_launch_time = task_1_and_2_launch_time + RUNNING_RECON_THRESHOLD
-        check_time = task_3_launch_time + timedelta(seconds=1)
-
-        # Task 1 and 2 launch
-        task_1.launch(task_1_and_2_launch_time)
-        task_2.launch(task_1_and_2_launch_time)
-
-        # The reconciliation threshold has now expired
-        # Task 3 launches and a task update comes for task 2
-        task_3.launch(task_3_launch_time)
-        update = job_test_utils.create_task_status_update(task_2.id, 'agent_id', TaskStatusUpdate.RUNNING,
-                                                          task_3_launch_time)
-        task_2.update(update)
-
-        # A second later, we check for tasks needing reconciliation
-        # Task 1 was launched a while ago (exceeding threshold) so it should be reconciled
-        self.assertTrue(task_1.needs_reconciliation(check_time))
-        # Task 2 received an update 1 second ago so it should not be reconciled
-        self.assertFalse(task_2.needs_reconciliation(check_time))
-        # Task 3 was launched 1 second ago so it should not be reconciled
-        self.assertFalse(task_3.needs_reconciliation(check_time))
-        # Task 4 did not even launch so it should not be reconciled
-        self.assertFalse(task_4.needs_reconciliation(check_time))

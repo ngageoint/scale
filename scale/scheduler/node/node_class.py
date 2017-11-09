@@ -33,8 +33,7 @@ class Node(object):
     NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
-    deprecated_desc = 'Node is deprecated and will not run new or existing jobs.'
-    deprecated_desc += ' If this node has existing jobs, please cancel them or switch the node to active.'
+    deprecated_desc = 'Node is deprecated and will not be used by Scale. Existing jobs on the node will be failed.'
     DEPRECATED = NodeState(state='DEPRECATED', title='Deprecated', description=deprecated_desc)
     OFFLINE = NodeState(state='OFFLINE', title='Offline',
                         description='Node is offline/unavailable, so no jobs can currently run on it.')

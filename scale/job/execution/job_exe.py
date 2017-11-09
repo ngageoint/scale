@@ -39,6 +39,7 @@ class RunningJobExecution(object):
 
         # Public, read-only info
         self.id = job_exe.id
+        self.agent_id = agent_id
         self.cluster_id = job_exe.get_cluster_id()
         self.job_id = job_exe.job_id
         self.exe_num = job_exe.exe_num
@@ -152,18 +153,17 @@ class RunningJobExecution(object):
         return job_exe_end
 
     def execution_canceled(self, when):
-        """Cancels this job execution and returns the current task
+        """Cancels this job execution
 
         :param when: The time that the execution was canceled
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
-            task = self._current_task
+            if self._current_task:
+                # Execution is canceled, so kill the current task
+                self._current_task.force_kill()
             self._set_final_status('CANCELED', when)
-            return task
 
     def execution_lost(self, when):
         """Fails this job execution for its node becoming lost
@@ -175,7 +175,8 @@ class RunningJobExecution(object):
         error = get_builtin_error('node-lost')
 
         with self._lock:
-            self._current_task = None
+            if self._current_task:
+                self._current_task.force_reconciliation()
             self._set_final_status('FAILED', when, error)
 
     def execution_timed_out(self, task, when):

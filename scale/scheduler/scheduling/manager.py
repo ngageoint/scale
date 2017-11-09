@@ -617,16 +617,24 @@ class SchedulingManager(object):
                 fulfilled_nodes[node.node_id] = node
 
         # Schedule job executions already on the node waiting for their next task
-        # TODO: fail job_exes with a "node lost" error if job_exe's node does not appear in the dict or is offline or
-        # changed agent ID
+        node_lost_job_exes_ids = []
         # TODO: fail job_exes if they are starving to get resources for their next task
         for running_job_exe in running_job_exes:
-            if running_job_exe.is_next_task_ready() and running_job_exe.node_id in nodes:
+            if running_job_exe.node_id not in nodes:  # Unknown/lost node
+                node_lost_job_exes_ids.append(running_job_exe.id)
+            else:
                 node = nodes[running_job_exe.node_id]
-                has_waiting_tasks = node.accept_job_exe_next_task(running_job_exe, waiting_tasks)
-                if has_waiting_tasks and node.node_id in fulfilled_nodes:
-                    # Node has tasks waiting for resources
-                    del fulfilled_nodes[node.node_id]
+                if not node.is_ready_for_next_job_task() or node.agent_id != running_job_exe.agent_id:
+                    # Node is deprecated, offline, or has switched agent IDs
+                    node_lost_job_exes_ids.append(running_job_exe.id)
+                elif running_job_exe.is_next_task_ready():
+                    has_waiting_tasks = node.accept_job_exe_next_task(running_job_exe, waiting_tasks)
+                    if has_waiting_tasks and node.node_id in fulfilled_nodes:
+                        # Node has tasks waiting for resources
+                        del fulfilled_nodes[node.node_id]
+        # Handle any running job executions that have lost their node
+        if node_lost_job_exes_ids:
+            job_exe_mgr.lost_job_exes(node_lost_job_exes_ids, when)
 
         # Update waiting task counts and calculate shortages
         agent_shortages = {}  # {Agent ID: NodeResources}

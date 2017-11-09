@@ -380,16 +380,8 @@ class ScaleScheduler(MesosScheduler):
 
         # Fail job executions that were running on the lost node
         if node:
-            lost_exes = job_exe_mgr.lost_node(node.id, started)
-            tasks_to_reconcile = []
-            for lost_exe in lost_exes:
-                # Reconcile lost tasks
-                lost_task = lost_exe.current_task
-                if lost_task:
-                    tasks_to_reconcile.append(lost_task)
-                cleanup_mgr.add_job_execution(lost_exe)
-            if tasks_to_reconcile:
-                recon_mgr.add_tasks(tasks_to_reconcile)
+            for finished_job_exe in job_exe_mgr.lost_node(node.id, started):
+                cleanup_mgr.add_job_execution(finished_job_exe)
 
         duration = now() - started
         msg = 'Scheduler slaveLost() took %.3f seconds'

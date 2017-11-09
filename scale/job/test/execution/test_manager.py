@@ -116,10 +116,14 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
         self.job_exe_mgr.handle_task_update(update)
 
-        lost_job_exe = self.job_exe_mgr.lost_node(self.node_model_1.id, now())[0]
+        # Lose node and get lost task update
+        self.job_exe_mgr.lost_node(self.node_model_1.id, now())
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.LOST, task_1_started)
+        lost_job_exe = self.job_exe_mgr.handle_task_update(update)
+
         self.assertEqual(lost_job_exe.id, self.job_exe_1.id)
         self.assertEqual(lost_job_exe.status, 'FAILED')
-        self.assertEqual(lost_job_exe._error.name, 'node-lost')
+        self.assertEqual(lost_job_exe.error.name, 'node-lost')
 
         # Make sure a create_job_exe_ends message and failed_jobs message exists for the lost job execution
         messages = self.job_exe_mgr.get_messages()

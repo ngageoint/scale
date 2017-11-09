@@ -169,6 +169,34 @@ class JobExecutionManager(object):
         with self._lock:
             self._metrics.init_with_database()
 
+    def lost_job_exes(self, job_exe_ids, when):
+        """Informs the manager that the job executions with the given IDs were lost
+
+        :param job_exe_ids: The IDs of the lost job executions
+        :type job_exe_ids: list
+        :param when: The time that the executions were lost
+        :type when: :class:`datetime.datetime`
+        :returns: A list of the finished job executions
+        :rtype: list
+        """
+
+        lost_job_exe_ids = set(job_exe_ids)
+
+        finished_job_exes = []
+        with self._lock:
+            for job_exe in self._running_job_exes.values():
+                if job_exe.id in lost_job_exe_ids:
+                    job_exe.execution_lost(when)
+                    task = job_exe.current_task
+                    if task:
+                        # Node could be deprecated, so force kill the current task
+                        task.force_kill()
+                    if job_exe.is_finished():
+                        self._handle_finished_job_exe(job_exe)
+                        finished_job_exes.append(job_exe)
+
+        return finished_job_exes
+
     def lost_node(self, node_id, when):
         """Informs the manager that the node with the given ID was lost and has gone offline
 
@@ -176,16 +204,14 @@ class JobExecutionManager(object):
         :type node_id: int
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
-        :returns: A list of the lost job executions that had been running on the node
+        :returns: A list of the finished job executions
         :rtype: list
         """
 
-        lost_exes = []
         finished_job_exes = []
         with self._lock:
             for job_exe in self._running_job_exes.values():
                 if job_exe.node_id == node_id:
-                    lost_exes.append(job_exe)
                     job_exe.execution_lost(when)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
@@ -195,7 +221,7 @@ class JobExecutionManager(object):
         for finished_job_exe in finished_job_exes:
             self._handle_finished_job_exe_in_database(finished_job_exe)
 
-        return lost_exes
+        return finished_job_exes
 
     def schedule_job_exes(self, job_exes, messages):
         """Adds newly scheduled running job executions to the manager
@@ -213,11 +239,11 @@ class JobExecutionManager(object):
             self._metrics.add_running_job_exes(job_exes)
 
     def sync_with_database(self):
-        """Syncs with the database to handle any canceled executions. The current task of each canceled job execution is
-        returned so the tasks may be killed.
+        """Syncs with the database to handle any canceled executions. Any job executions that are now finished are
+        returned.
 
-        :returns: A list of the canceled tasks to kill
-        :rtype: [:class:`job.tasks.base_task.Task`]
+        :returns: A list of the finished job executions
+        :rtype: list
         """
 
         job_ids = []
@@ -232,7 +258,6 @@ class JobExecutionManager(object):
         for job in Job.objects.filter(id__in=job_ids):
             job_models[job.id] = job
 
-        canceled_tasks = []
         finished_job_exes = []
         when_canceled = now()
         with self._lock:
@@ -240,22 +265,16 @@ class JobExecutionManager(object):
                 job_model = job_models[running_job_exe.job_id]
                 # If the job has been canceled or the job has a newer execution, this execution must be canceled
                 if job_model.status == 'CANCELED' or job_model.num_exes > running_job_exe.exe_num:
-                    task = running_job_exe.execution_canceled(when_canceled)
-                    if task:
-                        # Since it has an outstanding task, we do not remove the canceled job execution at this point.
-                        # We wait for the status update of the killed task to come back so that job execution cleanup
-                        # occurs after the task is dead.
-                        canceled_tasks.append(task)
-                    else:
-                        if running_job_exe.is_finished():
-                            self._handle_finished_job_exe(running_job_exe)
-                            finished_job_exes.append(running_job_exe)
+                    running_job_exe.execution_canceled(when_canceled)
+                    if running_job_exe.is_finished():
+                        self._handle_finished_job_exe(running_job_exe)
+                        finished_job_exes.append(running_job_exe)
 
         # TODO: this can be removed once database operations move to messaging backend
         for finished_job_exe in finished_job_exes:
             self._handle_finished_job_exe_in_database(finished_job_exe)
 
-        return canceled_tasks
+        return finished_job_exes
 
     def _create_finished_job_exe_messages(self, finished_job_exes):
         """Creates messages for finished job executions

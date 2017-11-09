@@ -47,7 +47,7 @@
         "fields": {
             "name": "node-lost",
             "title": "Node Lost",
-            "description": "The node running this job was lost.",
+            "description": "The node running this job was lost, either by going offline or being deprecated by a Scale admin.",
             "category": "SYSTEM",
             "is_builtin": true,
             "should_be_retried": true,

@@ -6,6 +6,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
 
+from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
 from job.models import JobExecution
 from job.test import utils as job_test_utils
@@ -28,6 +29,8 @@ class TestSchedulingManager(TestCase):
 
     def setUp(self):
         django.setup()
+
+        reset_error_cache()
 
         self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
