@@ -840,9 +840,9 @@ class JobExecutionDetailsView(RetrieveAPIView):
         """
 
         if request.version == 'v5':
-            self.retrieve_v5(request, job_exe_id)
+            return self.retrieve_v5(request, job_exe_id)
         else:
-            return Http404
+            raise Http404
 
     # TODO: remove when REST API v5 is removed
     def retrieve_v5(self, request, job_exe_id):
