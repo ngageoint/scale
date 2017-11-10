@@ -271,6 +271,7 @@ class JobUpdateSerializer(JobSerializer):
     input_files = ScaleFileSerializer(many=True)
 
 
+# TODO: remove when REST API v5 is removed
 class JobExecutionSerializer(JobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
     from error.serializers import ErrorBaseSerializer
@@ -281,6 +282,7 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     error = ErrorBaseSerializer(source='jobexecutionend.error')
 
 
+# TODO: remove when REST API v5 is removed
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
     """Converts job execution model fields to REST output"""
     from error.serializers import ErrorSerializer
@@ -309,6 +311,7 @@ class JobExecutionLogSerializer(JobExecutionSerializer):
     stderr = serializers.CharField()
 
 
+# TODO: remove when REST API v5 is removed
 class JobWithExecutionSerializer(JobSerializer):
     """Converts job with latest execution model fields to REST output"""
     latest_job_exe = JobExecutionBaseSerializer()

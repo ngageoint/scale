@@ -939,6 +939,7 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
+    # TODO: remove when REST API v5 is removed
     def get_details(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 
@@ -987,6 +988,7 @@ class JobExecutionManager(models.Manager):
 
         return job_exe
 
+    # TODO: remove when REST API v5 is removed
     def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
         """Returns a list of job executions within the given time range.
@@ -1070,6 +1072,7 @@ class JobExecutionManager(models.Manager):
         logger.info('Found job execution with ID %d', job_exe.id)
         return job_exe
 
+    # TODO: remove when REST API v5 is removed
     def get_latest(self, jobs):
         """Gets the latest job execution associated with each given job.
 
@@ -1087,6 +1090,7 @@ class JobExecutionManager(models.Manager):
 
         return results
 
+    # TODO: remove when REST API v5 is removed
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 
