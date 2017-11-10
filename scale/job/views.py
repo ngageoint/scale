@@ -731,6 +731,21 @@ class JobsWithExecutionView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v5':
+            return self.list_v5(request)
+        else:
+            raise Http404
+
+    # TODO: remove when REST API v5 is removed
+    def list_v5(self, request):
+        """Gets jobs and their associated latest execution
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -772,6 +787,21 @@ class JobExecutionsView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v5':
+            return self.list_v5(request)
+        else:
+            raise Http404
+
+    # TODO: remove when REST API v5 is removed
+    def list_v5(self, request):
+        """Gets job executions and their associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -799,6 +829,23 @@ class JobExecutionDetailsView(RetrieveAPIView):
     serializer_class = JobExecutionDetailsSerializer
 
     def retrieve(self, request, job_exe_id):
+        """Gets job execution and associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_exe_id: the job execution id
+        :type job_exe_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v5':
+            self.retrieve_v5(request, job_exe_id)
+        else:
+            return Http404
+
+    # TODO: remove when REST API v5 is removed
+    def retrieve_v5(self, request, job_exe_id):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
