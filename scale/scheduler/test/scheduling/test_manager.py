@@ -27,6 +27,8 @@ from scheduler.tasks.manager import system_task_mgr
 
 class TestSchedulingManager(TestCase):
 
+    fixtures = ['basic_job_errors.json']
+
     def setUp(self):
         django.setup()
 

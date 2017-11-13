@@ -574,12 +574,18 @@ class TestRunningJobExecution(TestCase):
         job_task = self.running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([job_task], now())
         self.running_job_exe.execution_lost(when_lost)
-        self.assertTrue(self.running_job_exe.is_finished())
+        self.assertFalse(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'FAILED')
         self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
         self.assertEqual(self.running_job_exe.error.name, 'node-lost')
         self.assertEqual(self.running_job_exe.finished, when_lost)
         self.assertFalse(self.running_job_exe.is_next_task_ready())
+
+        # Task update comes back for lost task
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.LOST, now())
+        self.task_mgr.handle_task_update(update)
+        self.running_job_exe.task_update(update)
+        self.assertTrue(self.running_job_exe.is_finished())
 
     def test_lost_task(self):
         """Tests running through a job execution that has a task that gets lost"""

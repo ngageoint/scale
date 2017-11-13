@@ -156,22 +156,30 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
         self.job_exe_mgr.handle_task_update(update)
 
-        # Cancel job_exe_1 and have manager sync with database
-        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id], now())
-        tasks_to_kill = self.job_exe_mgr.sync_with_database()
+        # Cancel job_exe_1 and job_exe_2 and have manager sync with database
+        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id, self.job_exe_2.job_id], now())
+        finished_job_exes = self.job_exe_mgr.sync_with_database()
 
         self.assertEqual(self.job_exe_1.status, 'CANCELED')
-        self.assertEqual(len(tasks_to_kill), 1)
-        self.assertEqual(tasks_to_kill[0].id, task_1.id)
-        # No message yet since we wait for the canceled task to be killed
-        self.assertListEqual(self.job_exe_mgr.get_messages(), [])
+        self.assertFalse(self.job_exe_1.is_finished())
+        self.assertEqual(self.job_exe_2.status, 'CANCELED')
+        self.assertTrue(self.job_exe_2.is_finished())
 
-        # Task killed
+        # Only job_exe_2 is finished, job_exe_1 has a task to kill
+        self.assertEqual(len(finished_job_exes), 1)
+        self.assertEqual(finished_job_exes[0].id, self.job_exe_2.id)
+        # Make sure a create_job_exe_ends message exists for job_exe_2
+        message = self.job_exe_mgr.get_messages()[0]
+        self.assertEqual(message.type, 'create_job_exe_ends')
+        self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_2.id)
+
+        # Task killed for job_exe_1
         task_1_killed = task_1_started + timedelta(minutes=5)
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.KILLED, task_1_killed)
         self.job_exe_mgr.handle_task_update(update)
 
-        # Make sure a create_job_exe_ends message exists for the canceled job execution
+        # Make sure a create_job_exe_ends message exists for job_exe_1
+        self.assertTrue(self.job_exe_1.is_finished())
         message = self.job_exe_mgr.get_messages()[0]
         self.assertEqual(message.type, 'create_job_exe_ends')
         self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
