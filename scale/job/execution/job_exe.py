@@ -1,12 +1,13 @@
 """Defines the class that represents running job executions"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import threading
 
 from django.utils.timezone import now
 
-from error.models import Error, get_builtin_error, get_unknown_error
+from error.models import get_builtin_error, get_unknown_error
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
@@ -14,6 +15,9 @@ from job.execution.tasks.pre_task import PreTask
 from job.execution.tasks.pull_task import PullTask
 from job.models import JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
+
+
+RESOURCE_STARVATION_THRESHOLD = datetime.timedelta(minutes=10)
 
 
 logger = logging.getLogger(__name__)
@@ -56,6 +60,8 @@ class RunningJobExecution(object):
         self._current_task = None
         self._error = None
         self._finished = None
+        self._has_been_starved = False
+        self._last_task_finished = None
         self._remaining_tasks = []
         self._status = 'RUNNING'
 
@@ -125,6 +131,30 @@ class RunningJobExecution(object):
         """
 
         return self._status
+
+    def check_for_starvation(self, when):
+        """Checks this job execution to see if it has been starved of resources for its next task
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: Whether this job execution has been starved
+        :rtype: bool
+        """
+
+        with self._lock:
+            if self._has_been_starved:
+                return self._has_been_starved
+
+            if self._current_task or not self._remaining_tasks:
+                return False
+
+            if self._last_task_finished and when > self._last_task_finished + RESOURCE_STARVATION_THRESHOLD:
+                self._has_been_starved = True
+                error = get_builtin_error('resource-starvation')
+                self._set_final_status('FAILED', when, error)
+                logger.warning('Job execution %d has failed due to resource starvation', self.id)
+
+            return self._has_been_starved
 
     def create_job_exe_end_model(self):
         """Creates and returns a job execution end model for this job execution. Caller must ensure that this job
@@ -301,9 +331,10 @@ class RunningJobExecution(object):
 
         with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
+                when = now()
                 self._current_task = None
+                self._last_task_finished = when
                 if not self._remaining_tasks:
-                    when = now()
                     self._set_final_status('COMPLETED', when)
 
     def _task_fail(self, task_update):
@@ -320,6 +351,7 @@ class RunningJobExecution(object):
                 if not error:
                     error = get_unknown_error()
                 self._current_task = None
+                self._last_task_finished = when
                 self._set_final_status('FAILED', when, error)
 
     def _task_lost(self, task_update):
@@ -338,3 +370,4 @@ class RunningJobExecution(object):
                 self._current_task.update_task_id_for_lost_task()  # Note: This changes the task ID!
                 self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None
+            self._last_task_finished = now()

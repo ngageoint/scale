@@ -59,6 +59,20 @@
         "model": "error.Error",
         "pk": null,
         "fields": {
+            "name": "resource-starvation",
+            "title": "Resource Starvation",
+            "description": "This job waited too long for resources for its next task to become available on the node.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "should_be_retried": true,
+            "created": "2017-11-13T00:00:00.0Z",
+            "last_modified": "2017-11-13T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
             "name": "launch-timeout",
             "title": "Launch Timeout",
             "description": "A task for this job failed to start within a reasonable amount of time after being launched.",
@@ -89,7 +103,7 @@
         "fields": {
             "name": "pre-timeout",
             "title": "Pre-task Timeout",
-            "description": "The pre-task did not finish within a reasonable amount of time. This is likely due to excessive time downloading the algorithm's input data from their workspace(s).",
+            "description": "The pre-task did not finish within a reasonable amount of time. This is likely due to excessive time downloading the algorithm's input files from their workspace(s).",
             "category": "SYSTEM",
             "is_builtin": true,
             "should_be_retried": false,
@@ -103,7 +117,7 @@
         "fields": {
             "name": "post-timeout",
             "title": "Post-task Timeout",
-            "description": "The post-task did not finish within a reasonable amount of time. This is likely due to excessive time uploading the algorithm's output data to their workspace(s).",
+            "description": "The post-task did not finish within a reasonable amount of time. This is likely due to excessive time uploading the algorithm's output files to their workspace(s).",
             "category": "SYSTEM",
             "is_builtin": true,
             "should_be_retried": false,

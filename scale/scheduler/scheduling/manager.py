@@ -20,6 +20,7 @@ from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
+from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.manager import scheduler_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.agent import ResourceSet
@@ -618,13 +619,12 @@ class SchedulingManager(object):
 
         # Schedule job executions already on the node waiting for their next task
         node_lost_job_exes_ids = []
-        # TODO: fail job_exes if they are starving to get resources for their next task
         for running_job_exe in running_job_exes:
             if running_job_exe.node_id not in nodes:  # Unknown/lost node
                 node_lost_job_exes_ids.append(running_job_exe.id)
             else:
                 node = nodes[running_job_exe.node_id]
-                if not node.is_ready_for_next_job_task() or node.agent_id != running_job_exe.agent_id:
+                if not node.is_ready_for_next_job_task or node.agent_id != running_job_exe.agent_id:
                     # Node is deprecated, offline, or has switched agent IDs
                     node_lost_job_exes_ids.append(running_job_exe.id)
                 elif running_job_exe.is_next_task_ready():
@@ -632,9 +632,12 @@ class SchedulingManager(object):
                     if has_waiting_tasks and node.node_id in fulfilled_nodes:
                         # Node has tasks waiting for resources
                         del fulfilled_nodes[node.node_id]
-        # Handle any running job executions that have lost their node
+        # Handle any running job executions that have lost their node or become starved
+        finished_job_exes = job_exe_mgr.check_for_starvation(when)
         if node_lost_job_exes_ids:
-            job_exe_mgr.lost_job_exes(node_lost_job_exes_ids, when)
+            finished_job_exes.extend(job_exe_mgr.lost_job_exes(node_lost_job_exes_ids, when))
+        for finished_job_exe in finished_job_exes:
+            cleanup_mgr.add_job_execution(finished_job_exe)
 
         # Update waiting task counts and calculate shortages
         agent_shortages = {}  # {Agent ID: NodeResources}

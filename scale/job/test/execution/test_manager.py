@@ -9,9 +9,11 @@ from django.utils.timezone import now
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 from error.models import get_builtin_error, reset_error_cache
+from job.execution.job_exe import RESOURCE_STARVATION_THRESHOLD
 from job.execution.manager import JobExecutionManager
 from job.messages.job_exe_end import MAX_NUM
 from job.models import Job
+from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 
 
@@ -32,7 +34,39 @@ class TestJobExecutionManager(TransactionTestCase):
         self.node_model_2 = node_test_utils.create_node()
         self.job_exe_2 = job_test_utils.create_running_job_exe(agent_id=self.agent_id, node=self.node_model_2)
 
+        self.task_mgr = TaskManager()
         self.job_exe_mgr = JobExecutionManager()
+
+    def test_check_for_starvation(self):
+        """Tests calling check_for_starvation() successfully"""
+
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
+
+        # Start and complete first task of execution
+        task_1_launched = now()
+        task_1 = self.job_exe_1.start_next_task()
+        self.task_mgr.launch_tasks([task_1], task_1_launched)
+        task_1_started = task_1_launched + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
+        self.task_mgr.handle_task_update(update)
+        self.job_exe_mgr.handle_task_update(update)
+        task_1_completed = task_1_started + timedelta(seconds=10)
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          task_1_completed)
+        self.task_mgr.handle_task_update(update)
+        self.job_exe_mgr.handle_task_update(update)
+
+        # Check after the time threshold has passed and task 2 has still not been launched
+        check_time = task_1_completed + RESOURCE_STARVATION_THRESHOLD + timedelta(seconds=1)
+        finished_job_exes = self.job_exe_mgr.check_for_starvation(check_time)
+
+        # Check that execution 1 was failed for starvation
+        self.assertEqual(len(finished_job_exes), 1)
+        starved_job_exe = finished_job_exes[0]
+        self.assertEqual(starved_job_exe.id, self.job_exe_1.id)
+        self.assertEqual(starved_job_exe.status, 'FAILED')
+        self.assertEqual(starved_job_exe.error.name, 'resource-starvation')
+        self.assertEqual(starved_job_exe.finished, check_time)
 
     def test_generate_status_json(self):
         """Tests calling generate_status_json() successfully"""

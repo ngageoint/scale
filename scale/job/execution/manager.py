@@ -43,6 +43,26 @@ class JobExecutionManager(object):
         with self._lock:
             self._job_exe_end_models.extend(job_exe_ends)
 
+    def check_for_starvation(self, when):
+        """Checks all of the currently running job executions for resource starvation. If any starved executions are
+        found, they are failed and returned.
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: A list of the starved job executions
+        :rtype: list
+        """
+
+        finished_job_exes = []
+        with self._lock:
+            for job_exe in self._running_job_exes.values():
+                if job_exe.check_for_starvation(when):
+                    if job_exe.is_finished():
+                        self._handle_finished_job_exe(job_exe)
+                        finished_job_exes.append(job_exe)
+
+        return finished_job_exes
+
     def clear(self):
         """Clears all data from the manager. This method is intended for testing only.
         """
