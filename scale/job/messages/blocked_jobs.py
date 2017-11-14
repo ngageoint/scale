@@ -78,7 +78,7 @@ class BlockedJobs(CommandMessage):
             jobs_to_blocked = []
             # Retrieve locked job models
             for job_model in Job.objects.get_locked_jobs(self._blocked_job_ids):
-                if job_model.last_status_change < self.status_change:
+                if not job_model.last_status_change or job_model.last_status_change < self.status_change:
                     # Status update is not old, so perform the update
                     jobs_to_blocked.append(job_model)
 
