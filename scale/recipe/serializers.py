@@ -13,6 +13,7 @@ class RecipeTypeBaseSerializer(ModelIdSerializer):
 
 class RecipeTypeSerializer(RecipeTypeBaseSerializer):
     """Converts recipe type model fields to REST output."""
+    is_system = serializers.BooleanField()
     is_active = serializers.BooleanField()
     definition = serializers.JSONField(default=dict)
     revision_num = serializers.IntegerField()

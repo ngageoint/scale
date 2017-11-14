@@ -41,6 +41,37 @@ class TestQueueScaleBakeView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
 
 
+class TestQueueScaleCasinoView(TransactionTestCase):
+
+    fixtures = ['diagnostic_job_types.json', 'diagnostic_recipe_types.json']
+
+    def setUp(self):
+        django.setup()
+
+    def test_bad_num(self):
+        """Tests calling the view with a num of 0 (which is invalid)."""
+
+        json_data = {
+            'num': 0
+        }
+
+        url = rest_util.get_url('/diagnostics/recipe/casino/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_successful(self):
+        """Tests calling the view to create Scale Casino recipes."""
+
+        json_data = {
+            'num': 10
+        }
+
+        url = rest_util.get_url('/diagnostics/recipe/casino/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+
 class TestQueueScaleHelloView(TransactionTestCase):
 
     fixtures = ['diagnostic_job_types.json']

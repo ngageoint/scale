@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializer
+from recipe.configuration.data.recipe_data import RecipeData
+from recipe.models import RecipeType
 import util.rest as rest_util
 from util.rest import BadParameter
 
@@ -40,6 +42,34 @@ class QueueScaleBakeView(GenericAPIView):
         job_type = JobType.objects.get(name='scale-bake', version='1.0')
         for _ in xrange(num):
             Queue.objects.queue_new_job_for_user(job_type, {})
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class QueueScaleCasinoView(GenericAPIView):
+    """This view is the endpoint for queuing new Scale Casino recipes."""
+    parser_classes = (JSONParser,)
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
+
+    def post(self, request):
+        """Creates and queues the specified number of Scale Casino recipes
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        num = rest_util.parse_int(request, 'num')
+
+        if num < 1:
+            raise BadParameter('num must be at least 1')
+
+        # TODO: in the future, send command message to do this asynchronously
+        recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
+        for _ in xrange(num):
+            Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData())
 
         return Response(status=status.HTTP_202_ACCEPTED)
 

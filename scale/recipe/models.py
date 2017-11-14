@@ -939,6 +939,19 @@ class RecipeTypeManager(models.Manager):
 
         return trigger_rules
 
+    def get_by_natural_key(self, name, version):
+        """Django method to retrieve a recipe type for the given natural key
+
+        :param name: The human-readable name of the recipe type
+        :type name: string
+        :param version: The version of the recipe type
+        :type version: string
+        :returns: The recipe type defined by the natural key
+        :rtype: :class:`recipe.models.RecipeType`
+        """
+
+        return self.get(name=name, version=version)
+
     def get_details(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
 
@@ -1040,6 +1053,8 @@ class RecipeType(models.Model):
     :keyword description: An optional description of the recipe type
     :type description: :class:`django.db.models.CharField`
 
+    :keyword is_system: Whether this is a system recipe type
+    :type is_system: :class:`django.db.models.BooleanField`
     :keyword is_active: Whether the recipe type is active (false once recipe type is archived)
     :type is_active: :class:`django.db.models.BooleanField`
     :keyword definition: JSON definition for running a recipe of this type
@@ -1062,6 +1077,7 @@ class RecipeType(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.CharField(blank=True, max_length=500, null=True)
 
+    is_system = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
     revision_num = models.IntegerField(default=1)
@@ -1081,6 +1097,15 @@ class RecipeType(models.Model):
         """
 
         return RecipeDefinition(self.definition)
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type as the combination of name and version
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, string)
+        """
+
+        return self.name, self.version
 
     class Meta(object):
         """meta information for the db"""
@@ -1106,6 +1131,19 @@ class RecipeTypeRevisionManager(models.Manager):
         new_rev.revision_num = recipe_type.revision_num
         new_rev.definition = recipe_type.definition
         new_rev.save()
+
+    def get_by_natural_key(self, recipe_type, revision_num):
+        """Django method to retrieve a recipe type revision for the given natural key
+
+        :param recipe_type: The recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The recipe type revision defined by the natural key
+        :rtype: :class:`recipe.models.RecipeTypeRevision`
+        """
+
+        return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
     def get_revision(self, recipe_type_id, revision_num):
         """Returns the revision for the given recipe type and revision number
@@ -1151,6 +1189,16 @@ class RecipeTypeRevision(models.Model):
         """
 
         return RecipeDefinition(self.definition)
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type revision as the combination of job type and
+        revision number
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, int)
+        """
+
+        return self.recipe_type, self.revision_num
 
     class Meta(object):
         """meta information for the db"""

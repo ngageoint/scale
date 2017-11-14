@@ -306,7 +306,6 @@ These services provide access to information about "all", "currently running" an
 | .value             | Various           | The actual value of the input, which can vary depending on the type. Simple    |
 |                    |                   | property inputs will include primitive values, whereas the file or files type  |
 |                    |                   | will include a full JSON representation of a Scale file object.                |
-|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | outputs            | Array             | A list of job interface outputs merged with their respective job result values.|
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -736,7 +735,6 @@ These services provide access to information about "all", "currently running" an
 | .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .input_files        | JSON Object       | A list of files that the job used as input.                                   |
-|                     |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -1078,6 +1076,7 @@ These services provide access to information about "all", "currently running" an
 |                    |                   |          | - *data* - data time of input file (*data_started*, *data_ended*)   |
 |                    |                   |          | - *source* - collection time of source file (*source_started*,      |
 |                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          |                                                                     |
 |                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Returns only input files with this file name.                       |
