@@ -1,0 +1,22 @@
+queue\.messages package
+=======================
+
+Submodules
+----------
+
+queue\.messages\.queued\_jobs module
+------------------------------------
+
+.. automodule:: queue.messages.queued_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: queue.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,22 @@
+recipe\.messages package
+========================
+
+Submodules
+----------
+
+recipe\.messages\.update\_recipes module
+----------------------------------------
+
+.. automodule:: recipe.messages.update_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

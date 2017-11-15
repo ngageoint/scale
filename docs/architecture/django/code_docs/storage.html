@@ -1496,6 +1496,25 @@ workspace field populated.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.models.ScaleFileManager.get_files_for_queued_jobs">
+<code class="descname">get_files_for_queued_jobs</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_files_for_queued_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
+configuring queued jobs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The file IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scale_file models that match the given IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.models.ScaleFileManager.move_files">
 <code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace

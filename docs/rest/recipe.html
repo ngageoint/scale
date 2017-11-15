@@ -514,8 +514,7 @@ values.</td>
 <td>Various</td>
 <td>The actual value of the input, which can vary depending on the type. Simple
 property inputs will include primitive values, whereas the file or files
-type will include a full JSON representation of a Scale file object.
-(See <span class="xref std std-ref">Scale File Details</span>)</td>
+type will include a full JSON representation of a Scale file object.</td>
 </tr>
 <tr class="row-odd"><td colspan="2">jobs</td>
 <td>Array</td>
@@ -1033,6 +1032,215 @@ Defaults to jobs current priority, lower number is higher priority.</td>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-recipe-input-files">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="0%" />
+<col width="8%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Recipe Input Files</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Returns detailed information about input files associated with a given Recipe ID.</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><dl class="first last docutils">
+<dt><strong>GET</strong> /recipes/{id}/input_files/</dt>
+<dd>Where {id} is the unique identifier of an existing recipe.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">Optional</td>
+<td>The end of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>time_field</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td><p class="first">Indicates the time field(s) that <em>started</em> and <em>ended</em> will use for
+time filtering. Valid values are:</p>
+<ul class="simple">
+<li><em>last_modified</em> - last modification of source file meta-data</li>
+<li><em>data</em> - data time of input file (<em>data_started</em>, <em>data_ended</em>)</li>
+<li><dl class="first docutils">
+<dt><em>source</em> - collection time of source file (<em>source_started</em>,</dt>
+<dd><em>source_ended</em>)</dd>
+</dl>
+</li>
+</ul>
+<p class="last">The default value is <em>last_modified</em>.</p>
+</td>
+</tr>
+<tr class="row-even"><td>file_name</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>Returns only input files with this file name.</td>
+</tr>
+<tr class="row-odd"><td>recipe_input</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>Returns files for this recipe input.</td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td colspan="2">Integer</td>
+<td colspan="3">The unique identifier of the file.</td>
+</tr>
+<tr class="row-odd"><td>file_name</td>
+<td colspan="2">String</td>
+<td colspan="3">The name of the file</td>
+</tr>
+<tr class="row-even"><td>file_path</td>
+<td colspan="2">String</td>
+<td colspan="3">The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-odd"><td colspan="6">file_type          | String            | The type of Scale file, either &#8216;SOURCE&#8217; or &#8216;PRODUCT&#8217;</td>
+</tr>
+<tr class="row-even"><td colspan="6">file_size          | Integer           | The size of the file in bytes.</td>
+</tr>
+<tr class="row-odd"><td>media_type</td>
+<td colspan="2">String</td>
+<td colspan="3">The IANA media type of the file.</td>
+</tr>
+<tr class="row-even"><td>data_type</td>
+<td colspan="2">String</td>
+<td colspan="3">A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-odd"><td>meta_data</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">A dictionary of key/value pairs that describe file-specific attributes.</td>
+</tr>
+<tr class="row-even"><td>url</td>
+<td colspan="2">String</td>
+<td colspan="3">A hyperlink to the file.</td>
+</tr>
+<tr class="row-odd"><td>source_started</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">When collection of the source file started.</td>
+</tr>
+<tr class="row-even"><td>source_ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">When collection of the source file ended.</td>
+</tr>
+<tr class="row-odd"><td>data_started</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td>data_ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">The ended time of the source data being ingested.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>deleted</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">When the file was deleted from storage.</td>
+</tr>
+<tr class="row-odd"><td>last_modified</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="3">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>uuid</td>
+<td colspan="2">String</td>
+<td colspan="3">A unique string of characters that help determine if files are identical.</td>
+</tr>
+<tr class="row-odd"><td>is_deleted</td>
+<td colspan="2">Boolean</td>
+<td colspan="3">A flag that will indicate if the file was deleted.</td>
+</tr>
+<tr class="row-even"><td>workspace</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">The workspace storing the file.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td colspan="2">Integer</td>
+<td colspan="3">The unique identifier of the workspace.</td>
+</tr>
+<tr class="row-even"><td>.name</td>
+<td colspan="2">String</td>
+<td colspan="3">The name of the workspace</td>
+</tr>
+<tr class="row-odd"><td>countries</td>
+<td colspan="2">Array</td>
+<td colspan="3">A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td>geometry</td>
+<td colspan="2">Array</td>
+<td colspan="3">The geo-spatial footprint of the file.</td>
+</tr>
+<tr class="row-odd"><td>center_point</td>
+<td colspan="2">Array</td>
+<td colspan="3">The center point of the file in Lat/Lon Decimal Degree.</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+     <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="p">{</span>
+             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+             <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;foo.bar&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;file/path/foo.bar&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;file_type&quot;</span><span class="o">:</span> <span class="s2">&quot;SOURCE&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+             <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+             <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-10T00:00:00Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-11T00:00:00Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-10T00:00:00Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-11T00:00:00Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2017-10-12T18:59:24.398334Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2017-10-12T18:59:24.398379Z&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+             <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+                 <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;workspace-19&quot;</span>
+             <span class="p">},</span>
+             <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TCT&quot;</span><span class="p">],</span>
+             <span class="s2">&quot;geometry&quot;</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
+             <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span>
+         <span class="p">}</span>
     <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>

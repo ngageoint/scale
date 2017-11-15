@@ -1,6 +1,13 @@
 queue\.test package
 ===================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    queue.test.messages
+
 Submodules
 ----------
 

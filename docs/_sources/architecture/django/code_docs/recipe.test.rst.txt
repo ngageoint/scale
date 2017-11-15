@@ -8,6 +8,7 @@ Subpackages
 
     recipe.test.configuration
     recipe.test.handlers
+    recipe.test.messages
 
 Submodules
 ----------

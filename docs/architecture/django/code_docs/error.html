@@ -467,7 +467,7 @@ support for logging messages to a database table.</p>
 </div>
 <div class="section" id="module-error.models">
 <span id="error-models-module"></span><h2>error.models module<a class="headerlink" href="#module-error.models" title="Permalink to this headline">¶</a></h2>
-<p>error models</p>
+<p>Defines the database models for errors</p>
 <dl class="class">
 <dt id="error.models.Error">
 <em class="property">class </em><code class="descclassname">error.models.</code><code class="descname">Error</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.Error" title="Permalink to this definition">¶</a></dt>
@@ -732,24 +732,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.models.ErrorManager.get_error">
-<code class="descname">get_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error with the given name, using the cache if able to prevent database accesses</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.models.ErrorManager.get_errors">
 <code class="descname">get_errors</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of errors within the given time range.</p>
@@ -769,22 +751,6 @@ object the first time, the query is executed.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>]</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="error.models.ErrorManager.get_unknown_error">
-<code class="descname">get_unknown_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_unknown_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for an unknown cause</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The unknown error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -881,6 +847,82 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="error.models.get_builtin_error">
+<code class="descclassname">error.models.</code><code class="descname">get_builtin_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_builtin_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the builtin error with the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.models.get_error">
+<code class="descclassname">error.models.</code><code class="descname">get_error</code><span class="sig-paren">(</span><em>error_id</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error with the given ID, might require database access if the error is not currently cached</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error_id</strong> (<em>int</em>) &#8211; The ID of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.models.get_job_error">
+<code class="descclassname">error.models.</code><code class="descname">get_job_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_job_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job error with the given name, might require database access if the error is not currently cached</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.models.get_unknown_error">
+<code class="descclassname">error.models.</code><code class="descname">get_unknown_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_unknown_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for an unknown cause</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The unknown error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.models.reset_error_cache">
+<code class="descclassname">error.models.</code><code class="descname">reset_error_cache</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.reset_error_cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the error cache, used for testing</p>
 </dd></dl>
 
 </div>

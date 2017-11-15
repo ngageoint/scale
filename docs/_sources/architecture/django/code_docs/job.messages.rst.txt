@@ -4,10 +4,34 @@ job\.messages package
 Submodules
 ----------
 
+job\.messages\.blocked\_jobs module
+-----------------------------------
+
+.. automodule:: job.messages.blocked_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.messages\.failed\_jobs module
+----------------------------------
+
+.. automodule:: job.messages.failed_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.job\_exe\_end module
 -----------------------------------
 
 .. automodule:: job.messages.job_exe_end
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.messages\.pending\_jobs module
+-----------------------------------
+
+.. automodule:: job.messages.pending_jobs
     :members:
     :undoc-members:
     :show-inheritance:

@@ -32,6 +32,7 @@ These services provide access to information about general files that are being 
 |                    |                   |          | - *data* - data time of Scale file (*data_started*, *data_ended*)   |
 |                    |                   |          | - *source* - collection time of source file (*source_started*,      |
 |                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          |                                                                     |
 |                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Returns only input files with this file name.                       |

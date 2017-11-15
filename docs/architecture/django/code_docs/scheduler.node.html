@@ -685,7 +685,7 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.DEPRECATED">
-<code class="descname">DEPRECATED</code><em class="property"> = NodeState(state=u'DEPRECATED', title=u'Deprecated', description=u'Node is deprecated and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEPRECATED" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DEPRECATED</code><em class="property"> = NodeState(state=u'DEPRECATED', title=u'Deprecated', description=u'Node is deprecated and will not be used by Scale. Existing jobs on the node will be failed.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEPRECATED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -775,7 +775,7 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.deprecated_desc">
-<code class="descname">deprecated_desc</code><em class="property"> = u'Node is deprecated and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.deprecated_desc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">deprecated_desc</code><em class="property"> = u'Node is deprecated and will not be used by Scale. Existing jobs on the node will be failed.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.deprecated_desc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

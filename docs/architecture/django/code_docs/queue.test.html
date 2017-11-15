@@ -39,7 +39,7 @@
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.2.1-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="queue package" href="queue.html"/>
-        <link rel="next" title="recipe package" href="recipe.html"/>
+        <link rel="next" title="queue.test.messages package" href="queue.test.messages.html"/>
         <link rel="prev" title="queue.migrations package" href="queue.migrations.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -225,6 +225,19 @@
             
   <div class="section" id="queue-test-package">
 <h1>queue.test package<a class="headerlink" href="#queue-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="queue.test.messages.html">queue.test.messages package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages.test_queued_jobs">queue.test.messages.test_queued_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -303,31 +316,6 @@
 <dt id="queue.test.test_models.TestQueueManager.test_get_queue_lifo">
 <code class="descname">test_get_queue_lifo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_get_queue_lifo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.get_queue() in LIFO mode</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure">
-<code class="descname">test_handle_job_failure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_failure() when the job fails</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_no_retry">
-<code class="descname">test_handle_job_failure_no_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_no_retry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_failure() when the job should not retry because the error should not be
-retried</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_retry">
-<code class="descname">test_handle_job_failure_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_retry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_failure() when the job retries</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_superseded">
-<code class="descname">test_handle_job_failure_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded</p>
 </dd></dl>
 
 </dd></dl>
@@ -656,7 +644,7 @@ retried</p>
 <dl class="method">
 <dt id="queue.test.test_views.TestRequeueJobsView.test_priority">
 <code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the requeue view changing the job priority.</p>
+<dd><p>Tests successfully calling the requeue view changing the queue priority.</p>
 </dd></dl>
 
 <dl class="method">
@@ -707,7 +695,7 @@ retried</p>
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>11</em>, <em>15</em>, <em>14</em>, <em>57</em>, <em>35</em>, <em>814317</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>11</em>, <em>15</em>, <em>21</em>, <em>17</em>, <em>58</em>, <em>306156</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -746,7 +734,7 @@ retried</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.html" class="btn btn-neutral float-right" title="recipe package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="queue.test.messages.html" class="btn btn-neutral float-right" title="queue.test.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="queue.migrations.html" class="btn btn-neutral" title="queue.migrations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

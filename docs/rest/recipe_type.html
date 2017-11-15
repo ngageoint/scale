@@ -298,36 +298,40 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <td>String</td>
 <td colspan="2">An optional description of the recipe type.</td>
 </tr>
-<tr class="row-odd"><td>.is_active</td>
+<tr class="row-odd"><td>.is_system</td>
+<td>Boolean</td>
+<td colspan="2">Whether the recipe type is a built-in system type.</td>
+</tr>
+<tr class="row-even"><td>.is_active</td>
 <td>Boolean</td>
 <td colspan="2">Whether the recipe type is active (false once recipe type is archived).</td>
 </tr>
-<tr class="row-even"><td>.definition</td>
+<tr class="row-odd"><td>.definition</td>
 <td>JSON Object</td>
 <td colspan="2">JSON description defining the interface for running a recipe of this type.
 (See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.revision_num</td>
+<tr class="row-even"><td>.revision_num</td>
 <td>Integer</td>
 <td colspan="2">The current revision number of the recipe type, incremented for each edit.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
+<tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.last_modified</td>
+<tr class="row-even"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>.archived</td>
+<tr class="row-odd"><td>.archived</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the recipe type was archived (no longer active).</td>
 </tr>
-<tr class="row-odd"><td>.trigger_rule</td>
+<tr class="row-even"><td>.trigger_rule</td>
 <td>JSON Object</td>
 <td colspan="2">The linked trigger rule that automatically invokes the recipe type.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -338,6 +342,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
             <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
             <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
             <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
             <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -523,6 +528,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -815,46 +821,51 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <td>String</td>
 <td>An optional description of the recipe type.</td>
 </tr>
-<tr class="row-even"><td>is_active</td>
+<tr class="row-even"><td>is_system</td>
+<td>Boolean</td>
+<td>Whether the recipe type is a built-in system type.</td>
+</tr>
+<tr class="row-odd"><td>is_active</td>
 <td>Boolean</td>
 <td>Whether the recipe type is active (false once recipe type is archived).</td>
 </tr>
-<tr class="row-odd"><td>definition</td>
+<tr class="row-even"><td>definition</td>
 <td>JSON Object</td>
 <td>JSON description defining the interface for running a recipe of this type.
 (See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td>revision_num</td>
+<tr class="row-odd"><td>revision_num</td>
 <td>Integer</td>
 <td>The current revision number of the recipe type, incremented for each edit.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>archived</td>
+<tr class="row-even"><td>archived</td>
 <td>ISO-8601 Datetime</td>
 <td>When the recipe type was archived (no longer active).</td>
 </tr>
-<tr class="row-even"><td>trigger_rule</td>
+<tr class="row-odd"><td>trigger_rule</td>
 <td>JSON Object</td>
 <td>The associated trigger rule that automatically invokes this recipe type.</td>
 </tr>
-<tr class="row-odd"><td>job_types</td>
+<tr class="row-even"><td>job_types</td>
 <td>Array</td>
 <td>List of all job_types that are referenced by this recipe type&#8217;s definition
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -1083,6 +1094,7 @@ Set this field to null to remove the existing trigger rule.</td>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>

@@ -247,6 +247,45 @@ allowing a simulation of jobs that take some amount of time to complete.</td>
 <col width="67%" />
 </colgroup>
 <thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Casino Recipes</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Creates and queues a specified number of Scale Casino recipes. Scale Casino recipes are useful for testing recipes in
+the presence of job failures.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>POST</strong> /diagnostics/recipe/casino/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>num</td>
+<td>Integer</td>
+<td>The number of recipes to create, must be at least one</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;num&quot;</span><span class="o">:</span> <span class="mi">100</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">202 ACCEPTED</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
 <tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Hello Jobs</strong></th>
 </tr>
 </thead>

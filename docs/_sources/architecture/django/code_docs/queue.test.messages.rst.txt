@@ -1,0 +1,22 @@
+queue\.test\.messages package
+=============================
+
+Submodules
+----------
+
+queue\.test\.messages\.test\_queued\_jobs module
+------------------------------------------------
+
+.. automodule:: queue.test.messages.test_queued_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: queue.test.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

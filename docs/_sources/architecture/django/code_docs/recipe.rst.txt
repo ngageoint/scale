@@ -8,6 +8,7 @@ Subpackages
 
     recipe.configuration
     recipe.handlers
+    recipe.messages
     recipe.migrations
     recipe.test
     recipe.triggers

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>recipe.test.handlers package &mdash; Scale 5.2.1-snapshot documentation</title>
+  <title>recipe.test.messages package &mdash; Scale 5.2.1-snapshot documentation</title>
   
 
   
@@ -39,8 +39,8 @@
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.2.1-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="recipe.test package" href="recipe.test.html"/>
-        <link rel="next" title="recipe.test.messages package" href="recipe.test.messages.html"/>
-        <link rel="prev" title="recipe.test.configuration.definition package" href="recipe.test.configuration.definition.html"/>
+        <link rel="next" title="recipe.triggers package" href="recipe.triggers.html"/>
+        <link rel="prev" title="recipe.test.handlers package" href="recipe.test.handlers.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -205,13 +205,13 @@
         
           <li><a href="recipe.test.html">recipe.test package</a> &raquo;</li>
         
-      <li>recipe.test.handlers package</li>
+      <li>recipe.test.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/recipe.test.handlers.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/recipe.test.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -224,117 +224,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recipe-test-handlers-package">
-<h1>recipe.test.handlers package<a class="headerlink" href="#recipe-test-handlers-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="recipe-test-messages-package">
+<h1>recipe.test.messages package<a class="headerlink" href="#recipe-test-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-recipe.test.handlers.test_graph">
-<span id="recipe-test-handlers-test-graph-module"></span><h2>recipe.test.handlers.test_graph module<a class="headerlink" href="#module-recipe.test.handlers.test_graph" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.test.messages.test_update_recipes">
+<span id="recipe-test-messages-test-update-recipes-module"></span><h2>recipe.test.messages.test_update_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_update_recipes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="recipe.test.handlers.test_graph.TestRecipeGraph">
-<em class="property">class </em><code class="descclassname">recipe.test.handlers.test_graph.</code><code class="descname">TestRecipeGraph</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph.TestRecipeGraph" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.test.messages.test_update_recipes.TestBlockedJobs">
+<em class="property">class </em><code class="descclassname">recipe.test.messages.test_update_recipes.</code><code class="descname">TestBlockedJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestBlockedJobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="recipe.test.handlers.test_graph.TestRecipeGraph.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph.TestRecipeGraph.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.test.messages.test_update_recipes.TestBlockedJobs.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestBlockedJobs.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.handlers.test_graph.TestRecipeGraph.test_get_topological_order">
-<code class="descname">test_get_topological_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph.TestRecipeGraph.test_get_topological_order" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeGraph.get_topological_order() successfully</p>
+<dt id="recipe.test.messages.test_update_recipes.TestBlockedJobs.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestBlockedJobs.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling UpdateRecipes.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_update_recipes.TestBlockedJobs.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestBlockedJobs.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a UpdateRecipes message to and from JSON</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.test.handlers.test_graph_delta">
-<span id="recipe-test-handlers-test-graph-delta-module"></span><h2>recipe.test.handlers.test_graph_delta module<a class="headerlink" href="#module-recipe.test.handlers.test_graph_delta" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta">
-<em class="property">class </em><code class="descclassname">recipe.test.handlers.test_graph_delta.</code><code class="descname">TestRecipeGraphDelta</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_changed">
-<code class="descname">test_init_changed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_changed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a RecipeGraphDelta between two graphs where some nodes were changed (and 1 deleted)</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_deleted_and_new">
-<code class="descname">test_init_deleted_and_new</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_deleted_and_new" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a RecipeGraphDelta between two graphs where some nodes were deleted and new nodes added</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_identical">
-<code class="descname">test_init_identical</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_identical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a RecipeGraphDelta between two identical graphs</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_new_required_input">
-<code class="descname">test_init_new_required_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_new_required_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a RecipeGraphDelta between two graphs where the new graph has a new required input that blocks
-reprocessing</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_reprocess_identical_node">
-<code class="descname">test_reprocess_identical_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_reprocess_identical_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeGraphDelta.reprocess_identical_node() to indicate identical nodes that should be marked
-as changed</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-recipe.test.handlers.test_handler">
-<span id="recipe-test-handlers-test-handler-module"></span><h2>recipe.test.handlers.test_handler module<a class="headerlink" href="#module-recipe.test.handlers.test_handler" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler">
-<em class="property">class </em><code class="descclassname">recipe.test.handlers.test_handler.</code><code class="descname">TestRecipeHandler</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_blocked_jobs">
-<code class="descname">test_get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_blocked_jobs()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_dependent_job_ids">
-<code class="descname">test_get_dependent_job_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_dependent_job_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_dependent_job_ids()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue">
-<code class="descname">test_get_existing_jobs_to_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_existing_jobs_to_queue()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs">
-<code class="descname">test_get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeHandler.get_pending_jobs()</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-recipe.test.handlers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.handlers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.test.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -348,10 +270,10 @@ as changed</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.test.messages.html" class="btn btn-neutral float-right" title="recipe.test.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recipe.triggers.html" class="btn btn-neutral float-right" title="recipe.triggers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.test.configuration.definition.html" class="btn btn-neutral" title="recipe.test.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.test.handlers.html" class="btn btn-neutral" title="recipe.test.handlers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

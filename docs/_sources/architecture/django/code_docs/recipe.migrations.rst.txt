@@ -148,6 +148,14 @@ recipe\.migrations\.0018\_recipefile\_recipe\_input module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0019\_recipetype\_is\_system module
+-------------------------------------------------------
+
+.. automodule:: recipe.migrations.0019_recipetype_is_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

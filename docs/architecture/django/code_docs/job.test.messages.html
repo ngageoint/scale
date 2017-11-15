@@ -231,6 +231,58 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-job.test.messages.test_blocked_jobs">
+<span id="job-test-messages-test-blocked-jobs-module"></span><h2>job.test.messages.test_blocked_jobs module<a class="headerlink" href="#module-job.test.messages.test_blocked_jobs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.messages.test_blocked_jobs.TestBlockedJobs">
+<em class="property">class </em><code class="descclassname">job.test.messages.test_blocked_jobs.</code><code class="descname">TestBlockedJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_blocked_jobs.TestBlockedJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.messages.test_blocked_jobs.TestBlockedJobs.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_blocked_jobs.TestBlockedJobs.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_blocked_jobs.TestBlockedJobs.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_blocked_jobs.TestBlockedJobs.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling BlockedJobs.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_blocked_jobs.TestBlockedJobs.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_blocked_jobs.TestBlockedJobs.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a BlockedJobs message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.messages.test_failed_jobs">
+<span id="job-test-messages-test-failed-jobs-module"></span><h2>job.test.messages.test_failed_jobs module<a class="headerlink" href="#module-job.test.messages.test_failed_jobs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.messages.test_failed_jobs.TestFailedJobs">
+<em class="property">class </em><code class="descclassname">job.test.messages.test_failed_jobs.</code><code class="descname">TestFailedJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_failed_jobs.TestFailedJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.messages.test_failed_jobs.TestFailedJobs.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_failed_jobs.TestFailedJobs.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_failed_jobs.TestFailedJobs.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_failed_jobs.TestFailedJobs.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling FailedJobs.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_failed_jobs.TestFailedJobs.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_failed_jobs.TestFailedJobs.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a FailedJobs message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.messages.test_job_exe_end">
 <span id="job-test-messages-test-job-exe-end-module"></span><h2>job.test.messages.test_job_exe_end module<a class="headerlink" href="#module-job.test.messages.test_job_exe_end" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -257,6 +309,32 @@
 <dt id="job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.test_json">
 <code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.test_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests coverting a CreateJobExecutionEnd message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.messages.test_pending_jobs">
+<span id="job-test-messages-test-pending-jobs-module"></span><h2>job.test.messages.test_pending_jobs module<a class="headerlink" href="#module-job.test.messages.test_pending_jobs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.messages.test_pending_jobs.TestPendingJobs">
+<em class="property">class </em><code class="descclassname">job.test.messages.test_pending_jobs.</code><code class="descname">TestPendingJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_pending_jobs.TestPendingJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.messages.test_pending_jobs.TestPendingJobs.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_pending_jobs.TestPendingJobs.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_pending_jobs.TestPendingJobs.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_pending_jobs.TestPendingJobs.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PendingJobs.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_pending_jobs.TestPendingJobs.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_pending_jobs.TestPendingJobs.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a PendingJobs message to and from JSON</p>
 </dd></dl>
 
 </dd></dl>

@@ -376,7 +376,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.messages.html">job.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.blocked_jobs">job.messages.blocked_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.pending_jobs">job.messages.pending_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages">Module contents</a></li>
 </ul>
@@ -532,7 +535,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job.test.messages.html">job.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_blocked_jobs">job.test.messages.test_blocked_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_pending_jobs">job.test.messages.test_pending_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
 </ul>
@@ -724,8 +730,8 @@ configured type and the registered clock function is executed.</p>
 <dt id="job.models.Job">
 <em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">Job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
-<p>Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-model using select_for_update().</p>
+<p>Represents a job to be run on the cluster. A model lock must be obtained using select_for_update() on any job
+model before updating its status or superseding it.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -837,6 +843,22 @@ many-to-one relation.</p>
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.Job.can_be_blocked">
+<code class="descname">can_be_blocked</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_blocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be set to BLOCKED status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to BLOCKED status, false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.Job.can_be_canceled">
 <code class="descname">can_be_canceled</code><a class="headerlink" href="#job.models.Job.can_be_canceled" title="Permalink to this definition">¶</a></dt>
@@ -846,6 +868,70 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job status allows the job to be canceled, false otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.can_be_failed">
+<code class="descname">can_be_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be set to FAILED status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to FAILED status, false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.can_be_pending">
+<code class="descname">can_be_pending</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be set to PENDING status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to PENDING status, false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.can_be_queued">
+<code class="descname">can_be_queued</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be placed on the queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be placed on the queue, false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.can_be_running">
+<code class="descname">can_be_running</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be set to RUNNING status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to RUNNING status, false otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -1031,6 +1117,22 @@ object the first time, the query is executed.</p>
 <code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="job.models.Job.has_been_queued">
+<code class="descname">has_been_queued</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.has_been_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job has been queued at least once</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job has been queued at least once, false otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.Job.id">
 <code class="descname">id</code><a class="headerlink" href="#job.models.Job.id" title="Permalink to this definition">¶</a></dt>
@@ -1058,22 +1160,6 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.Job.is_ready_to_queue">
-<code class="descname">is_ready_to_queue</code><a class="headerlink" href="#job.models.Job.is_ready_to_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this job can be added to the queue.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job status allows the job to be queued, false otherwise.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -2967,6 +3053,24 @@ fields.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobManager.get_jobs_with_related">
+<code class="descname">get_jobs_with_related</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs_with_related" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the job models for the given IDs with related job_type and job_type_rev models</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job models</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobManager.get_locked_job">
 <code class="descname">get_locked_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_locked_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locks and returns the job model for the given ID with no related fields. Caller must be within an atomic
@@ -3104,34 +3208,6 @@ on the job model. The job should have its related job_type and job_type_rev mode
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.queue_jobs">
-<code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queues the given jobs and returns the models that are successfully set to QUEUED. The caller must have
-obtained model locks on the job models in an atomic transaction. Any jobs that are not in a valid status for
-being queued, are without job data, or are superseded will be ignored. All jobs should have their related
-job_type and job_type_rev models populated.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to QUEUED</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs are queued</li>
-<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority before they are queued</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job models that were successfully set to QUEUED</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.supersede_jobs">
 <code class="descname">supersede_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.supersede_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.</p>
@@ -3169,6 +3245,32 @@ job_type and job_type_rev models populated.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobManager.update_jobs_to_blocked">
+<code class="descname">update_jobs_to_blocked</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_blocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the BLOCKED status and returns the IDs of the models that were successfully
+set to BLOCKED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid state for being BLOCKED will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to BLOCKED</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The status change time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to BLOCKED</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobManager.update_jobs_to_canceled">
 <code class="descname">update_jobs_to_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
@@ -3188,18 +3290,104 @@ updates occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.update_jobs_to_running">
-<code class="descname">update_jobs_to_running</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_running" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the jobs with the given IDs to the RUNNING status. The caller must have obtained model locks on the
-job models.</p>
+<dt id="job.models.JobManager.update_jobs_to_failed">
+<code class="descname">update_jobs_to_failed</code><span class="sig-paren">(</span><em>jobs</em>, <em>error_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the FAILED status and returns the IDs of the models that were successfully
+set to FAILED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid state for being FAILED will be ignored.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs to update</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to FAILED</li>
+<li><strong>error_id</strong> (<em>int</em>) &#8211; The ID of the error that caused the failure</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The ended time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to FAILED</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.update_jobs_to_pending">
+<code class="descname">update_jobs_to_pending</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the PENDING status and returns the IDs of the models that were successfully
+set to PENDING. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid state for being PENDING will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to PENDING</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The status change time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to PENDING</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.update_jobs_to_queued">
+<code class="descname">update_jobs_to_queued</code><span class="sig-paren">(</span><em>jobs</em>, <em>when_queued</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the QUEUED status and returns the IDs of the models that were successfully
+set to QUEUED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid status for being queued, are without job input, or are superseded will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to QUEUED</li>
+<li><strong>when_queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs are queued</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to QUEUED</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.update_jobs_to_running">
+<code class="descname">update_jobs_to_running</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the RUNNING status and returns the IDs of the models that were successfully
+set to RUNNING. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid state for RUNNING will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to RUNNING</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start time</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to RUNNING</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
 </td>
 </tr>
 </tbody>

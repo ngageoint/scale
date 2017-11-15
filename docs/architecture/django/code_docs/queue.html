@@ -39,7 +39,7 @@
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.2.1-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="queue.migrations package" href="queue.migrations.html"/>
+        <link rel="next" title="queue.messages package" href="queue.messages.html"/>
         <link rel="prev" title="product.test.configuration package" href="product.test.configuration.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -227,6 +227,12 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="queue.messages.html">queue.messages package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="queue.migrations.html">queue.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0001_initial">queue.migrations.0001_initial module</a></li>
@@ -248,6 +254,15 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="queue.test.html">queue.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="queue.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="queue.test.messages.html">queue.test.messages package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages.test_queued_jobs">queue.test.messages.test_queued_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="queue.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_job_load">queue.test.test_job_load module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.test.html#module-queue.test.test_models">queue.test.test_models module</a></li>
@@ -901,6 +916,32 @@ database changes occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="queue.models.QueueManager.queue_jobs">
+<code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
+Any jobs that are not in a valid status for being queued, are without job input, or are superseded will be
+ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to put on the queue</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority when they are queued</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully QUEUED</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.models.QueueManager.queue_new_job">
 <code class="descname">queue_new_job</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_new_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
@@ -1309,7 +1350,7 @@ superseded will be ignored. All database changes will occur within an atomic tra
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="queue.migrations.html" class="btn btn-neutral float-right" title="queue.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="queue.messages.html" class="btn btn-neutral float-right" title="queue.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="product.test.configuration.html" class="btn btn-neutral" title="product.test.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -381,6 +381,24 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a currently running job execution. This class is thread-safe.</p>
 <dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.check_for_starvation">
+<code class="descname">check_for_starvation</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.check_for_starvation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks this job execution to see if it has been starved of resources for its next task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Whether this job execution has been starved</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.execution.job_exe.RunningJobExecution.create_job_exe_end_model">
 <code class="descname">create_job_exe_end_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.create_job_exe_end_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and returns a job execution end model for this job execution. Caller must ensure that this job
@@ -423,7 +441,7 @@ execution is finished before calling.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error, possibly None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">error.objects.Error</span></code></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -448,16 +466,12 @@ execution is finished before calling.</p>
 <dl class="method">
 <dt id="job.execution.job_exe.RunningJobExecution.execution_canceled">
 <code class="descname">execution_canceled</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancels this job execution and returns the current task</p>
+<dd><p>Cancels this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the execution was canceled</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The current task, possibly None</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -648,6 +662,25 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.check_for_starvation">
+<code class="descname">check_for_starvation</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.check_for_starvation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks all of the currently running job executions for resource starvation. If any starved executions are
+found, they are failed and returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of the starved job executions</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.clear">
 <code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears all data from the manager. This method is intended for testing only.</p>
@@ -764,6 +797,30 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.lost_job_exes">
+<code class="descname">lost_job_exes</code><span class="sig-paren">(</span><em>job_exe_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.lost_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the manager that the job executions with the given IDs were lost</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_exe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The IDs of the lost job executions</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the executions were lost</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of the finished job executions</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.lost_node">
 <code class="descname">lost_node</code><span class="sig-paren">(</span><em>node_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.lost_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Informs the manager that the node with the given ID was lost and has gone offline</p>
@@ -777,7 +834,7 @@ tasks remain.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of the lost job executions that had been running on the node</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of the finished job executions</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
@@ -808,15 +865,15 @@ tasks remain.</p>
 <dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.sync_with_database">
 <code class="descname">sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Syncs with the database to handle any canceled executions. The current task of each canceled job execution is
-returned so the tasks may be killed.</p>
+<dd><p>Syncs with the database to handle any canceled executions. Any job executions that are now finished are
+returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the canceled tasks to kill</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the finished job executions</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>

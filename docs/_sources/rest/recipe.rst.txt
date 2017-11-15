@@ -202,7 +202,6 @@ These services provide access to information about recipes.
 | .value                | Various           | The actual value of the input, which can vary depending on the type. Simple |
 |                       |                   | property inputs will include primitive values, whereas the file or files    |
 |                       |                   | type will include a full JSON representation of a Scale file object.        |
-|                       |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                   |
 +-----------------------+-------------------+-----------------------------------------------------------------------------+
 | jobs                  | Array             | The jobs associated with this recipe.                                       |
 +-----------------------+-------------------+-----------------------------------------------------------------------------+
@@ -698,7 +697,7 @@ These services provide access to information about recipes.
 +=========================================================================================================================+
 | Returns detailed information about input files associated with a given Recipe ID.                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /recipes/{id}/input_files/                                                                                         |
+| **GET** /recipes/{id}/input_files/                                                                                      |
 |         Where {id} is the unique identifier of an existing recipe.                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
@@ -718,6 +717,7 @@ These services provide access to information about recipes.
 |                    |                   |          | - *data* - data time of input file (*data_started*, *data_ended*)   |
 |                    |                   |          | - *source* - collection time of source file (*source_started*,      |
 |                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          |                                                                     |
 |                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Returns only input files with this file name.                       |

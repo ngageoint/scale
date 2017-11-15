@@ -348,6 +348,47 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="diagnostic.views.QueueScaleCasinoView">
+<em class="property">class </em><code class="descclassname">diagnostic.views.</code><code class="descname">QueueScaleCasinoView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.views.QueueScaleCasinoView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for queuing new Scale Casino recipes.</p>
+<dl class="attribute">
+<dt id="diagnostic.views.QueueScaleCasinoView.parser_classes">
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#diagnostic.views.QueueScaleCasinoView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.views.QueueScaleCasinoView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.views.QueueScaleCasinoView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and queues the specified number of Scale Casino recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="diagnostic.views.QueueScaleCasinoView.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#diagnostic.views.QueueScaleCasinoView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="diagnostic.views.QueueScaleCasinoView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#diagnostic.views.QueueScaleCasinoView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">QueueStatusSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="diagnostic.views.QueueScaleHelloView">
 <em class="property">class </em><code class="descclassname">diagnostic.views.</code><code class="descname">QueueScaleHelloView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.views.QueueScaleHelloView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>

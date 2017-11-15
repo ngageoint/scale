@@ -392,6 +392,18 @@ timeout threshold</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.tasks.base_task.Task.force_kill">
+<code class="descname">force_kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.force_kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a task setting to force kill messages for this task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.tasks.base_task.Task.force_reconciliation">
+<code class="descname">force_reconciliation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.force_reconciliation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a task setting to force immediate reconciliation for this task</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.tasks.base_task.Task.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.get_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the resources that are required/have been scheduled for this task</p>
@@ -544,6 +556,22 @@ timeout threshold</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The task name</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.tasks.base_task.Task.needs_killed">
+<code class="descname">needs_killed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.needs_killed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this task needs to be killed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this task needs to be killed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -705,6 +733,22 @@ timeout threshold</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.tasks.manager.TaskManager.get_tasks_to_kill">
+<code class="descname">get_tasks_to_kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_tasks_to_kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of the tasks that need to be killed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of tasks to kill</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.tasks.manager.TaskManager.get_tasks_to_reconcile">
 <code class="descname">get_tasks_to_reconcile</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_tasks_to_reconcile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all of the tasks that need to be reconciled</p>
@@ -716,7 +760,7 @@ timeout threshold</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of tasks that require reconciliation</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>
@@ -734,7 +778,7 @@ timeout threshold</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of tasks that timed out</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>

@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    queue.messages
     queue.migrations
     queue.test
 
