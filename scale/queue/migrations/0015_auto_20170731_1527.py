@@ -127,6 +127,7 @@ class Migration(migrations.Migration):
         FileAncestryLink = apps.get_model('product', 'FileAncestryLink')
         Queue = apps.get_model('queue', 'Queue')
         ScaleFile = apps.get_model('storage', 'ScaleFile')
+        Workspace = apps.get_model('storage', 'Workspace')
 
         # Attach needed methods to Job model
         Job.get_job_data = get_job_data
@@ -157,7 +158,7 @@ class Migration(migrations.Migration):
                 input_file_ids.update(job.get_job_data().get_input_file_ids())
 
             if input_file_ids:
-                for input_file in ScaleFile.objects.get_files(input_file_ids):
+                for input_file in ScaleFile.objects.select_related('workspace').filter(id__in=input_file_ids).iterator():
                     input_files[input_file.id] = input_file
 
             # Bulk create queue models

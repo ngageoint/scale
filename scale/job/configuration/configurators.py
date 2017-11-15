@@ -189,7 +189,8 @@ class QueuedExecutionConfigurator(object):
                     from ingest.models import Ingest
                     ingest = Ingest.objects.select_related('workspace', 'new_workspace').get(id=ingest_id)
                     workspace_name = ingest.workspace.name
-                    new_workspace_name = ingest.new_workspace.name
+                    if ingest.new_workspace:
+                        new_workspace_name = ingest.new_workspace.name
             if workspace_name:
                 workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
             if new_workspace_name:
