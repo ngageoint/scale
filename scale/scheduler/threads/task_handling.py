@@ -62,15 +62,18 @@ class TaskHandlingThread(BaseSchedulerThread):
 
         when = now()
 
-        self._kill_tasks()
         self._timeout_tasks(when)
         self._reconcile_tasks(when)
+        self._kill_tasks()
 
     def _kill_tasks(self):
         """Sends kill messages for any tasks that need to be stopped
         """
 
-        for task in system_task_mgr.get_tasks_to_kill():
+        tasks_to_kill = system_task_mgr.get_tasks_to_kill()
+        tasks_to_kill.extend(task_mgr.get_tasks_to_kill())
+
+        for task in tasks_to_kill:
             # Send kill message for system task
             pb_task_to_kill = mesos_pb2.TaskID()
             pb_task_to_kill.value = task.id
@@ -102,9 +105,3 @@ class TaskHandlingThread(BaseSchedulerThread):
             else:
                 # Not a job task, so must be a node task
                 node_mgr.handle_task_timeout(task)
-
-            # Send kill message for timed out task
-            pb_task_to_kill = mesos_pb2.TaskID()
-            pb_task_to_kill.value = task.id
-            logger.info('Killing task %s', task.id)
-            self._driver.killTask(pb_task_to_kill)

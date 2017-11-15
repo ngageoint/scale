@@ -16,7 +16,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import CACHED_ERRORS, Error
+from error.models import Error, get_builtin_error, get_unknown_error, reset_error_cache
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job, JobExecution, JobExecutionOutput
@@ -112,7 +112,7 @@ class TestQueueManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        CACHED_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+        reset_error_cache()
 
     def test_get_queue_fifo(self):
         """Tests calling QueueManager.get_queue() in FIFO mode"""
@@ -147,71 +147,6 @@ class TestQueueManager(TransactionTestCase):
                 first = False
             else:
                 self.assertEqual(queue.id, queue_1.id)
-
-    def test_handle_job_failure(self):
-        """Tests calling QueueManager.handle_job_failure() when the job fails"""
-
-        job_type = job_test_utils.create_job_type(max_tries=1)
-        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        unknown_error = Error.objects.get_unknown_error()
-
-        # Call method to test
-        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=unknown_error)
-
-        # Make sure job is failed
-        job = Job.objects.get(pk=job.id)
-        self.assertEqual(job.status, 'FAILED')
-        self.assertEqual(job.error_id, unknown_error.id)
-
-    def test_handle_job_failure_retry(self):
-        """Tests calling QueueManager.handle_job_failure() when the job retries"""
-
-        job_type = job_test_utils.create_job_type(max_tries=2)
-        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_error('database-operation')
-
-        # Call method to test
-        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
-
-        # Make sure job retried
-        job = Job.objects.get(pk=job.id)
-        self.assertEqual(job.status, 'QUEUED')
-        self.assertIsNone(job.error)
-
-    def test_handle_job_failure_no_retry(self):
-        """Tests calling QueueManager.handle_job_failure() when the job should not retry because the error should not be
-        retried
-        """
-
-        job_type = job_test_utils.create_job_type(max_tries=2)
-        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_unknown_error()
-
-        # Call method to test
-        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
-
-        # Make sure job is failed
-        job = Job.objects.get(pk=job.id)
-        self.assertEqual(job.status, 'FAILED')
-        self.assertEqual(job.error_id, error.id)
-
-    def test_handle_job_failure_superseded(self):
-        """Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded"""
-
-        job_type = job_test_utils.create_job_type(max_tries=2)
-        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        error = Error.objects.get_error('database-operation')
-
-        Job.objects.supersede_jobs([job], now())
-
-        # Call method to test
-        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
-
-        # Make sure job is failed
-        job = Job.objects.get(pk=job.id)
-        self.assertEqual(job.status, 'FAILED')
-        self.assertEqual(job.error_id, error.id)
-        self.assertTrue(job.is_superseded)
 
 
 class TestQueueManagerHandleJobCancellation(TransactionTestCase):
@@ -250,7 +185,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Queue the job
         job = job_test_utils.create_job()
-        Queue.objects._queue_jobs([job])
+        Queue.objects.queue_jobs([job])
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
@@ -628,7 +563,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job')
         recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, job_name='Job 1')
-        Job.objects.update_jobs_to_running({recipe_job_1.job.id: recipe_job_1.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([recipe_job_1.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=recipe_job_1.job, status='COMPLETED', output=results)
@@ -700,12 +635,12 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.assertTrue(new_recipe_job_2.is_original)
 
         # Complete both the old and new job 2 and check that only the new recipe completes
-        Job.objects.update_jobs_to_running({recipe_job_2.job.id: recipe_job_2.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([recipe_job_2.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=recipe_job_2.job, status='COMPLETED', output=results)
         Queue.objects.handle_job_completion(recipe_job_2.job_id, recipe_job_2.job.num_exes, now())
-        Job.objects.update_jobs_to_running({new_recipe_job_2.job.id: new_recipe_job_2.job.num_exes}, now())
+        Job.objects.update_jobs_to_running([new_recipe_job_2.job], now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=new_recipe_job_2.job, status='COMPLETED', output=results)
@@ -798,8 +733,8 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         }
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
         self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
-        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED')
-        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED')
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0)
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0)
         data_b = {
             'version': '1.0',
             'input_data': [],
@@ -822,12 +757,10 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
         self.assertEqual(standalone_failed_job.max_tries, 4)
-        self.assertEqual(standalone_failed_job.priority, self.new_priority)
 
         standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
         self.assertEqual(standalone_canceled_job.status, 'QUEUED')
         self.assertEqual(standalone_canceled_job.max_tries, 2)
-        self.assertEqual(standalone_canceled_job.priority, self.new_priority)
 
         # Superseded job should not be re-queued
         standalone_superseded_job = Job.objects.get(id=self.standalone_superseded_job.id)

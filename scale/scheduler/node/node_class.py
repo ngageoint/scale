@@ -33,8 +33,7 @@ class Node(object):
     NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
-    deprecated_desc = 'Node is deprecated and will not run new or existing jobs.'
-    deprecated_desc += ' If this node has existing jobs, please cancel them or switch the node to active.'
+    deprecated_desc = 'Node is deprecated and will not be used by Scale. Existing jobs on the node will be failed.'
     DEPRECATED = NodeState(state='DEPRECATED', title='Deprecated', description=deprecated_desc)
     OFFLINE = NodeState(state='OFFLINE', title='Offline',
                         description='Node is offline/unavailable, so no jobs can currently run on it.')
@@ -235,7 +234,7 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._state not in [Node.DEPRECATED, Node.OFFLINE]
+        return self._state not in [Node.DEPRECATED, Node.OFFLINE] and self._is_image_pulled
 
     def is_ready_for_system_task(self):
         """Indicates whether this node is ready to launch a new system task
@@ -274,6 +273,9 @@ class Node(object):
                 self._port = port
             if is_online is not None:
                 self._is_online = is_online
+                if not is_online:
+                    # If node goes offline, reset it
+                    self._reset_node()
             self._update_state()
 
     def update_from_model(self, node, scheduler_config):
@@ -292,6 +294,10 @@ class Node(object):
             self._is_active = node.is_active
             self._is_paused = node.is_paused
             self._is_scheduler_paused = scheduler_config.is_paused
+
+            if not node.is_active:
+                # If node is deprecated, reset it
+                self._reset_node()
             self._update_state()
 
     def _create_next_tasks(self, when):
@@ -478,6 +484,14 @@ class Node(object):
             self._pull_task = None
         if self._pull_task and self._pull_task.has_ended:
             self._pull_task = None
+
+    def _reset_node(self):
+        """Resets the node if it goes away so initial cleanup and the Scale image pull occur when the node comes back.
+        Caller must have obtained the node's thread lock.
+        """
+
+        self._is_image_pulled = False
+        self._is_initial_cleanup_completed = False
 
     def _update_state(self):
         """Updates the node's state. Caller must have obtained the node's thread lock.

@@ -1,14 +1,105 @@
-"""error models"""
+"""Defines the database models for errors"""
 from __future__ import unicode_literals
 import logging
 
 from django.db import models, transaction
 
+from util.exceptions import ScaleLogicBug
+
 
 logger = logging.getLogger(__name__)
 
 
-CACHED_ERRORS = {}  # {Name: Error model}
+CACHED_BUILTIN_ERROR_NAMES = {}  # {Name: Error ID}
+CACHED_ERRORS = {}  # {Error ID: Error model}
+
+# TODO: Once Seed job types are in place, we can update job errors to be cached by a combination of job type rev ID (?)
+# and exit code
+CACHED_JOB_ERROR_NAMES = {}  # {Name: Error ID}
+
+
+def get_builtin_error(name):
+    """Returns the builtin error with the given name
+
+    :param name: The name of the error
+    :type name: string
+    :returns: The error with the given name
+    :rtype: :class:`error.models.Error`
+    """
+
+    if name not in CACHED_BUILTIN_ERROR_NAMES:
+        raise ScaleLogicBug('Unknown builtin error: %s' % name)
+
+    error_id = CACHED_BUILTIN_ERROR_NAMES[name]
+    return CACHED_ERRORS[error_id]
+
+
+def get_error(error_id):
+    """Returns the error with the given ID, might require database access if the error is not currently cached
+
+    :param error_id: The ID of the error
+    :type error_id: int
+    :returns: The error with the given ID
+    :rtype: :class:`error.models.Error`
+    """
+
+    if error_id not in CACHED_ERRORS:
+        error = Error.objects.get(id=error_id)
+        _cache_error(error)
+
+    return CACHED_ERRORS[error_id]
+
+
+def get_job_error(name):
+    """Returns the job error with the given name, might require database access if the error is not currently cached
+
+    :param name: The name of the error
+    :type name: string
+    :returns: The error with the given name
+    :rtype: :class:`error.models.Error`
+    """
+
+    if name not in CACHED_JOB_ERROR_NAMES:
+        error = Error.objects.get(name=name)
+        _cache_error(error)
+
+    error_id = CACHED_JOB_ERROR_NAMES[name]
+    return CACHED_ERRORS[error_id]
+
+
+def get_unknown_error():
+    """Returns the error for an unknown cause
+
+    :returns: The unknown error
+    :rtype: :class:`error.models.Error`
+    """
+
+    return get_builtin_error('unknown')
+
+
+def reset_error_cache():
+    """Resets the error cache, used for testing
+    """
+
+    CACHED_BUILTIN_ERROR_NAMES.clear()
+    CACHED_ERRORS.clear()
+    CACHED_JOB_ERROR_NAMES.clear()
+
+    Error.objects.cache_builtin_errors()
+
+
+def _cache_error(error):
+    """Caches the given error model
+
+    :param error: The error to cache
+    :type error: :class:`error.models.Error`
+    """
+
+    CACHED_ERRORS[error.id] = error
+    if error.is_builtin:
+        CACHED_BUILTIN_ERROR_NAMES[error.name] = error.id
+    else:
+        CACHED_JOB_ERROR_NAMES[error.name] = error.id
 
 
 class ErrorManager(models.Manager):
@@ -19,29 +110,7 @@ class ErrorManager(models.Manager):
         """
 
         for error in self.filter(is_builtin=True).iterator():
-            CACHED_ERRORS[error.name] = error
-
-    def get_error(self, name):
-        """Returns the error with the given name, using the cache if able to prevent database accesses
-
-        :param name: The name of the error
-        :type name: string
-        :returns: The error with the given name
-        :rtype: :class:`error.models.Error`
-        """
-
-        if name not in CACHED_ERRORS:
-            error = Error.objects.get(name=name)
-            CACHED_ERRORS[name] = error
-        return CACHED_ERRORS[name]
-
-    def get_unknown_error(self):
-        """Returns the error for an unknown cause
-
-        :returns: The unknown error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_error('unknown')
+            _cache_error(error)
 
     def get_errors(self, started=None, ended=None, order=None):
         """Returns a list of errors within the given time range.
@@ -57,7 +126,7 @@ class ErrorManager(models.Manager):
         """
 
         # Fetch a list of errors
-        errors = Error.objects.all()
+        errors = self.all()
 
         # Apply time range filtering
         if started:

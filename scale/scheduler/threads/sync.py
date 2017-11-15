@@ -5,7 +5,6 @@ import datetime
 import logging
 
 from django.conf import settings
-from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
 from scheduler.cleanup.manager import cleanup_mgr
@@ -64,6 +63,7 @@ class SyncThread(BaseSchedulerThread):
 
         scheduler_mgr.sync_with_database()
         job_type_mgr.sync_with_database()
+        job_exe_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
 
         node_mgr.sync_with_database(scheduler_mgr.config)
@@ -71,12 +71,9 @@ class SyncThread(BaseSchedulerThread):
         mesos_master = scheduler_mgr.mesos_address
         resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)
 
-        # Kill running tasks for canceled job executions
-        for task_to_kill in job_exe_mgr.sync_with_database():
-            pb_task_to_kill = mesos_pb2.TaskID()
-            pb_task_to_kill.value = task_to_kill.id
-            logger.info('Killing task %s', task_to_kill.id)
-            self._driver.killTask(pb_task_to_kill)
+        # Handle canceled job executions
+        for finished_job_exe in job_exe_mgr.sync_with_database():
+            cleanup_mgr.add_job_execution(finished_job_exe)
 
         if settings.SECRETS_URL:
             secrets_mgr.sync_with_backend()

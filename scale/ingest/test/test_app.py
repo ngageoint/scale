@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
+from error.models import reset_error_cache
 from ingest.models import Ingest
 from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecution
@@ -21,6 +22,8 @@ class TestIngestJobType(TestCase):
 
     def setUp(self):
         django.setup()
+
+        reset_error_cache()
 
         self.task_mgr = TaskManager()
 

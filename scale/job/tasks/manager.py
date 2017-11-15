@@ -88,13 +88,27 @@ class TaskManager(object):
         with self._lock:
             return self._tasks[task_id] if task_id in self._tasks else None
 
+    def get_tasks_to_kill(self):
+        """Returns all of the tasks that need to be killed
+
+        :returns: The list of tasks to kill
+        :rtype: list
+        """
+
+        tasks = []
+        with self._lock:
+            for task in self._tasks.values():
+                if task.needs_killed():
+                    tasks.append(task)
+        return tasks
+
     def get_tasks_to_reconcile(self, when):
         """Returns all of the tasks that need to be reconciled
 
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of tasks that require reconciliation
-        :rtype: [:class:`job.tasks.base_task.Task`]
+        :rtype: list
         """
 
         tasks = []
@@ -110,7 +124,7 @@ class TaskManager(object):
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of tasks that timed out
-        :rtype: [:class:`job.tasks.base_task.Task`]
+        :rtype: list
         """
 
         tasks = []

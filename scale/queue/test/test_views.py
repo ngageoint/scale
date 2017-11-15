@@ -14,6 +14,7 @@ import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+from job.configuration.data.job_data import JobData
 from job.models import Job
 from queue.models import Queue
 
@@ -315,9 +316,9 @@ class TestRequeueJobsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_1 = job_test_utils.create_job(status='RUNNING')
-        self.job_2 = job_test_utils.create_job(data={})
-        self.job_3 = job_test_utils.create_job(status='FAILED')
+        self.job_1 = job_test_utils.create_job(status='RUNNING', num_exes=1)
+        self.job_2 = job_test_utils.create_job(data={}, num_exes=0)
+        self.job_3 = job_test_utils.create_job(status='FAILED', num_exes=1)
 
         definition = {
             'version': '1.0',
@@ -387,6 +388,7 @@ class TestRequeueJobsView(TestCase):
 
         # make sure the job is in the right state despite not actually having been run
         Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
+        self.job_2.data = JobData().get_dict()
         self.job_2.num_exes = 2
         self.job_2.save()
 
@@ -439,7 +441,6 @@ class TestRequeueJobsView(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_3.id)
-        self.assertEqual(result['results'][0]['status'], 'BLOCKED')
 
     def test_job_ids(self):
         """Tests successfully calling the requeue view filtered by job identifier."""
@@ -521,13 +522,14 @@ class TestRequeueJobsView(TestCase):
         self.assertEqual(result['results'][0]['error']['category'], error.category)
 
     def test_priority(self):
-        """Tests successfully calling the requeue view changing the job priority."""
+        """Tests successfully calling the requeue view changing the queue priority."""
 
         job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
         job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
 
         # make sure the job is in the right state despite not actually having been run
         Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
+        self.job_2.data = JobData().get_dict()
         self.job_2.num_exes = 2
         self.job_2.save()
 
@@ -544,4 +546,5 @@ class TestRequeueJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_2.id)
         self.assertEqual(result['results'][0]['status'], 'QUEUED')
-        self.assertEqual(result['results'][0]['priority'], 123)
+        queue = Queue.objects.get(job_id=self.job_2.id)
+        self.assertEqual(queue.priority, 123)

@@ -31,7 +31,7 @@ class RecipeData(object):
     connect shared resources to resource instances in Scale, and details needed to store all resulting output.
     """
 
-    def __init__(self, data):
+    def __init__(self, data={}):
         """Creates a recipe data object from the given dictionary. The general format is checked for correctness, but
         the actual input and output details are not checked for correctness against the recipe definition.
 

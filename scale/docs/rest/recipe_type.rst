@@ -61,6 +61,8 @@ These services provide access to information about recipe types.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .description       | String            | An optional description of the recipe type.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .is_system         | Boolean           | Whether the recipe type is a built-in system type.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_active         | Boolean           | Whether the recipe type is active (false once recipe type is archived).        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .definition        | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
@@ -89,6 +91,7 @@ These services provide access to information about recipe types.
 |                "version": "1.0.0",                                                                                      |
 |                "title": "My Recipe",                                                                                    |
 |                "description": "This is a description of the recipe",                                                    |
+|                "is_system": false,                                                                                      |
 |                "is_active": true,                                                                                       |
 |                "definition": {                                                                                          |
 |                    "input_data": [                                                                                      |
@@ -240,6 +243,7 @@ These services provide access to information about recipe types.
 |        "version": "1.0.0",                                                                                              |
 |        "title": "My Recipe",                                                                                            |
 |        "description": "This is a description of the recipe",                                                            |
+|        "is_system": false,                                                                                              |
 |        "is_active": true,                                                                                               |
 |        "definition": {                                                                                                  |
 |            "input_data": [                                                                                              |
@@ -471,6 +475,8 @@ These services provide access to information about recipe types.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | description        | String            | An optional description of the recipe type.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_system          | Boolean           | Whether the recipe type is a built-in system type.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | Whether the recipe type is active (false once recipe type is archived).        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | definition         | JSON Object       | JSON description defining the interface for running a recipe of this type.     |
@@ -497,6 +503,7 @@ These services provide access to information about recipe types.
 |        "version": "1.0.0",                                                                                              |
 |        "title": "My Recipe",                                                                                            |
 |        "description": "This is a description of the recipe",                                                            |
+|        "is_system": false,                                                                                              |
 |        "is_active": true,                                                                                               |
 |        "definition": {                                                                                                  |
 |            "input_data": [                                                                                              |
@@ -695,6 +702,7 @@ These services provide access to information about recipe types.
 |        "version": "1.0.0",                                                                                              |
 |        "title": "My Recipe",                                                                                            |
 |        "description": "This is a description of the recipe",                                                            |
+|        "is_system": false,                                                                                              |
 |        "is_active": true,                                                                                               |
 |        "definition": {                                                                                                  |
 |            "input_data": [                                                                                              |

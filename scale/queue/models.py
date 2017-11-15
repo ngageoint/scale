@@ -261,6 +261,63 @@ class QueueManager(models.Manager):
             results.append(status)
         return results
 
+    def queue_jobs(self, jobs, priority=None):
+        """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
+        Any jobs that are not in a valid status for being queued, are without job input, or are superseded will be
+        ignored.
+
+        :param jobs: The job models to put on the queue
+        :type jobs: list
+        :param priority: An optional argument to reset the jobs' priority when they are queued
+        :type priority: int
+        :returns: The list of job IDs that were successfully QUEUED
+        :rtype: list
+        """
+
+        when_queued = timezone.now()
+
+        # Set job models to QUEUED
+        queued_job_ids = Job.objects.update_jobs_to_queued(jobs, when_queued)
+        if not queued_job_ids:
+            return queued_job_ids  # Done if nothing was queued
+
+        # Retrieve the related job_type and job_type_rev models for the queued jobs
+        queued_jobs = Job.objects.get_jobs_with_related(queued_job_ids)
+
+        # Query for all input files of the queued jobs
+        input_files = {}
+        input_file_ids = set()
+        for job in queued_jobs:
+            input_file_ids.update(job.get_job_data().get_input_file_ids())
+        if input_file_ids:
+            for input_file in ScaleFile.objects.get_files_for_queued_jobs(input_file_ids):
+                input_files[input_file.id] = input_file
+
+        # Bulk create queue models
+        queues = []
+        configurator = QueuedExecutionConfigurator(input_files)
+        for job in queued_jobs:
+            config = configurator.configure_queued_job(job)
+
+            queue = Queue()
+            queue.job_type_id = job.job_type_id
+            queue.job_id = job.id
+            queue.exe_num = job.num_exes
+            queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
+            queue.is_canceled = False
+            queue.priority = priority if priority is not None else job.priority
+            queue.timeout = job.timeout
+            queue.interface = job.get_job_interface().get_dict()
+            queue.configuration = config.get_dict()
+            queue.resources = job.get_resources().get_json().get_dict()
+            queue.queued = when_queued
+            queues.append(queue)
+
+        if queues:
+            self.bulk_create(queues)
+
+        return queued_job_ids
+
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
         """Handles the cancellation of a job. All database changes occur in an atomic transaction.
@@ -295,8 +352,8 @@ class QueueManager(models.Manager):
         """
 
         job = Job.objects.get_locked_job(job_id)
-        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
-        if job.status != 'RUNNING' or job.num_exes != exe_num:
+        # If the execution number has changed, this update is obsolete
+        if job.num_exes != exe_num:
             return
 
         Job.objects.complete_job(job, when)
@@ -320,10 +377,11 @@ class QueueManager(models.Manager):
                         raise Exception('Scale created invalid job data: %s' % str(ex))
                     jobs_to_queue.append(job_to_queue)
                 if jobs_to_queue:
-                    self._queue_jobs(jobs_to_queue)
+                    self.queue_jobs(jobs_to_queue)
             if handler.is_completed():
                 Recipe.objects.complete_recipe(handler.recipe.id, when)
 
+    # TODO: remove this
     @transaction.atomic
     def handle_job_failure(self, job_id, exe_num, when, error):
         """Handles the failure of a job. The number of the job's running execution is provided to resolve race
@@ -341,8 +399,8 @@ class QueueManager(models.Manager):
         """
 
         job = Job.objects.get_locked_job(job_id)
-        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
-        if job.status != 'RUNNING' or job.num_exes != exe_num:
+        # If the execution number has changed, this update is obsolete
+        if job.num_exes != exe_num:
             return
 
         # Need related job_type and job_type_rev models
@@ -357,7 +415,7 @@ class QueueManager(models.Manager):
         retry = retry and not job.is_superseded
 
         if retry:
-            self._queue_jobs([job])
+            self.queue_jobs([job])
         else:
             Job.objects.fail_job(job, when, error)
             # If this job is in a recipe, update dependent jobs so that they are BLOCKED
@@ -388,7 +446,8 @@ class QueueManager(models.Manager):
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
         Job.objects.populate_job_data(job, data)
-        self._queue_jobs([job])
+        self.queue_jobs([job])
+        job = Job.objects.get(id=job.id)
 
         return job
 
@@ -443,7 +502,8 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs)
+        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs,
+                                               priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -454,7 +514,7 @@ class QueueManager(models.Manager):
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
         if jobs_to_queue:
-            self._queue_jobs(jobs_to_queue, priority=priority)
+            self.queue_jobs(jobs_to_queue)
 
         return handler
 
@@ -513,7 +573,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries(jobs_to_queue)
-            self._queue_jobs(jobs_to_queue, priority=priority)
+            self.queue_jobs(jobs_to_queue, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -532,59 +592,6 @@ class QueueManager(models.Manager):
         """
 
         self.filter(job_id__in=job_ids).update(is_canceled=True)
-
-    def _queue_jobs(self, jobs, input_files=None, priority=None):
-        """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
-        Any jobs that are not in a valid status for being queued, are without job data, or are superseded will be
-        ignored. All jobs should have their related job_type and job_type_rev models populated. All scale_file models
-        should have their related workspace field populated. If the scale_file models are not provided, they will be
-        queried.
-
-        :param jobs: The job models to put on the queue
-        :type jobs: list
-        :param input_files: The dict of Scale file models stored by ID
-        :type input_files: dict
-        :param priority: An optional argument to reset the jobs' priority before they are queued
-        :type priority: int
-        """
-
-        when_queued = timezone.now()
-
-        # Set job models to QUEUED
-        queued_jobs = Job.objects.queue_jobs(jobs, when_queued, priority)
-
-        if not input_files:
-            # Query for all input files
-            input_files = {}
-            input_file_ids = set()
-            for job in queued_jobs:
-                input_file_ids.update(job.get_job_data().get_input_file_ids())
-            if input_file_ids:
-                for input_file in ScaleFile.objects.get_files(input_file_ids):
-                    input_files[input_file.id] = input_file
-
-        # Bulk create queue models
-        queues = []
-        configurator = QueuedExecutionConfigurator(input_files)
-        for job in queued_jobs:
-            config = configurator.configure_queued_job(job)
-
-            queue = Queue()
-            queue.job_type = job.job_type
-            queue.job = job
-            queue.exe_num = job.num_exes
-            queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
-            queue.is_canceled = False
-            queue.priority = job.priority
-            queue.timeout = job.timeout
-            queue.interface = job.get_job_interface().get_dict()
-            queue.configuration = config.get_dict()
-            queue.resources = job.get_resources().get_json().get_dict()
-            queue.queued = when_queued
-            queues.append(queue)
-
-        if queues:
-            self.bulk_create(queues)
 
 
 class Queue(models.Model):

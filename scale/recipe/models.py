@@ -22,7 +22,6 @@ from trigger.models import TriggerEvent, TriggerRule
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -51,7 +50,8 @@ class RecipeManager(models.Manager):
             batch_recipe = None
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
+    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
+                      priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
         must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
@@ -71,6 +71,8 @@ class RecipeManager(models.Manager):
             supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
             actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to set the priority of the new recipe jobs
+        :type priority: int
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
@@ -130,7 +132,7 @@ class RecipeManager(models.Manager):
         RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
+        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs, priority)
         handler = RecipeHandler(recipe, recipe_jobs)
         # Block any new jobs that need to be blocked
         jobs_to_blocked = handler.get_blocked_jobs()
@@ -138,7 +140,7 @@ class RecipeManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
         return handler
 
-    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs):
+    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs, priority=None):
         """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
         an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
         all job models in superseded_jobs.
@@ -155,6 +157,8 @@ class RecipeManager(models.Manager):
             supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
             actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to set the priority of the new recipe jobs
+        :type priority: int
         :returns: The list of newly created recipe_job models (without id field populated)
         :rtype: [:class:`recipe.models.RecipeJob`]
 
@@ -185,6 +189,8 @@ class RecipeManager(models.Manager):
                     jobs_to_supersede.append(superseded_job)
 
             job = Job.objects.create_job(job_type, event, superseded_job)
+            if priority is not None:
+                job.priority = priority
             job.save()
             recipe_job = RecipeJob()
             recipe_job.job = job
@@ -213,6 +219,22 @@ class RecipeManager(models.Manager):
         RecipeJob.objects.bulk_create(recipe_jobs_to_create)
         return recipe_jobs_to_create
 
+    def get_latest_recipe_ids_for_jobs(self, job_ids):
+        """Returns the IDs of the latest (non-superseded) recipes that contain the jobs with the given IDs
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The recipe IDs
+        :rtype: list
+        """
+
+        recipe_ids = set()
+        # A job should match at most one non-superseded recipe
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids, recipe__is_superseded=False).only('recipe_id'):
+            recipe_ids.add(recipe_job.recipe_id)
+
+        return list(recipe_ids)
+
     def get_recipe_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
         returned model will have its related recipe_type and recipe_type_rev models populated. If the job exists in
@@ -231,6 +253,7 @@ class RecipeManager(models.Manager):
             return None
         return recipe_job
 
+    # TODO: remove this once job failure, completion, and cancellation have moved to messaging system
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
         must first have obtained a model lock on the job model for the given ID. This method will acquire model locks on
@@ -248,6 +271,30 @@ class RecipeManager(models.Manager):
             return handlers[0]
         return None
 
+    def get_recipe_handlers(self, recipes):
+        """Returns the handlers for the given recipes
+
+        :param recipes: The recipe models with recipe_type_rev models populated
+        :type recipes: list
+        :returns: The recipe handlers
+        :rtype: list
+        """
+
+        recipe_dict = {recipe.id: recipe for recipe in recipes}
+        handlers = []
+
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
+        for recipe_id in recipe_dict.keys():
+            if recipe_id in recipe_jobs_dict:
+                recipe_jobs = recipe_jobs_dict[recipe_id]
+                if recipe_jobs:
+                    recipe = recipe_dict[recipe_id]
+                    handler = RecipeHandler(recipe, recipe_jobs)
+                    handlers.append(handler)
+
+        return handlers
+
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def get_recipe_handlers_for_jobs(self, job_ids):
         """Returns recipe handlers for all of the recipes containing the jobs with the given IDs. The caller must first
         have obtained model locks on all of the job models for the given IDs. This method will acquire model locks on
@@ -342,6 +389,17 @@ class RecipeManager(models.Manager):
         else:
             recipes = recipes.order_by('last_modified')
         return recipes
+
+    def get_recipes_with_definitions(self, recipe_ids):
+        """Returns a list of recipes with their definitions (recipe_type_rev models populated) for the given recipe IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: The list of recipes with their recipe_type_rev models populated
+        :rtype: list
+        """
+
+        return Recipe.objects.select_related('recipe_type_rev').filter(id__in=recipe_ids)
 
     def get_details(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.
@@ -446,6 +504,7 @@ class RecipeManager(models.Manager):
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
         the results.
@@ -457,7 +516,7 @@ class RecipeManager(models.Manager):
         """
 
         handlers = {}  # {Recipe ID: Recipe handler}
-        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_ids)
+        recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs_old(recipe_ids)
         for recipe_id in recipe_ids:
             if recipe_id in recipe_jobs_dict:
                 recipe_jobs = recipe_jobs_dict[recipe_id]
@@ -501,7 +560,8 @@ class RecipeManager(models.Manager):
 
 
 class Recipe(models.Model):
-    """Represents a recipe to be run on the cluster
+    """Represents a recipe to be run on the cluster. A model lock must be obtained using select_for_update() on any
+    recipe model before adding new jobs to it or superseding it.
 
     :keyword recipe_type: The type of this recipe
     :type recipe_type: :class:`django.db.models.ForeignKey`
@@ -658,6 +718,26 @@ class RecipeJobManager(models.Manager):
     """
 
     def get_recipe_jobs(self, recipe_ids):
+        """Returns the recipe_job models with related job and job_type_rev models for the given recipe IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: Dict where each recipe ID maps to a list of corresponding recipe_job models
+        :rtype: dict
+        """
+
+        recipe_jobs = {}  # {Recipe ID: [Recipe job]}
+
+        for recipe_job in self.select_related('job__job_type_rev').filter(recipe_id__in=recipe_ids):
+            if recipe_job.recipe_id in recipe_jobs:
+                recipe_jobs[recipe_job.recipe_id].append(recipe_job)
+            else:
+                recipe_jobs[recipe_job.recipe_id] = [recipe_job]
+
+        return recipe_jobs
+
+    # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
+    def get_recipe_jobs_old(self, recipe_ids):
         """Returns the recipe_job models with related recipe, recipe_type, recipe_type_rev, job, job_type, and
         job_type_rev models for the given recipe IDs
 
@@ -859,6 +939,19 @@ class RecipeTypeManager(models.Manager):
 
         return trigger_rules
 
+    def get_by_natural_key(self, name, version):
+        """Django method to retrieve a recipe type for the given natural key
+
+        :param name: The human-readable name of the recipe type
+        :type name: string
+        :param version: The version of the recipe type
+        :type version: string
+        :returns: The recipe type defined by the natural key
+        :rtype: :class:`recipe.models.RecipeType`
+        """
+
+        return self.get(name=name, version=version)
+
     def get_details(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
 
@@ -960,6 +1053,8 @@ class RecipeType(models.Model):
     :keyword description: An optional description of the recipe type
     :type description: :class:`django.db.models.CharField`
 
+    :keyword is_system: Whether this is a system recipe type
+    :type is_system: :class:`django.db.models.BooleanField`
     :keyword is_active: Whether the recipe type is active (false once recipe type is archived)
     :type is_active: :class:`django.db.models.BooleanField`
     :keyword definition: JSON definition for running a recipe of this type
@@ -982,6 +1077,7 @@ class RecipeType(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.CharField(blank=True, max_length=500, null=True)
 
+    is_system = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
     revision_num = models.IntegerField(default=1)
@@ -1001,6 +1097,15 @@ class RecipeType(models.Model):
         """
 
         return RecipeDefinition(self.definition)
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type as the combination of name and version
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, string)
+        """
+
+        return self.name, self.version
 
     class Meta(object):
         """meta information for the db"""
@@ -1026,6 +1131,19 @@ class RecipeTypeRevisionManager(models.Manager):
         new_rev.revision_num = recipe_type.revision_num
         new_rev.definition = recipe_type.definition
         new_rev.save()
+
+    def get_by_natural_key(self, recipe_type, revision_num):
+        """Django method to retrieve a recipe type revision for the given natural key
+
+        :param recipe_type: The recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The recipe type revision defined by the natural key
+        :rtype: :class:`recipe.models.RecipeTypeRevision`
+        """
+
+        return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
     def get_revision(self, recipe_type_id, revision_num):
         """Returns the revision for the given recipe type and revision number
@@ -1071,6 +1189,16 @@ class RecipeTypeRevision(models.Model):
         """
 
         return RecipeDefinition(self.definition)
+
+    def natural_key(self):
+        """Django method to define the natural key for a recipe type revision as the combination of job type and
+        revision number
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, int)
+        """
+
+        return self.recipe_type, self.revision_num
 
     class Meta(object):
         """meta information for the db"""

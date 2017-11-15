@@ -8,10 +8,12 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from error.models import CACHED_ERRORS
+from error.models import get_builtin_error, reset_error_cache
+from job.execution.job_exe import RESOURCE_STARVATION_THRESHOLD
 from job.execution.manager import JobExecutionManager
 from job.messages.job_exe_end import MAX_NUM
 from job.models import Job
+from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 
 
@@ -23,8 +25,8 @@ class TestJobExecutionManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        # Clear error cache so test works correctly
-        CACHED_ERRORS.clear()
+        # Clear error cache so tests work correctly
+        reset_error_cache()
 
         self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()
@@ -32,7 +34,39 @@ class TestJobExecutionManager(TransactionTestCase):
         self.node_model_2 = node_test_utils.create_node()
         self.job_exe_2 = job_test_utils.create_running_job_exe(agent_id=self.agent_id, node=self.node_model_2)
 
+        self.task_mgr = TaskManager()
         self.job_exe_mgr = JobExecutionManager()
+
+    def test_check_for_starvation(self):
+        """Tests calling check_for_starvation() successfully"""
+
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
+
+        # Start and complete first task of execution
+        task_1_launched = now()
+        task_1 = self.job_exe_1.start_next_task()
+        self.task_mgr.launch_tasks([task_1], task_1_launched)
+        task_1_started = task_1_launched + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
+        self.task_mgr.handle_task_update(update)
+        self.job_exe_mgr.handle_task_update(update)
+        task_1_completed = task_1_started + timedelta(seconds=10)
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          task_1_completed)
+        self.task_mgr.handle_task_update(update)
+        self.job_exe_mgr.handle_task_update(update)
+
+        # Check after the time threshold has passed and task 2 has still not been launched
+        check_time = task_1_completed + RESOURCE_STARVATION_THRESHOLD + timedelta(seconds=1)
+        finished_job_exes = self.job_exe_mgr.check_for_starvation(check_time)
+
+        # Check that execution 1 was failed for starvation
+        self.assertEqual(len(finished_job_exes), 1)
+        starved_job_exe = finished_job_exes[0]
+        self.assertEqual(starved_job_exe.id, self.job_exe_1.id)
+        self.assertEqual(starved_job_exe.status, 'FAILED')
+        self.assertEqual(starved_job_exe.error.name, 'resource-starvation')
+        self.assertEqual(starved_job_exe.finished, check_time)
 
     def test_generate_status_json(self):
         """Tests calling generate_status_json() successfully"""
@@ -87,12 +121,19 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FAILED, task_1_failed,
                                                           exit_code=1)
 
-        # Job execution is finished, so it should be returned and a create_job_exe_ends message is available
+        # Job execution is finished, so it should be returned and a create_job_exe_ends message and a failed_jobs
+        # message is available
         result = self.job_exe_mgr.handle_task_update(update)
         self.assertEqual(self.job_exe_1.id, result.id)
-        message = self.job_exe_mgr.get_messages()[0]
-        self.assertEqual(message.type, 'create_job_exe_ends')
-        self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+
+        messages = self.job_exe_mgr.get_messages()
+        self.assertEqual(len(messages), 2)
+        job_exe_ends_msg = messages[0]
+        self.assertEqual(job_exe_ends_msg.type, 'create_job_exe_ends')
+        self.assertEqual(job_exe_ends_msg._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+        failed_jobs_msg = messages[1]
+        self.assertEqual(failed_jobs_msg.type, 'failed_jobs')
+        self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, self.job_exe_1.job_id)
 
     def test_init_with_database(self):
         """Tests calling init_with_database() successfully"""
@@ -109,14 +150,25 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
         self.job_exe_mgr.handle_task_update(update)
 
-        lost_job_exe = self.job_exe_mgr.lost_node(self.node_model_1.id, now())[0]
+        # Lose node and get lost task update
+        self.job_exe_mgr.lost_node(self.node_model_1.id, now())
+        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.LOST, task_1_started)
+        lost_job_exe = self.job_exe_mgr.handle_task_update(update)
+
         self.assertEqual(lost_job_exe.id, self.job_exe_1.id)
         self.assertEqual(lost_job_exe.status, 'FAILED')
-        self.assertEqual(lost_job_exe._error.name, 'node-lost')
-        # Make sure a create_job_exe_ends message exists for the lost job execution
-        message = self.job_exe_mgr.get_messages()[0]
-        self.assertEqual(message.type, 'create_job_exe_ends')
-        self.assertEqual(message._job_exe_ends[0].job_exe_id, lost_job_exe.id)
+        self.assertEqual(lost_job_exe.error.name, 'node-lost')
+
+        # Make sure a create_job_exe_ends message and failed_jobs message exists for the lost job execution
+        messages = self.job_exe_mgr.get_messages()
+        self.assertEqual(len(messages), 2)
+        job_exe_ends_msg = messages[0]
+        self.assertEqual(job_exe_ends_msg.type, 'create_job_exe_ends')
+        self.assertEqual(job_exe_ends_msg._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
+        failed_jobs_msg = messages[1]
+        self.assertEqual(failed_jobs_msg.type, 'failed_jobs')
+        self.assertTrue(get_builtin_error('node-lost').id in failed_jobs_msg._failed_jobs)
+        self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, self.job_exe_1.job_id)
 
     def test_schedule_job_exes(self):
         """Tests calling schedule_job_exes() successfully"""
@@ -138,22 +190,30 @@ class TestJobExecutionManager(TransactionTestCase):
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
         self.job_exe_mgr.handle_task_update(update)
 
-        # Cancel job_exe_1 and have manager sync with database
-        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id], now())
-        tasks_to_kill = self.job_exe_mgr.sync_with_database()
+        # Cancel job_exe_1 and job_exe_2 and have manager sync with database
+        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id, self.job_exe_2.job_id], now())
+        finished_job_exes = self.job_exe_mgr.sync_with_database()
 
         self.assertEqual(self.job_exe_1.status, 'CANCELED')
-        self.assertEqual(len(tasks_to_kill), 1)
-        self.assertEqual(tasks_to_kill[0].id, task_1.id)
-        # No message yet since we wait for the canceled task to be killed
-        self.assertListEqual(self.job_exe_mgr.get_messages(), [])
+        self.assertFalse(self.job_exe_1.is_finished())
+        self.assertEqual(self.job_exe_2.status, 'CANCELED')
+        self.assertTrue(self.job_exe_2.is_finished())
 
-        # Task killed
+        # Only job_exe_2 is finished, job_exe_1 has a task to kill
+        self.assertEqual(len(finished_job_exes), 1)
+        self.assertEqual(finished_job_exes[0].id, self.job_exe_2.id)
+        # Make sure a create_job_exe_ends message exists for job_exe_2
+        message = self.job_exe_mgr.get_messages()[0]
+        self.assertEqual(message.type, 'create_job_exe_ends')
+        self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_2.id)
+
+        # Task killed for job_exe_1
         task_1_killed = task_1_started + timedelta(minutes=5)
         update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.KILLED, task_1_killed)
         self.job_exe_mgr.handle_task_update(update)
 
-        # Make sure a create_job_exe_ends message exists for the canceled job execution
+        # Make sure a create_job_exe_ends message exists for job_exe_1
+        self.assertTrue(self.job_exe_1.is_finished())
         message = self.job_exe_mgr.get_messages()[0]
         self.assertEqual(message.type, 'create_job_exe_ends')
         self.assertEqual(message._job_exe_ends[0].job_exe_id, self.job_exe_1.id)

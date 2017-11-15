@@ -1,12 +1,13 @@
 """Defines the class that represents running job executions"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import threading
 
 from django.utils.timezone import now
 
-from error.models import Error
+from error.models import get_builtin_error, get_unknown_error
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
@@ -14,6 +15,9 @@ from job.execution.tasks.pre_task import PreTask
 from job.execution.tasks.pull_task import PullTask
 from job.models import JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
+
+
+RESOURCE_STARVATION_THRESHOLD = datetime.timedelta(minutes=10)
 
 
 logger = logging.getLogger(__name__)
@@ -39,6 +43,7 @@ class RunningJobExecution(object):
 
         # Public, read-only info
         self.id = job_exe.id
+        self.agent_id = agent_id
         self.cluster_id = job_exe.get_cluster_id()
         self.job_id = job_exe.job_id
         self.exe_num = job_exe.exe_num
@@ -55,6 +60,8 @@ class RunningJobExecution(object):
         self._current_task = None
         self._error = None
         self._finished = None
+        self._has_been_starved = False
+        self._last_task_finished = None
         self._remaining_tasks = []
         self._status = 'RUNNING'
 
@@ -88,7 +95,7 @@ class RunningJobExecution(object):
         """Returns this job execution's error, None if there is no error
 
         :returns: The error, possibly None
-        :rtype: :class:`error.objects.Error`
+        :rtype: :class:`error.models.Error`
         """
 
         return self._error
@@ -125,6 +132,30 @@ class RunningJobExecution(object):
 
         return self._status
 
+    def check_for_starvation(self, when):
+        """Checks this job execution to see if it has been starved of resources for its next task
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: Whether this job execution has been starved
+        :rtype: bool
+        """
+
+        with self._lock:
+            if self._has_been_starved:
+                return self._has_been_starved
+
+            if self._current_task or not self._remaining_tasks:
+                return False
+
+            if self._last_task_finished and when > self._last_task_finished + RESOURCE_STARVATION_THRESHOLD:
+                self._has_been_starved = True
+                error = get_builtin_error('resource-starvation')
+                self._set_final_status('FAILED', when, error)
+                logger.warning('Job execution %d has failed due to resource starvation', self.id)
+
+            return self._has_been_starved
+
     def create_job_exe_end_model(self):
         """Creates and returns a job execution end model for this job execution. Caller must ensure that this job
         execution is finished before calling.
@@ -152,18 +183,17 @@ class RunningJobExecution(object):
         return job_exe_end
 
     def execution_canceled(self, when):
-        """Cancels this job execution and returns the current task
+        """Cancels this job execution
 
         :param when: The time that the execution was canceled
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
-            task = self._current_task
+            if self._current_task:
+                # Execution is canceled, so kill the current task
+                self._current_task.force_kill()
             self._set_final_status('CANCELED', when)
-            return task
 
     def execution_lost(self, when):
         """Fails this job execution for its node becoming lost
@@ -172,10 +202,11 @@ class RunningJobExecution(object):
         :type when: :class:`datetime.datetime`
         """
 
-        error = Error.objects.get_error('node-lost')
+        error = get_builtin_error('node-lost')
 
         with self._lock:
-            self._current_task = None
+            if self._current_task:
+                self._current_task.force_reconciliation()
             self._set_final_status('FAILED', when, error)
 
     def execution_timed_out(self, task, when):
@@ -191,7 +222,7 @@ class RunningJobExecution(object):
             error_name = task.timeout_error_name
         else:
             error_name = 'launch-timeout'
-        error = Error.objects.get_error(error_name)
+        error = get_builtin_error(error_name)
 
         with self._lock:
             self._set_final_status('FAILED', when, error)
@@ -300,9 +331,10 @@ class RunningJobExecution(object):
 
         with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
+                when = now()
                 self._current_task = None
+                self._last_task_finished = when
                 if not self._remaining_tasks:
-                    when = now()
                     self._set_final_status('COMPLETED', when)
 
     def _task_fail(self, task_update):
@@ -317,8 +349,9 @@ class RunningJobExecution(object):
                 when = now()
                 error = self._current_task.determine_error(task_update)
                 if not error:
-                    error = Error.objects.get_unknown_error()
+                    error = get_unknown_error()
                 self._current_task = None
+                self._last_task_finished = when
                 self._set_final_status('FAILED', when, error)
 
     def _task_lost(self, task_update):
@@ -337,3 +370,4 @@ class RunningJobExecution(object):
                 self._current_task.update_task_id_for_lost_task()  # Note: This changes the task ID!
                 self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None
+            self._last_task_finished = now()

@@ -47,7 +47,6 @@ MIN_DISK = 0.0
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
-# When applying status updates to jobs: Job, Recipe
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
 
@@ -346,6 +345,17 @@ class JobManager(models.Manager):
                              job_type_names=job_type_names, job_type_categories=job_type_categories,
                              include_superseded=include_superseded, order=order)
 
+    def get_jobs_with_related(self, job_ids):
+        """Gets the job models for the given IDs with related job_type and job_type_rev models
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The job models
+        :rtype: list
+        """
+
+        return self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids)
+
     def get_locked_job(self, job_id):
         """Locks and returns the job model for the given ID with no related fields. Caller must be within an atomic
         transaction.
@@ -382,7 +392,7 @@ class JobManager(models.Manager):
 
         self.lock_jobs(job_ids)
 
-        return list(self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
+        return list(self.get_jobs_with_related(job_ids))
 
     def get_running_jobs(self):
         """Returns all jobs that are currently RUNNING
@@ -413,6 +423,7 @@ class JobManager(models.Manager):
         # Update job models in database with single query
         self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
 
+    # TODO: remove this once get_recipe_handlers_for_jobs() is refactored
     def lock_jobs(self, job_ids):
         """Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)
 
@@ -425,55 +436,6 @@ class JobManager(models.Manager):
         # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
         # two queries in get_locked_jobs_with_related().
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
-
-    def queue_jobs(self, jobs, when, priority=None):
-        """Queues the given jobs and returns the models that are successfully set to QUEUED. The caller must have
-        obtained model locks on the job models in an atomic transaction. Any jobs that are not in a valid status for
-        being queued, are without job data, or are superseded will be ignored. All jobs should have their related
-        job_type and job_type_rev models populated.
-
-        :param jobs: The job models to set to QUEUED
-        :type jobs: list
-        :param when: The time that the jobs are queued
-        :type when: :class:`datetime.datetime`
-        :param priority: An optional argument to reset the jobs' priority before they are queued
-        :type priority: int
-        :returns: The list of job models that were successfully set to QUEUED
-        :rtype: list
-        """
-
-        # Update job models in memory and collect job IDs
-        job_ids = set()
-        jobs_to_queue = []
-        for job in jobs:
-            if not job.is_ready_to_queue or not job.data or job.is_superseded:
-                continue
-
-            job_ids.add(job.id)
-            jobs_to_queue.append(job)
-            job.status = 'QUEUED'
-            job.node = None
-            job.error = None
-            job.queued = when
-            job.started = None
-            job.ended = None
-            job.last_status_change = when
-            job.num_exes += 1
-            if priority:
-                job.priority = priority
-            job.last_modified = when
-
-        # Update job models in database with single query
-        if priority:
-            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
-                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
-                                               priority=priority, last_modified=when)
-        else:
-            self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
-                                               last_status_change=when, num_exes=models.F('num_exes') + 1,
-                                               last_modified=when)
-
-        return jobs_to_queue
 
     def populate_job_data(self, job, data):
         """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
@@ -606,6 +568,27 @@ class JobManager(models.Manager):
 
         self.filter(id__in=job_ids).update(node_id=node_id, started=when, last_modified=timezone.now())
 
+    def update_jobs_to_blocked(self, jobs, when):
+        """Updates the given job models to the BLOCKED status and returns the IDs of the models that were successfully
+        set to BLOCKED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being BLOCKED will be ignored.
+
+        :param jobs: The job models to set to BLOCKED
+        :type jobs: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to BLOCKED
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_blocked():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='BLOCKED', last_status_change=when, last_modified=timezone.now())
+        return job_ids
+
     @transaction.atomic
     def update_jobs_to_canceled(self, job_ids, when):
         """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
@@ -624,21 +607,99 @@ class JobManager(models.Manager):
 
         if jobs_to_update:
             # Update job models in database
-            self.filter(id__in=jobs_to_update).update(status='CANCELED', last_status_change=when,
+            self.filter(id__in=jobs_to_update).update(status='CANCELED', error=None, node=None, last_status_change=when,
                                                       last_modified=timezone.now())
 
-    def update_jobs_to_running(self, job_ids, when):
-        """Updates the jobs with the given IDs to the RUNNING status. The caller must have obtained model locks on the
-        job models.
+    def update_jobs_to_failed(self, jobs, error_id, when):
+        """Updates the given job models to the FAILED status and returns the IDs of the models that were successfully
+        set to FAILED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being FAILED will be ignored.
 
-        :param job_ids: A list of job IDs to update
-        :type job_ids: list
-        :param when: The start time
+        :param jobs: The job models to set to FAILED
+        :type jobs: list
+        :param error_id: The ID of the error that caused the failure
+        :type error_id: int
+        :param when: The ended time
         :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to FAILED
+        :rtype: list
         """
 
-        self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
+        job_ids = []
+        for job in jobs:
+            if job.can_be_failed():
+                job_ids.append(job.id)
 
+        self.filter(id__in=job_ids).update(status='FAILED', error_id=error_id, ended=when, last_status_change=when,
+                                           last_modified=timezone.now())
+        return job_ids
+
+    def update_jobs_to_pending(self, jobs, when):
+        """Updates the given job models to the PENDING status and returns the IDs of the models that were successfully
+        set to PENDING. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being PENDING will be ignored.
+
+        :param jobs: The job models to set to PENDING
+        :type jobs: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to PENDING
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_pending():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='PENDING', last_status_change=when, last_modified=timezone.now())
+        return job_ids
+
+    def update_jobs_to_queued(self, jobs, when_queued):
+        """Updates the given job models to the QUEUED status and returns the IDs of the models that were successfully
+        set to QUEUED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid status for being queued, are without job input, or are superseded will be ignored.
+
+        :param jobs: The job models to set to QUEUED
+        :type jobs: list
+        :param when_queued: The time that the jobs are queued
+        :type when_queued: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to QUEUED
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_queued():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='QUEUED', node=None, error=None, queued=when_queued, started=None,
+                                           ended=None, last_status_change=when_queued,
+                                           num_exes=models.F('num_exes') + 1, last_modified=timezone.now())
+        return job_ids
+
+    def update_jobs_to_running(self, jobs, when):
+        """Updates the given job models to the RUNNING status and returns the IDs of the models that were successfully
+        set to RUNNING. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for RUNNING will be ignored.
+
+        :param jobs: The job models to set to RUNNING
+        :type jobs: list
+        :param when: The start time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to RUNNING
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_running():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='RUNNING', last_status_change=when, last_modified=timezone.now())
+        return job_ids
+
+    # TODO: this needs to be removed as usage of this is refactored into the messaging backend
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
 
@@ -719,8 +780,8 @@ class JobManager(models.Manager):
 
 
 class Job(models.Model):
-    """Represents a job to be run on the cluster. Any status updates to a job model requires obtaining a lock on the
-    model using select_for_update().
+    """Represents a job to be run on the cluster. A model lock must be obtained using select_for_update() on any job
+    model before updating its status or superseding it.
 
     :keyword job_type: The type of this job
     :type job_type: :class:`django.db.models.ForeignKey`
@@ -808,7 +869,7 @@ class Job(models.Model):
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = django.contrib.postgres.fields.JSONField(default=dict)
-    # TODO: rename results to output, will cause breaking REST API changes
+    # TODO: rename results to output and make default nullable, will cause breaking REST API changes
     results = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField()
@@ -838,6 +899,53 @@ class Job(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = JobManager()
+
+    def can_be_blocked(self):
+        """Indicates whether this job can be set to BLOCKED status
+
+        :returns: True if the job can be set to BLOCKED status, false otherwise
+        :rtype: bool
+        """
+
+        return self.status != 'BLOCKED' and not self.has_been_queued()
+
+    def can_be_failed(self):
+        """Indicates whether this job can be set to FAILED status
+
+        :returns: True if the job can be set to FAILED status, false otherwise
+        :rtype: bool
+        """
+
+        # QUEUED is allowed because the RUNNING update may come after the failure
+        return self.status in ['QUEUED', 'RUNNING']
+
+    def can_be_pending(self):
+        """Indicates whether this job can be set to PENDING status
+
+        :returns: True if the job can be set to PENDING status, false otherwise
+        :rtype: bool
+        """
+
+        return self.status != 'PENDING' and not self.has_been_queued()
+
+    def can_be_queued(self):
+        """Indicates whether this job can be placed on the queue
+
+        :returns: True if the job can be placed on the queue, false otherwise
+        :rtype: bool
+        """
+
+        # QUEUED is allowed because the RUNNING update may come after the failure
+        return self.status != 'COMPLETED' and self.data and not self.is_superseded
+
+    def can_be_running(self):
+        """Indicates whether this job can be set to RUNNING status
+
+        :returns: True if the job can be set to RUNNING status, false otherwise
+        :rtype: bool
+        """
+
+        return self.status == 'QUEUED'
 
     def get_job_data(self):
         """Returns the data for this job
@@ -893,6 +1001,15 @@ class Job(models.Model):
         resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
         return resources
 
+    def has_been_queued(self):
+        """Indicates whether this job has been queued at least once
+
+        :returns: True if the job has been queued at least once, false otherwise.
+        :rtype: bool
+        """
+
+        return self.num_exes > 0
+
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
         Callers must save the model to persist the change.
@@ -909,16 +1026,6 @@ class Job(models.Model):
 
         return self.status not in ['COMPLETED', 'CANCELED']
     can_be_canceled = property(_can_be_canceled)
-
-    def _is_ready_to_queue(self):
-        """Indicates whether this job can be added to the queue.
-
-        :returns: True if the job status allows the job to be queued, false otherwise.
-        :rtype: bool
-        """
-
-        return self.status not in ['QUEUED', 'COMPLETED']
-    is_ready_to_queue = property(_is_ready_to_queue)
 
     def _is_ready_to_requeue(self):
         """Indicates whether this job can be added to the queue after being attempted previously.

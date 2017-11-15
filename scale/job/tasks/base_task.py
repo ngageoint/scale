@@ -70,6 +70,8 @@ class Task(object):
         self._lock = threading.Lock()
         self._has_been_launched = False
         self._launched = None
+        self._force_recon = False
+        self._needs_killed = False
         self._last_status_update = None
         self._has_started = False
         self._started = None
@@ -287,8 +289,21 @@ class Task(object):
 
             if timed_out:
                 self._has_timed_out = True
+                self._needs_killed = True
 
             return self._has_timed_out
+
+    def force_kill(self):
+        """Sets a task setting to force kill messages for this task
+        """
+
+        self._needs_killed = True
+
+    def force_reconciliation(self):
+        """Sets a task setting to force immediate reconciliation for this task
+        """
+
+        self._force_recon = True
 
     @abstractmethod
     def get_resources(self):
@@ -297,6 +312,20 @@ class Task(object):
         :returns: The scheduled resources for this task
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
+
+    def needs_killed(self):
+        """Indicates whether this task needs to be killed
+
+        :returns: Whether this task needs to be killed
+        :rtype: bool
+        """
+
+        with self._lock:
+            if not self._last_status_update:
+                return False  # Has not been launched yet
+            if self._has_ended:
+                return False
+            return self._needs_killed
 
     def needs_reconciliation(self, when):
         """Indicates whether this task needs to be reconciled due to its latest status update being stale
@@ -310,6 +339,8 @@ class Task(object):
         with self._lock:
             if not self._last_status_update:
                 return False  # Has not been launched yet
+            if self._force_recon:
+                return True
             time_since_last_update = when - self._last_status_update
             if self._has_started:
                 return time_since_last_update > RUNNING_RECON_THRESHOLD
@@ -342,6 +373,7 @@ class Task(object):
             if self._task_id != task_update.task_id:
                 return
 
+            self._force_recon = False
             self._last_status_update = task_update.timestamp
             if self._has_ended:  # Ended tasks no longer update
                 return

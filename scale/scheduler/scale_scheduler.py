@@ -9,7 +9,7 @@ import threading
 from django.utils.timezone import now
 from mesos.interface import Scheduler as MesosScheduler
 
-from error.models import Error
+from error.models import Error, get_builtin_error
 from job.execution.manager import job_exe_mgr
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import Job, JobExecution
@@ -380,20 +380,12 @@ class ScaleScheduler(MesosScheduler):
 
         # Fail job executions that were running on the lost node
         if node:
-            lost_exes = job_exe_mgr.lost_node(node.id, started)
-            tasks_to_reconcile = []
-            for lost_exe in lost_exes:
-                # Reconcile lost tasks
-                lost_task = lost_exe.current_task
-                if lost_task:
-                    tasks_to_reconcile.append(lost_task)
-                cleanup_mgr.add_job_execution(lost_exe)
-            if tasks_to_reconcile:
-                recon_mgr.add_tasks(tasks_to_reconcile)
+            for finished_job_exe in job_exe_mgr.lost_node(node.id, started):
+                cleanup_mgr.add_job_execution(finished_job_exe)
 
         duration = now() - started
         msg = 'Scheduler slaveLost() took %.3f seconds'
-        if duration > ScaleScheduler.DATABASE_WARN_THRESHOLD:
+        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())
@@ -455,7 +447,7 @@ class ScaleScheduler(MesosScheduler):
         # Query for jobs that are running
         for job in Job.objects.get_running_jobs():
             # Fail all jobs that the scheduler has lost
-            Queue.objects.handle_job_failure(job.id, job.num_exes, now(), Error.objects.get_error('scheduler-lost'))
+            Queue.objects.handle_job_failure(job.id, job.num_exes, now(), get_builtin_error('scheduler-lost'))
 
     def _reconcile_running_jobs(self):
         """Reconciles all currently running job executions with Mesos"""

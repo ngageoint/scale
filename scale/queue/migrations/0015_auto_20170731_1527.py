@@ -158,7 +158,8 @@ class Migration(migrations.Migration):
                 input_file_ids.update(job.get_job_data().get_input_file_ids())
 
             if input_file_ids:
-                for input_file in ScaleFile.objects.select_related('workspace').filter(id__in=input_file_ids).iterator():
+                qry = ScaleFile.objects.select_related('workspace').filter(id__in=input_file_ids)
+                for input_file in qry.only('id', 'file_type', 'file_path', 'is_deleted', 'workspace__name').iterator():
                     input_files[input_file.id] = input_file
 
             # Bulk create queue models

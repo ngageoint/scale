@@ -10,9 +10,9 @@ class RecipeHandler(object):
     def __init__(self, recipe, recipe_jobs):
         """Constructor
 
-        :param recipe: The recipe model with related recipe_type and recipe_type_rev models
+        :param recipe: The recipe model with related recipe_type_rev model
         :type recipe: :class:`recipe.models.Recipe`
-        :param recipe_jobs: The list of recipe_job models with related job and job_type models
+        :param recipe_jobs: The list of recipe_job models with related job and job_type_rev models
         :type recipe_jobs: [:class:`recipe.models.RecipeJob`]
         """
 

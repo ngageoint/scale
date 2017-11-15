@@ -550,7 +550,7 @@ class ExecutionConfiguration(object):
         for input_name in input_files:
             file_list = []
             for input_file in input_files[input_name]:
-                file_dict = {'id': input_file.id, 'type': input_file.file_type,
+                file_dict = {'id': input_file.file_id, 'type': input_file.file_type,
                              'workspace_name': input_file.workspace_name, 'workspace_path': input_file.workspace_path,
                              'is_deleted': input_file.is_deleted}
                 if input_file.local_file_name:

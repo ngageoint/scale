@@ -6,6 +6,7 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
+from error.models import reset_error_cache
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.execution.tasks.post_task import PostTask
@@ -21,6 +22,9 @@ class TestPostTask(TestCase):
         django.setup()
 
         self.job_exe = job_test_utils.create_job_exe()
+
+        # Clear error cache so tests work correctly
+        reset_error_cache()
 
     def test_determine_error(self):
         """Tests that a post-task successfully determines the correct error"""

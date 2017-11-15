@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import datetime
 
-from error.models import Error
+from error.models import get_builtin_error
 from job.execution.tasks.exe_task import JobExecutionTask
 
 
@@ -49,7 +49,7 @@ class PullTask(JobExecutionTask):
             if self._task_id != task_update.task_id:
                 return None
 
-            return Error.objects.get_error('pull')
+            return get_builtin_error('pull')
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

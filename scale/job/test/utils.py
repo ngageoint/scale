@@ -129,7 +129,7 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
+def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=1, max_tries=1, queued=None,
                started=None, ended=None, last_status_change=None, priority=100, results=None, superseded_job=None,
                delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
     """Creates a job model for unit testing
@@ -145,11 +145,14 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     if not last_status_change:
         last_status_change = timezone.now()
     if not data:
-        data = {
-            'version': '1.0',
-            'input_data': [],
-            'output_data': [],
-        }
+        if num_exes == 0:
+            data = {}
+        else:
+            data = {
+                'version': '1.0',
+                'input_data': [],
+                'output_data': [],
+            }
     if not results:
        results = dict() 
        
@@ -163,6 +166,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.data = data
     job.status = status
     job.num_exes = num_exes
+    job.max_tries = max_tries
     job.queued = queued
     job.started = started
     job.ended = ended
@@ -326,7 +330,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
     input_files = {}
     input_file_ids = job.get_job_data().get_input_file_ids()
     if input_file_ids:
-        for input_file in ScaleFile.objects.get_files(input_file_ids):
+        for input_file in ScaleFile.objects.get_files_for_queued_jobs(input_file_ids):
             input_files[input_file.id] = input_file
     exe_config = QueuedExecutionConfigurator(input_files).configure_queued_job(job)
 

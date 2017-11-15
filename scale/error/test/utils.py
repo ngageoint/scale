@@ -6,7 +6,8 @@ from error.models import Error
 NAME_COUNTER = 1
 
 
-def create_error(name=None, title=None, description='Test error description', category='SYSTEM', is_builtin=False):
+def create_error(name=None, title=None, description='Test error description', category='SYSTEM', is_builtin=False,
+                 should_be_retried=False):
     """Creates a error model for unit testing
 
     :returns: The error model
@@ -19,4 +20,4 @@ def create_error(name=None, title=None, description='Test error description', ca
         NAME_COUNTER += 1
 
     return Error.objects.create(name=name, title=title, description=description, category=category,
-                                is_builtin=is_builtin)
+                                is_builtin=is_builtin, should_be_retried=should_be_retried)

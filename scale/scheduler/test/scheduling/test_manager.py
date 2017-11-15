@@ -6,13 +6,16 @@ from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
 
+from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
 from job.models import JobExecution
 from job.test import utils as job_test_utils
+from node.models import Node
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.models import Queue
 from queue.test import utils as queue_test_utils
+from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
@@ -26,8 +29,12 @@ from scheduler.tasks.manager import system_task_mgr
 
 class TestSchedulingManager(TestCase):
 
+    fixtures = ['basic_job_errors.json']
+
     def setUp(self):
         django.setup()
+
+        reset_error_cache()
 
         self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
@@ -51,6 +58,10 @@ class TestSchedulingManager(TestCase):
             node._initial_cleanup_completed()
             node._is_image_pulled = True
             node._update_state()
+            if node.agent_id == 'agent_1':
+                self.node_1_id = node.id
+        cleanup_mgr.update_nodes(node_mgr.get_nodes())
+        self.node_1 = Node.objects.get(id=self.node_1_id)
         # Ignore system tasks
         system_task_mgr._is_db_update_completed = True
 
@@ -217,7 +228,7 @@ class TestSchedulingManager(TestCase):
         job_type_with_limit.max_scheduled = 4
         job_type_with_limit.save()
         running_job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_1.agent_id,
-                                                                  job_type=job_type_with_limit)
+                                                                  job_type=job_type_with_limit, node=self.node_1)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
@@ -229,7 +240,7 @@ class TestSchedulingManager(TestCase):
         job_exe_mgr.schedule_job_exes([running_job_exe_1], [])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
-                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+                                NodeResources([Cpus(0.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
