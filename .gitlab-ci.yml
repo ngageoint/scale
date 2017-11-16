@@ -1,0 +1,38 @@
+variables:
+  IMAGE_PREFIX: scale
+
+  # Environment variables that must be set in Gitlab CI/CD Pipeline variables
+  # GOSU_URL
+  # ALPINE_IMAGE
+  # CENTOS_IMAGE
+  # LOGSTASH_IMAGE
+
+image: ${REGISTRY}/${DOCKER_DEV_USER}/docker:17
+
+services:
+  - ${REGISTRY}/${DOCKER_DEV_USER}/dind:17
+
+stages:
+  - package
+
+logstash:
+  stage: package
+  script:
+    - ./build-support.sh ${LOGSTASH_IMAGE} logstash
+  only:
+    - tags
+
+scale:
+  stage: package
+  script:
+    - ./build-scale.sh
+  only:
+    - master
+    - tags
+
+vault:
+  stage: package
+  script:
+    - ./build-support.sh ${ALPINE_IMAGE} vault
+  only:
+    - tags
