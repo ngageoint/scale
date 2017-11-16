@@ -1,6 +1,7 @@
 *.pyc
 env/
 .idea/
+.vscode/
 .git
 LICENSE
 README.md

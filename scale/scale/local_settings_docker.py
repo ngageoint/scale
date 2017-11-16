@@ -10,6 +10,7 @@ SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
 # Use the following lines to enable developer/debug mode.
 DEBUG = os.environ.get('DJANGO_DEBUG', 'false').lower() in ('yes', 'true', 't', '1')
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
+DEBUG_PORT = int(os.environ.get('SCALE_DEBUG_PORT', '6899'))
 
 # Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
 FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', None)

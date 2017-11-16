@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.conf import settings
 from django.db import transaction
 from django.utils.timezone import now
 
@@ -20,6 +21,10 @@ def initialize_system():
     """Performs any necessary functions needed for initializing Scale"""
 
     logger.info('Initializing system')
+
+    if settings.DEBUG:
+        from pudb.remote import set_trace
+        set_trace(term_size=(80, 24), port=settings.DEBUG_PORT)
 
     Scheduler.objects.initialize_scheduler()
 
