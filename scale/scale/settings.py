@@ -77,7 +77,8 @@ X_FRAME_OPTIONS = 'DENY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-DEBUG_PORT = 6899
+DEBUG_HOST = 'localhost'
+DEBUG_PORT = 1337
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 

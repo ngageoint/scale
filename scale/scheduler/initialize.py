@@ -23,8 +23,9 @@ def initialize_system():
     logger.info('Initializing system')
 
     if settings.DEBUG:
-        from pudb.remote import set_trace
-        set_trace(term_size=(80, 50), host='0.0.0.0', port=settings.DEBUG_PORT)
+        logger.info('Attempting connection to remote debug server at %s:%s' % (settings.DEBUG_HOST, settings.DEBUG_PORT))
+        from pydevd import set_trace
+        settrace(host=settings.DEBUG_HOST, port=settings.DEBUG_PORT)
 
     Scheduler.objects.initialize_scheduler()
 
