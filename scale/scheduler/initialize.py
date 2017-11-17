@@ -24,7 +24,7 @@ def initialize_system():
 
     if settings.DEBUG:
         from pudb.remote import set_trace
-        set_trace(term_size=(80, 24), port=settings.DEBUG_PORT)
+        set_trace(term_size=(80, 50), host='0.0.0.0', port=settings.DEBUG_PORT)
 
     Scheduler.objects.initialize_scheduler()
 
