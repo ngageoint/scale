@@ -77,9 +77,6 @@ X_FRAME_OPTIONS = 'DENY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-# If both are set to values other than None, scheduler will attempt to make remote debugger connection on launch
-DEBUG_HOST = None
-DEBUG_PORT = 1337
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 

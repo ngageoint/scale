@@ -22,11 +22,6 @@ def initialize_system():
 
     logger.info('Initializing system')
 
-    if settings.DEBUG_HOST and settings.DEBUG_PORT:
-        logger.info('Attempting connection to remote debug server at %s:%s' % (settings.DEBUG_HOST, settings.DEBUG_PORT))
-        from pydevd import settrace
-        settrace(host=settings.DEBUG_HOST, port=settings.DEBUG_PORT)
-
     Scheduler.objects.initialize_scheduler()
 
     # Make sure clock job has been created
