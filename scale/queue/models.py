@@ -593,7 +593,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
-        return JobInterfaceSunset(self.interface, do_validate=False)
+        return JobInterfaceSunset.create(self.interface, do_validate=False)
 
     def get_resources(self):
         """Returns the resources required by this queued job

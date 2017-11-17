@@ -2832,7 +2832,7 @@ class JobType(models.Model):
                 :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterfaceSunset(self.interface)
+        return JobInterfaceSunset.create(self.interface)
 
     def get_error_interface(self):
         """Returns the interface for mapping a job's exit code or
