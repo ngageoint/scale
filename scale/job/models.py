@@ -10,7 +10,7 @@ import django.contrib.postgres.fields
 import django.utils.html
 from django.conf import settings
 from django.db import models, transaction
-from django.db.models import Q
+from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
@@ -1207,6 +1207,19 @@ class JobExecutionManager(models.Manager):
 
         return job_exe
 
+    def get_unfinished_job_exes(self):
+        """Returns the job executions for the jobs that are unfinished. Unfinished jobs are jobs where the latest
+        execution has been scheduled, but the job is still in QUEUED or RUNNING status. The returned job executions will
+        not have any of their JSON fields populated.
+
+        :returns: The job execution models for the unfinished jobs
+        :rtype: list
+        """
+
+        qry = self.filter(job__status__in=['QUEUED', 'RUNNING'], exe_num=F('job__num_exes'))
+        qry = qry.defer('resources', 'configuration')
+        return qry
+
 
 class JobExecution(models.Model):
     """Represents a job execution that has been scheduled to run on a node
@@ -1293,15 +1306,34 @@ class JobExecution(models.Model):
         :rtype: :class:`job.models.JobExecutionEnd`
         """
 
+        return self.create_job_exe_end_model(TaskResults(do_validate=False), 'CANCELED', None, when)
+
+    def create_job_exe_end_model(self, task_results, status, error_id, when):
+        """Creates and returns a job execution end model for this job execution
+
+        :param task_results: The task results for the execution
+        :type task_results: :class:`job.execution.tasks.json.results.task_results.TaskResults`
+        :param status: The final job execution status
+        :type status: str
+        :param error_id: The ID of the error (for failed executions), possibly None
+        :type error_id: int
+        :param when: When the job execution ended
+        :type when: :class:`datetime.datetime`
+        :returns: The job execution end model
+        :rtype: :class:`job.models.JobExecutionEnd`
+        """
+
         job_exe_end = JobExecutionEnd()
         job_exe_end.job_exe_id = self.id
         job_exe_end.job_id = self.job_id
         job_exe_end.job_type_id = self.job_type_id
         job_exe_end.exe_num = self.exe_num
-        job_exe_end.task_results = TaskResults(do_validate=False).get_dict()
-        job_exe_end.status = 'CANCELED'
+        job_exe_end.task_results = task_results.get_dict()
+        job_exe_end.status = status
+        job_exe_end.error_id = error_id
+        job_exe_end.node_id = self.node_id
         job_exe_end.queued = self.queued
-        job_exe_end.started = None
+        job_exe_end.started = self.started
         job_exe_end.ended = when
         return job_exe_end
 
