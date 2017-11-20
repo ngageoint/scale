@@ -347,7 +347,7 @@ class JobInterface(object):
 
         param_replacements['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         # Remove extra whitespace
         command_arguments = ' '.join(command_arguments.split())
@@ -379,7 +379,7 @@ class JobInterface(object):
         :rtype: str
         """
 
-        return self._replace_command_parameters(self.get_command_args(), values)
+        return self.replace_command_parameters(self.get_command_args(), values)
 
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
@@ -528,7 +528,7 @@ class JobInterface(object):
                 property_val = job_data.data_inputs_by_name[input_name]['value']
                 param_replacements[input_name] = property_val
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
@@ -552,7 +552,7 @@ class JobInterface(object):
                                                        exe_configuration,
                                                        job_type, True)
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
@@ -902,7 +902,7 @@ class JobInterface(object):
                 shared_resource['required'] = True
 
     @staticmethod
-    def _replace_command_parameters(command_arguments, param_replacements):
+    def replace_command_parameters(command_arguments, param_replacements):
         """find all occurrences of a parameter with a given name in the command_arguments string and
         replace it with the param value. If the parameter replacement string in the command uses a
         custom output ( ${-f :foo}).

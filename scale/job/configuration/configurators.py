@@ -11,6 +11,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
+from job.deprecation import JobInterfaceSunset
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
@@ -401,7 +402,10 @@ class ScheduledExecutionConfigurator(object):
         # job types
         env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
         args = config._get_task_dict('main')['args']
-        args = JobInterface._replace_command_parameters(args, env_vars)
+
+        # TODO: Remove old-style logic for command parameters inject when with v6
+        if not JobInterfaceSunset.is_seed(job_type.interface):
+            args = JobInterface.replace_command_parameters(args, env_vars)
         config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources
@@ -463,7 +467,7 @@ class ScheduledExecutionConfigurator(object):
                 # TODO: command args and env var replacement from the interface should be removed once Scale drops
                 # support for old-style job types
                 args = config._get_task_dict('main')['args']
-                args = JobInterface._replace_command_parameters(args, task_settings)
+                args = JobInterface.replace_command_parameters(args, task_settings)
                 env_vars = interface.populate_env_vars_arguments(task_settings)
                 _config.add_to_task('main', args=args, env_vars=env_vars, settings=task_settings)
 
