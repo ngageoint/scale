@@ -403,6 +403,24 @@ class JobInterface(object):
                 names.append(output_data['name'])
         return names
 
+    def get_mounts(self):
+        """Gets the mounts defined for the job
+
+        :return: the mounts for a job
+        :rtype: list
+        """
+
+        return self.get_dict().get('mounts', [])
+
+    def get_settings(self):
+        """Gets the settings for the job
+
+        :return: the settings object
+        :rtype: dict
+        """
+
+        return self.get_dict().get('settings', [])
+
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
         """Stores the files and deletes any working directories
 

@@ -336,8 +336,7 @@ class ScheduledExecutionConfigurator(object):
 
         job_config = job_type.get_job_configuration()
         mount_volumes = {}
-        # TODO: use better interface method once we switch to Seed
-        for mount in interface.get_dict()['mounts']:
+        for mount in interface.get_mounts():
             name = mount['name']
             mode = mount['mode']
             path = mount['path']
@@ -449,8 +448,7 @@ class ScheduledExecutionConfigurator(object):
             secret_settings = secrets_mgr.retrieve_job_type_secrets(job_type.get_secrets_key())
             for _config, secrets_hidden in [(config, True), (config_with_secrets, False)]:
                 task_settings = {}
-                # TODO: use better interface method once we switch to Seed
-                for setting in interface.get_dict()['settings']:
+                for setting in interface.get_settings():
                     name = setting['name']
                     if setting['secret']:
                         value = None
@@ -460,7 +458,7 @@ class ScheduledExecutionConfigurator(object):
                                 value = '*****'
                     else:
                         value = job_config.get_setting_value(name)
-                    if setting['required'] or value is not None:
+                    if 'required' in setting and setting['required'] or value is not None:
                         task_settings[name] = value
                 # TODO: command args and env var replacement from the interface should be removed once Scale drops
                 # support for old-style job types
