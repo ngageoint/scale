@@ -58,7 +58,9 @@ class RestartScheduler(CommandMessage):
                 job_exe_ends.append(job_exe.create_job_exe_end_model(task_results, 'FAILED', error.id, self.when))
 
         # Create messages to fail unfinished jobs and executions
-        self.new_messages.extend(create_failed_jobs_messages(failed_jobs), self.when)
-        self.new_messages.extend(create_job_exe_end_messages(job_exe_ends))
+        if failed_jobs:
+            logger.info('Found ')
+            self.new_messages.extend(create_failed_jobs_messages(failed_jobs, self.when))
+            self.new_messages.extend(create_job_exe_end_messages(job_exe_ends))
 
         return True
