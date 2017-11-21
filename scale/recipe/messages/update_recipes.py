@@ -5,8 +5,8 @@ import logging
 
 from django.utils.timezone import now
 
-from job.messages.blocked_jobs import BlockedJobs
-from job.messages.pending_jobs import PendingJobs
+from job.messages.blocked_jobs import create_blocked_jobs_messages
+from job.messages.pending_jobs import create_pending_jobs_messages
 from messaging.messages.message import CommandMessage
 from recipe.models import Recipe
 
@@ -19,6 +19,31 @@ MAX_JOBS_AT_A_TIME = 1000
 
 
 logger = logging.getLogger(__name__)
+
+
+def create_update_recipes_messages(recipe_ids):
+    """Creates messages to update the given recipes
+
+    :param recipe_ids: The recipe IDs
+    :type recipe_ids: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for recipe_id in recipe_ids:
+        if not message:
+            message = UpdateRecipes()
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = UpdateRecipes()
+        message.add_recipe(recipe_id)
+    if message:
+        messages.append(message)
+
+    return messages
 
 
 class UpdateRecipes(CommandMessage):
@@ -96,51 +121,7 @@ class UpdateRecipes(CommandMessage):
                     pending_job_ids.add(pending_job.id)
 
         # Create new messages
-        self._create_blocked_jobs_messages(blocked_job_ids, when)
-        self._create_pending_jobs_messages(pending_job_ids, when)
+        self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))
+        self.new_messages.extend(create_pending_jobs_messages(pending_job_ids, when))
 
         return True
-
-    def _create_blocked_jobs_messages(self, blocked_job_ids, when):
-        """Creates messages to update the given job IDs to BLOCKED
-
-        :param blocked_job_ids: The job IDs
-        :type blocked_job_ids: list
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        """
-
-        message = None
-        for job_id in blocked_job_ids:
-            if not message:
-                message = BlockedJobs()
-                message.status_change = when
-            elif not message.can_fit_more():
-                self.new_messages.append(message)
-                message = BlockedJobs()
-                message.status_change = when
-            message.add_job(job_id)
-        if message:
-            self.new_messages.append(message)
-
-    def _create_pending_jobs_messages(self, pending_job_ids, when):
-        """Creates messages to update the given job IDs to PENDING
-
-        :param pending_job_ids: The job IDs
-        :type pending_job_ids: list
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        """
-
-        message = None
-        for job_id in pending_job_ids:
-            if not message:
-                message = PendingJobs()
-                message.status_change = when
-            elif not message.can_fit_more():
-                self.new_messages.append(message)
-                message = PendingJobs()
-                message.status_change = when
-            message.add_job(job_id)
-        if message:
-            self.new_messages.append(message)

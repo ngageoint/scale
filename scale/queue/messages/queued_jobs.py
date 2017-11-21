@@ -21,6 +21,31 @@ QueuedJob = namedtuple('QueuedJob', ['job_id', 'exe_num'])
 logger = logging.getLogger(__name__)
 
 
+def create_queued_jobs_messages(jobs):
+    """Creates messages to queue the given jobs
+
+    :param jobs: The jobs to queue
+    :type jobs: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for job in jobs:
+        if not message:
+            message = QueuedJobs()
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = QueuedJobs()
+        message.add_job(job.job_id, job.exe_num)
+    if message:
+        messages.append(message)
+
+    return messages
+
+
 class QueuedJobs(CommandMessage):
     """Command message that sets QUEUED status for job models
     """

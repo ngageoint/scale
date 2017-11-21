@@ -17,6 +17,35 @@ MAX_NUM = 1000
 logger = logging.getLogger(__name__)
 
 
+def create_blocked_jobs_messages(blocked_job_ids, when):
+    """Creates messages to update the given job IDs to BLOCKED
+
+    :param blocked_job_ids: The job IDs
+    :type blocked_job_ids: list
+    :param when: The current time
+    :type when: :class:`datetime.datetime`
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for job_id in blocked_job_ids:
+        if not message:
+            message = BlockedJobs()
+            message.status_change = when
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = BlockedJobs()
+            message.status_change = when
+        message.add_job(job_id)
+    if message:
+        messages.append(message)
+
+    return messages
+
+
 class BlockedJobs(CommandMessage):
     """Command message that sets BLOCKED status for job models
     """
