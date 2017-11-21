@@ -9,19 +9,19 @@ import threading
 from django.utils.timezone import now
 from mesos.interface import Scheduler as MesosScheduler
 
-from error.models import Error, get_builtin_error
+from error.models import reset_error_cache
 from job.execution.manager import job_exe_mgr
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
-from job.models import Job, JobExecution
+from job.models import JobExecution
 from job.tasks.manager import task_mgr
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
-from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
 from scheduler.manager import scheduler_mgr
+from scheduler.messages.restart_scheduler import RestartScheduler
 from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
@@ -95,15 +95,17 @@ class ScaleScheduler(MesosScheduler):
 
         # Initial database sync
         logger.info('Performing initial sync with Scale database')
-        Error.objects.cache_builtin_errors()
+        reset_error_cache()
         job_exe_mgr.init_with_database()
         job_type_mgr.sync_with_database()
         scheduler_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
-        self._fail_lost_jobs()
 
         # Start up background threads
         self._messaging_thread = MessagingThread()
+        restart_msg = RestartScheduler()
+        restart_msg.when = now()
+        self._messaging_thread.add_initial_messages([restart_msg])
         messaging_thread = threading.Thread(target=self._messaging_thread.run)
         messaging_thread.daemon = True
         messaging_thread.start()
@@ -440,14 +442,6 @@ class ScaleScheduler(MesosScheduler):
         self._sync_thread.shutdown()
         self._task_handling_thread.shutdown()
         self._task_update_thread.shutdown()
-
-    def _fail_lost_jobs(self):
-        """Looks up all currently running jobs in the database and fail them as being lost by the scheduler"""
-
-        # Query for jobs that are running
-        for job in Job.objects.get_running_jobs():
-            # Fail all jobs that the scheduler has lost
-            Queue.objects.handle_job_failure(job.id, job.num_exes, now(), get_builtin_error('scheduler-lost'))
 
     def _reconcile_running_jobs(self):
         """Reconciles all currently running job executions with Mesos"""

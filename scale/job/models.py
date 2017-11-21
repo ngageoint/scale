@@ -126,24 +126,6 @@ class JobManager(models.Manager):
 
         return job
 
-    def fail_job(self, job, when, error):
-        """Updates the given job to the FAILED status. The caller must have obtained the job model's lock. All database
-        updates occur in an atomic transaction.
-
-        :param job: The job model
-        :type job: :class:`job.models.Job`
-        :param when: The completed time
-        :type when: :class:`datetime.datetime`
-        :param error: The error that caused the failure
-        :type error: :class:`error.models.Error`
-        """
-
-        job.status = 'FAILED'
-        job.error = error
-        job.ended = when
-        job.last_status_change = when
-        job.save()
-
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                     job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
                     order=None):
@@ -393,15 +375,6 @@ class JobManager(models.Manager):
         self.lock_jobs(job_ids)
 
         return list(self.get_jobs_with_related(job_ids))
-
-    def get_running_jobs(self):
-        """Returns all jobs that are currently RUNNING
-
-        :returns: The list of RUNNING jobs
-        :rtype: list
-        """
-
-        return self.filter(status='RUNNING').defer('data', 'results')
 
     def increment_max_tries(self, jobs):
         """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
