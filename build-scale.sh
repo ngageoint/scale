@@ -11,7 +11,7 @@ then
     inject-auth-env.sh
 
     export IMAGE_URL=${REGISTRY}/${DOCKER_USER}/${IMAGE_PREFIX}
-    docker build --build-arg EPEL_INSTALL=0 --build-arg IMAGE=${CENTOS_IMAGE} --build-arg BUILDNUM=${CI_BUILD_REF:0:8} --build-arg GOSU_URL=${GOSU_URL} -t ${IMAGE_URL} .
+    docker build --build-arg EPEL_INSTALL=${EPEL_INSTALL} --build-arg IMAGE=${CENTOS_IMAGE} --build-arg BUILDNUM=${CI_BUILD_REF:0:8} --build-arg GOSU_URL=${GOSU_URL} -t ${IMAGE_URL} .
 
     export SCALE_VERSION=$(docker run --entrypoint /bin/bash ${IMAGE_URL} -c 'python -c "import scale; print(scale.__docker_version__)"')
     docker tag ${IMAGE_URL} ${IMAGE_URL}:${SCALE_VERSION}
@@ -19,7 +19,7 @@ then
     docker push ${IMAGE_URL}:${SCALE_VERSION}
 else
     export IMAGE_URL=${REGISTRY}/${DOCKER_USER}/${IMAGE_PREFIX}:${CI_BUILD_TAG}
-    docker build --build-arg EPEL_INSTALL=0 --build-arg GOSU_URL=${GOSU_URL} -t ${IMAGE_URL} .
+    docker build --build-arg EPEL_INSTALL=${EPEL_INSTALL} --build-arg IMAGE=${CENTOS_IMAGE} --build-arg GOSU_URL=${GOSU_URL} -t ${IMAGE_URL} .
 
     docker push ${IMAGE_URL}
 fi
