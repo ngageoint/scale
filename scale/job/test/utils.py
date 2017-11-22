@@ -323,7 +323,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
 
     when = timezone.now()
     if not job:
-        job = create_job(job_type=job_type, input_file_size=input_file_size, num_exes=num_exes)
+        job = create_job(job_type=job_type, status='RUNNING', input_file_size=input_file_size, num_exes=num_exes)
     job_type = job.job_type
 
     # Configuration that occurs at queue time

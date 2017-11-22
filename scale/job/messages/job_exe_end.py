@@ -15,6 +15,31 @@ MAX_NUM = 10
 logger = logging.getLogger(__name__)
 
 
+def create_job_exe_end_messages(job_exe_end_models):
+    """Creates messages to create the given job_exe_end models
+
+    :param job_exe_end_models: The job_exe_end models to create
+    :type job_exe_end_models: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for job_exe_end in job_exe_end_models:
+        if not message:
+            message = CreateJobExecutionEnd()
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = CreateJobExecutionEnd()
+        message.add_job_exe_end(job_exe_end)
+    if message:
+        messages.append(message)
+
+    return messages
+
+
 class CreateJobExecutionEnd(CommandMessage):
     """Command message that creates job_exe_end models
     """

@@ -17,6 +17,35 @@ MAX_NUM = 1000
 logger = logging.getLogger(__name__)
 
 
+def create_pending_jobs_messages(pending_job_ids, when):
+    """Creates messages to update the given job IDs to PENDING
+
+    :param pending_job_ids: The job IDs
+    :type pending_job_ids: list
+    :param when: The current time
+    :type when: :class:`datetime.datetime`
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for job_id in pending_job_ids:
+        if not message:
+            message = PendingJobs()
+            message.status_change = when
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = PendingJobs()
+            message.status_change = when
+        message.add_job(job_id)
+    if message:
+        messages.append(message)
+
+    return messages
+
+
 class PendingJobs(CommandMessage):
     """Command message that sets PENDING status for job models
     """

@@ -54,6 +54,9 @@ class RunningJobExecution(object):
         self.started = job_exe.started
         self.docker_volumes = configuration.get_named_docker_volumes()
 
+        # Keep job_exe model for generating job_exe_end model
+        self._job_exe = job_exe
+
         # Internal task and status info
         self._lock = threading.Lock()  # Protects the following fields
         self._all_tasks = []
@@ -166,21 +169,9 @@ class RunningJobExecution(object):
 
         task_results = TaskResults(do_validate=False)
         task_results.add_task_results(self._all_tasks)
+        error_id = self._error.id if self._error else None
 
-        job_exe_end = JobExecutionEnd()
-        job_exe_end.job_exe_id = self.id
-        job_exe_end.job_id = self.job_id
-        job_exe_end.job_type_id = self.job_type_id
-        job_exe_end.exe_num = self.exe_num
-        job_exe_end.task_results = task_results.get_dict()
-        job_exe_end.status = self._status
-        if self._error:
-            job_exe_end.error_id = self._error.id
-        job_exe_end.node_id = self.node_id
-        job_exe_end.queued = self.queued
-        job_exe_end.started = self.started
-        job_exe_end.ended = self._finished
-        return job_exe_end
+        return self._job_exe.create_job_exe_end_model(task_results, self._status, error_id, self._finished)
 
     def execution_canceled(self, when):
         """Cancels this job execution

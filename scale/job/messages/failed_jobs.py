@@ -16,10 +16,39 @@ from util.parse import datetime_to_string, parse_datetime
 MAX_NUM = 100
 
 
-FailedJob = namedtuple('FailedJob', ['job_id', 'exe_num'])
+FailedJob = namedtuple('FailedJob', ['job_id', 'exe_num', 'error_id'])
 
 
 logger = logging.getLogger(__name__)
+
+
+def create_failed_jobs_messages(failed_jobs, when):
+    """Creates messages to fail the given jobs
+
+    :param failed_jobs: The failed jobs
+    :type failed_jobs: list
+    :param when: When the jobs failed
+    :type when: :class:`datetime.datetime`
+    :return: The list of messages
+    :rtype: list
+    """
+
+    messages = []
+
+    message = None
+    for failed_job in failed_jobs:
+        if not message:
+            message = FailedJobs()
+            message.ended = when
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = FailedJobs()
+            message.ended = when
+        message.add_failed_job(failed_job)
+    if message:
+        messages.append(message)
+
+    return messages
 
 
 class FailedJobs(CommandMessage):
@@ -36,23 +65,18 @@ class FailedJobs(CommandMessage):
         self._failed_jobs = {}  # {Error ID: [FailedJob]}
         self.ended = None
 
-    def add_failed_job(self, job_id, exe_num, error_id):
+    def add_failed_job(self, failed_job):
         """Adds the given failed job to this message
 
-        :param job_id: The failed job ID
-        :type job_id: int
-        :param exe_num: The failed job's execution number
-        :type exe_num: int
-        :param error_id: The error ID for the failure
-        :type error_id: int
+        :param failed_job: The failed job ID
+        :type failed_job: :class:`job.messages.failed_jobs.FailedJob`
         """
 
         self._count += 1
-        failed_job = FailedJob(job_id, exe_num)
-        if error_id in self._failed_jobs:
-            self._failed_jobs[error_id].append(failed_job)
+        if failed_job.error_id in self._failed_jobs:
+            self._failed_jobs[failed_job.error_id].append(failed_job)
         else:
-            self._failed_jobs[error_id] = [failed_job]
+            self._failed_jobs[failed_job.error_id] = [failed_job]
 
     def can_fit_more(self):
         """Indicates whether more failed jobs can fit in this message
@@ -89,13 +113,15 @@ class FailedJobs(CommandMessage):
             for job_dict in error_dict['jobs']:
                 job_id = job_dict['id']
                 exe_num = job_dict['exe_num']
-                message.add_failed_job(job_id, exe_num, error_id)
+                message.add_failed_job(FailedJob(job_id, exe_num, error_id))
 
         return message
 
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
+
+        from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
 
         job_ids = []
         for job_list in self._failed_jobs.values():
@@ -133,7 +159,7 @@ class FailedJobs(CommandMessage):
                     retry = retry and not job_model.is_superseded
 
                     if retry:
-                        jobs_to_retry.append(job_model)
+                        jobs_to_retry.append(QueuedJob(job_model.id, job_model.num_exes))
                     else:
                         jobs_to_fail.append(job_model)
 
@@ -149,29 +175,9 @@ class FailedJobs(CommandMessage):
 
             # Place jobs to retry back onto the queue
             if jobs_to_retry:
-                self._create_queued_jobs_messages(jobs_to_retry)
+                self.new_messages.extend(create_queued_jobs_messages(jobs_to_retry))
 
         return True
-
-    def _create_queued_jobs_messages(self, jobs):
-        """Creates messages to queue the given jobs that should be retried
-
-        :param jobs: The job models to queue
-        :type jobs: list
-        """
-
-        from queue.messages.queued_jobs import QueuedJobs
-
-        message = None
-        for job in jobs:
-            if not message:
-                message = QueuedJobs()
-            elif not message.can_fit_more():
-                self.new_messages.append(message)
-                message = QueuedJobs()
-            message.add_job(job.id, job.num_exes)
-        if message:
-            self.new_messages.append(message)
 
     def _create_update_recipes_messages(self, failed_job_ids):
         """Creates messages to update the the recipes for the given failed jobs
@@ -180,17 +186,8 @@ class FailedJobs(CommandMessage):
         :type failed_job_ids: list
         """
 
-        from recipe.messages.update_recipes import UpdateRecipes
+        from recipe.messages.update_recipes import create_update_recipes_messages
         from recipe.models import Recipe
-        recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(failed_job_ids)
 
-        message = None
-        for recipe_id in recipe_ids:
-            if not message:
-                message = UpdateRecipes()
-            elif not message.can_fit_more():
-                self.new_messages.append(message)
-                message = UpdateRecipes()
-            message.add_recipe(recipe_id)
-        if message:
-            self.new_messages.append(message)
+        recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(failed_job_ids)
+        self.new_messages.extend(create_update_recipes_messages(recipe_ids))

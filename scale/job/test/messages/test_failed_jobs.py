@@ -6,7 +6,7 @@ from django.utils.timezone import now
 
 from error.test import utils as error_test_utils
 from job.configuration.data.job_data import JobData
-from job.messages.failed_jobs import FailedJobs
+from job.messages.failed_jobs import FailedJob, FailedJobs
 from job.models import Job
 from job.test import utils as job_test_utils
 from queue.models import Queue
@@ -38,11 +38,11 @@ class TestFailedJobs(TransactionTestCase):
         message = FailedJobs()
         message.ended = when_ended
         if message.can_fit_more():
-            message.add_failed_job(job_1.id, job_1.num_exes, error.id)
+            message.add_failed_job(FailedJob(job_1.id, job_1.num_exes, error.id))
         if message.can_fit_more():
-            message.add_failed_job(job_2.id, job_2.num_exes, error.id)
+            message.add_failed_job(FailedJob(job_2.id, job_2.num_exes, error.id))
         if message.can_fit_more():
-            message.add_failed_job(job_3.id, job_3.num_exes, error.id)
+            message.add_failed_job(FailedJob(job_3.id, job_3.num_exes, error.id))
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -103,19 +103,19 @@ class TestFailedJobs(TransactionTestCase):
         message = FailedJobs()
         message.ended = when_ended
         if message.can_fit_more():
-            message.add_failed_job(job_1.id, job_1.num_exes, error_1.id)
+            message.add_failed_job(FailedJob(job_1.id, job_1.num_exes, error_1.id))
         if message.can_fit_more():
-            message.add_failed_job(job_2.id, job_2.num_exes, error_1.id)
+            message.add_failed_job(FailedJob(job_2.id, job_2.num_exes, error_1.id))
         if message.can_fit_more():
-            message.add_failed_job(job_3.id, job_3.num_exes, error_1.id)
+            message.add_failed_job(FailedJob(job_3.id, job_3.num_exes, error_1.id))
         if message.can_fit_more():
-            message.add_failed_job(job_4.id, job_4.num_exes, error_2.id)  # Error that cannot be retried
+            message.add_failed_job(FailedJob(job_4.id, job_4.num_exes, error_2.id))  # Error that cannot be retried
         if message.can_fit_more():
-            message.add_failed_job(job_5.id, job_5.num_exes - 1, error_1.id)  # Mismatched exe_num
+            message.add_failed_job(FailedJob(job_5.id, job_5.num_exes - 1, error_1.id))  # Mismatched exe_num
         if message.can_fit_more():
-            message.add_failed_job(job_6.id, job_6.num_exes, error_1.id)
+            message.add_failed_job(FailedJob(job_6.id, job_6.num_exes, error_1.id))
         if message.can_fit_more():
-            message.add_failed_job(job_7.id, job_7.num_exes - 1, error_1.id)
+            message.add_failed_job(FailedJob(job_7.id, job_7.num_exes - 1, error_1.id))
 
         # Execute message
         result = message.execute()
