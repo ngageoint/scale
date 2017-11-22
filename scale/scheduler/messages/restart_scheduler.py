@@ -59,7 +59,8 @@ class RestartScheduler(CommandMessage):
 
         # Create messages to fail unfinished jobs and executions
         if failed_jobs:
-            logger.info('Failing %d job(s) that had started but not finished prior to scheduler restart')
+            count = len(failed_jobs)
+            logger.info('Failing %d job(s) that had started but not finished prior to scheduler restart', count)
             self.new_messages.extend(create_failed_jobs_messages(failed_jobs, self.when))
             self.new_messages.extend(create_job_exe_end_messages(job_exe_ends))
 
