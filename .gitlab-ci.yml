@@ -1,11 +1,18 @@
-variables:
-  IMAGE_PREFIX: scale
+# Environment variables that must be set in Gitlab CI/CD Pipeline variables
+# ALPINE_IMAGE
+# CENTOS_IMAGE
+# DOCKER_AUTH_CONFIG
+# DOCKER_DEV_AUTH_CONFIG
+# DOCKER_DEV_USER
+# DOCKER_USER
+# GOSU_URL
+# LOGSTASH_IMAGE
+# REGISTRY
+# VAULT_ZIP
 
-  # Environment variables that must be set in Gitlab CI/CD Pipeline variables
-  # GOSU_URL
-  # ALPINE_IMAGE
-  # CENTOS_IMAGE
-  # LOGSTASH_IMAGE
+variables:
+  IMAGE_PREFIX: "scale"
+  EPEL_INSTALL: "0"
 
 image: ${REGISTRY}/${DOCKER_DEV_USER}/docker:17
 
