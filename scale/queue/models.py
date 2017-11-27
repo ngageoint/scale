@@ -381,49 +381,6 @@ class QueueManager(models.Manager):
             if handler.is_completed():
                 Recipe.objects.complete_recipe(handler.recipe.id, when)
 
-    # TODO: remove this
-    @transaction.atomic
-    def handle_job_failure(self, job_id, exe_num, when, error):
-        """Handles the failure of a job. The number of the job's running execution is provided to resolve race
-        conditions. If the job has tries remaining, it is put back on the queue. Otherwise it is marked failed. All
-        database changes occur in an atomic transaction.
-
-        :param job_id: The job ID
-        :type job_id: int
-        :param exe_num: The job's execution number
-        :type exe_num: int
-        :param when: When the job was completed
-        :type when: :class:`datetime.datetime`
-        :param error: The error that caused the failure
-        :type error: :class:`error.models.Error`
-        """
-
-        job = Job.objects.get_locked_job(job_id)
-        # If the execution number has changed, this update is obsolete
-        if job.num_exes != exe_num:
-            return
-
-        # Need related job_type and job_type_rev models
-        # TODO: refactor this as part of the move to the messaging backend
-        job = Job.objects.select_related('job_type', 'job_type_rev').get(id=job_id)
-
-        # Re-try job if error supports re-try and there are more tries left
-        retry = error.should_be_retried and job.num_exes < job.max_tries
-        # Also re-try long running jobs
-        retry = retry or job.job_type.is_long_running
-        # Do not re-try superseded jobs
-        retry = retry and not job.is_superseded
-
-        if retry:
-            self.queue_jobs([job])
-        else:
-            Job.objects.fail_job(job, when, error)
-            # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-            handler = Recipe.objects.get_recipe_handler_for_job(job_id)
-            if handler:
-                jobs_to_blocked = handler.get_blocked_jobs()
-                Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
-
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,

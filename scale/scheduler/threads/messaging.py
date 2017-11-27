@@ -29,6 +29,15 @@ class MessagingThread(BaseSchedulerThread):
         self._manager = CommandMessageManager()
         self._messages = []
 
+    def add_initial_messages(self, messages):
+        """Adds any initial messages to the thread
+
+        :param messages: The initial messages
+        :type messages: list
+        """
+
+        self._messages.extend(messages)
+
     def _execute(self):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """

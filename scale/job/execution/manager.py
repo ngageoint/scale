@@ -8,8 +8,8 @@ from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
-from job.messages.failed_jobs import FailedJobs
-from job.messages.job_exe_end import CreateJobExecutionEnd
+from job.messages.failed_jobs import create_failed_jobs_messages, FailedJob
+from job.messages.job_exe_end import create_job_exe_end_messages
 from job.models import Job, JobExecution
 
 
@@ -105,7 +105,7 @@ class JobExecutionManager(object):
         messages = running_job_messages
 
         # Add messages for creating job_exe_end models
-        messages.extend(self._create_job_exe_end_messages(job_exe_end_models))
+        messages.extend(create_job_exe_end_messages(job_exe_end_models))
 
          # Add messages for finished job executions
         messages.extend(self._create_finished_job_exe_messages(finished_job_exes))
@@ -306,45 +306,13 @@ class JobExecutionManager(object):
         """
 
         when = now()
-        messages = []
 
-        message = None
+        failed_jobs = []
         for job_exe in finished_job_exes:
             if job_exe.status == 'FAILED':
-                if not message:
-                    message = FailedJobs()
-                    message.ended = when
-                elif not message.can_fit_more():
-                    messages.append(message)
-                    message = FailedJobs()
-                    message.ended = when
-                message.add_failed_job(job_exe.job_id, job_exe.exe_num, job_exe.error.id)
-        if message:
-            messages.append(message)
+                failed_jobs.append(FailedJob(job_exe.job_id, job_exe.exe_num, job_exe.error.id))
 
-        return messages
-
-    def _create_job_exe_end_messages(self, job_exe_end_models):
-        """Creates messages to create job_exe_end models
-
-        :param job_exe_end_models: The job_exe_end models to create
-        :type job_exe_end_models: list
-        :returns: The job_exe_end messages
-        :rtype: list
-        """
-
-        messages = []
-
-        message = None
-        for job_exe_end in job_exe_end_models:
-            if not message:
-                message = CreateJobExecutionEnd()
-            elif not message.can_fit_more():
-                messages.append(message)
-                message = CreateJobExecutionEnd()
-            message.add_job_exe_end(job_exe_end)
-        if message:
-            messages.append(message)
+        messages = create_failed_jobs_messages(failed_jobs, when)
 
         return messages
 

@@ -126,6 +126,7 @@ class SchedulerManager(models.Manager):
         return status_dict
 
 
+# TODO: remove master_hostname and master_port fields when REST API v4 is removed
 class Scheduler(models.Model):
     """Represents a scheduler instance. There should only be a single instance of this and it's used for storing
     cluster-wide state related to scheduling in mesos.
