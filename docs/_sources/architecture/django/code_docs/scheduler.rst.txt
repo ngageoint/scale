@@ -9,6 +9,7 @@ Subpackages
     scheduler.cleanup
     scheduler.database
     scheduler.management
+    scheduler.messages
     scheduler.migrations
     scheduler.node
     scheduler.recon

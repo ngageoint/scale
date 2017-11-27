@@ -894,28 +894,6 @@ race conditions. All database changes occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="queue.models.QueueManager.handle_job_failure">
-<code class="descname">handle_job_failure</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.handle_job_failure" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handles the failure of a job. The number of the job&#8217;s running execution is provided to resolve race
-conditions. If the job has tries remaining, it is put back on the queue. Otherwise it is marked failed. All
-database changes occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</li>
-<li><strong>exe_num</strong> (<em>int</em>) &#8211; The job&#8217;s execution number</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the job was completed</li>
-<li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.models.QueueManager.queue_jobs">
 <code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.

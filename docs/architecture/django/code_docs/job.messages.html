@@ -287,14 +287,44 @@
 
 </dd></dl>
 
+<dl class="function">
+<dt id="job.messages.blocked_jobs.create_blocked_jobs_messages">
+<code class="descclassname">job.messages.blocked_jobs.</code><code class="descname">create_blocked_jobs_messages</code><span class="sig-paren">(</span><em>blocked_job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.blocked_jobs.create_blocked_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to update the given job IDs to BLOCKED</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>blocked_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.messages.failed_jobs">
 <span id="job-messages-failed-jobs-module"></span><h2>job.messages.failed_jobs module<a class="headerlink" href="#module-job.messages.failed_jobs" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that sets FAILED status for job models</p>
 <dl class="class">
 <dt id="job.messages.failed_jobs.FailedJob">
-<em class="property">class </em><code class="descclassname">job.messages.failed_jobs.</code><code class="descname">FailedJob</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.failed_jobs.FailedJob" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.messages.failed_jobs.</code><code class="descname">FailedJob</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em>, <em>error_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.failed_jobs.FailedJob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="job.messages.failed_jobs.FailedJob.error_id">
+<code class="descname">error_id</code><a class="headerlink" href="#job.messages.failed_jobs.FailedJob.error_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.messages.failed_jobs.FailedJob.exe_num">
 <code class="descname">exe_num</code><a class="headerlink" href="#job.messages.failed_jobs.FailedJob.exe_num" title="Permalink to this definition">¶</a></dt>
@@ -316,18 +346,13 @@
 <p>Command message that sets FAILED status for job models</p>
 <dl class="method">
 <dt id="job.messages.failed_jobs.FailedJobs.add_failed_job">
-<code class="descname">add_failed_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em>, <em>error_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.failed_jobs.FailedJobs.add_failed_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_failed_job</code><span class="sig-paren">(</span><em>failed_job</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.failed_jobs.FailedJobs.add_failed_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given failed job to this message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_id</strong> (<em>int</em>) &#8211; The failed job ID</li>
-<li><strong>exe_num</strong> (<em>int</em>) &#8211; The failed job&#8217;s execution number</li>
-<li><strong>error_id</strong> (<em>int</em>) &#8211; The error ID for the failure</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>failed_job</strong> (<a class="reference internal" href="#job.messages.failed_jobs.FailedJob" title="job.messages.failed_jobs.FailedJob"><code class="xref py py-class docutils literal"><span class="pre">job.messages.failed_jobs.FailedJob</span></code></a>) &#8211; The failed job ID</td>
 </tr>
 </tbody>
 </table>
@@ -367,6 +392,30 @@
 <dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.failed_jobs.create_failed_jobs_messages">
+<code class="descclassname">job.messages.failed_jobs.</code><code class="descname">create_failed_jobs_messages</code><span class="sig-paren">(</span><em>failed_jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.failed_jobs.create_failed_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to fail the given jobs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>failed_jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The failed jobs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the jobs failed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -428,6 +477,24 @@
 
 </dd></dl>
 
+<dl class="function">
+<dt id="job.messages.job_exe_end.create_job_exe_end_messages">
+<code class="descclassname">job.messages.job_exe_end.</code><code class="descname">create_job_exe_end_messages</code><span class="sig-paren">(</span><em>job_exe_end_models</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.job_exe_end.create_job_exe_end_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to create the given job_exe_end models</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_end_models</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job_exe_end models to create</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.messages.pending_jobs">
 <span id="job-messages-pending-jobs-module"></span><h2>job.messages.pending_jobs module<a class="headerlink" href="#module-job.messages.pending_jobs" title="Permalink to this headline">¶</a></h2>
@@ -485,6 +552,30 @@
 <dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.pending_jobs.create_pending_jobs_messages">
+<code class="descclassname">job.messages.pending_jobs.</code><code class="descname">create_pending_jobs_messages</code><span class="sig-paren">(</span><em>pending_job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.pending_jobs.create_pending_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to update the given job IDs to PENDING</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pending_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

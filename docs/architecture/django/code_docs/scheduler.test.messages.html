@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>recipe.messages package &mdash; Scale 5.3.0-snapshot documentation</title>
+  <title>scheduler.test.messages package &mdash; Scale 5.3.0-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.3.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="recipe package" href="recipe.html"/>
-        <link rel="next" title="recipe.migrations package" href="recipe.migrations.html"/>
-        <link rel="prev" title="recipe.handlers package" href="recipe.handlers.html"/>
+        <link rel="up" title="scheduler.test package" href="scheduler.test.html"/>
+        <link rel="next" title="scheduler.test.node package" href="scheduler.test.node.html"/>
+        <link rel="prev" title="scheduler.test package" href="scheduler.test.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -126,19 +126,24 @@
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.urls">scheduler.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.views">scheduler.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
@@ -201,15 +206,17 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+          <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
         
-      <li>recipe.messages package</li>
+          <li><a href="scheduler.test.html">scheduler.test package</a> &raquo;</li>
+        
+      <li>scheduler.test.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/recipe.messages.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.test.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -222,90 +229,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recipe-messages-package">
-<h1>recipe.messages package<a class="headerlink" href="#recipe-messages-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scheduler-test-messages-package">
+<h1>scheduler.test.messages package<a class="headerlink" href="#scheduler-test-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-recipe.messages.update_recipes">
-<span id="recipe-messages-update-recipes-module"></span><h2>recipe.messages.update_recipes module<a class="headerlink" href="#module-recipe.messages.update_recipes" title="Permalink to this headline">¶</a></h2>
-<p>Defines a command message that evaluates and updates recipes</p>
+<div class="section" id="module-scheduler.test.messages.test_restart_scheduler">
+<span id="scheduler-test-messages-test-restart-scheduler-module"></span><h2>scheduler.test.messages.test_restart_scheduler module<a class="headerlink" href="#module-scheduler.test.messages.test_restart_scheduler" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="recipe.messages.update_recipes.UpdateRecipes">
-<em class="property">class </em><code class="descclassname">recipe.messages.update_recipes.</code><code class="descname">UpdateRecipes</code><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
-<p>Command message that evaluates and updates recipes</p>
-<dl class="method">
-<dt id="recipe.messages.update_recipes.UpdateRecipes.add_recipe">
-<code class="descname">add_recipe</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes.add_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given recipe ID to this message</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dt id="scheduler.test.messages.test_restart_scheduler.TestRestartScheduler">
+<em class="property">class </em><code class="descclassname">scheduler.test.messages.test_restart_scheduler.</code><code class="descname">TestRestartScheduler</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'scheduler_errors.json']</em><a class="headerlink" href="#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
-<dt id="recipe.messages.update_recipes.UpdateRecipes.can_fit_more">
-<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes.can_fit_more" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether more recipes can fit in this message</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more recipes can fit, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
+<dt id="scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RestartScheduler.execute() successfully</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.messages.update_recipes.UpdateRecipes.execute">
-<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes.execute" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+<dt id="scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a RestartScheduler message to and from JSON</p>
 </dd></dl>
 
-<dl class="staticmethod">
-<dt id="recipe.messages.update_recipes.UpdateRecipes.from_json">
-<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes.from_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.messages.update_recipes.UpdateRecipes.to_json">
-<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.UpdateRecipes.to_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="recipe.messages.update_recipes.create_update_recipes_messages">
-<code class="descclassname">recipe.messages.update_recipes.</code><code class="descname">create_update_recipes_messages</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.create_update_recipes_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates messages to update the given recipes</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.messages">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.messages" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.test.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.test.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -319,10 +280,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.migrations.html" class="btn btn-neutral float-right" title="recipe.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.test.node.html" class="btn btn-neutral float-right" title="scheduler.test.node package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.handlers.html" class="btn btn-neutral" title="recipe.handlers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.test.html" class="btn btn-neutral" title="scheduler.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

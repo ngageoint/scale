@@ -1,0 +1,22 @@
+scheduler\.messages package
+===========================
+
+Submodules
+----------
+
+scheduler\.messages\.restart\_scheduler module
+----------------------------------------------
+
+.. automodule:: scheduler.messages.restart_scheduler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:
