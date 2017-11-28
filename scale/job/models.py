@@ -43,6 +43,7 @@ MIN_CPUS = 0.25
 MIN_MEM = 128.0
 MIN_DISK = 0.0
 
+INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile models
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
@@ -421,51 +422,18 @@ class JobManager(models.Manager):
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
-        modified = timezone.now()
-
         # Validate job data
         interface = job.get_job_interface()
         interface.validate_data(data)
 
-        # Analyze input files
-        input_file_ids = data.get_input_file_ids()
-        input_files = ScaleFile.objects.get_files(input_file_ids)
-        input_size_bytes = 0
-        for input_file in input_files:
-            input_size_bytes += input_file.file_size
-
-        # Calculate total input file size in MiB rounded up to the nearest whole MiB
-        input_size_mb = long(math.ceil((input_size_bytes / (1024.0 * 1024.0))))
-        # Calculate output space required in MiB rounded up to the nearest whole MiB
-        multiplier = job.job_type.disk_out_mult_required
-        const = job.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * input_size_mb + const))
-        disk_in_required = max(input_size_mb, MIN_DISK)
-        disk_out_required = max(output_size_mb, MIN_DISK)
-
         # Update job model in memory
         job.data = data.get_dict()
-        job.disk_in_required = disk_in_required
-        job.disk_out_required = disk_out_required
-        job.last_modified = modified
-
-        # Configure and populate JobInputFile
-        job_inputs = []
-        for input_file in data.get_input_file_info():
-            job_input = JobInputFile()
-            job_input.job_id = job.id
-            job_input.input_file_id = input_file[0]
-            job_input.job_input = input_file[1]
-            job_inputs.append(job_input)
-        JobInputFile.objects.bulk_create(job_inputs)
-
-        # Populate file ancestry links
-        from product.models import FileAncestryLink
-        FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, None, job, None)
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
-                                      disk_out_required=disk_out_required, last_modified=modified)
+        self.filter(id=job.id).update(data=data.get_dict())
+
+        # Process job inputs
+        self.process_job_inputs([job])
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -498,6 +466,62 @@ class JobManager(models.Manager):
             for input_file_id in input_file_ids:
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
+
+    def process_job_inputs(self, jobs):
+        """Processes the inputs for the given jobs. The caller must have obtained a model lock on the given job models.
+
+        :param jobs: The locked job models
+        :type jobs: list
+        """
+
+        when = timezone.now()
+        job_input_file_ids = {}  # {Job ID: set}
+        job_file_sizes = {}  # {Job ID: int}
+        all_input_file_ids = set()
+        input_file_models = []
+
+        # Process each job to get its input file IDs and create models related to input files
+        for job in jobs:
+            if job.disk_in_required is not None:
+                continue  # Ignore jobs that have already had inputs processed
+            job_input = job.get_job_data()
+            file_ids = job_input.get_input_file_ids()
+            job_input_file_ids[job.id] = set(file_ids)
+            job_file_sizes[job.id] = 0
+            all_input_file_ids.update(file_ids)
+
+            # Create JobInputFile models in batches
+            for input_file in job_input.get_input_file_info():
+                job_input_file = JobInputFile()
+                job_input_file.job_id = job.id
+                job_input_file.input_file_id = input_file[0]
+                job_input_file.job_input = input_file[1]
+                input_file_models.append(job_input_file)
+                if len(input_file_models) >= INPUT_FILE_BATCH_SIZE:
+                    JobInputFile.objects.bulk_create(input_file_models)
+                    input_file_models = []
+
+            # Create file ancestry links for job
+            from product.models import FileAncestryLink
+            FileAncestryLink.objects.create_file_ancestry_links(file_ids, None, job, None)
+
+        # Finish creating any remaining JobInputFile models
+        if input_file_models:
+            JobInputFile.objects.bulk_create(input_file_models)
+
+        # Calculate input file summary data for each job
+        for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
+            for job_id, file_ids in job_input_file_ids.items():
+                if input_file.id in file_ids:
+                    job_file_sizes[job_id] += input_file.file_size  # This is in bytes
+
+        # Update each job with its input file summary data
+        for job_id, total_file_size in job_file_sizes.items():
+            # Calculate total input file size in MiB rounded up to the nearest whole MiB
+            input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
+            input_file_size_mb = max(input_file_size_mb, MIN_DISK)
+            self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
+                                          last_modified=when)
 
     def supersede_jobs(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.

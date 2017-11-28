@@ -93,7 +93,7 @@ class TestJobManager(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         job_type = job_test_utils.create_job_type(interface=interface)
-        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING', input_file_size=None)
         data = {
             'version': '1.0',
             'input_data': [{
