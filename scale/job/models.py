@@ -1207,14 +1207,14 @@ class JobExecutionManager(models.Manager):
     def get_unfinished_job_exes(self):
         """Returns the job executions for the jobs that are unfinished. Unfinished jobs are jobs where the latest
         execution has been scheduled, but the job is still in QUEUED or RUNNING status. The returned job executions will
-        not have any of their JSON fields populated.
+        not have any of their JSON fields populated. The returned list is a queryset iterator, so only access it once.
 
         :returns: The job execution models for the unfinished jobs
         :rtype: list
         """
 
         qry = self.filter(job__status__in=['QUEUED', 'RUNNING'], exe_num=F('job__num_exes'))
-        qry = qry.defer('resources', 'configuration')
+        qry = qry.defer('resources', 'configuration').iterator()
         return qry
 
 
