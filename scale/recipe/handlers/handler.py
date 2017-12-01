@@ -1,6 +1,13 @@
 """Defines the class for handling recipes"""
 from __future__ import unicode_literals
 
+import logging
+
+from job.configuration.data.exceptions import InvalidData
+
+
+logger = logging.getLogger(__name__)
+
 
 class RecipeHandler(object):
     """This class handles the logic for a recipe"""
@@ -13,7 +20,7 @@ class RecipeHandler(object):
         :param recipe: The recipe model with related recipe_type_rev model
         :type recipe: :class:`recipe.models.Recipe`
         :param recipe_jobs: The list of recipe_job models with related job and job_type_rev models
-        :type recipe_jobs: [:class:`recipe.models.RecipeJob`]
+        :type recipe_jobs: list
         """
 
         self.recipe = recipe
@@ -75,6 +82,7 @@ class RecipeHandler(object):
             job_ids |= self.get_dependent_job_ids(child_id)  # Set union with the children of the child node
         return job_ids
 
+    # TODO: remove this after no longer used, should be after entire REST API is migrated to messaging backend
     def get_existing_jobs_to_queue(self):
         """Returns all of the existing recipe jobs that are ready to be queued
 
@@ -103,6 +111,62 @@ class RecipeHandler(object):
 
             job_data = node.create_job_data(job.get_job_interface(), self._data, parent_results)
             jobs_to_queue.append((job, job_data))
+
+        return jobs_to_queue
+
+    def get_jobs_ready_for_input(self):
+        """Returns the models for each job in the recipe that is ready for its input. The new inputs have been set on
+        each model, but not saved in the database.
+
+        :returns: The list of jobs with their input
+        :rtype: list
+        """
+
+        # Compile all of the job outputs in the recipe
+        job_outputs = {}  # {Job name: Job results}
+        for job_name in self._graph.get_topological_order():
+            job = self._jobs_by_name[job_name].job
+            if job.has_output():
+                job_outputs[job_name] = job.get_job_results()
+
+        # Find jobs without input yet that have parents ready to pass on outputs
+        jobs_with_new_inputs = []
+        for job_name in self._graph.get_topological_order():
+            job = self._jobs_by_name[job_name].job
+            node = self._graph.get_node(job_name)
+            if job.has_input():
+                continue  # Job already has its input
+            all_parents_ready = True
+            for parent_node in node.parents:
+                parent_job = self._jobs_by_name[parent_node.job_name].job
+                if not parent_job.is_ready_for_children():
+                    all_parents_ready = False
+                    break
+            if not all_parents_ready:
+                continue  # Job must have all parents ready in order to get its input
+
+            try:
+                job_input = node.create_job_data(job.get_job_interface(), self._data, job_outputs)
+                job.set_input(job_input)
+                jobs_with_new_inputs.append(job)
+            except InvalidData:
+                logger.exception('Invalid job input')
+
+        return jobs_with_new_inputs
+
+    def get_jobs_ready_for_first_queue(self):
+        """Returns the models for each job in the recipe that is ready to be queued for the first time
+
+        :returns: The list of jobs ready to be queued
+        :rtype: list
+        """
+
+        jobs_to_queue = []
+
+        for job_name in self._graph.get_topological_order():
+            job = self._jobs_by_name[job_name].job
+            if not job.has_been_queued() and job.can_be_queued():
+                jobs_to_queue.append(job)
 
         return jobs_to_queue
 

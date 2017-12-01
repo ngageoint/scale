@@ -865,6 +865,7 @@ class Job(models.Model):
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
+    # TODO: rename data to input and make default nullable, will cause breaking REST API changes
     data = django.contrib.postgres.fields.JSONField(default=dict)
     # TODO: rename results to output and make default nullable, will cause breaking REST API changes
     results = django.contrib.postgres.fields.JSONField(default=dict)
@@ -933,7 +934,7 @@ class Job(models.Model):
         """
 
         # QUEUED is allowed because the RUNNING update may come after the failure
-        return self.status != 'COMPLETED' and self.data and not self.is_superseded
+        return self.status != 'COMPLETED' and self.has_input() and not self.is_superseded
 
     def can_be_running(self):
         """Indicates whether this job can be set to RUNNING status
@@ -1007,12 +1008,61 @@ class Job(models.Model):
 
         return self.num_exes > 0
 
+    def has_input(self):
+        """Indicates whether this job has its input
+
+        :returns: True if the job has its input, false otherwise.
+        :rtype: bool
+        """
+
+        return True if self.data else False
+
+    def has_output(self):
+        """Indicates whether this job has its output
+
+        :returns: True if the job has its output, false otherwise.
+        :rtype: bool
+        """
+
+        return True if self.results else False
+
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
         Callers must save the model to persist the change.
         """
 
         self.max_tries = self.num_exes + self.job_type.max_tries
+
+    def is_ready_for_children(self):
+        """Indicates whether this job is ready for its children jobs to be queued
+
+        :returns: True if this job is ready for its children jobs, false otherwise
+        :rtype: bool
+        """
+
+        return self.status == 'COMPLETED' and self.has_outputs()
+
+    def set_input(self, job_input):
+        """Validates and sets the input for this job model. No database update is applied. This job should have its
+        related job_type and job_type_rev models populated.
+
+        :param job_input: JSON description defining the job input
+        :type job_input: :class:`job.configuration.data.job_data.JobData`
+        :raises job.configuration.data.exceptions.InvalidData: If the job input is invalid
+        """
+
+        interface = self.get_job_interface()
+        interface.validate_data(job_input)
+        self.data = job_input.get_dict()
+
+    def update_database_with_input(self, when):
+        """Updates the database with this job's input JSON
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
+        Job.objects.filter(id=self.id).update(data=self.data, last_modified=when)
 
     def _can_be_canceled(self):
         """Indicates whether this job can be canceled.

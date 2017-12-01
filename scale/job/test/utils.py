@@ -144,6 +144,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
         event = trigger_test_utils.create_trigger_event()
     if not last_status_change:
         last_status_change = timezone.now()
+    if num_exes == 0:
+        input_file_size=None
     if not data:
         if num_exes == 0:
             data = {}

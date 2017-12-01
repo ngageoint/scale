@@ -49,7 +49,7 @@ class ProcessJobInputs(CommandMessage):
         """Constructor
         """
 
-        super(ProcessJobInputs, self).__init__('process_job_inputs')
+        super(ProcessJobInputs, self).__init__('process_job_input')
 
         self._count = 0
         self._job_ids = []
