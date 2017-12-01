@@ -23,8 +23,8 @@ from job.exceptions import InvalidJobField
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
-                             JobWithExecutionSerializer, JobExecutionSerializer,
-                             JobExecutionDetailsSerializer)
+                             JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
+                             OldJobExecutionSerializer, OldJobExecutionDetailsSerializer)
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
@@ -779,19 +779,29 @@ class JobExecutionsView(ListAPIView):
     queryset = JobExecution.objects.all()
     serializer_class = JobExecutionSerializer
 
-    def list(self, request):
+    def list(self, request, job_id=None):
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.list_v5(request)
+        # TODO: remove this check when REST API v5 is removed
+        if not job_id:
+            if request.version == 'v5':
+                return self.list_v5(request)
+            else:
+                raise Http404
         else:
-            raise Http404
+            job_exes = JobExecution.objects.get_job_exes(job_id=job_id)
+
+            page = self.paginate_queryset(job_exes)
+            serializer = OldJobExecutionSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
     def list_v5(self, request):
@@ -819,7 +829,7 @@ class JobExecutionsView(ListAPIView):
                                                  job_type_categories, node_ids, order)
 
         page = self.paginate_queryset(job_exes)
-        serializer = self.get_serializer(page, many=True)
+        serializer = OldJobExecutionSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
 
@@ -828,21 +838,32 @@ class JobExecutionDetailsView(RetrieveAPIView):
     queryset = JobExecution.objects.all()
     serializer_class = JobExecutionDetailsSerializer
 
-    def retrieve(self, request, job_exe_id):
+    def retrieve(self, request, job_id, job_exe_id=None):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
         :param job_exe_id: the job execution id
-        :type job_exe_id: int
+        :type job_exe_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
-            return self.retrieve_v5(request, job_exe_id)
+        # TODO: remove this check when REST API v5 is removed
+        if not job_exe_id:
+            if request.version == 'v5':
+                job_exe_id = job_id
+                return self.retrieve_v5(request, job_exe_id)
+            else:
+                raise Http404
         else:
-            raise Http404
+            try:
+                job_exe = JobExecution.objects.get_details(job_id)
+            except JobExecution.DoesNotExist:
+                raise Http404
+
 
     # TODO: remove when REST API v5 is removed
     def retrieve_v5(self, request, job_exe_id):
@@ -851,7 +872,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param job_exe_id: the job execution id
-        :type job_exe_id: int
+        :type job_exe_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
@@ -860,7 +881,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         except JobExecution.DoesNotExist:
             raise Http404
 
-        serializer = self.get_serializer(job_exe)
+        serializer = OldJobExecutionDetailsSerializer(job_exe)
         return Response(serializer.data)
 
 
