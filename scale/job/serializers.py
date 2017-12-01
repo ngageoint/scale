@@ -271,9 +271,10 @@ class JobUpdateSerializer(JobSerializer):
     input_files = ScaleFileSerializer(many=True)
 
 
-# TODO: remove when REST API v5 is removed
-class JobExecutionSerializer(JobExecutionBaseSerializer):
+# TODO: remove this function when REST API v5 is removed
+class OldJobExecutionSerializer(JobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
+
     from error.serializers import ErrorBaseSerializer
     from node.serializers import NodeBaseSerializerV4
 
@@ -282,9 +283,32 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     error = ErrorBaseSerializer(source='jobexecutionend.error')
 
 
-# TODO: remove when REST API v5 is removed
-class JobExecutionDetailsSerializer(JobExecutionSerializer):
+class JobExecutionSerializer(JobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
+
+    from error.serializers import ErrorBaseSerializer
+    from node.serializers import NodeBaseSerializerV4
+
+    job = JobBaseSerializer()
+    node = NodeBaseSerializerV4()
+    error = ErrorBaseSerializer(source='jobexecutionend.error')
+
+    job_type = JobTypeSerializer()
+    exe_num = serializers.IntegerField()
+    cluster_id = serializers.CharField()
+    input_file_size = serializers.FloatField()
+
+    cpus_scheduled = serializers.FloatField()
+    mem_scheduled = serializers.FloatField()
+    disk_out_scheduled = serializers.FloatField()
+    disk_in_scheduled = serializers.FloatField(source='input_file_size')
+    disk_total_scheduled = serializers.FloatField()
+
+
+# TODO: remove this function when REST API v5 is removed
+class OldJobExecutionDetailsSerializer(OldJobExecutionSerializer):
+    """Converts job execution model fields to REST output"""
+
     from error.serializers import ErrorSerializer
     from node.serializers import NodeSerializerV4
 
@@ -292,15 +316,33 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     node = NodeSerializerV4()
     error = ErrorSerializer(source='jobexecutionend.error')
 
-    environment = serializers.JSONField(default=dict)
     cpus_scheduled = serializers.FloatField()
     mem_scheduled = serializers.FloatField()
     disk_in_scheduled = serializers.FloatField(source='input_file_size')
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
+    environment = serializers.JSONField(default=dict)
     results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
+    results_manifest = serializers.JSONField(default=dict)
 
+
+class JobExecutionDetailsSerializer(JobExecutionSerializer):
+    """Converts job execution model fields to REST output"""
+
+    from error.serializers import ErrorSerializer
+    from node.serializers import NodeSerializerV4
+
+    job = JobSerializer()
+    node = NodeSerializerV4()
+    error = ErrorSerializer(source='jobexecutionend.error')
+
+    task_results = serializers.JSONField(default=dict)
+    resources = serializers.JSONField(default=dict)
+    configuration = serializers.JSONField(default=dict)
+
+    environment = serializers.JSONField(default=dict)
+    results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
     results_manifest = serializers.JSONField(default=dict)
 
 
