@@ -800,7 +800,7 @@ class JobExecutionsView(ListAPIView):
             job_exes = JobExecution.objects.get_job_exes(job_id=job_id)
 
             page = self.paginate_queryset(job_exes)
-            serializer = OldJobExecutionSerializer(page, many=True)
+            serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
@@ -838,21 +838,21 @@ class JobExecutionDetailsView(RetrieveAPIView):
     queryset = JobExecution.objects.all()
     serializer_class = JobExecutionDetailsSerializer
 
-    def retrieve(self, request, job_id, job_exe_id=None):
+    def retrieve(self, request, job_id, exe_num=None):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
         :param job_id: The ID for the job.
         :type job_id: int encoded as a str
-        :param job_exe_id: the job execution id
-        :type job_exe_id: int encoded as a str
+        :param exe_num: the execution number
+        :type exe_num: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
 
         # TODO: remove this check when REST API v5 is removed
-        if not job_exe_id:
+        if not exe_num:
             if request.version == 'v5':
                 job_exe_id = job_id
                 return self.retrieve_v5(request, job_exe_id)
@@ -860,10 +860,12 @@ class JobExecutionDetailsView(RetrieveAPIView):
                 raise Http404
         else:
             try:
-                job_exe = JobExecution.objects.get_details(job_id)
+                job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
             except JobExecution.DoesNotExist:
                 raise Http404
 
+            serializer = self.get_serializer(job_exe)
+            return Response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
     def retrieve_v5(self, request, job_exe_id):
