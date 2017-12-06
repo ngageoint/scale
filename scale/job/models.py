@@ -1052,48 +1052,47 @@ class JobExecutionManager(models.Manager):
         return job_exes
 
     def get_job_exes(self, job_id):
-        """Returns a list of job executions for the given job and filters.
+        """Returns a list of job executions for the given job.
 
-        :param job_type_ids: Query job executions of the type associated with the identifier.
-        :type job_type_ids: int
+        :param job_id: Query job executions associated with the job identifier.
+        :type job_id: int
         :returns: The list of job executions that match the job identifier.
         :rtype: [:class:`job.models.JobExecution`]
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend__error',
-                                                             'jobexecutionoutput')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend')
         job_exes = job_exes.defer('stdout', 'stderr')
-        
+
         # Apply job filtering
         job_exes = job_exes.filter(job__id=job_id)
 
         # Apply sorting
         job_exes = job_exes.order_by('exe_num')
+
         return job_exes
 
     def get_job_exe_details(self, job_id, exe_num):
-        """Returns the details of a job execution for the given job identifier and execution number.
+        """Returns additional details about a job execution related to the given job execution and execution number.
 
-        :param job_type_ids: Query job executions of the type associated with the identifier.
-        :type job_type_ids: int
-        :param exe_num: The execution number
+        :param job_id: Query job executions associated with the job identifier.
+        :type job_id: int
+        :param exe_num: Query job executions associated with the execution number.
         :type exe_num: int
-        :returns: The job execution model with associated models.
+        :returns: Details about the job execution that match the job execution identifier.
         :rtype: [:class:`job.models.JobExecution`]
         """
 
         # Fetch a list of job executions
         job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
-                                                             'jobexecutionoutput')
+                                                            'jobexecutionoutput')
         job_exe = job_exe.defer('stdout', 'stderr')
-        
-        # Apply job filtering
+
+        # Apply job and execution filtering
         job_exe = job_exe.filter(job__id=job_id, exe_num=exe_num)
 
         return job_exe
 
-    
     def get_job_exe_with_job_and_job_type(self, job_id, exe_num):
         """Gets a job execution with its related job and job_type models populated using only one database query
 
