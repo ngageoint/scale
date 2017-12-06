@@ -1072,6 +1072,27 @@ class JobExecutionManager(models.Manager):
         job_exes = job_exes.order_by('exe_num')
         return job_exes
 
+    def get_job_exe_details(self, job_id, exe_num):
+        """Returns the details of a job execution for the given job identifier and execution number.
+
+        :param job_type_ids: Query job executions of the type associated with the identifier.
+        :type job_type_ids: int
+        :param exe_num: The execution number
+        :type exe_num: int
+        :returns: The job execution model with associated models.
+        :rtype: [:class:`job.models.JobExecution`]
+        """
+
+        # Fetch a list of job executions
+        job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
+                                                             'jobexecutionoutput')
+        job_exe = job_exe.defer('stdout', 'stderr')
+        
+        # Apply job filtering
+        job_exe = job_exe.filter(job__id=job_id, exe_num=exe_num)
+
+        return job_exe
+
     
     def get_job_exe_with_job_and_job_type(self, job_id, exe_num):
         """Gets a job execution with its related job and job_type models populated using only one database query
