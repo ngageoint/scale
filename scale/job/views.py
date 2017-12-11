@@ -859,12 +859,12 @@ class JobExecutionDetailsView(RetrieveAPIView):
             else:
                 raise Http404
         else:
-            try:
-                job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
-            except JobExecution.DoesNotExist:
+            job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
+            
+            if not job_exe.exists():
                 raise Http404
 
-            serializer = self.get_serializer(job_exe)
+            serializer = self.get_serializer(job_exe, many=True)
             return Response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
