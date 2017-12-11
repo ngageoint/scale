@@ -1073,7 +1073,7 @@ class JobExecutionManager(models.Manager):
         return job_exes
 
     def get_job_exe_details(self, job_id, exe_num):
-        """Returns additional details about a job execution related to the given job execution and execution number.
+        """Returns additional details about a job execution related to the given job identifier and execution number.
 
         :param job_id: Query job executions associated with the job identifier.
         :type job_id: int
