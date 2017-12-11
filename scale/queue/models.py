@@ -356,8 +356,6 @@ class QueueManager(models.Manager):
         if job.num_exes != exe_num:
             return
 
-        Job.objects.complete_job(job, when)
-
         # Publish this job's products
         # TODO: we should eventually refactor how product publishing is handled
         job_exe = JobExecution.objects.get(job_id=job_id, exe_num=exe_num)

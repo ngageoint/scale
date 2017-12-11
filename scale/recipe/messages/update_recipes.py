@@ -129,6 +129,9 @@ class UpdateRecipes(CommandMessage):
                     job.update_database_with_input(when)
                 for job in handler.get_jobs_ready_for_first_queue():
                     job_ids_ready_for_first_queue.append(job.id)
+                # TODO: handle this in a new message where recipe models lock themselves and then update
+                if handler.is_completed():
+                    Recipe.objects.complete_recipe(handler.recipe.id, when)
 
         # Create new messages
         self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))
@@ -137,7 +140,7 @@ class UpdateRecipes(CommandMessage):
         self.new_messages.extend(create_process_job_inputs_messages(job_ids_ready_for_first_queue))
 
         logger.info('Found %d job(s) that should transition to BLOCKED', len(blocked_job_ids))
-        logger.info('Found %d job(s) that should transition to PENDING', len(blocked_job_ids))
+        logger.info('Found %d job(s) that should transition to PENDING', len(pending_job_ids))
         logger.info('Found %d job(s) that received their input', num_jobs_with_input)
         logger.info('Found %d job(s) that are ready to be queued', len(job_ids_ready_for_first_queue))
 

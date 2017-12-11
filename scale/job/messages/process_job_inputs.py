@@ -101,7 +101,7 @@ class ProcessJobInputs(CommandMessage):
             job_models = Job.objects.get_locked_jobs(self._job_ids)
 
             # Process job inputs
-            Job.objects.process_job_inputs(job_models)
+            Job.objects.process_job_input(job_models)
 
         # Create messages to queue the jobs
         jobs_to_queue = []

@@ -9,7 +9,7 @@ import math
 import django.contrib.postgres.fields
 import django.utils.html
 from django.conf import settings
-from django.db import models, transaction
+from django.db import connection, models, transaction
 from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
@@ -54,39 +54,6 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
-
-    def complete_job(self, job, when):
-        """Updates the given job to the COMPLETED status. The caller must have obtained the job model's lock. All
-        database updates occur in an atomic transaction.
-
-        :param job: The job model
-        :type job: :class:`job.models.Job`
-        :param when: The completed time
-        :type when: :class:`datetime.datetime`
-        """
-
-        job.status = 'COMPLETED'
-        job.ended = when
-        job.last_status_change = when
-
-        # Query output from completed job execution
-        try:
-            job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.num_exes)
-            job.results = job_exe_output.get_output().get_dict()
-        except JobExecutionOutput.DoesNotExist:
-            # This will work for now (system jobs do not have output), but will need to be changed once the saving of
-            # output becomes asynchronous
-            job.results = JobResults().get_dict()
-
-        job.save()
-
-        # Update completed job count if part of a batch
-        from batch.models import Batch, BatchJob
-        try:
-            batch_job = BatchJob.objects.get(job_id=job.id)
-            Batch.objects.count_completed_job(batch_job.batch.id)
-        except BatchJob.DoesNotExist:
-            pass
 
     def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
@@ -433,7 +400,7 @@ class JobManager(models.Manager):
         self.filter(id=job.id).update(data=data.get_dict())
 
         # Process job inputs
-        self.process_job_inputs([job])
+        self.process_job_input([job])
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -467,7 +434,7 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    def process_job_inputs(self, jobs):
+    def process_job_input(self, jobs):
         """Processes the inputs for the given jobs. The caller must have obtained a model lock on the given job models.
 
         :param jobs: The locked job models
@@ -510,10 +477,11 @@ class JobManager(models.Manager):
             JobInputFile.objects.bulk_create(input_file_models)
 
         # Calculate input file summary data for each job
-        for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
-            for job_id, file_ids in job_input_file_ids.items():
-                if input_file.id in file_ids:
-                    job_file_sizes[job_id] += input_file.file_size  # This is in bytes
+        if all_input_file_ids:
+            for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
+                for job_id, file_ids in job_input_file_ids.items():
+                    if input_file.id in file_ids:
+                        job_file_sizes[job_id] += input_file.file_size  # This is in bytes
 
         # Update each job with its input file summary data
         for job_id, total_file_size in job_file_sizes.items():
@@ -522,6 +490,30 @@ class JobManager(models.Manager):
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
             self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
                                           last_modified=when)
+
+    # TODO: create unit tests for completed jobs message
+    def process_job_output(self, job_ids, when):
+        """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
+        in an atomic transaction. All jobs that are both COMPLETED and have their execution output stored, will have the
+        output saved in the job model. The list of job IDs for models that are both COMPLETED and have output will be
+        returned.
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that are both COMPLETED and have output
+        :rtype: list
+        """
+
+        if job_ids:
+            qry = 'UPDATE job j SET results = jeo.output, last_modified = %s FROM job_exe_output jeo'
+            qry += ' WHERE j.id = jeo.job_id AND j.num_exes = jeo.exe_num AND j.id IN %s AND j.status=\'COMPLETED\''
+            with connection.cursor() as cursor:
+                cursor.execute(qry, [when, tuple(job_ids)])
+
+        qry = self.filter(id__in=job_ids, status='COMPLETED', jobexecutionoutput__exe_num=F('num_exes')).only('id')
+        return [job.id for job in qry]
 
     def supersede_jobs(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
@@ -606,6 +598,28 @@ class JobManager(models.Manager):
             # Update job models in database
             self.filter(id__in=jobs_to_update).update(status='CANCELED', error=None, node=None, last_status_change=when,
                                                       last_modified=timezone.now())
+
+    def update_jobs_to_completed(self, jobs, when):
+        """Updates the given job models to the COMPLETED status and returns the IDs of the models that were successfully
+        set to COMPLETED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being COMPLETED will be ignored.
+
+        :param jobs: The job models to set to COMPLETED
+        :type jobs: list
+        :param when: The ended time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to COMPLETED
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_completed():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='COMPLETED', ended=when, last_status_change=when,
+                                           last_modified=timezone.now())
+        return job_ids
 
     def update_jobs_to_failed(self, jobs, error_id, when):
         """Updates the given job models to the FAILED status and returns the IDs of the models that were successfully
@@ -906,6 +920,16 @@ class Job(models.Model):
         """
 
         return self.status != 'BLOCKED' and not self.has_been_queued()
+
+    def can_be_completed(self):
+        """Indicates whether this job can be set to COMPLETED status
+
+        :returns: True if the job can be set to COMPLETED status, false otherwise
+        :rtype: bool
+        """
+
+        # QUEUED is allowed because the RUNNING update may come after the completion
+        return self.status in ['QUEUED', 'RUNNING']
 
     def can_be_failed(self):
         """Indicates whether this job can be set to FAILED status
