@@ -1051,7 +1051,7 @@ class JobExecutionManager(models.Manager):
             job_exes = job_exes.order_by('created')
         return job_exes
 
-    def get_job_exes(self, job_id):
+    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None):
         """Returns a list of job executions for the given job.
 
         :param job_id: Query job executions associated with the job identifier.
@@ -1066,6 +1066,27 @@ class JobExecutionManager(models.Manager):
 
         # Apply job filtering
         job_exes = job_exes.filter(job__id=job_id)
+        
+        # Apply time range filtering
+        if started:
+            job_exes = job_exes.filter(started__gte=started)
+        if ended:
+            job_exes = job_exes.filter(jobexecutionend__ended__lte=ended)
+
+        # Apply status and node filtering
+        if statuses:
+            if 'RUNNING' in statuses:
+                # This is a special case where we have to use exclusion so that running executions (no job_exe_end) are
+                # included
+                exclude_statues = []
+                for status in ['COMPLETED', 'FAILED', 'CANCELED']:
+                    if status not in statuses:
+                        exclude_statues.append(status)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
+            else:
+                job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
+        if node_ids:
+            job_exes = job_exes.filter(node_id__in=node_ids)
 
         # Apply sorting
         job_exes = job_exes.order_by('exe_num')

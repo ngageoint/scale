@@ -717,7 +717,7 @@ class JobUpdatesView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-
+# TODO: remove when REST API v5 is removed
 class JobsWithExecutionView(ListAPIView):
     """This view is the endpoint for viewing jobs and their associated latest execution"""
     queryset = Job.objects.all()
@@ -737,7 +737,6 @@ class JobsWithExecutionView(ListAPIView):
         else:
             raise Http404
 
-    # TODO: remove when REST API v5 is removed
     def list_v5(self, request):
         """Gets jobs and their associated latest execution
 
@@ -797,7 +796,15 @@ class JobExecutionsView(ListAPIView):
             else:
                 raise Http404
         else:
-            job_exes = JobExecution.objects.get_job_exes(job_id=job_id)
+            started = rest_util.parse_timestamp(request, 'started', required=False)
+            ended = rest_util.parse_timestamp(request, 'ended', required=False)
+            rest_util.check_time_range(started, ended)
+
+            statuses = rest_util.parse_string_list(request, 'status', required=False)
+            node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
+
+            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
+                                                         statuses=statuses, node_ids=node_ids)
 
             page = self.paginate_queryset(job_exes)
             serializer = self.get_serializer(page, many=True)
@@ -860,7 +867,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
                 raise Http404
         else:
             job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
-            
+
             if not job_exe.exists():
                 raise Http404
 
