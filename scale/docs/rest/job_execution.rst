@@ -13,6 +13,11 @@ These services provide access to information about "all", "currently running" an
 +=========================================================================================================================+
 | Returns a list of all job executions.                                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v5 version of the job execution list API, which is now deprecated.      |
+|                The new v6 version of this API is queried differently but returns much of the same information.          |
+|                See :ref:`Job Executions List <rest_job_executions_list>` more details on the new endpoint.              |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /job-executions/                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
