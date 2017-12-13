@@ -1056,6 +1056,14 @@ class JobExecutionManager(models.Manager):
 
         :param job_id: Query job executions associated with the job identifier.
         :type job_id: int
+        :param started: Query job executions updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query job executions updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query job executions with the a specific status.
+        :type statuses: [string]
+        :param node_ids: Query job executions that ran on a node with the identifier.
+        :type node_ids: [int]
         :returns: The list of job executions that match the job identifier.
         :rtype: [:class:`job.models.JobExecution`]
         """
