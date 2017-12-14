@@ -8,15 +8,16 @@ These services provide access to information about "all", "currently running" an
 
 .. _rest_job_execution_list:
 
+.. TODO: remove this rST table when REST API v5 is removed
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution List**                                                                                                  |
 +=========================================================================================================================+
 | Returns a list of all job executions.                                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **DEPRECATED**                                                                                                          |
-|                This table describes the current v5 version of the job execution list API, which is now deprecated.      |
-|                The new v6 version of this API is queried differently but returns much of the same information.          |
-|                See :ref:`Job Executions List <rest_job_executions_list>` more details on the new endpoint.              |
+|                This table describes the current **v5** version of the job execution list API, which is now deprecated.  |
+|                The new v6 version of this API is queried differently, but returns much of the same information.         |
+|                See :ref:`Job Execution List <rest_job_execution_list_v6>` for more details on the new endpoint.         |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /job-executions/                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -191,10 +192,16 @@ These services provide access to information about "all", "currently running" an
 
 .. _rest_job_execution_details:
 
+.. TODO: remove this rST table when REST API v5 is removed
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution Details**                                                                                                 |
 +===========================================================================================================================+
 | Returns a specific job execution and all its related model information including job, node, environment, and results.     |
++---------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                            |
+|                This table describes the current **v5** version of the job execution details API, which is now deprecated. |
+|                The new v6 version of this API is queried differently, but returns much of the same information.           |
+|                See :ref:`Job Executions Details <rest_job_execution_details_v6>` more details on the new endpoint.        |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **GET** /job-executions/{id}/                                                                                             |
 |         Where {id} is the unique identifier of an existing model.                                                         |
