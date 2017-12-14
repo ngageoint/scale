@@ -806,9 +806,12 @@ class JobExecutionsView(ListAPIView):
             job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
                                                          statuses=statuses, node_ids=node_ids)
 
-            page = self.paginate_queryset(job_exes)
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            if job_exes.exists():
+                page = self.paginate_queryset(job_exes)
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            else:
+                raise Http404
 
     # TODO: remove when REST API v5 is removed
     def list_v5(self, request):
@@ -868,11 +871,11 @@ class JobExecutionDetailsView(RetrieveAPIView):
         else:
             job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
 
-            if not job_exe.exists():
+            if job_exe.exists():
+                serializer = self.get_serializer(job_exe, many=True)
+                return Response(serializer.data)
+            else:
                 raise Http404
-
-            serializer = self.get_serializer(job_exe, many=True)
-            return Response(serializer.data)
 
     # TODO: remove when REST API v5 is removed
     def retrieve_v5(self, request, job_exe_id):
