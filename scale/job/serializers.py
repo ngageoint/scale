@@ -168,7 +168,7 @@ class JobRevisionSerializer(JobSerializer):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializer()
 
-
+# TODO: remove this function when REST API v5 is removed 
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
@@ -289,20 +289,14 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     from error.serializers import ErrorBaseSerializer
     from node.serializers import NodeBaseSerializerV4
 
-    job = JobBaseSerializer()
+    job = ModelIdSerializer()
     node = NodeBaseSerializerV4()
     error = ErrorBaseSerializer(source='jobexecutionend.error')
+    job_type = JobTypeBaseSerializer()
 
-    job_type = JobTypeSerializer()
     exe_num = serializers.IntegerField()
     cluster_id = serializers.CharField()
     input_file_size = serializers.FloatField()
-
-    cpus_scheduled = serializers.FloatField()
-    mem_scheduled = serializers.FloatField()
-    disk_out_scheduled = serializers.FloatField()
-    disk_in_scheduled = serializers.FloatField(source='input_file_size')
-    disk_total_scheduled = serializers.FloatField()
 
 
 # TODO: remove this function when REST API v5 is removed
@@ -315,16 +309,6 @@ class OldJobExecutionDetailsSerializer(OldJobExecutionSerializer):
     job = JobSerializer()
     node = NodeSerializerV4()
     error = ErrorSerializer(source='jobexecutionend.error')
-
-    cpus_scheduled = serializers.FloatField()
-    mem_scheduled = serializers.FloatField()
-    disk_in_scheduled = serializers.FloatField(source='input_file_size')
-    disk_out_scheduled = serializers.FloatField()
-    disk_total_scheduled = serializers.FloatField()
-
-    environment = serializers.JSONField(default=dict)
-    results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
-    results_manifest = serializers.JSONField(default=dict)
 
 
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
