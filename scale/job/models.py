@@ -1074,7 +1074,7 @@ class JobExecutionManager(models.Manager):
 
         # Apply job filtering
         job_exes = job_exes.filter(job__id=job_id)
-        
+
         # Apply time range filtering
         if started:
             job_exes = job_exes.filter(started__gte=started)
@@ -1118,7 +1118,7 @@ class JobExecutionManager(models.Manager):
         job_exe = job_exe.defer('stdout', 'stderr')
 
         # Apply job and execution filtering
-        job_exe = job_exe.filter(job__id=job_id, exe_num=exe_num)
+        job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)
 
         return job_exe
 
