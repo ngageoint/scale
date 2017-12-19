@@ -1186,7 +1186,8 @@ These services provide access to information about "all", "currently running" an
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Executions List**                                                                                                   |
 +===========================================================================================================================+
-| Returns a list of job executions associated with a given Job ID.                                                          |
+| Returns a list of job executions associated with a given Job ID.  Returned job executions are ordered by exe_num          |
+| descending (most recent first)                                                                                            |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **NOTE**                                                                                                                  |
 |                This API endpoint is available starting with API **v6**.  It replaces a very similar API endpoint which    |
@@ -1197,6 +1198,11 @@ These services provide access to information about "all", "currently running" an
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                      |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
+| page                 | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size            | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                      |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
 | started              | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
 |                      |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                      |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
@@ -1206,7 +1212,7 @@ These services provide access to information about "all", "currently running" an
 |                      |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
 | status               | String            | Optional | Return only executions with a status matching this string.          |
-|                      |                   |          | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].            |
+|                      |                   |          | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                    |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
 | node_id              | Integer           | Optional | Return only executions that ran on a given node.                    |
@@ -1234,29 +1240,11 @@ These services provide access to information about "all", "currently running" an
 | .status              | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .command_arguments   | String            | The argument string to execute on the command line for this job execution.     | 
+| .command_arguments   | String            | The argument string to execute on the command line for this job execution.     |
 |                      |                   | This field is populated when the job execution is scheduled to run on a node   |
 |                      |                   | and is updated when any needed pre-job steps are run.                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .timeout             | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .pre_started         | ISO-8601 Datetime | When the pre-job steps were started on a node.                                 |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .pre_completed       | ISO-8601 Datetime | When the pre-job steps were completed on a node.                               |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .pre_exit_code       | Integer           | The exit code of the pre-steps job process for this job execution.             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_started         | ISO-8601 Datetime | When the actual job started running on a node.                                 |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_completed       | ISO-8601 Datetime | When the actual job completed running on a node.                               |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_exit_code       | Integer           | The exit code of the main job process for this job execution.                  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .post_started        | ISO-8601 Datetime | When the post-job steps were started on a node.                                |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .post_completed      | ISO-8601 Datetime | When the post-job steps were completed on a node.                              |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .post_exit_code      | Integer           | The exit code of the post-steps job process for this job execution.            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .created             | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1281,20 +1269,10 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | cluster_id           | String            | The Scale cluster identifier.                                                  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| cpus_scheduled       | Decimal           | The number of CPUs scheduled for the execution.                                |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| mem_scheduled        | Decimal           | The amount of RAM in MiB scheduled for the execution.                          |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_in_scheduled    | Decimal           | The amount of disk space in MiB scheduled for input files for the execution.   |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_out_scheduled   | Decimal           | The amount of disk space in MiB scheduled for output files for the execution.  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_total_scheduled | Decimal           | The total amount of disk space in MiB scheduled for the execution.             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                |
 |                                                                                                                           |
 |    {                                                                                                                      |
-|        "count": 57,                                                                                                       | 
+|        "count": 57,                                                                                                       |
 |        "next": null,                                                                                                      |
 |        "previous": null,                                                                                                  |
 |        "results": [                                                                                                       |
@@ -1303,65 +1281,35 @@ These services provide access to information about "all", "currently running" an
 |                "status": "COMPLETED",                                                                                     |
 |                "command_arguments": "",                                                                                   |
 |                "timeout": 1800,                                                                                           |
-|                "pre_started": null,                                                                                       |
-|                "pre_completed": null,                                                                                     |
-|                "pre_exit_code": null,                                                                                     |
-|                "job_started": "2015-08-28T17:57:44.703Z",                                                                 |
-|                "job_completed": "2015-08-28T17:57:45.906Z",                                                               |
-|                "job_exit_code": null,                                                                                     |
-|                "post_started": null,                                                                                      |
-|                "post_completed": null,                                                                                    |
-|                "post_exit_code": null,                                                                                    |
 |                "created": "2015-08-28T17:57:41.033Z",                                                                     |
 |                "queued": "2015-08-28T17:57:41.010Z",                                                                      |
 |                "started": "2015-08-28T17:57:44.494Z",                                                                     |
 |                "ended": "2015-08-28T17:57:45.906Z",                                                                       |
 |                "last_modified": "2015-08-28T17:57:45.992Z",                                                               |
 |                "job": {                                                                                                   |
-|                    "id": 3,                                                                                               |
-|                    "job_type": {                                                                                          |
-|                        "id": 1,                                                                                           |
-|                        "name": "scale-ingest",                                                                            |
-|                        "version": "1.0",                                                                                  |
-|                        "title": "Scale Ingest",                                                                           |
-|                        "description": "Ingests a source file into a workspace",                                           |
-|                        "category": "system",                                                                              |
-|                        "author_name": null,                                                                               |
-|                        "author_url": null,                                                                                |
-|                        "is_system": true,                                                                                 |
-|                        "is_long_running": false,                                                                          |
-|                        "is_active": true,                                                                                 |
-|                        "is_operational": true,                                                                            |
-|                        "is_paused": false,                                                                                |
-|                        "icon_code": "f013"                                                                                |
-|                    },                                                                                                     |
-|                    "job_type_rev": {                                                                                      |
-|                        "id": 2                                                                                            |
-|                    },                                                                                                     |
-|                    "event": {                                                                                             |
-|                        "id": 3                                                                                            |
-|                    },                                                                                                     |
-|                    "error": null,                                                                                         |
-|                    "status": "COMPLETED",                                                                                 |
-|                    "priority": 10,                                                                                        |
-|                    "num_exes": 1                                                                                          |
+|                    "id": 3                                                                                                |
+|                },                                                                                                         |
+|                "job_type": {                                                                                              |
+|                    "id": 1,                                                                                               |
+|                    "name": "scale-ingest",                                                                                |
+|                    "version": "1.0",                                                                                      |
+|                    "title": "Scale Ingest",                                                                               |
+|                    "description": "Ingests a source file into a workspace",                                               |
+|                    "category": "system",                                                                                  |
+|                    "author_name": null,                                                                                   |
+|                    "author_url": null,                                                                                    |
+|                    "is_system": true,                                                                                     |
+|                    "is_long_running": false,                                                                              |
+|                    "is_active": true,                                                                                     |
+|                    "is_operational": true,                                                                                |
+|                    "is_paused": false,                                                                                    |
+|                    "icon_code": "f013"                                                                                    |
 |                },                                                                                                         |
 |                "node": {                                                                                                  |
 |                    "id": 1,                                                                                               |
-|                    "hostname": "machine.com",                                                                             |
-|                    "port": 5051,                                                                                          |
-|                    "slave_id": "20150821-123454-1683014024-5050-8216-S2"                                                  |
-|                },                                                                                                         |
-|                "error": null,                                                                                             |
-|                "exe_num": 3,                                                                                              |
-|                "cluster_id": "scale_job_1234_267x0",                                                                      |
-|                "cpus_scheduled": 1.0,                                                                                     |
-|                "mem_scheduled": 256,                                                                                      |
-|                "disk_out_scheduled": 10.0,                                                                                |
-|                "disk_in_scheduled": 10.0                                                                                  |
-|            },                                                                                                             |
-|            ...                                                                                                            |
-|        ]                                                                                                                  |
+|                    "hostname": "machine.com"                                                                              |
+|                }                                                                                                          |
+|          }                                                                                                                |
 |    }                                                                                                                      |
 +---------------------------------------------------------------------------------------------------------------------------+
 
@@ -1393,31 +1341,13 @@ These services provide access to information about "all", "currently running" an
 |                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | status               | String            | The status of the job execution.                                               |
-|                      |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
+|                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| command_arguments    | String            | The argument string to execute on the command line for this job execution.     | 
+| command_arguments    | String            | The argument string to execute on the command line for this job execution.     |
 |                      |                   | This field is populated when the job execution is scheduled to run on a node   |
 |                      |                   | and is updated when any needed pre-job steps are run.                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | timeout              | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| pre_started          | ISO-8601 Datetime | When the pre-job steps were started on a node.                                 |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| pre_completed        | ISO-8601 Datetime | When the pre-job steps were completed on a node.                               |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| pre_exit_code        | Integer           | The exit code of the pre-steps job process for this job execution.             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| job_started          | ISO-8601 Datetime | When the actual job started running on a node.                                 |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| job_completed        | ISO-8601 Datetime | When the actual job completed running on a node.                               |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| job_exit_code        | Integer           | The exit code of the main job process for this job execution.                  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| post_started         | ISO-8601 Datetime | When the post-job steps were started on a node.                                |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| post_completed       | ISO-8601 Datetime | When the post-job steps were completed on a node.                              |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| post_exit_code       | Integer           | The exit code of the post-steps job process for this job execution.            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | created              | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1440,16 +1370,6 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | environment          | JSON Object       | An interface description for the environment the job execution executed in.    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| cpus_scheduled       | Decimal           | The number of CPUs scheduled for the execution.                                |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| mem_scheduled        | Decimal           | The amount of RAM in MiB scheduled for the execution.                          |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_in_scheduled    | Decimal           | The amount of disk space in MiB scheduled for input files for the execution.   |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_out_scheduled   | Decimal           | The amount of disk space in MiB scheduled for output files for the execution.  |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_total_scheduled | Decimal           | The total amount of disk space in MiB scheduled for the execution.             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | results              | JSON Object       | An interface description for all the possible job results meta-data.           |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | results_manifest     | JSON Object       | An interface description for all the actual job results meta-data.             |
@@ -1464,15 +1384,6 @@ These services provide access to information about "all", "currently running" an
 |      "status": "COMPLETED",                                                                                               |
 |      "command_arguments": "",                                                                                             |
 |      "timeout": 1800,                                                                                                     |
-|      "pre_started": null,                                                                                                 |
-|      "pre_completed": null,                                                                                               |
-|      "pre_exit_code": null,                                                                                               |
-|      "job_started": "2015-08-28T17:57:44.703Z",                                                                           |
-|      "job_completed": "2015-08-28T17:57:45.906Z",                                                                         |
-|      "job_exit_code": null,                                                                                               |
-|      "post_started": null,                                                                                                |
-|      "post_completed": null,                                                                                              |
-|      "post_exit_code": null,                                                                                              |
 |      "created": "2015-08-28T17:57:41.033Z",                                                                               |
 |      "queued": "2015-08-28T17:57:41.010Z",                                                                                |
 |      "started": "2015-08-28T17:57:44.494Z",                                                                               |
@@ -1480,51 +1391,31 @@ These services provide access to information about "all", "currently running" an
 |      "last_modified": "2015-08-28T17:57:45.992Z",                                                                         |
 |      "job": {                                                                                                             |
 |          "id": 3,                                                                                                         |
-|          "job_type": {                                                                                                    |
-|              "id": 1,                                                                                                     |
-|              "name": "scale-ingest",                                                                                      |
-|              "version": "1.0",                                                                                            |
-|              "title": "Scale Ingest",                                                                                     |
-|              "description": "Ingests a source file into a workspace",                                                     |
-|              "category": "system",                                                                                        |
-|              "author_name": null,                                                                                         |
-|              "author_url": null,                                                                                          |
-|              "is_system": true,                                                                                           |
-|              "is_long_running": false,                                                                                    |
-|              "is_active": true,                                                                                           |
-|              "is_operational": true,                                                                                      |
-|              "is_paused": false,                                                                                          |
-|              "icon_code": "f013"                                                                                          |
-|          },                                                                                                               |
-|          "job_type_rev": {                                                                                                |
-|              "id": 2                                                                                                      |
-|          },                                                                                                               |
-|          "event": {                                                                                                       |
-|              "id": 3                                                                                                      |
-|          },                                                                                                               |
-|          "error": null,                                                                                                   |
-|          "status": "COMPLETED",                                                                                           |
-|          "priority": 10,                                                                                                  |
-|          "num_exes": 1                                                                                                    |
+|      },                                                                                                                   |
+|      "job_type": {                                                                                                        |
+|          "id": 1,                                                                                                         |
+|          "name": "scale-ingest",                                                                                          |
+|          "version": "1.0",                                                                                                |
+|          "title": "Scale Ingest",                                                                                         |
+|          "description": "Ingests a source file into a workspace",                                                         |
+|          "category": "system",                                                                                            |
+|          "author_name": null,                                                                                             |
+|          "author_url": null,                                                                                              |
+|          "is_system": true,                                                                                               |
+|          "is_long_running": false,                                                                                        |
+|          "is_active": true,                                                                                               |
+|          "is_operational": true,                                                                                          |
+|          "is_paused": false,                                                                                              |
+|          "icon_code": "f013"                                                                                              |
 |      },                                                                                                                   |
 |      "node": {                                                                                                            |
 |          "id": 1,                                                                                                         |
 |          "hostname": "machine.com",                                                                                       |
 |          "port": 5051,                                                                                                    |
-|          "slave_id": "20150821-123454-1683014024-5050-8216-S2",                                                           |
-|          "is_paused": false,                                                                                              |
-|          "is_active": true,                                                                                               |
-|          "archived": null,                                                                                                |
-|          "created": "2015-09-02T18:05:54.730Z",                                                                           |
-|          "last_modified": "2015-09-08T16:53:57.439Z"                                                                      |
+|          "slave_id": "20150821-123454-1683014024-5050-8216-S2"                                                            |
 |      },                                                                                                                   |
 |      "error": null,                                                                                                       |
 |      "environment": {...},                                                                                                |
-|      "cpus_scheduled": 0.5,                                                                                               |
-|      "mem_scheduled": 15360.0,                                                                                            |
-|      "disk_in_scheduled": 1.0,                                                                                            |
-|      "disk_out_scheduled": 0.0,                                                                                           |
-|      "disk_total_scheduled": 1.0,                                                                                         |
 |      "results": {                                                                                                         |
 |          "output_data": [                                                                                                 |
 |              {                                                                                                            |
