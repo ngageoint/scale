@@ -385,7 +385,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                         self.assertEqual(opt_value, 'test-logging-address')
                         found_syslog_address = True
                     elif opt_name == 'tag':
-                        self.assertEqual(opt_value, exe_config_with_secrets.get_task_id(task_type))
+                        tag_value = '%s|%s' % (exe_config_with_secrets.get_task_id(task_type), job_type.name)
+                        self.assertEqual(opt_value, tag_value)
                         found_tag = True
             self.assertTrue(found_log_driver)
             self.assertTrue(found_syslog_format)

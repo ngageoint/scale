@@ -18,7 +18,7 @@ filter {
     ruby {
       init => "@ordernum = 0"
       code => "@ordernum += 1; tag_items = event['program'].split('++'); event['scale_order_num'] = @ordernum; event['scale_task'] = tag_items[0].sub(%r{^docker/}, ''); event['scale_job_exe'] = event['scale_task'].sub(%r{_[^_]*$}, ''); event['scale_node'] = event['logsource']; event['stream'] = event['severity'] == 3 ? 'stderr' : 'stdout'; event['job_type'] = tag_items[1]"
-     remove_field => ["host", "priority", "timestamp8601", "logsource", "program", "pid", "severity", "facility", "timestamp", "facility_label", "severity_label", "job_type"]
+      remove_field => ["host", "priority", "timestamp8601", "logsource", "program", "pid", "severity", "facility", "timestamp", "facility_label", "severity_label", "job_type"]
     }
   }
   else {

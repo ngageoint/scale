@@ -300,8 +300,16 @@ def deploy_logstash(client, app_name, es_urls, es_lb):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
+    #default based on MARATHON_APP_DOCKER_IMAGE with repo/scale:tag updated to repo/scale-logstash:tag
+    marathon_img_default = os.getenv('MARATHON_APP_DOCKER_IMAGE')
+    if marathon_img_default.endswith(':'):
+        logstash_docker_img_default = marathon_img_default.replace(':', '-logstash:')
+    else:
+        logstash_docker_img_default = marathon_img_default + '-logstash'
+
     # Load marathon template file
-    marathon = initialize_app_template('logstash', app_name, os.getenv('LOGSTASH_DOCKER_IMAGE'))
+    marathon = initialize_app_template('logstash', app_name, os.getenv(
+        'LOGSTASH_DOCKER_IMAGE', logstash_docker_img_default))
 
     arbitrary_env = {
         'ELASTICSEARCH_LB': es_lb,
