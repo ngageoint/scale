@@ -169,7 +169,7 @@ class JobRevisionSerializer(JobSerializer):
     job_type_rev = JobTypeRevisionSerializer()
 
 # TODO: remove this function when REST API v5 is removed 
-class JobExecutionBaseSerializer(ModelIdSerializer):
+class OldJobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
     command_arguments = serializers.CharField()
@@ -186,6 +186,23 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
     post_started = serializers.DateTimeField()
     post_completed = serializers.DateTimeField()
     post_exit_code = serializers.IntegerField()
+
+    created = serializers.DateTimeField()
+    queued = serializers.DateTimeField()
+    started = serializers.DateTimeField()
+    ended = serializers.DateTimeField(source='jobexecutionend.ended')
+    last_modified = serializers.DateTimeField(source='created')
+
+    job = ModelIdSerializer()
+    node = ModelIdSerializer()
+    error = ModelIdSerializer()
+
+
+class JobExecutionBaseSerializer(ModelIdSerializer):
+    """Converts job execution model fields to REST output"""
+    status = serializers.CharField(source='get_status')
+    command_arguments = serializers.CharField()
+    timeout = serializers.IntegerField()
 
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
@@ -258,7 +275,7 @@ class JobDetailsSerializer(JobSerializer):
     except:
         recipes = []
 
-    job_exes = JobExecutionBaseSerializer(many=True)
+    job_exes = OldJobExecutionBaseSerializer(many=True)
 
     inputs = JobDetailsInputSerializer(many=True)
     outputs = JobDetailsOutputSerializer(many=True)
@@ -272,7 +289,7 @@ class JobUpdateSerializer(JobSerializer):
 
 
 # TODO: remove this function when REST API v5 is removed
-class OldJobExecutionSerializer(JobExecutionBaseSerializer):
+class OldJobExecutionSerializer(OldJobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
 
     from error.serializers import ErrorBaseSerializer
@@ -314,13 +331,6 @@ class OldJobExecutionDetailsSerializer(OldJobExecutionSerializer):
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
     """Converts job execution model fields to REST output"""
 
-    from error.serializers import ErrorSerializer
-    from node.serializers import NodeSerializerV4
-
-    job = JobSerializer()
-    node = NodeSerializerV4()
-    error = ErrorSerializer(source='jobexecutionend.error')
-
     task_results = serializers.JSONField(default=dict)
     resources = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(default=dict)
@@ -340,4 +350,4 @@ class JobExecutionLogSerializer(JobExecutionSerializer):
 # TODO: remove when REST API v5 is removed
 class JobWithExecutionSerializer(JobSerializer):
     """Converts job with latest execution model fields to REST output"""
-    latest_job_exe = JobExecutionBaseSerializer()
+    latest_job_exe = OldJobExecutionBaseSerializer()

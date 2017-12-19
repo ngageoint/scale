@@ -2509,7 +2509,8 @@ class TestJobExecutionsView(TransactionTestCase):
     def test_get_job_execution_bad_id(self):
         url = rest_util.get_url('/jobs/999999999/executions/')
         response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(result['results'], [])
 
     def test_get_job_execution_filter_node(self):
         url = rest_util.get_url('/jobs/%d/executions/?node_id=%d' % (self.job_1.id, self.node_1.id))
@@ -2555,6 +2556,7 @@ class TestJobExecutionDetailsView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        print results
         self.assertEqual(results['id'], self.job_exe_1a.id)
 
     def test_get_job_execution_bad_exe_num(self):
