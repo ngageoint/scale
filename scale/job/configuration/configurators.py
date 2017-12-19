@@ -467,7 +467,7 @@ class ScheduledExecutionConfigurator(object):
                 # TODO: command args and env var replacement from the interface should be removed once Scale drops
                 # support for old-style job types
                 args = config._get_task_dict('main')['args']
-                if JobInterfaceSunset.is_seed(interface):
+                if JobInterfaceSunset.is_seed(interface.definition):
                     env_vars = task_settings
                 # TODO: Remove this else block when old-style job types are removed
                 else:
