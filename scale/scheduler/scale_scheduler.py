@@ -51,9 +51,6 @@ class ScaleScheduler(MesosScheduler):
     # Warning threshold for normal callbacks (those with no external calls, e.g. database queries)
     NORMAL_WARN_THRESHOLD = datetime.timedelta(milliseconds=5)
 
-    # Warning threshold for callbacks that include database queries
-    DATABASE_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
-
     def __init__(self):
         """Constructor
         """
@@ -327,7 +324,7 @@ class ScaleScheduler(MesosScheduler):
 
         duration = now() - started
         msg = 'Scheduler statusUpdate() took %.3f seconds'
-        if duration > ScaleScheduler.DATABASE_WARN_THRESHOLD:
+        if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())

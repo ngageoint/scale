@@ -339,47 +339,6 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def handle_job_completion(self, job_id, exe_num, when):
-        """Handles the successful completion of a job. The number of the job's running execution is provided to resolve
-        race conditions. All database changes occur in an atomic transaction.
-
-        :param job_id: The job ID
-        :type job_id: int
-        :param exe_num: The job's execution number
-        :type exe_num: int
-        :param when: When the job was completed
-        :type when: :class:`datetime.datetime`
-        """
-
-        job = Job.objects.get_locked_job(job_id)
-        # If the execution number has changed, this update is obsolete
-        if job.num_exes != exe_num:
-            return
-
-        # Publish this job's products
-        # TODO: we should eventually refactor how product publishing is handled
-        job_exe = JobExecution.objects.get(job_id=job_id, exe_num=exe_num)
-        ProductFile.objects.publish_products(job_exe.id, job, job.ended)
-
-        # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
-        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
-        if handler:
-            if not job.is_superseded:  # Do not queue dependent jobs for superseded jobs
-                jobs_to_queue = []
-                for job_tuple in handler.get_existing_jobs_to_queue():
-                    job_to_queue = job_tuple[0]
-                    job_data = job_tuple[1]
-                    try:
-                        Job.objects.populate_job_data(job_to_queue, job_data)
-                    except InvalidData as ex:
-                        raise Exception('Scale created invalid job data: %s' % str(ex))
-                    jobs_to_queue.append(job_to_queue)
-                if jobs_to_queue:
-                    self.queue_jobs(jobs_to_queue)
-            if handler.is_completed():
-                Recipe.objects.complete_recipe(handler.recipe.id, when)
-
-    @transaction.atomic
     def queue_new_job(self, job_type, data, event):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
         job_exe, and queue models are saved in the database in an atomic transaction.

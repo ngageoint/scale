@@ -491,7 +491,6 @@ class JobManager(models.Manager):
             self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
                                           last_modified=when)
 
-    # TODO: create unit tests for completed jobs message
     def process_job_output(self, job_ids, when):
         """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
         in an atomic transaction. All jobs that are both COMPLETED and have their execution output stored, will have the

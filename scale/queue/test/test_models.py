@@ -6,23 +6,17 @@ import time
 import django
 from django.utils.timezone import now
 from django.test import TestCase, TransactionTestCase
-from mock import MagicMock
 
 import job.test.utils as job_test_utils
-import node.test.utils as node_test_utils
 import product.test.utils as product_test_utils
 import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import Error, get_builtin_error, get_unknown_error, reset_error_cache
+from error.models import reset_error_cache
 from job.configuration.results.job_results import JobResults
-from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.models import Job, JobExecution, JobExecutionOutput
-from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
-from queue.job_exe import QueuedJobExecution
+from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
@@ -259,180 +253,6 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(final_job.status, 'CANCELED')
 
 
-class TestQueueManagerHandleJobCompletion(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.workspace = storage_test_utils.create_workspace()
-        source_file = source_test_utils.create_source(workspace=self.workspace)
-
-        self.event = trigger_test_utils.create_trigger_event()
-
-        interface_1 = {
-            'version': '1.0',
-            'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 1',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 1',
-                'type': 'files',
-                'media_type': 'image/png',
-            }]
-        }
-        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
-
-        interface_2 = {
-            'version': '1.0',
-            'command': 'test_command',
-            'command_arguments': 'test_arg',
-            'input_data': [{
-                'name': 'Test Input 2',
-                'type': 'files',
-                'media_types': ['image/png', 'image/tiff'],
-            }],
-            'output_data': [{
-                'name': 'Test Output 2',
-                'type': 'file',
-            }]
-        }
-        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
-
-        definition = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'type': 'file',
-                'media_types': ['text/plain'],
-            }],
-            'jobs': [{
-                'name': 'Job 1',
-                'job_type': {
-                    'name': self.job_type_1.name,
-                    'version': self.job_type_1.version,
-                },
-                'recipe_inputs': [{
-                    'recipe_input': 'Recipe Input',
-                    'job_input': 'Test Input 1',
-                }]
-            }, {
-                'name': 'Job 2',
-                'job_type': {
-                    'name': self.job_type_2.name,
-                    'version': self.job_type_2.version,
-                },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
-                    }]
-                }]
-            }]
-        }
-        recipe_definition = RecipeDefinition(definition)
-        recipe_definition.validate_job_interfaces()
-        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
-
-        data = {
-            'version': '1.0',
-            'input_data': [{
-                'name': 'Recipe Input',
-                'file_id': source_file.id,
-            }],
-            'workspace_id': self.workspace.id,
-        }
-        self.data = RecipeData(data)
-
-    def test_successful_with_partial_recipe(self):
-        """Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe."""
-
-        # Queue the recipe
-        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
-
-        # Fake out completing Job 1
-        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
-        job_exe_1 = job_test_utils.create_job_exe(job=job_1, status='RUNNING')
-        output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
-        output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
-
-        results = JobResults()
-        results.add_file_list_parameter('Test Output 1', [output_file_1.id, output_file_2.id])
-        job_exe_output_1 = JobExecutionOutput()
-        job_exe_output_1.job_exe_id = job_exe_1.id
-        job_exe_output_1.job_id = job_exe_1.job_id
-        job_exe_output_1.job_type_id = job_exe_1.job_type_id
-        job_exe_output_1.exe_num = job_exe_1.exe_num
-        job_exe_output_1.output = results.get_dict()
-        job_exe_output_1.save()
-
-        Job.objects.filter(pk=job_1.id).update(status='RUNNING')
-
-        # Call method to test
-        Queue.objects.handle_job_completion(job_1.id, job_1.num_exes, now())
-
-        # Make sure Job 2 in the recipe is successfully queued
-        recipe_job_2 = RecipeJob.objects.select_related('job', 'recipe').get(recipe_id=handler.recipe.id,
-                                                                             job_name='Job 2')
-        self.assertEqual(recipe_job_2.job.status, 'QUEUED')
-        self.assertIsNone(recipe_job_2.recipe.completed)
-
-    def test_successful_with_full_recipe(self):
-        """Tests calling QueueManager.handle_job_completion() successfully with all jobs in a recipe."""
-
-        # Queue the recipe
-        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
-
-        # Fake out completing Job 1
-        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
-        job_exe_1 = job_test_utils.create_job_exe(job=job_1, status='RUNNING')
-        output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
-        output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
-
-        results = JobResults()
-        results.add_file_list_parameter('Test Output 1', [output_file_1.id, output_file_2.id])
-        job_exe_output_1 = JobExecutionOutput()
-        job_exe_output_1.job_exe_id = job_exe_1.id
-        job_exe_output_1.job_id = job_exe_1.job_id
-        job_exe_output_1.job_type_id = job_exe_1.job_type_id
-        job_exe_output_1.exe_num = job_exe_1.exe_num
-        job_exe_output_1.output = results.get_dict()
-        job_exe_output_1.save()
-
-        Job.objects.filter(pk=job_1.id).update(status='RUNNING')
-
-        Queue.objects.handle_job_completion(job_1.id, job_1.num_exes, now())
-
-        # Fake out completing Job 2
-        job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2').job
-        job_exe_2 = job_test_utils.create_job_exe(job=job_2, status='RUNNING')
-        output_file_1 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
-        output_file_2 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
-
-        results = JobResults()
-        results.add_file_list_parameter('Test Output 2', [output_file_1.id, output_file_2.id])
-        job_exe_output_2 = JobExecutionOutput()
-        job_exe_output_2.job_exe_id = job_exe_2.id
-        job_exe_output_2.job_id = job_exe_2.job_id
-        job_exe_output_2.job_type_id = job_exe_2.job_type_id
-        job_exe_output_2.exe_num = job_exe_2.exe_num
-        job_exe_output_2.output = results.get_dict()
-        job_exe_output_2.save()
-
-        Job.objects.filter(pk=job_2.id).update(status='RUNNING')
-
-        # Call method to test
-        Queue.objects.handle_job_completion(job_2.id, job_2.num_exes, now())
-
-        # Make sure final recipe attributes are updated
-        recipe = Recipe.objects.get(pk=handler.recipe.id)
-        self.assertIsNotNone(recipe.completed)
-
-
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
     fixtures = ['basic_system_job_types.json']
@@ -558,7 +378,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         """Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe."""
 
         # Queue initial recipe and complete its first job
-        node = node_test_utils.create_node()
         handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job')
@@ -567,7 +386,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
         job_test_utils.create_job_exe(job=recipe_job_1.job, status='COMPLETED', output=results)
-        Queue.objects.handle_job_completion(recipe_job_1.job_id, recipe_job_1.job.num_exes, now())
+        Job.objects.update_jobs_to_completed([recipe_job_1.job], now())
+        Job.objects.process_job_output([recipe_job_1.job_id], now())
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
@@ -633,22 +453,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.assertFalse(new_recipe_job_1.is_original)
         self.assertEqual(new_recipe_job_2.job.status, 'QUEUED')
         self.assertTrue(new_recipe_job_2.is_original)
-
-        # Complete both the old and new job 2 and check that only the new recipe completes
-        Job.objects.update_jobs_to_running([recipe_job_2.job], now())
-        results = JobResults()
-        results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
-        job_test_utils.create_job_exe(job=recipe_job_2.job, status='COMPLETED', output=results)
-        Queue.objects.handle_job_completion(recipe_job_2.job_id, recipe_job_2.job.num_exes, now())
-        Job.objects.update_jobs_to_running([new_recipe_job_2.job], now())
-        results = JobResults()
-        results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
-        job_test_utils.create_job_exe(job=new_recipe_job_2.job, status='COMPLETED', output=results)
-        Queue.objects.handle_job_completion(new_recipe_job_2.job_id, new_recipe_job_2.job.num_exes, now())
-        recipe = Recipe.objects.get(id=recipe.id)
-        new_recipe = Recipe.objects.get(id=new_recipe.id)
-        self.assertIsNone(recipe.completed)
-        self.assertIsNotNone(new_recipe.completed)
 
 
 class TestQueueManagerRequeueJobs(TransactionTestCase):
