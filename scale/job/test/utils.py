@@ -241,7 +241,7 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_end.ended = ended
         job_exe_end.save()
 
-    if status == 'COMPLETED':
+    if status == 'COMPLETED' or output:
         job_exe_output = JobExecutionOutput()
         job_exe_output.job_exe_id = job_exe.id
         job_exe_output.job = job_exe.job

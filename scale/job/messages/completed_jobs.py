@@ -136,8 +136,9 @@ class CompletedJobs(CommandMessage):
                 logger.info('Set %d job(s) to COMPLETED status', len(completed_job_ids))
 
             # Process job output to find jobs that are both COMPLETED and have output
-            if completed_job_ids:
-                jobs_with_output = Job.objects.process_job_output(completed_job_ids, when)
+            if jobs_to_complete:
+                job_ids = [job.id for job in jobs_to_complete]
+                jobs_with_output = Job.objects.process_job_output(job_ids, when)
                 # Jobs that are COMPLETED and have output should update their recipes
                 if jobs_with_output:
                     logger.info('Found %d COMPLETED job(s) with output, ready to update recipe(s)',
@@ -149,7 +150,7 @@ class CompletedJobs(CommandMessage):
                 job_model = job_models[job_id]
                 # Publish this job's products
                 from product.models import ProductFile
-                # TODO: we should eventually refactor how product publishing is handled
+                # TODO: product publishing needs to be moved to its own message(s) that fire after process_job_output()
                 job_exe = JobExecution.objects.get(job_id=job_id, exe_num=job_model.num_exes)
                 ProductFile.objects.publish_products(job_exe.id, job_model, self.ended)
                 # Update completed job count if part of a batch
