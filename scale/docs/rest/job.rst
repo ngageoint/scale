@@ -1238,11 +1238,7 @@ These services provide access to information about "all", "currently running" an
 |                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .status              | String            | The status of the job execution.                                               |
-|                      |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .command_arguments   | String            | The argument string to execute on the command line for this job execution.     |
-|                      |                   | This field is populated when the job execution is scheduled to run on a node   |
-|                      |                   | and is updated when any needed pre-job steps are run.                          |
+|                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .timeout             | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1254,8 +1250,6 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .ended               | ISO-8601 Datetime | When the job execution ended. (FAILED, COMPLETED, or CANCELED)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified       | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job                 | JSON Object       | The job that is associated with the execution.                                 |
 |                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1265,9 +1259,14 @@ These services provide access to information about "all", "currently running" an
 | .error               | JSON Object       | The last error that was recorded for the execution.                            |
 |                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| exe_num              | Integer           | The unique job execution number for the job identifer.                         |
+| .job_type            | JSON Object       | The job type that is associated with the execution.                            |
+|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| cluster_id           | String            | The Scale cluster identifier.                                                  |
+| .exe_num             | Integer           | The unique job execution number for the job identifer.                         |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| .cluster_id          | String            | The Scale cluster identifier.                                                  |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| .input_file_size     | Float             | The total amount of disk space in MiB for all input files for this execution.  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                |
 |                                                                                                                           |
@@ -1279,16 +1278,19 @@ These services provide access to information about "all", "currently running" an
 |            {                                                                                                              |
 |                "id": 3,                                                                                                   |
 |                "status": "COMPLETED",                                                                                     |
-|                "command_arguments": "",                                                                                   |
 |                "timeout": 1800,                                                                                           |
 |                "created": "2015-08-28T17:57:41.033Z",                                                                     |
 |                "queued": "2015-08-28T17:57:41.010Z",                                                                      |
 |                "started": "2015-08-28T17:57:44.494Z",                                                                     |
 |                "ended": "2015-08-28T17:57:45.906Z",                                                                       |
-|                "last_modified": "2015-08-28T17:57:45.992Z",                                                               |
 |                "job": {                                                                                                   |
-|                    "id": 3                                                                                                |
+|                    "id": 3,                                                                                               |
 |                },                                                                                                         |
+|                "node": {                                                                                                  |
+|                    "id": 1,                                                                                               |
+|                    "hostname": "machine.com"                                                                              |
+|                },                                                                                                         |
+|                "error": null,                                                                                             |
 |                "job_type": {                                                                                              |
 |                    "id": 1,                                                                                               |
 |                    "name": "scale-ingest",                                                                                |
@@ -1305,11 +1307,11 @@ These services provide access to information about "all", "currently running" an
 |                    "is_paused": false,                                                                                    |
 |                    "icon_code": "f013"                                                                                    |
 |                },                                                                                                         |
-|                "node": {                                                                                                  |
-|                    "id": 1,                                                                                               |
-|                    "hostname": "machine.com"                                                                              |
-|                }                                                                                                          |
-|          }                                                                                                                |
+|                "exe_num": 1,                                                                                              |
+|                "cluster_id": "scale_job_1234_263x0",                                                                      |
+|                "input_file_size": 10.0                                                                                    |
+|            }                                                                                                              |
+|        ]                                                                                                                  |
 |    }                                                                                                                      |
 +---------------------------------------------------------------------------------------------------------------------------+
 
@@ -1343,10 +1345,6 @@ These services provide access to information about "all", "currently running" an
 | status               | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| command_arguments    | String            | The argument string to execute on the command line for this job execution.     |
-|                      |                   | This field is populated when the job execution is scheduled to run on a node   |
-|                      |                   | and is updated when any needed pre-job steps are run.                          |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | timeout              | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | created              | ISO-8601 Datetime | When the associated database model was initially created.                      |
@@ -1357,8 +1355,6 @@ These services provide access to information about "all", "currently running" an
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | ended                | ISO-8601 Datetime | When the job execution ended. (FAILED, COMPLETED, or CANCELED)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| last_modified        | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
 | job                  | JSON Object       | The job that is associated with the execution.                                 |
 |                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1368,30 +1364,43 @@ These services provide access to information about "all", "currently running" an
 | error                | JSON Object       | The last error that was recorded for the execution.                            |
 |                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| environment          | JSON Object       | An interface description for the environment the job execution executed in.    |
+| job_type             | JSON Object       | The job type that is associated with the execution.                            |
+|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| results              | JSON Object       | An interface description for all the possible job results meta-data.           |
+| exe_num              | Integer           | The unique job execution number for the job identifer.                         |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| results_manifest     | JSON Object       | An interface description for all the actual job results meta-data.             |
+| cluster_id           | String            | The Scale cluster identifier.                                                  |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| input_file_size      | Float             | The total amount of disk space in MiB for all input files for this execution.  |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| task_results         | JSON Object       | JSON description of the task results for this execution.                       |
+|                      |                   | (See :ref:`Job Task Results <architecture_jobs_task_results_spec>`)            |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| resources            | JSON Object       | JSON description describing the resources allocated to this execution.         |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | configuration        | JSON Object       | JSON description of the configuration for running the job                      |
-|                      |                   | (See :ref:`architecture_jobs_job_configuration_spec`)                          |
+|                      |                   | (See :ref:`Job Execution Configuration <architecture_jobs_exe_configuration`)  |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| output               | JSON Object       | JSON description of the job output.                                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                |
 |                                                                                                                           |
 |  {                                                                                                                        |
 |      "id": 3,                                                                                                             |
 |      "status": "COMPLETED",                                                                                               |
-|      "command_arguments": "",                                                                                             |
 |      "timeout": 1800,                                                                                                     |
 |      "created": "2015-08-28T17:57:41.033Z",                                                                               |
 |      "queued": "2015-08-28T17:57:41.010Z",                                                                                |
 |      "started": "2015-08-28T17:57:44.494Z",                                                                               |
 |      "ended": "2015-08-28T17:57:45.906Z",                                                                                 |
-|      "last_modified": "2015-08-28T17:57:45.992Z",                                                                         |
 |      "job": {                                                                                                             |
 |          "id": 3,                                                                                                         |
 |      },                                                                                                                   |
+|      "node": {                                                                                                            |
+|          "id": 1,                                                                                                         |
+|          "hostname": "machine.com"                                                                                        |
+|      },                                                                                                                   |
+|      "error": null,                                                                                                       |
 |      "job_type": {                                                                                                        |
 |          "id": 1,                                                                                                         |
 |          "name": "scale-ingest",                                                                                          |
@@ -1408,15 +1417,22 @@ These services provide access to information about "all", "currently running" an
 |          "is_paused": false,                                                                                              |
 |          "icon_code": "f013"                                                                                              |
 |      },                                                                                                                   |
-|      "node": {                                                                                                            |
-|          "id": 1,                                                                                                         |
-|          "hostname": "machine.com",                                                                                       |
-|          "port": 5051,                                                                                                    |
-|          "slave_id": "20150821-123454-1683014024-5050-8216-S2"                                                            |
+|      "exe_num": 1,                                                                                                        |
+|      "cluster_id": "scale_job_1234_263x0",                                                                                |
+|      "input_file_size": 10.0,                                                                                             |
+|      "task_results": {...},                                                                                               |
+|      "resources": {                                                                                                       |
+|          "version": "1.0",                                                                                                |
+|          "resources": {                                                                                                   |
+|              "mem": 128.0,                                                                                                |
+|              "disk": 11.0,                                                                                                |
+|              "cpus": 1.0                                                                                                  |
+|          }                                                                                                                |
 |      },                                                                                                                   |
-|      "error": null,                                                                                                       |
-|      "environment": {...},                                                                                                |
-|      "results": {                                                                                                         |
+|      "configuration": {                                                                                                   |
+|          "tasks": [...],                                                                                                  |
+|          "version": "2.0"}                                                                                                |
+|      "output": {                                                                                                          |
 |          "output_data": [                                                                                                 |
 |              {                                                                                                            |
 |                  "name": "output_file",                                                                                   |
@@ -1424,15 +1440,6 @@ These services provide access to information about "all", "currently running" an
 |              }                                                                                                            |
 |          ],                                                                                                               |
 |          "version": "1.0"                                                                                                 |
-|      },                                                                                                                   |
-|      "results_manifest": {                                                                                                |
-|          "output_data": [],                                                                                               |
-|          "version": "1.1",                                                                                                |
-|          "errors": [],                                                                                                    |
-|          "parse_results": []                                                                                              |
-|      },                                                                                                                   |
-|      "configuration": {                                                                                                   |
-|          "tasks": [...],                                                                                                  |
-|          "version": "2.0"}                                                                                                |
+|      }                                                                                                                    |
 |  }                                                                                                                        |
 +---------------------------------------------------------------------------------------------------------------------------+
