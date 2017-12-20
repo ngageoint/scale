@@ -68,7 +68,7 @@ class FailedJobs(CommandMessage):
     def add_failed_job(self, failed_job):
         """Adds the given failed job to this message
 
-        :param failed_job: The failed job ID
+        :param failed_job: The failed job
         :type failed_job: :class:`job.messages.failed_jobs.FailedJob`
         """
 

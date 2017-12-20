@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.messages.completed_jobs import create_completed_jobs_messages, CompletedJob
 from job.messages.failed_jobs import create_failed_jobs_messages, FailedJob
 from job.messages.job_exe_end import create_job_exe_end_messages
 from job.models import Job, JobExecution
@@ -163,7 +164,6 @@ class JobExecutionManager(object):
         :rtype: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
-        finished_job_exe = None
         if task_update.task_id.startswith(JOB_TASK_ID_PREFIX):
             cluster_id = JobExecution.parse_cluster_id(task_update.task_id)
             with self._lock:
@@ -172,13 +172,7 @@ class JobExecutionManager(object):
                     job_exe.task_update(task_update)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
-                        finished_job_exe = job_exe
-                        # return job_exe
-
-        # TODO: this can be removed once database operations move to messaging backend
-        if finished_job_exe:
-            self._handle_finished_job_exe_in_database(finished_job_exe)
-            return finished_job_exe
+                        return job_exe
 
         return None
 
@@ -237,10 +231,6 @@ class JobExecutionManager(object):
                         self._handle_finished_job_exe(job_exe)
                         finished_job_exes.append(job_exe)
 
-        # TODO: this can be removed once database operations move to messaging backend
-        for finished_job_exe in finished_job_exes:
-            self._handle_finished_job_exe_in_database(finished_job_exe)
-
         return finished_job_exes
 
     def schedule_job_exes(self, job_exes, messages):
@@ -290,10 +280,6 @@ class JobExecutionManager(object):
                         self._handle_finished_job_exe(running_job_exe)
                         finished_job_exes.append(running_job_exe)
 
-        # TODO: this can be removed once database operations move to messaging backend
-        for finished_job_exe in finished_job_exes:
-            self._handle_finished_job_exe_in_database(finished_job_exe)
-
         return finished_job_exes
 
     def _create_finished_job_exe_messages(self, finished_job_exes):
@@ -307,12 +293,16 @@ class JobExecutionManager(object):
 
         when = now()
 
+        completed_jobs = []
         failed_jobs = []
         for job_exe in finished_job_exes:
-            if job_exe.status == 'FAILED':
+            if job_exe.status == 'COMPLETED':
+                completed_jobs.append(CompletedJob(job_exe.job_id, job_exe.exe_num))
+            elif job_exe.status == 'FAILED':
                 failed_jobs.append(FailedJob(job_exe.job_id, job_exe.exe_num, job_exe.error.id))
 
-        messages = create_failed_jobs_messages(failed_jobs, when)
+        messages = create_completed_jobs_messages(completed_jobs, when)
+        messages.extend(create_failed_jobs_messages(failed_jobs, when))
 
         return messages
 
@@ -332,23 +322,6 @@ class JobExecutionManager(object):
         # Remove the finished job execution and update the metrics
         del self._running_job_exes[running_job_exe.cluster_id]
         self._metrics.job_exe_finished(running_job_exe)
-
-    def _handle_finished_job_exe_in_database(self, running_job_exe):
-        """Handles the finished job execution by performing any needed database operations. This is a stop gap until
-        these database operations move to the messaging backend.
-
-        :param running_job_exe: The finished job execution
-        :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
-        """
-
-        # TODO: handling job completion here for now, later this will be sent via messaging backend in a
-        # background thread
-        from queue.models import Queue
-        job_id = running_job_exe.job_id
-        exe_num = running_job_exe.exe_num
-        when = running_job_exe.finished
-        if running_job_exe.status == 'COMPLETED':
-            Queue.objects.handle_job_completion(job_id, exe_num, when)
 
 
 job_exe_mgr = JobExecutionManager()

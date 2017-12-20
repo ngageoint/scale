@@ -261,8 +261,9 @@ class ScaleFileManager(models.Manager):
         files = files.order_by('last_modified')
         return files
 
-    def get_files(self, file_ids):
-        """Returns the files with the given IDs. Each scale_file model will have its related workspace field populated.
+    def get_files_for_job_summary(self, file_ids):
+        """Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
+        calculating summary data for a job's inputs. The returned list is a queryset iterator, so only access it once.
 
         :param file_ids: The file IDs
         :type file_ids: list
@@ -270,11 +271,11 @@ class ScaleFileManager(models.Manager):
         :rtype: list
         """
 
-        return self.select_related('workspace').filter(id__in=file_ids).iterator()
+        return self.filter(id__in=file_ids).only('id', 'file_size').iterator()
 
     def get_files_for_queued_jobs(self, file_ids):
         """Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
-        configuring queued jobs.
+        configuring queued jobs. The returned list is a queryset iterator, so only access it once.
 
         :param file_ids: The file IDs
         :type file_ids: list

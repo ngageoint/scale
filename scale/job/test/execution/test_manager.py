@@ -106,32 +106,52 @@ class TestJobExecutionManager(TransactionTestCase):
 
         self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2], [])
 
-        # Start task
+        # Start tasks
         task_1 = self.job_exe_1.start_next_task()
         task_1_started = now() - timedelta(minutes=5)
-        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING, task_1_started)
+        update_1 = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.RUNNING,
+                                                            task_1_started)
+        task_2 = self.job_exe_2.start_next_task()
+        # Shortcut job exe 2 so that there is only one task to complete
+        self.job_exe_2._remaining_tasks = []
+        task_2_started = now() - timedelta(minutes=5)
+        update_2 = job_test_utils.create_task_status_update(task_2.id, 'agent', TaskStatusUpdate.RUNNING,
+                                                            task_2_started)
 
         # Job execution is not finished, so None should be returned and no message is available
-        result = self.job_exe_mgr.handle_task_update(update)
+        result = self.job_exe_mgr.handle_task_update(update_1)
+        self.assertIsNone(result)
+        result = self.job_exe_mgr.handle_task_update(update_2)
         self.assertIsNone(result)
         self.assertListEqual(self.job_exe_mgr.get_messages(), [])
 
-        # Fail task
+        # Fail task 1 for job exe 1
         task_1_failed = task_1_started + timedelta(seconds=1)
-        update = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FAILED, task_1_failed,
-                                                          exit_code=1)
+        update_1 = job_test_utils.create_task_status_update(task_1.id, 'agent', TaskStatusUpdate.FAILED, task_1_failed,
+                                                            exit_code=1)
 
-        # Job execution is finished, so it should be returned and a create_job_exe_ends message and a failed_jobs
-        # message is available
-        result = self.job_exe_mgr.handle_task_update(update)
+        # Complete task 2 for job exe 2
+        task_2_completed = task_2_started + timedelta(seconds=1)
+        update_2 = job_test_utils.create_task_status_update(task_2.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                            task_2_completed)
+
+        # Job executions are finished, so they should be returned and a create_job_exe_ends message, a failed_jobs
+        # message, and a completed_jobs message is available
+        result = self.job_exe_mgr.handle_task_update(update_1)
         self.assertEqual(self.job_exe_1.id, result.id)
+        result = self.job_exe_mgr.handle_task_update(update_2)
+        self.assertEqual(self.job_exe_2.id, result.id)
 
         messages = self.job_exe_mgr.get_messages()
-        self.assertEqual(len(messages), 2)
+        self.assertEqual(len(messages), 3)
         job_exe_ends_msg = messages[0]
         self.assertEqual(job_exe_ends_msg.type, 'create_job_exe_ends')
         self.assertEqual(job_exe_ends_msg._job_exe_ends[0].job_exe_id, self.job_exe_1.id)
-        failed_jobs_msg = messages[1]
+        self.assertEqual(job_exe_ends_msg._job_exe_ends[1].job_exe_id, self.job_exe_2.id)
+        completed_jobs_msg = messages[1]
+        self.assertEqual(completed_jobs_msg.type, 'completed_jobs')
+        self.assertEqual(completed_jobs_msg._completed_jobs[0].job_id, self.job_exe_2.job_id)
+        failed_jobs_msg = messages[2]
         self.assertEqual(failed_jobs_msg.type, 'failed_jobs')
         self.assertEqual(failed_jobs_msg._failed_jobs.values()[0][0].job_id, self.job_exe_1.job_id)
 

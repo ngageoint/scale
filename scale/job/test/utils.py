@@ -144,6 +144,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
         event = trigger_test_utils.create_trigger_event()
     if not last_status_change:
         last_status_change = timezone.now()
+    if num_exes == 0:
+        input_file_size=None
     if not data:
         if num_exes == 0:
             data = {}
@@ -191,7 +193,7 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
 
     when = timezone.now()
     if not job:
-        job = create_job(job_type=job_type, input_file_size=input_file_size)
+        job = create_job(job_type=job_type, status=status, input_file_size=input_file_size)
     job_type = job.job_type
 
     job_exe = JobExecution()
@@ -200,7 +202,7 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     if not exe_num:
         exe_num = job.num_exes
     job_exe.exe_num = exe_num
-    job_exe.set_cluster_id('1234', job.id, job.num_exes)
+    job_exe.set_cluster_id('1234', job.id, job_exe.exe_num)
     if not node:
         node = node_utils.create_node()
     job_exe.node = node
@@ -221,9 +223,9 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     if status in ['COMPLETED', 'FAILED', 'CANCELED']:
         job_exe_end = JobExecutionEnd()
         job_exe_end.job_exe_id = job_exe.id
-        job_exe_end.job = job
-        job_exe_end.job_type = job_type
-        job_exe_end.exe_num = exe_num
+        job_exe_end.job = job_exe.job
+        job_exe_end.job_type = job_exe.job_type
+        job_exe_end.exe_num = job_exe.exe_num
         if not task_results:
             task_results = TaskResults()
         job_exe_end.task_results = task_results.get_dict()
@@ -239,12 +241,12 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_end.ended = ended
         job_exe_end.save()
 
-    if status == 'COMPLETED':
+    if status == 'COMPLETED' or output:
         job_exe_output = JobExecutionOutput()
         job_exe_output.job_exe_id = job_exe.id
-        job_exe_output.job = job
-        job_exe_output.job_type = job_type
-        job_exe_output.exe_num = exe_num
+        job_exe_output.job = job_exe.job
+        job_exe_output.job_type = job_exe.job_type
+        job_exe_output.exe_num = job_exe.exe_num
         if not output:
             output = JobResults()
         job_exe_output.output = output.get_dict()

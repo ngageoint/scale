@@ -17,7 +17,8 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
+from job.configuration.results.job_results import JobResults
+from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision
 from node.resources.json.resources import Resources
 from trigger.models import TriggerRule
 
@@ -93,7 +94,7 @@ class TestJobManager(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         job_type = job_test_utils.create_job_type(interface=interface)
-        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING', input_file_size=None)
         data = {
             'version': '1.0',
             'input_data': [{
@@ -164,6 +165,54 @@ class TestJobManager(TransactionTestCase):
         data_dict = job.get_job_data().get_dict()
         self.assertEqual(len(data_dict['input_data']), 1)
         self.assertEqual(data_dict['input_data'][0]['name'], 'Input 1')
+
+    def test_process_job_output(self):
+        """Tests calling JobManager.process_job_output()"""
+
+        output_1 = JobResults()
+        output_1.add_file_parameter('foo', 1)
+        output_2 = JobResults()
+        output_2.add_file_parameter('foo', 2)
+
+        # These jobs have completed and have their execution results
+        job_exe_1 = job_test_utils.create_job_exe(status='COMPLETED', output=output_1)
+        job_exe_2 = job_test_utils.create_job_exe(status='COMPLETED', output=output_2)
+
+        # These jobs have their execution results, but have not completed
+        job_exe_3 = job_test_utils.create_job_exe(status='RUNNING')
+        job_exe_4 = job_test_utils.create_job_exe(status='RUNNING')
+        for job_exe in [job_exe_3, job_exe_4]:
+            job_exe_output = JobExecutionOutput()
+            job_exe_output.job_exe_id = job_exe.id
+            job_exe_output.job_id = job_exe.job_id
+            job_exe_output.job_type_id = job_exe.job.job_type_id
+            job_exe_output.exe_num = job_exe.exe_num
+            job_exe_output.output = JobResults().get_dict()
+            job_exe_output.save()
+
+        # These jobs have completed, but do not have their execution results
+        job_exe_5 = job_test_utils.create_job_exe(status='RUNNING')
+        job_exe_6 = job_test_utils.create_job_exe(status='RUNNING')
+        for job in [job_exe_5.job, job_exe_6.job]:
+            job.status = 'COMPLETED'
+            job.save()
+
+        # Test method
+        job_ids = [job_exe.job_id for job_exe in [job_exe_1, job_exe_2, job_exe_3, job_exe_4, job_exe_5, job_exe_6]]
+        result_ids = Job.objects.process_job_output(job_ids, timezone.now())
+
+        self.assertEqual(set(result_ids), {job_exe_1.job_id, job_exe_2.job_id})
+        # Jobs 1 and 2 should have output populated, jobs 3 through 6 should not
+        jobs = list(Job.objects.filter(id__in=job_ids).order_by('id'))
+        self.assertEqual(len(jobs), 6)
+        self.assertTrue(jobs[0].has_output())
+        self.assertDictEqual(jobs[0].results, output_1.get_dict())
+        self.assertTrue(jobs[1].has_output())
+        self.assertDictEqual(jobs[1].results, output_2.get_dict())
+        self.assertFalse(jobs[2].has_output())
+        self.assertFalse(jobs[3].has_output())
+        self.assertFalse(jobs[4].has_output())
+        self.assertFalse(jobs[5].has_output())
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
