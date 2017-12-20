@@ -51,7 +51,7 @@ class TestQueuedExecutionConfigurator(TestCase):
                      'output_data': [{'name': 'output_1', 'workspace_id': workspace.id}]}
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
-        expected_args = '-a my_val -b %s %s  ${job_output_dir}' % (input_2_val, input_3_val)
+        expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
         job_type = job_test_utils.create_job_type(interface=interface_dict)

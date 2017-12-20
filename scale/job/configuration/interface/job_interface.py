@@ -904,6 +904,9 @@ class JobInterface(object):
                 else:
                     keep_replacing = False
 
+        # Remove any extra whitespace in the command arguments
+        ret_str = ' '.join(ret_str.split())
+
         return ret_str
 
     @staticmethod
