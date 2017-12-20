@@ -201,14 +201,12 @@ class OldJobExecutionBaseSerializer(ModelIdSerializer):
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
-    command_arguments = serializers.CharField()
     timeout = serializers.IntegerField()
 
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
     ended = serializers.DateTimeField(source='jobexecutionend.ended')
-    last_modified = serializers.DateTimeField(source='created')
 
     job = ModelIdSerializer()
     node = ModelIdSerializer()
@@ -304,10 +302,10 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
 
     from error.serializers import ErrorBaseSerializer
-    from node.serializers import NodeBaseSerializerV4
+    from node.serializers import NodeBaseSerializer
 
     job = ModelIdSerializer()
-    node = NodeBaseSerializerV4()
+    node = NodeBaseSerializer()
     error = ErrorBaseSerializer(source='jobexecutionend.error')
     job_type = JobTypeBaseSerializer()
 
@@ -334,10 +332,7 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     task_results = serializers.JSONField(default=dict)
     resources = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(default=dict)
-
-    environment = serializers.JSONField(default=dict)
-    results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
-    results_manifest = serializers.JSONField(default=dict)
+    output = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):
