@@ -1478,9 +1478,10 @@ workspace field populated.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="storage.models.ScaleFileManager.get_files">
-<code class="descname">get_files</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the files with the given IDs. Each scale_file model will have its related workspace field populated.</p>
+<dt id="storage.models.ScaleFileManager.get_files_for_job_summary">
+<code class="descname">get_files_for_job_summary</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_files_for_job_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
+calculating summary data for a job&#8217;s inputs. The returned list is a queryset iterator, so only access it once.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1499,7 +1500,7 @@ workspace field populated.</p>
 <dt id="storage.models.ScaleFileManager.get_files_for_queued_jobs">
 <code class="descname">get_files_for_queued_jobs</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_files_for_queued_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
-configuring queued jobs.</p>
+configuring queued jobs. The returned list is a queryset iterator, so only access it once.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

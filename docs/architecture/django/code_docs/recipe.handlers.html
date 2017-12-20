@@ -597,6 +597,39 @@ that have not changed. All children nodes will be changed as well.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_first_queue">
+<code class="descname">get_jobs_ready_for_first_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_first_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the models for each job in the recipe that is ready to be queued for the first time</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs ready to be queued</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_input">
+<code class="descname">get_jobs_ready_for_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the models for each job in the recipe that is ready for its input. The new inputs have been set on
+each model, but not saved in the database.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs with their input</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.handlers.handler.RecipeHandler.get_pending_jobs">
 <code class="descname">get_pending_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_pending_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the jobs within this recipe that should be updated to PENDING status</p>

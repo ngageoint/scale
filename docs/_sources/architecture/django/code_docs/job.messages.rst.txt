@@ -12,6 +12,14 @@ job\.messages\.blocked\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.completed\_jobs module
+-------------------------------------
+
+.. automodule:: job.messages.completed_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.failed\_jobs module
 ----------------------------------
 
@@ -32,6 +40,14 @@ job\.messages\.pending\_jobs module
 -----------------------------------
 
 .. automodule:: job.messages.pending_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.messages\.process\_job\_inputs module
+------------------------------------------
+
+.. automodule:: job.messages.process_job_inputs
     :members:
     :undoc-members:
     :show-inheritance:
