@@ -201,7 +201,7 @@
   <div class="section" id="job-execution-services">
 <span id="rest-job-execution"></span><h1>Job Execution Services<a class="headerlink" href="#job-execution-services" title="Permalink to this headline">¶</a></h1>
 <p>These services provide access to information about &#8220;all&#8221;, &#8220;currently running&#8221; and &#8220;previously finished&#8221; job executions.</p>
-<table border="1" class="docutils" id="rest-job-execution-list">
+<span class="target" id="rest-job-execution-list"></span><table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -215,36 +215,44 @@
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Returns a list of all job executions.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /job-executions/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current <strong>v5</strong> version of the job execution list API, which is now deprecated.
+The new v6 version of this API is queried differently, but returns much of the same information.
+See <a class="reference internal" href="job.html#rest-job-execution-list-v6"><span class="std std-ref">Job Execution List</span></a> for more details on the new endpoint.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="4"><strong>GET</strong> /job-executions/</td>
 </tr>
-<tr class="row-odd"><td>page</td>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>page</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
-<tr class="row-even"><td>page_size</td>
+<tr class="row-odd"><td>page_size</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
-<tr class="row-odd"><td>started</td>
+<tr class="row-even"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-even"><td>ended</td>
+<tr class="row-odd"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-odd"><td>order</td>
+<tr class="row-even"><td>order</td>
 <td>String</td>
 <td>Optional</td>
 <td>One or more fields to use when ordering the results.
@@ -252,155 +260,155 @@ Duplicate it to multi-sort, (ex: order=status&amp;order=created).
 Nested objects require a delimiter (ex: order=job_type__name).
 Prefix fields with a dash to reverse the sort, (ex: order=-status).</td>
 </tr>
-<tr class="row-even"><td>status</td>
+<tr class="row-odd"><td>status</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only executions with a status matching this string.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>job_type_id</td>
+<tr class="row-even"><td>job_type_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only jobs with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>job_type_name</td>
+<tr class="row-odd"><td>job_type_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only jobs with a given job type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>job_type_category</td>
+<tr class="row-even"><td>job_type_category</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>node_id</td>
+<tr class="row-odd"><td>node_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only executions that ran on a given node.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.status</td>
+<tr class="row-odd"><td>.status</td>
 <td>String</td>
 <td colspan="2">The status of the job execution.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-odd"><td>.command_arguments</td>
+<tr class="row-even"><td>.command_arguments</td>
 <td>String</td>
 <td colspan="2">The argument string to execute on the command line for this job execution.
 This field is populated when the job execution is scheduled to run on a node
 and is updated when any needed pre-job steps are run.</td>
 </tr>
-<tr class="row-even"><td>.timeout</td>
+<tr class="row-odd"><td>.timeout</td>
 <td>Integer</td>
 <td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-odd"><td>.pre_started</td>
+<tr class="row-even"><td>.pre_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the pre-job steps were started on a node.</td>
 </tr>
-<tr class="row-even"><td>.pre_completed</td>
+<tr class="row-odd"><td>.pre_completed</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the pre-job steps were completed on a node.</td>
 </tr>
-<tr class="row-odd"><td>.pre_exit_code</td>
+<tr class="row-even"><td>.pre_exit_code</td>
 <td>Integer</td>
 <td colspan="2">The exit code of the pre-steps job process for this job execution.</td>
 </tr>
-<tr class="row-even"><td>.job_started</td>
+<tr class="row-odd"><td>.job_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the actual job started running on a node.</td>
 </tr>
-<tr class="row-odd"><td>.job_completed</td>
+<tr class="row-even"><td>.job_completed</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the actual job completed running on a node.</td>
 </tr>
-<tr class="row-even"><td>.job_exit_code</td>
+<tr class="row-odd"><td>.job_exit_code</td>
 <td>Integer</td>
 <td colspan="2">The exit code of the main job process for this job execution.</td>
 </tr>
-<tr class="row-odd"><td>.post_started</td>
+<tr class="row-even"><td>.post_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the post-job steps were started on a node.</td>
 </tr>
-<tr class="row-even"><td>.post_completed</td>
+<tr class="row-odd"><td>.post_completed</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the post-job steps were completed on a node.</td>
 </tr>
-<tr class="row-odd"><td>.post_exit_code</td>
+<tr class="row-even"><td>.post_exit_code</td>
 <td>Integer</td>
 <td colspan="2">The exit code of the post-steps job process for this job execution.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
+<tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.queued</td>
+<tr class="row-even"><td>.queued</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue for this run and went to QUEUED status.</td>
 </tr>
-<tr class="row-even"><td>.started</td>
+<tr class="row-odd"><td>.started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job was scheduled and went to RUNNING status.</td>
 </tr>
-<tr class="row-odd"><td>.ended</td>
+<tr class="row-even"><td>.ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the job execution ended. (FAILED, COMPLETED, or CANCELED)</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>.job</td>
+<tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job that is associated with the execution.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.node</td>
+<tr class="row-odd"><td>.node</td>
 <td>JSON Object</td>
 <td colspan="2">The node that ran the execution.
 (See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.error</td>
+<tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td colspan="2">The last error that was recorded for the execution.
 (See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -470,7 +478,7 @@ and is updated when any needed pre-job steps are run.</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils" id="rest-job-execution-details">
+<span class="target" id="rest-job-execution-details"></span><table border="1" class="docutils">
 <colgroup>
 <col width="18%" />
 <col width="16%" />
@@ -484,145 +492,153 @@ and is updated when any needed pre-job steps are run.</td>
 <tr class="row-even"><td colspan="3">Returns a specific job execution and all its related model information including job, node, environment, and results.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current <strong>v5</strong> version of the job execution details API, which is now deprecated.
+The new v6 version of this API is queried differently, but returns much of the same information.
+See <a class="reference internal" href="job.html#rest-job-execution-details-v6"><span class="std std-ref">Job Executions Details</span></a> more details on the new endpoint.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /job-executions/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="2">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>id</td>
+<tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>status</td>
+<tr class="row-even"><td>status</td>
 <td>String</td>
 <td>The status of the job execution.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td>command_arguments</td>
+<tr class="row-odd"><td>command_arguments</td>
 <td>String</td>
 <td>The argument string to execute on the command line for this job execution.
 This field is populated when the job execution is scheduled to run on a node
 and is updated when any needed pre-job steps are run.</td>
 </tr>
-<tr class="row-odd"><td>timeout</td>
+<tr class="row-even"><td>timeout</td>
 <td>Integer</td>
 <td>The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-even"><td>pre_started</td>
+<tr class="row-odd"><td>pre_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the pre-job steps were started on a node.</td>
 </tr>
-<tr class="row-odd"><td>pre_completed</td>
+<tr class="row-even"><td>pre_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the pre-job steps were completed on a node.</td>
 </tr>
-<tr class="row-even"><td>pre_exit_code</td>
+<tr class="row-odd"><td>pre_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the pre-steps job process for this job execution.</td>
 </tr>
-<tr class="row-odd"><td>job_started</td>
+<tr class="row-even"><td>job_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the actual job started running on a node.</td>
 </tr>
-<tr class="row-even"><td>job_completed</td>
+<tr class="row-odd"><td>job_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the actual job completed running on a node.</td>
 </tr>
-<tr class="row-odd"><td>job_exit_code</td>
+<tr class="row-even"><td>job_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the main job process for this job execution.</td>
 </tr>
-<tr class="row-even"><td>post_started</td>
+<tr class="row-odd"><td>post_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the post-job steps were started on a node.</td>
 </tr>
-<tr class="row-odd"><td>post_completed</td>
+<tr class="row-even"><td>post_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the post-job steps were completed on a node.</td>
 </tr>
-<tr class="row-even"><td>post_exit_code</td>
+<tr class="row-odd"><td>post_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the post-steps job process for this job execution.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>queued</td>
+<tr class="row-odd"><td>queued</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was added to the queue for this run and went to QUEUED status.</td>
 </tr>
-<tr class="row-odd"><td>started</td>
+<tr class="row-even"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was scheduled and went to RUNNING status.</td>
 </tr>
-<tr class="row-even"><td>ended</td>
+<tr class="row-odd"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job execution ended. (FAILED, COMPLETED, or CANCELED)</td>
 </tr>
-<tr class="row-odd"><td>last_modified</td>
+<tr class="row-even"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>job</td>
+<tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the execution.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>node</td>
+<tr class="row-even"><td>node</td>
 <td>JSON Object</td>
 <td>The node that ran the execution.
 (See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>error</td>
+<tr class="row-odd"><td>error</td>
 <td>JSON Object</td>
 <td>The last error that was recorded for the execution.
 (See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>environment</td>
+<tr class="row-even"><td>environment</td>
 <td>JSON Object</td>
 <td>An interface description for the environment the job execution executed in.</td>
 </tr>
-<tr class="row-even"><td>cpus_scheduled</td>
+<tr class="row-odd"><td>cpus_scheduled</td>
 <td>Decimal</td>
 <td>The number of CPUs scheduled for the execution.</td>
 </tr>
-<tr class="row-odd"><td>mem_scheduled</td>
+<tr class="row-even"><td>mem_scheduled</td>
 <td>Decimal</td>
 <td>The amount of RAM in MiB scheduled for the execution.</td>
 </tr>
-<tr class="row-even"><td>disk_in_scheduled</td>
+<tr class="row-odd"><td>disk_in_scheduled</td>
 <td>Decimal</td>
 <td>The amount of disk space in MiB scheduled for input files for the execution.</td>
 </tr>
-<tr class="row-odd"><td>disk_out_scheduled</td>
+<tr class="row-even"><td>disk_out_scheduled</td>
 <td>Decimal</td>
 <td>The amount of disk space in MiB scheduled for output files for the execution.</td>
 </tr>
-<tr class="row-even"><td>disk_total_scheduled</td>
+<tr class="row-odd"><td>disk_total_scheduled</td>
 <td>Decimal</td>
 <td>The total amount of disk space in MiB scheduled for the execution.</td>
 </tr>
-<tr class="row-odd"><td>results</td>
+<tr class="row-even"><td>results</td>
 <td>JSON Object</td>
 <td>An interface description for all the possible job results meta-data.</td>
 </tr>
-<tr class="row-even"><td>results_manifest</td>
+<tr class="row-odd"><td>results_manifest</td>
 <td>JSON Object</td>
 <td>An interface description for all the actual job results meta-data.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
     <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
     <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>

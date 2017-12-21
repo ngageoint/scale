@@ -1895,6 +1895,391 @@ contained in the geographic boundary of this file.</td>
 </tr>
 </tbody>
 </table>
+<span class="target" id="rest-job-execution-list-v6"></span><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Job Executions List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of job executions associated with a given Job ID.  Returned job executions are ordered by exe_num
+descending (most recent first)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>NOTE</strong></dt>
+<dd>This API endpoint is available starting with API <strong>v6</strong>.  It replaces a very similar API endpoint which
+you can see described here: <a class="reference internal" href="job_execution.html#rest-job-execution-list"><span class="std std-ref">Job Execution List</span></a>.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><dl class="first last docutils">
+<dt><strong>GET</strong> /jobs/{id}/executions/</dt>
+<dd>Where {id} is the unique identifier of an existing job.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-odd"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-even"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The end of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only executions with a status matching this string.
+Choices: [RUNNING, FAILED, COMPLETED, CANCELED].
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>node_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only executions that ran on a given node.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.status</td>
+<td>String</td>
+<td colspan="2">The status of the job execution.
+Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-even"><td>.exe_num</td>
+<td>Integer</td>
+<td colspan="2">The unique job execution number for the job identifer.</td>
+</tr>
+<tr class="row-odd"><td>.cluster_id</td>
+<td>String</td>
+<td colspan="2">The Scale cluster identifier.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.queued</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job was added to the queue for this run and went to QUEUED status.</td>
+</tr>
+<tr class="row-even"><td>.started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job was scheduled and went to RUNNING status.</td>
+</tr>
+<tr class="row-odd"><td>.ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the job execution ended. (FAILED, COMPLETED, or CANCELED)</td>
+</tr>
+<tr class="row-even"><td>.job</td>
+<td>JSON Object</td>
+<td colspan="2">The job that is associated with the execution.
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.node</td>
+<td>JSON Object</td>
+<td colspan="2">The node that ran the execution.
+(See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.error</td>
+<td>JSON Object</td>
+<td colspan="2">The last error that was recorded for the execution.
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job_type</td>
+<td>JSON Object</td>
+<td colspan="2">The job type that is associated with the execution.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.timeout</td>
+<td>Integer</td>
+<td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-odd"><td>.input_file_size</td>
+<td>Float</td>
+<td colspan="2">The total amount of disk space in MiB for all input files for this execution.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exe_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;cluster_id&quot;</span><span class="o">:</span> <span class="s2">&quot;scale_job_1234_263x0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.033Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.010Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:44.494Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:45.906Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;machine.com&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+            <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mf">10.0</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<span class="target" id="rest-job-execution-details-v6"></span><table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Job Execution Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns a specific job execution and all its related model information including job, node, environment, and results.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>NOTE</strong></dt>
+<dd>This API endpoint is available starting with API <strong>v6</strong>.  It replaces a very similar API endpoint which
+you can see described here: <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution List</span></a>.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /jobs/{id}/executions/{exe_num}</dt>
+<dd>Where {id} is the unique identifier of an existing job and {exe_num} is the execution number of a job execution
+as it relates to the job.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>The status of the job execution.
+Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
+</tr>
+<tr class="row-odd"><td>exe_num</td>
+<td>Integer</td>
+<td>The unique job execution number for the job identifer.</td>
+</tr>
+<tr class="row-even"><td>cluster_id</td>
+<td>String</td>
+<td>The Scale cluster identifier.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>queued</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job was added to the queue for this run and went to QUEUED status.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job was scheduled and went to RUNNING status.</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job execution ended. (FAILED, COMPLETED, or CANCELED)</td>
+</tr>
+<tr class="row-odd"><td>job</td>
+<td>JSON Object</td>
+<td>The job that is associated with the execution.
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>node</td>
+<td>JSON Object</td>
+<td>The node that ran the execution.
+(See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>error</td>
+<td>JSON Object</td>
+<td>The last error that was recorded for the execution.
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>job_type</td>
+<td>JSON Object</td>
+<td>The job type that is associated with the execution.
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>timeout</td>
+<td>Integer</td>
+<td>The maximum amount of time this job can run before being killed (in seconds).</td>
+</tr>
+<tr class="row-even"><td>input_file_size</td>
+<td>Float</td>
+<td>The total amount of disk space in MiB for all input files for this execution.</td>
+</tr>
+<tr class="row-odd"><td>task_results</td>
+<td>JSON Object</td>
+<td>JSON description of the task results for this execution.
+(See <a class="reference internal" href="../architecture/jobs/task_results.html#architecture-jobs-task-results-spec"><span class="std std-ref">Job Task Results</span></a>)</td>
+</tr>
+<tr class="row-even"><td>resources</td>
+<td>JSON Object</td>
+<td>JSON description describing the resources allocated to this execution.</td>
+</tr>
+<tr class="row-odd"><td>configuration</td>
+<td>JSON Object</td>
+<td>JSON description of the configuration for running the job
+(See <span class="xref std std-ref">Job Execution Configuration &lt;architecture_jobs_exe_configuration</span>)</td>
+</tr>
+<tr class="row-even"><td>output</td>
+<td>JSON Object</td>
+<td>JSON description of the job output.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;exe_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;cluster_id&quot;</span><span class="o">:</span> <span class="s2">&quot;scale_job_1234_263x0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.033Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.010Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:44.494Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:45.906Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;machine.com&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+    <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mf">10.0</span><span class="p">,</span>
+    <span class="s2">&quot;task_results&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">128.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">11.0</span><span class="p">,</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">1.0</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;tasks&quot;</span><span class="o">:</span> <span class="p">[...],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">}</span>
+    <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">3</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

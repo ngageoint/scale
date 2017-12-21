@@ -922,6 +922,27 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="job.test.test_views.TestJobExecutionDetailsView">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.test_views.TestJobExecutionDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobExecutionDetailsView.test_get_job_execution_bad_exe_num">
+<code class="descname">test_get_job_execution_bad_exe_num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsView.test_get_job_execution_bad_exe_num" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobExecutionDetailsView.test_get_job_execution_for_job_exe_id">
+<code class="descname">test_get_job_execution_for_job_exe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionDetailsView.test_get_job_execution_for_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.test.test_views.TestJobExecutionSpecificLogView">
 <em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobExecutionSpecificLogView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionSpecificLogView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -987,41 +1008,25 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_for_job_exe_id">
-<code class="descname">test_get_job_execution_for_job_exe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_for_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_node">
+<code class="descname">test_get_job_execution_filter_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_status">
+<code class="descname">test_get_job_execution_filter_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_time">
+<code class="descname">test_get_job_execution_filter_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_execution_filter_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions">
 <code class="descname">test_get_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This test checks to make sure there are 10 job executions.</p>
+<dd><p>This test checks to make sure there are 4 job executions.</p>
 </dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_category">
-<code class="descname">test_get_job_executions_for_job_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_category" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_id">
-<code class="descname">test_get_job_executions_for_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_name">
-<code class="descname">test_get_job_executions_for_job_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_for_job_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_get_job_executions_running_status">
-<code class="descname">test_get_job_executions_running_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_get_job_executions_running_status" title="Permalink to this definition">¶</a></dt>
-<dd><p>This test checks to make sure there are 2 job executions running.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobExecutionsView.test_no_tz">
-<code class="descname">test_no_tz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobExecutionsView.test_no_tz" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1680,6 +1685,59 @@
 <dl class="method">
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_with_status_filter">
 <code class="descname">test_with_status_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_with_status_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.test_views.TestOldJobExecutionsView">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestOldJobExecutionsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_execution_bad_id">
+<code class="descname">test_get_job_execution_bad_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_execution_bad_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_execution_for_job_exe_id">
+<code class="descname">test_get_job_execution_for_job_exe_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_execution_for_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_executions">
+<code class="descname">test_get_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_executions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test checks to make sure there are 10 job executions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_category">
+<code class="descname">test_get_job_executions_for_job_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_category" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_id">
+<code class="descname">test_get_job_executions_for_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_name">
+<code class="descname">test_get_job_executions_for_job_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_for_job_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_running_status">
+<code class="descname">test_get_job_executions_running_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_get_job_executions_running_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>This test checks to make sure there are 2 job executions running.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestOldJobExecutionsView.test_no_tz">
+<code class="descname">test_no_tz</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestOldJobExecutionsView.test_no_tz" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

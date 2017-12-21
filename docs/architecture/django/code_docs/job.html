@@ -2636,6 +2636,30 @@ job_exe, job_type, and error models will be populated.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobExecutionManager.get_job_exe_details">
+<code class="descname">get_job_exe_details</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exe_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns additional details about a job execution related to the given job identifier and execution number.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_id</strong> (<em>int</em>) &#8211; Query job executions associated with the job identifier.</li>
+<li><strong>exe_num</strong> (<em>int</em>) &#8211; Query job executions associated with the execution number.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Details about the job execution that match the job execution identifier.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobExecutionManager.get_job_exe_with_job_and_job_type">
 <code class="descname">get_job_exe_with_job_and_job_type</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exe_with_job_and_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets a job execution with its related job and job_type models populated using only one database query</p>
@@ -2653,6 +2677,33 @@ job_exe, job_type, and error models will be populated.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobExecutionManager.get_job_exes">
+<code class="descname">get_job_exes</code><span class="sig-paren">(</span><em>job_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>node_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of job executions for the given job.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_id</strong> (<em>int</em>) &#8211; Query job executions associated with the job identifier.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
+<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions with the a specific status.</li>
+<li><strong>node_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job executions that match the job identifier.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -5105,20 +5156,6 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
-<dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializer.ErrorSerializer">
-<em class="property">class </em><code class="descname">ErrorSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializer.ErrorSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializer" title="error.serializers.ErrorBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializer</span></code></a></p>
-<p>Converts error model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializer.NodeSerializerV4">
-<em class="property">class </em><code class="descname">NodeSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializer.NodeSerializerV4" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="node.html#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
-<p>Converts node model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -5141,8 +5178,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionSerializer.NodeBaseSerializerV4">
-<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializer.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dt id="job.serializers.JobExecutionSerializer.NodeBaseSerializer">
+<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -5289,6 +5326,55 @@ object the first time, the query is executed.</p>
 <p>Converts job with latest execution model fields to REST output</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionBaseSerializer">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">OldJobExecutionBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job execution model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionDetailsSerializer">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">OldJobExecutionDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.serializers.OldJobExecutionSerializer" title="job.serializers.OldJobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.OldJobExecutionSerializer</span></code></a></p>
+<p>Converts job execution model fields to REST output</p>
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionDetailsSerializer.ErrorSerializer">
+<em class="property">class </em><code class="descname">ErrorSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionDetailsSerializer.ErrorSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializer" title="error.serializers.ErrorBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializer</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionDetailsSerializer.NodeSerializerV4">
+<em class="property">class </em><code class="descname">NodeSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionDetailsSerializer.NodeSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="node.html#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
+<p>Converts node model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionSerializer">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">OldJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.serializers.OldJobExecutionBaseSerializer" title="job.serializers.OldJobExecutionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.OldJobExecutionBaseSerializer</span></code></a></p>
+<p>Converts job execution model fields to REST output</p>
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionSerializer.ErrorBaseSerializer">
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.OldJobExecutionSerializer.NodeBaseSerializerV4">
+<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.OldJobExecutionSerializer.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts node model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.urls">
 <span id="job-urls-module"></span><h2>job.urls module<a class="headerlink" href="#module-job.urls" title="Permalink to this headline">¶</a></h2>
@@ -5374,7 +5460,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="job.views.JobExecutionDetailsView.retrieve">
-<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em>, <em>exe_num=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets job execution and associated job_type id, name, and version</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5382,7 +5468,32 @@ object the first time, the query is executed.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; the job execution id</li>
+<li><strong>job_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job.</li>
+<li><strong>exe_num</strong> (<em>int encoded as a str</em>) &#8211; the execution number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobExecutionDetailsView.retrieve_v5">
+<code class="descname">retrieve_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets job execution and associated job_type id, name, and version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>job_exe_id</strong> (<em>int encoded as a str</em>) &#8211; the job execution id</li>
 </ul>
 </td>
 </tr>
@@ -5448,7 +5559,31 @@ object the first time, the query is executed.</p>
 <p>This view is the endpoint for viewing job executions and their associated job_type id, name, and version</p>
 <dl class="method">
 <dt id="job.views.JobExecutionsView.list">
-<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>job_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets job executions and their associated job_type id, name, and version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>job_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobExecutionsView.list_v5">
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets job executions and their associated job_type id, name, and version</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -5947,6 +6082,24 @@ example: input_1</p>
 <dl class="method">
 <dt id="job.views.JobsWithExecutionView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsWithExecutionView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets jobs and their associated latest execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobsWithExecutionView.list_v5">
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsWithExecutionView.list_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets jobs and their associated latest execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
