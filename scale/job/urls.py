@@ -19,6 +19,8 @@ urlpatterns = [
     # Job views
     url(r'^jobs/$', views.JobsView.as_view(), name='jobs_view'),
     url(r'^jobs/(\d+)/$', views.JobDetailsView.as_view(), name='job_details_view'),
+    url(r'^jobs/(\d+)/executions/$', views.JobExecutionsView.as_view(), name=''),
+    url(r'^jobs/(\d+)/executions/(\d+)/$', views.JobExecutionDetailsView.as_view(), name=''),
     url(r'^jobs/(\d+)/input_files/$', views.JobInputFilesView.as_view(), name='job_input_files_view'),
     url(r'^jobs/updates/$', views.JobUpdatesView.as_view(), name='job_updates_view'),
 

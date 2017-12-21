@@ -1116,6 +1116,7 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
+    # TODO: remove when REST API v5 is removed
     def get_details(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 
@@ -1164,6 +1165,7 @@ class JobExecutionManager(models.Manager):
 
         return job_exe
 
+    # TODO: remove when REST API v5 is removed
     def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
         """Returns a list of job executions within the given time range.
@@ -1226,6 +1228,77 @@ class JobExecutionManager(models.Manager):
             job_exes = job_exes.order_by('created')
         return job_exes
 
+    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None):
+        """Returns a list of job executions for the given job.
+
+        :param job_id: Query job executions associated with the job identifier.
+        :type job_id: int
+        :param started: Query job executions updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query job executions updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query job executions with the a specific status.
+        :type statuses: [string]
+        :param node_ids: Query job executions that ran on a node with the identifier.
+        :type node_ids: [int]
+        :returns: The list of job executions that match the job identifier.
+        :rtype: [:class:`job.models.JobExecution`]
+        """
+
+        # Fetch a list of job executions
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend')
+        job_exes = job_exes.defer('stdout', 'stderr')
+
+        # Apply job filtering
+        job_exes = job_exes.filter(job__id=job_id)
+
+        # Apply time range filtering
+        if started:
+            job_exes = job_exes.filter(started__gte=started)
+        if ended:
+            job_exes = job_exes.filter(jobexecutionend__ended__lte=ended)
+
+        # Apply status and node filtering
+        if statuses:
+            if 'RUNNING' in statuses:
+                # This is a special case where we have to use exclusion so that running executions (no job_exe_end) are
+                # included
+                exclude_statues = []
+                for status in ['COMPLETED', 'FAILED', 'CANCELED']:
+                    if status not in statuses:
+                        exclude_statues.append(status)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
+            else:
+                job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
+        if node_ids:
+            job_exes = job_exes.filter(node_id__in=node_ids)
+
+        # Apply sorting
+        job_exes = job_exes.order_by('exe_num')
+
+        return job_exes
+
+    def get_job_exe_details(self, job_id, exe_num):
+        """Returns additional details about a job execution related to the given job identifier and execution number.
+
+        :param job_id: Query job executions associated with the job identifier.
+        :type job_id: int
+        :param exe_num: Query job executions associated with the execution number.
+        :type exe_num: int
+        :returns: Details about the job execution that match the job execution identifier.
+        :rtype: [:class:`job.models.JobExecution`]
+        """
+
+        # Fetch a list of job executions
+        job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
+                                                            'jobexecutionoutput')
+        job_exe = job_exe.defer('stdout', 'stderr')
+
+        # Apply job and execution filtering
+        job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)
+
+        return job_exe
+
     def get_job_exe_with_job_and_job_type(self, job_id, exe_num):
         """Gets a job execution with its related job and job_type models populated using only one database query
 
@@ -1247,6 +1320,7 @@ class JobExecutionManager(models.Manager):
         logger.info('Found job execution with ID %d', job_exe.id)
         return job_exe
 
+    # TODO: remove when REST API v5 is removed
     def get_latest(self, jobs):
         """Gets the latest job execution associated with each given job.
 
@@ -1264,6 +1338,7 @@ class JobExecutionManager(models.Manager):
 
         return results
 
+    # TODO: remove when REST API v5 is removed
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 

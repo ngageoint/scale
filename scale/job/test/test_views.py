@@ -13,6 +13,7 @@ from rest_framework import status
 import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
+import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
@@ -2330,7 +2331,7 @@ class TestJobTypesSystemFailuresView(TestCase):
         self.assertEqual(result['results'][0]['error']['name'], self.error.name)
         self.assertEqual(result['results'][0]['count'], 1)
 
-
+# TODO: remove when REST API v5 is removed
 class TestJobsWithExecutionView(TransactionTestCase):
     """An integration test of the Jobs with latest execution view"""
 
@@ -2477,6 +2478,95 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
 
 class TestJobExecutionsView(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type_1 = job_test_utils.create_job_type()
+        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
+        self.node_1 = node_test_utils.create_node()
+        self.node_2 = node_test_utils.create_node()
+
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=1, status='FAILED', node=self.node_1,
+                                                        started='2017-01-02T00:00:00Z', ended='2017-01-02T01:00:00Z')
+        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, exe_num=2, status='COMPLETED', node=self.node_2,
+                                                        started='2017-01-01T00:00:00Z', ended='2017-01-01T01:00:00Z')
+        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, exe_num=3, status='COMPLETED', node=self.node_2,
+                                                        started='2017-01-01T00:00:00Z', ended='2017-01-01T01:00:00Z')
+        self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, exe_num=4, status='RUNNING', node=self.node_2,
+                                                        started='2017-01-03T00:00:00Z', ended='2017-01-03T01:00:00Z')
+
+    def test_get_job_executions(self):
+        """This test checks to make sure there are 4 job executions."""
+        url = rest_util.get_url('/jobs/%d/executions/' % self.job_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 4)
+
+    def test_get_job_execution_bad_id(self):
+        url = rest_util.get_url('/jobs/999999999/executions/')
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+        self.assertEqual(result['results'], [])
+
+    def test_get_job_execution_filter_node(self):
+        url = rest_util.get_url('/jobs/%d/executions/?node_id=%d' % (self.job_1.id, self.node_1.id))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 1)
+
+    def test_get_job_execution_filter_status(self):
+        url = rest_util.get_url('/jobs/%d/executions/?status=COMPLETED' % self.job_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 2)
+
+    def test_get_job_execution_filter_time(self):
+        url = rest_util.get_url('/jobs/%d/executions/?started=2017-01-01T00:00:00Z&ended=2017-01-02T00:00:00Z' % self.job_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 2)
+
+
+class TestJobExecutionDetailsView(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type_1 = job_test_utils.create_job_type()
+        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
+
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=9999, status='COMPLETED')
+
+    def test_get_job_execution_for_job_exe_id(self):
+        url = rest_util.get_url('/jobs/%d/executions/%d/' % (self.job_1.id, self.job_exe_1a.exe_num))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        print results
+        self.assertEqual(results['id'], self.job_exe_1a.id)
+
+    def test_get_job_execution_bad_exe_num(self):
+        url = rest_util.get_url('/jobs/%d/executions/%d/' % (self.job_1.id, 999999999))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+
+# TODO: remove when REST API v5 is removed
+class TestOldJobExecutionsView(TransactionTestCase):
 
     def setUp(self):
         django.setup()
