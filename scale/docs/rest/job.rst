@@ -1240,7 +1240,9 @@ These services provide access to information about "all", "currently running" an
 | .status              | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .timeout             | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
+| .exe_num             | Integer           | The unique job execution number for the job identifer.                         |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| .cluster_id          | String            | The Scale cluster identifier.                                                  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .created             | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1262,9 +1264,7 @@ These services provide access to information about "all", "currently running" an
 | .job_type            | JSON Object       | The job type that is associated with the execution.                            |
 |                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .exe_num             | Integer           | The unique job execution number for the job identifer.                         |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| .cluster_id          | String            | The Scale cluster identifier.                                                  |
+| .timeout             | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .input_file_size     | Float             | The total amount of disk space in MiB for all input files for this execution.  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1278,7 +1278,8 @@ These services provide access to information about "all", "currently running" an
 |            {                                                                                                              |
 |                "id": 3,                                                                                                   |
 |                "status": "COMPLETED",                                                                                     |
-|                "timeout": 1800,                                                                                           |
+|                "exe_num": 1,                                                                                              |
+|                "cluster_id": "scale_job_1234_263x0",                                                                      |
 |                "created": "2015-08-28T17:57:41.033Z",                                                                     |
 |                "queued": "2015-08-28T17:57:41.010Z",                                                                      |
 |                "started": "2015-08-28T17:57:44.494Z",                                                                     |
@@ -1307,8 +1308,7 @@ These services provide access to information about "all", "currently running" an
 |                    "is_paused": false,                                                                                    |
 |                    "icon_code": "f013"                                                                                    |
 |                },                                                                                                         |
-|                "exe_num": 1,                                                                                              |
-|                "cluster_id": "scale_job_1234_263x0",                                                                      |
+|                "timeout": 1800,                                                                                           |
 |                "input_file_size": 10.0                                                                                    |
 |            }                                                                                                              |
 |        ]                                                                                                                  |
@@ -1345,7 +1345,9 @@ These services provide access to information about "all", "currently running" an
 | status               | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| timeout              | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
+| exe_num              | Integer           | The unique job execution number for the job identifer.                         |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| cluster_id           | String            | The Scale cluster identifier.                                                  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | created              | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1367,9 +1369,7 @@ These services provide access to information about "all", "currently running" an
 | job_type             | JSON Object       | The job type that is associated with the execution.                            |
 |                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| exe_num              | Integer           | The unique job execution number for the job identifer.                         |
-+----------------------+-------------------+--------------------------------------------------------------------------------+
-| cluster_id           | String            | The Scale cluster identifier.                                                  |
+| timeout              | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | input_file_size      | Float             | The total amount of disk space in MiB for all input files for this execution.  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
@@ -1388,7 +1388,8 @@ These services provide access to information about "all", "currently running" an
 |  {                                                                                                                        |
 |      "id": 3,                                                                                                             |
 |      "status": "COMPLETED",                                                                                               |
-|      "timeout": 1800,                                                                                                     |
+|      "exe_num": 1,                                                                                                        |
+|      "cluster_id": "scale_job_1234_263x0",                                                                                |
 |      "created": "2015-08-28T17:57:41.033Z",                                                                               |
 |      "queued": "2015-08-28T17:57:41.010Z",                                                                                |
 |      "started": "2015-08-28T17:57:44.494Z",                                                                               |
@@ -1417,10 +1418,9 @@ These services provide access to information about "all", "currently running" an
 |          "is_paused": false,                                                                                              |
 |          "icon_code": "f013"                                                                                              |
 |      },                                                                                                                   |
-|      "exe_num": 1,                                                                                                        |
-|      "cluster_id": "scale_job_1234_263x0",                                                                                |
+|      "timeout": 1800,                                                                                                     |
 |      "input_file_size": 10.0,                                                                                             |
-|      "task_results": {...},                                                                                               |
+|      "task_results": null,                                                                                                |
 |      "resources": {                                                                                                       |
 |          "version": "1.0",                                                                                                |
 |          "resources": {                                                                                                   |
