@@ -98,6 +98,8 @@ def _cache_error(error):
     CACHED_ERRORS[error.id] = error
     if error.is_builtin:
         CACHED_BUILTIN_ERROR_NAMES[error.name] = error.id
+        # TODO: this is a hack for legacy jobs that use builtin Scale errors, remove this after legacy jobs are removed
+        CACHED_JOB_ERROR_NAMES[error.name] = error.id
     else:
         CACHED_JOB_ERROR_NAMES[error.name] = error.id
 
