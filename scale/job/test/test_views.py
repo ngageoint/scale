@@ -2556,7 +2556,6 @@ class TestJobExecutionDetailsView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        print results
         self.assertEqual(results['id'], self.job_exe_1a.id)
 
     def test_get_job_execution_bad_exe_num(self):
