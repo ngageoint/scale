@@ -31,6 +31,9 @@ DEFAULT_PRINCIPLE = None
 DEFAULT_SECRET = None
 
 
+GLOBAL_SHUTDOWN = None
+
+
 class Command(BaseCommand):
     """Command that launches the Scale scheduler
     """
@@ -50,6 +53,10 @@ class Command(BaseCommand):
 
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
+
+        # Set up global shutdown
+        global GLOBAL_SHUTDOWN
+        GLOBAL_SHUTDOWN = self._shutdown
 
         # TODO: clean this up
         mesos_master = options.get('master')
@@ -115,7 +122,7 @@ class Command(BaseCommand):
             logger.exception('Mesos Scheduler Driver returned an exception')
 
         #Perform a shut down and return any non-zero status
-        shutdown_status = self._shutdown
+        shutdown_status = self._shutdown()
         status = status or shutdown_status
 
         logger.info('Exiting...')

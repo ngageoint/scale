@@ -6,6 +6,7 @@ import math
 import time
 from abc import ABCMeta
 
+from django.db.utils import InterfaceError
 from django.utils.timezone import now
 
 
@@ -45,6 +46,14 @@ class BaseSchedulerThread(object):
 
             try:
                 self._execute()
+            except InterfaceError as err:
+                logger.exception('%s thread had a critical error interfacing with the database', self._name)
+                if err.message == 'connection already closed':
+                    msg = '%s thread has detected that the database connection is closed and cannot be recovered.'
+                    msg += ' Shutting down the scheduler...'
+                    logger.error(msg, self._name)
+                    from scheduler.management.commands.scale_scheduler import GLOBAL_SHUTDOWN
+                    GLOBAL_SHUTDOWN()
             except Exception:
                 logger.exception('%s thread had a critical error', self._name)
 
