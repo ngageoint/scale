@@ -120,6 +120,7 @@ class TestCreateJobExecutionEnd(TransactionTestCase):
                 task.update(update)
                 job_exe.task_update(update)
             message_1.add_job_exe_end(job_exe.create_job_exe_end_model())
+            message_1.add_job_exe_end(job_exe.create_job_exe_end_model())  # Test having duplicate models
             message_2.add_job_exe_end(job_exe.create_job_exe_end_model())
             message_3.add_job_exe_end(job_exe.create_job_exe_end_model())
 
