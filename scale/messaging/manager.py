@@ -117,7 +117,11 @@ class CommandMessageManager(object):
 
         command = self._extract_command(message)
         logger.info('Processing message of type %s', command.type)
-        success = command.execute()
+        try:
+            success = command.execute()
+        except Exception:
+            logger.exception('Message threw exception')
+            success = False
 
         if not success:
             raise CommandMessageExecuteFailure

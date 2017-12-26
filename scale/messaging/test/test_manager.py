@@ -129,6 +129,24 @@ class TestCommandMessageManager(TestCase):
 
         self.assertFalse(send_downstream.called)
 
+    @patch('messaging.manager.CommandMessageManager._extract_command')
+    @patch('messaging.manager.CommandMessageManager._send_downstream')
+    def test_process_message_exception(self, send_downstream, extract_command):
+        """Validate logic for a process message throwing an exception in process execution"""
+
+        message = {'type': 'test', 'body': 'payload'}
+
+        manager = CommandMessageManager()
+        command = MagicMock()
+        command.execute = MagicMock()
+        command.execute.side_effect = Exception
+        extract_command.return_value = command
+
+        with self.assertRaises(CommandMessageExecuteFailure):
+            manager._process_message(message)
+
+        self.assertFalse(send_downstream.called)
+
     @patch('messaging.manager.CommandMessageManager.send_messages')
     def test_successful_send_downstream(self, send_messages):
         """Validate call of send_message for each downstream message"""
