@@ -133,6 +133,7 @@ class CreateJobExecutionEnd(CommandMessage):
         for job_exe_end in self._job_exe_ends:
             if job_exe_end.job_exe_id not in existing_ids:
                 models_to_create.append(job_exe_end)
+                existing_ids.add(job_exe_end.job_exe_id)  # Handles duplicate models in the message
 
         # Bulk create new job_exe_end models
         if models_to_create:
