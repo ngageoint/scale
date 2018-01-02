@@ -25,4 +25,4 @@ class SchedulerConfiguration(object):
             self.is_paused = scheduler.is_paused
             self.num_message_handlers = scheduler.num_message_handlers
             self.queue_mode = scheduler.queue_mode
-            self.debugging_level = scheduler.debugging_level 
+            self.logging_level = scheduler.logging_level 

@@ -22,7 +22,7 @@ class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
     queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
-    update_fields = ('is_paused', 'num_message_handlers', 'debugging_level')
+    update_fields = ('is_paused', 'num_message_handlers', 'logging_level')
 
     def get(self, request):
         """Gets scheduler info
