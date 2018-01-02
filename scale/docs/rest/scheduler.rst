@@ -30,11 +30,14 @@ There should be one and only one scheduler entry in the database and it is used 
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
 +----------------------+-------------------+------------------------------------------------------------------------------+
+| debugging_level      | String            | The logging level sent to all tasks that run within a Scale Docker image     |
++----------------------+-------------------+------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "is_paused": False,                                                                                               |
 |       "num_message_handlers": 2,                                                                                        |
+|       "debugging_level": 'INFO',                                                                                        |
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 
@@ -56,6 +59,10 @@ There should be one and only one scheduler entry in the database and it is used 
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
 +----------------------+-------------------+------------------------------------------------------------------------------+
+| debugging_level      | String            | (Optional) The logging level sent to all tasks that run within a Scale       |
+|                      |                   | Docker image. Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.|
+|                      |                   | Anything else will default to INFO                                           |
++----------------------+-------------------+------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -70,10 +77,13 @@ There should be one and only one scheduler entry in the database and it is used 
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
 +----------------------+-------------------+------------------------------------------------------------------------------+
+| debugging_level      | String            | The logging level sent to all tasks that run within a Scale Docker image     |
++----------------------+-------------------+------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "is_paused": False,                                                                                               |
 |       "num_message_handlers": 2,                                                                                        |
+|       "debugging_level": 'INFO',                                                                                        |
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+

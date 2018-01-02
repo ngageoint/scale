@@ -250,6 +250,12 @@ LOG_HANDLERS = {
         'formatter': 'standard',
         'stream': sys.stderr
     },
+    'console-err-debug': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stderr
+    },
     'file-debug': {
         'level': 'DEBUG',
         'class': 'logging.handlers.TimedRotatingFileHandler',
@@ -285,7 +291,7 @@ LOG_CONSOLE_DEBUG = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err'],
+            'handlers': ['console-err-debug'],
             'level': 'DEBUG',
         },
     },
@@ -297,8 +303,44 @@ LOG_CONSOLE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err'],
+            'handlers': ['console-err-debug'],
             'level': 'INFO',
+        },
+    },
+}
+LOG_CONSOLE_ERROR = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-err'],
+            'level': 'ERROR',
+        },
+    },
+}
+LOG_CONSOLE_WARNING = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-err'],
+            'level': 'WARNING',
+        },
+    },
+}
+LOG_CONSOLE_CRITICAL = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-err'],
+            'level': 'CRITICAL',
         },
     },
 }
