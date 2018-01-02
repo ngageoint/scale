@@ -301,10 +301,8 @@ class JobData(object):
         """Retrieves the given data input files and writes them to the given local directories. Any given file
         parameters that do not appear in the data will not be returned in the results.
 
-        :param data_files: Dict with each file parameter name mapping to a bool indicating if the parameter accepts
-            multiple files (True), an absolute directory path and bool indicating if job supports partial file
-            download (True).
-        :type data_files: {string: tuple(bool, string, bool)}
+        :param data_files: Object containing manifest details on input files.
+        :type data_files: `job.seed.types.SeedInputFiles`
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
         :rtype: {string: [string]}
         """
@@ -315,7 +313,7 @@ class JobData(object):
         for data_file in data_files:
             input_name = data_file.name
             multiple = data_file.multiple
-            dir_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, self._input_files[input_name])
+            dir_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
             partial = data_file.partial
             if data_file.name not in self._data_names:
                 continue
