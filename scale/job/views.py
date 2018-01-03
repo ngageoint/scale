@@ -24,7 +24,7 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
-                             OldJobExecutionSerializer, OldJobExecutionDetailsSerializer)
+                             OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer)
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
@@ -577,15 +577,70 @@ class JobDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        # TODO: remove this check when REST API v5 is removed
+        if request.version == 'v5':
+            return self.get_v5(request, job_id)
+        else:
+            try:
+                job = Job.objects.get_details(job_id)
+            except Job.DoesNotExist:
+                raise Http404
+
+            serializer = self.get_serializer(job)
+            return Response(serializer.data)
+
+    def patch(self, request, job_id):
+        """Modify job info with a subset of fields
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        # TODO: remove this check when REST API v5 is removed
+        if request.version == 'v5':
+            return self.patch_v5(request, job_id)
+        else:
+            # Validate that no extra fields are included
+            rest_util.check_update(request, ['status'])
+
+            # Validate JSON
+            status_code = rest_util.parse_string(request, 'status')
+            if status_code != 'CANCELED':
+                raise rest_util.BadParameter('Invalid or read-only status. Allowed values: CANCELED')
+
+            try:
+                Queue.objects.handle_job_cancellation(job_id, timezone.now())
+                job = Job.objects.get_details(job_id)
+            except (Job.DoesNotExist, JobExecution.DoesNotExist):
+                raise Http404
+
+            serializer = self.get_serializer(job)
+            return Response(serializer.data)
+
+    def get_v5(self, request, job_id):
+        """Retrieves jobs and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         try:
-            job = Job.objects.get_details(job_id)
+            job = Job.objects.get_details_v5(job_id)
         except Job.DoesNotExist:
             raise Http404
 
-        serializer = self.get_serializer(job)
+        serializer = OldJobDetailsSerializer(job)
         return Response(serializer.data)
 
-    def patch(self, request, job_id):
+    def patch_v5(self, request, job_id):
         """Modify job info with a subset of fields
 
         :param request: the HTTP PATCH request
@@ -606,11 +661,11 @@ class JobDetailsView(GenericAPIView):
 
         try:
             Queue.objects.handle_job_cancellation(job_id, timezone.now())
-            job = Job.objects.get_details(job_id)
+            job = Job.objects.get_details_v5(job_id)
         except (Job.DoesNotExist, JobExecution.DoesNotExist):
             raise Http404
 
-        serializer = self.get_serializer(job)
+        serializer = OldJobDetailsSerializer(job)
         return Response(serializer.data)
 
 class JobInputFilesView(ListAPIView):
