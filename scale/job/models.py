@@ -266,6 +266,74 @@ class JobManager(models.Manager):
 
         return job
 
+# TODO: remopve this function when API v5 is removed
+def get_details_v5(self, job_id):
+        """Gets additional details for the given job model based on related model attributes.
+
+        The additional fields include: input files, recipe, job executions, and generated products.
+
+        :param job_id: The unique identifier of the job.
+        :type job_id: int
+        :returns: The job with extra related attributes.
+        :rtype: :class:`job.models.Job`
+        """
+
+        # Attempt to fetch the requested job
+        job = Job.objects.select_related(
+            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
+            'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job', 'superseded_job__job_type',
+            'superseded_by_job', 'superseded_by_job__job_type'
+        ).get(pk=job_id)
+
+        # Attempt to get related job executions
+        job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
+        job.job_exes = job_exes.defer('job__data', 'job__results').order_by('-created')
+
+        # Attempt to get related recipe
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from recipe.models import RecipeJob
+            recipe_jobs = RecipeJob.objects.filter(job=job).order_by('recipe__last_modified')
+            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                     'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                     'recipe__event__rule')
+            job.recipes = [recipe_job.recipe for recipe_job in recipe_jobs]
+        except:
+            job.recipes = []
+
+        # Fetch all the associated input files
+        input_file_ids = job.get_job_data().get_input_file_ids()
+        input_files = ScaleFile.objects.filter(id__in=input_file_ids)
+        input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+                                        'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                        'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                        'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                        'job_type__error_mapping')
+        input_files = input_files.prefetch_related('countries')
+        input_files = input_files.order_by('id').distinct('id')
+
+        # Attempt to get related products
+        output_files = ScaleFile.objects.filter(job=job)
+        output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+                                          'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                          'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                          'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                          'job_type__error_mapping')
+        output_files = output_files.prefetch_related('countries')
+        output_files = output_files.order_by('id').distinct('id')
+
+        # Merge job interface definitions with mapped values
+        job_interface_dict = job.get_job_interface().get_dict()
+        job_data_dict = job.get_job_data().get_dict()
+        job_results_dict = job.get_job_results().get_dict()
+        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+                                           output_files)
+
+        return job
+
     def get_job_updates(self, started=None, ended=None, statuses=None, job_type_ids=None,
                         job_type_names=None, job_type_categories=None, include_superseded=False, order=None):
         """Returns a list of jobs that changed status within the given time range.
@@ -822,12 +890,12 @@ class Job(models.Model):
     :keyword error: The error that caused the failure (should only be set when status is FAILED)
     :type error: :class:`django.db.models.ForeignKey`
 
-    :keyword data: JSON description defining the data for this job. This field must be populated when the job is first
+    :keyword input: JSON description defining the data for this job. This field must be populated when the job is first
         queued.
-    :type data: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword results: JSON description defining the results for this job. This field is populated when the job is
+    :type input: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword output: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
-    :type results: :class:`django.contrib.postgres.fields.JSONField`
+    :type output: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -837,15 +905,8 @@ class Job(models.Model):
     :type max_tries: :class:`django.db.models.IntegerField`
     :keyword num_exes: The number of executions this job has had
     :type num_exes: :class:`django.db.models.IntegerField`
-    :keyword cpus_required: The number of CPUs required for this job
-    :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_required: The amount of RAM in MiB required for this job
-    :type mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_in_required: The amount of disk space in MiB required for input files for this job
-    :type disk_in_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_required: The amount of disk space in MiB required for output (temp work and products) for this
-        job
-    :type disk_out_required: :class:`django.db.models.FloatField`
+    :keyword input_file_size: The amount of disk space in MiB required for input files for this job
+    :type input_file_size: :class:`django.db.models.FloatField`
 
     :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
         superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
@@ -899,21 +960,14 @@ class Job(models.Model):
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
-    # TODO: rename data to input and make default nullable, will cause breaking REST API changes
-    data = django.contrib.postgres.fields.JSONField(default=dict)
-    # TODO: rename results to output and make default nullable, will cause breaking REST API changes
-    results = django.contrib.postgres.fields.JSONField(default=dict)
+    input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
-    # TODO: remove cpus_required, mem_required, and disk_out_required, will cause breaking REST API changes
-    # TODO: rename disk_in_required to input_file_size, will cause breaking REST API changes
-    cpus_required = models.FloatField(blank=True, null=True)
-    mem_required = models.FloatField(blank=True, null=True)
-    disk_in_required = models.FloatField(blank=True, null=True)
-    disk_out_required = models.FloatField(blank=True, null=True)
+    input_file_size = models.FloatField(blank=True, null=True)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
