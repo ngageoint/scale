@@ -302,14 +302,15 @@ class JobData(object):
         parameters that do not appear in the data will not be returned in the results.
 
         :param data_files: Object containing manifest details on input files.
-        :type data_files: `job.seed.types.SeedInputFiles`
+        :type data_files: [`job.seed.types.SeedInputFiles`]
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
         :rtype: {string: [string]}
         """
 
         # Organize the data files
         param_file_ids = {}  # Parameter name -> [file IDs]
-        files_to_retrieve = {}  # File ID -> tuple(string, bool) for relative dir path and if partially accessed
+        # File ID -> tuple(string, bool) for relative dir path and if partially accessed
+        files_to_retrieve = {}
         for data_file in data_files:
             input_name = data_file.name
             multiple = data_file.multiple
@@ -319,9 +320,10 @@ class JobData(object):
                 continue
             file_input = self._data_names[data_file.name]
             file_ids = []
-            if not multiple and len(file_input) > 1:
-                raise Exception('Multiple inputs detected for input %s that does not support.' % (data_file.name,))
-            for file_id in file_input:
+            if not multiple and len(file_input.file_ids) > 1:
+                raise Exception(
+                    'Multiple inputs detected for input %s that does not support.' % (data_file.name,))
+            for file_id in file_input.file_ids:
                 file_id = long(file_id)
                 file_ids.append(file_id)
                 files_to_retrieve[file_id] = (dir_path, partial)
@@ -400,7 +402,6 @@ class JobData(object):
         data_files = [SeedInputFiles(x) for x in data_files]
         # Download the job execution input files
         self.retrieve_input_data_files(data_files)
-
 
     def capture_output_json(self, output_json_interface):
         """
@@ -651,6 +652,7 @@ class JobData(object):
         """
 
         return {k: collection[k] for k in collection if isinstance(collection[k], type)}
+
 
     def _retrieve_files(self, data_files):
         """Retrieves the given data files and writes them to the given local directories. If no file with a given ID

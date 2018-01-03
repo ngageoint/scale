@@ -7,6 +7,7 @@ from mock import patch
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.results.exceptions import OutputCaptureError
 from job.data.job_data import JobData
+from job.seed.types import SeedInputFiles
 from product.types import ProductFileMetadata
 
 
@@ -86,4 +87,29 @@ class TestJobData(TransactionTestCase):
         results = JobData(data).store_output_data_files(files, {}, None)
         self.assertEqual([{'name':'OUTPUT_TIFFS', 'file_ids': [1]}], results.output_data)
 
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_success_single_input_file(self, retrieve_files, join):
+        job_data = JobData()
+        job_data.add_file_input({'name':'TEST_FILE_INPUT', 'file_ids': [1]})
+        retrieve_files.return_value = {1: '/scale/input/TEST_FILE_INPUT'}
 
+        data_files = [SeedInputFiles({'name':'TEST_FILE_INPUT', 'multiple': False, 'required': True, 'mediaTypes': [], 'partial': False})]
+
+        result = job_data.retrieve_input_data_files(data_files)
+        self.assertEqual(result, {'TEST_FILE_INPUT': ['/scale/input/TEST_FILE_INPUT']})
+
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_success_multiple_input_file(self, retrieve_files, join):
+        raise NotImplementedError
+
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_missing_file(self, retrieve_files, join):
+        raise NotImplementedError
+
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_missing_plurality_mismatch(self, retrieve_files, join):
+        raise NotImplementedError
