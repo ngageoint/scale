@@ -130,6 +130,39 @@ class JobBaseSerializer(ModelIdSerializer):
     priority = serializers.IntegerField()
     num_exes = serializers.IntegerField()
 
+# TODO: remove this function when REST API v5 is removed
+class OldJobSerializer(JobBaseSerializer):
+    """Converts job model fields to REST output."""
+    from error.serializers import ErrorBaseSerializer
+    from trigger.serializers import TriggerEventBaseSerializer
+
+    job_type_rev = JobTypeRevisionBaseSerializer()
+    event = TriggerEventBaseSerializer()
+    node = NodeBaseSerializer()
+    error = ErrorBaseSerializer()
+
+    timeout = serializers.IntegerField()
+    max_tries = serializers.IntegerField()
+
+    cpus_required = ''
+    mem_required = ''
+    disk_out_required = ''
+    disk_in_required = serializers.FloatField(source='input_file_size')
+
+    is_superseded = serializers.BooleanField()
+    root_superseded_job = ModelIdSerializer()
+    superseded_job = ModelIdSerializer()
+    superseded_by_job = ModelIdSerializer()
+    delete_superseded = serializers.BooleanField()
+
+    created = serializers.DateTimeField()
+    queued = serializers.DateTimeField()
+    started = serializers.DateTimeField()
+    ended = serializers.DateTimeField()
+    last_status_change = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
 
 class JobSerializer(JobBaseSerializer):
     """Converts job model fields to REST output."""
@@ -144,10 +177,7 @@ class JobSerializer(JobBaseSerializer):
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()
 
-    cpus_required = serializers.FloatField()
-    mem_required = serializers.FloatField()
-    disk_in_required = serializers.FloatField()
-    disk_out_required = serializers.FloatField()
+    input_file_size = serializers.FloatField()
 
     is_superseded = serializers.BooleanField()
     root_superseded_job = ModelIdSerializer()
@@ -249,8 +279,8 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
         except:
             pass
 
-
-class JobDetailsSerializer(JobSerializer):
+# TODO: remove this function when REST API v5 is removed
+class OldJobDetailsSerializer(OldJobSerializer):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
@@ -260,8 +290,8 @@ class JobDetailsSerializer(JobSerializer):
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
-    data = serializers.JSONField(default=dict)
-    results = serializers.JSONField(default=dict)
+    data = serializers.JSONField(default=dict, source='input')
+    results = serializers.JSONField(default=dict, source='output')
 
     root_superseded_job = JobBaseSerializer()
     superseded_job = JobBaseSerializer()
@@ -279,6 +309,27 @@ class JobDetailsSerializer(JobSerializer):
 
     inputs = JobDetailsInputSerializer(many=True)
     outputs = JobDetailsOutputSerializer(many=True)
+
+
+class JobDetailsSerializer(JobSerializer):
+    """Converts job model and related fields to REST output."""
+    from error.serializers import ErrorSerializer
+    from recipe.serializers import RecipeBaseSerializer
+    from trigger.serializers import TriggerEventDetailsSerializer
+    
+    job_type = JobTypeSerializer()
+    job_type_rev = JobTypeRevisionSerializer()
+    recipe = RecipeBaseSerializer()
+    event = TriggerEventDetailsSerializer()
+    error = ErrorSerializer()
+
+    input = serializers.JSONField(default=dict)
+    output = serializers.JSONField(default=dict)
+    resources = serializers.JSONField(default=dict)
+
+    root_superseded_job = JobBaseSerializer()
+    superseded_job = JobBaseSerializer()
+    superseded_by_job = JobBaseSerializer()
 
 
 class JobUpdateSerializer(JobSerializer):
