@@ -101,15 +101,9 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
         direct_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
                                                      ancestor_job__isnull=True)
-        self.assertEqual(direct_qry.count(), 3)
+        self.assertEqual(direct_qry.count(), 2)
         file_8_parent_ids = {link.ancestor_id for link in direct_qry}
-        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
-
-        indirect_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
-                                                       ancestor_job__isnull=False)
-        self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
-        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
+        self.assertSetEqual(file_8_parent_ids, {self.file_1.id, self.file_2.id})
 
     def test_products(self):
         """Tests creating links for inputs with generated products at the same time."""
@@ -123,14 +117,9 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         FileAncestryLink.objects.create_file_ancestry_links(parent_ids, child_ids, job_exe.job, job_exe.id)
 
         direct_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=True)
-        self.assertEqual(direct_qry.count(), 3)
+        self.assertEqual(direct_qry.count(), 2)
         file_8_parent_ids = {link.ancestor_id for link in direct_qry}
-        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
-
-        indirect_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=False)
-        self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
-        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
+        self.assertSetEqual(file_8_parent_ids, {self.file_1.id, self.file_2.id})
 
     def test_inputs_and_products(self):
         """Tests creating links for inputs and then later replacing with generated products."""
@@ -158,14 +147,9 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         self.assertEqual(len(old_indirect_qry), 0)
 
         direct_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=True)
-        self.assertEqual(direct_qry.count(), 3)
+        self.assertEqual(direct_qry.count(), 2)
         file_8_parent_ids = {link.ancestor_id for link in direct_qry}
-        self.assertSetEqual(file_8_parent_ids, {self.file_4.id, self.file_6.id, self.file_7.id})
-
-        indirect_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=False)
-        self.assertEqual(indirect_qry.count(), 3)
-        file_8_ancestor_ids = {link.ancestor_id for link in indirect_qry}
-        self.assertSetEqual(file_8_ancestor_ids, {self.file_1.id, self.file_2.id, self.file_3.id})
+        self.assertSetEqual(file_8_parent_ids, {self.file_1.id, self.file_2.id})
 
 
 class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
