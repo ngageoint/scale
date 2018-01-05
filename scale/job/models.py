@@ -195,8 +195,8 @@ class JobManager(models.Manager):
 
         return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                 job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                job_type_categories=job_type_categories, batch_ids=batch_ids, 
-                                error_categories=error_categories, include_superseded=include_superseded, 
+                                job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                error_categories=error_categories, include_superseded=include_superseded,
                                 order=order)
 
     def get_details(self, job_id):
@@ -218,20 +218,24 @@ class JobManager(models.Manager):
         ).get(pk=job_id)
 
         # Attempt to get related job executions
-        job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
-        job.job_exes = job_exes.defer('job__data', 'job__results').order_by('-created')
+        if job.status in ['RUNNING', 'COMPLETED', 'FAILED', 'QUEUED']:
+            job_exe = JobExecution.objects.filter(job=job, exe_num=job.num_exes).select_related('job', 'node', 'error')
+            job.execution = job_exe.defer('job__data', 'job__results').order_by('-created')
+        else:
+            job.execution = []
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
             from recipe.models import RecipeJob
-            recipe_jobs = RecipeJob.objects.filter(job=job).order_by('recipe__last_modified')
-            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                     'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                     'recipe__event__rule')
-            job.recipes = [recipe_job.recipe for recipe_job in recipe_jobs]
+
+            recipe_job = RecipeJob.objects.filter(job=job, is_original=True)
+            recipe_job = recipe_job.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                   'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                   'recipe__event__rule')
+            job.recipe = recipe_job
         except:
-            job.recipes = []
+            job.recipe = []
 
         # Fetch all the associated input files
         input_file_ids = job.get_job_data().get_input_file_ids()
@@ -260,14 +264,11 @@ class JobManager(models.Manager):
         job_interface_dict = job.get_job_interface().get_dict()
         job_data_dict = job.get_job_data().get_dict()
         job_results_dict = job.get_job_results().get_dict()
-        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
-        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
-                                           output_files)
 
         return job
 
-# TODO: remopve this function when API v5 is removed
-def get_details_v5(self, job_id):
+    # TODO: remove this function when API v5 is removed
+    def get_details_v5(self, job_id):
         """Gets additional details for the given job model based on related model attributes.
 
         The additional fields include: input files, recipe, job executions, and generated products.
@@ -465,7 +466,7 @@ def get_details_v5(self, job_id):
         job.data = data.get_dict()
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict())
+        self.filter(id=job.id).update(input=data.get_dict())
 
         # Process job inputs
         self.process_job_input([job])
@@ -519,7 +520,7 @@ def get_details_v5(self, job_id):
 
         # Process each job to get its input file IDs and create models related to input files
         for job in jobs:
-            if job.disk_in_required is not None:
+            if job.input_file_size is not None:
                 continue  # Ignore jobs that have already had inputs processed
             job_input = job.get_job_data()
             file_ids = job_input.get_input_file_ids()
@@ -569,11 +570,12 @@ def get_details_v5(self, job_id):
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
+            
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
-                                          source_started=source_started, source_ended=source_ended, last_modified=when)
+            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started, 
+                                          source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
         """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
@@ -590,7 +592,7 @@ def get_details_v5(self, job_id):
         """
 
         if job_ids:
-            qry = 'UPDATE job j SET results = jeo.output, last_modified = %s FROM job_exe_output jeo'
+            qry = 'UPDATE job j SET output = jeo.output, last_modified = %s FROM job_exe_output jeo'
             qry += ' WHERE j.id = jeo.job_id AND j.num_exes = jeo.exe_num AND j.id IN %s AND j.status=\'COMPLETED\''
             with connection.cursor() as cursor:
                 cursor.execute(qry, [when, tuple(job_ids)])
@@ -838,6 +840,7 @@ def get_details_v5(self, job_id):
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
                                                last_modified=modified)
 
+    # TODO: remove this function when API REST v5 is removed 
     def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
         """Merges data for a single job instance with its job interface to produce a mapping of key/values.
 
@@ -854,6 +857,7 @@ def get_details_v5(self, job_id):
         # Setup the basic structure for merged results
         merged_dicts = copy.deepcopy(job_interface_dict)
         name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
+        print job_files
         file_map = {job_file.id: job_file for job_file in job_files}
 
         # Merge the job data with the interface attributes
@@ -1054,7 +1058,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.data.job_data.JobData`
         """
 
-        return JobData(self.data)
+        return JobData(self.input)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1072,7 +1076,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        return JobResults(self.results)
+        return JobResults(self.output)
 
     def get_resources(self):
         """Returns the resources required for this job
@@ -1086,19 +1090,19 @@ class Job(models.Model):
         # Calculate memory required in MiB rounded up to the nearest whole MiB
         multiplier = self.job_type.mem_mult_required
         const = self.job_type.mem_const_required
-        disk_in_required = self.disk_in_required
-        if not disk_in_required:
-            disk_in_required = 0.0
-        memory_mb = long(math.ceil(multiplier * disk_in_required + const))
+        input_file_size = self.input_file_size
+        if not input_file_size:
+            input_file_size = 0.0
+        memory_mb = long(math.ceil(multiplier * input_file_size + const))
         memory_required = max(memory_mb, MIN_MEM)
 
         # Calculate output space required in MiB rounded up to the nearest whole MiB
         multiplier = self.job_type.disk_out_mult_required
         const = self.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
+        output_size_mb = long(math.ceil(multiplier * input_file_size + const))
         disk_out_required = max(output_size_mb, MIN_DISK)
 
-        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
+        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
         return resources
 
     def has_been_queued(self):
@@ -1126,7 +1130,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return True if self.results else False
+        return True if self.output else False
 
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
