@@ -271,7 +271,7 @@ class ScaleFileManager(models.Manager):
         :rtype: list
         """
 
-        return self.filter(id__in=file_ids).only('id', 'file_size').iterator()
+        return self.filter(id__in=file_ids).only('id', 'file_size', 'source_started', 'source_ended').iterator()
 
     def get_files_for_queued_jobs(self, file_ids):
         """Returns the file models with the given IDs. Each scale_file model only contains the needed fields for
