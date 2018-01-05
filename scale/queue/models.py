@@ -303,7 +303,7 @@ class QueueManager(models.Manager):
             queue.job_type_id = job.job_type_id
             queue.job_id = job.id
             queue.exe_num = job.num_exes
-            queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
+            queue.input_file_size = job.input_file_size if job.input_file_size else 0.0
             queue.is_canceled = False
             queue.priority = priority if priority is not None else job.priority
             queue.timeout = job.timeout
