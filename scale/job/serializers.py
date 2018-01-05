@@ -316,7 +316,7 @@ class JobDetailsSerializer(JobSerializer):
     from error.serializers import ErrorSerializer
     from recipe.serializers import RecipeBaseSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
-    
+
     job_type = JobTypeSerializer()
     job_type_rev = JobTypeRevisionSerializer()
     recipe = RecipeBaseSerializer()

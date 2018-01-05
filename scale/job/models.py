@@ -857,7 +857,6 @@ class JobManager(models.Manager):
         # Setup the basic structure for merged results
         merged_dicts = copy.deepcopy(job_interface_dict)
         name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
-        print job_files
         file_map = {job_file.id: job_file for job_file in job_files}
 
         # Merge the job data with the interface attributes
