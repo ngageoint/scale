@@ -129,8 +129,8 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=1, max_tries=1, queued=None,
-               started=None, ended=None, last_status_change=None, priority=100, results=None, superseded_job=None,
+def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=1, queued=None,
+               started=None, ended=None, last_status_change=None, priority=100, output=None, superseded_job=None,
                delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
     """Creates a job model for unit testing
 
@@ -145,19 +145,19 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     if not last_status_change:
         last_status_change = timezone.now()
     if num_exes == 0:
-        input_file_size=None
-    if not data:
+        input_file_size = None
+    if not input:
         if num_exes == 0:
-            data = {}
+            input = {}
         else:
-            data = {
+            input = {
                 'version': '1.0',
                 'input_data': [],
                 'output_data': [],
             }
-    if not results:
-       results = dict() 
-       
+    if not output:
+       output = dict()
+
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs([superseded_job], timezone.now())
     if is_superseded and not superseded:
@@ -165,7 +165,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
 
     job = Job.objects.create_job(job_type, event, superseded_job=superseded_job, delete_superseded=delete_superseded)
     job.priority = priority
-    job.data = data
+    job.input = input
     job.status = status
     job.num_exes = num_exes
     job.max_tries = max_tries
@@ -174,10 +174,10 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.ended = ended
     job.last_status_change = last_status_change
     job.error = error
-    job.results = results
+    job.output = output
     job.is_superseded = is_superseded
     job.superseded = superseded
-    job.disk_in_required = input_file_size
+    job.input_file_size = input_file_size
     job.save()
     return job
 

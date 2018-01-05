@@ -115,7 +115,7 @@ class TestJobManager(TransactionTestCase):
         job = Job.objects.get(id=job.id)
 
         # Make sure input file size is calculated and set
-        self.assertEqual(job.disk_in_required, 110)  # Convert from file bytes to MiB to get 110 value
+        self.assertEqual(job.input_file_size, 110)  # Convert from file bytes to MiB to get 110 value
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job.id)
         self.assertEqual(len(job_input_files), 2)
@@ -327,7 +327,7 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, data={}, started=timezone.now(), ended=timezone.now())
+        job = job_test_utils.create_job(num_exes=1, input={}, started=timezone.now(), ended=timezone.now())
 
         Job.objects.update_jobs_to_queued([job], timezone.now())
         job = Job.objects.get(pk=job.id)
