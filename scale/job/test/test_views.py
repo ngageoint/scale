@@ -207,7 +207,7 @@ class TestJobDetailsView(TestCase):
             'output_data': []
         }
         self.job_type = job_test_utils.create_job_type(interface=job_interface)
-        self.job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
+        self.job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
 
         # Attempt to stage related models
         self.job_exe = job_test_utils.create_job_exe(job=self.job)
@@ -378,7 +378,7 @@ class TestJobDetailsView(TestCase):
         job_results = {
             'output_data': []
         }
-        new_job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results,
+        new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
                                             superseded_job=self.job, delete_superseded=False)
 
         # Make sure the original job was updated
@@ -447,13 +447,13 @@ class TestJobsUpdateView(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1')
         self.job1 = job_test_utils.create_job(
             job_type=self.job_type1, status='RUNNING',
-            data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
+            input={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2')
         self.job2 = job_test_utils.create_job(
             job_type=self.job_type2, status='PENDING',
-            data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
+            input={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
@@ -2855,7 +2855,7 @@ class TestJobInputFilesView(TestCase):
             'output_data': []
         }
         self.job_type = job_test_utils.create_job_type(interface=job_interface)
-        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
+        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
         self.job = job_test_utils.create_job(job_type=self.job_type)
 
         # Create JobInputFile entry files
