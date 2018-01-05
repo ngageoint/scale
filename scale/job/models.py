@@ -220,7 +220,7 @@ class JobManager(models.Manager):
         # Attempt to get related job executions
         if job.status in ['RUNNING', 'COMPLETED', 'FAILED', 'QUEUED']:
             job_exe = JobExecution.objects.filter(job=job, exe_num=job.num_exes).select_related('job', 'node', 'error')
-            job.execution = job_exe.defer('job__data', 'job__results').order_by('-created')
+            job.execution = job_exe.defer('job__input', 'job__output').order_by('-created')
         else:
             job.execution = []
 
@@ -241,7 +241,7 @@ class JobManager(models.Manager):
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        input_files = input_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                         'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                         'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                         'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
@@ -252,7 +252,7 @@ class JobManager(models.Manager):
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
         output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        output_files = output_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                           'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                           'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                           'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
@@ -288,7 +288,7 @@ class JobManager(models.Manager):
 
         # Attempt to get related job executions
         job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
-        job.job_exes = job_exes.defer('job__data', 'job__results').order_by('-created')
+        job.job_exes = job_exes.defer('job__input', 'job__output').order_by('-created')
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
@@ -306,7 +306,7 @@ class JobManager(models.Manager):
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        input_files = input_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                         'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                         'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                         'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
@@ -317,7 +317,7 @@ class JobManager(models.Manager):
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
         output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        output_files = output_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                           'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                           'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                           'job_type__interface', 'job_type__docker_params', 'job_type__configuration',

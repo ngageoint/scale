@@ -127,7 +127,7 @@ class IngestManager(models.Manager):
         ingests = self.select_related('strike', 'scan', 'workspace', 'new_workspace', 'job')
         ingests = ingests.select_related('source_file', 'source_file__workspace')
         ingests = ingests.defer('strike__configuration', 'scan__configuration', 'workspace__json_config')
-        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__results')
+        ingests = ingests.defer('new_workspace__json_config', 'job__input', 'job__output')
         ingests = ingests.defer('source_file__workspace__json_config')
 
         # Apply time range filtering
