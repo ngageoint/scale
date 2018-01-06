@@ -96,9 +96,9 @@ class TestProcessJobInputs(TransactionTestCase):
             }]}
 
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_1)
+                                          input=data_1)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_2)
+                                          input=data_2)
         job_ids = [job_1.id, job_2.id]
 
         # Add jobs to message

@@ -317,7 +317,7 @@ class TestRequeueJobsView(TestCase):
         django.setup()
 
         self.job_1 = job_test_utils.create_job(status='RUNNING', num_exes=1)
-        self.job_2 = job_test_utils.create_job(data={}, num_exes=0)
+        self.job_2 = job_test_utils.create_job(input={}, num_exes=0)
         self.job_3 = job_test_utils.create_job(status='FAILED', num_exes=1)
 
         definition = {

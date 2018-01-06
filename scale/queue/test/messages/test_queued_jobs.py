@@ -19,9 +19,9 @@ class TestQueuedJobs(TransactionTestCase):
         """Tests coverting a QueuedJobs message to and from JSON"""
 
         data = JobData()
-        job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', data=data.get_dict())
-        job_2 = job_test_utils.create_job(num_exes=1, status='FAILED', data=data.get_dict())
-        job_3 = job_test_utils.create_job(num_exes=1, status='COMPLETED', data=data.get_dict())
+        job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', input=data.get_dict())
+        job_2 = job_test_utils.create_job(num_exes=1, status='FAILED', input=data.get_dict())
+        job_3 = job_test_utils.create_job(num_exes=1, status='COMPLETED', input=data.get_dict())
         job_ids = [job_1.id, job_2.id, job_3.id]
 
         # Add jobs to message
@@ -55,13 +55,13 @@ class TestQueuedJobs(TransactionTestCase):
         """Tests calling QueuedJobs.execute() successfully"""
 
         data = JobData()
-        job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', data=data.get_dict())
-        job_2 = job_test_utils.create_job(num_exes=1, status='FAILED', data=data.get_dict())
-        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict())
-        job_4 = job_test_utils.create_job(num_exes=0, status='CANCELED', data=data.get_dict())
-        job_5 = job_test_utils.create_job(num_exes=1, status='QUEUED', data=data.get_dict())
-        job_6 = job_test_utils.create_job(num_exes=1, status='COMPLETED', data=data.get_dict())
-        job_7 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict())
+        job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', input=data.get_dict())
+        job_2 = job_test_utils.create_job(num_exes=1, status='FAILED', input=data.get_dict())
+        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict())
+        job_4 = job_test_utils.create_job(num_exes=0, status='CANCELED', input=data.get_dict())
+        job_5 = job_test_utils.create_job(num_exes=1, status='QUEUED', input=data.get_dict())
+        job_6 = job_test_utils.create_job(num_exes=1, status='COMPLETED', input=data.get_dict())
+        job_7 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict())
         job_8 = job_test_utils.create_job(num_exes=0, status='CANCELED')
         job_ids = [job_1.id, job_2.id, job_3.id, job_4.id, job_5.id, job_6.id, job_7.id, job_8.id]
 
