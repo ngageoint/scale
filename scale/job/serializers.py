@@ -2,8 +2,35 @@
 import rest_framework.serializers as serializers
 
 from job.models import Job
+from job.deprecation import JobInterfaceSunset
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
+
+
+class SeedFilesSerializer(serializers.Serializer):
+    """Converts Seed formatted input / output files to REST ouput"""
+
+    name = serializers.CharField()
+    mediaType = serializers.CharField()
+    multiple = serializers.BooleanField()
+
+    def to_representation(self, obj):
+        result = super(SeedFilesSerializer, self).to_representation(obj)
+
+        result['value'] = [self.Meta.FILE_SERIALIZER().to_representation(v) for v in obj['value']]
+        return result
+
+    class Meta:
+        from storage.serializers import ScaleFileBaseSerializer
+        FILE_SERIALIZER = ScaleFileBaseSerializer
+
+
+class SeedJsonSerializer(serializers.Serializer):
+    """Converts Seed formatted input / output JSON to REST ouput"""
+
+    name = serializers.CharField()
+    type = serializers.CharField()
+    value = serializers.CharField()
 
 
 class JobTypeBaseSerializer(ModelIdSerializer):
@@ -199,7 +226,7 @@ class JobRevisionSerializer(JobSerializer):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializer()
 
-# TODO: remove this function when REST API v5 is removed 
+# TODO: remove this function when REST API v5 is removed
 class OldJobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
@@ -270,15 +297,31 @@ class JobDetailsInputSerializer(serializers.Serializer):
         from storage.serializers import ScaleFileSerializer
         FILE_SERIALIZER = ScaleFileSerializer
 
-
 class JobDetailsOutputSerializer(JobDetailsInputSerializer):
-    """Converts job detail model output fields to REST output"""
+    """Converts job detail model output fields to REST output
+
+    TODO: Deprecated in v6
+    """
     class Meta:
         try:
             from product.serializers import ProductFileBaseSerializer
             FILE_SERIALIZER = ProductFileBaseSerializer
         except:
             pass
+
+class JobDetailsSeedInputsSerializer(serializers.Serializer):
+    """Converts job detail model Seed input fields to REST output"""
+
+    files = SeedFilesSerializer()
+    json = SeedJsonSerializer()
+
+
+class JobDetailsSeedOutputsSerializer(serializers.Serializer):
+    """Converts job detail model Seed output fields to REST output"""
+
+    files = SeedFilesSerializer()
+    json = SeedJsonSerializer()
+
 
 # TODO: remove this function when REST API v5 is removed
 class OldJobDetailsSerializer(OldJobSerializer):
@@ -308,8 +351,21 @@ class OldJobDetailsSerializer(OldJobSerializer):
 
     job_exes = OldJobExecutionBaseSerializer(many=True)
 
-    inputs = JobDetailsInputSerializer(many=True)
-    outputs = JobDetailsOutputSerializer(many=True)
+    def to_representation(self, obj):
+        result = super(JobDetailsSerializer, self).to_representation(obj)
+
+        inputs = None
+        outputs = None
+        interface_dict = obj['job_type'].interface.get_dict()
+        if JobInterfaceSunset.is_seed(interface_dict):
+            result['inputs'] = JobDetailsSeedInputsSerializer(many=True)
+            result['outputs'] = JobDetailsSeedOutputsSerializer(many=True)
+        # TODO: Deprecated in v6
+        else:
+            result['inputs'] = JobDetailsInputSerializer(many=True)
+            result['outputs'] = JobDetailsOutputSerializer(many=True)
+
+        return result
 
 
 class JobDetailsSerializer(JobSerializer):
