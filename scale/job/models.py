@@ -463,7 +463,7 @@ class JobManager(models.Manager):
         interface.validate_data(data)
 
         # Update job model in memory
-        job.data = data.get_dict()
+        job.input = data.get_dict()
 
         # Update job model in database with single query
         self.filter(id=job.id).update(input=data.get_dict())

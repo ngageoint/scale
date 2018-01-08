@@ -156,7 +156,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
                 'output_data': [],
             }
     if not output:
-       output = dict()
+        output = dict()
 
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs([superseded_job], timezone.now())
