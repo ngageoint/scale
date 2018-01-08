@@ -38,8 +38,8 @@ class TestProcessJobInputs(TransactionTestCase):
         self.assertEqual(len(new_message.new_messages), 1)
         self.assertEqual(new_message.new_messages[0].type, 'queued_jobs')
         # Jobs should have input_file_size set to 0 (no input files)
-        self.assertEqual(jobs[0].disk_in_required, 0.0)
-        self.assertEqual(jobs[1].disk_in_required, 0.0)
+        self.assertEqual(jobs[0].input_file_size, 0.0)
+        self.assertEqual(jobs[1].input_file_size, 0.0)
 
     def test_execute(self):
         """Tests calling ProcessJobInputs.execute() successfully"""
@@ -118,8 +118,8 @@ class TestProcessJobInputs(TransactionTestCase):
         self.assertEqual(message.new_messages[0].type, 'queued_jobs')
 
         # Check jobs for expected input_file_size
-        self.assertEqual(jobs[0].disk_in_required, 110.0)
-        self.assertEqual(jobs[1].disk_in_required, 1042.0)
+        self.assertEqual(jobs[0].file_input_size, 110.0)
+        self.assertEqual(jobs[1].file_input_size, 1042.0)
 
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job_1.id)
