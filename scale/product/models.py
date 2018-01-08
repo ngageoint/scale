@@ -527,12 +527,19 @@ class ProductFileManager(models.GeoManager):
         input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
-        # Compute the overall start and stop times for all file_entries
-        source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
-        start_times = [f.data_started for f in source_files]
-        end_times = [f.data_ended for f in source_files]
-        start_times.sort()
-        end_times.sort(reverse=True)
+        source_started = job_exe.job.source_started
+        source_ended = job_exe.job.source_ended
+        if not source_started:
+            # Compute the overall start and stop times for all file_entries
+            source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
+            start_times = [f.data_started for f in source_files]
+            end_times = [f.data_ended for f in source_files]
+            start_times.sort()
+            end_times.sort(reverse=True)
+            if start_times:
+                source_started = start_times[0]
+            if end_times:
+                source_ended = end_times[0]
 
         products_to_save = []
         for entry in file_entries:
@@ -590,12 +597,8 @@ class ProductFileManager(models.GeoManager):
                 except BatchJob.DoesNotExist:
                     product.batch_id = None
 
-            # Add start and stop times if available
-            if start_times:
-                product.source_started = start_times[0]
-
-            if end_times:
-                product.source_ended = end_times[0]
+            product.source_started = source_started
+            product.source_ended = source_ended
 
             products_to_save.append(FileUpload(product, local_path))
 

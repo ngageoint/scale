@@ -152,63 +152,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         self.assertSetEqual(file_8_parent_ids, {self.file_1.id, self.file_2.id})
 
 
-class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
-    def setUp(self):
-        django.setup()
-
-        # Generation 1
-        self.file_1 = source_test_utils.create_source(file_name='my_file_1.txt')
-        self.file_2 = source_test_utils.create_source(file_name='my_file_2.txt')
-        self.file_8 = source_test_utils.create_source(file_name='my_file_8.txt')
-
-        # Generation 2
-        job_exe_1 = job_test_utils.create_job_exe()
-        recipe_job_1 = recipe_test_utils.create_recipe_job(job=job_exe_1.job)
-        self.file_3 = prod_test_utils.create_product(job_exe=job_exe_1)
-        self.file_4 = prod_test_utils.create_product(job_exe=job_exe_1)
-        self.file_5 = prod_test_utils.create_product(job_exe=job_exe_1)
-
-        # Generation 3
-        job_exe_2 = job_test_utils.create_job_exe()
-        recipe_job_2 = recipe_test_utils.create_recipe_job(job=job_exe_2.job)
-        self.file_6 = prod_test_utils.create_product(job_exe=job_exe_2)
-
-        # Stand alone file
-        self.file_7 = prod_test_utils.create_product()
-
-        # First job links generation 1 to 2
-        FileAncestryLink.objects.create(ancestor=self.file_1, descendant=self.file_3, job_exe=job_exe_1,
-                                        job=job_exe_1.job, recipe=recipe_job_1.recipe)
-        FileAncestryLink.objects.create(ancestor=self.file_1, descendant=self.file_4, job_exe=job_exe_1,
-                                        job=job_exe_1.job, recipe=recipe_job_1.recipe)
-        FileAncestryLink.objects.create(ancestor=self.file_1, descendant=self.file_5, job_exe=job_exe_1,
-                                        job=job_exe_1.job, recipe=recipe_job_1.recipe)
-
-        FileAncestryLink.objects.create(ancestor=self.file_2, descendant=self.file_4, job_exe=job_exe_1,
-                                        job=job_exe_1.job, recipe=recipe_job_1.recipe)
-        FileAncestryLink.objects.create(ancestor=self.file_2, descendant=self.file_5, job_exe=job_exe_1,
-                                        job=job_exe_1.job, recipe=recipe_job_1.recipe)
-
-        # Second job links generation 2 to 3
-        FileAncestryLink.objects.create(ancestor=self.file_3, descendant=self.file_6, job_exe=job_exe_2,
-                                        job=job_exe_2.job, recipe=recipe_job_2.recipe)
-        FileAncestryLink.objects.create(ancestor=self.file_1, descendant=self.file_6, job_exe=job_exe_2,
-                                        job=job_exe_2.job, recipe=recipe_job_2.recipe,
-                                        ancestor_job_exe=job_exe_1, ancestor_job=job_exe_1.job)
-
-    def test_successful(self):
-        """Tests calling FileAncestryLinkManager.get_source_ancestors() successfully."""
-
-        source_files = FileAncestryLink.objects.get_source_ancestors([self.file_6.id, self.file_8.id])
-
-        result_ids = []
-        for source_file in source_files:
-            result_ids.append(source_file.id)
-        result_ids.sort()
-
-        self.assertListEqual(result_ids, [self.file_1.id, self.file_8.id])
-
-
 class TestProductFileManager(TestCase):
     """Tests on the ProductFileManager"""
 
