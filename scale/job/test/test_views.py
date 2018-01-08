@@ -283,7 +283,7 @@ class TestJobDetailsView(TestCase):
             'type': 'property',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_field',
             'value': 10,
         }]
@@ -308,7 +308,7 @@ class TestJobDetailsView(TestCase):
             'type': 'file',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_file',
             'file_id': self.file.id,
         }]
@@ -344,7 +344,7 @@ class TestJobDetailsView(TestCase):
             'type': 'files',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_files',
             'file_ids': [self.file.id],
         }]
