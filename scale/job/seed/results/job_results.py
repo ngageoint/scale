@@ -73,7 +73,6 @@ class JobResults(object):
 
         self.output_data.append({'name': output_name, 'json': value})
 
-
     def get_dict(self):
         """Returns the internal dictionary that represents these job results
 
@@ -83,4 +82,33 @@ class JobResults(object):
 
         return self.results_dict
 
+    def extend_interface_with_outputs(self, interface, job_files):
+        """Add a value property to both files and json objects within Seed Manifest
 
+        :param interface: Seed manifest which should have concrete outputs injected
+        :type interface: :class:`job.seed.manifest.SeedManifest`
+        :param job_files: A list of files that are referenced by the job data.
+        :type job_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of Seed Manifest outputs key mapped to the corresponding data value.
+        :rtype: dict
+        """
+
+        files = []
+        json = []
+        file_map = {job_file.id: job_file for job_file in job_files}
+        outputs = interface.get_outputs()
+        for i in outputs['files']:
+            for j in self.output_data:
+                if i['name'] is j['name']:
+                    i['value'] = [file_map[x] for x in j['file_ids']]
+                    break
+            files.append(i)
+        for i in outputs['json']:
+            for j in self.output_data:
+                if i['name'] is j['name']:
+                    i['value'] = j['json']
+                    break
+            json.append(i)
+        outputs['files'] = files
+        outputs['json'] = json
+        return outputs

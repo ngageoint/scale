@@ -374,9 +374,16 @@ class JobManager(models.Manager):
         job_results_dict = job.get_job_results().get_dict()
 
         # TODO: Fix this to be forward / backward compatible with pre / post Seed Interface
-        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
-        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
-                                           output_files)
+        if JobInterfaceSunset.is_seed(job_interface_dict):
+            # Handle Seed injection of instance values
+            job.inputs = job.get_job_data().extend_interface_with_inputs(job.get_job_interface(), input_files)
+            job.outputs = job.get_job_results().extend_interface_with_outputs(job.get_job_interface(), output_files)
+        else:
+            # TODO: Remove in v6
+            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+            job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+                                               output_files)
+
 
         return job
 

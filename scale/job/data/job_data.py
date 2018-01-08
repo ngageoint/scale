@@ -364,6 +364,26 @@ class JobData(object):
 
         return input_values
 
+    def inject_inputs_into_interface(self, interface):
+        """Add a value property to both files and json objects within Seed Manifest
+
+        :param interface: Seed manifest which should have concrete inputs injected
+        :type interface: :class:`job.seed.manifest.SeedManifest`
+        """
+
+        files = []
+        json = []
+        inputs = interface.get_inputs()
+        for x in inputs['files']:
+            x['value'] = self._input_files[x['name']].value
+            files.append(x)
+        for x in inputs['json']:
+            x['value'] = self._input_json[x['name']].value
+            json.append(x)
+        inputs['files'] = files
+        inputs['json'] = json
+        return inputs
+
     def get_injected_env_vars(self, input_files):
         """Inject all execution time values to job data mappings
 
