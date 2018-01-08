@@ -1120,7 +1120,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return True if self.data else False
+        return True if self.input else False
 
     def has_output(self):
         """Indicates whether this job has its output

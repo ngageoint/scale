@@ -443,7 +443,7 @@ class MetricsJobTypeManager(models.Manager):
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('input', 'output')
 
         # Calculate the overall counts based on job status
         entry_map = {}
