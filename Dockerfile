@@ -29,7 +29,7 @@ EXPOSE 80
 # SCALE_DB_PASS
 # SCALE_DB_PORT
 # SCALE_DB_USER
-# SCALE_DEBUG
+# DJANGO_DEBUG
 # SCALE_DOCKER_IMAGE used for explicit override of docker image used, not needed in Marathon
 # SCALE_ELASTICSEARCH_URLS
 # SCALE_LOGGING_ADDRESS
@@ -39,6 +39,7 @@ EXPOSE 80
 # SECRETS_SSL_WARNINGS false to silence SSL warnings from secrets transactions, true (defualt) to raise them.
 # SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
 # SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
+# SYSTEM_LOGGING_LEVEL used to set logging level for system processes. use DEBUG, INFO, WARNING, ERROR, and CRITICAL. 
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.

@@ -80,7 +80,7 @@ class SchedulerManager(models.Manager):
         """Fetch summary hardware resource usage for the scheduler framework.
 
         :returns: Node resource usage information.
-        :rtype: dict
+        :rtype: dict 
         """
         master_dict = {
             'is_online': False,
@@ -91,7 +91,7 @@ class SchedulerManager(models.Manager):
             'is_online': False,
             'is_paused': False,
             'hostname': None,
-            'logging_level':''
+            'system_job_logging_level':''
         }
         res_dict = None
 
@@ -106,7 +106,7 @@ class SchedulerManager(models.Manager):
             sched_dict['is_online'] = sched_info.is_online
             sched_dict['is_paused'] = sched.is_paused  # Note this must be pulled from the database
             sched_dict['hostname'] = sched_info.hostname
-            sched_dict['logging_level'] = sched.logging_level
+            sched_dict['system_job_logging_level'] = sched.system_job_logging_level
 
             # Master is online if the API above succeeded
             master_dict['is_online'] = True
@@ -152,7 +152,7 @@ class Scheduler(models.Model):
     status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
-    logging_level = models.CharField(max_length=10, default='INFO')
+    system_job_logging_level = models.CharField(max_length=10, default='INFO')
 
     objects = SchedulerManager()
 

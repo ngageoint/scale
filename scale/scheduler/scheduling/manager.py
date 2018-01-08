@@ -389,7 +389,7 @@ class SchedulingManager(object):
                     job_type = job_types[job_exe_model.job_type_id]
                     # The configuration stored in the job_exe model has been censored so it is safe to save in database
                     # The returned configuration may contain secrets and should be passed to running job_exe for use
-                    config = configurator.configure_scheduled_job(job_exe_model, job_type, queued_job_exe.interface, scheduler_mgr.config.logging_level)
+                    config = configurator.configure_scheduled_job(job_exe_model, job_type, queued_job_exe.interface, scheduler_mgr.config.system_job_logging_level)
                     scheduled_models[queued_job_exe.id] = (job_exe_model, config)
             JobExecution.objects.bulk_create(job_exe_models)
 

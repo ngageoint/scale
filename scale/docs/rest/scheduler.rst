@@ -23,21 +23,22 @@ There should be one and only one scheduler entry in the database and it is used 
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| is_paused            | Boolean           | True if the scheduler is paused. This functions like individually pausing    |
-|                      |                   | all nodes but maintains separated state so toggling this back to unpaused    |
-|                      |                   | results in the previous individual node pause state.                         |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| logging_level        | String            | The logging level sent to all tasks that run within a Scale Docker image     |
-+----------------------+-------------------+------------------------------------------------------------------------------+
++--------------------------+---------------+------------------------------------------------------------------------------+
+| is_paused                | Boolean       | True if the scheduler is paused. This functions like individually pausing    |
+|                          |               | all nodes but maintains separated state so toggling this back to unpaused    |
+|                          |               | results in the previous individual node pause state.                         |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| num_message_handlers     | Integer       | The number of message handlers to have scheduled                             |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| system_job_logging_level | String        | The logging level sent to all system tasks that run within                   |
+|                          |               | a Scale Docker image                                                         |
++--------------------------+---------------+------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "is_paused": False,                                                                                               |
 |       "num_message_handlers": 2,                                                                                        |
-|       "logging_level": 'INFO'                                                                                           |
+|       "system_job_logging_level": 'INFO'                                                                                |
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 
@@ -54,15 +55,15 @@ There should be one and only one scheduler entry in the database and it is used 
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| is_paused            | Boolean           | (Optional) True if the scheduler should be paused, false to resume           |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| logging_level        | String            | (Optional) The logging level sent to all tasks that run within a Scale       |
-|                      |                   | Docker image. Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.|
-|                      |                   | Anything else will default to INFO                                           |
-+----------------------+-------------------+------------------------------------------------------------------------------+
++--------------------------+---------------+------------------------------------------------------------------------------+
+| is_paused                | Boolean       | (Optional) True if the scheduler should be paused, false to resume           |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| num_message_handlers     | Integer       | (Optional) The number of message handlers to have scheduled                  |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| system_job_logging_level | String        | (Optional) The logging level sent to all system tasks that run within a Scale|
+|                          |               | Docker image. Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.|
+|                          |               | Anything else will default to INFO                                           |
++--------------------------+---------------+------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -70,20 +71,21 @@ There should be one and only one scheduler entry in the database and it is used 
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| is_paused            | Boolean           | True if the scheduler is paused. This functions like individually pausing    |
-|                      |                   | all nodes but maintains separated state so toggling this back to unpaused    |
-|                      |                   | results in the previous individual node pause state.                         |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| logging_level        | String            | The logging level sent to all tasks that run within a Scale Docker image     |
-+----------------------+-------------------+------------------------------------------------------------------------------+
++--------------------------+---------------+------------------------------------------------------------------------------+
+| is_paused                | Boolean       | True if the scheduler is paused. This functions like individually pausing    |
+|                          |               | all nodes but maintains separated state so toggling this back to unpaused    |
+|                          |               | results in the previous individual node pause state.                         |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| num_message_handlers     | Integer       | The number of message handlers to have scheduled                             |
++--------------------------+---------------+------------------------------------------------------------------------------+
+| system_job_logging_level | String        | The logging level sent to all system tasks that run within                   |
+|                          |               | a Scale Docker image                                                         |
++--------------------------+---------------+------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |   {                                                                                                                     |
 |       "is_paused": False,                                                                                               |
 |       "num_message_handlers": 2,                                                                                        |
-|       "logging_level": 'INFO'                                                                                           |
+|       "system_job_logging_level": 'INFO'                                                                                |
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+

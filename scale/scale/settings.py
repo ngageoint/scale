@@ -231,6 +231,9 @@ LOG_FORMATTERS = {
 LOG_FILTERS = {
     'require_debug_false': {
         '()': 'django.utils.log.RequireDebugFalse'
+    },
+    'debug_info_only':{
+        '()':'scale.custom_logging.UserFilter',
     }
 }
 LOG_HANDLERS = {
@@ -245,16 +248,17 @@ LOG_HANDLERS = {
         'stream': sys.stdout
     },
     'console-err': {
-        'level': 'WARNING',
-        'class': 'logging.StreamHandler',
-        'formatter': 'standard',
-        'stream': sys.stderr
-    },
-    'console-err-debug': {
         'level': 'DEBUG',
         'class': 'logging.StreamHandler',
         'formatter': 'standard',
         'stream': sys.stderr
+    },
+    'console-debug': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stdout,
+        'filters':['debug_info_only']
     },
     'file-debug': {
         'level': 'DEBUG',
@@ -291,7 +295,7 @@ LOG_CONSOLE_DEBUG = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console-err-debug'],
+            'handlers': ['console-debug','console-err'],
             'level': 'DEBUG',
         },
     },
@@ -303,7 +307,7 @@ LOG_CONSOLE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console-err-debug'],
+            'handlers': ['console-debug','console-err'],
             'level': 'INFO',
         },
     },
@@ -368,8 +372,7 @@ LOG_CONSOLE_FILE_INFO = {
         },
     },
 }
-LOGGING = LOG_CONSOLE_INFO
-
+LOGGING = LOG_CONSOLE_DEBUG
 
 # Hack to fix ISO8601 for datetime filters.
 # This should be taken care of by a future django fix.  And might even be handled

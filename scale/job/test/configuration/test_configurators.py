@@ -283,7 +283,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                            'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                            'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
-                                           'NEW_WORKSPACE': new_workspace.name},
+                                           'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO'},
                               'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
                                              new_workspace.name: {'mode': 'rw', 'volume_name': new_wksp_vol_name}},
                               'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
@@ -304,6 +304,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INGEST_ID=%s' % unicode(ingest.id)},
                                                 {'flag': 'env', 'value': 'WORKSPACE=%s' % workspace.name},
                                                 {'flag': 'env', 'value': 'NEW_WORKSPACE=%s' % new_workspace.name},
+                                                {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                 {'flag': 'volume',
                                                  'value': '/w_1/host/path:%s:rw' % wksp_vol_path},
                                                 {'flag': 'volume',
@@ -388,12 +389,6 @@ class TestScheduledExecutionConfigurator(TestCase):
                         tag_value = '%s|%s' % (exe_config_with_secrets.get_task_id(task_type), job_type.name)
                         self.assertEqual(opt_value, tag_value)
                         found_tag = True
-                elif docker_param.flag == 'env':
-                    array = docker_param.value.split('=')
-                    opt_name = array[0]
-                    opt_value = array[1]
-                    if opt_name == 'LOGGING_LEVEL':                        
-                        self.assertEqual(opt_value, 'INFO')
             self.assertTrue(found_log_driver)
             self.assertTrue(found_syslog_format)
             self.assertTrue(found_syslog_address)

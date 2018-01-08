@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='scheduler',
-            name='logging_level',
+            name='system_job_logging_level',
             field=models.CharField(default='INFO', max_length=10),
         ),
     ]

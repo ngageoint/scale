@@ -64,7 +64,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_DB_PASS               | 'scale'                         | database login password                    |
 | SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
 | SCALE_DB_USER               | 'scale'                         | database login name                        |
-| SCALE_DEBUG                 | ''                              | Change to '1' for debugging                |
+| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
 | SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
@@ -76,6 +76,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 
 Scale Dependencies
 ==================
@@ -119,9 +120,18 @@ Scale Development
 If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 3 primary
 components of Scale:
 
-- Scale User Interface: https://github.com/ngageoint/scale/tree/master/scale-ui
-- Scheduler / Service APIs: https://github.com/ngageoint/scale/tree/master/scale
-- Scale Command Line Interface: https://github.com/ngageoint/scale/tree/master/scale-cli
+- [Scale](#scale)
+    - [Mesos and Nodes](#mesos-and-nodes)
+    - [Ingest](#ingest)
+    - [Jobs](#jobs)
+    - [Products](#products)
+- [Docker Images](#docker-images)
+- [Scale Dependencies](#scale-dependencies)
+- [Quick Start](#quick-start)
+- [Algorithm Development](#algorithm-development)
+    - [Scale Development](#scale-development)
+- [Build](#build)
+- [Contributing](#contributing)
 
 The links provide specific development environment setup instructions for each individual component.
 

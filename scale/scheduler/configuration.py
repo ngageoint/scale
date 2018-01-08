@@ -20,10 +20,10 @@ class SchedulerConfiguration(object):
         self.is_paused = True
         self.num_message_handlers = DEFAULT_NUM_MESSAGE_HANDLERS
         self.queue_mode = DEFAULT_QUEUE_ORDER
-        self.logging_level = DEFAULT_LOGGING_LEVEL
+        self.system_job_logging_level = DEFAULT_LOGGING_LEVEL
 
         if scheduler:
             self.is_paused = scheduler.is_paused
             self.num_message_handlers = scheduler.num_message_handlers
             self.queue_mode = scheduler.queue_mode
-            self.logging_level = scheduler.logging_level 
+            self.system_job_logging_level = scheduler.system_job_logging_level 
