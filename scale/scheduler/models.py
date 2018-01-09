@@ -91,7 +91,7 @@ class SchedulerManager(models.Manager):
             'is_online': False,
             'is_paused': False,
             'hostname': None,
-            'system_job_logging_level':''
+            'system_job_logging_level':'INFO'
         }
         res_dict = None
 
