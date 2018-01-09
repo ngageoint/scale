@@ -248,7 +248,7 @@ LOG_HANDLERS = {
         'stream': sys.stdout
     },
     'console-stderr': {
-        'level': 'DEBUG',
+        'level': 'WARNING',
         'class': 'logging.StreamHandler',
         'formatter': 'standard',
         'stream': sys.stderr
