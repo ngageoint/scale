@@ -87,7 +87,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         data = JobData()
         data.add_property_input('Ingest ID', str(ingest.id))
         ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
-        ingest.job.output = data.get_dict()
+        ingest.job.input = data.get_dict()
         ingest.job.status = 'QUEUED'
         ingest.job.save()
 
