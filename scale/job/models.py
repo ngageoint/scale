@@ -1158,7 +1158,7 @@ class Job(models.Model):
 
         interface = self.get_job_interface()
         interface.validate_data(job_input)
-        self.data = job_input.get_dict()
+        self.input = job_input.get_dict()
 
     def update_database_with_input(self, when):
         """Updates the database with this job's input JSON
@@ -1167,7 +1167,7 @@ class Job(models.Model):
         :type when: :class:`datetime.datetime`
         """
 
-        Job.objects.filter(id=self.id).update(data=self.data, last_modified=when)
+        Job.objects.filter(id=self.id).update(input=self.input, last_modified=when)
 
     def _can_be_canceled(self):
         """Indicates whether this job can be canceled.

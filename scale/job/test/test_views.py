@@ -313,7 +313,7 @@ class TestJobDetailsView(TestCase):
             'file_id': self.file.id,
         }]
         if self.product:
-            self.job.results['output_data'] = [{
+            self.job.output['output_data'] = [{
                 'name': 'output_file',
                 'file_id': self.product.id,
             }]
@@ -349,7 +349,7 @@ class TestJobDetailsView(TestCase):
             'file_ids': [self.file.id],
         }]
         if self.product:
-            self.job.results['output_data'] = [{
+            self.job.output['output_data'] = [{
                 'name': 'output_files',
                 'file_ids': [self.product.id],
             }]

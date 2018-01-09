@@ -175,7 +175,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         strike = ingest_test_utils.create_strike(configuration=configuration)
         data = JobData()
         data.add_property_input('Strike ID', str(strike.id))
-        strike.job.data = data.get_dict()
+        strike.job.input = data.get_dict()
         strike.job.status = 'QUEUED'
         strike.job.save()
 

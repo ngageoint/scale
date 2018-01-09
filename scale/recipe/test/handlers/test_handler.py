@@ -366,7 +366,7 @@ class TestRecipeHandler(TestCase):
         # Make sure only Job 1 is returned and that its job data is correct
         self.assertEqual(len(jobs_with_inputs), 1)
         self.assertEqual(jobs_with_inputs[0].id, job_1.id)
-        self.assertDictEqual(jobs_with_inputs[0].data, {
+        self.assertDictEqual(jobs_with_inputs[0].input, {
             'version': '1.0',
             'input_data': [{
                 'name': input_name_1,

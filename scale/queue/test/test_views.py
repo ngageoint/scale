@@ -388,7 +388,7 @@ class TestRequeueJobsView(TestCase):
 
         # make sure the job is in the right state despite not actually having been run
         Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
-        self.job_2.data = JobData().get_dict()
+        self.job_2.input = JobData().get_dict()
         self.job_2.num_exes = 2
         self.job_2.save()
 
@@ -529,7 +529,7 @@ class TestRequeueJobsView(TestCase):
 
         # make sure the job is in the right state despite not actually having been run
         Job.objects.update_status([self.job_2], 'FAILED', timezone.now(), error_test_utils.create_error())
-        self.job_2.data = JobData().get_dict()
+        self.job_2.input = JobData().get_dict()
         self.job_2.num_exes = 2
         self.job_2.save()
 
