@@ -234,7 +234,7 @@ class ScheduledExecutionConfigurator(object):
                                  'SCALE_DB_PORT': db['PORT']}
         self._system_settings_hidden = {key: '*****' for key in self._system_settings.keys()}
 
-    def configure_scheduled_job(self, job_exe, job_type, interface):
+    def configure_scheduled_job(self, job_exe, job_type, interface, system_logging_level):
         """Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
         models will not have any related fields populated. The execution configuration in the job_exe model will have
         all secret values replaced with '*****' so that it is safe to be stored in the database. Another copy of this
@@ -258,7 +258,7 @@ class ScheduledExecutionConfigurator(object):
 
         # Configure job tasks based upon whether system job or regular job
         if job_type.is_system:
-            ScheduledExecutionConfigurator._configure_system_job(config, job_exe)
+            ScheduledExecutionConfigurator._configure_system_job(config, job_exe, system_logging_level)
         else:
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type)
 
@@ -322,9 +322,9 @@ class ScheduledExecutionConfigurator(object):
             syslog_format = DockerParameter('log-opt', 'syslog-format=rfc3164')
             log_address = DockerParameter('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
             if not job_type.is_system:
-                pre_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('pre'),job_type.name))
+                pre_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('pre'), job_type.name))
                 config.add_to_task('pre', docker_params=[log_driver, syslog_format, log_address, pre_task_tag])
-                post_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('post'),job_type.name))
+                post_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('post'), job_type.name))
                 config.add_to_task('post', docker_params=[log_driver, syslog_format, log_address, post_task_tag])
                 # TODO: remove es_urls parameter when Scale no longer supports old style job types
                 es_urls = None
@@ -335,7 +335,7 @@ class ScheduledExecutionConfigurator(object):
                 # Post task needs ElasticSearch URL to grab logs for old artifact registration
                 es_param = DockerParameter('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
                 config.add_to_task('post', docker_params=[es_param])
-            main_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('main'),job_type.name))
+            main_task_tag = DockerParameter('log-opt', 'tag=%s|%s' % (config.get_task_id('main'), job_type.name))
             config.add_to_task('main', docker_params=[log_driver, syslog_format, log_address, main_task_tag])
 
     @staticmethod
@@ -531,7 +531,7 @@ class ScheduledExecutionConfigurator(object):
         return config_with_secrets
 
     @staticmethod
-    def _configure_system_job(config, job_exe):
+    def _configure_system_job(config, job_exe, system_logging_level):
         """Configures the given execution as a system job
 
         :param config: The execution configuration
@@ -539,5 +539,5 @@ class ScheduledExecutionConfigurator(object):
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         """
-
-        config.add_to_task('main', resources=job_exe.get_resources())
+        logging_env_vars = {'SYSTEM_LOGGING_LEVEL': system_logging_level}
+        config.add_to_task('main', env_vars=logging_env_vars, resources=job_exe.get_resources())

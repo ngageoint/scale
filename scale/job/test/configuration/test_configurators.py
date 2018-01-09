@@ -266,7 +266,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                    'PORT': 'TEST_PORT'}}
             configurator = ScheduledExecutionConfigurator(workspaces)
             exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, ingest_job_type,
-                                                                           queue.get_job_interface())
+                                                                           queue.get_job_interface(), 'INFO')
 
         # Expected results
         wksp_vol_name = get_workspace_volume_name(job_exe_model, workspace.name)
@@ -283,7 +283,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                            'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                            'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
-                                           'NEW_WORKSPACE': new_workspace.name},
+                                           'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO'},
                               'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
                                              new_workspace.name: {'mode': 'rw', 'volume_name': new_wksp_vol_name}},
                               'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
@@ -304,6 +304,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INGEST_ID=%s' % unicode(ingest.id)},
                                                 {'flag': 'env', 'value': 'WORKSPACE=%s' % workspace.name},
                                                 {'flag': 'env', 'value': 'NEW_WORKSPACE=%s' % new_workspace.name},
+                                                {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                 {'flag': 'volume',
                                                  'value': '/w_1/host/path:%s:rw' % wksp_vol_path},
                                                 {'flag': 'volume',
@@ -357,7 +358,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
                 configurator = ScheduledExecutionConfigurator({})
                 exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                               queue.get_job_interface())
+                                                                               queue.get_job_interface(), 'INFO')
 
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
@@ -450,7 +451,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_2': 's_2_secret'}
                 configurator = ScheduledExecutionConfigurator(workspaces)
                 exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                               queue.get_job_interface())
+                                                                            queue.get_job_interface(), 'INFO')
 
         # Expected results
         input_wksp_vol_name = get_workspace_volume_name(job_exe_model, input_workspace.name)
@@ -654,7 +655,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_1': 's_1_secret', 's_2': 's_2_secret'}
                 configurator = ScheduledExecutionConfigurator({})
                 exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                               queue.get_job_interface())
+                                                                               queue.get_job_interface(),'INFO')
 
         expected_pre_secret_settings = {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                         'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
@@ -779,7 +780,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
             configurator = ScheduledExecutionConfigurator({})
             exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                           queue.get_job_interface())
+                                                                           queue.get_job_interface(), 'INFO')
 
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())

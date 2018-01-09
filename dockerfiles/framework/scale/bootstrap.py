@@ -213,6 +213,8 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     secrets_token = os.environ.get('SECRETS_TOKEN', '')
     secrets_url = os.environ.get('SECRETS_URL', '')
 
+    # Set attributes for logging
+    system_logging_level = os.environ.get('SYSTEM_LOGGING_LEVEL', 'INFO')
 
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
@@ -238,7 +240,8 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'SCALE_ELASTICSEARCH_LB': es_lb,
         'SECRETS_SSL_WARNINGS': str(secrets_ssl_warn),
         'SECRETS_TOKEN': str(secrets_token),
-        'SECRETS_URL': str(secrets_url)
+        'SECRETS_URL': str(secrets_url),
+        'SYSTEM_LOGGING_LEVEL': system_logging_level
     }
     # For all environment variable that are set add to marathon json.
     for env in arbitrary_env:

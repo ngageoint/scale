@@ -64,7 +64,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_DB_PASS               | 'scale'                         | database login password                    |
 | SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
 | SCALE_DB_USER               | 'scale'                         | database login name                        |
-| SCALE_DEBUG                 | ''                              | Change to '1' for debugging                |
+| DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
 | SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
@@ -76,6 +76,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+| SYSTEM_LOGGING_LEVEL        | None                            | System wide logging level. INFO-CRITICAL   |
 
 Scale Dependencies
 ==================

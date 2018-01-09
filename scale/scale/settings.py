@@ -231,6 +231,9 @@ LOG_FORMATTERS = {
 LOG_FILTERS = {
     'require_debug_false': {
         '()': 'django.utils.log.RequireDebugFalse'
+    },
+    'debug_info_only':{
+        '()':'scale.custom_logging.UserFilter',
     }
 }
 LOG_HANDLERS = {
@@ -244,11 +247,18 @@ LOG_HANDLERS = {
         'formatter': 'standard',
         'stream': sys.stdout
     },
-    'console-err': {
+    'console-stderr': {
         'level': 'WARNING',
         'class': 'logging.StreamHandler',
         'formatter': 'standard',
         'stream': sys.stderr
+    },
+    'console-stdout': {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'standard',
+        'stream': sys.stdout,
+        'filters':['debug_info_only']
     },
     'file-debug': {
         'level': 'DEBUG',
@@ -285,7 +295,7 @@ LOG_CONSOLE_DEBUG = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err'],
+            'handlers': ['console-stdout','console-stderr'],
             'level': 'DEBUG',
         },
     },
@@ -297,8 +307,44 @@ LOG_CONSOLE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err'],
+            'handlers': ['console-stdout','console-stderr'],
             'level': 'INFO',
+        },
+    },
+}
+LOG_CONSOLE_ERROR = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-stderr'],
+            'level': 'ERROR',
+        },
+    },
+}
+LOG_CONSOLE_WARNING = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-stderr'],
+            'level': 'WARNING',
+        },
+    },
+}
+LOG_CONSOLE_CRITICAL = {
+    'version': 1,
+    'formatters': LOG_FORMATTERS,
+    'filters': LOG_FILTERS,
+    'handlers': LOG_HANDLERS,
+    'loggers': {
+        '': {
+            'handlers': ['console-stderr'],
+            'level': 'CRITICAL',
         },
     },
 }
@@ -309,7 +355,7 @@ LOG_CONSOLE_FILE_DEBUG = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err', 'file-debug', 'file-info', 'file-error'],
+            'handlers': ['console', 'console-stderr', 'file-debug', 'file-info', 'file-error'],
             'level': 'DEBUG',
         },
     },
@@ -321,13 +367,12 @@ LOG_CONSOLE_FILE_INFO = {
     'handlers': LOG_HANDLERS,
     'loggers': {
         '': {
-            'handlers': ['console', 'console-err', 'file-info', 'file-error'],
+            'handlers': ['console', 'console-stderr', 'file-info', 'file-error'],
             'level': 'INFO',
         },
     },
 }
-LOGGING = LOG_CONSOLE_INFO
-
+LOGGING = LOG_CONSOLE_DEBUG
 
 # Hack to fix ISO8601 for datetime filters.
 # This should be taken care of by a future django fix.  And might even be handled

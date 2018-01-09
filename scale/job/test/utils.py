@@ -368,7 +368,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
     for workspace in Workspace.objects.all():
         workspaces[workspace.name] = workspace
     secret_config = ScheduledExecutionConfigurator(workspaces).configure_scheduled_job(job_exe, job_type,
-                                                                                       job_type.get_job_interface())
+                                                                                       job_type.get_job_interface(),'INFO')
     return RunningJobExecution(agent_id, job_exe, job_type, secret_config, priority)
 
 
