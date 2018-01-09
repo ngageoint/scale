@@ -120,18 +120,9 @@ Scale Development
 If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 3 primary
 components of Scale:
 
-- [Scale](#scale)
-    - [Mesos and Nodes](#mesos-and-nodes)
-    - [Ingest](#ingest)
-    - [Jobs](#jobs)
-    - [Products](#products)
-- [Docker Images](#docker-images)
-- [Scale Dependencies](#scale-dependencies)
-- [Quick Start](#quick-start)
-- [Algorithm Development](#algorithm-development)
-    - [Scale Development](#scale-development)
-- [Build](#build)
-- [Contributing](#contributing)
+- Scale User Interface: https://github.com/ngageoint/scale/tree/master/scale-ui
+- Scheduler / Service APIs: https://github.com/ngageoint/scale/tree/master/scale
+- Scale Command Line Interface: https://github.com/ngageoint/scale/tree/master/scale-cli
 
 The links provide specific development environment setup instructions for each individual component.
 
