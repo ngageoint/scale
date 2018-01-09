@@ -14,7 +14,7 @@ from rest_framework.reverse import reverse
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobSerializer
+from job.serializers import OldJobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
@@ -60,7 +60,8 @@ class QueueNewJobView(GenericAPIView):
     """This view is the endpoint for creating new jobs and putting them on the queue."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
+    # TODO: Update to v6 serializer when REST API v5 is removed. 
+    serializer_class = OldJobDetailsSerializer
 
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
@@ -84,7 +85,8 @@ class QueueNewJobView(GenericAPIView):
         except InvalidData as err:
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
-        job_details = Job.objects.get_details(job_id)
+        # TODO: Update to v6 get_details when REST API v5 is removed. 
+        job_details = Job.objects.get_details_v5(job_id)
 
         serializer = self.get_serializer(job_details)
         job_url = reverse('job_details_view', args=[job_id], request=request)
