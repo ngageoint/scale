@@ -216,7 +216,6 @@ class AgentResources(object):
         """
 
         if shortage_resources:
-            logger.warning('Agent %s has a shortage of %s', self.agent_id, shortage_resources)
             shortage_resources.round_values()
         self._shortage_resources = shortage_resources
 
