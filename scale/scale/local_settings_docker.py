@@ -104,7 +104,7 @@ if MARATHON_PASSED_IMAGE:
 CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)
 
 # Logging configuration
-LOGGING_LEVEL = os.environ.get('SYSTEM_LOGGING_LEVEL', '') #should only be present in running jobs
+LOGGING_LEVEL = os.environ.get('SYSTEM_LOGGING_LEVEL', '')
 
 if LOGGING_LEVEL == "DEBUG":
     LOGGING = LOG_CONSOLE_DEBUG
