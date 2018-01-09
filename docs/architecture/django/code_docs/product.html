@@ -567,6 +567,25 @@ without any derived products.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="product.models.FileAncestryLinkManager.get_source_ancestor_ids">
+<code class="descname">get_source_ancestor_ids</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLinkManager.get_source_ancestor_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the source file ancestor IDs for the given file IDs. This will include any of the given
+files that are source files themselves.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The file IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of ancestor source file IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="product.models.FileAncestryLinkManager.get_source_ancestors">
 <code class="descname">get_source_ancestors</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLinkManager.get_source_ancestors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of the source file ancestors for the given file IDs. This will include any of the given files

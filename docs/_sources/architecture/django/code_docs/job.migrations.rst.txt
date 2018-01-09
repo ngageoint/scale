@@ -260,6 +260,14 @@ job\.migrations\.0032\_job\_node module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0033\_auto\_20180105\_2113 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0033_auto_20180105_2113
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

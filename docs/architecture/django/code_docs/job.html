@@ -420,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0030_remove_job_configuration">job.migrations.0030_remove_job_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0031_auto_20170822_1544">job.migrations.0031_auto_20170822_1544 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0032_job_node">job.migrations.0032_job_node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0033_auto_20180105_2113">job.migrations.0033_auto_20180105_2113 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -768,6 +769,8 @@ job in the chain (i.e. jobs that have a null superseded_job field).</li>
 <li><strong>superseded_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that was directly superseded by this job. The reverse relationship can be accessed
 using &#8216;superseded_by_job&#8217;.</li>
 <li><strong>delete_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this job should delete the products of the job that it has directly superseded</li>
+<li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The start time of the source data for this job</li>
+<li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the source data for this job</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job was created</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job was added to the queue to be run when resources are available</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job started running</li>
@@ -1529,6 +1532,20 @@ related job_type and job_type_rev models populated.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.source_ended">
+<code class="descname">source_ended</code><a class="headerlink" href="#job.models.Job.source_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.source_started">
+<code class="descname">source_started</code><a class="headerlink" href="#job.models.Job.source_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
