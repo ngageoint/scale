@@ -238,9 +238,14 @@ results in the previous individual node pause state.</td>
 <td>Integer</td>
 <td>The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="2">system_logging_level</td>
+<td>String</td>
+<td>The logging level for all scale system components</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
     <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -252,58 +257,70 @@ results in the previous individual node pause state.</td>
 <colgroup>
 <col width="17%" />
 <col width="1%" />
-<col width="16%" />
-<col width="66%" />
+<col width="3%" />
+<col width="13%" />
+<col width="67%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Update Scheduler</strong></th>
+<tr class="row-odd"><th class="head" colspan="5"><strong>Update Scheduler</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Update one or more fields for the scheduler.</td>
+<tr class="row-even"><td colspan="5">Update one or more fields for the scheduler.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="5"><dl class="first last docutils">
 <dt><strong>PATCH</strong> /scheduler/</dt>
 <dd>All fields are optional and additional fields are not tolerated.</dd>
 </dl>
 </td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="5"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2">is_paused</td>
+<tr class="row-even"><td colspan="3">is_paused</td>
 <td>Boolean</td>
 <td>(Optional) True if the scheduler should be paused, false to resume</td>
 </tr>
-<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<tr class="row-odd"><td colspan="3">num_message_handlers</td>
 <td>Integer</td>
 <td>(Optional) The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3">system_logging_level</td>
+<td>String</td>
+<td>(Optional) The logging level sent to all scale system components.
+Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.
+Anything else will default to INFO</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">200 OK</td>
+<tr class="row-odd"><td colspan="5"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="4">200 OK</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="2">is_paused</td>
-<td>Boolean</td>
+<tr class="row-even"><td colspan="5"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="2">is_paused</td>
+<td colspan="2">Boolean</td>
 <td>True if the scheduler is paused. This functions like individually pausing
 all nodes but maintains separated state so toggling this back to unpaused
 results in the previous individual node pause state.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">num_message_handlers</td>
-<td>Integer</td>
+<tr class="row-even"><td colspan="2">num_message_handlers</td>
+<td colspan="2">Integer</td>
 <td>The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<td colspan="2">String</td>
+<td>The logging level for all scale system components</td>
+</tr>
+<tr class="row-even"><td colspan="5"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
     <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
 <span class="p">}</span>
 </pre></div>
 </div>

@@ -333,7 +333,7 @@ related job_type and job_type_rev models populated.</p>
 <p>Configurator that handles execution configurations when a job execution is scheduled</p>
 <dl class="method">
 <dt id="job.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job">
-<code class="descname">configure_scheduled_job</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type</em>, <em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">configure_scheduled_job</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type</em>, <em>interface</em>, <em>system_logging_level</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
 models will not have any related fields populated. The execution configuration in the job_exe model will have
 all secret values replaced with &#8216;<strong>*</strong>&#8216; so that it is safe to be stored in the database. Another copy of this

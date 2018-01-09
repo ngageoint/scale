@@ -68,6 +68,14 @@ scheduler\.migrations\.0008\_auto\_20171103\_1334 module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.migrations\.0009\_scheduler\_debugging\_level module
+---------------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0009_scheduler_debugging_level
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

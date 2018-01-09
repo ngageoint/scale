@@ -275,6 +275,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0006_scheduler_status">scheduler.migrations.0006_scheduler_status module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0007_scheduler_num_message_handlers">scheduler.migrations.0007_scheduler_num_message_handlers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0008_auto_20171103_1334">scheduler.migrations.0008_auto_20171103_1334 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0009_scheduler_debugging_level">scheduler.migrations.0009_scheduler_debugging_level module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -750,6 +751,13 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.system_logging_level">
+<code class="descname">system_logging_level</code><a class="headerlink" href="#scheduler.models.Scheduler.system_logging_level" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -990,7 +998,7 @@ fails during that time.</p>
 <p>Meta class used to define what is serialized and how</p>
 <dl class="attribute">
 <dt id="scheduler.serializers.SchedulerSerializer.Meta.fields">
-<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1065,7 +1073,7 @@ fails during that time.</p>
 
 <dl class="attribute">
 <dt id="scheduler.views.SchedulerView.update_fields">
-<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
