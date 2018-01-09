@@ -444,6 +444,8 @@ class JobManager(models.Manager):
         when = timezone.now()
         job_input_file_ids = {}  # {Job ID: set}
         job_file_sizes = {}  # {Job ID: int}
+        job_source_started = {}  # {Job ID: datetime}
+        job_source_ended = {}  # {Job ID: datetime}
         all_input_file_ids = set()
         input_file_models = []
 
@@ -455,6 +457,8 @@ class JobManager(models.Manager):
             file_ids = job_input.get_input_file_ids()
             job_input_file_ids[job.id] = set(file_ids)
             job_file_sizes[job.id] = 0
+            job_source_started[job.id] = None
+            job_source_ended[job.id] = None
             all_input_file_ids.update(file_ids)
 
             # Create JobInputFile models in batches
@@ -476,20 +480,32 @@ class JobManager(models.Manager):
         if input_file_models:
             JobInputFile.objects.bulk_create(input_file_models)
 
+        # TODO: make this more efficient
         # Calculate input file summary data for each job
         if all_input_file_ids:
             for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
                 for job_id, file_ids in job_input_file_ids.items():
                     if input_file.id in file_ids:
                         job_file_sizes[job_id] += input_file.file_size  # This is in bytes
+                        if input_file.source_started is not None:
+                            started = job_source_started[job_id]
+                            min_started = min(s for s in [started, input_file.source_started] if s is not None)
+                            job_source_started[job_id] = input_file.source_started if started is None else min_started
+                        if input_file.source_ended is not None:
+                            ended = job_source_ended[job_id]
+                            max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
+                            job_source_ended[job_id] = input_file.source_ended if ended is None else max_ended
 
         # Update each job with its input file summary data
         for job_id, total_file_size in job_file_sizes.items():
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
+            # Get source data times
+            source_started = job_source_started[job_id]
+            source_ended = job_source_ended[job_id]
             self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
-                                          last_modified=when)
+                                          source_started=source_started, source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
         """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
@@ -844,6 +860,11 @@ class Job(models.Model):
     :keyword delete_superseded: Whether this job should delete the products of the job that it has directly superseded
     :type delete_superseded: :class:`django.db.models.BooleanField`
 
+    :keyword source_started: The start time of the source data for this job
+    :type source_started: :class:`django.db.models.DateTimeField`
+    :keyword source_ended: The end time of the source data for this job
+    :type source_ended: :class:`django.db.models.DateTimeField`
+
     :keyword created: When the job was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job was added to the queue to be run when resources are available
@@ -900,6 +921,10 @@ class Job(models.Model):
     superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True,
                                           on_delete=models.PROTECT)
     delete_superseded = models.BooleanField(default=True)
+
+    # Optional geospatial fields
+    source_started = models.DateTimeField(blank=True, null=True)
+    source_ended = models.DateTimeField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)

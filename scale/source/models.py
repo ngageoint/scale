@@ -339,6 +339,8 @@ class SourceFileManager(models.GeoManager):
         else:
             src_file.data_started = data_started
             src_file.data_ended = data_ended
+        src_file.source_started = src_file.data_started
+        src_file.source_ended = src_file.data_ended
         for tag in data_types:
             src_file.add_data_type_tag(tag)
         if geom:

@@ -45,6 +45,9 @@ class FileAncestryLinkManager(models.Manager):
         # This overrides any file input links that were created when the job first received its input data
         FileAncestryLink.objects.filter(job_id=job.id).delete()
 
+        # Convert parent IDs to source file ancestors
+        parent_ids = self.get_source_ancestor_ids(parent_ids)
+
         # Not all jobs have a recipe so attempt to get one if applicable
         job_recipe = Recipe.objects.get_recipe_for_job(job.id)
 
@@ -55,18 +58,11 @@ class FileAncestryLinkManager(models.Manager):
         except BatchJob.DoesNotExist:
             batch_id = None
 
-        # Grab ancestors for the parents
-        ancestor_map = dict()
-        ancestor_links = FileAncestryLink.objects.filter(descendant_id__in=parent_ids)
-        for ancestor_link in ancestor_links:
-            if ancestor_link.ancestor_id not in parent_ids:
-                ancestor_map[ancestor_link.ancestor_id] = ancestor_link
-
         # Make sure all input file links are still created when no products are generated
         if not child_ids:
             child_ids = {None}
 
-        # Create direct links by leaving the ancestor job fields as null
+        # Create direct links (from source to product) by leaving the ancestor job fields as null
         for parent_id in parent_ids:
             for child_id in child_ids:
 
@@ -86,31 +82,24 @@ class FileAncestryLinkManager(models.Manager):
                 else:
                     link.recipe = None
 
-        # Create indirect links by setting the ancestor job fields
-        for ancestor_link in ancestor_map.itervalues():
-            for child_id in child_ids:
-
-                # Set references to the current file
-                link = FileAncestryLink(created=created)
-                link.ancestor_id = ancestor_link.ancestor_id
-                link.descendant_id = child_id
-
-                # Set references to the current execution
-                link.job_exe_id = job_exe_id
-                link.job_id = job.id
-                link.batch_id = batch_id
-
-                if job_recipe:
-                    link.recipe_id = job_recipe.recipe_id
-                else:
-                    link.recipe = None
-
-                # Set references to the ancestor execution
-                link.ancestor_job_id = ancestor_link.job_id
-                link.ancestor_job_exe_id = ancestor_link.job_exe_id
-                new_links.append(link)
-
         FileAncestryLink.objects.bulk_create(new_links)
+
+    def get_source_ancestor_ids(self, file_ids):
+        """Returns a list of the source file ancestor IDs for the given file IDs. This will include any of the given
+        files that are source files themselves.
+
+        :param file_ids: The file IDs
+        :type file_ids: list
+        :returns: The list of ancestor source file IDs
+        :rtype: list
+        """
+
+        potential_src_file_ids = set(file_ids)
+        # Get all ancestors to include as possible source files
+        for ancestor_link in self.filter(descendant_id__in=file_ids).iterator():
+            potential_src_file_ids.add(ancestor_link.ancestor_id)
+        source_file_query = ScaleFile.objects.filter(id__in=list(potential_src_file_ids), file_type='SOURCE').only('id')
+        return [src_file.id for src_file in source_file_query]
 
     def get_source_ancestors(self, file_ids):
         """Returns a list of the source file ancestors for the given file IDs. This will include any of the given files
@@ -122,13 +111,14 @@ class FileAncestryLinkManager(models.Manager):
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
-        potential_src_file_ids = list(file_ids)
+        potential_src_file_ids = set(file_ids)
         # Get all ancestors to include as possible source files
-        for ancestor_link in self.filter(descendant_id__in=file_ids):
-            potential_src_file_ids.append(ancestor_link.ancestor_id)
-        return ScaleFile.objects.filter(id__in=potential_src_file_ids, file_type='SOURCE')
+        for ancestor_link in self.filter(descendant_id__in=file_ids).iterator():
+            potential_src_file_ids.add(ancestor_link.ancestor_id)
+        return ScaleFile.objects.filter(id__in=list(potential_src_file_ids), file_type='SOURCE')
 
 
+# TODO: this model and its manager can be removed once all of the remaining views that rely on it are removed
 class FileAncestryLink(models.Model):
     """Represents an ancestry link between two files where the ancestor resulted in the descendant through a series of
     one or more job executions. A direct ancestry link (parent to child) is formed when the parent is passed as input to
@@ -537,12 +527,19 @@ class ProductFileManager(models.GeoManager):
         input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
-        # Compute the overall start and stop times for all file_entries
-        source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
-        start_times = [f.data_started for f in source_files]
-        end_times = [f.data_ended for f in source_files]
-        start_times.sort()
-        end_times.sort(reverse=True)
+        source_started = job_exe.job.source_started
+        source_ended = job_exe.job.source_ended
+        if not source_started:
+            # Compute the overall start and stop times for all file_entries
+            source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
+            start_times = [f.data_started for f in source_files]
+            end_times = [f.data_ended for f in source_files]
+            start_times.sort()
+            end_times.sort(reverse=True)
+            if start_times:
+                source_started = start_times[0]
+            if end_times:
+                source_ended = end_times[0]
 
         products_to_save = []
         for entry in file_entries:
@@ -600,12 +597,8 @@ class ProductFileManager(models.GeoManager):
                 except BatchJob.DoesNotExist:
                     product.batch_id = None
 
-            # Add start and stop times if available
-            if start_times:
-                product.source_started = start_times[0]
-
-            if end_times:
-                product.source_ended = end_times[0]
+            product.source_started = source_started
+            product.source_ended = source_ended
 
             products_to_save.append(FileUpload(product, local_path))
 

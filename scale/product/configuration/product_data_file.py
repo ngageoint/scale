@@ -95,12 +95,15 @@ class ProductDataFileStore(AbstractDataFileStore):
         job_version_path = get_valid_filename(job_exe.job.job_type.version)
         remote_path = os.path.join(remote_path, 'jobs', job_type_path, job_version_path)
 
-        # Try to use data start time from earliest ancestor source file
-        the_date = None
-        for source_file in FileAncestryLink.objects.get_source_ancestors(list(input_file_ids)):
-            if source_file.data_started:
-                if not the_date or source_file.data_started < the_date:
-                    the_date = source_file.data_started
+        # Try to use source start time from the job
+        the_date = job_exe.job.source_started
+
+        if not the_date:
+            # Try to grab source started the old way through the source ancestor file
+            for source_file in FileAncestryLink.objects.get_source_ancestors(list(input_file_ids)):
+                if source_file.data_started:
+                    if not the_date or source_file.data_started < the_date:
+                        the_date = source_file.data_started
 
         # No data start time populated, use current time
         if not the_date:

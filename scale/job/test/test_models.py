@@ -166,6 +166,117 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(len(data_dict['input_data']), 1)
         self.assertEqual(data_dict['input_data'][0]['name'], 'Input 1')
 
+    def test_process_job_input(self):
+        """Tests calling JobManager.process_job_input()"""
+
+        date_1 = timezone.now()
+        min_src_started_job_1 = date_1 - datetime.timedelta(days=200)
+        max_src_ended_job_1 = date_1 + datetime.timedelta(days=200)
+        date_2 = date_1 + datetime.timedelta(minutes=30)
+        date_3 = date_1 + datetime.timedelta(minutes=40)
+        date_4 = date_1 + datetime.timedelta(minutes=50)
+        min_src_started_job_2 = date_1 - datetime.timedelta(days=500)
+        max_src_ended_job_2 = date_1 + datetime.timedelta(days=500)
+        workspace = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0)
+        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0, source_started=date_2,
+                                                source_ended=date_3)
+        file_3 = storage_test_utils.create_file(workspace=workspace, file_size=987654321.0,
+                                                source_started=min_src_started_job_1, source_ended=date_4)
+        file_4 = storage_test_utils.create_file(workspace=workspace, file_size=46546.0,
+                                                source_ended=max_src_ended_job_1)
+        file_5 = storage_test_utils.create_file(workspace=workspace, file_size=83457.0, source_started=date_2)
+        file_6 = storage_test_utils.create_file(workspace=workspace, file_size=42126588636633.0, source_ended=date_4)
+        file_7 = storage_test_utils.create_file(workspace=workspace, file_size=76645464662354.0)
+        file_8 = storage_test_utils.create_file(workspace=workspace, file_size=4654.0,
+                                                source_started=min_src_started_job_2)
+        file_9 = storage_test_utils.create_file(workspace=workspace, file_size=545.0, source_started=date_3,
+                                                source_ended=max_src_ended_job_2)
+        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4)
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }, {
+                'name': 'Input 2',
+                'type': 'files',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_type = job_test_utils.create_job_type(interface=interface)
+
+        data_1 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_1.id
+            }, {
+                'name': 'Input 2',
+                'file_ids': [file_2.id, file_3.id, file_4.id, file_5.id]
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'workspace_id': workspace.id
+            }]}
+        data_2 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_6.id
+            }, {
+                'name': 'Input 2',
+                'file_ids': [file_7.id, file_8.id, file_9.id, file_10.id]
+            }],
+            'output_data': [{
+                'name': 'Output 1',
+                'workspace_id': workspace.id
+            }]}
+
+        job_1 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
+                                          data=data_1)
+        job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
+                                          data=data_2)
+
+        # Execute method
+        Job.objects.process_job_input([job_1, job_2])
+
+        # Retrieve updated job models
+        jobs = Job.objects.filter(id__in=[job_1.id, job_2.id]).order_by('id')
+        job_1 = jobs[0]
+        job_2 = jobs[1]
+
+        # Check jobs for expected fields
+        self.assertEqual(job_1.disk_in_required, 1053.0)
+        self.assertEqual(job_1.source_started, min_src_started_job_1)
+        self.assertEqual(job_1.source_ended, max_src_ended_job_1)
+        self.assertEqual(job_2.disk_in_required, 113269857.0)
+        self.assertEqual(job_2.source_started, min_src_started_job_2)
+        self.assertEqual(job_2.source_ended, max_src_ended_job_2)
+
+        # Make sure job input file models are created
+        job_input_files = JobInputFile.objects.filter(job_id=job_1.id)
+        self.assertEqual(len(job_input_files), 5)
+        input_files_dict = {'Input 1': set(), 'Input 2': set()}
+        for job_input_file in job_input_files:
+            input_files_dict[job_input_file.job_input].add(job_input_file.input_file_id)
+        self.assertDictEqual(input_files_dict, {'Input 1': {file_1.id}, 'Input 2': {file_2.id, file_3.id, file_4.id,
+                                                                                    file_5.id}})
+        job_input_files = JobInputFile.objects.filter(job_id=job_2.id)
+        self.assertEqual(len(job_input_files), 5)
+        input_files_dict = {'Input 1': set(), 'Input 2': set()}
+        for job_input_file in job_input_files:
+            input_files_dict[job_input_file.job_input].add(job_input_file.input_file_id)
+        self.assertDictEqual(input_files_dict, {'Input 1': {file_6.id}, 'Input 2': {file_7.id, file_8.id, file_9.id,
+                                                                                    file_10.id}})
+
     def test_process_job_output(self):
         """Tests calling JobManager.process_job_output()"""
 
