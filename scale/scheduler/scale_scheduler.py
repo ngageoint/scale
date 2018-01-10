@@ -82,10 +82,10 @@ class ScaleScheduler(MesosScheduler):
         job_exe_mgr.init_with_database()
         logger.info('Retrieving job types...')
         job_type_mgr.sync_with_database()
-        logger.info('Retrieving scheduler settings...')
-        scheduler_mgr.sync_with_database()
         logger.info('Retrieving workspaces...')
         workspace_mgr.sync_with_database()
+        logger.info('Retrieving scheduler settings...')
+        scheduler_mgr.sync_with_database()
 
         # Start up background threads
         logger.info('Starting up background threads')
