@@ -79,6 +79,7 @@ class Command(BaseCommand):
     def run_scheduler(self, mesos_master):
         logger.info("I am the leader")
         self.scheduler = ScaleScheduler()
+        self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
 
         framework = mesos_pb2.FrameworkInfo()

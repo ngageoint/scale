@@ -69,7 +69,8 @@ class SyncThread(BaseSchedulerThread):
         node_mgr.sync_with_database(scheduler_mgr.config)
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
         mesos_master = scheduler_mgr.mesos_address
-        resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)
+        if mesos_master:
+            resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)
 
         # Handle canceled job executions
         for finished_job_exe in job_exe_mgr.sync_with_database():
