@@ -902,6 +902,12 @@ reliable fashion.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.scale_scheduler.ScaleScheduler.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the scheduler and gets it ready to connect to Mesos. This method should only ever be called once.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.scale_scheduler.ScaleScheduler.offerRescinded">
 <code class="descname">offerRescinded</code><span class="sig-paren">(</span><em>driver</em>, <em>offerId</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scale_scheduler.ScaleScheduler.offerRescinded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invoked when an offer is no longer valid (e.g., the slave was lost or
