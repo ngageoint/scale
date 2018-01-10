@@ -70,6 +70,9 @@ class SchedulingManager(object):
 
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
+        if not framework_id or not driver:
+            # Don't schedule anything until the scheduler has connected to Mesos
+            return 0
 
         job_types = job_type_mgr.get_job_types()
         job_type_resources = job_type_mgr.get_job_type_resources()
