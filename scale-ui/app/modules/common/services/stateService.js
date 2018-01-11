@@ -5,6 +5,7 @@
         var version = '',
             jobsColDefs = [],
             jobsParams = {},
+            parentJobsParams = {},
             jobExecutionsParams = {},
             jobTypesParams = {},
             recipesColDefs = [],
@@ -43,12 +44,12 @@
             });
         };
 
-        var initJobsParams = function (data) {
+        var initJobsParams = function (data, isParent) {
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: isParent ? null : data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 status: data.status ? data.status : null,
                 error_category: data.error_category ? data.error_category : null,
@@ -209,6 +210,16 @@
             setJobsParams: function (data) {
                 jobsParams = initJobsParams(data);
                 updateQuerystring(jobsParams);
+            },
+            getParentJobsParams: function () {
+                if (_.keys(parentJobsParams).length === 0) {
+                    return initJobsParams($location.search(), true);
+                }
+                return parentJobsParams;
+            },
+            setParentJobsParams: function (data) {
+                parentJobsParams = initJobsParams(data, true);
+                updateQuerystring(parentJobsParams);
             },
             getJobExecutionsParams: function () {
                 if (_.keys(jobExecutionsParams).length === 0) {

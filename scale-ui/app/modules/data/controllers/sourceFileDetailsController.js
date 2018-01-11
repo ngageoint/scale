@@ -10,13 +10,23 @@
         $scope.productsData = null;
         $scope.ingestsData = null;
         $scope.hasParentCtrl = true;
+        $scope.jobsParams = stateService.getParentJobsParams();
+        $scope.productsParams = {
+            order: ["-last_modified"],
+            page: 1,
+            page_size: 25
+        };
+        $scope.ingestsParams = {
+            order: ["-last_modified"],
+            page: 1,
+            page_size: 25
+        };
 
         ctrl.loading = true;
         ctrl._ = _;
         ctrl.sourceFile = null;
         ctrl.activeTab = qs.tab || 'jobs';
-        ctrl.sourceFileProductsParams = stateService.getSourceFileProductsParams();
-        ctrl.startDate = moment.utc(ctrl.sourceFileProductsParams.started).toDate();
+        ctrl.startDate = moment.utc($scope.productsParams.started).toDate();
         ctrl.startDatePopup = {
             opened: false
         };
@@ -24,7 +34,7 @@
             $event.stopPropagation();
             ctrl.startDatePopup.opened = true;
         };
-        ctrl.stopDate = moment.utc(ctrl.sourceFileProductsParams.ended).toDate();
+        ctrl.stopDate = moment.utc($scope.productsParams.ended).toDate();
         ctrl.stopDatePopup = {
             opened: false
         };
@@ -35,25 +45,25 @@
         ctrl.dateModelOptions = {
             timezone: '+000'
         };
-        ctrl.searchText = ctrl.sourceFileProductsParams.file_name || '';
+        ctrl.searchText = $scope.productsParams.file_name || '';
         ctrl.gridOptions = gridFactory.defaultGridOptions();
-        ctrl.gridOptions.paginationCurrentPage = ctrl.sourceFileProductsParams.page || 1;
-        ctrl.gridOptions.paginationPageSize = ctrl.sourceFileProductsParams.page_size || ctrl.gridOptions.paginationPageSize;
+        ctrl.gridOptions.paginationCurrentPage = $scope.productsParams.page || 1;
+        ctrl.gridOptions.paginationPageSize = $scope.productsParams.page_size || ctrl.gridOptions.paginationPageSize;
         ctrl.gridOptions.data = [];
 
         $timeout(function () {
-            ctrl.gridOptions.paginationCurrentPage = ctrl.sourceFileProductsParams.page || 1;
-            ctrl.gridOptions.paginationPageSize = ctrl.sourceFileProductsParams.page_size || ctrl.gridOptions.paginationPageSize;
+            ctrl.gridOptions.paginationCurrentPage = $scope.productsParams.page || 1;
+            ctrl.gridOptions.paginationPageSize = $scope.productsParams.page_size || ctrl.gridOptions.paginationPageSize;
         });
 
         var getSourceJobs = function () {
-            dataService.getSourceDescendants(ctrl.sourceFile.id, 'jobs', stateService.getJobsParams()).then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'jobs', $scope.jobsParams).then(function (data) {
                 $scope.jobsData = data;
             });
         };
 
         var getSourceProducts = function () {
-            dataService.getSourceDescendants(ctrl.sourceFile.id, 'products', ctrl.sourceFileProductsParams).then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'products', $scope.productsParams).then(function (data) {
                 $scope.productsData = data;
                 ctrl.gridOptions.minRowsToShow = data.results.length;
                 ctrl.gridOptions.virtualizationThreshold = data.results.length;
@@ -63,7 +73,7 @@
         };
 
         var getSourceIngests = function () {
-            dataService.getSourceDescendants(ctrl.sourceFile.id, 'ingests', stateService.getIngestsParams()).then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'ingests', $scope.ingestsParams).then(function (data) {
                 $scope.ingestsData = data;
             });
         };
@@ -93,7 +103,7 @@
             return '';
         };
 
-        var filteredByOrder = ctrl.sourceFileProductsParams.order ? true : false;
+        var filteredByOrder = $scope.productsParams.order ? true : false;
 
         ctrl.colDefs = [
             {
@@ -136,16 +146,16 @@
         ];
 
         ctrl.filterResults = function () {
-            stateService.setSourceFileProductsParams(ctrl.sourceFileProductsParams);
+            stateService.setSourceFileProductsParams($scope.productsParams);
             getSourceProducts();
         };
 
         ctrl.updateColDefs = function () {
-            ctrl.gridOptions.columnDefs = gridFactory.applySortConfig(ctrl.colDefs, ctrl.sourceFileProductsParams);
+            ctrl.gridOptions.columnDefs = gridFactory.applySortConfig(ctrl.colDefs, $scope.productsParams);
         };
 
         ctrl.updateSourceFileProductsOrder = function (sortArr) {
-            ctrl.sourceFileProductsParams.order = sortArr.length > 0 ? sortArr : null;
+            $scope.productsParams.order = sortArr.length > 0 ? sortArr : null;
             filteredByOrder = sortArr.length > 0;
             ctrl.filterResults();
         };
@@ -154,8 +164,8 @@
             //set gridApi on scope
             ctrl.gridApi = gridApi;
             ctrl.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                ctrl.sourceFileProductsParams.page = currentPage;
-                ctrl.sourceFileProductsParams.page_size = pageSize;
+                $scope.productsParams.page = currentPage;
+                $scope.productsParams.page_size = pageSize;
                 ctrl.filterResults();
             });
             // ctrl.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
@@ -176,7 +186,7 @@
 
         ctrl.filterByFilename = function (keyEvent) {
             if (!keyEvent || (keyEvent && keyEvent.which === 13)) {
-                ctrl.sourceFileProductsParams.file_name = ctrl.searchText;
+                $scope.productsParams.file_name = ctrl.searchText;
                 ctrl.filterResults();
             }
         };
@@ -211,7 +221,7 @@
 
         $scope.$watch('ctrl.startDate', function (value) {
             if ($scope.productsData) {
-                ctrl.sourceFileProductsParams.started = value.toISOString();
+                $scope.productsParams.started = value.toISOString();
                 ctrl.filterResults();
             }
         });
@@ -235,7 +245,7 @@
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            ctrl.sourceFileProductsParams = newValue;
+            $scope.productsParams = newValue;
             ctrl.updateColDefs();
         });
     });
