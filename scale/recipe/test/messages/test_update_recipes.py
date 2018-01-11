@@ -2,7 +2,9 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from django.utils.timezone import now
 
+from job.configuration.results.job_results import JobResults
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.messages.update_recipes import UpdateRecipes
@@ -145,7 +147,7 @@ class TestUpdateRecipes(TestCase):
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_running', job=self.job_2_running)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_2, job_name='job_blocked', job=self.job_2_blocked)
 
-        # Create recipe for testing jobs that are ready for their input and to be queued
+        # Create recipe for testing the setting of input for a starting job in a recipe (no parents)
         input_name_1 = 'Test Input 1'
         output_name_1 = 'Test Output 1'
         interface_1 = {
@@ -232,6 +234,24 @@ class TestUpdateRecipes(TestCase):
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 1', job=job_3)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 2', job=job_4)
 
+        # Create recipe for testing the setting of input for a child job
+        job_5 = job_test_utils.create_job(job_type=job_type_3, status='COMPLETED')
+        file_2 = storage_test_utils.create_file(workspace=workspace, media_type='text/plain')
+        job_5_output_dict = {
+            'version': '1.0',
+            'output_data': [{
+                'name': output_name_1,
+                'file_ids': [file_2.id]
+            }]
+        }
+        job_test_utils.create_job_exe(job=job_5, output=JobResults(job_5_output_dict))
+        # Complete job 5 and set its output so that update recipe message can give go ahead for child job 6
+        Job.objects.process_job_output([job_5.id], now())
+        job_6 = job_test_utils.create_job(job_type=job_type_4, status='PENDING', num_exes=0)
+        self.recipe_4 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, data=data)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_4, job_name='Job 1', job=job_5)
+        recipe_test_utils.create_recipe_job(recipe=self.recipe_4, job_name='Job 2', job=job_6)
+
         # Add recipes to message
         message = UpdateRecipes()
         if message.can_fit_more():
@@ -240,6 +260,8 @@ class TestUpdateRecipes(TestCase):
             message.add_recipe(self.recipe_2.id)
         if message.can_fit_more():
             message.add_recipe(self.recipe_3.id)
+        if message.can_fit_more():
+            message.add_recipe(self.recipe_4.id)
 
         # Execute message
         result = message.execute()
@@ -273,6 +295,19 @@ class TestUpdateRecipes(TestCase):
                 'workspace_id': workspace.id,
             }],
         })
+        # Make sure Job 6 has its input populated
+        job = Job.objects.get(id=job_6.id)
+        self.assertDictEqual(job.data, {
+            'version': '1.0',
+            'input_data': [{
+                'name': input_name_2,
+                'file_ids': [file_2.id],
+            }],
+            'output_data': [{
+                'name': output_name_2,
+                'workspace_id': workspace.id,
+            }],
+        })
 
         # Test executing message again
         message_json_dict = message.to_json()
@@ -293,6 +328,7 @@ class TestUpdateRecipes(TestCase):
                 pending_jobs_msg = True
             elif new_msg.type == 'process_job_input':
                 process_job_inputs_msg = True
+                self.assertSetEqual(set(new_msg._job_ids), {job_3.id, job_6.id})
         self.assertTrue(blocked_jobs_msg)
         self.assertTrue(pending_jobs_msg)
         self.assertTrue(process_job_inputs_msg)
