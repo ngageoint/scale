@@ -13,6 +13,7 @@
             recipesParams = {},
             ingestsColDefs = [],
             ingestsParams = {},
+            parentIngestsParams = {},
             scansColDefs = [],
             scansParams = {},
             nodesColDefs = [],
@@ -109,12 +110,12 @@
             };
         };
 
-        var initIngestsParams = function (data) {
+        var initIngestsParams = function (data, isParent) {
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: isParent ? null : data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null,
                 file_name: data.file_name ? data.file_name : null,
@@ -291,6 +292,16 @@
             setIngestsParams: function (data) {
                 ingestsParams = initIngestsParams(data);
                 updateQuerystring(ingestsParams);
+            },
+            getParentIngestsParams: function () {
+                if (_.keys(parentIngestsParams).length === 0) {
+                    return initIngestsParams($location.search(), true);
+                }
+                return parentIngestsParams;
+            },
+            setParentIngestsParams: function (data) {
+                parentIngestsParams = initIngestsParams(data, true);
+                updateQuerystring(parentIngestsParams);
             },
             getScansParams: function () {
                 if (_.keys(scansParams).length === 0) {

@@ -16,35 +16,13 @@
             page: 1,
             page_size: 25
         };
-        $scope.ingestsParams = {
-            order: ["-last_modified"],
-            page: 1,
-            page_size: 25
-        };
+        $scope.ingestsParams = stateService.getParentIngestsParams();
 
         ctrl.loading = true;
         ctrl._ = _;
         ctrl.sourceFile = null;
         ctrl.activeTab = qs.tab || 'jobs';
-        ctrl.startDate = moment.utc($scope.productsParams.started).toDate();
-        ctrl.startDatePopup = {
-            opened: false
-        };
-        ctrl.openStartDatePopup = function ($event) {
-            $event.stopPropagation();
-            ctrl.startDatePopup.opened = true;
-        };
-        ctrl.stopDate = moment.utc($scope.productsParams.ended).toDate();
-        ctrl.stopDatePopup = {
-            opened: false
-        };
-        ctrl.openStopDatePopup = function ($event) {
-            $event.stopPropagation();
-            ctrl.stopDatePopup.opened = true;
-        };
-        ctrl.dateModelOptions = {
-            timezone: '+000'
-        };
+
         ctrl.searchText = $scope.productsParams.file_name || '';
         ctrl.gridOptions = gridFactory.defaultGridOptions();
         ctrl.gridOptions.paginationCurrentPage = $scope.productsParams.page || 1;
@@ -218,20 +196,6 @@
                 windowClass: 'metadata-modal-window'
             });
         };
-
-        $scope.$watch('ctrl.startDate', function (value) {
-            if ($scope.productsData) {
-                $scope.productsParams.started = value.toISOString();
-                ctrl.filterResults();
-            }
-        });
-
-        $scope.$watch('ctrl.stopDate', function (value) {
-            if ($scope.productsData) {
-                ctrl.sourceFilesParams.ended = value.toISOString();
-                ctrl.filterResults();
-            }
-        });
 
         $scope.$watchCollection('ctrl.stateService.getSourceFileProductsColDefs()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
