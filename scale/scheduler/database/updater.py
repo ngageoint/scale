@@ -80,10 +80,10 @@ class DatabaseUpdater(object):
         job_ids_by_exe_num = {}  # {Exe num: [Job ID]}
         job_exe_ids_by_exe_num = {}  # {Exe num: [Job Exe ID]}, these are the "good" exes to keep
         qry = 'SELECT job_id, exe_num, count(*), min(id) FROM job_exe'
-        qry += ' WHERE job_id BETWEEN %d AND %d GROUP BY job_id, exe_num'
+        qry += ' WHERE job_id BETWEEN %s AND %s GROUP BY job_id, exe_num'
         qry = 'SELECT job_id, exe_num, count, min FROM (%s) c WHERE count > 1' % qry
         with connection.cursor() as cursor:
-            cursor.execute(qry, [batch_start_job_id, batch_end_job_id])
+            cursor.execute(qry, [str(batch_start_job_id), str(batch_end_job_id)])
             for row in cursor.fetchall():
                 job_id = row[0]
                 exe_num = row[1]
@@ -111,7 +111,7 @@ class DatabaseUpdater(object):
         TaskUpdate.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
         JobExecutionOutput.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
         JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
-        deleted_count = JobExecution.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()[0]
+        deleted_count = JobExecution.objects.filter(id__in=job_exe_ids_to_delete).delete()[0]
         logger.info('Deleted %d duplicates', deleted_count)
 
         self._updated_job += job_batch_size
