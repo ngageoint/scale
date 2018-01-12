@@ -87,7 +87,7 @@ class QueueNewJobView(GenericAPIView):
         # TODO: remove this check when REST API v5 is removed. 
         if request.version == 'v5':
             job_details = Job.objects.get_details_v5(job_id)
-            serializer = self.get_serializer(job_details)
+            serializer = OldJobDetailsSerializer(job_details)
         else:
             job_details = Job.objects.get_details(job_id)
             serializer = self.get_serializer(job_details)

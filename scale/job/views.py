@@ -558,11 +558,13 @@ class JobsView(ListAPIView):
                                     order=order)
 
         page = self.paginate_queryset(jobs)
-        # TODO: remove this if statement when REST API v5 is removed
+
+        # TODO: remove this version check when REST API v5 is removed
         if request.version == 'v5':
             serializer = OldJobSerializer(page, many=True)
         else:
             serializer = self.get_serializer(page, many=True)
+        
         return self.get_paginated_response(serializer.data)
 
 
