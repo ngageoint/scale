@@ -147,6 +147,13 @@ place jobs and recipes on the queue for processing.
 +=========================================================================================================================+
 | Creates a new job and places it onto the queue                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Queue New Job endpoint response.  Starting    |
+|                with API **v6** the following fields will be removed: *cpus_required*, *mem_required*,                   |
+|                *disk_out_required*, *inputs*, *outputs*, *job_exes*, *recipes*.  The following fields will be added:    |
+|                *resources*, *execution*, *recipe*.  Additionally, *disk_in_required* is renamed to *input_file_size*,   |
+|                *data* is renamed to *input*, and *results* is renamed to *output*.                                      |
++-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /queue/new-job/                                                                                                |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
@@ -649,6 +656,12 @@ place jobs and recipes on the queue for processing.
 | **Requeue Jobs**                                                                                                        |
 +=========================================================================================================================+
 | Increases the maximum failure allowance for existing jobs and puts them back on the queue.                              |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Requeue Jobs endpoint response. Starting with |
+|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*.   |
+|                A *resources* section will also be added to the response. Additionally, *disk_in_required* is renamed to |
+|                *input_file_size*, *data* is renamed to *input*, and *results* is renamed to *output*.                   |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /queue/requeue-jobs/                                                                                           |
 +--------------------+----------------------------------------------------------------------------------------------------+
