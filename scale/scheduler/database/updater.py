@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.db import transaction
+from django.db import connection, transaction
 
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.models import JobExecution, JobExecutionEnd, JobExecutionOutput
+from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
 from util.exceptions import TerminatedCommand
 from util.parse import datetime_to_string
 
@@ -24,13 +24,15 @@ class DatabaseUpdater(object):
         self._running = True
         self._updated_job_exe = 0
         self._total_job_exe = 0
+        self._updated_job = 0
+        self._total_job = 0
 
     def update(self):
         """Runs the database update
         """
 
+        # Converting job execution models
         self._perform_update_init()
-
         while True:
             if not self._running:
                 raise TerminatedCommand()
@@ -39,12 +41,83 @@ class DatabaseUpdater(object):
                 break
             self._perform_update_iteration()
 
+        # Removing job execution duplicates
+        self._perform_job_exe_dup_init()
+        while True:
+            if not self._running:
+                raise TerminatedCommand()
+
+            if self._updated_job >= self._total_job:
+                break
+            self._perform_job_exe_dup_iteration()
+
     def stop(self):
         """Informs the database updater to stop running
         """
 
         logger.info('Scale database updater has been told to stop')
         self._running = False
+
+    def _perform_job_exe_dup_init(self):
+        """Performs any initialization piece of the removal of job execution duplicates
+        """
+
+        logger.info('Scale is now removing duplicate job execution models')
+        logger.info('Counting the number of jobs that need to be checked...')
+        self._total_job = Job.objects.all().count()
+        logger.info('Found %d jobs that need to be checked for duplicate executions', self._total_job)
+
+    def _perform_job_exe_dup_iteration(self):
+        """Performs a single iteration of the removal of job execution duplicates
+        """
+
+        job_batch_size = 10000
+
+        batch_start_job_id = self._updated_job
+        batch_end_job_id = batch_start_job_id + job_batch_size - 1
+
+        # Find (job_id, exe_num) pairs that have duplicates
+        job_ids_by_exe_num = {}  # {Exe num: [Job ID]}
+        job_exe_ids_by_exe_num = {}  # {Exe num: [Job Exe ID]}, these are the "good" exes to keep
+        qry = 'SELECT job_id, exe_num, count(*), min(id) FROM job_exe'
+        qry += ' WHERE job_id BETWEEN %s AND %s GROUP BY job_id, exe_num'
+        qry = 'SELECT job_id, exe_num, count, min FROM (%s) c WHERE count > 1' % qry
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [str(batch_start_job_id), str(batch_end_job_id)])
+            for row in cursor.fetchall():
+                job_id = row[0]
+                exe_num = row[1]
+                job_exe_id = row[3]
+                if exe_num not in job_ids_by_exe_num:
+                    job_ids_by_exe_num[exe_num] = []
+                    job_exe_ids_by_exe_num[exe_num] = []
+                job_ids_by_exe_num[exe_num].append(job_id)
+                job_exe_ids_by_exe_num[exe_num].append(job_exe_id)
+
+        if job_ids_by_exe_num:
+            # Find IDs of duplicate job_exes
+            job_exe_ids_to_delete = []
+            for exe_num in job_ids_by_exe_num:
+                job_ids = job_ids_by_exe_num[exe_num]
+                job_exe_ids = job_exe_ids_by_exe_num[exe_num]  # These are the "good" exes to keep
+                job_exe_qry = JobExecution.objects.filter(job_id__in=job_ids, exe_num=exe_num)
+                for job_exe in job_exe_qry.exclude(id__in=job_exe_ids).only('id'):
+                    job_exe_ids_to_delete.append(job_exe.id)
+
+            logger.info('Deleting %d duplicates that were found...', len(job_exe_ids_to_delete))
+            TaskUpdate.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            JobExecutionOutput.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            deleted_count = JobExecution.objects.filter(id__in=job_exe_ids_to_delete).delete()[0]
+            logger.info('Deleted %d duplicates', deleted_count)
+        else:
+            logger.info('No duplicates found')
+
+        self._updated_job += job_batch_size
+        if self._updated_job > self._total_job:
+            self._updated_job = self._total_job
+        percent = (float(self._updated_job) / float(self._total_job)) * 100.00
+        logger.info('Completed %s of %s jobs (%.1f%%)', self._updated_job, self._total_job, percent)
 
     def _perform_update_init(self):
         """Performs any initialization piece of the database update
