@@ -33,6 +33,7 @@
         vm.searchText = vm.sourceFilesParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.data = [];
+        vm.disableDateFilter = false;
 
         $timeout(function () {
             vm.gridOptions.paginationCurrentPage = vm.sourceFilesParams.page || 1;
@@ -85,7 +86,15 @@
 
         vm.getSourceFiles = function () {
             vm.loading = true;
-            dataService.getSources(vm.sourceFilesParams).then(function (data) {
+            var queryParams = _.clone(vm.sourceFilesParams);
+            if (queryParams.file_name) {
+                vm.disableDateFilter = true;
+                delete queryParams.started;
+                delete queryParams.ended;
+            } else {
+                vm.disableDateFilter = false;
+            }
+            dataService.getSources(queryParams).then(function (data) {
                 vm.sourceFileData = SourceFile.transformer(data.results);
                 vm.gridOptions.minRowsToShow = vm.sourceFileData.length;
                 vm.gridOptions.virtualizationThreshold = vm.sourceFileData.length;
