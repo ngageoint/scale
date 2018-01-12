@@ -114,6 +114,8 @@ class DatabaseUpdater(object):
             logger.info('No duplicates found')
 
         self._updated_job += job_batch_size
+        if self._updated_job > self._total_job:
+            self._updated_job = self._total_job
         percent = (float(self._updated_job) / float(self._total_job)) * 100.00
         logger.info('Completed %s of %s jobs (%.1f%%)', self._updated_job, self._total_job, percent)
 
