@@ -94,25 +94,24 @@ class DatabaseUpdater(object):
                 job_ids_by_exe_num[exe_num].append(job_id)
                 job_exe_ids_by_exe_num[exe_num].append(job_exe_id)
 
-        if not job_ids_by_exe_num:
+        if job_ids_by_exe_num:
+            # Find IDs of duplicate job_exes
+            job_exe_ids_to_delete = []
+            for exe_num in job_ids_by_exe_num:
+                job_ids = job_ids_by_exe_num[exe_num]
+                job_exe_ids = job_exe_ids_by_exe_num[exe_num]  # These are the "good" exes to keep
+                job_exe_qry = JobExecution.objects.filter(job_id__in=job_ids, exe_num=exe_num)
+                for job_exe in job_exe_qry.exclude(id__in=job_exe_ids).only('id'):
+                    job_exe_ids_to_delete.append(job_exe.id)
+
+            logger.info('Deleting %d duplicates that were found...', len(job_exe_ids_to_delete))
+            TaskUpdate.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            JobExecutionOutput.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
+            deleted_count = JobExecution.objects.filter(id__in=job_exe_ids_to_delete).delete()[0]
+            logger.info('Deleted %d duplicates', deleted_count)
+        else:
             logger.info('No duplicates found')
-            return  # No duplicates
-
-        # Find IDs of duplicate job_exes
-        job_exe_ids_to_delete = []
-        for exe_num in job_ids_by_exe_num:
-            job_ids = job_ids_by_exe_num[exe_num]
-            job_exe_ids = job_exe_ids_by_exe_num[exe_num]  # These are the "good" exes to keep
-            job_exe_qry = JobExecution.objects.filter(job_id__in=job_ids, exe_num=exe_num)
-            for job_exe in job_exe_qry.exclude(id__in=job_exe_ids).only('id'):
-                job_exe_ids_to_delete.append(job_exe.id)
-
-        logger.info('Deleting %d duplicates that were found...', len(job_exe_ids_to_delete))
-        TaskUpdate.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
-        JobExecutionOutput.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
-        JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids_to_delete).delete()
-        deleted_count = JobExecution.objects.filter(id__in=job_exe_ids_to_delete).delete()[0]
-        logger.info('Deleted %d duplicates', deleted_count)
 
         self._updated_job += job_batch_size
         percent = (float(self._updated_job) / float(self._total_job)) * 100.00
