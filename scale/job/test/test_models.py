@@ -241,9 +241,9 @@ class TestJobManager(TransactionTestCase):
             }]}
 
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_1)
+                                          input=data_1)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_2)
+                                          input=data_2)
 
         # Execute method
         Job.objects.process_job_input([job_1, job_2])
@@ -254,10 +254,10 @@ class TestJobManager(TransactionTestCase):
         job_2 = jobs[1]
 
         # Check jobs for expected fields
-        self.assertEqual(job_1.disk_in_required, 1053.0)
+        self.assertEqual(job_1.input_file_size, 1053.0)
         self.assertEqual(job_1.source_started, min_src_started_job_1)
         self.assertEqual(job_1.source_ended, max_src_ended_job_1)
-        self.assertEqual(job_2.disk_in_required, 113269857.0)
+        self.assertEqual(job_2.input_file_size, 113269857.0)
         self.assertEqual(job_2.source_started, min_src_started_job_2)
         self.assertEqual(job_2.source_ended, max_src_ended_job_2)
 

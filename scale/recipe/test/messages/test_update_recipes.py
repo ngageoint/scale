@@ -297,7 +297,7 @@ class TestUpdateRecipes(TestCase):
         })
         # Make sure Job 6 has its input populated
         job = Job.objects.get(id=job_6.id)
-        self.assertDictEqual(job.data, {
+        self.assertDictEqual(job.input, {
             'version': '1.0',
             'input_data': [{
                 'name': input_name_2,
