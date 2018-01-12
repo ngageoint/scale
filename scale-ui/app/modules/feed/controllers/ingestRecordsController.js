@@ -6,7 +6,7 @@
 
         var vm = this;
 
-        vm.ingestsParams = stateService.getIngestsParams();
+        vm.ingestsParams = $scope.$parent.ingestsData ? stateService.getParentIngestsParams() : stateService.getIngestsParams();
 
         vm.stateService = stateService;
         vm.loading = true;
@@ -125,7 +125,11 @@
 
         vm.filterResults = function () {
             poller.stopAll();
-            stateService.setIngestsParams(vm.ingestsParams);
+            if ($scope.$parent.ingestsData) {
+                stateService.setParentIngestsParams(vm.ingestsParams);
+            } else {
+                stateService.setIngestsParams(vm.ingestsParams);
+            }
             vm.loading = true;
             vm.getIngests();
         };
@@ -215,7 +219,11 @@
         };
 
         vm.initialize = function () {
-            stateService.setIngestsParams(vm.ingestsParams);
+            if ($scope.$parent.ingestsData) {
+                stateService.setParentIngestsParams(vm.ingestsParams);
+            } else {
+                stateService.setIngestsParams(vm.ingestsParams);
+            }
             vm.updateColDefs();
             vm.getStrikes();
             if (!$scope.$parent.hasParentCtrl) {

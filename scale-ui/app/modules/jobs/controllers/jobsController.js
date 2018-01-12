@@ -7,7 +7,7 @@
         var vm = this,
             jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
-        vm.jobsParams = stateService.getJobsParams();
+        vm.jobsParams = $scope.$parent.jobsData ? stateService.getParentJobsParams() : stateService.getJobsParams();
 
         vm.stateService = stateService;
         vm.loading = true;
@@ -217,7 +217,11 @@
 
         vm.filterResults = function () {
             poller.stopAll();
-            stateService.setJobsParams(vm.jobsParams);
+            if ($scope.$parent.jobsData) {
+                stateService.setParentJobsParams(vm.jobsParams);
+            } else {
+                stateService.setJobsParams(vm.jobsParams);
+            }
             vm.loading = true;
             vm.getJobs();
         };
@@ -294,7 +298,11 @@
         };
 
         vm.initialize = function () {
-            stateService.setJobsParams(vm.jobsParams);
+            if ($scope.$parent.jobsData) {
+                stateService.setParentJobsParams(vm.jobsParams);
+            } else {
+                stateService.setJobsParams(vm.jobsParams);
+            }
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
