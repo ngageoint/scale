@@ -173,6 +173,7 @@ class JobSerializer(JobBaseSerializer):
     event = TriggerEventBaseSerializer()
     node = NodeBaseSerializer()
     error = ErrorBaseSerializer()
+    resources = serializers.JSONField(source='get_resources_dict')
 
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()
@@ -314,18 +315,22 @@ class OldJobDetailsSerializer(OldJobSerializer):
 class JobDetailsSerializer(JobSerializer):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializer
-    from recipe.serializers import RecipeBaseSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
 
     job_type = JobTypeSerializer()
     job_type_rev = JobTypeRevisionSerializer()
-    recipe = RecipeBaseSerializer()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
+    try:
+        from recipe.serializers import RecipeBaseSerializer
+        recipe = RecipeBaseSerializer()
+    except:
+        recipe = {}
+
     input = serializers.JSONField(default=dict)
     output = serializers.JSONField(default=dict)
-    resources = serializers.JSONField(default=dict)
+    execution = JobExecutionBaseSerializer(many=True)
 
     root_superseded_job = JobBaseSerializer()
     superseded_job = JobBaseSerializer()
