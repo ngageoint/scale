@@ -95,7 +95,7 @@ class JobManager(models.Manager):
         return job
 
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
                     order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
@@ -163,7 +163,7 @@ class JobManager(models.Manager):
         return jobs
 
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
                  order=None):
         """Returns a list of jobs within the given time range.
 
@@ -229,41 +229,13 @@ class JobManager(models.Manager):
         try:
             from recipe.models import RecipeJob
 
-            recipe_job = RecipeJob.objects.filter(job=job, is_original=True)
-            recipe_job = recipe_job.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                   'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                   'recipe__event__rule')
-            job.recipe = recipe_job
+            recipe_job = RecipeJob.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                          'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                          'recipe__event__rule').get(job=job, 
+                                                                                     recipe__is_superseded=False)
+            job.recipe = recipe_job.recipe
         except:
-            job.recipe = []
-
-        # Fetch all the associated input files
-        input_file_ids = job.get_job_data().get_input_file_ids()
-        input_files = ScaleFile.objects.filter(id__in=input_file_ids)
-        input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        input_files = input_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
-                                        'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
-                                        'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                        'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
-                                        'job_type__error_mapping')
-        input_files = input_files.prefetch_related('countries')
-        input_files = input_files.order_by('id').distinct('id')
-
-        # Attempt to get related products
-        output_files = ScaleFile.objects.filter(job=job)
-        output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        output_files = output_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
-                                          'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
-                                          'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                          'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
-                                          'job_type__error_mapping')
-        output_files = output_files.prefetch_related('countries')
-        output_files = output_files.order_by('id').distinct('id')
-
-        # Merge job interface definitions with mapped values
-        job_interface_dict = job.get_job_interface().get_dict()
-        job_data_dict = job.get_job_data().get_dict()
-        job_results_dict = job.get_job_results().get_dict()
+            job.recipe = None
 
         return job
 
@@ -1103,6 +1075,15 @@ class Job(models.Model):
 
         resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
         return resources
+
+    def get_resources_dict(self):
+        """Gathers resources information and returns it as a dictl.
+
+        :returns: The job resources dict
+        :rtype: dict
+        """
+        
+        return self.get_resources().get_json().get_dict()
 
     def has_been_queued(self):
         """Indicates whether this job has been queued at least once
