@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    scheduler.test.database
     scheduler.test.messages
     scheduler.test.node
     scheduler.test.scheduling

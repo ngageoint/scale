@@ -1,0 +1,22 @@
+scheduler\.test\.database package
+=================================
+
+Submodules
+----------
+
+scheduler\.test\.database\.test\_updater module
+-----------------------------------------------
+
+.. automodule:: scheduler.test.database.test_updater
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.database
+    :members:
+    :undoc-members:
+    :show-inheritance:
