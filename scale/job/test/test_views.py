@@ -544,9 +544,9 @@ class TestJobDetailsView(TestCase):
 
         result = json.loads(response.content)
 
-        self.assertEqual(result['execution'][0]['job']['id'], self.job.id)
-        self.assertEqual(result['execution'][0]['job_type']['id'], self.job_type.id)
-        self.assertEqual(result['execution'][0]['exe_num'], self.job_exe.exe_num)
+        self.assertEqual(result['execution']['job']['id'], self.job.id)
+        self.assertEqual(result['execution']['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['execution']['exe_num'], self.job_exe.exe_num)
 
     def test_successful_resources(self):
         """Tests successfully calling the job details view for resources."""

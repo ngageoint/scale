@@ -219,10 +219,12 @@ class JobManager(models.Manager):
 
         # Attempt to get related job executions
         if job.status in ['RUNNING', 'COMPLETED', 'FAILED', 'QUEUED']:
-            job_exe = JobExecution.objects.filter(job=job, exe_num=job.num_exes).select_related('job', 'node', 'error')
-            job.execution = job_exe.defer('job__input', 'job__output').order_by('-created')
+            try:
+                job.execution = JobExecution.objects.get_job_exe_details(job_id=job.id, exe_num=job.num_exes)
+            except JobExecution.DoesNotExist():
+                job.execution = None
         else:
-            job.execution = []
+            job.execution = None
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
@@ -234,7 +236,7 @@ class JobManager(models.Manager):
                                                           'recipe__event__rule').get(job=job, 
                                                                                      recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
-        except:
+        except RecipeJob.DoesNotExist:
             job.recipe = None
 
         return job
@@ -1077,7 +1079,7 @@ class Job(models.Model):
         return resources
 
     def get_resources_dict(self):
-        """Gathers resources information and returns it as a dictl.
+        """Gathers resources information and returns it as a dict.
 
         :returns: The job resources dict
         :rtype: dict
@@ -1354,8 +1356,8 @@ class JobExecutionManager(models.Manager):
 
         # Fetch a list of job executions
         job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
-                                                            'jobexecutionoutput')
-        job_exe = job_exe.defer('stdout', 'stderr')
+                                                            'jobexecutionend__error', 'jobexecutionoutput')
+        job_exe = job_exe.defer('stdout', 'stderr', 'job__input', 'job__output')
 
         # Apply job and execution filtering
         job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)

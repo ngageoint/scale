@@ -330,7 +330,7 @@ class JobDetailsSerializer(JobSerializer):
 
     input = serializers.JSONField(default=dict)
     output = serializers.JSONField(default=dict)
-    execution = JobExecutionBaseSerializer(many=True)
+    execution = JobExecutionBaseSerializer()
 
     root_superseded_job = JobBaseSerializer()
     superseded_job = JobBaseSerializer()
