@@ -167,8 +167,8 @@ class TestJobsView(TestCase):
         self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
-
-class TestJobDetailsView(TestCase):
+# TODO: remove when REST API v5 is removed
+class OldTestJobDetailsView(TestCase):
 
     def setUp(self):
         django.setup()
@@ -207,7 +207,7 @@ class TestJobDetailsView(TestCase):
             'output_data': []
         }
         self.job_type = job_test_utils.create_job_type(interface=job_interface)
-        self.job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
+        self.job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
 
         # Attempt to stage related models
         self.job_exe = job_test_utils.create_job_exe(job=self.job)
@@ -283,7 +283,7 @@ class TestJobDetailsView(TestCase):
             'type': 'property',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_field',
             'value': 10,
         }]
@@ -308,12 +308,12 @@ class TestJobDetailsView(TestCase):
             'type': 'file',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_file',
             'file_id': self.file.id,
         }]
         if self.product:
-            self.job.results['output_data'] = [{
+            self.job.output['output_data'] = [{
                 'name': 'output_file',
                 'file_id': self.product.id,
             }]
@@ -344,12 +344,12 @@ class TestJobDetailsView(TestCase):
             'type': 'files',
         }]
         self.job.job_type_rev.save()
-        self.job.data['input_data'] = [{
+        self.job.input['input_data'] = [{
             'name': 'input_files',
             'file_ids': [self.file.id],
         }]
         if self.product:
-            self.job.results['output_data'] = [{
+            self.job.output['output_data'] = [{
                 'name': 'output_files',
                 'file_ids': [self.product.id],
             }]
@@ -378,7 +378,7 @@ class TestJobDetailsView(TestCase):
         job_results = {
             'output_data': []
         }
-        new_job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results,
+        new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
                                             superseded_job=self.job, delete_superseded=False)
 
         # Make sure the original job was updated
@@ -436,6 +436,210 @@ class TestJobDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
+class TestJobDetailsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.country = storage_test_utils.create_country()
+        self.file = storage_test_utils.create_file(countries=[self.country])
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'property',
+                'name': 'input_field',
+            }, {
+                'type': 'file',
+                'name': 'input_file',
+            }, {
+                'type': 'files',
+                'name': 'input_files',
+            }],
+            'output_data': [{
+                'type': 'file',
+                'name': 'output_file',
+            }, {
+                'type': 'files',
+                'name': 'output_files',
+            }],
+            'shared_resources': [],
+        }
+
+        job_data = {
+            'input_data': []
+        }
+        job_results = {
+            'output_data': []
+        }
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
+        self.job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results, status='RUNNING')
+
+        # Attempt to stage related models
+        self.job_exe = job_test_utils.create_job_exe(job=self.job)
+
+        try:
+            import recipe.test.utils as recipe_test_utils
+            definition = {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'Recipe Input',
+                    'type': 'file',
+                    'media_types': ['text/plain'],
+                }],
+                'jobs': [{
+                    'name': 'Job 1',
+                    'job_type': {
+                        'name': self.job_type.name,
+                        'version': self.job_type.version,
+                    },
+                    'recipe_inputs': [{
+                        'recipe_input': 'Recipe Input',
+                        'job_input': 'input_files',
+                    }]
+                }]
+            }
+            self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+            self.recipe = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+            self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job=self.job, job_name='Job 1')
+        except:
+            self.recipe_type = None
+            self.recipe = None
+            self.recipe_job = None
+
+        try:
+            import product.test.utils as product_test_utils
+            self.product = product_test_utils.create_product(job_exe=self.job_exe, countries=[self.country])
+        except:
+            self.product = None
+
+    def test_successful_empty(self):
+        """Tests successfully calling the job details view with no data or results."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['job_type']['name'], self.job.job_type.name)
+        self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
+
+        if self.recipe:
+            self.assertEqual(result['recipe']['recipe_type']['name'], self.recipe.recipe_type.name)
+        else:
+            self.assertEqual(len(result['recipe']), 0)
+
+    def test_successful_execution(self):
+        """Tests successfully calling the job details view and checking the execution response."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['execution']['job']['id'], self.job.id)
+        self.assertEqual(result['execution']['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['execution']['exe_num'], self.job_exe.exe_num)
+
+    def test_successful_resources(self):
+        """Tests successfully calling the job details view for resources."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['resources']['resources']['cpus'], 1.0)
+        self.assertEqual(result['resources']['resources']['mem'], 128.0)
+        self.assertEqual(result['resources']['resources']['disk'], 11.0)
+
+    def test_superseded(self):
+        """Tests successfully calling the job details view for superseded jobs."""
+
+        job_data = {
+            'input_data': []
+        }
+        job_results = {
+            'output_data': []
+        }
+        new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
+                                            superseded_job=self.job, delete_superseded=False)
+
+        # Make sure the original job was updated
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(result['is_superseded'])
+        self.assertIsNone(result['root_superseded_job'])
+        self.assertIsNotNone(result['superseded_by_job'])
+        self.assertEqual(result['superseded_by_job']['id'], new_job.id)
+        self.assertIsNotNone(result['superseded'])
+        self.assertTrue(result['delete_superseded'])
+
+        # Make sure the new new job has the expected relations
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % new_job.id)
+        url = '/v6/jobs/%i/' % new_job.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertFalse(result['is_superseded'])
+        self.assertIsNotNone(result['root_superseded_job'])
+        self.assertEqual(result['root_superseded_job']['id'], self.job.id)
+        self.assertIsNotNone(result['superseded_job'])
+        self.assertEqual(result['superseded_job']['id'], self.job.id)
+        self.assertIsNone(result['superseded'])
+        self.assertFalse(result['delete_superseded'])
+
+    def test_cancel_successful(self):
+        """Tests successfully cancelling a job."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        data = {'status': 'CANCELED'}
+        response = self.client.patch(url, json.dumps(data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['status'], 'CANCELED')
+
+    def test_cancel_bad_param(self):
+        """Tests cancelling a job with invalid arguments."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        data = {'foo': 'bar'}
+        response = self.client.patch(url, json.dumps(data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_cancel_bad_value(self):
+        """Tests cancelling a job with an incorrect status."""
+
+        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
+        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/v6/jobs/%i/' % self.job.id
+        data = {'status': 'COMPLETED'}
+        response = self.client.patch(url, json.dumps(data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
 class TestJobsUpdateView(TestCase):
 
     def setUp(self):
@@ -447,13 +651,13 @@ class TestJobsUpdateView(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1')
         self.job1 = job_test_utils.create_job(
             job_type=self.job_type1, status='RUNNING',
-            data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
+            input={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2')
         self.job2 = job_test_utils.create_job(
             job_type=self.job_type2, status='PENDING',
-            data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
+            input={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
@@ -2855,7 +3059,7 @@ class TestJobInputFilesView(TestCase):
             'output_data': []
         }
         self.job_type = job_test_utils.create_job_type(interface=job_interface)
-        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, data=job_data, results=job_results)
+        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
         self.job = job_test_utils.create_job(job_type=self.job_type)
 
         # Create JobInputFile entry files

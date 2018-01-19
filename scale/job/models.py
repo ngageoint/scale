@@ -95,7 +95,7 @@ class JobManager(models.Manager):
         return job
 
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
                     order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
@@ -163,7 +163,7 @@ class JobManager(models.Manager):
         return jobs
 
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
                  order=None):
         """Returns a list of jobs within the given time range.
 
@@ -195,8 +195,8 @@ class JobManager(models.Manager):
 
         return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                 job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                job_type_categories=job_type_categories, batch_ids=batch_ids, 
-                                error_categories=error_categories, include_superseded=include_superseded, 
+                                job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                error_categories=error_categories, include_superseded=include_superseded,
                                 order=order)
 
     def get_details(self, job_id):
@@ -218,8 +218,51 @@ class JobManager(models.Manager):
         ).get(pk=job_id)
 
         # Attempt to get related job executions
+        if job.status in ['RUNNING', 'COMPLETED', 'FAILED', 'QUEUED']:
+            try:
+                job.execution = JobExecution.objects.get_job_exe_details(job_id=job.id, exe_num=job.num_exes)
+            except JobExecution.DoesNotExist:
+                job.execution = None
+        else:
+            job.execution = None
+
+        # Attempt to get related recipe
+        # Use a localized import to make higher level application dependencies optional
+        try:
+            from recipe.models import RecipeJob
+
+            recipe_job = RecipeJob.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                          'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                          'recipe__event__rule').get(job=job, 
+                                                                                     recipe__is_superseded=False)
+            job.recipe = recipe_job.recipe
+        except RecipeJob.DoesNotExist:
+            job.recipe = None
+
+        return job
+
+    # TODO: remove this function when API v5 is removed
+    def get_details_v5(self, job_id):
+        """Gets additional details for the given job model based on related model attributes.
+
+        The additional fields include: input files, recipe, job executions, and generated products.
+
+        :param job_id: The unique identifier of the job.
+        :type job_id: int
+        :returns: The job with extra related attributes.
+        :rtype: :class:`job.models.Job`
+        """
+
+        # Attempt to fetch the requested job
+        job = Job.objects.select_related(
+            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
+            'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job', 'superseded_job__job_type',
+            'superseded_by_job', 'superseded_by_job__job_type'
+        ).get(pk=job_id)
+
+        # Attempt to get related job executions
         job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
-        job.job_exes = job_exes.defer('job__data', 'job__results').order_by('-created')
+        job.job_exes = job_exes.defer('job__input', 'job__output').order_by('-created')
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
@@ -237,7 +280,7 @@ class JobManager(models.Manager):
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        input_files = input_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                         'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                         'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                         'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
@@ -248,7 +291,7 @@ class JobManager(models.Manager):
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
         output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+        output_files = output_files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                           'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                           'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                           'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
@@ -394,10 +437,10 @@ class JobManager(models.Manager):
         interface.validate_data(data)
 
         # Update job model in memory
-        job.data = data.get_dict()
+        job.input = data.get_dict()
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict())
+        self.filter(id=job.id).update(input=data.get_dict())
 
         # Process job inputs
         self.process_job_input([job])
@@ -451,7 +494,7 @@ class JobManager(models.Manager):
 
         # Process each job to get its input file IDs and create models related to input files
         for job in jobs:
-            if job.disk_in_required is not None:
+            if job.input_file_size is not None:
                 continue  # Ignore jobs that have already had inputs processed
             job_input = job.get_job_data()
             file_ids = job_input.get_input_file_ids()
@@ -501,11 +544,12 @@ class JobManager(models.Manager):
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
+            
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(disk_in_required=input_file_size_mb, disk_out_required=0.0,
-                                          source_started=source_started, source_ended=source_ended, last_modified=when)
+            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started, 
+                                          source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
         """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
@@ -522,7 +566,7 @@ class JobManager(models.Manager):
         """
 
         if job_ids:
-            qry = 'UPDATE job j SET results = jeo.output, last_modified = %s FROM job_exe_output jeo'
+            qry = 'UPDATE job j SET output = jeo.output, last_modified = %s FROM job_exe_output jeo'
             qry += ' WHERE j.id = jeo.job_id AND j.num_exes = jeo.exe_num AND j.id IN %s AND j.status=\'COMPLETED\''
             with connection.cursor() as cursor:
                 cursor.execute(qry, [when, tuple(job_ids)])
@@ -770,6 +814,7 @@ class JobManager(models.Manager):
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
                                                last_modified=modified)
 
+    # TODO: remove this function when API REST v5 is removed 
     def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
         """Merges data for a single job instance with its job interface to produce a mapping of key/values.
 
@@ -822,12 +867,12 @@ class Job(models.Model):
     :keyword error: The error that caused the failure (should only be set when status is FAILED)
     :type error: :class:`django.db.models.ForeignKey`
 
-    :keyword data: JSON description defining the data for this job. This field must be populated when the job is first
+    :keyword input: JSON description defining the data for this job. This field must be populated when the job is first
         queued.
-    :type data: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword results: JSON description defining the results for this job. This field is populated when the job is
+    :type input: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword output: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
-    :type results: :class:`django.contrib.postgres.fields.JSONField`
+    :type output: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
@@ -837,15 +882,8 @@ class Job(models.Model):
     :type max_tries: :class:`django.db.models.IntegerField`
     :keyword num_exes: The number of executions this job has had
     :type num_exes: :class:`django.db.models.IntegerField`
-    :keyword cpus_required: The number of CPUs required for this job
-    :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_required: The amount of RAM in MiB required for this job
-    :type mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_in_required: The amount of disk space in MiB required for input files for this job
-    :type disk_in_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_required: The amount of disk space in MiB required for output (temp work and products) for this
-        job
-    :type disk_out_required: :class:`django.db.models.FloatField`
+    :keyword input_file_size: The amount of disk space in MiB required for input files for this job
+    :type input_file_size: :class:`django.db.models.FloatField`
 
     :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
         superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
@@ -899,21 +937,14 @@ class Job(models.Model):
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
-    # TODO: rename data to input and make default nullable, will cause breaking REST API changes
-    data = django.contrib.postgres.fields.JSONField(default=dict)
-    # TODO: rename results to output and make default nullable, will cause breaking REST API changes
-    results = django.contrib.postgres.fields.JSONField(default=dict)
+    input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
-    # TODO: remove cpus_required, mem_required, and disk_out_required, will cause breaking REST API changes
-    # TODO: rename disk_in_required to input_file_size, will cause breaking REST API changes
-    cpus_required = models.FloatField(blank=True, null=True)
-    mem_required = models.FloatField(blank=True, null=True)
-    disk_in_required = models.FloatField(blank=True, null=True)
-    disk_out_required = models.FloatField(blank=True, null=True)
+    input_file_size = models.FloatField(blank=True, null=True)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
@@ -1000,7 +1031,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.data.job_data.JobData`
         """
 
-        return JobData(self.data)
+        return JobData(self.input)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1018,7 +1049,7 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        return JobResults(self.results)
+        return JobResults(self.output)
 
     def get_resources(self):
         """Returns the resources required for this job
@@ -1032,20 +1063,29 @@ class Job(models.Model):
         # Calculate memory required in MiB rounded up to the nearest whole MiB
         multiplier = self.job_type.mem_mult_required
         const = self.job_type.mem_const_required
-        disk_in_required = self.disk_in_required
-        if not disk_in_required:
-            disk_in_required = 0.0
-        memory_mb = long(math.ceil(multiplier * disk_in_required + const))
+        input_file_size = self.input_file_size
+        if not input_file_size:
+            input_file_size = 0.0
+        memory_mb = long(math.ceil(multiplier * input_file_size + const))
         memory_required = max(memory_mb, MIN_MEM)
 
         # Calculate output space required in MiB rounded up to the nearest whole MiB
         multiplier = self.job_type.disk_out_mult_required
         const = self.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
+        output_size_mb = long(math.ceil(multiplier * input_file_size + const))
         disk_out_required = max(output_size_mb, MIN_DISK)
 
-        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
+        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
         return resources
+
+    def get_resources_dict(self):
+        """Gathers resources information and returns it as a dict.
+
+        :returns: The job resources dict
+        :rtype: dict
+        """
+        
+        return self.get_resources().get_json().get_dict()
 
     def has_been_queued(self):
         """Indicates whether this job has been queued at least once
@@ -1063,7 +1103,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return True if self.data else False
+        return True if self.input else False
 
     def has_output(self):
         """Indicates whether this job has its output
@@ -1072,7 +1112,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return True if self.results else False
+        return True if self.output else False
 
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
@@ -1101,7 +1141,7 @@ class Job(models.Model):
 
         interface = self.get_job_interface()
         interface.validate_data(job_input)
-        self.data = job_input.get_dict()
+        self.input = job_input.get_dict()
 
     def update_database_with_input(self, when):
         """Updates the database with this job's input JSON
@@ -1110,7 +1150,7 @@ class Job(models.Model):
         :type when: :class:`datetime.datetime`
         """
 
-        Job.objects.filter(id=self.id).update(data=self.data, last_modified=when)
+        Job.objects.filter(id=self.id).update(input=self.input, last_modified=when)
 
     def _can_be_canceled(self):
         """Indicates whether this job can be canceled.
@@ -1316,8 +1356,8 @@ class JobExecutionManager(models.Manager):
 
         # Fetch a list of job executions
         job_exe = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
-                                                            'jobexecutionoutput')
-        job_exe = job_exe.defer('stdout', 'stderr')
+                                                            'jobexecutionend__error', 'jobexecutionoutput')
+        job_exe = job_exe.defer('stdout', 'stderr', 'job__input', 'job__output')
 
         # Apply job and execution filtering
         job_exe = job_exe.get(job__id=job_id, exe_num=exe_num)

@@ -23,8 +23,8 @@ class TestFailedJobs(TransactionTestCase):
         error = error_test_utils.create_error(should_be_retried=True)
 
         data = JobData()
-        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', data=data.get_dict(), max_tries=2)
-        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict(), max_tries=1)
+        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', input=data.get_dict(), max_tries=2)
+        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1)
         job_3 = job_test_utils.create_job(num_exes=0, status='PENDING')
         job_ids = [job_1.id, job_2.id, job_3.id]
 
@@ -82,12 +82,12 @@ class TestFailedJobs(TransactionTestCase):
         error_2 = error_test_utils.create_error(should_be_retried=False)
 
         data = JobData()
-        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', data=data.get_dict(), max_tries=2)
-        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict(), max_tries=2)
-        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict(), max_tries=1)
-        job_4 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict(), max_tries=2)
-        job_5 = job_test_utils.create_job(num_exes=1, status='RUNNING', data=data.get_dict(), max_tries=2)
-        job_6 = job_test_utils.create_job(num_exes=1, status='FAILED', data=data.get_dict(), max_tries=2)
+        job_1 = job_test_utils.create_job(num_exes=1, status='QUEUED', input=data.get_dict(), max_tries=2)
+        job_2 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
+        job_3 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=1)
+        job_4 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
+        job_5 = job_test_utils.create_job(num_exes=1, status='RUNNING', input=data.get_dict(), max_tries=2)
+        job_6 = job_test_utils.create_job(num_exes=1, status='FAILED', input=data.get_dict(), max_tries=2)
         job_7 = job_test_utils.create_job(num_exes=0, status='CANCELED')
         job_ids = [job_1.id, job_2.id, job_3.id, job_4.id, job_5.id, job_6.id, job_7.id]
 

@@ -13,6 +13,12 @@ These services provide access to information about "all", "currently running" an
 +=========================================================================================================================+
 | Returns a list of all jobs. Jobs marked as superseded are excluded by default.                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Job List endpoint response.  Starting with    |
+|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*.   |
+|                A *resources* section will also be added to the response. Additionally, *disk_in_required* is renamed to |
+|                *input_file_size*, *data* is renamed to *input*, and *results* is renamed to *output*.                   |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/                                                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
@@ -211,6 +217,13 @@ These services provide access to information about "all", "currently running" an
 | **Job Details**                                                                                                         |
 +=========================================================================================================================+
 | Returns a specific job and all its related model information including executions, recipes, and products.               |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Job Details endpoint response.  Starting with |
+|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*,   |
+|                *inputs*, *outputs*, *job_exes*, *recipes*.  The following fields will be added: *resources*,            |
+|                *execution*, *recipe*.  Additionally, *disk_in_required* is renamed to *input_file_size*, *data* is      |
+|                renamed to *input*, and *results* is renamed to *output*.                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/{id}/                                                                                                     |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -569,6 +582,13 @@ These services provide access to information about "all", "currently running" an
 | **Update Job**                                                                                                          |
 +=========================================================================================================================+
 | Update the details of a job.                                                                                            |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Update Job endpoint response.  Starting with  |
+|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*,   |
+|                *inputs*, *outputs*, *job_exes*, *recipes*.  The following fields will be added: *resources*,            |
+|                *execution*, *recipe*.  Additionally, *disk_in_required* is renamed to *input_file_size*, *data* is      |
+|                renamed to *input*, and *results* is renamed to *output*.                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **PATCH** /jobs/{id}/                                                                                                   |
 |         Where {id} is the unique identifier of an existing job.                                                         |

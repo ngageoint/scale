@@ -55,7 +55,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
         job_type = job_test_utils.create_job_type(interface=interface_dict)
-        job = job_test_utils.create_job(job_type=job_type, data=data_dict, status='QUEUED')
+        job = job_test_utils.create_job(job_type=job_type, input=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
         # Test method
@@ -87,7 +87,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         data = JobData()
         data.add_property_input('Ingest ID', str(ingest.id))
         ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
-        ingest.job.data = data.get_dict()
+        ingest.job.input = data.get_dict()
         ingest.job.status = 'QUEUED'
         ingest.job.save()
 
@@ -175,7 +175,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         strike = ingest_test_utils.create_strike(configuration=configuration)
         data = JobData()
         data.add_property_input('Strike ID', str(strike.id))
-        strike.job.data = data.get_dict()
+        strike.job.input = data.get_dict()
         strike.job.status = 'QUEUED'
         strike.job.save()
 
@@ -431,7 +431,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
         resources = job.get_resources()
         main_resources = resources.copy()
-        main_resources.subtract(NodeResources([Disk(job.disk_in_required)]))
+        main_resources.subtract(NodeResources([Disk(job.input_file_size)]))
         post_resources = resources.copy()
         post_resources.remove_resource('disk')
         # Get job info off of the queue

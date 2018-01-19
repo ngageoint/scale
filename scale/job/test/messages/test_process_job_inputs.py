@@ -38,8 +38,8 @@ class TestProcessJobInputs(TransactionTestCase):
         self.assertEqual(len(new_message.new_messages), 1)
         self.assertEqual(new_message.new_messages[0].type, 'queued_jobs')
         # Jobs should have input_file_size set to 0 (no input files)
-        self.assertEqual(jobs[0].disk_in_required, 0.0)
-        self.assertEqual(jobs[1].disk_in_required, 0.0)
+        self.assertEqual(jobs[0].input_file_size, 0.0)
+        self.assertEqual(jobs[1].input_file_size, 0.0)
 
     def test_execute(self):
         """Tests calling ProcessJobInputs.execute() successfully"""
@@ -68,7 +68,7 @@ class TestProcessJobInputs(TransactionTestCase):
             }]}
         job_type = job_test_utils.create_job_type(interface=interface)
 
-        data_1 = {
+        input_1 = {
             'version': '1.0',
             'input_data': [{
                 'name': 'Input 1',
@@ -81,7 +81,7 @@ class TestProcessJobInputs(TransactionTestCase):
                 'name': 'Output 1',
                 'workspace_id': workspace.id
             }]}
-        data_2 = {
+        input_2 = {
             'version': '1.0',
             'input_data': [{
                 'name': 'Input 1',
@@ -96,9 +96,9 @@ class TestProcessJobInputs(TransactionTestCase):
             }]}
 
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_1)
+                                          input=input_1)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_2)
+                                          input=input_2)
         job_ids = [job_1.id, job_2.id]
 
         # Add jobs to message
@@ -118,8 +118,8 @@ class TestProcessJobInputs(TransactionTestCase):
         self.assertEqual(message.new_messages[0].type, 'queued_jobs')
 
         # Check jobs for expected input_file_size
-        self.assertEqual(jobs[0].disk_in_required, 110.0)
-        self.assertEqual(jobs[1].disk_in_required, 1042.0)
+        self.assertEqual(jobs[0].input_file_size, 110.0)
+        self.assertEqual(jobs[1].input_file_size, 1042.0)
 
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job_1.id)

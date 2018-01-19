@@ -148,8 +148,8 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         # Check results
         queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
         job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
+        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
+        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
 
     def test_successful_recipe_creation(self):
         """Tests successfully processing a parse that triggers recipe creation."""
@@ -176,7 +176,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         # Check results...ensure first job is queued
         queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
         job_1 = Job.objects.get(pk=queue_1.job_id)
-        self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
-        self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
-        self.assertEqual(job_1.data['output_data'][0]['name'], self.output_name)
-        self.assertEqual(job_1.data['output_data'][0]['workspace_id'], self.workspace.id)
+        self.assertEqual(job_1.input['input_data'][0]['name'], self.input_name)
+        self.assertEqual(job_1.input['input_data'][0]['file_id'], self.source_file.id)
+        self.assertEqual(job_1.input['output_data'][0]['name'], self.output_name)
+        self.assertEqual(job_1.input['output_data'][0]['workspace_id'], self.workspace.id)

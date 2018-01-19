@@ -602,7 +602,7 @@ class JobInterface(object):
                 raise MissingSetting('Required setting %s was not provided' % name)
 
     def _check_env_var_uniqueness(self):
-        """Ensures all the enviornmental variable names are unique, and throws a
+        """Ensures all the environmental variable names are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
         """
 
@@ -683,17 +683,17 @@ class JobInterface(object):
                     file_desc.add_allowed_media_type(media_type)
                 self._input_file_validation_dict[name] = (required, True, file_desc)
 
-        for ouput_data in self.definition['output_data']:
-            output_type = ouput_data['type']
+        for output_data in self.definition['output_data']:
+            output_type = output_data['type']
             if output_type in ['file', 'files']:
-                name = ouput_data['name']
-                required = ouput_data['required']
+                name = output_data['name']
+                required = output_data['required']
                 self._output_file_validation_list.append(name)
                 self._output_file_manifest_dict[name] = (output_type == 'files', required)
 
     @staticmethod
     def _get_artifacts_from_stdout(stdout):
-        """Parses stdout looking for artifacts of the form ARTIFACT:<ouput_name>:<output_path>
+        """Parses stdout looking for artifacts of the form ARTIFACT:<output_name>:<output_path>
         :param stdout: the standard out from the job execution
         :type stdout: str
 

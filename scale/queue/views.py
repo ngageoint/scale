@@ -14,7 +14,7 @@ from rest_framework.reverse import reverse
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobSerializer
+from job.serializers import JobDetailsSerializer, JobSerializer, OldJobSerializer, OldJobDetailsSerializer
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
@@ -84,9 +84,14 @@ class QueueNewJobView(GenericAPIView):
         except InvalidData as err:
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
-        job_details = Job.objects.get_details(job_id)
+        # TODO: remove this check when REST API v5 is removed. 
+        if request.version == 'v5':
+            job_details = Job.objects.get_details_v5(job_id)
+            serializer = OldJobDetailsSerializer(job_details)
+        else:
+            job_details = Job.objects.get_details(job_id)
+            serializer = self.get_serializer(job_details)
 
-        serializer = self.get_serializer(job_details)
         job_url = reverse('job_details_view', args=[job_id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
@@ -154,7 +159,7 @@ class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = RequeueJobSerializer
+    serializer_class = JobSerializer
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -192,5 +197,11 @@ class RequeueJobsView(GenericAPIView):
             jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
         page = self.paginate_queryset(jobs)
-        serializer = JobSerializer(page, many=True)
+
+        # TODO: remove this version check when REST API v5 is removed
+        if request.version == 'v5':
+            serializer = OldJobSerializer(page, many=True)
+        else:
+            serializer = JobSerializer(page, many=True)
+
         return self.get_paginated_response(serializer.data)

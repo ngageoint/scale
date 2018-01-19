@@ -115,7 +115,7 @@ class TestJobManager(TransactionTestCase):
         job = Job.objects.get(id=job.id)
 
         # Make sure input file size is calculated and set
-        self.assertEqual(job.disk_in_required, 110)  # Convert from file bytes to MiB to get 110 value
+        self.assertEqual(job.input_file_size, 110)  # Convert from file bytes to MiB to get 110 value
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job.id)
         self.assertEqual(len(job_input_files), 2)
@@ -241,9 +241,9 @@ class TestJobManager(TransactionTestCase):
             }]}
 
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_1)
+                                          input=data_1)
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING', input_file_size=None,
-                                          data=data_2)
+                                          input=data_2)
 
         # Execute method
         Job.objects.process_job_input([job_1, job_2])
@@ -254,10 +254,10 @@ class TestJobManager(TransactionTestCase):
         job_2 = jobs[1]
 
         # Check jobs for expected fields
-        self.assertEqual(job_1.disk_in_required, 1053.0)
+        self.assertEqual(job_1.input_file_size, 1053.0)
         self.assertEqual(job_1.source_started, min_src_started_job_1)
         self.assertEqual(job_1.source_ended, max_src_ended_job_1)
-        self.assertEqual(job_2.disk_in_required, 113269857.0)
+        self.assertEqual(job_2.input_file_size, 113269857.0)
         self.assertEqual(job_2.source_started, min_src_started_job_2)
         self.assertEqual(job_2.source_ended, max_src_ended_job_2)
 
@@ -317,9 +317,9 @@ class TestJobManager(TransactionTestCase):
         jobs = list(Job.objects.filter(id__in=job_ids).order_by('id'))
         self.assertEqual(len(jobs), 6)
         self.assertTrue(jobs[0].has_output())
-        self.assertDictEqual(jobs[0].results, output_1.get_dict())
+        self.assertDictEqual(jobs[0].output, output_1.get_dict())
         self.assertTrue(jobs[1].has_output())
-        self.assertDictEqual(jobs[1].results, output_2.get_dict())
+        self.assertDictEqual(jobs[1].output, output_2.get_dict())
         self.assertFalse(jobs[2].has_output())
         self.assertFalse(jobs[3].has_output())
         self.assertFalse(jobs[4].has_output())
@@ -327,7 +327,7 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, data={}, started=timezone.now(), ended=timezone.now())
+        job = job_test_utils.create_job(num_exes=1, input={}, started=timezone.now(), ended=timezone.now())
 
         Job.objects.update_jobs_to_queued([job], timezone.now())
         job = Job.objects.get(pk=job.id)
