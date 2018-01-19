@@ -609,4 +609,4 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch_recipes[0].batch, batch)
         self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
         self.assertIsNone(batch_recipes[0].superseded_recipe)
-        self.assertEqual(batch_recipes[0].recipe.data['input_data'][0]['file_id'], file1.id)
+        self.assertEqual(batch_recipes[0].recipe.input['input_data'][0]['file_id'], file1.id)
