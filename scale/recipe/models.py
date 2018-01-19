@@ -50,7 +50,7 @@ class RecipeManager(models.Manager):
             batch_recipe = None
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
+    def create_recipe(self, recipe_type, input, event, superseded_recipe=None, delta=None, superseded_jobs=None,
                       priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
@@ -59,8 +59,8 @@ class RecipeManager(models.Manager):
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param input: The recipe input to run on, should be None if superseded_recipe is provided
+        :type input: :class:`recipe.input.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
@@ -101,7 +101,7 @@ class RecipeManager(models.Manager):
             superseded_recipe.save()
 
             # Use data from superseded recipe
-            data = superseded_recipe.get_recipe_data()
+            input = superseded_recipe.get_recipe_data()
             if not delta:
                 raise SupersedeError('Cannot supersede a recipe without delta')
 
@@ -116,13 +116,13 @@ class RecipeManager(models.Manager):
                 raise SupersedeError('delta must be provided with a superseded recipe')
 
         # Validate recipe data and save recipe
-        recipe_definition.validate_data(data)
-        recipe.data = data.get_dict()
+        recipe_definition.validate_data(input)
+        recipe.input = input.get_dict()
         recipe.save()
 
         # Save models for each recipe input file
         recipe_files = []
-        for input_file_info in data.get_input_file_info():
+        for input_file_info in input.get_input_file_info():
             recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
             recipe_file.scale_file_id = input_file_info[0]
@@ -598,7 +598,7 @@ class Recipe(models.Model):
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
 
-    data = django.contrib.postgres.fields.JSONField(default=dict)
+    input = django.contrib.postgres.fields.JSONField(default=dict)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
@@ -616,11 +616,11 @@ class Recipe(models.Model):
     def get_recipe_data(self):
         """Returns the data for this recipe
 
-        :returns: The data for this recipe
+        :returns: The input for this recipe
         :rtype: :class:`recipe.configuration.data.recipe_data.RecipeData`
         """
 
-        return RecipeData(self.data)
+        return RecipeData(self.input)
 
     def get_recipe_definition(self):
         """Returns the definition for this recipe
