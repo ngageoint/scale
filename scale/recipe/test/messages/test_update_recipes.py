@@ -230,7 +230,7 @@ class TestUpdateRecipes(TestCase):
             'workspace_id': workspace.id,
         }
         self.recipe_type_3 = recipe_test_utils.create_recipe_type(definition=definition)
-        self.recipe_3 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, data=data)
+        self.recipe_3 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, input=data)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 1', job=job_3)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_3, job_name='Job 2', job=job_4)
 
@@ -248,7 +248,7 @@ class TestUpdateRecipes(TestCase):
         # Complete job 5 and set its output so that update recipe message can give go ahead for child job 6
         Job.objects.process_job_output([job_5.id], now())
         job_6 = job_test_utils.create_job(job_type=job_type_4, status='PENDING', num_exes=0)
-        self.recipe_4 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, data=data)
+        self.recipe_4 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type_3, input=data)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_4, job_name='Job 1', job=job_5)
         recipe_test_utils.create_recipe_job(recipe=self.recipe_4, job_name='Job 2', job=job_6)
 

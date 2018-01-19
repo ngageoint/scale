@@ -247,7 +247,7 @@ class TestRecipeHandler(TestCase):
             'workspace_id': workspace.id,
         }
         recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
-        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
         recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
@@ -355,7 +355,7 @@ class TestRecipeHandler(TestCase):
             'workspace_id': workspace.id,
         }
         recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
-        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
         recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
@@ -463,7 +463,7 @@ class TestRecipeHandler(TestCase):
             'workspace_id': workspace.id,
         }
         recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
-        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, data=data)
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
         recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
