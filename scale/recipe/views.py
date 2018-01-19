@@ -18,7 +18,7 @@ from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
-                                RecipeTypeSerializer)
+                                RecipeTypeSerializer, OldRecipeDetailsSerializer)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializer
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
@@ -313,6 +313,25 @@ class RecipeDetailsView(RetrieveAPIView):
             raise Http404
 
         serializer = self.get_serializer(recipe)
+        return Response(serializer.data)
+
+    # TODO: remove this function when REST API v5 is removed
+    def retrieve_v5(self, request, recipe_id):
+        """Retrieves the details for a recipe and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            recipe = Recipe.objects.get_details(recipe_id)
+        except Recipe.DoesNotExist:
+            raise Http404
+
+        serializer = OldRecipeDetailsSerializer(recipe)
         return Response(serializer.data)
 
 
