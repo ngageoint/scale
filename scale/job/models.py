@@ -221,7 +221,7 @@ class JobManager(models.Manager):
         if job.status in ['RUNNING', 'COMPLETED', 'FAILED', 'QUEUED']:
             try:
                 job.execution = JobExecution.objects.get_job_exe_details(job_id=job.id, exe_num=job.num_exes)
-            except JobExecution.DoesNotExist():
+            except JobExecution.DoesNotExist:
                 job.execution = None
         else:
             job.execution = None
