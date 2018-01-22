@@ -119,7 +119,6 @@ class RecipeDetailsSerializer(RecipeSerializer):
     """Converts related recipe model fields to REST output."""
     from trigger.serializers import TriggerEventDetailsSerializer
 
-    recipe_type = RecipeTypeSerializer()
     recipe_type_rev = RecipeTypeRevisionSerializer()
     event = TriggerEventDetailsSerializer()
     input = serializers.JSONField(default=dict)
