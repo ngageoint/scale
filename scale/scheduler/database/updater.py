@@ -107,7 +107,7 @@ class DatabaseUpdater(object):
             batch_id = batch.id
             break
 
-        # Populate job.recipe_id if it is missing
+        # Populate job.batch_id and recipe.batch_id if they are missing
         qry_1 = 'UPDATE job j SET batch_id = bj.batch_id FROM batch_job bj'
         qry_1 += ' WHERE j.id = bj.job_id AND bj.batch_id = %s AND j.batch_id IS NULL'
         qry_2 = 'UPDATE recipe r SET batch_id = br.batch_id FROM batch_recipe br'
