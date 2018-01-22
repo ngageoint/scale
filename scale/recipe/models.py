@@ -93,6 +93,7 @@ class RecipeManager(models.Manager):
         recipe.recipe_type = recipe_type
         recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
+        recipe.batch_id = batch_id
         recipe_definition = recipe.get_recipe_definition()
         when = timezone.now()
 
@@ -577,9 +578,8 @@ class Recipe(models.Model):
     :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this recipe
     :type event: :class:`django.db.models.ForeignKey`
-
-    :keyword data: JSON description defining the data for this recipe
-    :type data: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword batch: The batch that contains this recipe
+    :type batch: :class:`django.db.models.ForeignKey`
 
     :keyword is_superseded: Whether this recipe has been superseded and is obsolete. This may be true while
         superseded_by_recipe (the reverse relationship of superseded_recipe) is null, indicating that this recipe is
@@ -591,6 +591,9 @@ class Recipe(models.Model):
     :keyword superseded_recipe: The recipe that was directly superseded by this recipe. The reverse relationship can be
         accessed using 'superseded_by_recipe'.
     :type superseded_recipe: :class:`django.db.models.ForeignKey`
+
+    :keyword data: JSON description defining the data for this recipe
+    :type data: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -605,14 +608,16 @@ class Recipe(models.Model):
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
-
-    data = django.contrib.postgres.fields.JSONField(default=dict)
+    batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
                                                null=True, on_delete=models.PROTECT)
     superseded_recipe = models.OneToOneField('recipe.Recipe', related_name='superseded_by_recipe', blank=True,
                                              null=True, on_delete=models.PROTECT)
+
+    data = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
