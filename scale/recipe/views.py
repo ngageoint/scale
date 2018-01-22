@@ -327,7 +327,7 @@ class RecipeDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
         try:
-            recipe = Recipe.objects.get_details(recipe_id)
+            recipe = Recipe.objects.get_details_v5(recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
 
@@ -433,11 +433,21 @@ class RecipeReprocessView(GenericAPIView):
         except ReprocessError as err:
             raise BadParameter(unicode(err))
 
-        try:
-            new_recipe = Recipe.objects.get_details(handler.recipe.id)
-        except Recipe.DoesNotExist:
-            raise Http404
+        # TODO: remove this check when REST API v5 is removed
+        if request.version == 'v5':
+            try:
+                new_recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+            except Recipe.DoesNotExist:
+                raise Http404
+
+            serializer = OldRecipeDetailsSerializer(new_recipe)
+        else:
+            try:
+                new_recipe = Recipe.objects.get_details(handler.recipe.id)
+            except Recipe.DoesNotExist:
+                raise Http404
+
+            serializer = self.get_serializer(new_recipe)
 
         url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
-        serializer = self.get_serializer(new_recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
