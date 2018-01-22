@@ -297,8 +297,10 @@ class BatchManager(models.Manager):
 
         # Create the new recipe and its associated jobs
         batch_definition = batch.get_batch_definition()
-        handler = Recipe.objects.reprocess_recipe(superseded_recipe.id, batch_definition.job_names,
-                                                  batch_definition.all_jobs, batch_definition.priority)
+        handler = Recipe.objects.reprocess_recipe(superseded_recipe.id, batch_id=batch.id,
+                                                  job_names=batch_definition.job_names,
+                                                  all_jobs=batch_definition.all_jobs,
+                                                  priority=batch_definition.priority)
 
         # Fetch all the recipe jobs that were just superseded
         old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=superseded_recipe,
@@ -343,7 +345,7 @@ class BatchManager(models.Manager):
             'file_name': input_file.file_name,
         }
         event = TriggerEvent.objects.create_trigger_event('BATCH', None, description, timezone.now())
-        handler = Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event)
+        handler = Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event, batch_id=batch.id)
 
         # Create all the batch models for the new recipe and jobs
         self._create_batch_models(batch, handler)
@@ -435,7 +437,8 @@ class Batch(models.Model):
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
-    creator_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+    creator_job = models.ForeignKey('job.Job', related_name='batch_creator_job', blank=True, null=True,
+                                    on_delete=models.PROTECT)
 
     definition = django.contrib.postgres.fields.JSONField(default=dict)
 

@@ -55,7 +55,8 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
+    def create_job(self, job_type, event, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
+                   delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
         job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
         returned job model will have not yet been saved in the database.
@@ -64,6 +65,12 @@ class JobManager(models.Manager):
         :type job_type: :class:`job.models.JobType`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
+        :param root_recipe_id: The ID of the root recipe that contains this job
+        :type root_recipe_id: int
+        :param recipe_id: The ID of the original recipe that created this job
+        :type recipe_id: int
+        :param batch_id: The ID of the batch that contains this job
+        :type batch_id: int
         :param superseded_job: The job that the created job is superseding, possibly None
         :type superseded_job: :class:`job.models.Job`
         :param delete_superseded: Whether the created job should delete products from the superseded job
@@ -80,9 +87,13 @@ class JobManager(models.Manager):
         job.job_type = job_type
         job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.id, job_type.revision_num)
         job.event = event
+        job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        job.recipe_id = recipe_id
+        job.batch_id = batch_id
+        job.max_tries = job_type.max_tries
+
         job.priority = job_type.priority
         job.timeout = job_type.timeout
-        job.max_tries = job_type.max_tries
 
         if superseded_job:
             root_id = superseded_job.root_superseded_job_id
@@ -858,32 +869,14 @@ class Job(models.Model):
     :type job_type: :class:`django.db.models.ForeignKey`
     :keyword job_type_rev: The revision of the job type when this job was created
     :type job_type_rev: :class:`django.db.models.ForeignKey`
-    :keyword status: The status of the job
-    :type status: :class:`django.db.models.CharField`
     :keyword event: The event that triggered the creation of this job
     :type event: :class:`django.db.models.ForeignKey`
-    :keyword node: The node on which the job is/was running (should only be set if status is RUNNING or final status)
-    :type node: :class:`django.db.models.ForeignKey`
-    :keyword error: The error that caused the failure (should only be set when status is FAILED)
-    :type error: :class:`django.db.models.ForeignKey`
-
-    :keyword input: JSON description defining the data for this job. This field must be populated when the job is first
-        queued.
-    :type input: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword output: JSON description defining the results for this job. This field is populated when the job is
-        successfully completed.
-    :type output: :class:`django.contrib.postgres.fields.JSONField`
-
-    :keyword priority: The priority of the job (lower number is higher priority)
-    :type priority: :class:`django.db.models.IntegerField`
-    :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
-    :type timeout: :class:`django.db.models.IntegerField`
-    :keyword max_tries: The maximum number of times to try executing this job in case of errors (minimum one)
-    :type max_tries: :class:`django.db.models.IntegerField`
-    :keyword num_exes: The number of executions this job has had
-    :type num_exes: :class:`django.db.models.IntegerField`
-    :keyword input_file_size: The amount of disk space in MiB required for input files for this job
-    :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword root_recipe: The root recipe that contains this job
+    :type root_recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this job
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch that contains this job
+    :type batch: :class:`django.db.models.ForeignKey`
 
     :keyword is_superseded: Whether this job has been superseded and is obsolete. This may be true while
         superseded_by_job (the reverse relationship of superseded_job) is null, indicating that this job is obsolete
@@ -897,6 +890,30 @@ class Job(models.Model):
     :type superseded_job: :class:`django.db.models.ForeignKey`
     :keyword delete_superseded: Whether this job should delete the products of the job that it has directly superseded
     :type delete_superseded: :class:`django.db.models.BooleanField`
+
+    :keyword status: The status of the job
+    :type status: :class:`django.db.models.CharField`
+    :keyword node: The node on which the job is/was running (should only be set if status is RUNNING or final status)
+    :type node: :class:`django.db.models.ForeignKey`
+    :keyword error: The error that caused the failure (should only be set when status is FAILED)
+    :type error: :class:`django.db.models.ForeignKey`
+    :keyword max_tries: The maximum number of times to try executing this job in case of errors (minimum one)
+    :type max_tries: :class:`django.db.models.IntegerField`
+    :keyword num_exes: The number of executions this job has had
+    :type num_exes: :class:`django.db.models.IntegerField`
+
+    :keyword priority: The priority of the job (lower number is higher priority)
+    :type priority: :class:`django.db.models.IntegerField`
+    :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
+    :type timeout: :class:`django.db.models.IntegerField`
+    :keyword input: JSON description defining the data for this job. This field must be populated when the job is first
+        queued.
+    :type input: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword input_file_size: The amount of disk space in MiB required for input files for this job
+    :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword output: JSON description defining the results for this job. This field is populated when the job is
+        successfully completed.
+    :type output: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword source_started: The start time of the source data for this job
     :type source_started: :class:`django.db.models.DateTimeField`
@@ -932,19 +949,13 @@ class Job(models.Model):
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job_type_rev = models.ForeignKey('job.JobTypeRevision', on_delete=models.PROTECT)
-    status = models.CharField(choices=JOB_STATUSES, default='PENDING', max_length=50, db_index=True)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
-    node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
-    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
-
-    input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-    output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
-
-    priority = models.IntegerField()
-    timeout = models.IntegerField()
-    max_tries = models.IntegerField()
-    num_exes = models.IntegerField(default=0)
-    input_file_size = models.FloatField(blank=True, null=True)
+    root_recipe = models.ForeignKey('recipe.Recipe', related_name='jobs_for_root_recipe', blank=True, null=True,
+                                    on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='jobs_for_recipe', blank=True, null=True,
+                               on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', related_name='jobs_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_job = models.ForeignKey('job.Job', related_name='superseded_by_jobs', blank=True, null=True,
@@ -952,6 +963,18 @@ class Job(models.Model):
     superseded_job = models.OneToOneField('job.Job', related_name='superseded_by_job', blank=True, null=True,
                                           on_delete=models.PROTECT)
     delete_superseded = models.BooleanField(default=True)
+
+    status = models.CharField(choices=JOB_STATUSES, default='PENDING', max_length=50, db_index=True)
+    node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
+    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
+    max_tries = models.IntegerField()
+    num_exes = models.IntegerField(default=0)
+
+    priority = models.IntegerField()
+    timeout = models.IntegerField()
+    input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    input_file_size = models.FloatField(blank=True, null=True)
+    output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
     # Optional geospatial fields
     source_started = models.DateTimeField(blank=True, null=True)

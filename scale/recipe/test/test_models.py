@@ -715,7 +715,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
             if recipe_job.job_name == 'Job 1':
                 Job.objects.update_status([recipe_job.job], 'FAILED', now(), get_unknown_error())
 
-        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, ['Job 2'])
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, job_names=['Job 2'])
 
         # Make sure that Job 1 is still FAILED and that Job 2 is BLOCKED
         recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
@@ -747,7 +747,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event)
 
-        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, ['Job 1'])
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, job_names=['Job 1'])
 
         # Make sure the recipe jobs get created with the correct job types
         recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')

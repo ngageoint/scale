@@ -408,7 +408,8 @@ class RecipeReprocessView(GenericAPIView):
         priority = rest_util.parse_int(request, 'priority', required=False)
 
         try:
-            handler = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs, priority)
+            handler = Recipe.objects.reprocess_recipe(recipe_id, job_names=job_names, all_jobs=all_jobs,
+                                                      priority=priority)
         except Recipe.DoesNotExist:
             raise Http404
         except ReprocessError as err:

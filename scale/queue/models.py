@@ -388,8 +388,8 @@ class QueueManager(models.Manager):
         return job_id
 
     @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
-                         priority=None):
+    def queue_new_recipe(self, recipe_type, data, event, batch_id=None, superseded_recipe=None, delta=None,
+                         superseded_jobs=None, priority=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
         caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
@@ -401,6 +401,8 @@ class QueueManager(models.Manager):
         :type data: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
@@ -416,8 +418,8 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs,
-                                               priority)
+        handler = Recipe.objects.create_recipe(recipe_type, data, event, batch_id, superseded_recipe, delta,
+                                               superseded_jobs, priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
