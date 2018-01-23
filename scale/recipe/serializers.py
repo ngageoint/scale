@@ -123,7 +123,6 @@ class RecipeDetailsSerializer(RecipeSerializer):
     event = TriggerEventDetailsSerializer()
     input = serializers.JSONField(default=dict)
 
-    inputs = RecipeDetailsInputSerializer(many=True)
     jobs = RecipeJobsDetailsSerializer(many=True)
 
     root_superseded_recipe = RecipeBaseSerializer()
