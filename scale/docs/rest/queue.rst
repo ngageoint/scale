@@ -433,6 +433,11 @@ place jobs and recipes on the queue for processing.
 +=========================================================================================================================+
 | Creates a new recipe and places it onto the queue                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Queue New Recipe endpoint response.  Starting |
+|                with API **v6** the *inputs* section will be removed, the *data* section will be renamed to *input*,     |
+|                and the *recipe_type* section will only contain *id*, *name*, *version*, *title*, and *description*.     |
++-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /queue/new-recipe/                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
