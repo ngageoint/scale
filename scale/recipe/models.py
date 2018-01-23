@@ -417,24 +417,13 @@ class RecipeManager(models.Manager):
             'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
         ).get(pk=recipe_id)
 
-        # Update the recipe with source file models
-        input_file_ids = recipe.get_recipe_data().get_input_file_ids()
-        input_files = ScaleFile.objects.filter(id__in=input_file_ids)
-        input_files = input_files.select_related('workspace').defer('workspace__json_config')
-        input_files = input_files.order_by('id').distinct('id')
-
-        recipe_definition_dict = recipe.get_recipe_definition().get_dict()
-        recipe_data_dict = recipe.get_recipe_data().get_dict()
-        recipe.inputs = self._merge_recipe_data(recipe_definition_dict['input_data'], recipe_data_dict['input_data'],
-                                                input_files)
-
         # Update the recipe with job models
         jobs = RecipeJob.objects.filter(recipe_id=recipe.id)
         jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
         recipe.jobs = jobs
         return recipe
 
-    # TODO: remove fuction when REST API v5 is removed
+    # TODO: remove function when REST API v5 is removed
     def get_details_v5(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.
 
@@ -560,6 +549,7 @@ class RecipeManager(models.Manager):
                     handlers[recipe.id] = handler
         return handlers
 
+        # TODO: remove this function when REST API v5 is removed
     def _merge_recipe_data(self, recipe_definition_dict, recipe_data_dict, recipe_files):
         """Merges data for a single recipe instance with its recipe definition to produce a mapping of key/values.
 
