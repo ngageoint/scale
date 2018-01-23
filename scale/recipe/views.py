@@ -307,13 +307,19 @@ class RecipeDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        try:
-            recipe = Recipe.objects.get_details(recipe_id)
-        except Recipe.DoesNotExist:
-            raise Http404
 
-        serializer = self.get_serializer(recipe)
-        return Response(serializer.data)
+        # TODO: remove check when REST API v5 is removed
+        if request.version == 'v5':
+            return self.retrieve_v5(request, recipe_id)
+        else:
+
+            try:
+                recipe = Recipe.objects.get_details(recipe_id)
+            except Recipe.DoesNotExist:
+                raise Http404
+
+            serializer = self.get_serializer(recipe)
+            return Response(serializer.data)
 
     # TODO: remove this function when REST API v5 is removed
     def retrieve_v5(self, request, recipe_id):
