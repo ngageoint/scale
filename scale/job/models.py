@@ -1461,6 +1461,10 @@ class JobExecution(models.Model):
     :type job: :class:`django.db.models.ForeignKey`
     :keyword job_type: The type of the job that was scheduled
     :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this job
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch that contains this job
+    :type batch: :class:`django.db.models.ForeignKey`
     :keyword exe_num: The number of the job's execution
     :type exe_num: :class:`django.db.models.IntegerField`
     :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
@@ -1488,6 +1492,8 @@ class JobExecution(models.Model):
 
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', blank=True, null=True, on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', blank=True, null=True, on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
     exe_num = models.IntegerField(blank=True, null=True)
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)

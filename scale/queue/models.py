@@ -302,6 +302,8 @@ class QueueManager(models.Manager):
             queue = Queue()
             queue.job_type_id = job.job_type_id
             queue.job_id = job.id
+            queue.recipe_id = job.recipe_id
+            queue.batch_id = job.batch_id
             queue.exe_num = job.num_exes
             queue.input_file_size = job.input_file_size if job.input_file_size else 0.0
             queue.is_canceled = False
@@ -517,6 +519,10 @@ class Queue(models.Model):
     :type job_type: :class:`django.db.models.ForeignKey`
     :keyword job: The job that has been queued
     :type job: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this job
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch that contains this job
+    :type batch: :class:`django.db.models.ForeignKey`
     :keyword exe_num: The number for this job execution
     :type exe_num: :class:`django.db.models.IntegerField`
 
@@ -544,6 +550,8 @@ class Queue(models.Model):
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', blank=True, null=True, on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
     exe_num = models.IntegerField()
 
     input_file_size = models.FloatField()
