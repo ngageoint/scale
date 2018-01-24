@@ -176,8 +176,8 @@ class TestProductDetailsView(TestCase):
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.product = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          is_published=True, file_name='test.txt',
-                                                          countries=[self.country])
+                                                         is_published=True, file_name='test.txt',
+                                                         countries=[self.country])
 
     def test_id(self):
         """Tests successfully calling the product files detail view by id"""

@@ -235,7 +235,7 @@ class ProductFileManager(models.GeoManager):
                                   'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                   'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                   'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
-                                  'job_type__error_mapping', 'recipe__data', 'recipe_type__definition',
+                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
                                   'batch__definition')
         products = products.prefetch_related('countries')
 
