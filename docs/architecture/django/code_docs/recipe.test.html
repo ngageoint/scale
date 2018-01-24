@@ -515,6 +515,29 @@ has one identical node, and deletes another node to replace it with a new one.</
 <div class="section" id="module-recipe.test.test_views">
 <span id="recipe-test-test-views-module"></span><h2>recipe.test.test_views module<a class="headerlink" href="#module-recipe.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="recipe.test.test_views.OldTestRecipeDetailsView">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">OldTestRecipeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_views.OldTestRecipeDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.OldTestRecipeDetailsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipe details</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.OldTestRecipeDetailsView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.OldTestRecipeDetailsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe details view for superseded recipes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_views.TestRecipeDetailsView">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -954,7 +977,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>input=None</em>, <em>event=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

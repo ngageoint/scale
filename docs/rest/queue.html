@@ -742,22 +742,30 @@ The status will always be QUEUED and a new job_exe will be included.
 <tbody valign="top">
 <tr class="row-even"><td colspan="3">Creates a new recipe and places it onto the queue</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>POST</strong> /queue/new-recipe/</td>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Queue New Recipe endpoint response.  Starting
+with API <strong>v6</strong> the <em>inputs</em> section will be removed, the <em>data</em> section will be renamed to <em>input</em>,
+and the <em>recipe_type</em> section will only contain <em>id</em>, <em>name</em>, <em>version</em>, <em>title</em>, and <em>description</em>.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td colspan="3"><strong>POST</strong> /queue/new-recipe/</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>recipe_type_id</td>
+<tr class="row-odd"><td>recipe_type_id</td>
 <td>Integer</td>
 <td>The ID of the recipe type to queue</td>
 </tr>
-<tr class="row-odd"><td>recipe_data</td>
+<tr class="row-even"><td>recipe_data</td>
 <td>JSON Object</td>
 <td>Defines the data to run the recipe, see <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><span class="std std-ref">Recipe Data</span></a></td>
 </tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
     <span class="s2">&quot;recipe_data&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -778,25 +786,25 @@ The status will always be QUEUED and a new job_exe will be included.
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="2">201 CREATED</td>
 </tr>
-<tr class="row-odd"><td><strong>Location</strong></td>
+<tr class="row-even"><td><strong>Location</strong></td>
 <td colspan="2">URL pointing to the details for the newly queued recipe data</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
+<tr class="row-odd"><td>&#160;</td>
 <td>JSON Object</td>
 <td>All fields are the same as the recipe details model.
 (See <a class="reference internal" href="recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
     <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>

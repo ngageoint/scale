@@ -285,6 +285,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0017_auto_20170412_1225">recipe.migrations.0017_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0018_recipefile_recipe_input">recipe.migrations.0018_recipefile_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0019_recipetype_is_system">recipe.migrations.0019_recipetype_is_system module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0020_auto_20180119_0055">recipe.migrations.0020_auto_20180119_0055 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -484,13 +485,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.Recipe.data">
-<code class="descname">data</code><a class="headerlink" href="#recipe.models.Recipe.data" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="recipe.models.Recipe.event">
 <code class="descname">event</code><a class="headerlink" href="#recipe.models.Recipe.event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
@@ -538,7 +532,7 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The data for this recipe</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input for this recipe</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a></td>
 </tr>
@@ -565,6 +559,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="recipe.models.Recipe.id">
 <code class="descname">id</code><a class="headerlink" href="#recipe.models.Recipe.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.input">
+<code class="descname">input</code><a class="headerlink" href="#recipe.models.Recipe.input" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1106,7 +1107,7 @@ superseded_recipe model. All database changes occur in an atomic transaction.</p
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the recipe to create</li>
-<li><strong>data</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>) &#8211; The recipe data to run on, should be None if superseded_recipe is provided</li>
+<li><strong>input</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>) &#8211; The recipe input to run on, should be None if superseded_recipe is provided</li>
 <li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this recipe</li>
 <li><strong>superseded_recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
 <li><strong>delta</strong> (<a class="reference internal" href="recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta" title="recipe.handlers.graph_delta.RecipeGraphDelta"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.graph_delta.RecipeGraphDelta</span></code></a>) &#8211; If not None, represents the changes between the old recipe to supersede and the new recipe</li>
@@ -1134,6 +1135,24 @@ actually be replaced by the new recipe definition.</li>
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the details for a given recipe including its associated jobs and input files.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>:int</em>) &#8211; The unique identifier of the recipe to fetch.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A recipe with additional information.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.get_details_v5">
+<code class="descname">get_details_v5</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_details_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the details for a given recipe including its associated jobs and input files.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2018,6 +2037,20 @@ model.</p>
 <div class="section" id="module-recipe.serializers">
 <span id="recipe-serializers-module"></span><h2>recipe.serializers module<a class="headerlink" href="#module-recipe.serializers" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="recipe.serializers.OldRecipeDetailsSerializer">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">OldRecipeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.OldRecipeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeSerializer" title="recipe.serializers.RecipeSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeSerializer</span></code></a></p>
+<p>Converts related recipe model fields to REST output.</p>
+<dl class="class">
+<dt id="recipe.serializers.OldRecipeDetailsSerializer.TriggerEventDetailsSerializer">
+<em class="property">class </em><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.OldRecipeDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeBaseSerializer">
 <em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -2199,6 +2232,30 @@ model.</p>
 <dl class="method">
 <dt id="recipe.views.RecipeDetailsView.retrieve">
 <code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a recipe and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>recipe_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.views.RecipeDetailsView.retrieve_v5">
+<code class="descname">retrieve_v5</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for a recipe and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

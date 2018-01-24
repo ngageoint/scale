@@ -145,6 +145,11 @@ These services provide access to information about recipes.
 +=========================================================================================================================+
 | Returns a specific recipe and all its related model information including definition, event, data, and jobs.            |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Recipe Details endpoint response.  Starting   |
+|                with API **v6** the *inputs* section will be removed, the *data* section will be renamed to *input*,     |
+|                and the *recipe_type* section will only contain *id*, *name*, *version*, *title*, and *description*.     |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /recipes/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -438,6 +443,11 @@ These services provide access to information about recipes.
 | Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.              |
 | Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be|
 | specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again.     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Re-Process Recipe endpoint response. Starting |
+|                with API **v6** the *inputs* section will be removed, the *data* section will be renamed to *input*,     |
+|                and the *recipe_type* section will only contain *id*, *name*, *version*, *title*, and *description*.     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /recipes/{id}/reprocess/                                                                                       |
 |          Where {id} is the unique identifier of an existing model.                                                      |

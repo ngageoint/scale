@@ -420,120 +420,128 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 <tr class="row-even"><td colspan="4">Returns a specific recipe and all its related model information including definition, event, data, and jobs.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Recipe Details endpoint response.  Starting
+with API <strong>v6</strong> the <em>inputs</em> section will be removed, the <em>data</em> section will be renamed to <em>input</em>,
+and the <em>recipe_type</em> section will only contain <em>id</em>, <em>name</em>, <em>version</em>, <em>title</em>, and <em>description</em>.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /recipes/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2">id</td>
+<tr class="row-odd"><td colspan="2">id</td>
 <td>Integer</td>
 <td>The unique identifier of the model.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">recipe_type</td>
+<tr class="row-even"><td colspan="2">recipe_type</td>
 <td>JSON Object</td>
 <td>The recipe type that is associated with the recipe.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">recipe_type_rev</td>
+<tr class="row-odd"><td colspan="2">recipe_type_rev</td>
 <td>JSON Object</td>
 <td>The recipe type revision that is associated with the recipe.
 This represents the definition at the time the recipe was scheduled.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span class="std std-ref">Recipe Type Revision Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">event</td>
+<tr class="row-even"><td colspan="2">event</td>
 <td>JSON Object</td>
 <td>The trigger event that is associated with the recipe.</td>
 </tr>
-<tr class="row-even"><td colspan="2">is_superseded</td>
+<tr class="row-odd"><td colspan="2">is_superseded</td>
 <td>Boolean</td>
 <td>Whether this recipe has been replaced and is now obsolete.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">root_superseded_recipe</td>
+<tr class="row-even"><td colspan="2">root_superseded_recipe</td>
 <td>JSON Object</td>
 <td>The first recipe in the current chain of superseded recipes.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">superseded_recipe</td>
+<tr class="row-odd"><td colspan="2">superseded_recipe</td>
 <td>JSON Object</td>
 <td>The previous recipe in the chain that was superseded by this recipe.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">superseded_by_recipe</td>
+<tr class="row-even"><td colspan="2">superseded_by_recipe</td>
 <td>JSON Object</td>
 <td>The next recipe in the chain that superseded this recipe.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">created</td>
+<tr class="row-odd"><td colspan="2">created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">completed</td>
+<tr class="row-even"><td colspan="2">completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When every job in the recipe was completed successfully.
 This field will remain null if a job in the recipe is blocked or failed.</td>
 </tr>
-<tr class="row-even"><td colspan="2">superseded</td>
+<tr class="row-odd"><td colspan="2">superseded</td>
 <td>ISO-8601 Datetime</td>
 <td>When the the recipe became superseded by another recipe.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">last_modified</td>
+<tr class="row-even"><td colspan="2">last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td colspan="2">data</td>
+<tr class="row-odd"><td colspan="2">data</td>
 <td>JSON Object</td>
 <td>JSON description defining the data used to execute a recipe instance.
 (See <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data-spec"><span class="std std-ref">Recipe Data Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">inputs</td>
+<tr class="row-even"><td colspan="2">inputs</td>
 <td>Array</td>
 <td>A list of recipe definition inputs merged with their respective recipe data
 values.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.name</td>
+<tr class="row-odd"><td colspan="2">.name</td>
 <td>String</td>
 <td>The name of the input as defined by the recipe type definition.
 (See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.type</td>
+<tr class="row-even"><td colspan="2">.type</td>
 <td>String</td>
 <td>The type of the input as defined by the recipe type definition.
 (See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.value</td>
+<tr class="row-odd"><td colspan="2">.value</td>
 <td>Various</td>
 <td>The actual value of the input, which can vary depending on the type. Simple
 property inputs will include primitive values, whereas the file or files
 type will include a full JSON representation of a Scale file object.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">jobs</td>
+<tr class="row-even"><td colspan="2">jobs</td>
 <td>Array</td>
 <td>The jobs associated with this recipe.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.job_name</td>
+<tr class="row-odd"><td colspan="2">.job_name</td>
 <td>String</td>
 <td>The name of the job for this recipe.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_original</td>
+<tr class="row-even"><td colspan="2">.is_original</td>
 <td>Boolean</td>
 <td>Whether this is from the original recipe or copied from a superseded one.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.job</td>
+<tr class="row-odd"><td colspan="2">.job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the recipe.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
     <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -769,24 +777,32 @@ Note that if the recipe type definition has not changed since the recipe was cre
 specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Re-Process Recipe endpoint response. Starting
+with API <strong>v6</strong> the <em>inputs</em> section will be removed, the <em>data</em> section will be renamed to <em>input</em>,
+and the <em>recipe_type</em> section will only contain <em>id</em>, <em>name</em>, <em>version</em>, <em>title</em>, and <em>description</em>.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><dl class="first last docutils">
 <dt><strong>POST</strong> /recipes/{id}/reprocess/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>job_names</td>
+<tr class="row-odd"><td>job_names</td>
 <td>Array[String]</td>
 <td>Optional</td>
 <td>The name of jobs within the recipe definition that should be
 included in the re-processing request, even when the definition for
 those jobs has not changed between recipe type revisions.</td>
 </tr>
-<tr class="row-odd"><td>all_jobs</td>
+<tr class="row-even"><td>all_jobs</td>
 <td>Boolean</td>
 <td>Optional</td>
 <td>A flag that indicates all jobs in the recipe should be re-processed,
@@ -794,38 +810,38 @@ even when the recipe type definitions are identical. This option
 overrides any job_name parameters and is typically used to
 re-process previously completed jobs with new algorithm updates.</td>
 </tr>
-<tr class="row-even"><td>priority</td>
+<tr class="row-odd"><td>priority</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Change the priority of jobs when adding them to the queue.
 Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">201 CREATED</td>
 </tr>
-<tr class="row-even"><td><strong>Location</strong></td>
+<tr class="row-odd"><td><strong>Location</strong></td>
 <td colspan="3">URL pointing to the details for the newly created recipe</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the recipe details model.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
     <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
