@@ -47,6 +47,19 @@ def create_update_recipes_messages(recipe_ids):
     return messages
 
 
+def create_update_recipes_messages_from_jobs(job_ids):
+    """Creates messages to update the recipes for the given jobs
+
+    :param job_ids: The job IDs
+    :type job_ids: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(job_ids)
+    return create_update_recipes_messages(recipe_ids)
+
+
 class UpdateRecipes(CommandMessage):
     """Command message that evaluates and updates recipes
     """

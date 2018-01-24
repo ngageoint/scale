@@ -171,23 +171,13 @@ class FailedJobs(CommandMessage):
 
             # Need to update recipes of failed jobs so that dependent jobs are BLOCKED
             if all_failed_job_ids:
-                self._create_update_recipes_messages(all_failed_job_ids)
+                from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
+
+                msgs = create_update_recipes_messages_from_jobs(all_failed_job_ids)
+                self.new_messages.extend(msgs)
 
             # Place jobs to retry back onto the queue
             if jobs_to_retry:
                 self.new_messages.extend(create_queued_jobs_messages(jobs_to_retry))
 
         return True
-
-    def _create_update_recipes_messages(self, failed_job_ids):
-        """Creates messages to update the the recipes for the given failed jobs
-
-        :param failed_job_ids: The job IDs
-        :type failed_job_ids: list
-        """
-
-        from recipe.messages.update_recipes import create_update_recipes_messages
-        from recipe.models import Recipe
-
-        recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(failed_job_ids)
-        self.new_messages.extend(create_update_recipes_messages(recipe_ids))
