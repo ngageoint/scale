@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('batch', '0004_auto_20180122_1444'),
-        ('recipe', '0019_recipetype_is_system'),
+        ('recipe', '0020_auto_20180119_0055'),
     ]
 
     operations = [
