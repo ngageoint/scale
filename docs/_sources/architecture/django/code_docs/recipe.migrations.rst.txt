@@ -164,6 +164,14 @@ recipe\.migrations\.0020\_auto\_20180119\_0055 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0020\_recipe\_batch module
+----------------------------------------------
+
+.. automodule:: recipe.migrations.0020_recipe_batch
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

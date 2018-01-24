@@ -124,6 +124,14 @@ queue\.migrations\.0015\_auto\_20170731\_1527 module
     :undoc-members:
     :show-inheritance:
 
+queue\.migrations\.0016\_auto\_20180123\_2037 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0016_auto_20180123_2037
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

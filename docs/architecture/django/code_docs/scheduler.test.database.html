@@ -240,15 +240,32 @@
 <dt id="scheduler.test.database.test_updater.TestDatabaseUpdater">
 <em class="property">class </em><code class="descclassname">scheduler.test.database.test_updater.</code><code class="descname">TestDatabaseUpdater</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.test_update">
-<code class="descname">test_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests running the database update</p>
+<dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_batch_fields">
+<code class="descname">test_update_batch_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_batch_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running the database update to populate new batch fields in job and recipe models</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_job_exe_dup">
+<code class="descname">test_update_job_exe_dup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_job_exe_dup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running the database update to remove job execution duplicates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_recipe_fields">
+<code class="descname">test_update_recipe_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_recipe_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests running the database update to populate new recipe fields in job model</p>
 </dd></dl>
 
 </dd></dl>
