@@ -20,7 +20,7 @@ from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, Req
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe, RecipeType
-from recipe.serializers import RecipeDetailsSerializer
+from recipe.serializers import RecipeDetailsSerializer, OldRecipeDetailsSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -125,12 +125,22 @@ class QueueNewRecipeView(GenericAPIView):
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            recipe = Recipe.objects.get_details(handler.recipe.id)
-        except Recipe.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(recipe)
+        # TODO: remove this check when REST API v5 is removed
+        if request.version == 'v5': 
+            try:
+                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+            except Recipe.DoesNotExist:
+                raise Http404
+            
+            serializer = OldRecipeDetailsSerializer(recipe)
+        else:
+            try:
+                recipe = Recipe.objects.get_details(handler.recipe.id)
+            except Recipe.DoesNotExist:
+                raise Http404
+            
+            serializer = self.get_serializer(recipe)
+        
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 

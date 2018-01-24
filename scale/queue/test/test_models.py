@@ -499,7 +499,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             'input_data': [],
             'workspace_id': 1,
         }
-        recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, data=data_a)
+        recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, input=data_a)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
 
@@ -545,7 +545,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             'input_data': [],
             'workspace_id': 1,
         }
-        recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, data=data_b)
+        recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, input=data_b)
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 1', job=self.job_b_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 2', job=self.job_b_2)
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 3', job=self.job_b_3)

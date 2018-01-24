@@ -50,7 +50,7 @@ class RecipeManager(models.Manager):
             batch_recipe = None
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, data, event, batch_id=None, superseded_recipe=None, delta=None,
+    def create_recipe(self, recipe_type, input, event, batch_id=None, superseded_recipe=None, delta=None,
                       superseded_jobs=None, priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
@@ -59,8 +59,8 @@ class RecipeManager(models.Manager):
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param input: The recipe input to run on, should be None if superseded_recipe is provided
+        :type input: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
         :param batch_id: The ID of the batch that contains this recipe
@@ -104,7 +104,7 @@ class RecipeManager(models.Manager):
             superseded_recipe.save()
 
             # Use data from superseded recipe
-            data = superseded_recipe.get_recipe_data()
+            input = superseded_recipe.get_recipe_data()
             if not delta:
                 raise SupersedeError('Cannot supersede a recipe without delta')
 
@@ -119,13 +119,13 @@ class RecipeManager(models.Manager):
                 raise SupersedeError('delta must be provided with a superseded recipe')
 
         # Validate recipe data and save recipe
-        recipe_definition.validate_data(data)
-        recipe.data = data.get_dict()
+        recipe_definition.validate_data(input)
+        recipe.input = input.get_dict()
         recipe.save()
 
         # Save models for each recipe input file
         recipe_files = []
-        for input_file_info in data.get_input_file_info():
+        for input_file_info in input.get_input_file_info():
             recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
             recipe_file.scale_file_id = input_file_info[0]
@@ -418,6 +418,29 @@ class RecipeManager(models.Manager):
 
         # Attempt to fetch the requested recipe
         recipe = Recipe.objects.select_related(
+            'recipe_type_rev', 'event', 'event__rule', 'root_superseded_recipe',
+            'root_superseded_recipe__recipe_type', 'superseded_recipe', 'superseded_recipe__recipe_type',
+            'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
+        ).get(pk=recipe_id)
+
+        # Update the recipe with job models
+        jobs = RecipeJob.objects.filter(recipe_id=recipe.id)
+        jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
+        recipe.jobs = jobs
+        return recipe
+
+    # TODO: remove function when REST API v5 is removed
+    def get_details_v5(self, recipe_id):
+        """Gets the details for a given recipe including its associated jobs and input files.
+
+        :param recipe_id: The unique identifier of the recipe to fetch.
+        :type recipe_id: :int
+        :returns: A recipe with additional information.
+        :rtype: :class:`recipe.models.Recipe`
+        """
+
+        # Attempt to fetch the requested recipe
+        recipe = Recipe.objects.select_related(
             'recipe_type', 'recipe_type_rev', 'event', 'event__rule', 'root_superseded_recipe',
             'root_superseded_recipe__recipe_type', 'superseded_recipe', 'superseded_recipe__recipe_type',
             'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
@@ -535,6 +558,7 @@ class RecipeManager(models.Manager):
                     handlers[recipe.id] = handler
         return handlers
 
+        # TODO: remove this function when REST API v5 is removed
     def _merge_recipe_data(self, recipe_definition_dict, recipe_data_dict, recipe_files):
         """Merges data for a single recipe instance with its recipe definition to produce a mapping of key/values.
 
@@ -592,8 +616,8 @@ class Recipe(models.Model):
         accessed using 'superseded_by_recipe'.
     :type superseded_recipe: :class:`django.db.models.ForeignKey`
 
-    :keyword data: JSON description defining the data for this recipe
-    :type data: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword input: JSON description defining the input for this recipe
+    :type input: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -617,7 +641,7 @@ class Recipe(models.Model):
     superseded_recipe = models.OneToOneField('recipe.Recipe', related_name='superseded_by_recipe', blank=True,
                                              null=True, on_delete=models.PROTECT)
 
-    data = django.contrib.postgres.fields.JSONField(default=dict)
+    input = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
@@ -629,11 +653,11 @@ class Recipe(models.Model):
     def get_recipe_data(self):
         """Returns the data for this recipe
 
-        :returns: The data for this recipe
+        :returns: The input for this recipe
         :rtype: :class:`recipe.configuration.data.recipe_data.RecipeData`
         """
 
-        return RecipeData(self.data)
+        return RecipeData(self.input)
 
     def get_recipe_definition(self):
         """Returns the definition for this recipe
