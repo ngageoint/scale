@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 from mock import patch, MagicMock
 
+from batch.test import utils as batch_test_utils
 from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
@@ -20,6 +21,7 @@ from job.test import utils as job_test_utils
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
 from node.test import utils as node_test_utils
+from recipe.test import utils as recipe_test_utils
 from storage.container import get_workspace_volume_path
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
@@ -225,7 +227,7 @@ class TestQueuedExecutionConfigurator(TestCase):
 
 class TestScheduledExecutionConfigurator(TestCase):
 
-    fixtures = ['ingest_job_types.json']
+    fixtures = ['batch_job_types.json', 'ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -283,7 +285,9 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                            'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                            'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
-                                           'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO'},
+                                           'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO',
+                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes)
+                              },
                               'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
                                              new_workspace.name: {'mode': 'rw', 'volume_name': new_wksp_vol_name}},
                               'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
@@ -305,6 +309,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'WORKSPACE=%s' % workspace.name},
                                                 {'flag': 'env', 'value': 'NEW_WORKSPACE=%s' % new_workspace.name},
                                                 {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                 {'flag': 'volume',
                                                  'value': '/w_1/host/path:%s:rw' % wksp_vol_path},
                                                 {'flag': 'volume',
@@ -436,6 +442,12 @@ class TestScheduledExecutionConfigurator(TestCase):
         post_resources.remove_resource('disk')
         # Get job info off of the queue
         queue = Queue.objects.get(job_id=job.id)
+        # Add recipe and batch info to queue model
+        batch = batch_test_utils.create_batch()
+        recipe = recipe_test_utils.create_recipe()
+        queue.batch_id = batch.id
+        queue.recipe_id = recipe.id
+        queue.save()
         queued_job_exe = QueuedJobExecution(queue)
         queued_job_exe.scheduled('agent_1', node.id, resources)
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
@@ -472,19 +484,30 @@ class TestScheduledExecutionConfigurator(TestCase):
                               'args': create_pull_command(job_type.docker_image),
                               'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
                                            'ALLOCATED_MEM': unicode(resources.mem),
-                                           'ALLOCATED_DISK': unicode(resources.disk)},
+                                           'ALLOCATED_DISK': unicode(resources.disk),
+                                           'SCALE_JOB_ID': unicode(job.id),
+                                           'SCALE_EXE_NUM': unicode(job.num_exes),
+                                           'SCALE_RECIPE_ID': unicode(recipe.id),
+                                           'SCALE_BATCH_ID': unicode(batch.id)
+                              },
                               'docker_params': [{'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                 {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
-                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk}]}
+                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
+                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
+                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)}]}
         expected_pre_task = {'task_id': '%s_pre' % job_exe_model.get_cluster_id(), 'type': 'pre',
                              'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk},
                              'args': PRE_TASK_COMMAND_ARGS,
-                             'env_vars': {'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'ALLOCATED_CPUS': unicode(resources.cpus),
+                             'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
                                           'ALLOCATED_MEM': unicode(resources.mem),
                                           'ALLOCATED_DISK': unicode(resources.disk), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
-                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT'},
+                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
+                                          'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
+                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                             },
                              'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                              'mounts': {input_mnt_name: input_vol_name, output_mnt_name: output_vol_name},
                              'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
@@ -498,14 +521,16 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                            'type': 'volume'}},
                              'docker_params': [{'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
-                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
-                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.num_exes},
                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
                                                {'flag': 'env', 'value': 'SCALE_DB_HOST=TEST_HOST'},
                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
+                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
+                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
+                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
                                                {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                {'flag': 'volume',
@@ -518,12 +543,14 @@ class TestScheduledExecutionConfigurator(TestCase):
                              'resources': {'cpus': post_resources.cpus, 'mem': post_resources.mem,
                                            'disk': post_resources.disk},
                              'args': POST_TASK_COMMAND_ARGS,
-                             'env_vars': {'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'ALLOCATED_CPUS': unicode(post_resources.cpus),
+                             'env_vars': {'ALLOCATED_CPUS': unicode(post_resources.cpus),
                                           'ALLOCATED_MEM': unicode(post_resources.mem),
                                           'ALLOCATED_DISK': unicode(post_resources.disk), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
-                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT'},
+                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
+                                          'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
+                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                             },
                              'workspaces': {input_workspace.name: {'mode': 'rw', 'volume_name': input_wksp_vol_name},
                                             output_workspace.name: {'mode': 'rw', 'volume_name': output_wksp_vol_name}},
                              'mounts': {output_mnt_name: output_vol_name},
@@ -546,6 +573,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % post_resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
+                                               {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
+                                               {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
+                                               {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
                                                {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                {'flag': 'volume',
@@ -564,7 +595,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'S_2': 's_2_secret', 'my_special_env': 's_2_secret',
                                            'ALLOCATED_CPUS': unicode(main_resources.cpus),
                                            'ALLOCATED_MEM': unicode(main_resources.mem),
-                                           'ALLOCATED_DISK': unicode(main_resources.disk)},
+                                           'ALLOCATED_DISK': unicode(main_resources.disk),
+                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
+                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                              },
                               'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                               'mounts': {'m_1': m_1_vol_name, 'm_2': None, 'm_3': None, input_mnt_name: input_vol_name,
                                          output_mnt_name: output_vol_name},  # m_2 and s_3 are required, but missing
@@ -588,6 +622,10 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'INPUT_1=my_val'},
                                                 {'flag': 'env', 'value': 'job_output_dir=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
                                                 {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
+                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%s' % unicode(job.id)},
+                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
+                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
+                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
                                                 {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                             (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                 {'flag': 'volume',

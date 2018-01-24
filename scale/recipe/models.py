@@ -50,8 +50,8 @@ class RecipeManager(models.Manager):
             batch_recipe = None
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, input, event, superseded_recipe=None, delta=None, superseded_jobs=None,
-                      priority=None):
+    def create_recipe(self, recipe_type, input, event, batch_id=None, superseded_recipe=None, delta=None,
+                      superseded_jobs=None, priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
         must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
@@ -63,6 +63,8 @@ class RecipeManager(models.Manager):
         :type input: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
@@ -91,6 +93,7 @@ class RecipeManager(models.Manager):
         recipe.recipe_type = recipe_type
         recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
+        recipe.batch_id = batch_id
         recipe_definition = recipe.get_recipe_definition()
         when = timezone.now()
 
@@ -132,7 +135,7 @@ class RecipeManager(models.Manager):
         RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs, priority)
+        recipe_jobs = self._create_recipe_jobs(batch_id, recipe, event, when, delta, superseded_jobs, priority)
         handler = RecipeHandler(recipe, recipe_jobs)
         # Block any new jobs that need to be blocked
         jobs_to_blocked = handler.get_blocked_jobs()
@@ -140,11 +143,13 @@ class RecipeManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
         return handler
 
-    def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs, priority=None):
+    def _create_recipe_jobs(self, batch_id, recipe, event, when, delta, superseded_jobs, priority=None):
         """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
         an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
         all job models in superseded_jobs.
 
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
         :param recipe: The new recipe
         :type recipe: :class:`recipe.models.Recipe`
         :param event: The event that triggered the creation of this recipe
@@ -188,7 +193,8 @@ class RecipeManager(models.Manager):
                     superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
                     jobs_to_supersede.append(superseded_job)
 
-            job = Job.objects.create_job(job_type, event, superseded_job)
+            job = Job.objects.create_job(job_type, event, root_recipe_id=recipe.root_superseded_recipe_id,
+                                         recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
             if priority is not None:
                 job.priority = priority
             job.save()
@@ -458,13 +464,15 @@ class RecipeManager(models.Manager):
         return recipe
 
     @transaction.atomic
-    def reprocess_recipe(self, recipe_id, job_names=None, all_jobs=False, priority=None):
+    def reprocess_recipe(self, recipe_id, batch_id=None, job_names=None, all_jobs=False, priority=None):
         """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
         revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
         transaction. A recipe instance that is already superseded cannot be re-processed again.
 
-        :param recipe_id: The identifier of the recipe to re-process.
+        :param recipe_id: The identifier of the recipe to re-process
         :type recipe_id: int
+        :param batch_id: The ID of the batch that contains the new recipe
+        :type batch_id: int
         :param job_names: A list of job names from the recipe that should be forced to re-process even if the latest
             recipe revision left them unchanged. If none are passed, then only jobs that changed are scheduled.
         :type job_names: [string]
@@ -522,8 +530,9 @@ class RecipeManager(models.Manager):
         # Create the new recipe while superseding the old one and queuing the associated jobs
         try:
             from queue.models import Queue
-            return Queue.objects.queue_new_recipe(current_type, None, event, superseded_recipe, graph_delta,
-                                                  superseded_jobs, priority)
+            return Queue.objects.queue_new_recipe(current_type, None, event, batch_id=batch_id,
+                                                  superseded_recipe=superseded_recipe, delta=graph_delta,
+                                                  superseded_jobs=superseded_jobs, priority=priority)
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 
@@ -593,9 +602,8 @@ class Recipe(models.Model):
     :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this recipe
     :type event: :class:`django.db.models.ForeignKey`
-
-    :keyword data: JSON description defining the data for this recipe
-    :type data: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword batch: The batch that contains this recipe
+    :type batch: :class:`django.db.models.ForeignKey`
 
     :keyword is_superseded: Whether this recipe has been superseded and is obsolete. This may be true while
         superseded_by_recipe (the reverse relationship of superseded_recipe) is null, indicating that this recipe is
@@ -607,6 +615,9 @@ class Recipe(models.Model):
     :keyword superseded_recipe: The recipe that was directly superseded by this recipe. The reverse relationship can be
         accessed using 'superseded_by_recipe'.
     :type superseded_recipe: :class:`django.db.models.ForeignKey`
+
+    :keyword input: JSON description defining the input for this recipe
+    :type input: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -621,14 +632,16 @@ class Recipe(models.Model):
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
-
-    input = django.contrib.postgres.fields.JSONField(default=dict)
+    batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
                                                null=True, on_delete=models.PROTECT)
     superseded_recipe = models.OneToOneField('recipe.Recipe', related_name='superseded_by_recipe', blank=True,
                                              null=True, on_delete=models.PROTECT)
+
+    input = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)

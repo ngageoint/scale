@@ -5,8 +5,10 @@ import logging
 
 from django.db import connection, transaction
 
+from batch.models import Batch
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
+from recipe.models import Recipe
 from util.exceptions import TerminatedCommand
 from util.parse import datetime_to_string
 
@@ -26,6 +28,12 @@ class DatabaseUpdater(object):
         self._total_job_exe = 0
         self._updated_job = 0
         self._total_job = 0
+        self._current_recipe_id = None
+        self._updated_recipe = 0
+        self._total_recipe = 0
+        self._current_batch_id = None
+        self._updated_batch = 0
+        self._total_batch = 0
 
     def update(self):
         """Runs the database update
@@ -51,12 +59,75 @@ class DatabaseUpdater(object):
                 break
             self._perform_job_exe_dup_iteration()
 
+        # Populating new recipe fields in job models
+        self._perform_recipe_field_init()
+        while True:
+            if not self._running:
+                raise TerminatedCommand()
+
+            if self._updated_recipe >= self._total_recipe:
+                break
+            self._perform_recipe_field_iteration()
+
+        # Populating new batch fields in job and recipe models
+        self._perform_batch_field_init()
+        while True:
+            if not self._running:
+                raise TerminatedCommand()
+
+            if self._updated_batch >= self._total_batch:
+                break
+            self._perform_batch_field_iteration()
+
     def stop(self):
         """Informs the database updater to stop running
         """
 
         logger.info('Scale database updater has been told to stop')
         self._running = False
+
+    def _perform_batch_field_init(self):
+        """Performs any initialization piece of the setting of batch fields on job and recipe models
+        """
+
+        logger.info('Scale is now populating the new batch fields on the job and recipe models')
+        logger.info('Counting the number of batches...')
+        self._total_batch = Batch.objects.all().count()
+        logger.info('Found %d batches that need to be done', self._total_batch)
+
+    def _perform_batch_field_iteration(self):
+        """Performs a single iteration of the setting of batch fields on job and recipe models
+        """
+
+        # Get batch ID
+        batch_qry = Batch.objects.all()
+        if self._current_batch_id:
+            batch_qry = batch_qry.filter(id__gt=self._current_batch_id)
+        for batch in batch_qry.order_by('id').only('id')[:1]:
+            batch_id = batch.id
+            break
+
+        # Populate job.batch_id and recipe.batch_id if they are missing
+        qry_1 = 'UPDATE job j SET batch_id = bj.batch_id FROM batch_job bj'
+        qry_1 += ' WHERE j.id = bj.job_id AND bj.batch_id = %s AND j.batch_id IS NULL'
+        qry_2 = 'UPDATE recipe r SET batch_id = br.batch_id FROM batch_recipe br'
+        qry_2 += ' WHERE r.id = br.recipe_id AND br.batch_id = %s AND r.batch_id IS NULL'
+        with connection.cursor() as cursor:
+            cursor.execute(qry_1, [str(batch_id)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d job(s) updated with batch_id %d', count, batch_id)
+            cursor.execute(qry_2, [str(batch_id)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d recipe(s) updated with batch_id %d', count, batch_id)
+
+        self._current_batch_id = batch_id
+        self._updated_batch += 1
+        if self._updated_batch > self._total_batch:
+            self._updated_batch = self._total_batch
+        percent = (float(self._updated_batch) / float(self._total_batch)) * 100.00
+        logger.info('Completed %s of %s batches (%.1f%%)', self._updated_batch, self._total_batch, percent)
 
     def _perform_job_exe_dup_init(self):
         """Performs any initialization piece of the removal of job execution duplicates
@@ -118,6 +189,57 @@ class DatabaseUpdater(object):
             self._updated_job = self._total_job
         percent = (float(self._updated_job) / float(self._total_job)) * 100.00
         logger.info('Completed %s of %s jobs (%.1f%%)', self._updated_job, self._total_job, percent)
+
+    def _perform_recipe_field_init(self):
+        """Performs any initialization piece of the setting of recipe fields on job models
+        """
+
+        logger.info('Scale is now populating the new recipe fields on the job models')
+        logger.info('Counting the number of recipes...')
+        self._total_recipe = Recipe.objects.all().count()
+        logger.info('Found %d recipes that need to be done', self._total_recipe)
+
+    def _perform_recipe_field_iteration(self):
+        """Performs a single iteration of the setting of recipe fields on job models
+        """
+
+        recipe_batch_size = 10000
+
+        # Get recipe IDs
+        recipe_qry = Recipe.objects.all()
+        if self._current_recipe_id:
+            recipe_qry = recipe_qry.filter(id__gt=self._current_recipe_id)
+        recipe_ids = [recipe.id for recipe in recipe_qry.order_by('id').only('id')[:recipe_batch_size]]
+
+        # Populate job.recipe_id if it is missing
+        qry_1 = 'UPDATE job j SET recipe_id = rj.recipe_id FROM recipe_job rj'
+        qry_1 += ' WHERE j.id = rj.job_id AND rj.recipe_id IN %s AND rj.is_original AND j.recipe_id IS NULL'
+        qry_2 = 'UPDATE job j SET root_recipe_id = r.id FROM recipe_job rj'
+        qry_2 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id AND'
+        qry_2 += ' r.id IN %s AND r.root_superseded_recipe_id IS NULL AND j.root_recipe_id IS NULL'
+        qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_job rj'
+        qry_3 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id'
+        qry_3 += ' AND r.id IN %s AND r.root_superseded_recipe_id IS NOT NULL AND j.root_recipe_id IS NULL'
+        with connection.cursor() as cursor:
+            cursor.execute(qry_1, [tuple(recipe_ids)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d job(s) updated with recipe_id field', count)
+            cursor.execute(qry_2, [tuple(recipe_ids)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d job(s) updated with root_recipe_id field', count)
+            cursor.execute(qry_3, [tuple(recipe_ids)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d job(s) updated with root_recipe_id field', count)
+
+        self._current_recipe_id = recipe_ids[-1]
+        self._updated_recipe += recipe_batch_size
+        if self._updated_recipe > self._total_recipe:
+            self._updated_recipe = self._total_recipe
+        percent = (float(self._updated_recipe) / float(self._total_recipe)) * 100.00
+        logger.info('Completed %s of %s recipes (%.1f%%)', self._updated_recipe, self._total_recipe, percent)
 
     def _perform_update_init(self):
         """Performs any initialization piece of the database update

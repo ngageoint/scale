@@ -434,7 +434,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         delta = RecipeGraphDelta(graph_a, graph_b)
 
         # Queue new recipe that supersedes the old recipe
-        new_handler = Queue.objects.queue_new_recipe(new_recipe_type, None, event, recipe, delta, superseded_jobs)
+        new_handler = Queue.objects.queue_new_recipe(new_recipe_type, None, event, superseded_recipe=recipe,
+                                                     delta=delta, superseded_jobs=superseded_jobs)
 
         # Ensure old recipe is superseded
         recipe = Recipe.objects.get(id=handler.recipe.id)

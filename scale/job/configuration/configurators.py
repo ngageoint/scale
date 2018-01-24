@@ -284,13 +284,20 @@ class ScheduledExecutionConfigurator(object):
 
         config.set_task_ids(job_exe.get_cluster_id())
 
-        # Configure env vars describing allocated task resources
         for task_type in config.get_task_types():
             # Configure env vars describing allocated task resources
             env_vars = {}
             for resource in config.get_resources(task_type).resources:
                 env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
                 env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
+
+            # Configure env vars for Scale meta-data
+            env_vars['SCALE_JOB_ID'] = unicode(job_exe.job_id)
+            env_vars['SCALE_EXE_NUM'] = unicode(job_exe.exe_num)
+            if job_exe.recipe_id:
+                env_vars['SCALE_RECIPE_ID'] = unicode(job_exe.recipe_id)
+            if job_exe.batch_id:
+                env_vars['SCALE_BATCH_ID'] = unicode(job_exe.batch_id)
 
             # Configure workspace volumes
             workspace_volumes = {}
@@ -390,9 +397,8 @@ class ScheduledExecutionConfigurator(object):
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_type.docker_image))
-        env_vars = {'SCALE_JOB_ID': unicode(job_exe.job_id), 'SCALE_EXE_NUM': unicode(job_exe.exe_num)}
-        config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS, env_vars=env_vars)
-        config.add_to_task('post', args=POST_TASK_COMMAND_ARGS, env_vars=env_vars)
+        config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS)
+        config.add_to_task('post', args=POST_TASK_COMMAND_ARGS)
 
         # Configure input workspaces
         ro_input_workspaces = {}
