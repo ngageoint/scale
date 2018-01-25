@@ -93,10 +93,19 @@ class TestCompletedJobs(TransactionTestCase):
         self.assertTrue(result)
 
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-        self.assertEqual(len(message.new_messages), 1)
-        update_recipes_msg = message.new_messages[0]
-        self.assertEqual(update_recipes_msg.type, 'update_recipes')
-        self.assertEqual(len(update_recipes_msg._recipe_ids), 1)  # Job 2 was only job both completed and with output
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipes_msg = None
+        publish_job_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'update_recipes':
+                update_recipes_msg = msg
+            elif msg.type == 'publish_job':
+                publish_job_msg = msg
+        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(publish_job_msg)
+        # Job 2 was only job both completed and with output
+        self.assertEqual(len(update_recipes_msg._recipe_ids), 1)
+        self.assertEqual(publish_job_msg.job_id, job_2.id)
 
         # Job 1 should be completed
         self.assertEqual(jobs[0].status, 'COMPLETED')
@@ -121,10 +130,19 @@ class TestCompletedJobs(TransactionTestCase):
 
         # Should have the same update_recipes message as before
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-        self.assertEqual(len(message.new_messages), 1)
-        update_recipes_msg = message.new_messages[0]
-        self.assertEqual(update_recipes_msg.type, 'update_recipes')
-        self.assertEqual(len(update_recipes_msg._recipe_ids), 1)  # Job 2 was only job both completed and with output
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipes_msg = None
+        publish_job_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'update_recipes':
+                update_recipes_msg = msg
+            elif msg.type == 'publish_job':
+                publish_job_msg = msg
+        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(publish_job_msg)
+        # Job 2 was only job both completed and with output
+        self.assertEqual(len(update_recipes_msg._recipe_ids), 1)
+        self.assertEqual(publish_job_msg.job_id, job_2.id)
 
         # Should have the same models as before
         self.assertEqual(jobs[0].status, 'COMPLETED')

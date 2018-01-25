@@ -7,7 +7,8 @@ from collections import namedtuple
 from django.db import transaction
 from django.utils.timezone import now
 
-from job.models import Job, JobExecution
+from job.messages.publish_job import create_publish_job_message
+from job.models import Job
 from messaging.messages.message import CommandMessage
 from util.parse import datetime_to_string, parse_datetime
 
@@ -47,6 +48,37 @@ def create_completed_jobs_messages(completed_jobs, when):
         message.add_completed_job(completed_job)
     if message:
         messages.append(message)
+
+    return messages
+
+
+def process_completed_jobs_with_output(job_ids, when):
+    """Processes the given job IDs to determine if any of the jobs have both COMPLETED and received their output.
+    Messages will be created and returned for completed jobs that have their output populated. Caller must have obtained
+    model locks on the given jobs.
+
+    :param job_ids: The job IDs
+    :type job_ids: list
+    :param when: The current time
+    :type when: :class:`datetime.datetime`
+    :return: The list of created messages
+    :rtype: list
+    """
+
+    messages = []
+
+    # Find jobs that are COMPLETED and have output
+    completed_job_ids_with_output = Job.objects.process_job_output(job_ids, when)
+    if completed_job_ids_with_output:
+        logger.info('Found %d COMPLETED job(s) with output', len(completed_job_ids_with_output))
+
+        # Create messages to update recipes
+        from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
+        messages.extend(create_update_recipes_messages_from_jobs(completed_job_ids_with_output))
+
+        # Create messages to publish each job
+        for job_id in completed_job_ids_with_output:
+            messages.append(create_publish_job_message(job_id))
 
     return messages
 
@@ -128,6 +160,7 @@ class CompletedJobs(CommandMessage):
                     # Ignore this job
                     continue
                 jobs_to_complete.append(job_model)
+            job_ids_to_complete = [job.id for job in jobs_to_complete]
 
             # Update jobs to completed
             completed_job_ids = []
@@ -135,24 +168,13 @@ class CompletedJobs(CommandMessage):
                 completed_job_ids = Job.objects.update_jobs_to_completed(jobs_to_complete, self.ended)
                 logger.info('Set %d job(s) to COMPLETED status', len(completed_job_ids))
 
-            # Process job output to find jobs that are both COMPLETED and have output
-            if jobs_to_complete:
-                job_ids = [job.id for job in jobs_to_complete]
-                jobs_with_output = Job.objects.process_job_output(job_ids, when)
-                # Jobs that are COMPLETED and have output should update their recipes
-                if jobs_with_output:
-                    logger.info('Found %d COMPLETED job(s) with output, ready to update recipe(s)',
-                                len(jobs_with_output))
-                    self._create_update_recipes_messages(jobs_with_output)
+            # Create messages for jobs that are both COMPLETED and have output
+            if job_ids_to_complete:
+                msgs = process_completed_jobs_with_output(job_ids_to_complete, when)
+                self.new_messages.extend(msgs)
 
             # TODO: this needs to be improved to be more efficient and not perform batch model locking
             for job_id in completed_job_ids:
-                job_model = job_models[job_id]
-                # Publish this job's products
-                from product.models import ProductFile
-                # TODO: product publishing needs to be moved to its own message(s) that fire after process_job_output()
-                job_exe = JobExecution.objects.get(job_id=job_id, exe_num=job_model.num_exes)
-                ProductFile.objects.publish_products(job_exe.id, job_model, self.ended)
                 # Update completed job count if part of a batch
                 from batch.models import Batch, BatchJob
                 try:
@@ -162,16 +184,3 @@ class CompletedJobs(CommandMessage):
                     pass
 
         return True
-
-    def _create_update_recipes_messages(self, job_ids):
-        """Creates messages to update the the recipes for the given jobs that are both COMPLETED and have output
-
-        :param job_ids: The job IDs
-        :type job_ids: list
-        """
-
-        from recipe.messages.update_recipes import create_update_recipes_messages
-        from recipe.models import Recipe
-
-        recipe_ids = Recipe.objects.get_latest_recipe_ids_for_jobs(job_ids)
-        self.new_messages.extend(create_update_recipes_messages(recipe_ids))

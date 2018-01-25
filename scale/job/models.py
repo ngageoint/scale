@@ -1426,6 +1426,17 @@ class JobExecutionManager(models.Manager):
 
         return results
 
+    def get_latest_execution(self, job_id):
+        """Gets the latest job execution for the given job ID and returns it with the related job model
+
+        :param job_id: The job ID
+        :type job_id: int
+        :returns: The job execution model with related job and job_type models populated
+        :rtype: :class:`job.models.JobExecution`
+        """
+
+        return self.select_related('job').get(job_id=job_id, exe_num=F('job__num_exes'))
+
     # TODO: remove when REST API v5 is removed
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
