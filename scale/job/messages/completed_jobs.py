@@ -7,7 +7,8 @@ from collections import namedtuple
 from django.db import transaction
 from django.utils.timezone import now
 
-from job.models import Job, JobExecution
+from job.messages.publish_job import create_publish_job_message
+from job.models import Job
 from messaging.messages.message import CommandMessage
 from util.parse import datetime_to_string, parse_datetime
 
@@ -74,6 +75,10 @@ def process_completed_jobs_with_output(job_ids, when):
         # Create messages to update recipes
         from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
         messages.extend(create_update_recipes_messages_from_jobs(completed_job_ids_with_output))
+
+        # Create messages to publish each job
+        for job_id in completed_job_ids_with_output:
+            messages.append(create_publish_job_message(job_id))
 
     return messages
 
@@ -170,12 +175,6 @@ class CompletedJobs(CommandMessage):
 
             # TODO: this needs to be improved to be more efficient and not perform batch model locking
             for job_id in completed_job_ids:
-                job_model = job_models[job_id]
-                # Publish this job's products
-                from product.models import ProductFile
-                # TODO: product publishing needs to be moved to its own message(s) that fire after process_job_output()
-                job_exe = JobExecution.objects.get(job_id=job_id, exe_num=job_model.num_exes)
-                ProductFile.objects.publish_products(job_exe.id, job_model, self.ended)
                 # Update completed job count if part of a batch
                 from batch.models import Batch, BatchJob
                 try:

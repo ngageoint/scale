@@ -32,6 +32,7 @@ class JobConfig(AppConfig):
         from job.messages.job_exe_end import CreateJobExecutionEnd
         from job.messages.pending_jobs import PendingJobs
         from job.messages.process_job_inputs import ProcessJobInputs
+        from job.messages.publish_job import PublishJob
         from job.messages.running_jobs import RunningJobs
         from messaging.messages.factory import add_message_type
 
@@ -41,4 +42,5 @@ class JobConfig(AppConfig):
         add_message_type(CreateJobExecutionEnd)
         add_message_type(PendingJobs)
         add_message_type(ProcessJobInputs)
+        add_message_type(PublishJob)
         add_message_type(RunningJobs)
