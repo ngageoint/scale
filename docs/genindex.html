@@ -1009,10 +1009,10 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
@@ -1163,6 +1163,8 @@
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.utils.create_product">create_product() (in module product.test.utils)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.create_publish_job_message">create_publish_job_message() (in module job.messages.publish_job)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.create_pull_command">create_pull_command() (in module job.tasks.pull_task)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.utils.create_queue">create_queue() (in module queue.test.utils)</a>
@@ -1226,6 +1228,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.create_update_recipes_messages">create_update_recipes_messages() (in module recipe.messages.update_recipes)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.create_update_recipes_messages_from_jobs">create_update_recipes_messages_from_jobs() (in module recipe.messages.update_recipes)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.utils.create_workspace">create_workspace() (in module storage.test.utils)</a>
 
@@ -1979,10 +1983,10 @@
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.error_id">(metrics.models.MetricsError attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.error_mapping">error_mapping (job.models.JobType attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.error_system_count">error_system_count (metrics.models.MetricsJobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorBaseSerializer">ErrorBaseSerializer (class in error.serializers)</a>
@@ -2051,6 +2055,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.pending_jobs.PendingJobs.execute">(job.messages.pending_jobs.PendingJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.process_job_inputs.ProcessJobInputs.execute">(job.messages.process_job_inputs.ProcessJobInputs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.execute">(job.messages.publish_job.PublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.execute">(job.messages.running_jobs.RunningJobs method)</a>
 </li>
@@ -2351,6 +2357,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.pending_jobs.PendingJobs.from_json">(job.messages.pending_jobs.PendingJobs static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.process_job_inputs.ProcessJobInputs.from_json">(job.messages.process_job_inputs.ProcessJobInputs static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.from_json">(job.messages.publish_job.PublishJob static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.from_json">(job.messages.running_jobs.RunningJobs static method)</a>
 </li>
@@ -2850,6 +2858,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.get_latest">get_latest() (job.models.JobExecutionManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.get_latest_execution">get_latest_execution() (job.models.JobExecutionManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_latest_recipe_ids_for_jobs">get_latest_recipe_ids_for_jobs() (recipe.models.RecipeManager method)</a>
 </li>
@@ -4533,6 +4543,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.process_job_inputs">job.messages.process_job_inputs (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.publish_job">job.messages.publish_job (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations">job.migrations (module)</a>
@@ -4708,6 +4720,8 @@
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_pending_jobs">job.test.messages.test_pending_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_process_job_inputs">job.test.messages.test_process_job_inputs (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs (module)</a>
 </li>
@@ -7095,6 +7109,8 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.priority">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.process_completed_jobs_with_output">process_completed_jobs_with_output() (in module job.messages.completed_jobs)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.clock.ClockEventProcessor.process_event">process_event() (job.clock.ClockEventProcessor method)</a>
 
       <ul>
@@ -7208,6 +7224,8 @@
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.publish_products">publish_products() (product.models.ProductFileManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.published">published (storage.models.ScaleFile attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob">PublishJob (class in job.messages.publish_job)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.pull_bad">pull_bad (scheduler.node.conditions.NodeError attribute)</a>
 </li>
@@ -8819,6 +8837,8 @@
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_pending_jobs.TestPendingJobs.setUp">(job.test.messages.test_pending_jobs.TestPendingJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_process_job_inputs.TestProcessJobInputs.setUp">(job.test.messages.test_process_job_inputs.TestProcessJobInputs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.setUp">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.setUp">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
 </li>
@@ -10538,6 +10558,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_process_job_inputs.TestProcessJobInputs.test_execute">(job.test.messages.test_process_job_inputs.TestProcessJobInputs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.test_execute">(job.test.messages.test_publish_job.TestPublishJob method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.test_execute">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.test.messages.html#queue.test.messages.test_queued_jobs.TestQueuedJobs.test_execute">(queue.test.messages.test_queued_jobs.TestQueuedJobs method)</a>
@@ -11305,6 +11327,8 @@
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_pending_jobs.TestPendingJobs.test_json">(job.test.messages.test_pending_jobs.TestPendingJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_process_job_inputs.TestProcessJobInputs.test_json">(job.test.messages.test_process_job_inputs.TestProcessJobInputs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.test_json">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.test_json">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
 </li>
@@ -13347,6 +13371,8 @@
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsView">TestProductsView (class in product.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob">TestPublishJob (class in job.test.messages.test_publish_job)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.html#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator">TestQueuedExecutionConfigurator (class in job.test.configuration.test_configurators)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.messages.html#queue.test.messages.test_queued_jobs.TestQueuedJobs">TestQueuedJobs (class in queue.test.messages.test_queued_jobs)</a>
@@ -13635,6 +13661,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.pending_jobs.PendingJobs.to_json">(job.messages.pending_jobs.PendingJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.process_job_inputs.ProcessJobInputs.to_json">(job.messages.process_job_inputs.ProcessJobInputs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.to_json">(job.messages.publish_job.PublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.to_json">(job.messages.running_jobs.RunningJobs method)</a>
 </li>

@@ -382,6 +382,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.pending_jobs">job.messages.pending_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.process_job_inputs">job.messages.process_job_inputs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.publish_job">job.messages.publish_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages">Module contents</a></li>
 </ul>
@@ -547,6 +548,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_pending_jobs">job.test.messages.test_pending_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_process_job_inputs">job.test.messages.test_process_job_inputs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
 </ul>
@@ -2839,6 +2841,24 @@ job_exe, job_type, and error models will be populated.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dictionary that maps each job identifier to its latest execution.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict of int -&gt; class:<cite>job.models.JobExecution</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobExecutionManager.get_latest_execution">
+<code class="descname">get_latest_execution</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_latest_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the latest job execution for the given job ID and returns it with the related job model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution model with related job and job_type models populated</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a></td>
 </tr>
 </tbody>
 </table>

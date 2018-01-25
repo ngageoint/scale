@@ -412,6 +412,32 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="job.messages.completed_jobs.process_completed_jobs_with_output">
+<code class="descclassname">job.messages.completed_jobs.</code><code class="descname">process_completed_jobs_with_output</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.completed_jobs.process_completed_jobs_with_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the given job IDs to determine if any of the jobs have both COMPLETED and received their output.
+Messages will be created and returned for completed jobs that have their output populated. Caller must have obtained
+model locks on the given jobs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of created messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.messages.failed_jobs">
 <span id="job-messages-failed-jobs-module"></span><h2>job.messages.failed_jobs module<a class="headerlink" href="#module-job.messages.failed_jobs" title="Permalink to this headline">¶</a></h2>
@@ -751,6 +777,53 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.messages.publish_job">
+<span id="job-messages-publish-job-module"></span><h2>job.messages.publish_job module<a class="headerlink" href="#module-job.messages.publish_job" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that publishes a job</p>
+<dl class="class">
+<dt id="job.messages.publish_job.PublishJob">
+<em class="property">class </em><code class="descclassname">job.messages.publish_job.</code><code class="descname">PublishJob</code><a class="headerlink" href="#job.messages.publish_job.PublishJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that publishes a completed job</p>
+<dl class="method">
+<dt id="job.messages.publish_job.PublishJob.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.publish_job.PublishJob.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.publish_job.PublishJob.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.publish_job.PublishJob.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.publish_job.PublishJob.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.publish_job.PublishJob.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.publish_job.create_publish_job_message">
+<code class="descclassname">job.messages.publish_job.</code><code class="descname">create_publish_job_message</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.publish_job.create_publish_job_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a publish job message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The publish job message</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.messages.publish_job.PublishJob" title="job.messages.publish_job.PublishJob"><code class="xref py py-class docutils literal"><span class="pre">job.messages.publish_job.PublishJob</span></code></a></td>
 </tr>
 </tbody>
 </table>

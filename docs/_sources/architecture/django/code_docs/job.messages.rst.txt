@@ -52,6 +52,14 @@ job\.messages\.process\_job\_inputs module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.publish\_job module
+----------------------------------
+
+.. automodule:: job.messages.publish_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.running\_jobs module
 -----------------------------------
 
