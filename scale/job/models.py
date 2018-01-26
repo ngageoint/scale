@@ -173,6 +173,17 @@ class JobManager(models.Manager):
             jobs = jobs.order_by('last_modified')
         return jobs
 
+    def get_basic_jobs(self, job_ids):
+        """Returns the basic job models for the given IDs with no related fields
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The job models
+        :rtype: list
+        """
+
+        return list(self.filter(id__in=job_ids))
+
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
                  order=None):
@@ -398,7 +409,20 @@ class JobManager(models.Manager):
 
         return list(self.get_jobs_with_related(job_ids))
 
-    def increment_max_tries(self, jobs):
+    def increment_max_tries(self, job_ids, when):
+        """Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
+        setting of their associated job type.
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(max_tries=F('num_exes') + F('job_type__max_tries'), last_modified=when)
+
+    # TODO: remove this when no longer used (should be when v5 is removed)
+    def increment_max_tries_old(self, jobs):
         """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
         caller must have obtained model locks on the job models.
 
@@ -1136,13 +1160,6 @@ class Job(models.Model):
         """
 
         return True if self.output else False
-
-    def increase_max_tries(self):
-        """Increase the total max_tries based on the current number of executions and job type max_tries.
-        Callers must save the model to persist the change.
-        """
-
-        self.max_tries = self.num_exes + self.job_type.max_tries
 
     def is_ready_for_children(self):
         """Indicates whether this job is ready for its children jobs to be queued

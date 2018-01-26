@@ -490,7 +490,7 @@ class QueueManager(models.Manager):
 
         # Update jobs that are being re-queued
         if jobs_to_queue:
-            Job.objects.increment_max_tries(jobs_to_queue)
+            Job.objects.increment_max_tries_old(jobs_to_queue)
             self.queue_jobs(jobs_to_queue, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:

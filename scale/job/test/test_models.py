@@ -486,22 +486,6 @@ class TestJob(TestCase):
         self.assertFalse(Job(status='COMPLETED').is_ready_to_requeue)
         self.assertTrue(Job(status='CANCELED').is_ready_to_requeue)
 
-    def test_increase_max_tries_canceled(self):
-        """Tests increasing the maximum number of tries for a job instance that was canceled prematurely."""
-        job_type = JobType(max_tries=10)
-        job = Job(job_type=job_type, num_exes=3, max_tries=5)
-        job.increase_max_tries()
-
-        self.assertEqual(job.max_tries, 13)
-
-    def test_increase_max_tries_failed(self):
-        """Tests increasing the maximum number of tries for a job instance that ran out of tries due to failures."""
-        job_type = JobType(max_tries=10)
-        job = Job(job_type=job_type, num_exes=5, max_tries=5)
-        job.increase_max_tries()
-
-        self.assertEqual(job.max_tries, 15)
-
 
 class TestJobExecutionManager(TransactionTestCase):
     """Tests for the job execution model manager"""
