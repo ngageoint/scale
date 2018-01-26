@@ -419,7 +419,11 @@ class JobManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=job_ids).update(max_tries=F('num_exes') + F('job_type__max_tries'), last_modified=when)
+        if job_ids:
+            qry = 'UPDATE job j SET max_tries = j.num_exes + jt.max_tries, last_modified = %s FROM job_type jt'
+            qry += ' WHERE j.job_type_id = jt.id AND j.id IN %s'
+            with connection.cursor() as cursor:
+                cursor.execute(qry, [when, tuple(job_ids)])
 
     # TODO: remove this when no longer used (should be when v5 is removed)
     def increment_max_tries_old(self, jobs):

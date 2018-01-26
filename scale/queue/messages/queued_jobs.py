@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def create_queued_jobs_messages(jobs, priority=None):
     """Creates messages to queue the given jobs
 
-    :param jobs: The jobs to queue
+    :param jobs: The jobs to queue (QueuedJob tuple)
     :type jobs: list
     :param priority: Optional priority to set on the queued jobs
     :type priority: int

@@ -123,8 +123,8 @@ class RequeueJobs(CommandMessage):
         for requeue_job in self._requeue_jobs:
             job_model = job_models[requeue_job.job_id]
             if job_model.can_be_queued() and job_model.has_been_queued() and job_model.num_exes == requeue_job.exe_num:
-                jobs_to_requeue.append(job_model)
-        job_ids_to_requeue = [job.id for job in jobs_to_requeue]
+                jobs_to_requeue.append(QueuedJob(job_model.id, job_model.num_exes))
+        job_ids_to_requeue = [job.job_id for job in jobs_to_requeue]
         logger.info('There are %d job(s) to re-queue, increasing max tries', len(job_ids_to_requeue))
 
         # Reset max_tries for jobs that will be re-queued

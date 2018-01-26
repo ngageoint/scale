@@ -45,7 +45,7 @@ class TestRequeueJobs(TestCase):
         self.assertEqual(len(new_message.new_messages), 1)
         message = new_message.new_messages[0]
         self.assertEqual(message.type, 'queued_jobs')
-        self.assertListEqual(message._queued_jobs, [QueuedJob(job_1.id, job_1.exe_num)])
+        self.assertListEqual(message._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
         self.assertEqual(message.priority, 1)
 
     def test_execute(self):
@@ -86,12 +86,13 @@ class TestRequeueJobs(TestCase):
         self.assertEqual(jobs[3].max_tries, 3)
         # Job 1 is only job that should be included in message to be queued
         self.assertEqual(len(message.new_messages), 1)
-        message = message.new_messages[0]
-        self.assertEqual(message.type, 'queued_jobs')
-        self.assertListEqual(message._queued_jobs, [QueuedJob(job_1.id, job_1.exe_num)])
-        self.assertEqual(message.priority, 101)
+        queued_jobs_msg = message.new_messages[0]
+        self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
+        self.assertListEqual(queued_jobs_msg._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
+        self.assertEqual(queued_jobs_msg.priority, 101)
 
         # Test executing message again
+        message.new_messages = []
         result = message.execute()
         self.assertTrue(result)
 
@@ -107,7 +108,7 @@ class TestRequeueJobs(TestCase):
         self.assertEqual(jobs[3].max_tries, 3)
         # Job 1 is only job that should be included in message to be queued
         self.assertEqual(len(message.new_messages), 1)
-        message = message.new_messages[0]
-        self.assertEqual(message.type, 'queued_jobs')
-        self.assertListEqual(message._queued_jobs, [QueuedJob(job_1.id, job_1.exe_num)])
-        self.assertEqual(message.priority, 101)
+        queued_jobs_msg = message.new_messages[0]
+        self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
+        self.assertListEqual(queued_jobs_msg._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
+        self.assertEqual(queued_jobs_msg.priority, 101)
