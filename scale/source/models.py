@@ -177,11 +177,11 @@ class SourceFileManager(models.GeoManager):
             order.append('id')
         else:
             order = ['last_modified', 'id']
-        jobs = Job.objects.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                       job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                       job_type_categories=job_type_categories, batch_ids=batch_ids, 
-                                       error_categories=error_categories, include_superseded=include_superseded, 
-                                       order=order)
+        jobs = Job.objects.filter_jobs_related(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                               job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                               job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                               error_categories=error_categories, include_superseded=include_superseded,
+                                               order=order)
         distinct = [field.replace('-', '') for field in order]  # Remove - char for reverse sort fields
         jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct(*distinct)
         return jobs

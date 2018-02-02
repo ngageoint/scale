@@ -21,7 +21,9 @@ class QueueConfig(AppConfig):
         # Register queue message types
         from queue.messages.queued_jobs import QueuedJobs
         from queue.messages.requeue_jobs import RequeueJobs
+        from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
         from messaging.messages.factory import add_message_type
 
         add_message_type(QueuedJobs)
         add_message_type(RequeueJobs)
+        add_message_type(RequeueJobsBulk)
