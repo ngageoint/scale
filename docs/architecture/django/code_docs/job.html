@@ -5634,27 +5634,9 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.views.JobDetailsView.get_v5">
-<code class="descname">get_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.get_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves jobs and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="job.views.JobDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
 </dd></dl>
 
 <dl class="method">
@@ -5681,40 +5663,10 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobDetailsView.patch_v5">
-<code class="descname">patch_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.patch_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify job info with a subset of fields</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.views.JobDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
@@ -5723,6 +5675,12 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobExecutionDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for viewing job execution detail</p>
+<dl class="method">
+<dt id="job.views.JobExecutionDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.views.JobExecutionDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobExecutionDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -5777,12 +5735,6 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="job.views.JobExecutionDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionDetailsSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -5827,6 +5779,12 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobExecutionsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for viewing job executions and their associated job_type id, name, and version</p>
+<dl class="method">
+<dt id="job.views.JobExecutionsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.views.JobExecutionsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>job_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list" title="Permalink to this definition">¶</a></dt>
@@ -5873,12 +5831,6 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobExecutionsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobExecutionsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobExecutionsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
@@ -6314,6 +6266,12 @@ example: input_1</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving a list of all available jobs.</p>
 <dl class="method">
+<dt id="job.views.JobsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.views.JobsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobsView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves jobs and returns it in JSON form</p>
@@ -6335,12 +6293,6 @@ example: input_1</p>
 <dt id="job.views.JobsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#job.views.JobsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

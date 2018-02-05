@@ -3399,12 +3399,28 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_serializer">get_serializer() (in module metrics.registry)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_serializer_class">get_serializer_class() (node.views.NodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.get_serializer_class">get_serializer_class() (job.views.JobDetailsView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.get_serializer_class">(job.views.JobExecutionDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionsView.get_serializer_class">(job.views.JobExecutionsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobsView.get_serializer_class">(job.views.JobsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_serializer_class">(node.views.NodeDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/node.html#node.views.NodesView.get_serializer_class">(node.views.NodesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.html#product.views.ProductDetailsView.get_serializer_class">(product.views.ProductDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewJobView.get_serializer_class">(queue.views.QueueNewJobView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewRecipeView.get_serializer_class">(queue.views.QueueNewRecipeView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.get_serializer_class">(recipe.views.RecipeDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.get_serializer_class">(recipe.views.RecipeReprocessView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceDetailsView.get_serializer_class">(source.views.SourceDetailsView method)</a>
 </li>
@@ -3539,8 +3555,6 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v4">(scheduler.views.StatusView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.get_v5">get_v5() (job.views.JobDetailsView method)</a>
-</li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.get_versioned_urls">get_versioned_urls() (in module util.rest)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.broker.BrokerDetails.get_virtual_host">get_virtual_host() (util.broker.BrokerDetails method)</a>
@@ -6897,8 +6911,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v4">patch_v4() (node.views.NodeDetailsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.patch_v5">patch_v5() (job.views.JobDetailsView method)</a>
-</li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.pause_reason">pause_reason (node.models.Node attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.paused">paused (job.models.JobType attribute)</a>
@@ -8064,8 +8076,6 @@
       <ul>
         <li><a href="architecture/django/code_docs/product.html#product.views.ProductDetailsView.retrieve_v5">(product.views.ProductDetailsView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.retrieve_v5">(recipe.views.RecipeDetailsView method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.retry.retry">retry() (in module util.retry)</a>
 </li>
@@ -8546,12 +8556,6 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.serializer_class">(ingest.views.StrikesView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.serializer_class">(job.views.JobDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.serializer_class">(job.views.JobExecutionDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionsView.serializer_class">(job.views.JobExecutionsView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobInputFilesView.serializer_class">(job.views.JobInputFilesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeDetailsView.serializer_class">(job.views.JobTypeDetailsView attribute)</a>
@@ -8568,8 +8572,6 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView.serializer_class">(job.views.JobUpdatesView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.html#job.views.JobsView.serializer_class">(job.views.JobsView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobsWithExecutionView.serializer_class">(job.views.JobsWithExecutionView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.serializer_class">(metrics.views.MetricsView attribute)</a>
@@ -8584,19 +8586,11 @@
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.JobLoadView.serializer_class">(queue.views.JobLoadView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewJobView.serializer_class">(queue.views.QueueNewJobView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewRecipeView.serializer_class">(queue.views.QueueNewRecipeView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueStatusView.serializer_class">(queue.views.QueueStatusView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.RequeueJobsView.serializer_class">(queue.views.RequeueJobsView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.serializer_class">(recipe.views.RecipeDetailsView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeInputFilesView.serializer_class">(recipe.views.RecipeInputFilesView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.serializer_class">(recipe.views.RecipeReprocessView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.serializer_class">(recipe.views.RecipeTypeDetailsView attribute)</a>
 </li>

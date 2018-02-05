@@ -2308,6 +2308,12 @@ model.</p>
 <em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for retrieving details of a recipe</p>
+<dl class="method">
+<dt id="recipe.views.RecipeDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="recipe.views.RecipeDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#recipe.views.RecipeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -2335,36 +2341,6 @@ model.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.views.RecipeDetailsView.retrieve_v5">
-<code class="descname">retrieve_v5</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a recipe and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>recipe_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.views.RecipeDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -2471,6 +2447,12 @@ example: input_1</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for scheduling a reprocess of a recipe</p>
 <dl class="method">
+<dt id="recipe.views.RecipeReprocessView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeReprocessView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.views.RecipeReprocessView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeReprocessView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Schedules a recipe for reprocessing and returns it in JSON form</p>
@@ -2498,12 +2480,6 @@ example: input_1</p>
 <dt id="recipe.views.RecipeReprocessView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#recipe.views.RecipeReprocessView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.views.RecipeReprocessView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeReprocessView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
