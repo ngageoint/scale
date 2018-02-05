@@ -75,6 +75,7 @@ class ProductDetailsView(RetrieveAPIView):
             return ProductFileDetailsSerializerV5
         return ProductFileDetailsSerializer
 
+    # TODO: remove the `file_name` arg when REST API v5 is removed
     def retrieve(self, request, product_id=None, file_name=None):
         """Retrieves the details for a product file and return them in JSON form
 
@@ -88,13 +89,13 @@ class ProductDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4' or request.version == 'v5':
+        if request.version != 'v6':
             return self.retrieve_v5(request, product_id, file_name)
-
-        try:
-            product = ProductFile.objects.get_details(product_id)
-        except ScaleFile.DoesNotExist:
-            raise Http404
+        else:
+            try:
+                product = ProductFile.objects.get_details(product_id)
+            except ScaleFile.DoesNotExist:
+                raise Http404
 
         serializer = self.get_serializer(product)
         return Response(serializer.data)
