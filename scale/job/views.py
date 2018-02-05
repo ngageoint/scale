@@ -525,8 +525,17 @@ class JobTypesStatusView(ListAPIView):
 class JobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all available jobs."""
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = JobSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobSerializer
+        else:
+            return OldJobSerializer
+    
     def list(self, request):
         """Retrieves jobs and returns it in JSON form
 
@@ -558,12 +567,7 @@ class JobsView(ListAPIView):
                                     order=order)
 
         page = self.paginate_queryset(jobs)
-
-        # TODO: remove this version check when REST API v5 is removed
-        if request.version == 'v5':
-            serializer = OldJobSerializer(page, many=True)
-        else:
-            serializer = self.get_serializer(page, many=True)
+        serializer = self.get_serializer(page, many=True)
         
         return self.get_paginated_response(serializer.data)
 
@@ -571,8 +575,17 @@ class JobsView(ListAPIView):
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
     queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = JobExecutionSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobDetailsSerializer
+        else:
+            return OldJobDetailsSerializer
+    
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
 
@@ -584,70 +597,19 @@ class JobDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO: remove this check when REST API v5 is removed
-        if request.version == 'v5':
-            return self.get_v5(request, job_id)
-        else:
-            try:
-                job = Job.objects.get_details(job_id)
-            except Job.DoesNotExist:
-                raise Http404
-
-            serializer = self.get_serializer(job)
-            return Response(serializer.data)
-
-    def patch(self, request, job_id):
-        """Modify job info with a subset of fields
-
-        :param request: the HTTP PATCH request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_id: The ID for the job.
-        :type job_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        # TODO: remove this check when REST API v5 is removed
-        if request.version == 'v5':
-            return self.patch_v5(request, job_id)
-        else:
-            # Validate that no extra fields are included
-            rest_util.check_update(request, ['status'])
-
-            # Validate JSON
-            status_code = rest_util.parse_string(request, 'status')
-            if status_code != 'CANCELED':
-                raise rest_util.BadParameter('Invalid or read-only status. Allowed values: CANCELED')
-
-            try:
-                Queue.objects.handle_job_cancellation(job_id, timezone.now())
-                job = Job.objects.get_details(job_id)
-            except (Job.DoesNotExist, JobExecution.DoesNotExist):
-                raise Http404
-
-            serializer = self.get_serializer(job)
-            return Response(serializer.data)
-
-    def get_v5(self, request, job_id):
-        """Retrieves jobs and returns it in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_id: The ID for the job.
-        :type job_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
         try:
-            job = Job.objects.get_details_v5(job_id)
+            # TODO: remove this check when REST API v5 is removed
+            if request.version == 'v6':
+                job = Job.objects.get_details(job_id)
+            else:
+                job = Job.objects.get_details_v5(job_id)
         except Job.DoesNotExist:
             raise Http404
 
-        serializer = OldJobDetailsSerializer(job)
+        serializer = self.get_serializer(job)
         return Response(serializer.data)
 
-    def patch_v5(self, request, job_id):
+    def patch(self, request, job_id):
         """Modify job info with a subset of fields
 
         :param request: the HTTP PATCH request
@@ -668,11 +630,15 @@ class JobDetailsView(GenericAPIView):
 
         try:
             Queue.objects.handle_job_cancellation(job_id, timezone.now())
-            job = Job.objects.get_details_v5(job_id)
+            # TODO: remove this check when REST API v5 is removed
+            if request.version == 'v6':
+                job = Job.objects.get_details(job_id)
+            else:
+                job = Job.objects.get_details_v5(job_id)
         except (Job.DoesNotExist, JobExecution.DoesNotExist):
             raise Http404
 
-        serializer = OldJobDetailsSerializer(job)
+        serializer = self.get_serializer(job)
         return Response(serializer.data)
 
 class JobInputFilesView(ListAPIView):
@@ -794,7 +760,7 @@ class JobsWithExecutionView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
+        if request.version != 'v6':
             return self.list_v5(request)
         else:
             raise Http404
@@ -838,8 +804,17 @@ class JobsWithExecutionView(ListAPIView):
 class JobExecutionsView(ListAPIView):
     """This view is the endpoint for viewing job executions and their associated job_type id, name, and version"""
     queryset = JobExecution.objects.all()
-    serializer_class = JobExecutionSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = JobExecutionSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobExecutionSerializer
+        else:
+            return OldJobExecutionSerializer
+    
     def list(self, request, job_id=None):
         """Gets job executions and their associated job_type id, name, and version
 
@@ -853,7 +828,7 @@ class JobExecutionsView(ListAPIView):
 
         # TODO: remove this check when REST API v5 is removed
         if not job_id:
-            if request.version == 'v5':
+            if request.version != 'v6':
                 return self.list_v5(request)
             else:
                 raise Http404
@@ -899,15 +874,24 @@ class JobExecutionsView(ListAPIView):
                                                  job_type_categories, node_ids, order)
 
         page = self.paginate_queryset(job_exes)
-        serializer = OldJobExecutionSerializer(page, many=True)
+        serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
 
 class JobExecutionDetailsView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution detail"""
     queryset = JobExecution.objects.all()
-    serializer_class = JobExecutionDetailsSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = JobExecutionDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobExecutionDetailsSerializer
+        else:
+            return OldJobExecutionDetailsSerializer
+    
     def retrieve(self, request, job_id, exe_num=None):
         """Gets job execution and associated job_type id, name, and version
 
@@ -923,7 +907,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
         # TODO: remove this check when REST API v5 is removed
         if not exe_num:
-            if request.version == 'v5':
+            if request.version != 'v6':
                 job_exe_id = job_id
                 return self.retrieve_v5(request, job_exe_id)
             else:
@@ -953,7 +937,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         except JobExecution.DoesNotExist:
             raise Http404
 
-        serializer = OldJobExecutionDetailsSerializer(job_exe)
+        serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
 
 

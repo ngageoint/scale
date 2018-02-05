@@ -60,8 +60,17 @@ class QueueNewJobView(GenericAPIView):
     """This view is the endpoint for creating new jobs and putting them on the queue."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = JobDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobDetailsSerializer
+        else:
+            return OldJobDetailsSerializer
+    
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
 
@@ -84,14 +93,16 @@ class QueueNewJobView(GenericAPIView):
         except InvalidData as err:
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
-        # TODO: remove this check when REST API v5 is removed. 
-        if request.version == 'v5':
-            job_details = Job.objects.get_details_v5(job_id)
-            serializer = OldJobDetailsSerializer(job_details)
-        else:
-            job_details = Job.objects.get_details(job_id)
-            serializer = self.get_serializer(job_details)
+        try:
+            # TODO: remove this check when REST API v5 is removed. 
+            if request.version == 'v6':
+                job_details = Job.objects.get_details(job_id)
+            else:
+                job_details = Job.objects.get_details_v5(job_id)
+        except Job.DoesNotExist:
+            raise Http404
 
+        serializer = self.get_serializer(job_details)
         job_url = reverse('job_details_view', args=[job_id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
@@ -101,7 +112,16 @@ class QueueNewRecipeView(GenericAPIView):
     """
     parser_classes = (JSONParser,)
     queryset = Recipe.objects.all()
-    serializer_class = RecipeDetailsSerializer
+    
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class = RecipeDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeDetailsSerializer
+        else:
+            return OldRecipeDetailsSerializer
 
     def post(self, request):
         """Queue a recipe and returns the new job information in JSON form
@@ -125,22 +145,16 @@ class QueueNewRecipeView(GenericAPIView):
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
-        # TODO: remove this check when REST API v5 is removed
-        if request.version == 'v5': 
-            try:
-                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
-            except Recipe.DoesNotExist:
-                raise Http404
-            
-            serializer = OldRecipeDetailsSerializer(recipe)
-        else:
-            try:
+        try:
+            # TODO: remove this check when REST API v5 is removed
+            if request.version == 'v6':
                 recipe = Recipe.objects.get_details(handler.recipe.id)
-            except Recipe.DoesNotExist:
-                raise Http404
+            else:
+                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
             
-            serializer = self.get_serializer(recipe)
-        
+        serializer = self.get_serializer(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 

@@ -295,7 +295,16 @@ class RecipesView(ListAPIView):
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""
     queryset = Recipe.objects.all()
-    serializer_class = RecipeDetailsSerializer
+
+    # TODO: remove this class and un-comment the serializer declaration when REST API v5 is removed
+    # serializer_class = RecipeDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeDetailsSerializer
+        else:
+            return OldRecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
         """Retrieves the details for a recipe and returns it in JSON form
@@ -308,36 +317,16 @@ class RecipeDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO: remove check when REST API v5 is removed
-        if request.version == 'v5':
-            return self.retrieve_v5(request, recipe_id)
-        else:
-
-            try:
-                recipe = Recipe.objects.get_details(recipe_id)
-            except Recipe.DoesNotExist:
-                raise Http404
-
-            serializer = self.get_serializer(recipe)
-            return Response(serializer.data)
-
-    # TODO: remove this function when REST API v5 is removed
-    def retrieve_v5(self, request, recipe_id):
-        """Retrieves the details for a recipe and returns it in JSON form
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param recipe_id: The id of the recipe
-        :type recipe_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
         try:
-            recipe = Recipe.objects.get_details_v5(recipe_id)
+            # TODO: remove check when REST API v5 is removed
+            if request.version == 'v6':
+                recipe = Recipe.objects.get_details(recipe_id)
+            else:
+                recipe = Recipe.objects.get_details_v5(recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
 
-        serializer = OldRecipeDetailsSerializer(recipe)
+        serializer = self.get_serializer(recipe)
         return Response(serializer.data)
 
 
@@ -415,8 +404,17 @@ class RecipeInputFilesView(ListAPIView):
 class RecipeReprocessView(GenericAPIView):
     """This view is the endpoint for scheduling a reprocess of a recipe"""
     queryset = Recipe.objects.all()
-    serializer_class = RecipeDetailsSerializer
 
+    # TODO: remove this class and un-comment the serializer declaration when REST API v5 is removed
+    # serializer_class = RecipeDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeDetailsSerializer
+        else:
+            return OldRecipeDetailsSerializer
+    
     def post(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form
 
@@ -440,21 +438,16 @@ class RecipeReprocessView(GenericAPIView):
         except ReprocessError as err:
             raise BadParameter(unicode(err))
 
-        # TODO: remove this check when REST API v5 is removed
-        if request.version == 'v5':
-            try:
-                new_recipe = Recipe.objects.get_details_v5(handler.recipe.id)
-            except Recipe.DoesNotExist:
-                raise Http404
-
-            serializer = OldRecipeDetailsSerializer(new_recipe)
-        else:
-            try:
+        try:
+            # TODO: remove this check when REST API v5 is removed
+            if request.version == 'v6':
                 new_recipe = Recipe.objects.get_details(handler.recipe.id)
-            except Recipe.DoesNotExist:
-                raise Http404
+            else:
+                new_recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
 
-            serializer = self.get_serializer(new_recipe)
+        serializer = self.get_serializer(new_recipe)
 
         url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
