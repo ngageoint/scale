@@ -179,11 +179,12 @@ class QueueStatusView(ListAPIView):
         return self.get_paginated_response(serializer.data)
 
 
+# TODO: remove this when REST API v5 is removed
 class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = OldJobSerializer
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -192,6 +193,9 @@ class RequeueJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v6':
+            raise Http404
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -221,11 +225,6 @@ class RequeueJobsView(GenericAPIView):
             jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
         page = self.paginate_queryset(jobs)
-
-        # TODO: remove this version check when REST API v5 is removed
-        if request.version == 'v5':
-            serializer = OldJobSerializer(page, many=True)
-        else:
-            serializer = JobSerializer(page, many=True)
+        serializer = OldJobSerializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)

@@ -7,6 +7,7 @@ from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from django.utils import timezone
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from rest_framework.parsers import JSONParser
 from rest_framework.renderers import StaticHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -26,9 +27,11 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
                              OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer,
                              OldJobSerializer)
+from messaging.manager import CommandMessageManager
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
+from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializer
@@ -988,3 +991,36 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         else:
             rsp = Response(data=logs)
         return rsp
+
+
+class RequeueJobsView(GenericAPIView):
+    """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
+    parser_classes = (JSONParser,)
+    queryset = Job.objects.all()
+
+    def post(self, request):
+        """Submit command message to re-queue jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
+        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
+        priority = rest_util.parse_int(request, 'priority', required=False)
+
+        # Create and send message
+        msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
+                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                               priority=priority, status=job_status)
+        CommandMessageManager().send_messages([msg])
+
+        return Response(status=status.HTTP_202_ACCEPTED)

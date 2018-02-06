@@ -345,6 +345,16 @@ class TestRequeueJobsView(TestCase):
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 1', job=self.job_1)
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 2', job=self.job_2)
 
+    def test_v6(self):
+        """Tests calling the v6 requeue view which should return 404"""
+        json_data = {
+            'job_ids': [1000],
+        }
+
+        url = '/v6/queue/requeue-jobs/'
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
     def test_no_match(self):
         """Tests calling the requeue view where there are no matching jobs to schedule."""
         json_data = {

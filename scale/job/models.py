@@ -106,8 +106,78 @@ class JobManager(models.Manager):
         return job
 
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
-                    order=None):
+                    job_type_categories=None, batch_ids=None, error_categories=None, error_ids=None,
+                    include_superseded=False, order=None):
+        """Returns a query for job models that filters on the given fields
+
+        :param started: Query jobs updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query jobs updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query jobs with the a specific status.
+        :type statuses: list
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: list
+        :param job_type_ids: Query jobs of the type associated with the identifier.
+        :type job_type_ids: list
+        :param job_type_names: Query jobs of the type associated with the name.
+        :type job_type_names: list
+        :param job_type_categories: Query jobs of the type associated with the category.
+        :type job_type_categories: list
+        :param batch_ids: Query jobs associated with the given batch identifiers.
+        :type batch_ids: list
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: list
+        :param error_ids: Query jobs that failed due to these errors.
+        :type error_ids: list
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
+        :param order: A list of fields to control the sort order.
+        :type order: list
+        :returns: The job query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        # Fetch a list of jobs
+        jobs = self.all()
+
+        # Apply time range filtering
+        if started:
+            jobs = jobs.filter(last_modified__gte=started)
+        if ended:
+            jobs = jobs.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if statuses:
+            jobs = jobs.filter(status__in=statuses)
+        if job_ids:
+            jobs = jobs.filter(id__in=job_ids)
+        if job_type_ids:
+            jobs = jobs.filter(job_type_id__in=job_type_ids)
+        if job_type_names:
+            jobs = jobs.filter(job_type__name__in=job_type_names)
+        if job_type_categories:
+            jobs = jobs.filter(job_type__category__in=job_type_categories)
+        if batch_ids:
+            jobs = jobs.filter(batchjob__batch__in=batch_ids)
+        if error_categories:
+            jobs = jobs.filter(error__category__in=error_categories)
+        if error_ids:
+            jobs = jobs.filter(error_id__in=error_ids)
+        if not include_superseded:
+            jobs = jobs.filter(is_superseded=False)
+
+        # Apply sorting
+        if order:
+            jobs = jobs.order_by(*order)
+        else:
+            jobs = jobs.order_by('last_modified')
+
+        return jobs
+
+    def filter_jobs_related(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
+                            job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None,
+                            include_superseded=False, order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
         fields.
@@ -138,40 +208,25 @@ class JobManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        # Fetch a list of jobs
-        jobs = Job.objects.all().select_related('job_type', 'job_type_rev', 'event', 'error')
+        jobs = self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                error_categories=error_categories, include_superseded=include_superseded,
+                                order=order)
+        jobs = jobs.select_related('job_type', 'job_type_rev', 'event', 'error')
         jobs = jobs.defer('job_type__interface', 'job_type_rev__job_type', 'job_type_rev__interface')
-
-        # Apply time range filtering
-        if started:
-            jobs = jobs.filter(last_modified__gte=started)
-        if ended:
-            jobs = jobs.filter(last_modified__lte=ended)
-
-        # Apply additional filters
-        if statuses:
-            jobs = jobs.filter(status__in=statuses)
-        if job_ids:
-            jobs = jobs.filter(id__in=job_ids)
-        if job_type_ids:
-            jobs = jobs.filter(job_type_id__in=job_type_ids)
-        if job_type_names:
-            jobs = jobs.filter(job_type__name__in=job_type_names)
-        if job_type_categories:
-            jobs = jobs.filter(job_type__category__in=job_type_categories)
-        if batch_ids:
-            jobs = jobs.filter(batchjob__batch__in=batch_ids)
-        if error_categories:
-            jobs = jobs.filter(error__category__in=error_categories)
-        if not include_superseded:
-            jobs = jobs.filter(is_superseded=False)
-
-        # Apply sorting
-        if order:
-            jobs = jobs.order_by(*order)
-        else:
-            jobs = jobs.order_by('last_modified')
         return jobs
+
+    def get_basic_jobs(self, job_ids):
+        """Returns the basic job models for the given IDs with no related fields
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The job models
+        :rtype: list
+        """
+
+        return list(self.filter(id__in=job_ids))
 
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False,
@@ -204,11 +259,11 @@ class JobManager(models.Manager):
         :rtype: [:class:`job.models.Job`]
         """
 
-        return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                job_type_categories=job_type_categories, batch_ids=batch_ids,
-                                error_categories=error_categories, include_superseded=include_superseded,
-                                order=order)
+        return self.filter_jobs_related(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                        job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                        error_categories=error_categories, include_superseded=include_superseded,
+                                        order=order)
 
     def get_details(self, job_id):
         """Gets additional details for the given job model based on related model attributes.
@@ -398,7 +453,24 @@ class JobManager(models.Manager):
 
         return list(self.get_jobs_with_related(job_ids))
 
-    def increment_max_tries(self, jobs):
+    def increment_max_tries(self, job_ids, when):
+        """Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
+        setting of their associated job type.
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
+        if job_ids:
+            qry = 'UPDATE job j SET max_tries = j.num_exes + jt.max_tries, last_modified = %s FROM job_type jt'
+            qry += ' WHERE j.job_type_id = jt.id AND j.id IN %s'
+            with connection.cursor() as cursor:
+                cursor.execute(qry, [when, tuple(job_ids)])
+
+    # TODO: remove this when no longer used (should be when v5 is removed)
+    def increment_max_tries_old(self, jobs):
         """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
         caller must have obtained model locks on the job models.
 
@@ -1136,13 +1208,6 @@ class Job(models.Model):
         """
 
         return True if self.output else False
-
-    def increase_max_tries(self):
-        """Increase the total max_tries based on the current number of executions and job type max_tries.
-        Callers must save the model to persist the change.
-        """
-
-        self.max_tries = self.num_exes + self.job_type.max_tries
 
     def is_ready_for_children(self):
         """Indicates whether this job is ready for its children jobs to be queued

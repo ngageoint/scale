@@ -129,9 +129,9 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=1, queued=None,
-               started=None, ended=None, last_status_change=None, priority=100, output=None, superseded_job=None,
-               delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
+def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
+               queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None,
+               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -168,7 +168,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     job.input = input
     job.status = status
     job.num_exes = num_exes
-    job.max_tries = max_tries
+    job.max_tries = max_tries if max_tries is not None else job_type.max_tries
     job.queued = queued
     job.started = started
     job.ended = ended

@@ -657,16 +657,15 @@ place jobs and recipes on the queue for processing.
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 
+.. TODO: remove when the v5 REST API is removed
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Requeue Jobs**                                                                                                        |
 +=========================================================================================================================+
 | Increases the maximum failure allowance for existing jobs and puts them back on the queue.                              |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **DEPRECATED**                                                                                                          |
-|                This documentation describes the API **v5** version of the Requeue Jobs endpoint response. Starting with |
-|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*.   |
-|                A *resources* section will also be added to the response. Additionally, *disk_in_required* is renamed to |
-|                *input_file_size*, *data* is renamed to *input*, and *results* is renamed to *output*.                   |
+|                The v5 version of this API has been deprecated. Please transition to using the                           |
+|                :ref:`new version <rest_job_requeue>` of this API.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /queue/requeue-jobs/                                                                                           |
 +--------------------+----------------------------------------------------------------------------------------------------+
