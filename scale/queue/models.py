@@ -460,6 +460,7 @@ class QueueManager(models.Manager):
 
         return self.queue_new_recipe(recipe_type, data, event)
 
+    # TODO: remove this (and old functions used here) when REST API v5 is removed
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
