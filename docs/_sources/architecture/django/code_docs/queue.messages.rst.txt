@@ -12,6 +12,22 @@ queue\.messages\.queued\_jobs module
     :undoc-members:
     :show-inheritance:
 
+queue\.messages\.requeue\_jobs module
+-------------------------------------
+
+.. automodule:: queue.messages.requeue_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.messages\.requeue\_jobs\_bulk module
+-------------------------------------------
+
+.. automodule:: queue.messages.requeue_jobs_bulk
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

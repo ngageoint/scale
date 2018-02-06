@@ -310,17 +310,170 @@
 
 <dl class="function">
 <dt id="queue.messages.queued_jobs.create_queued_jobs_messages">
-<code class="descclassname">queue.messages.queued_jobs.</code><code class="descname">create_queued_jobs_messages</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.queued_jobs.create_queued_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.messages.queued_jobs.</code><code class="descname">create_queued_jobs_messages</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.queued_jobs.create_queued_jobs_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to queue the given jobs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to queue</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to queue (QueuedJob tuple)</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; Optional priority to set on the queued jobs</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.messages.requeue_jobs">
+<span id="queue-messages-requeue-jobs-module"></span><h2>queue.messages.requeue_jobs module<a class="headerlink" href="#module-queue.messages.requeue_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that re-queues job models</p>
+<dl class="class">
+<dt id="queue.messages.requeue_jobs.RequeueJobs">
+<em class="property">class </em><code class="descclassname">queue.messages.requeue_jobs.</code><code class="descname">RequeueJobs</code><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that re-queues job models</p>
+<dl class="method">
+<dt id="queue.messages.requeue_jobs.RequeueJobs.add_job">
+<code class="descname">add_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>exe_num</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs.add_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</li>
+<li><strong>exe_num</strong> (<em>int</em>) &#8211; The job&#8217;s execution number</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.messages.requeue_jobs.RequeueJobs.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.messages.requeue_jobs.RequeueJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="queue.messages.requeue_jobs.RequeueJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.messages.requeue_jobs.RequeueJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.RequeueJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="queue.messages.requeue_jobs.create_requeue_jobs_messages">
+<code class="descclassname">queue.messages.requeue_jobs.</code><code class="descname">create_requeue_jobs_messages</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs.create_requeue_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to requeue the given jobs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to requeue</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; Optional priority to set on the re-queued jobs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.messages.requeue_jobs_bulk">
+<span id="queue-messages-requeue-jobs-bulk-module"></span><h2>queue.messages.requeue_jobs_bulk module<a class="headerlink" href="#module-queue.messages.requeue_jobs_bulk" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that performs a bulk re-queue operation</p>
+<dl class="class">
+<dt id="queue.messages.requeue_jobs_bulk.RequeueJobsBulk">
+<em class="property">class </em><code class="descclassname">queue.messages.requeue_jobs_bulk.</code><code class="descname">RequeueJobsBulk</code><a class="headerlink" href="#queue.messages.requeue_jobs_bulk.RequeueJobsBulk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that performs a bulk re-queue operation</p>
+<dl class="method">
+<dt id="queue.messages.requeue_jobs_bulk.RequeueJobsBulk.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs_bulk.RequeueJobsBulk.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="queue.messages.requeue_jobs_bulk.RequeueJobsBulk.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs_bulk.RequeueJobsBulk.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.messages.requeue_jobs_bulk.RequeueJobsBulk.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs_bulk.RequeueJobsBulk.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="queue.messages.requeue_jobs_bulk.create_requeue_jobs_bulk_message">
+<code class="descclassname">queue.messages.requeue_jobs_bulk.</code><code class="descname">create_requeue_jobs_bulk_message</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>error_categories=None</em>, <em>error_ids=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>priority=None</em>, <em>status=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.requeue_jobs_bulk.create_requeue_jobs_bulk_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to perform a bulk job re-queue operation. The parameters are applied as filters to the jobs
+affected by the re-queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The start time of the jobs</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The end time of the jobs</li>
+<li><strong>error_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of error categories</li>
+<li><strong>error_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of error IDs</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job type IDs</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; A new priority for the re-queued jobs</li>
+<li><strong>status</strong> (<em>str</em>) &#8211; The job status</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#queue.messages.requeue_jobs_bulk.RequeueJobsBulk" title="queue.messages.requeue_jobs_bulk.RequeueJobsBulk"><code class="xref py py-class docutils literal"><span class="pre">queue.messages.requeue_jobs_bulk.RequeueJobsBulk</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>

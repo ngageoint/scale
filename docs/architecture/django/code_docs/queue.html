@@ -230,6 +230,8 @@
 <li class="toctree-l1"><a class="reference internal" href="queue.messages.html">queue.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="queue.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages.requeue_jobs">queue.messages.requeue_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages.requeue_jobs_bulk">queue.messages.requeue_jobs_bulk module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.messages.html#module-queue.messages">Module contents</a></li>
 </ul>
 </li>
@@ -259,6 +261,8 @@
 <li class="toctree-l3"><a class="reference internal" href="queue.test.messages.html">queue.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages.test_queued_jobs">queue.test.messages.test_queued_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages.test_requeue_jobs">queue.test.messages.test_requeue_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages.test_requeue_jobs_bulk">queue.test.messages.test_requeue_jobs_bulk module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="queue.test.messages.html#module-queue.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -1331,7 +1335,7 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">OldJobSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

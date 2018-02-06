@@ -532,18 +532,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_models.TestJob.test_increase_max_tries_canceled">
-<code class="descname">test_increase_max_tries_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests increasing the maximum number of tries for a job instance that was canceled prematurely.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJob.test_increase_max_tries_failed">
-<code class="descname">test_increase_max_tries_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_increase_max_tries_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests increasing the maximum number of tries for a job instance that ran out of tries due to failures.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.test.test_models.TestJob.test_is_ready_to_requeue">
 <code class="descname">test_is_ready_to_requeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_requeue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking the job status for requeue eligibility.</p>
@@ -1802,6 +1790,23 @@
 
 </dd></dl>
 
+<dl class="class">
+<dt id="job.test.test_views.TestRequeueJobsView">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestRequeueJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestRequeueJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.test_views.TestRequeueJobsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestRequeueJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestRequeueJobsView.test_requeue">
+<code class="descname">test_requeue</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestRequeueJobsView.test_requeue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view successfully</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.test.utils">
 <span id="job-test-utils-module"></span><h2>job.test.utils module<a class="headerlink" href="#module-job.test.utils" title="Permalink to this headline">¶</a></h2>
@@ -1914,7 +1919,7 @@
 
 <dl class="function">
 <dt id="job.test.utils.create_job">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>input=None</em>, <em>num_exes=1</em>, <em>max_tries=1</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>output=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em>, <em>is_superseded=False</em>, <em>superseded=None</em>, <em>input_file_size=10.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>input=None</em>, <em>num_exes=1</em>, <em>max_tries=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>output=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em>, <em>is_superseded=False</em>, <em>superseded=None</em>, <em>input_file_size=10.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -1207,13 +1207,6 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.models.Job.increase_max_tries">
-<code class="descname">increase_max_tries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.increase_max_tries" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increase the total max_tries based on the current number of executions and job type max_tries.
-Callers must save the model to persist the change.</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="job.models.Job.ingest_set">
 <code class="descname">ingest_set</code><a class="headerlink" href="#job.models.Job.ingest_set" title="Permalink to this definition">¶</a></dt>
@@ -3231,7 +3224,41 @@ returned job model will have not yet been saved in the database.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.filter_jobs">
-<code class="descname">filter_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>error_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for job models that filters on the given fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
+<li><strong>statuses</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs with the a specific status.</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs associated with the given batch identifiers.</li>
+<li><strong>error_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>error_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query jobs that failed due to these errors.</li>
+<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The job query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.filter_jobs_related">
+<code class="descname">filter_jobs_related</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs_related" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for job models that filters on the given fields. The returned query includes the related
 job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
 fields.</p>
@@ -3259,6 +3286,24 @@ fields.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.get_basic_jobs">
+<code class="descname">get_basic_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_basic_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the basic job models for the given IDs with no related fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job models</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>
@@ -3441,7 +3486,26 @@ transaction.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.increment_max_tries">
-<code class="descname">increment_max_tries</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.increment_max_tries" title="Permalink to this definition">¶</a></dt>
+<code class="descname">increment_max_tries</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.increment_max_tries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
+setting of their associated job type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.increment_max_tries_old">
+<code class="descname">increment_max_tries_old</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.increment_max_tries_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increments the max_tries of the given jobs to be one greater than their current number of executions. The
 caller must have obtained model locks on the job models.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -6347,6 +6411,39 @@ example: input_1</p>
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobsWithExecutionView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobWithExecutionSerializer</span></code></p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.views.RequeueJobsView">
+<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">RequeueJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.RequeueJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for re-queuing jobs that have failed or been canceled</p>
+<dl class="attribute">
+<dt id="job.views.RequeueJobsView.parser_classes">
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#job.views.RequeueJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.views.RequeueJobsView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.RequeueJobsView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit command message to re-queue jobs that fit the given filter criteria</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.RequeueJobsView.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#job.views.RequeueJobsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

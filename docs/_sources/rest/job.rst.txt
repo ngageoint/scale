@@ -246,8 +246,8 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | event              | JSON Object       | The trigger event that is associated with the count.                           |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .node               | JSON Object       | The node that the job is/was running on.                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .node              | JSON Object       | The node that the job is/was running on.                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | error              | JSON Object       | The error that is associated with the count.                                   |
 |                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
@@ -1462,3 +1462,56 @@ These services provide access to information about "all", "currently running" an
 |      }                                                                                                                    |
 |  }                                                                                                                        |
 +---------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_job_requeue:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Requeue Jobs**                                                                                                        |
++=========================================================================================================================+
+| Re-queues the FAILED/CANCELED jobs that fit the given filter criteria. The re-queuing will be done asynchronously, so   |
+| the response will just indicate that the re-queue request has been accepted.                                            |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /jobs/requeue/                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_categories   | Array[String]     | Optional | Re-queue only jobs that failed with these error categories          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_ids          | Array[String]     | Optional | Re-queue only jobs that failed with these errors                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_ids            | Array[Integer]    | Optional | Re-queue only jobs with these IDs                                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| status             | String            | Optional | Re-queue only jobs with this status                                 |
+|                    |                   |          | Choices: [CANCELED, FAILED]                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_ids       | Array[Integer]    | Optional | Re-queue only jobs with these job types                             |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| priority           | Integer           | Optional | Change the priority of matching jobs when adding them to the queue. |
+|                    |                   |          | Defaults to jobs current priority, lower number is higher priority. |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|         "started": "2016-01-01T00:00:00Z",                                                                              |
+|         "ended": "2016-01-02T00:00:00Z",                                                                                |
+|         "status": "FAILED",                                                                                             |
+|         "job_type_ids": [1, 2, 3],                                                                                      |
+|         "error_categories": ["SYSTEM"]                                                                                  |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 202 Accepted                                                                                       |
++--------------------+----------------------------------------------------------------------------------------------------+
+| No response body                                                                                                        |
++-------------------------------------------------------------------------------------------------------------------------+
