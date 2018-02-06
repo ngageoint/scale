@@ -364,18 +364,26 @@ class JobData(object):
 
         return input_values
 
-    def inject_inputs_into_interface(self, interface):
+    def extend_interface_with_inputs(self, interface, job_files):
         """Add a value property to both files and json objects within Seed Manifest
 
         :param interface: Seed manifest which should have concrete inputs injected
         :type interface: :class:`job.seed.manifest.SeedManifest`
+        :param job_files: A list of files that are referenced by the job data.
+        :type job_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of Seed Manifest inputs key mapped to the corresponding data value.
+        :rtype: dict
         """
 
         files = []
         json = []
+        file_map = {job_file.id: job_file for job_file in job_files}
         inputs = interface.get_inputs()
         for x in inputs['files']:
-            x['value'] = self._input_files[x['name']].value
+            # Use internal JobInputFiles data structure to get Scale File IDs
+            # Follow that up with a list comprehension over potentially multiple IDs to get 
+            # final list of ScaleFile objects
+            x['value'] = [file_map[x] for x in self._input_files[x['name']].value]
             files.append(x)
         for x in inputs['json']:
             x['value'] = self._input_json[x['name']].value
