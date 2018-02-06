@@ -55,7 +55,7 @@ def create_requeue_jobs_bulk_message(started=None, ended=None, error_categories=
 
 
 class RequeueJobsBulk(CommandMessage):
-    """Command message that sets performs a bulk re-queue operation
+    """Command message that performs a bulk re-queue operation
     """
 
     def __init__(self):
