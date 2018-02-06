@@ -32,11 +32,12 @@
             this.ended_formatted = moment.utc(ended).format(scaleConfig.dateFormats.day_second_utc);
             this.last_status_change = last_status_change;
             this.last_modified = last_modified;
-            this.data = {
-                input_data: JobDetailInputData.transformer(data.input_data),
-                version: data.version,
-                output_data: JobDetailOutputData.transformer(data.output_data)
-            };
+            this.data = data ? {
+                    input_data: JobDetailInputData.transformer(data.input_data),
+                    version: data.version,
+                    output_data: JobDetailOutputData.transformer(data.output_data)
+                } :
+                null;
             this.results = results ? {
                     output_data: JobDetailOutputData.transformer(results.output_data),
                     version: results.version
