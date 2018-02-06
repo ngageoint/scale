@@ -3209,7 +3209,7 @@ class TestRequeueJobsView(TestCase):
             'priority': priority,
         }
 
-        url = rest_util.get_url('/jobs/requeue-jobs/')
+        url = rest_util.get_url('/jobs/requeue/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
