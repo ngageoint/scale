@@ -352,7 +352,7 @@ class OldJobDetailsSerializer(OldJobSerializer):
     job_exes = OldJobExecutionBaseSerializer(many=True)
 
     def to_representation(self, obj):
-        result = super(JobDetailsSerializer, self).to_representation(obj)
+        result = super(OldJobDetailsSerializer, self).to_representation(obj)
 
         inputs = None
         outputs = None

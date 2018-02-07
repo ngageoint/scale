@@ -1140,10 +1140,10 @@ class Job(models.Model):
 
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in self.data and '2.0' == self.data['version']:
-            job_data = JobData(self.data)
+        if 'version' in self.input and '2.0' == self.input['version']:
+            job_data = JobData(self.input)
         else:
-            job_data = JobData_1_0(self.data)
+            job_data = JobData_1_0(self.input)
         return job_data
 
     def get_job_interface(self):
@@ -2787,8 +2787,6 @@ class JobType(models.Model):
     error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
 
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-
-    configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
