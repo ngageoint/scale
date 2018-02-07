@@ -345,27 +345,15 @@ class OldJobDetailsSerializer(OldJobSerializer):
     # Use a localized import to make higher level application dependencies optional
     try:
         from recipe.serializers import RecipeSerializer
+
         recipes = RecipeSerializer(many=True)
     except:
         recipes = []
 
     job_exes = OldJobExecutionBaseSerializer(many=True)
 
-    def to_representation(self, obj):
-        result = super(OldJobDetailsSerializer, self).to_representation(obj)
-
-        inputs = None
-        outputs = None
-        interface_dict = obj['job_type'].interface.get_dict()
-        if JobInterfaceSunset.is_seed(interface_dict):
-            result['inputs'] = JobDetailsSeedInputsSerializer(many=True)
-            result['outputs'] = JobDetailsSeedOutputsSerializer(many=True)
-        # TODO: Deprecated in v6
-        else:
-            result['inputs'] = JobDetailsInputSerializer(many=True)
-            result['outputs'] = JobDetailsOutputSerializer(many=True)
-
-        return result
+    inputs = JobDetailsInputSerializer(many=True)
+    outputs = JobDetailsOutputSerializer(many=True)
 
 
 class JobDetailsSerializer(JobSerializer):
