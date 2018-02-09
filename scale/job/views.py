@@ -997,6 +997,7 @@ class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
+    serializer_class = JobSerializer
 
     def post(self, request):
         """Submit command message to re-queue jobs that fit the given filter criteria
