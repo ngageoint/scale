@@ -14,22 +14,36 @@ class RecipeHandler(object):
 
     BLOCKING_STATUSES = ['BLOCKED', 'FAILED', 'CANCELED']
 
-    def __init__(self, recipe, recipe_jobs):
+    def __init__(self, recipe, recipe_jobs, superseded_jobs):
         """Constructor
 
         :param recipe: The recipe model with related recipe_type_rev model
         :type recipe: :class:`recipe.models.Recipe`
         :param recipe_jobs: The list of recipe_job models with related job and job_type_rev models
         :type recipe_jobs: list
+        :param superseded_jobs: The list of recipe_job models from the superseded recipe
+        :type superseded_jobs: list
         """
 
         self.recipe = recipe
-        self.recipe_jobs = recipe_jobs
+        self.recipe_jobs = []
 
         self._data = recipe.get_recipe_data()
         self._graph = recipe.get_recipe_definition().get_graph()
         self._jobs_by_id = {}  # {Job ID: Recipe Job}
         self._jobs_by_name = {}  # {Job Name: Recipe Job}
+        self._superseded_jobs = superseded_jobs
+
+        self.add_jobs(recipe_jobs)
+
+    def add_jobs(self, recipe_jobs):
+        """Adds the given jobs to the recipe handler
+
+        :param recipe_jobs: The list of recipe_job models with related job and job_type_rev models
+        :type recipe_jobs: list
+        """
+
+        self.recipe_jobs.extend(recipe_jobs)
 
         for recipe_job in recipe_jobs:
             self._jobs_by_id[recipe_job.job_id] = recipe_job
@@ -169,6 +183,16 @@ class RecipeHandler(object):
                 jobs_to_queue.append(job)
 
         return jobs_to_queue
+
+    # TODO: implement
+    def get_jobs_to_create(self):
+        """Returns job models that need to be created for this recipe
+
+        :returns: The list of jobs that should be updated to BLOCKED
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        pass
 
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status

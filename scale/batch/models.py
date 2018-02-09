@@ -367,6 +367,7 @@ class BatchManager(models.Manager):
         # Create a batch job for each new recipe job
         batch_jobs = []
         now = timezone.now()
+        # TODO: remove handler.recipe_jobs
         for new_recipe_job in handler.recipe_jobs:
             if new_recipe_job.is_original:
                 batch_job = BatchJob()
@@ -467,6 +468,8 @@ class Batch(models.Model):
         db_table = 'batch'
 
 
+# TODO: when removing this and BatchRecipe, remove them from the databse update and make a note in the next release that
+# Scale needs to have the databse update run before upgrading to this new release
 class BatchJob(models.Model):
     """Links a new job and a batch together and associates it to the previous job being superseded
 

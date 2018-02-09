@@ -136,7 +136,7 @@ class RecipeManager(models.Manager):
 
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(batch_id, recipe, event, when, delta, superseded_jobs, priority)
-        handler = RecipeHandler(recipe, recipe_jobs)
+        handler = RecipeHandler(recipe, recipe_jobs, [])
         # Block any new jobs that need to be blocked
         jobs_to_blocked = handler.get_blocked_jobs()
         if jobs_to_blocked:
@@ -287,15 +287,20 @@ class RecipeManager(models.Manager):
         """
 
         recipe_dict = {recipe.id: recipe for recipe in recipes}
+        superseded_recipe_ids = [recipe.superseded_recipe_id for recipe in recipes]
         handlers = []
 
         recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
+        superseded_jobs_dict = {}
+        if superseded_recipe_ids:
+            superseded_jobs_dict = RecipeJob.objects.get_recipe_jobs(superseded_recipe_ids)
         for recipe_id in recipe_dict.keys():
             if recipe_id in recipe_jobs_dict:
                 recipe_jobs = recipe_jobs_dict[recipe_id]
                 if recipe_jobs:
                     recipe = recipe_dict[recipe_id]
-                    handler = RecipeHandler(recipe, recipe_jobs)
+                    superseded_jobs = superseded_jobs_dict[recipe_id] if recipe_id in superseded_jobs_dict else []
+                    handler = RecipeHandler(recipe, recipe_jobs, superseded_jobs)
                     handlers.append(handler)
 
         return handlers
@@ -554,7 +559,7 @@ class RecipeManager(models.Manager):
                 recipe_jobs = recipe_jobs_dict[recipe_id]
                 if recipe_jobs:
                     recipe = recipe_jobs[0].recipe
-                    handler = RecipeHandler(recipe, recipe_jobs)
+                    handler = RecipeHandler(recipe, recipe_jobs, [])
                     handlers[recipe.id] = handler
         return handlers
 
