@@ -193,7 +193,7 @@ class RecipeManager(models.Manager):
                     superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
                     jobs_to_supersede.append(superseded_job)
 
-            job = Job.objects.create_job(job_type, event, root_recipe_id=recipe.root_superseded_recipe_id,
+            job = Job.objects.create_job(job_type, event.id, root_recipe_id=recipe.root_superseded_recipe_id,
                                          recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
             if priority is not None:
                 job.priority = priority
@@ -240,6 +240,19 @@ class RecipeManager(models.Manager):
             recipe_ids.add(recipe_job.recipe_id)
 
         return list(recipe_ids)
+
+    def get_locked_recipes(self, recipe_ids):
+        """Locks and returns the recipe models for the given IDs with no related fields. Caller must be within an atomic
+        transaction.
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: The recipe models
+        :rtype: list
+        """
+
+        # Recipe models are always locked in order of ascending ID to prevent deadlocks
+        return list(self.select_for_update().filter(id__in=recipe_ids).order_by('id').iterator())
 
     def get_recipe_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
@@ -291,12 +304,10 @@ class RecipeManager(models.Manager):
 
         recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
         for recipe_id in recipe_dict.keys():
-            if recipe_id in recipe_jobs_dict:
-                recipe_jobs = recipe_jobs_dict[recipe_id]
-                if recipe_jobs:
-                    recipe = recipe_dict[recipe_id]
-                    handler = RecipeHandler(recipe, recipe_jobs)
-                    handlers.append(handler)
+            recipe = recipe_dict[recipe_id]
+            recipe_jobs = recipe_jobs_dict[recipe_id] if recipe_id in recipe_jobs_dict else []
+            handler = RecipeHandler(recipe, recipe_jobs)
+            handlers.append(handler)
 
         return handlers
 
@@ -405,7 +416,7 @@ class RecipeManager(models.Manager):
         :rtype: list
         """
 
-        return Recipe.objects.select_related('recipe_type_rev').filter(id__in=recipe_ids)
+        return self.select_related('recipe_type_rev', 'batch').defer('batch__definition').filter(id__in=recipe_ids)
 
     def get_details(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.

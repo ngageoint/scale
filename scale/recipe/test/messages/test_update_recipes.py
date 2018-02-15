@@ -8,6 +8,7 @@ from job.configuration.results.job_results import JobResults
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.messages.update_recipes import UpdateRecipes
+from recipe.models import RecipeJob
 from recipe.test import utils as recipe_test_utils
 from storage.test import utils as storage_test_utils
 
@@ -332,3 +333,119 @@ class TestUpdateRecipes(TestCase):
         self.assertTrue(blocked_jobs_msg)
         self.assertTrue(pending_jobs_msg)
         self.assertTrue(process_job_inputs_msg)
+
+    def test_execute_create_jobs(self):
+        """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
+
+        # Create recipes
+        job_type_1 = job_test_utils.create_job_type()
+        job_type_2 = job_test_utils.create_job_type()
+        definition_1 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_1',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                },
+            }, {
+                'name': 'job_2',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'job_1',
+                }],
+            }]
+        }
+        recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_1)
+
+        job_type_3 = job_test_utils.create_job_type()
+        job_type_4 = job_test_utils.create_job_type()
+        definition_2 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_a',
+                'job_type': {
+                    'name': job_type_3.name,
+                    'version': job_type_3.version,
+                },
+            }, {
+                'name': 'job_b',
+                'job_type': {
+                    'name': job_type_4.name,
+                    'version': job_type_4.version,
+                },
+                'dependencies': [{
+                    'name': 'job_a',
+                }],
+            }]
+        }
+        recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2)
+
+        # Add recipes to message
+        message = UpdateRecipes()
+        if message.can_fit_more():
+            message.add_recipe(recipe_1.id)
+        if message.can_fit_more():
+            message.add_recipe(recipe_2.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Make sure jobs get created and that "top" recipe jobs (job_1 and job_a) have input populated
+        rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
+        recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
+        self.assertEqual(len(recipe_jobs), 4)
+        self.assertEqual(recipe_jobs[0].recipe_id, recipe_1.id)
+        self.assertEqual(recipe_jobs[0].job_name, 'job_1')
+        self.assertEqual(recipe_jobs[0].job.job_type_id, job_type_1.id)
+        self.assertTrue(recipe_jobs[0].is_original)
+        self.assertTrue(recipe_jobs[0].job.has_input())
+        self.assertEqual(recipe_jobs[1].recipe_id, recipe_1.id)
+        self.assertEqual(recipe_jobs[1].job_name, 'job_2')
+        self.assertEqual(recipe_jobs[1].job.job_type_id, job_type_2.id)
+        self.assertTrue(recipe_jobs[1].is_original)
+        self.assertFalse(recipe_jobs[1].job.has_input())
+        self.assertEqual(recipe_jobs[2].recipe_id, recipe_2.id)
+        self.assertEqual(recipe_jobs[2].job_name, 'job_a')
+        self.assertEqual(recipe_jobs[2].job.job_type_id, job_type_3.id)
+        self.assertTrue(recipe_jobs[2].is_original)
+        self.assertTrue(recipe_jobs[2].job.has_input())
+        self.assertEqual(recipe_jobs[3].recipe_id, recipe_2.id)
+        self.assertEqual(recipe_jobs[3].job_name, 'job_b')
+        self.assertEqual(recipe_jobs[3].job.job_type_id, job_type_4.id)
+        self.assertTrue(recipe_jobs[3].is_original)
+        self.assertFalse(recipe_jobs[3].job.has_input())
+
+        jobs = Job.objects.filter(recipe_id__in=[recipe_1.id, recipe_2.id])
+        self.assertEqual(len(jobs), 4)
+
+        # Should have one message for processing inputs for job_1 and job_a
+        self.assertEqual(len(message.new_messages), 1)
+        msg = message.new_messages[0]
+        self.assertEqual(msg.type, 'process_job_input')
+        self.assertSetEqual(set(msg._job_ids), {recipe_jobs[0].job_id, recipe_jobs[2].job_id})
+
+        # Test executing message again
+        message_json_dict = message.to_json()
+        message = UpdateRecipes.from_json(message_json_dict)
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Make sure no additional jobs are created
+        rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
+        recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
+        self.assertEqual(len(recipe_jobs), 4)
+
+        # Make sure the same message is returned
+        self.assertEqual(len(message.new_messages), 1)
+        msg = message.new_messages[0]
+        self.assertEqual(msg.type, 'process_job_input')
+        self.assertSetEqual(set(msg._job_ids), {recipe_jobs[0].job_id, recipe_jobs[2].job_id})

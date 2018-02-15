@@ -55,7 +55,7 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job(self, job_type, event, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
+    def create_job(self, job_type, event_id, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
                    delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
         job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
@@ -63,8 +63,8 @@ class JobManager(models.Manager):
 
         :param job_type: The type of the job to create
         :type job_type: :class:`job.models.JobType`
-        :param event: The event that triggered the creation of this job
-        :type event: :class:`trigger.models.TriggerEvent`
+        :param event_id: The event ID that triggered the creation of this job
+        :type event_id: int
         :param root_recipe_id: The ID of the root recipe that contains this job
         :type root_recipe_id: int
         :param recipe_id: The ID of the original recipe that created this job
@@ -78,15 +78,14 @@ class JobManager(models.Manager):
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
+
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
-        if event is None:
-            raise Exception('Event that triggered job creation is required')
 
         job = Job()
         job.job_type = job_type
         job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.id, job_type.revision_num)
-        job.event = event
+        job.event_id = event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
         job.batch_id = batch_id

@@ -384,7 +384,7 @@ class TestJobManager(TransactionTestCase):
         old_job = job_test_utils.create_job()
 
         event = trigger_test_utils.create_trigger_event()
-        new_job = Job.objects.create_job(old_job.job_type, event, superseded_job=old_job, delete_superseded=False)
+        new_job = Job.objects.create_job(old_job.job_type, event.id, superseded_job=old_job, delete_superseded=False)
         new_job.save()
         when = timezone.now()
         Job.objects.supersede_jobs([old_job], when)

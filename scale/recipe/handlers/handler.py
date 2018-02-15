@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from job.configuration.data.exceptions import InvalidData
+from job.models import Job
 
 
 logger = logging.getLogger(__name__)
@@ -181,7 +182,6 @@ class RecipeHandler(object):
 
         return jobs_to_queue
 
-    # TODO: implement
     def get_jobs_to_create(self):
         """Returns a dict where recipe job_name maps to a list of job models that need to be created
 
@@ -189,34 +189,23 @@ class RecipeHandler(object):
         :rtype: dict
         """
 
-        # TODO: start with this, need to think about passing in priority
-        # The results from this should lead to saved job models and then saved recipe_job models
-        for job_tuple in recipe.get_recipe_definition().get_jobs_to_create():
+        job_models = {}
+
+        event_id = self.recipe.event_id
+        root_recipe_id = self.recipe.root_superseded_recipe_id
+        batch_id = self.recipe.batch_id
+        for job_tuple in self.recipe.get_recipe_definition().get_jobs_to_create():
             job_name = job_tuple[0]
             job_type = job_tuple[1]
-            superseded_job = None
+            if job_name in self._jobs_by_name:
+                continue  # Skip jobs that are already created
+            job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
+                                         batch_id=batch_id)
+            if self.recipe.batch and self.recipe.batch.priority is not None:
+                job.priority = self.recipe.batch.priority
+            job_models[job_name] = [job]
 
-            if delta:  # Look at changes from recipe we are superseding
-                if not delta.can_be_reprocessed:
-                    raise ReprocessError('Cannot reprocess recipe')
-                if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
-                    copied_job = superseded_jobs[delta.get_identical_nodes()[job_name]]
-                    recipe_job = RecipeJob()
-                    recipe_job.job = copied_job
-                    recipe_job.job_name = job_name
-                    recipe_job.recipe = recipe
-                    recipe_job.is_original = False
-                    recipe_jobs_to_create.append(recipe_job)
-                    continue  # Don't create a new job, just copy old one
-                elif job_name in delta.get_changed_nodes():  # Changed jobs should be superseded
-                    superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
-                    jobs_to_supersede.append(superseded_job)
-
-            job = Job.objects.create_job(job_type, event, root_recipe_id=recipe.root_superseded_recipe_id,
-                                         recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
-            if priority is not None:
-                job.priority = priority
-            job.save()
+        return job_models
 
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status

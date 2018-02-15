@@ -163,7 +163,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     if is_superseded and not superseded:
         superseded = timezone.now()
 
-    job = Job.objects.create_job(job_type, event, superseded_job=superseded_job, delete_superseded=delete_superseded)
+    job = Job.objects.create_job(job_type, event.id, superseded_job=superseded_job, delete_superseded=delete_superseded)
     job.priority = priority
     job.input = input
     job.status = status
