@@ -34,6 +34,7 @@ class JobConfig(AppConfig):
         from job.messages.process_job_inputs import ProcessJobInputs
         from job.messages.publish_job import PublishJob
         from job.messages.running_jobs import RunningJobs
+        from job.messages.unpublish_jobs import UnpublishJobs
         from messaging.messages.factory import add_message_type
 
         add_message_type(BlockedJobs)
@@ -44,3 +45,4 @@ class JobConfig(AppConfig):
         add_message_type(ProcessJobInputs)
         add_message_type(PublishJob)
         add_message_type(RunningJobs)
+        add_message_type(UnpublishJobs)

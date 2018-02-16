@@ -480,19 +480,17 @@ class ProductFileManager(models.GeoManager):
         self.filter(job_exe_id=job_exe_id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
 
-    def unpublish_products(self, root_job_id, when):
-        """Unpublishes all of the published products created by the superseded jobs with the given root ID
+    def unpublish_products(self, job_ids, when):
+        """Unpublishes all of the published products created by the given job IDs
 
-        :param root_job_id: The root superseded job ID
-        :type root_job_id: int
+        :param job_ids: The job IDs
+        :type job_ids: list
         :param when: When the products were unpublished
         :type when: :class:`datetime.datetime`
         """
 
         last_modified = timezone.now()
-        query = self.filter(job__root_superseded_job_id=root_job_id, is_published=True)
-        query.update(is_published=False, unpublished=when, last_modified=last_modified)
-        query = self.filter(job_id=root_job_id, is_published=True)
+        query = self.filter(job_id__in=job_ids, is_published=True)
         query.update(is_published=False, unpublished=when, last_modified=last_modified)
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
