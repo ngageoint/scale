@@ -719,8 +719,31 @@ class JobManager(models.Manager):
         self.filter(id__in=job_ids).update(status='BLOCKED', last_status_change=when, last_modified=timezone.now())
         return job_ids
 
+    def update_jobs_to_canceled(self, jobs, when):
+        """Updates the given job models to the CANCELED status and returns the IDs of the models that were successfully
+        set to CANCELED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being CANCELED will be ignored.
+
+        :param jobs: The job models to set to CANCELED
+        :type jobs: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to CANCELED
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_canceled():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='CANCELED', error=None, node=None, last_status_change=when,
+                                           last_modified=timezone.now())
+        return job_ids
+
+    # TODO: remove once REST API v5 is removed
     @transaction.atomic
-    def update_jobs_to_canceled(self, job_ids, when):
+    def update_jobs_to_canceled_old(self, job_ids, when):
         """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
         updates occur in an atomic transaction.
 
@@ -732,7 +755,7 @@ class JobManager(models.Manager):
 
         jobs_to_update = []
         for locked_job in self.get_locked_jobs(job_ids):
-            if locked_job.can_be_canceled:
+            if locked_job.status not in ['COMPLETED', 'CANCELED']:
                 jobs_to_update.append(locked_job.id)
 
         if jobs_to_update:
@@ -1070,6 +1093,15 @@ class Job(models.Model):
 
         return self.status != 'BLOCKED' and not self.has_been_queued()
 
+    def can_be_canceled(self):
+        """Indicates whether this job can be set to CANCELED status
+
+        :returns: True if the job can be set to CANCELED status, false otherwise
+        :rtype: bool
+        """
+
+        return self.status not in ['CANCELED', 'COMPLETED']
+
     def can_be_completed(self):
         """Indicates whether this job can be set to COMPLETED status
 
@@ -1239,16 +1271,7 @@ class Job(models.Model):
 
         Job.objects.filter(id=self.id).update(input=self.input, last_modified=when)
 
-    def _can_be_canceled(self):
-        """Indicates whether this job can be canceled.
-
-        :returns: True if the job status allows the job to be canceled, false otherwise.
-        :rtype: bool
-        """
-
-        return self.status not in ['COMPLETED', 'CANCELED']
-    can_be_canceled = property(_can_be_canceled)
-
+    # TODO: remove when REST API v5 is removed
     def _is_ready_to_requeue(self):
         """Indicates whether this job can be added to the queue after being attempted previously.
 

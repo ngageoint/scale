@@ -215,6 +215,15 @@ class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
 
+    def cancel_queued_jobs(self, job_ids):
+        """Marks the queued job executions for the given jobs as canceled
+
+        :param job_ids: The list of job IDs being canceled
+        :type job_ids: list
+        """
+
+        self.filter(job_id__in=job_ids).update(is_canceled=True)
+
     def get_queue(self, order_mode, ignore_job_type_ids=None):
         """Returns the list of queue models sorted according to their priority first, and then according to the provided
         mode
@@ -320,6 +329,7 @@ class QueueManager(models.Manager):
 
         return queued_job_ids
 
+    # TODO: remove once REST API v5 is removed
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
         """Handles the cancellation of a job. All database changes occur in an atomic transaction.
@@ -330,9 +340,9 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        Job.objects.update_jobs_to_canceled([job_id], when)
+        Job.objects.update_jobs_to_canceled_old([job_id], when)
 
-        self._cancel_queued_jobs([job_id])
+        self.cancel_queued_jobs([job_id])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
         handler = Recipe.objects.get_recipe_handler_for_job(job_id)
@@ -502,15 +512,6 @@ class QueueManager(models.Manager):
             jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
-
-    def _cancel_queued_jobs(self, job_ids):
-        """Marks the queued job executions for the given jobs as canceled
-
-        :param job_ids: The list of job IDs being canceled
-        :type job_ids: list
-        """
-
-        self.filter(job_id__in=job_ids).update(is_canceled=True)
 
 
 class Queue(models.Model):
