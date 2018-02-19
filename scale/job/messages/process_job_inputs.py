@@ -1,4 +1,4 @@
-"""Defines a command message that processes the inputs for a list of jobs"""
+"""Defines a command message that processes the input for a list of jobs"""
 from __future__ import unicode_literals
 
 import logging
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_process_job_inputs_messages(job_ids):
-    """Creates messages to process the inputs for the given jobs
+    """Creates messages to process the input for the given jobs
 
     :param job_ids: The job IDs
     :type job_ids: list
@@ -42,7 +42,7 @@ def create_process_job_inputs_messages(job_ids):
 
 
 class ProcessJobInputs(CommandMessage):
-    """Command message that processes the inputs for a list of jobs
+    """Command message that processes the input for a list of jobs
     """
 
     def __init__(self):

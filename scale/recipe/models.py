@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import copy
+import math
 
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
@@ -18,6 +19,8 @@ from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
 
+
+INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
@@ -474,6 +477,76 @@ class RecipeManager(models.Manager):
         recipe.jobs = jobs
         return recipe
 
+    def process_recipe_input(self, recipes):
+        """Processes the input for the given recipes. The caller must have obtained a model lock on the given recipe
+        models.
+
+        :param recipes: The locked recipe models
+        :type recipes: list
+        """
+
+        when = timezone.now()
+        recipe_input_file_ids = {}  # {Recipe ID: set}
+        recipe_file_sizes = {}  # {Recipe ID: int}
+        recipe_source_started = {}  # {Recipe ID: datetime}
+        recipe_source_ended = {}  # {Recipe ID: datetime}
+        all_input_file_ids = set()
+        input_file_models = []
+
+        # Process each recipe to get its input file IDs and create models related to input files
+        for recipe in recipes:
+            if recipe.input_file_size is not None:
+                continue  # Ignore recipes that have already had inputs processed
+            recipe_input = recipe.get_recipe_data()
+            file_ids = recipe_input.get_input_file_ids()
+            recipe_input_file_ids[recipe.id] = set(file_ids)
+            recipe_file_sizes[recipe.id] = 0
+            recipe_source_started[recipe.id] = None
+            recipe_source_ended[recipe.id] = None
+            all_input_file_ids.update(file_ids)
+
+            # Create RecipeInputFile models in batches
+            for input_file in recipe_input.get_input_file_info():
+                recipe_input_file = RecipeInputFile()
+                recipe_input_file.recipe_id = recipe.id
+                recipe_input_file.scale_file_id = input_file[0]
+                recipe_input_file.recipe_input = input_file[1]
+                input_file_models.append(recipe_input_file)
+                if len(input_file_models) >= INPUT_FILE_BATCH_SIZE:
+                    RecipeInputFile.objects.bulk_create(input_file_models)
+                    input_file_models = []
+
+        # Finish creating any remaining RecipeInputFile models
+        if input_file_models:
+            RecipeInputFile.objects.bulk_create(input_file_models)
+
+        # TODO: make this more efficient
+        # Calculate input file summary data for each recipe
+        if all_input_file_ids:
+            for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
+                for recipe_id, file_ids in recipe_input_file_ids.items():
+                    if input_file.id in file_ids:
+                        recipe_file_sizes[recipe_id] += input_file.file_size  # This is in bytes
+                        if input_file.source_started is not None:
+                            started = recipe_source_started[recipe_id]
+                            min_started = min(s for s in [started, input_file.source_started] if s is not None)
+                            recipe_source_started[recipe_id] = min_started
+                        if input_file.source_ended is not None:
+                            ended = recipe_source_ended[recipe_id]
+                            max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
+                            recipe_source_ended[recipe_id] = max_ended
+
+        # Update each recipe with its input file summary data
+        for recipe_id, total_file_size in recipe_file_sizes.items():
+            # Calculate total input file size in MiB rounded up to the nearest whole MiB
+            input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
+
+            # Get source data times
+            source_started = recipe_source_started[recipe_id]
+            source_ended = recipe_source_ended[recipe_id]
+            self.filter(id=recipe_id).update(input_file_size=input_file_size_mb, source_started=source_started,
+                                             source_ended=source_ended, last_modified=when)
+
     @transaction.atomic
     def reprocess_recipe(self, recipe_id, batch_id=None, job_names=None, all_jobs=False, priority=None):
         """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
@@ -629,6 +702,13 @@ class Recipe(models.Model):
 
     :keyword input: JSON description defining the input for this recipe
     :type input: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword input_file_size: The total size in MiB for all input files in this recipe
+    :type input_file_size: :class:`django.db.models.FloatField`
+
+    :keyword source_started: The start time of the source data for this recipe
+    :type source_started: :class:`django.db.models.DateTimeField`
+    :keyword source_ended: The end time of the source data for this recipe
+    :type source_ended: :class:`django.db.models.DateTimeField`
 
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -653,6 +733,11 @@ class Recipe(models.Model):
                                              null=True, on_delete=models.PROTECT)
 
     input = django.contrib.postgres.fields.JSONField(default=dict)
+    input_file_size = models.FloatField(blank=True, null=True)
+
+    # Optional geospatial fields
+    source_started = models.DateTimeField(blank=True, null=True)
+    source_ended = models.DateTimeField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)

@@ -615,18 +615,18 @@ class JobManager(models.Manager):
                         if input_file.source_started is not None:
                             started = job_source_started[job_id]
                             min_started = min(s for s in [started, input_file.source_started] if s is not None)
-                            job_source_started[job_id] = input_file.source_started if started is None else min_started
+                            job_source_started[job_id] = min_started
                         if input_file.source_ended is not None:
                             ended = job_source_ended[job_id]
                             max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
-                            job_source_ended[job_id] = input_file.source_ended if ended is None else max_ended
+                            job_source_ended[job_id] = max_ended
 
         # Update each job with its input file summary data
         for job_id, total_file_size in job_file_sizes.items():
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
-            
+
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
