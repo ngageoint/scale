@@ -217,7 +217,7 @@ class RecipeManager(models.Manager):
                 if not root_job_id:
                     root_job_id = deleted_job.id
                 if ProductFile:
-                    ProductFile.objects.unpublish_products(root_job_id, when)
+                    ProductFile.objects.unpublish_products_old(root_job_id, when)
         if jobs_to_supersede:
             # Supersede any jobs that were changed or deleted in new recipe
             Job.objects.supersede_jobs(jobs_to_supersede, when)

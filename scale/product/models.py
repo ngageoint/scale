@@ -464,7 +464,7 @@ class ProductFileManager(models.GeoManager):
 
         # Unpublish any products created by jobs that are superseded by this job
         if job.root_superseded_job_id:
-            self.unpublish_products(job.root_superseded_job_id, when)
+            self.unpublish_products_old(job.root_superseded_job_id, when)
 
         # Grab UUIDs from new products to be published
         uuids = []
@@ -491,6 +491,21 @@ class ProductFileManager(models.GeoManager):
 
         last_modified = timezone.now()
         query = self.filter(job_id__in=job_ids, is_published=True)
+        query.update(is_published=False, unpublished=when, last_modified=last_modified)
+
+    # TODO: remove this when no longer used
+    def unpublish_products_old(self, root_job_id, when):
+        """Unpublishes all of the published products created by the superseded jobs with the given root ID
+        :param root_job_id: The root superseded job ID
+        :type root_job_id: int
+        :param when: When the products were unpublished
+        :type when: :class:`datetime.datetime`
+        """
+
+        last_modified = timezone.now()
+        query = self.filter(job__root_superseded_job_id=root_job_id, is_published=True)
+        query.update(is_published=False, unpublished=when, last_modified=last_modified)
+        query = self.filter(job_id=root_job_id, is_published=True)
         query.update(is_published=False, unpublished=when, last_modified=last_modified)
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
