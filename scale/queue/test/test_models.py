@@ -466,7 +466,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', num_exes=1)
         self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1, priority=100)
         self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
-        Job.objects.supersede_jobs([self.standalone_superseded_job], now())
+        Job.objects.supersede_jobs_old([self.standalone_superseded_job], now())
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
         job_type_a_1 = job_test_utils.create_job_type()

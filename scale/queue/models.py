@@ -430,8 +430,8 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, data, event, batch_id, superseded_recipe, delta,
-                                               superseded_jobs, priority)
+        handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, superseded_recipe, delta,
+                                                   superseded_jobs, priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]

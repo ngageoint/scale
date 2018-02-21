@@ -182,7 +182,7 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_no_changes(self):
         """Tests calling BatchManager.schedule_recipes() for a recipe type that has nothing to reprocess"""
 
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
@@ -196,8 +196,8 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_new_batch(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that has never been started"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
 
@@ -217,11 +217,12 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_partial_batch(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that is incomplete"""
         for i in range(5):
-            Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+            Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                             event=self.event)
         partials = []
         for i in range(5):
-            handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                                   event=self.event)
+            handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                       event=self.event)
             handler.recipe.is_superseded = True
             handler.recipe.save()
             partials.append(handler.recipe)
@@ -253,7 +254,7 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_invalid_status(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that was already created"""
 
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
@@ -262,14 +263,14 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_date_range_created(self):
         """Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction"""
-        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event).recipe
+        recipe1 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1, tzinfo=utc))
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe2.id).update(created=datetime.datetime(2016, 2, 1, tzinfo=utc))
-        recipe3 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event).recipe
+        recipe3 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1, tzinfo=utc))
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
@@ -295,7 +296,7 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_date_range_data_none(self):
         """Tests calling BatchManager.schedule_recipes() for a batch data date range where no data matches"""
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -328,7 +329,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -341,8 +342,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data2),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2),
+                                                   event=self.event).recipe
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -379,8 +380,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data1),
-                                               event=self.event).recipe
+        recipe1 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1),
+                                                   event=self.event).recipe
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -394,7 +395,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data2), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -430,7 +431,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -444,8 +445,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data2),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2),
+                                                   event=self.event).recipe
 
         file3 = storage_test_utils.create_file()
         file3.data_ended = datetime.datetime(2016, 3, 1, tzinfo=utc)
@@ -458,7 +459,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(data3), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data3), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -484,8 +485,8 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_all_jobs(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         definition = {
             'all_jobs': True,
@@ -507,8 +508,8 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_job_names(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
         definition = {
@@ -536,7 +537,7 @@ class TestBatchManager(TransactionTestCase):
 
     def test_schedule_priority(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that overrides job priority"""
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
 
         definition = {
             'all_jobs': True,

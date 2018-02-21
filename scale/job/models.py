@@ -58,8 +58,7 @@ class JobManager(models.Manager):
     def create_job(self, job_type, event_id, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
                    delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
-        job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
-        returned job model will have not yet been saved in the database.
+        job is superseding. The returned job model will have not yet been saved in the database.
 
         :param job_type: The type of the job to create
         :type job_type: :class:`job.models.JobType`
@@ -630,7 +629,7 @@ class JobManager(models.Manager):
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started, 
+            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started,
                                           source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
@@ -656,7 +655,19 @@ class JobManager(models.Manager):
         qry = self.filter(id__in=job_ids, status='COMPLETED', jobexecutionoutput__exe_num=F('num_exes')).only('id')
         return [job.id for job in qry]
 
-    def supersede_jobs(self, jobs, when):
+    def supersede_jobs(self, job_ids, when):
+        """Updates the given job IDs to be superseded
+
+        :param job_ids: The job IDs to supersede
+        :type job_ids: list
+        :param when: The time that the jobs were superseded
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=timezone.now())
+
+    # TODO: remove this when no longer needed
+    def supersede_jobs_old(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
 
         :param jobs: The jobs to supersede

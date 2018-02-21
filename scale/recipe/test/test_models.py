@@ -436,7 +436,8 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=event)
 
         # Make sure the recipe jobs get created with the correct job types
         recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe.id, job_name='Job 1')
@@ -455,7 +456,8 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
@@ -465,9 +467,9 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         graph = self.recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph, graph)
         delta.reprocess_identical_node('Job 2')  # We want to reprocess Job 2
-        new_handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=None, event=event,
-                                                   superseded_recipe=recipe, delta=delta,
-                                                   superseded_jobs=superseded_jobs)
+        new_handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=None, event=event,
+                                                       superseded_recipe=recipe, delta=delta,
+                                                       superseded_jobs=superseded_jobs)
 
         # Check that old recipe and job 2 are superseded, job 1 should be copied (not superseded)
         recipe = Recipe.objects.get(id=recipe.id)
@@ -549,7 +551,8 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data), event=event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
@@ -566,9 +569,9 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         graph_a = self.recipe_type.get_recipe_definition().get_graph()
         graph_b = new_recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph_a, graph_b)
-        new_handler = Recipe.objects.create_recipe(recipe_type=new_recipe_type, input=None, event=event,
-                                                   superseded_recipe=recipe, delta=delta,
-                                                   superseded_jobs=superseded_jobs)
+        new_handler = Recipe.objects.create_recipe_old(recipe_type=new_recipe_type, input=None, event=event,
+                                                       superseded_recipe=recipe, delta=delta,
+                                                       superseded_jobs=superseded_jobs)
 
         # Check that old recipe and job 2 are superseded, job 1 should be copied (not superseded)
         recipe = Recipe.objects.get(id=recipe.id)
@@ -709,8 +712,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         # Clear error cache so test works correctly
         reset_error_cache()
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         for recipe_job in handler.recipe_jobs:
             if recipe_job.job_name == 'Job 1':
                 Job.objects.update_status([recipe_job.job], 'FAILED', now(), get_unknown_error())
@@ -728,8 +731,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_forced_all_job(self):
         """Tests reprocessing a recipe without any changes by forcing all jobs."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True)
 
@@ -744,8 +747,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_forced_specific_job(self):
         """Tests reprocessing a recipe without any changes by forcing a single job."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, job_names=['Job 1'])
 
@@ -757,8 +760,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_priority(self):
         """Tests reprocessing a recipe with a job priority override."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True, priority=1111)
 
@@ -771,8 +774,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         self.assertRaises(ReprocessError, Recipe.objects.reprocess_recipe, handler.recipe.id)
 
@@ -826,8 +829,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
             }]
         }
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_test_utils.edit_recipe_type(self.recipe_type, new_definition)
 
@@ -844,8 +847,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_reprocess_superseded_recipe(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=RecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         handler.recipe.is_superseded = True
         handler.recipe.save()
