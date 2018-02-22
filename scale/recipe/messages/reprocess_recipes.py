@@ -24,7 +24,8 @@ RECIPE_JOB_BATCH_SIZE = 500  # Maximum batch size for creating RecipeJob models
 logger = logging.getLogger(__name__)
 
 
-def create_update_recipes_messages(root_recipe_ids, revision_id, event_id, all_jobs=False, job_names=None, batch_id=None):
+def create_reprocess_recipes_messages(root_recipe_ids, revision_id, event_id, all_jobs=False, job_names=None,
+                                      batch_id=None):
     """Creates messages to reprocess the given root recipes
 
     :param root_recipe_ids: The root recipe IDs
@@ -157,7 +158,7 @@ class ReprocessRecipes(CommandMessage):
                                                                   self.event_id, batch_id=self.batch_id)
             Recipe.objects.bulk_create(recipes)
             logger.info('Created %d new recipe(s)', len(recipes))
-            Recipe.objects.supercede_recipes([recipe.id for recipe in recipes], when)
+            Recipe.objects.supersede_recipes([recipe.id for recipe in superseded_recipes], when)
             logger.info('Superseded %d old recipe(s)', len(recipes))
 
             # Handle superseded recipe jobs
@@ -199,7 +200,7 @@ class ReprocessRecipes(CommandMessage):
         new_graph = revisions[new_revision_id].get_recipe_definition().get_graph()
 
         for recipe in recipes:
-            job_ids = recipe_job_ids[recipe.id]
+            job_ids = recipe_job_ids[recipe.superseded_recipe_id]  # Get job IDs for superseded recipe
             old_graph = revisions[recipe.recipe_type_rev_id].get_recipe_definition().get_graph()
             names = old_graph.get_topological_order() if all_jobs else job_names
 
@@ -215,7 +216,7 @@ class ReprocessRecipes(CommandMessage):
                         recipe_job = RecipeJob()
                         recipe_job.job_id = job_id
                         recipe_job.job_name = identical_job_name
-                        recipe_job.recipe = recipe.id
+                        recipe_job.recipe_id = recipe.id
                         recipe_job.is_original = False
                         recipe_job_count += 1
                         recipe_job_models.append(recipe_job)

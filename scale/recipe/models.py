@@ -978,7 +978,7 @@ class RecipeJobManager(models.Manager):
             else:
                 job_dict[recipe_job.job_name] = [recipe_job.job_id]
 
-        return recipe_jobs
+        return recipe_job_ids
 
     def get_recipe_jobs(self, recipe_ids):
         """Returns the recipe_job models with related job and job_type_rev models for the given recipe IDs
