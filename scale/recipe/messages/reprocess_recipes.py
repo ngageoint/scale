@@ -140,10 +140,20 @@ class ReprocessRecipes(CommandMessage):
         """
 
         when = now()
+        msg_already_run = False
 
         with transaction.atomic():
             # Lock recipes
-            superseded_recipes = Recipe.objects.get_locked_recipes_from_root(self._root_recipe_ids)
+            superseded_recipes = Recipe.objects.get_locked_recipes_from_root(self._root_recipe_ids,
+                                                                             event_id=self.event_id)
+
+            if not superseded_recipes:
+                # The database transaction has already been completed, just need to resend messages
+                logger.warning('This database transaction appears to have already been executed, will resend messages')
+                msg_already_run = True
+                recipes = Recipe.objects.filter(root_superseded_recipe_id__in=self._root_recipe_ids,
+                                                event_id=self.event_id)
+                superseded_recipes = Recipe.objects.get_locked_recipes([r.superseded_recipe_id for r in recipes])
 
             # Get revisions and filter out invalid recipes (wrong recipe type)
             revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess(superseded_recipes, self.revision_id)
@@ -151,20 +161,21 @@ class ReprocessRecipes(CommandMessage):
             superseded_recipes = [recipe for recipe in superseded_recipes if recipe.recipe_type_id == recipe_type.id]
             if len(superseded_recipes) < len(self._root_recipe_ids):
                 diff = len(self._root_recipe_ids) - len(superseded_recipes)
-                logger.error('%d invalid recipes have been filtered out', diff)
+                logger.warning('%d invalid recipes have been filtered out', diff)
 
             # Create new recipes and supersede old recipes
-            recipes = Recipe.objects.create_recipes_for_reprocess(recipe_type, revisions, superseded_recipes,
-                                                                  self.event_id, batch_id=self.batch_id)
-            Recipe.objects.bulk_create(recipes)
-            logger.info('Created %d new recipe(s)', len(recipes))
-            Recipe.objects.supersede_recipes([recipe.id for recipe in superseded_recipes], when)
-            logger.info('Superseded %d old recipe(s)', len(recipes))
+            if not msg_already_run:
+                recipes = Recipe.objects.create_recipes_for_reprocess(recipe_type, revisions, superseded_recipes,
+                                                                      self.event_id, batch_id=self.batch_id)
+                Recipe.objects.bulk_create(recipes)
+                logger.info('Created %d new recipe(s)', len(recipes))
+                Recipe.objects.supersede_recipes([recipe.id for recipe in superseded_recipes], when)
+                logger.info('Superseded %d old recipe(s)', len(recipes))
 
             # Handle superseded recipe jobs
             recipe_job_ids = RecipeJob.objects.get_recipe_job_ids([recipe.id for recipe in superseded_recipes])
-            messages = self._handle_recipe_jobs(recipes, self.revision_id, revisions, recipe_job_ids, self.job_names,
-                                                self.all_jobs, when)
+            messages = self._handle_recipe_jobs(msg_already_run, recipes, self.revision_id, revisions, recipe_job_ids,
+                                                self.job_names, self.all_jobs, when)
             self.new_messages.extend(messages)
 
         # Create messages to handle new recipes
@@ -172,9 +183,12 @@ class ReprocessRecipes(CommandMessage):
 
         return True
 
-    def _handle_recipe_jobs(self, recipes, new_revision_id, revisions, recipe_job_ids, job_names, all_jobs, when):
+    def _handle_recipe_jobs(self, msg_already_run, recipes, new_revision_id, revisions, recipe_job_ids, job_names,
+                            all_jobs, when):
         """Handles the reprocessing of the recipe jobs
 
+        :param msg_already_run: Whether the database transaction has already occurred
+        :type msg_already_run: bool
         :param recipes: The new recipe models
         :type recipes: list
         :param new_revision_id: The ID of the new recipe type revision to use for reprocessing
@@ -210,19 +224,20 @@ class ReprocessRecipes(CommandMessage):
                 graph_delta.reprocess_identical_node(job_name)
 
             # Jobs that are identical from old recipe to new recipe are just copied to new recipe
-            for identical_job_name in graph_delta.get_identical_nodes():
-                if identical_job_name in job_ids:
-                    for job_id in job_ids[identical_job_name]:
-                        recipe_job = RecipeJob()
-                        recipe_job.job_id = job_id
-                        recipe_job.job_name = identical_job_name
-                        recipe_job.recipe_id = recipe.id
-                        recipe_job.is_original = False
-                        recipe_job_count += 1
-                        recipe_job_models.append(recipe_job)
-                        if len(recipe_job_models) >= RECIPE_JOB_BATCH_SIZE:
-                            RecipeJob.objects.bulk_create(recipe_job_models)
-                            recipe_job_models = []
+            if not msg_already_run:
+                for identical_job_name in graph_delta.get_identical_nodes():
+                    if identical_job_name in job_ids:
+                        for job_id in job_ids[identical_job_name]:
+                            recipe_job = RecipeJob()
+                            recipe_job.job_id = job_id
+                            recipe_job.job_name = identical_job_name
+                            recipe_job.recipe_id = recipe.id
+                            recipe_job.is_original = False
+                            recipe_job_count += 1
+                            recipe_job_models.append(recipe_job)
+                            if len(recipe_job_models) >= RECIPE_JOB_BATCH_SIZE:
+                                RecipeJob.objects.bulk_create(recipe_job_models)
+                                recipe_job_models = []
 
             # Jobs that changed from old recipe to new recipe should be superseded
             for changed_job_name in graph_delta.get_changed_nodes():
@@ -236,12 +251,13 @@ class ReprocessRecipes(CommandMessage):
                     unpublish_job_ids.extend(job_ids[deleted_job_name])
 
         # Finish creating any remaining RecipeJob models
-        if recipe_job_models:
+        if recipe_job_models and not msg_already_run:
             RecipeJob.objects.bulk_create(recipe_job_models)
         logger.info('Copied %d job(s) to the new recipe(s)', recipe_job_count)
 
         # Supersede recipe jobs that were not copied over to a new recipe
-        Job.objects.supersede_jobs(superseded_job_ids, when)
+        if not msg_already_run:
+            Job.objects.supersede_jobs(superseded_job_ids, when)
         logger.info('Superseded %d job(s)', len(superseded_job_ids))
         logger.info('Found %d job(s) that should be unpublished', len(unpublish_job_ids))
 

@@ -157,7 +157,7 @@ class JobManager(models.Manager):
         if job_type_categories:
             jobs = jobs.filter(job_type__category__in=job_type_categories)
         if batch_ids:
-            jobs = jobs.filter(batchjob__batch__in=batch_ids)
+            jobs = jobs.filter(batch_id__in=batch_ids)
         if error_categories:
             jobs = jobs.filter(error__category__in=error_categories)
         if error_ids:

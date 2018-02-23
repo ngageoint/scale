@@ -12,9 +12,11 @@ from batch.configuration.definition.batch_definition import BatchDefinition
 from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
 from job.models import JobType
+from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import RecipeData
-from recipe.models import Recipe, RecipeJob
+from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
+from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 
@@ -176,15 +178,22 @@ class BatchManager(models.Manager):
             batch.total_count = old_recipes_count + old_files_count
             batch.save()
 
-        # Schedule new recipes and create batch models for old recipes
-        logger.info('Scheduling new batch recipes for old recipes: %i', old_recipes_count)
+        # Send messages to reprocess old recipes
+        logger.info('Sending messages to reprocess old recipes: %i', old_recipes_count)
+        new_rev = RecipeTypeRevision.objects.get_revision(batch.recipe_type_id, batch.recipe_type.revision_num)
+        root_recipe_ids = []
         for old_recipe in old_recipes.iterator():
-            try:
-                self._process_recipe(batch, old_recipe)
-            except:
-                logger.exception('Unable to supersede batch recipe: %i', old_recipe.id)
-                batch.failed_count += 1
-                batch.save()
+            root_id = old_recipe.root_superseded_recipe_id if old_recipe.root_superseded_recipe_id else old_recipe.id
+            root_recipe_ids.append(root_id)
+        if root_recipe_ids:
+            all_jobs = batch_definition.all_jobs
+            job_names = batch_definition.job_names
+            messages = create_reprocess_recipes_messages(root_recipe_ids, new_rev.id, batch.event_id, all_jobs=all_jobs,
+                                                         job_names=job_names, batch_id=batch.id)
+            CommandMessageManager().send_messages(messages)
+            # Update the overall batch status
+            batch.created_count += old_recipes_count
+            batch.save()
 
         # Determine what trigger rule should be applied
         trigger_config = None
@@ -193,7 +202,7 @@ class BatchManager(models.Manager):
         elif batch_definition.trigger_config:
             trigger_config = batch_definition.trigger_config
 
-        # Schedule new recipes and create batch models for old files
+        # Schedule new recipes for old files
         logger.info('Scheduling new batch recipes for old files: %i', old_recipes_count)
         for old_file in old_files.iterator():
             try:
@@ -279,38 +288,6 @@ class BatchManager(models.Manager):
         return old_recipes
 
     @transaction.atomic
-    def _process_recipe(self, batch, superseded_recipe):
-        """Processes the given recipe within the context of a particular batch request.
-
-        When the superseded recipe is re-processed, a corresponding batch recipe model and its batch jobs are created in
-        an atomic transaction to support resuming the batch command when it is interrupted prematurely.
-
-        :param batch: The batch that defines the recipes to schedule
-        :type batch: :class:`batch.models.Batch`
-        :param superseded_recipe: The old recipe that was superseded
-        :type superseded_recipe: :class:`recipe.models.Recipe`
-        """
-
-        # Check whether the batch recipe already exists
-        if BatchRecipe.objects.filter(batch=batch, superseded_recipe=superseded_recipe).exists():
-            return
-
-        # Create the new recipe and its associated jobs
-        batch_definition = batch.get_batch_definition()
-        handler = Recipe.objects.reprocess_recipe(superseded_recipe.id, batch_id=batch.id,
-                                                  job_names=batch_definition.job_names,
-                                                  all_jobs=batch_definition.all_jobs,
-                                                  priority=batch_definition.priority)
-
-        # Fetch all the recipe jobs that were just superseded
-        old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=superseded_recipe,
-                                                                         job__is_superseded=True)
-        superseded_jobs = {rj.job_name: rj.job for rj in old_recipe_jobs}
-
-        # Create all the batch models for the new recipe and jobs
-        self._create_batch_models(batch, handler, superseded_recipe, superseded_jobs)
-
-    @transaction.atomic
     def _process_trigger(self, batch, trigger_config, input_file):
         """Processes the given input file within the context of a particular batch request.
 
@@ -345,50 +322,7 @@ class BatchManager(models.Manager):
             'file_name': input_file.file_name,
         }
         event = TriggerEvent.objects.create_trigger_event('BATCH', None, description, timezone.now())
-        handler = Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event, batch_id=batch.id)
-
-        # Create all the batch models for the new recipe and jobs
-        self._create_batch_models(batch, handler)
-
-    def _create_batch_models(self, batch, handler, superseded_recipe=None, superseded_jobs=None):
-        """Creates all the batch-specific models to track the new jobs that were queued.
-
-        Each batch recipe and its batch jobs are created in an atomic transaction to support resuming the batch command
-        when it is interrupted prematurely.
-
-        :param batch: The batch that defines the recipes to schedule
-        :type batch: :class:`batch.models.Batch`
-        :param superseded_recipe: The old recipe that was superseded
-        :type superseded_recipe: :class:`recipe.models.Recipe`
-        :param superseded_jobs: Represents the job models (stored by job name) of the old recipe to supersede
-        :type superseded_jobs: {string: :class:`job.models.Job`}
-        """
-
-        # Create a batch job for each new recipe job
-        batch_jobs = []
-        now = timezone.now()
-        # TODO: remove handler.recipe_jobs
-        for new_recipe_job in handler.recipe_jobs:
-            if new_recipe_job.is_original:
-                batch_job = BatchJob()
-                batch_job.batch = batch
-                batch_job.job = new_recipe_job.job
-                batch_job.created = now
-
-                # Associate it to a superseded job when possible
-                if superseded_jobs and new_recipe_job.job_name in superseded_jobs:
-                    batch_job.superseded_job = superseded_jobs[new_recipe_job.job_name]
-                
-                batch_jobs.append(batch_job)
-        BatchJob.objects.bulk_create(batch_jobs)
-
-        # Create a batch recipe for the new recipe
-        batch_recipe = BatchRecipe()
-        batch_recipe.batch = batch
-        batch_recipe.recipe = handler.recipe
-        batch_recipe.superseded_recipe = superseded_recipe
-        batch_recipe.save()
-
+        Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event, batch_id=batch.id)
         # Update the overall batch status
         batch.created_count += 1
         batch.save()

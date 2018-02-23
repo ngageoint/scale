@@ -439,9 +439,11 @@ class TestSourceJobsView(TransactionTestCase):
 
     def test_batch(self):
         """Tests filtering jobs by batch"""
-        batch_job = batch_test_utils.create_batch_job(job=self.job1)
+        batch = batch_test_utils.create_batch()
+        self.job1.batch_id = batch.id
+        self.job1.save()
 
-        url = rest_util.get_url('/sources/%d/jobs/?batch_id=%d' % (self.src_file.id, batch_job.batch.id))
+        url = rest_util.get_url('/sources/%d/jobs/?batch_id=%d' % (self.src_file.id, batch.id))
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

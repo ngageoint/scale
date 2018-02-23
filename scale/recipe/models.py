@@ -45,12 +45,10 @@ class RecipeManager(models.Manager):
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
         # Count as a completed recipe if part of a batch
-        from batch.models import Batch, BatchRecipe
-        try:
-            batch_recipe = BatchRecipe.objects.get(recipe_id=recipe_id)
-            Batch.objects.count_completed_recipe(batch_recipe.batch.id)
-        except BatchRecipe.DoesNotExist:
-            batch_recipe = None
+        from batch.models import Batch
+        recipe = self.get(id=recipe_id)
+        if recipe.batch_id:
+            Batch.objects.count_completed_recipe(batch.id)
 
     def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
         """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
@@ -333,12 +331,15 @@ class RecipeManager(models.Manager):
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=recipe_ids).order_by('id').iterator())
 
-    def get_locked_recipes_from_root(self, root_recipe_ids):
+    def get_locked_recipes_from_root(self, root_recipe_ids, event_id=None):
         """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
-        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction.
+        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
+        optional event ID ensures that recipes are not reprocessed multiple times due to one event.
 
         :param root_recipe_ids: The root recipe IDs
         :type root_recipe_ids: list
+        :param event_id: The event ID
+        :type event_id: int
         :returns: The recipe models
         :rtype: list
         """
@@ -347,6 +348,8 @@ class RecipeManager(models.Manager):
         qry = self.select_for_update()
         qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
         qry = qry.filter(is_superseded=False)
+        if event_id is not None:
+            qry = qry.exclude(event_id=event_id)  # Do not return recipes with this event ID
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(qry.order_by('id').iterator())
 
@@ -490,7 +493,7 @@ class RecipeManager(models.Manager):
 
         # Apply batch filtering 
         if batch_ids:
-            recipes = recipes.filter(batchrecipe__batch__in=batch_ids)
+            recipes = recipes.filter(batch_id__in=batch_ids)
 
         # Apply additional filters
         if not include_superseded:
