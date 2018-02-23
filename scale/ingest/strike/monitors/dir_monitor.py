@@ -234,10 +234,6 @@ class DirWatcherMonitor(Monitor):
             self._start_transfer(ingest, datetime.utcfromtimestamp(last_access))
 
         if ingest.status == 'TRANSFERRING':
-            # Update bytes transferred
-            size = os.path.getsize(file_path)
-            self._update_transfer(ingest, size)
-
             # Ensure that file is still in Strike dir as expected
             if not os.path.exists(file_path):
                 logger.error('%s was being transferred, but the file is now lost', file_path)
@@ -245,6 +241,10 @@ class DirWatcherMonitor(Monitor):
                 ingest.save()
                 logger.info('Ingest for %s marked as ERRORED', final_name)
                 return
+
+            # Update bytes transferred
+            size = os.path.getsize(file_path)
+            self._update_transfer(ingest, size)
 
             if self._is_still_transferring(file_name):
                 # Update with current progress of the transfer
