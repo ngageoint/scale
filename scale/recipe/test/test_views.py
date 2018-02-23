@@ -733,9 +733,11 @@ class TestRecipesView(TransactionTestCase):
     def test_successful_batch(self):
         """Tests getting recipes by batch id"""
 
-        batch_recipe = batch_test_utils.create_batch_recipe(recipe=self.recipe1)
+        batch = batch_test_utils.create_batch()
+        self.recipe1.batch_id = batch.id
+        self.recipe1.save()
 
-        url = rest_util.get_url('/recipes/?batch_id=%d' % batch_recipe.batch.id)
+        url = rest_util.get_url('/recipes/?batch_id=%d' % batch.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

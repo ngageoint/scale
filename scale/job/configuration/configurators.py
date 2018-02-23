@@ -229,9 +229,11 @@ class ScheduledExecutionConfigurator(object):
         self._workspaces = workspaces
 
         db = settings.DATABASES['default']
-        self._system_settings = {'SCALE_DB_NAME': db['NAME'], 'SCALE_DB_USER': db['USER'],
-                                 'SCALE_DB_PASS': db['PASSWORD'], 'SCALE_DB_HOST': db['HOST'],
-                                 'SCALE_DB_PORT': db['PORT']}
+        self._system_settings = {'SCALE_BROKER_URL': settings.BROKER_URL, 'SCALE_DB_NAME': db['NAME'],
+                                 'SCALE_DB_USER': db['USER'], 'SCALE_DB_PASS': db['PASSWORD'],
+                                 'SCALE_DB_HOST': db['HOST'], 'SCALE_DB_PORT': db['PORT']}
+        if settings.QUEUE_NAME:
+            self._system_settings['SCALE_QUEUE_NAME'] = settings.QUEUE_NAME
         self._system_settings_hidden = {key: '*****' for key in self._system_settings.keys()}
 
     def configure_scheduled_job(self, job_exe, job_type, interface, system_logging_level):

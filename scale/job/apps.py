@@ -27,6 +27,7 @@ class JobConfig(AppConfig):
 
         # Register job message types
         from job.messages.blocked_jobs import BlockedJobs
+        from job.messages.cancel_jobs import CancelJobs
         from job.messages.completed_jobs import CompletedJobs
         from job.messages.failed_jobs import FailedJobs
         from job.messages.job_exe_end import CreateJobExecutionEnd
@@ -34,9 +35,11 @@ class JobConfig(AppConfig):
         from job.messages.process_job_inputs import ProcessJobInputs
         from job.messages.publish_job import PublishJob
         from job.messages.running_jobs import RunningJobs
+        from job.messages.unpublish_jobs import UnpublishJobs
         from messaging.messages.factory import add_message_type
 
         add_message_type(BlockedJobs)
+        add_message_type(CancelJobs)
         add_message_type(CompletedJobs)
         add_message_type(FailedJobs)
         add_message_type(CreateJobExecutionEnd)
@@ -44,3 +47,4 @@ class JobConfig(AppConfig):
         add_message_type(ProcessJobInputs)
         add_message_type(PublishJob)
         add_message_type(RunningJobs)
+        add_message_type(UnpublishJobs)

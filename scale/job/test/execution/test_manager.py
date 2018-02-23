@@ -211,7 +211,7 @@ class TestJobExecutionManager(TransactionTestCase):
         self.job_exe_mgr.handle_task_update(update)
 
         # Cancel job_exe_1 and job_exe_2 and have manager sync with database
-        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id, self.job_exe_2.job_id], now())
+        Job.objects.update_jobs_to_canceled_old([self.job_exe_1.job_id, self.job_exe_2.job_id], now())
         finished_job_exes = self.job_exe_mgr.sync_with_database()
 
         self.assertEqual(self.job_exe_1.status, 'CANCELED')

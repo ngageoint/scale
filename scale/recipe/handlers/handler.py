@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from job.configuration.data.exceptions import InvalidData
+from job.models import Job
 
 
 logger = logging.getLogger(__name__)
@@ -24,12 +25,23 @@ class RecipeHandler(object):
         """
 
         self.recipe = recipe
-        self.recipe_jobs = recipe_jobs
+        self.recipe_jobs = []
 
         self._data = recipe.get_recipe_data()
         self._graph = recipe.get_recipe_definition().get_graph()
         self._jobs_by_id = {}  # {Job ID: Recipe Job}
         self._jobs_by_name = {}  # {Job Name: Recipe Job}
+
+        self.add_jobs(recipe_jobs)
+
+    def add_jobs(self, recipe_jobs):
+        """Adds the given jobs to the recipe handler
+
+        :param recipe_jobs: The list of recipe_job models with related job and job_type_rev models
+        :type recipe_jobs: list
+        """
+
+        self.recipe_jobs.extend(recipe_jobs)
 
         for recipe_job in recipe_jobs:
             self._jobs_by_id[recipe_job.job_id] = recipe_job
@@ -169,6 +181,31 @@ class RecipeHandler(object):
                 jobs_to_queue.append(job)
 
         return jobs_to_queue
+
+    def get_jobs_to_create(self):
+        """Returns a dict where recipe job_name maps to a list of job models that need to be created
+
+        :returns: Dict where job_name maps to list of job models
+        :rtype: dict
+        """
+
+        job_models = {}
+
+        event_id = self.recipe.event_id
+        root_recipe_id = self.recipe.root_superseded_recipe_id
+        batch_id = self.recipe.batch_id
+        for job_tuple in self.recipe.get_recipe_definition().get_jobs_to_create():
+            job_name = job_tuple[0]
+            job_type = job_tuple[1]
+            if job_name in self._jobs_by_name:
+                continue  # Skip jobs that are already created
+            job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
+                                         batch_id=batch_id)
+            if self.recipe.batch and self.recipe.batch.priority is not None:
+                job.priority = self.recipe.batch.priority
+            job_models[job_name] = [job]
+
+        return job_models
 
     def get_pending_jobs(self):
         """Returns the jobs within this recipe that should be updated to PENDING status

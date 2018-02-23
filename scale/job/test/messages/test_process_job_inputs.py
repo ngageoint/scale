@@ -147,7 +147,6 @@ class TestProcessJobInputs(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         # Still should have queued jobs message
         self.assertEqual(len(message.new_messages), 1)
         self.assertEqual(message.new_messages[0].type, 'queued_jobs')

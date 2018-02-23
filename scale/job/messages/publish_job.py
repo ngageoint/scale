@@ -60,6 +60,10 @@ class PublishJob(CommandMessage):
 
         when_published = now()
 
+        # TODO: re-work the concept of superseded products to perhaps eliminate the use of the UUID and just supersede
+        # products when the superseding/replacement job(s) produce products
+        # TODO: when we have multiple jobs per job_name, we must appropriately unpublish/supersede products from
+        # superseded recipe when no direct superseded job link occurs
         with transaction.atomic():
             # Retrieve job and job_exe models
             job_exe = JobExecution.objects.get_latest_execution(self.job_id)

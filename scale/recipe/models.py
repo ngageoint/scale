@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import copy
+import math
 
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
@@ -18,6 +19,8 @@ from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
 
+
+INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
@@ -42,16 +45,60 @@ class RecipeManager(models.Manager):
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
         # Count as a completed recipe if part of a batch
-        from batch.models import Batch, BatchRecipe
-        try:
-            batch_recipe = BatchRecipe.objects.get(recipe_id=recipe_id)
-            Batch.objects.count_completed_recipe(batch_recipe.batch.id)
-        except BatchRecipe.DoesNotExist:
-            batch_recipe = None
+        from batch.models import Batch
+        recipe = self.get(id=recipe_id)
+        if recipe.batch_id:
+            Batch.objects.count_completed_recipe(batch.id)
 
+    def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
+        """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
+
+        :param recipe_type: The type of the recipe to create
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param revision: The recipe type revision
+        :type revision: :class:`recipe.models.RecipeTypeRevision`
+        :param event_id: The ID of the event that triggered the creation of this recipe
+        :type event_id: int
+        :param input: The recipe input to run on, should be None if superseded_recipe is provided
+        :type input: :class:`recipe.data.recipe_data.RecipeData`
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.models.Recipe`
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe input is invalid
+        """
+
+        recipe = Recipe()
+        recipe.recipe_type = recipe_type
+        recipe.recipe_type_rev = revision
+        recipe.event_id = event_id
+        recipe.batch_id = batch_id
+        recipe_definition = recipe.get_recipe_definition()
+
+        if superseded_recipe:
+            # Use input from superseded recipe
+            input = superseded_recipe.get_recipe_data()
+
+            # New recipe references superseded recipe
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if root_id is None:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
+
+        # Validate recipe input and save recipe
+        recipe_definition.validate_data(input)
+        recipe.input = input.get_dict()
+
+        return recipe
+
+    # TODO: remove this once old recipe creation is removed
     @transaction.atomic
-    def create_recipe(self, recipe_type, input, event, batch_id=None, superseded_recipe=None, delta=None,
-                      superseded_jobs=None, priority=None):
+    def create_recipe_old(self, recipe_type, input, event, batch_id=None, superseded_recipe=None, delta=None,
+                          superseded_jobs=None, priority=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
         must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
@@ -135,7 +182,7 @@ class RecipeManager(models.Manager):
         RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
-        recipe_jobs = self._create_recipe_jobs(batch_id, recipe, event, when, delta, superseded_jobs, priority)
+        recipe_jobs = self._create_recipe_jobs_old(batch_id, recipe, event, when, delta, superseded_jobs, priority)
         handler = RecipeHandler(recipe, recipe_jobs)
         # Block any new jobs that need to be blocked
         jobs_to_blocked = handler.get_blocked_jobs()
@@ -143,7 +190,37 @@ class RecipeManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
         return handler
 
-    def _create_recipe_jobs(self, batch_id, recipe, event, when, delta, superseded_jobs, priority=None):
+    def create_recipes_for_reprocess(self, recipe_type, revisions, superseded_recipes, event_id, batch_id=None):
+        """Creates and returns new recipe models for reprocessing. The models will not be saved in the database.
+
+        :param recipe_type: The type of the new recipes to create
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param revisions: A dict of recipe type revisions stored by revision ID
+        :type revisions: dict
+        :param superseded_recipes: The recipes that are being superseded
+        :type superseded_recipes: list
+        :param event_id: The ID of the event that triggered the reprocessing
+        :type event_id: int
+        :param batch_id: The ID of the batch for this reprocessing
+        :type batch_id: int
+        :returns: The new recipe models
+        :rtype: list
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If a recipe input is invalid
+        """
+
+        recipes = []
+
+        for superseded_recipe in superseded_recipes:
+            revision = revisions[superseded_recipe.recipe_type_rev_id]
+            recipe = self.create_recipe(recipe_type, revision, event_id, None, batch_id=batch_id,
+                                        superseded_recipe=superseded_recipe)
+            recipes.append(recipe)
+
+        return recipes
+
+    # TODO: remove this once old recipe creation is removed
+    def _create_recipe_jobs_old(self, batch_id, recipe, event, when, delta, superseded_jobs, priority=None):
         """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
         an old recipe, both delta and superseded_jobs must be provided and the caller must have obtained a model lock on
         all job models in superseded_jobs.
@@ -193,7 +270,7 @@ class RecipeManager(models.Manager):
                     superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
                     jobs_to_supersede.append(superseded_job)
 
-            job = Job.objects.create_job(job_type, event, root_recipe_id=recipe.root_superseded_recipe_id,
+            job = Job.objects.create_job(job_type, event.id, root_recipe_id=recipe.root_superseded_recipe_id,
                                          recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
             if priority is not None:
                 job.priority = priority
@@ -217,10 +294,10 @@ class RecipeManager(models.Manager):
                 if not root_job_id:
                     root_job_id = deleted_job.id
                 if ProductFile:
-                    ProductFile.objects.unpublish_products(root_job_id, when)
+                    ProductFile.objects.unpublish_products_old(root_job_id, when)
         if jobs_to_supersede:
             # Supersede any jobs that were changed or deleted in new recipe
-            Job.objects.supersede_jobs(jobs_to_supersede, when)
+            Job.objects.supersede_jobs_old(jobs_to_supersede, when)
 
         RecipeJob.objects.bulk_create(recipe_jobs_to_create)
         return recipe_jobs_to_create
@@ -240,6 +317,41 @@ class RecipeManager(models.Manager):
             recipe_ids.add(recipe_job.recipe_id)
 
         return list(recipe_ids)
+
+    def get_locked_recipes(self, recipe_ids):
+        """Locks and returns the recipe models for the given IDs with no related fields. Caller must be within an atomic
+        transaction.
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: The recipe models
+        :rtype: list
+        """
+
+        # Recipe models are always locked in order of ascending ID to prevent deadlocks
+        return list(self.select_for_update().filter(id__in=recipe_ids).order_by('id').iterator())
+
+    def get_locked_recipes_from_root(self, root_recipe_ids, event_id=None):
+        """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
+        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
+        optional event ID ensures that recipes are not reprocessed multiple times due to one event.
+
+        :param root_recipe_ids: The root recipe IDs
+        :type root_recipe_ids: list
+        :param event_id: The event ID
+        :type event_id: int
+        :returns: The recipe models
+        :rtype: list
+        """
+
+        root_recipe_ids = set(root_recipe_ids)  # Ensure no duplicates
+        qry = self.select_for_update()
+        qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
+        qry = qry.filter(is_superseded=False)
+        if event_id is not None:
+            qry = qry.exclude(event_id=event_id)  # Do not return recipes with this event ID
+        # Recipe models are always locked in order of ascending ID to prevent deadlocks
+        return list(qry.order_by('id').iterator())
 
     def get_recipe_for_job(self, job_id):
         """Returns the original recipe for the job with the given ID (returns None if the job is not in a recipe). The
@@ -291,12 +403,10 @@ class RecipeManager(models.Manager):
 
         recipe_jobs_dict = RecipeJob.objects.get_recipe_jobs(recipe_dict.keys())
         for recipe_id in recipe_dict.keys():
-            if recipe_id in recipe_jobs_dict:
-                recipe_jobs = recipe_jobs_dict[recipe_id]
-                if recipe_jobs:
-                    recipe = recipe_dict[recipe_id]
-                    handler = RecipeHandler(recipe, recipe_jobs)
-                    handlers.append(handler)
+            recipe = recipe_dict[recipe_id]
+            recipe_jobs = recipe_jobs_dict[recipe_id] if recipe_id in recipe_jobs_dict else []
+            handler = RecipeHandler(recipe, recipe_jobs)
+            handlers.append(handler)
 
         return handlers
 
@@ -383,7 +493,7 @@ class RecipeManager(models.Manager):
 
         # Apply batch filtering 
         if batch_ids:
-            recipes = recipes.filter(batchrecipe__batch__in=batch_ids)
+            recipes = recipes.filter(batch_id__in=batch_ids)
 
         # Apply additional filters
         if not include_superseded:
@@ -405,7 +515,7 @@ class RecipeManager(models.Manager):
         :rtype: list
         """
 
-        return Recipe.objects.select_related('recipe_type_rev').filter(id__in=recipe_ids)
+        return self.select_related('recipe_type_rev', 'batch').defer('batch__definition').filter(id__in=recipe_ids)
 
     def get_details(self, recipe_id):
         """Gets the details for a given recipe including its associated jobs and input files.
@@ -462,6 +572,76 @@ class RecipeManager(models.Manager):
         jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
         recipe.jobs = jobs
         return recipe
+
+    def process_recipe_input(self, recipes):
+        """Processes the input for the given recipes. The caller must have obtained a model lock on the given recipe
+        models.
+
+        :param recipes: The locked recipe models
+        :type recipes: list
+        """
+
+        when = timezone.now()
+        recipe_input_file_ids = {}  # {Recipe ID: set}
+        recipe_file_sizes = {}  # {Recipe ID: int}
+        recipe_source_started = {}  # {Recipe ID: datetime}
+        recipe_source_ended = {}  # {Recipe ID: datetime}
+        all_input_file_ids = set()
+        input_file_models = []
+
+        # Process each recipe to get its input file IDs and create models related to input files
+        for recipe in recipes:
+            if recipe.input_file_size is not None:
+                continue  # Ignore recipes that have already had inputs processed
+            recipe_input = recipe.get_recipe_data()
+            file_ids = recipe_input.get_input_file_ids()
+            recipe_input_file_ids[recipe.id] = set(file_ids)
+            recipe_file_sizes[recipe.id] = 0
+            recipe_source_started[recipe.id] = None
+            recipe_source_ended[recipe.id] = None
+            all_input_file_ids.update(file_ids)
+
+            # Create RecipeInputFile models in batches
+            for input_file in recipe_input.get_input_file_info():
+                recipe_input_file = RecipeInputFile()
+                recipe_input_file.recipe_id = recipe.id
+                recipe_input_file.scale_file_id = input_file[0]
+                recipe_input_file.recipe_input = input_file[1]
+                input_file_models.append(recipe_input_file)
+                if len(input_file_models) >= INPUT_FILE_BATCH_SIZE:
+                    RecipeInputFile.objects.bulk_create(input_file_models)
+                    input_file_models = []
+
+        # Finish creating any remaining RecipeInputFile models
+        if input_file_models:
+            RecipeInputFile.objects.bulk_create(input_file_models)
+
+        # TODO: make this more efficient
+        # Calculate input file summary data for each recipe
+        if all_input_file_ids:
+            for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
+                for recipe_id, file_ids in recipe_input_file_ids.items():
+                    if input_file.id in file_ids:
+                        recipe_file_sizes[recipe_id] += input_file.file_size  # This is in bytes
+                        if input_file.source_started is not None:
+                            started = recipe_source_started[recipe_id]
+                            min_started = min(s for s in [started, input_file.source_started] if s is not None)
+                            recipe_source_started[recipe_id] = min_started
+                        if input_file.source_ended is not None:
+                            ended = recipe_source_ended[recipe_id]
+                            max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
+                            recipe_source_ended[recipe_id] = max_ended
+
+        # Update each recipe with its input file summary data
+        for recipe_id, total_file_size in recipe_file_sizes.items():
+            # Calculate total input file size in MiB rounded up to the nearest whole MiB
+            input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
+
+            # Get source data times
+            source_started = recipe_source_started[recipe_id]
+            source_ended = recipe_source_ended[recipe_id]
+            self.filter(id=recipe_id).update(input_file_size=input_file_size_mb, source_started=source_started,
+                                             source_ended=source_ended, last_modified=when)
 
     @transaction.atomic
     def reprocess_recipe(self, recipe_id, batch_id=None, job_names=None, all_jobs=False, priority=None):
@@ -536,6 +716,17 @@ class RecipeManager(models.Manager):
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 
+    def supersede_recipes(self, recipe_ids, when):
+        """Updates the given recipes to be superseded
+
+        :param recipe_ids: The recipe IDs to supersede
+        :type recipe_ids: list
+        :param when: The time that the recipes were superseded
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=recipe_ids).update(is_superseded=True, superseded=when, last_modified=timezone.now())
+
     # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
@@ -558,7 +749,7 @@ class RecipeManager(models.Manager):
                     handlers[recipe.id] = handler
         return handlers
 
-        # TODO: remove this function when REST API v5 is removed
+    # TODO: remove this function when REST API v5 is removed
     def _merge_recipe_data(self, recipe_definition_dict, recipe_data_dict, recipe_files):
         """Merges data for a single recipe instance with its recipe definition to produce a mapping of key/values.
 
@@ -618,6 +809,13 @@ class Recipe(models.Model):
 
     :keyword input: JSON description defining the input for this recipe
     :type input: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword input_file_size: The total size in MiB for all input files in this recipe
+    :type input_file_size: :class:`django.db.models.FloatField`
+
+    :keyword source_started: The start time of the source data for this recipe
+    :type source_started: :class:`django.db.models.DateTimeField`
+    :keyword source_ended: The end time of the source data for this recipe
+    :type source_ended: :class:`django.db.models.DateTimeField`
 
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -642,6 +840,11 @@ class Recipe(models.Model):
                                              null=True, on_delete=models.PROTECT)
 
     input = django.contrib.postgres.fields.JSONField(default=dict)
+    input_file_size = models.FloatField(blank=True, null=True)
+
+    # Optional geospatial fields
+    source_started = models.DateTimeField(blank=True, null=True)
+    source_ended = models.DateTimeField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
@@ -753,6 +956,32 @@ class RecipeInputFile(models.Model):
 class RecipeJobManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
+
+    def get_recipe_job_ids(self, recipe_ids):
+        """Returns a dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
+        the job IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :returns: Dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
+            the job IDs
+        :rtype: dict
+        """
+
+        recipe_job_ids = {}  # {Recipe ID: {Job Name: [Job ID]}}
+
+        for recipe_job in self.filter(recipe_id__in=recipe_ids).iterator():
+            if recipe_job.recipe_id in recipe_job_ids:
+                job_dict = recipe_job_ids[recipe_job.recipe_id]
+            else:
+                job_dict = {}
+                recipe_job_ids[recipe_job.recipe_id] = job_dict
+            if recipe_job.job_name in job_dict:
+                job_dict[recipe_job.job_name].append(recipe_job.job_id)
+            else:
+                job_dict[recipe_job.job_name] = [recipe_job.job_id]
+
+        return recipe_job_ids
 
     def get_recipe_jobs(self, recipe_ids):
         """Returns the recipe_job models with related job and job_type_rev models for the given recipe IDs
@@ -1194,6 +1423,26 @@ class RecipeTypeRevisionManager(models.Manager):
         """
 
         return RecipeTypeRevision.objects.get(recipe_type_id=recipe_type_id, revision_num=revision_num)
+
+    def get_revisions_for_reprocess(self, recipes_to_reprocess, new_rev_id):
+        """Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
+        given new revision ID. Each revision model will have its related recipe type model populated.
+
+        :param recipes_to_reprocess: The recipe models to reprocess
+        :type recipes_to_reprocess: list
+        :param new_rev_id: The revision ID for the new recipes
+        :type new_rev_id: int
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        rev_ids = {recipe.recipe_type_rev_id for recipe in recipes_to_reprocess}
+        rev_ids.add(new_rev_id)
+
+        revisions = {}
+        for rev in self.select_related('recipe_type').filter(id__in=rev_ids):
+            revisions[rev.id] = rev
+        return revisions
 
 
 class RecipeTypeRevision(models.Model):

@@ -1,12 +1,11 @@
-"""Defines a command message that processes the input for a list of jobs"""
+"""Defines a command message that unpublishes a list of jobs"""
 from __future__ import unicode_literals
 
 import logging
 
-from django.db import transaction
-
-from job.models import Job
 from messaging.messages.message import CommandMessage
+from product.models import ProductFile
+from util.parse import datetime_to_string, parse_datetime
 
 # This is the maximum number of job models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long and that each message can be processed quickly.
@@ -16,11 +15,13 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_process_job_inputs_messages(job_ids):
-    """Creates messages to process the input for the given jobs
+def create_unpublish_jobs_messages(job_ids, when):
+    """Creates messages to unpublish the given jobs
 
-    :param job_ids: The job IDs
+    :param job_ids: The job IDs to unpublish
     :type job_ids: list
+    :param when: When the jobs were unpublished
+    :type when: :class:`datetime.datetime`
     :return: The list of messages
     :rtype: list
     """
@@ -30,10 +31,12 @@ def create_process_job_inputs_messages(job_ids):
     message = None
     for job_id in job_ids:
         if not message:
-            message = ProcessJobInputs()
+            message = UnpublishJobs()
+            message.when = when
         elif not message.can_fit_more():
             messages.append(message)
-            message = ProcessJobInputs()
+            message = UnpublishJobs()
+            message.when = when
         message.add_job(job_id)
     if message:
         messages.append(message)
@@ -41,18 +44,19 @@ def create_process_job_inputs_messages(job_ids):
     return messages
 
 
-class ProcessJobInputs(CommandMessage):
-    """Command message that processes the input for a list of jobs
+class UnpublishJobs(CommandMessage):
+    """Command message that punpublishes a list of jobs
     """
 
     def __init__(self):
         """Constructor
         """
 
-        super(ProcessJobInputs, self).__init__('process_job_input')
+        super(UnpublishJobs, self).__init__('unpublish_jobs')
 
         self._count = 0
         self._job_ids = []
+        self.when = None
 
     def add_job(self, job_id):
         """Adds the given job ID to this message
@@ -77,39 +81,22 @@ class ProcessJobInputs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'job_ids': self._job_ids}
+        return {'job_ids': self._job_ids, 'when': datetime_to_string(self.when)}
 
     @staticmethod
     def from_json(json_dict):
         """See :meth:`messaging.messages.message.CommandMessage.from_json`
         """
 
-        message = ProcessJobInputs()
+        message = UnpublishJobs()
+        message.when = parse_datetime(json_dict['when'])
         for job_id in json_dict['job_ids']:
             message.add_job(job_id)
-
         return message
 
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-
-        with transaction.atomic():
-            # Retrieve locked job models
-            job_models = Job.objects.get_locked_jobs(self._job_ids)
-
-            # Process job inputs
-            Job.objects.process_job_input(job_models)
-
-        # Create messages to queue the jobs
-        jobs_to_queue = []
-        for job_model in job_models:
-            if job_model.num_exes == 0:
-                jobs_to_queue.append(QueuedJob(job_model.id, 0))
-        if jobs_to_queue:
-            logger.info('Processed job inputs, %d job(s) will be queued', len(jobs_to_queue))
-            self.new_messages.extend(create_queued_jobs_messages(jobs_to_queue))
-
+        ProductFile.objects.unpublish_products(self._job_ids, self.when)
         return True

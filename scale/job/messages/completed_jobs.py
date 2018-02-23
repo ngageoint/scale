@@ -176,11 +176,9 @@ class CompletedJobs(CommandMessage):
             # TODO: this needs to be improved to be more efficient and not perform batch model locking
             for job_id in completed_job_ids:
                 # Update completed job count if part of a batch
-                from batch.models import Batch, BatchJob
-                try:
-                    batch_job = BatchJob.objects.get(job_id=job_id)
-                    Batch.objects.count_completed_job(batch_job.batch.id)
-                except BatchJob.DoesNotExist:
-                    pass
+                from batch.models import Batch
+                batch_id = job_models[job_id].batch_id
+                if batch_id:
+                    Batch.objects.count_completed_job(batch_id)
 
         return True

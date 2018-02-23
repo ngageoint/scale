@@ -55,16 +55,15 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job(self, job_type, event, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
+    def create_job(self, job_type, event_id, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
                    delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
-        job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
-        returned job model will have not yet been saved in the database.
+        job is superseding. The returned job model will have not yet been saved in the database.
 
         :param job_type: The type of the job to create
         :type job_type: :class:`job.models.JobType`
-        :param event: The event that triggered the creation of this job
-        :type event: :class:`trigger.models.TriggerEvent`
+        :param event_id: The event ID that triggered the creation of this job
+        :type event_id: int
         :param root_recipe_id: The ID of the root recipe that contains this job
         :type root_recipe_id: int
         :param recipe_id: The ID of the original recipe that created this job
@@ -78,15 +77,14 @@ class JobManager(models.Manager):
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
+
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
-        if event is None:
-            raise Exception('Event that triggered job creation is required')
 
         job = Job()
         job.job_type = job_type
         job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.id, job_type.revision_num)
-        job.event = event
+        job.event_id = event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
         job.batch_id = batch_id
@@ -159,7 +157,7 @@ class JobManager(models.Manager):
         if job_type_categories:
             jobs = jobs.filter(job_type__category__in=job_type_categories)
         if batch_ids:
-            jobs = jobs.filter(batchjob__batch__in=batch_ids)
+            jobs = jobs.filter(batch_id__in=batch_ids)
         if error_categories:
             jobs = jobs.filter(error__category__in=error_categories)
         if error_ids:
@@ -616,22 +614,22 @@ class JobManager(models.Manager):
                         if input_file.source_started is not None:
                             started = job_source_started[job_id]
                             min_started = min(s for s in [started, input_file.source_started] if s is not None)
-                            job_source_started[job_id] = input_file.source_started if started is None else min_started
+                            job_source_started[job_id] = min_started
                         if input_file.source_ended is not None:
                             ended = job_source_ended[job_id]
                             max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
-                            job_source_ended[job_id] = input_file.source_ended if ended is None else max_ended
+                            job_source_ended[job_id] = max_ended
 
         # Update each job with its input file summary data
         for job_id, total_file_size in job_file_sizes.items():
             # Calculate total input file size in MiB rounded up to the nearest whole MiB
             input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
             input_file_size_mb = max(input_file_size_mb, MIN_DISK)
-            
+
             # Get source data times
             source_started = job_source_started[job_id]
             source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started, 
+            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started,
                                           source_ended=source_ended, last_modified=when)
 
     def process_job_output(self, job_ids, when):
@@ -657,7 +655,19 @@ class JobManager(models.Manager):
         qry = self.filter(id__in=job_ids, status='COMPLETED', jobexecutionoutput__exe_num=F('num_exes')).only('id')
         return [job.id for job in qry]
 
-    def supersede_jobs(self, jobs, when):
+    def supersede_jobs(self, job_ids, when):
+        """Updates the given job IDs to be superseded
+
+        :param job_ids: The job IDs to supersede
+        :type job_ids: list
+        :param when: The time that the jobs were superseded
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id__in=job_ids).update(is_superseded=True, superseded=when, last_modified=timezone.now())
+
+    # TODO: remove this when no longer needed
+    def supersede_jobs_old(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
 
         :param jobs: The jobs to supersede
@@ -720,8 +730,31 @@ class JobManager(models.Manager):
         self.filter(id__in=job_ids).update(status='BLOCKED', last_status_change=when, last_modified=timezone.now())
         return job_ids
 
+    def update_jobs_to_canceled(self, jobs, when):
+        """Updates the given job models to the CANCELED status and returns the IDs of the models that were successfully
+        set to CANCELED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+        that are not in a valid state for being CANCELED will be ignored.
+
+        :param jobs: The job models to set to CANCELED
+        :type jobs: list
+        :param when: The status change time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job IDs that were successfully set to CANCELED
+        :rtype: list
+        """
+
+        job_ids = []
+        for job in jobs:
+            if job.can_be_canceled():
+                job_ids.append(job.id)
+
+        self.filter(id__in=job_ids).update(status='CANCELED', error=None, node=None, last_status_change=when,
+                                           last_modified=timezone.now())
+        return job_ids
+
+    # TODO: remove once REST API v5 is removed
     @transaction.atomic
-    def update_jobs_to_canceled(self, job_ids, when):
+    def update_jobs_to_canceled_old(self, job_ids, when):
         """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
         updates occur in an atomic transaction.
 
@@ -733,7 +766,7 @@ class JobManager(models.Manager):
 
         jobs_to_update = []
         for locked_job in self.get_locked_jobs(job_ids):
-            if locked_job.can_be_canceled:
+            if locked_job.status not in ['COMPLETED', 'CANCELED']:
                 jobs_to_update.append(locked_job.id)
 
         if jobs_to_update:
@@ -1071,6 +1104,15 @@ class Job(models.Model):
 
         return self.status != 'BLOCKED' and not self.has_been_queued()
 
+    def can_be_canceled(self):
+        """Indicates whether this job can be set to CANCELED status
+
+        :returns: True if the job can be set to CANCELED status, false otherwise
+        :rtype: bool
+        """
+
+        return self.status not in ['CANCELED', 'COMPLETED']
+
     def can_be_completed(self):
         """Indicates whether this job can be set to COMPLETED status
 
@@ -1240,16 +1282,7 @@ class Job(models.Model):
 
         Job.objects.filter(id=self.id).update(input=self.input, last_modified=when)
 
-    def _can_be_canceled(self):
-        """Indicates whether this job can be canceled.
-
-        :returns: True if the job status allows the job to be canceled, false otherwise.
-        :rtype: bool
-        """
-
-        return self.status not in ['COMPLETED', 'CANCELED']
-    can_be_canceled = property(_can_be_canceled)
-
+    # TODO: remove when REST API v5 is removed
     def _is_ready_to_requeue(self):
         """Indicates whether this job can be added to the queue after being attempted previously.
 
