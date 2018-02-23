@@ -840,20 +840,30 @@ atomic transaction.</p>
 
 <dl class="method">
 <dt id="product.models.ProductFileManager.unpublish_products">
-<code class="descname">unpublish_products</code><span class="sig-paren">(</span><em>root_job_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.unpublish_products" title="Permalink to this definition">¶</a></dt>
-<dd><p>Unpublishes all of the published products created by the superseded jobs with the given root ID</p>
+<code class="descname">unpublish_products</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.unpublish_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpublishes all of the published products created by the given job IDs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>root_job_id</strong> (<em>int</em>) &#8211; The root superseded job ID</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the products were unpublished</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="product.models.ProductFileManager.unpublish_products_old">
+<code class="descname">unpublish_products_old</code><span class="sig-paren">(</span><em>root_job_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.unpublish_products_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unpublishes all of the published products created by the superseded jobs with the given root ID
+:param root_job_id: The root superseded job ID
+:type root_job_id: int
+:param when: When the products were unpublished
+:type when: <code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></p>
 </dd></dl>
 
 <dl class="method">

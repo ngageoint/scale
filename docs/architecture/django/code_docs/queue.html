@@ -862,6 +862,20 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for managing the queue</p>
 <dl class="method">
+<dt id="queue.models.QueueManager.cancel_queued_jobs">
+<code class="descname">cancel_queued_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.cancel_queued_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the queued job executions for the given jobs as canceled</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job IDs being canceled</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.models.QueueManager.get_queue">
 <code class="descname">get_queue</code><span class="sig-paren">(</span><em>order_mode</em>, <em>ignore_job_type_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of queue models sorted according to their priority first, and then according to the provided

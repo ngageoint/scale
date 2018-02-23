@@ -227,6 +227,170 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.messages.process_recipe_input">
+<span id="recipe-messages-process-recipe-input-module"></span><h2>recipe.messages.process_recipe_input module<a class="headerlink" href="#module-recipe.messages.process_recipe_input" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that processes the input for a list of recipes</p>
+<dl class="class">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput">
+<em class="property">class </em><code class="descclassname">recipe.messages.process_recipe_input.</code><code class="descname">ProcessRecipeInput</code><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that processes the input for a list of recipes</p>
+<dl class="method">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.add_recipe">
+<code class="descname">add_recipe</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.add_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given recipe ID to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.process_recipe_input.create_process_recipe_input_messages">
+<code class="descclassname">recipe.messages.process_recipe_input.</code><code class="descname">create_process_recipe_input_messages</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.create_process_recipe_input_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to process the input for the given recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.messages.reprocess_recipes">
+<span id="recipe-messages-reprocess-recipes-module"></span><h2>recipe.messages.reprocess_recipes module<a class="headerlink" href="#module-recipe.messages.reprocess_recipes" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that reprocesses recipes</p>
+<dl class="class">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes">
+<em class="property">class </em><code class="descclassname">recipe.messages.reprocess_recipes.</code><code class="descname">ReprocessRecipes</code><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that reprocesses recipes</p>
+<dl class="method">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes.add_recipe">
+<code class="descname">add_recipe</code><span class="sig-paren">(</span><em>root_recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes.add_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given root recipe ID to this message. Every recipe in the message must have the same recipe type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The root recipe ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more recipes can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more recipes can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.reprocess_recipes.ReprocessRecipes.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.ReprocessRecipes.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.reprocess_recipes.create_reprocess_recipes_messages">
+<code class="descclassname">recipe.messages.reprocess_recipes.</code><code class="descname">create_reprocess_recipes_messages</code><span class="sig-paren">(</span><em>root_recipe_ids</em>, <em>revision_id</em>, <em>event_id</em>, <em>all_jobs=False</em>, <em>job_names=None</em>, <em>batch_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.reprocess_recipes.create_reprocess_recipes_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to reprocess the given root recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>root_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The root recipe IDs</li>
+<li><strong>revision_id</strong> (<em>int</em>) &#8211; The ID of the new recipe type revision to use for reprocessing</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The ID of the event that triggered the reprocessing</li>
+<li><strong>all_jobs</strong> (<em>bool</em>) &#8211; Indicates whether all jobs in the recipes should be reprocessed</li>
+<li><strong>job_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Lists jobs that should be reprocessed even if they haven&#8217;t changed</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The batch ID if this reprocess belongs to a batch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.messages.update_recipes">
 <span id="recipe-messages-update-recipes-module"></span><h2>recipe.messages.update_recipes module<a class="headerlink" href="#module-recipe.messages.update_recipes" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that evaluates and updates recipes</p>

@@ -296,25 +296,25 @@
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_all_jobs">
-<code class="descname">test_schedule_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_all_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_all_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_all_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_created">
-<code class="descname">test_schedule_date_range_created</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_date_range_created</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_created" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_ended">
-<code class="descname">test_schedule_date_range_data_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_ended" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_date_range_data_ended</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data ended date range restriction</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_full">
-<code class="descname">test_schedule_date_range_data_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_full" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_date_range_data_full</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_full" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data date range restriction</p>
 </dd></dl>
 
@@ -326,7 +326,7 @@
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_date_range_data_started">
-<code class="descname">test_schedule_date_range_data_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_started" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_date_range_data_started</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_date_range_data_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch with a data started date range restriction</p>
 </dd></dl>
 
@@ -338,13 +338,13 @@
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_job_names">
-<code class="descname">test_schedule_job_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_job_names" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_job_names</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_job_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_new_batch">
-<code class="descname">test_schedule_new_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_new_batch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_new_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_new_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch that has never been started</p>
 </dd></dl>
 
@@ -356,14 +356,8 @@
 
 <dl class="method">
 <dt id="batch.test.test_models.TestBatchManager.test_schedule_partial_batch">
-<code class="descname">test_schedule_partial_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_partial_batch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_schedule_partial_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_partial_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch that is incomplete</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.test.test_models.TestBatchManager.test_schedule_priority">
-<code class="descname">test_schedule_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that overrides job priority</p>
 </dd></dl>
 
 <dl class="method">

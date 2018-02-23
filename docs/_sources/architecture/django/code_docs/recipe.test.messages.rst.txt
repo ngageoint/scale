@@ -4,6 +4,22 @@ recipe\.test\.messages package
 Submodules
 ----------
 
+recipe\.test\.messages\.test\_process\_recipe\_input module
+-----------------------------------------------------------
+
+.. automodule:: recipe.test.messages.test_process_recipe_input
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.test\.messages\.test\_reprocess\_recipes module
+-------------------------------------------------------
+
+.. automodule:: recipe.test.messages.test_reprocess_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.test\.messages\.test\_update\_recipes module
 ----------------------------------------------------
 

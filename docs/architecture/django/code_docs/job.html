@@ -377,6 +377,7 @@
 <li class="toctree-l1"><a class="reference internal" href="job.messages.html">job.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.blocked_jobs">job.messages.blocked_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.cancel_jobs">job.messages.cancel_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.completed_jobs">job.messages.completed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
@@ -384,6 +385,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.process_job_inputs">job.messages.process_job_inputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.publish_job">job.messages.publish_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.unpublish_jobs">job.messages.unpublish_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages">Module contents</a></li>
 </ul>
 </li>
@@ -543,6 +545,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job.test.messages.html">job.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_blocked_jobs">job.test.messages.test_blocked_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_cancel_jobs">job.test.messages.test_cancel_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_completed_jobs">job.test.messages.test_completed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
@@ -550,6 +553,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_process_job_inputs">job.test.messages.test_process_job_inputs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_unpublish_jobs">job.test.messages.test_unpublish_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
 </ul>
 </li>
@@ -890,15 +894,15 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </table>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="job.models.Job.can_be_canceled">
-<code class="descname">can_be_canceled</code><a class="headerlink" href="#job.models.Job.can_be_canceled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this job can be canceled.</p>
+<code class="descname">can_be_canceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be set to CANCELED status</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job status allows the job to be canceled, false otherwise.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to CANCELED status, false otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -3193,17 +3197,16 @@ object the first time, the query is executed.</p>
 <p>Provides additional methods for handling jobs</p>
 <dl class="method">
 <dt id="job.models.JobManager.create_job">
-<code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type</em>, <em>event</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type</em>, <em>event_id</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
-job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
-returned job model will have not yet been saved in the database.</p>
+job is superseding. The returned job model will have not yet been saved in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the job to create</li>
-<li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this job</li>
 <li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this job</li>
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this job</li>
 <li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this job</li>
@@ -3611,7 +3614,25 @@ returned.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.supersede_jobs">
-<code class="descname">supersede_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.supersede_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">supersede_jobs</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.supersede_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job IDs to be superseded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs to supersede</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs were superseded</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.supersede_jobs_old">
+<code class="descname">supersede_jobs_old</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.supersede_jobs_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3674,7 +3695,33 @@ that are not in a valid state for being BLOCKED will be ignored.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.update_jobs_to_canceled">
-<code class="descname">update_jobs_to_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_jobs_to_canceled</code><span class="sig-paren">(</span><em>jobs</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given job models to the CANCELED status and returns the IDs of the models that were successfully
+set to CANCELED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
+that are not in a valid state for being CANCELED will be ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to set to CANCELED</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The status change time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of job IDs that were successfully set to CANCELED</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.update_jobs_to_canceled_old">
+<code class="descname">update_jobs_to_canceled_old</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.update_jobs_to_canceled_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
 updates occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">

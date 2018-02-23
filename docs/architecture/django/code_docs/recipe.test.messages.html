@@ -229,6 +229,63 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.test.messages.test_process_recipe_input">
+<span id="recipe-test-messages-test-process-recipe-input-module"></span><h2>recipe.test.messages.test_process_recipe_input module<a class="headerlink" href="#module-recipe.test.messages.test_process_recipe_input" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput">
+<em class="property">class </em><code class="descclassname">recipe.test.messages.test_process_recipe_input.</code><code class="descname">TestProcessRecipeInput</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ProcessRecipeInput.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a ProcessRecipeInput message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.test.messages.test_reprocess_recipes">
+<span id="recipe-test-messages-test-reprocess-recipes-module"></span><h2>recipe.test.messages.test_reprocess_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_reprocess_recipes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes">
+<em class="property">class </em><code class="descclassname">recipe.test.messages.test_reprocess_recipes.</code><code class="descname">TestReprocessRecipes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling ReprocessRecipes.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a ReprocessRecipes message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.test.messages.test_update_recipes">
 <span id="recipe-test-messages-test-update-recipes-module"></span><h2>recipe.test.messages.test_update_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_update_recipes" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -244,6 +301,12 @@
 <dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute">
 <code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling UpdateRecipes.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute_create_jobs">
+<code class="descname">test_execute_create_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute_create_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created</p>
 </dd></dl>
 
 <dl class="method">

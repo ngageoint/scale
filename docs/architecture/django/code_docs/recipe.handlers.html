@@ -547,6 +547,20 @@ that have not changed. All children nodes will be changed as well.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.add_jobs">
+<code class="descname">add_jobs</code><span class="sig-paren">(</span><em>recipe_jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.add_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given jobs to the recipe handler</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of recipe_job models with related job and job_type_rev models</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.handlers.handler.RecipeHandler.get_blocked_jobs">
 <code class="descname">get_blocked_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_blocked_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the jobs within this recipe that should be updated to BLOCKED status</p>
@@ -624,6 +638,22 @@ each model, but not saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of jobs with their input</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.handlers.handler.RecipeHandler.get_jobs_to_create">
+<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.handler.RecipeHandler.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict where recipe job_name maps to a list of job models that need to be created</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where job_name maps to list of job models</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>

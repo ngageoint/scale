@@ -12,6 +12,14 @@ job\.messages\.blocked\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.cancel\_jobs module
+----------------------------------
+
+.. automodule:: job.messages.cancel_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.completed\_jobs module
 -------------------------------------
 
@@ -64,6 +72,14 @@ job\.messages\.running\_jobs module
 -----------------------------------
 
 .. automodule:: job.messages.running_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.messages\.unpublish\_jobs module
+-------------------------------------
+
+.. automodule:: job.messages.unpublish_jobs
     :members:
     :undoc-members:
     :show-inheritance:

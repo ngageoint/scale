@@ -312,6 +312,89 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.messages.cancel_jobs">
+<span id="job-messages-cancel-jobs-module"></span><h2>job.messages.cancel_jobs module<a class="headerlink" href="#module-job.messages.cancel_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that cancels job models</p>
+<dl class="class">
+<dt id="job.messages.cancel_jobs.CancelJobs">
+<em class="property">class </em><code class="descclassname">job.messages.cancel_jobs.</code><code class="descname">CancelJobs</code><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that cancels job models</p>
+<dl class="method">
+<dt id="job.messages.cancel_jobs.CancelJobs.add_job">
+<code class="descname">add_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs.add_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.cancel_jobs.CancelJobs.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.cancel_jobs.CancelJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.cancel_jobs.CancelJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.cancel_jobs.CancelJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.CancelJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.cancel_jobs.create_cancel_jobs_messages">
+<code class="descclassname">job.messages.cancel_jobs.</code><code class="descname">create_cancel_jobs_messages</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs.create_cancel_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to cancel the given jobs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs to cancel</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The cancel time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.messages.completed_jobs">
 <span id="job-messages-completed-jobs-module"></span><h2>job.messages.completed_jobs module<a class="headerlink" href="#module-job.messages.completed_jobs" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that sets COMPLETED status for job models</p>
@@ -708,12 +791,12 @@ model locks on the given jobs.</p>
 </div>
 <div class="section" id="module-job.messages.process_job_inputs">
 <span id="job-messages-process-job-inputs-module"></span><h2>job.messages.process_job_inputs module<a class="headerlink" href="#module-job.messages.process_job_inputs" title="Permalink to this headline">¶</a></h2>
-<p>Defines a command message that processes the inputs for a list of jobs</p>
+<p>Defines a command message that processes the input for a list of jobs</p>
 <dl class="class">
 <dt id="job.messages.process_job_inputs.ProcessJobInputs">
 <em class="property">class </em><code class="descclassname">job.messages.process_job_inputs.</code><code class="descname">ProcessJobInputs</code><a class="headerlink" href="#job.messages.process_job_inputs.ProcessJobInputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
-<p>Command message that processes the inputs for a list of jobs</p>
+<p>Command message that processes the input for a list of jobs</p>
 <dl class="method">
 <dt id="job.messages.process_job_inputs.ProcessJobInputs.add_job">
 <code class="descname">add_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.process_job_inputs.ProcessJobInputs.add_job" title="Permalink to this definition">¶</a></dt>
@@ -767,7 +850,7 @@ model locks on the given jobs.</p>
 <dl class="function">
 <dt id="job.messages.process_job_inputs.create_process_job_inputs_messages">
 <code class="descclassname">job.messages.process_job_inputs.</code><code class="descname">create_process_job_inputs_messages</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.process_job_inputs.create_process_job_inputs_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates messages to process the inputs for the given jobs</p>
+<dd><p>Creates messages to process the input for the given jobs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -907,6 +990,89 @@ time)</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The runnin job messages</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.messages.unpublish_jobs">
+<span id="job-messages-unpublish-jobs-module"></span><h2>job.messages.unpublish_jobs module<a class="headerlink" href="#module-job.messages.unpublish_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that unpublishes a list of jobs</p>
+<dl class="class">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs">
+<em class="property">class </em><code class="descclassname">job.messages.unpublish_jobs.</code><code class="descname">UnpublishJobs</code><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that punpublishes a list of jobs</p>
+<dl class="method">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs.add_job">
+<code class="descname">add_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs.add_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job ID to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.unpublish_jobs.UnpublishJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.UnpublishJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.unpublish_jobs.create_unpublish_jobs_messages">
+<code class="descclassname">job.messages.unpublish_jobs.</code><code class="descname">create_unpublish_jobs_messages</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.unpublish_jobs.create_unpublish_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to unpublish the given jobs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs to unpublish</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the jobs were unpublished</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
 </tr>
 </tbody>
 </table>
