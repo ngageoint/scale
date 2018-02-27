@@ -20,6 +20,14 @@ job\.messages\.cancel\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.cancel\_jobs\_bulk module
+----------------------------------------
+
+.. automodule:: job.messages.cancel_jobs_bulk
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.completed\_jobs module
 -------------------------------------
 
@@ -72,6 +80,14 @@ job\.messages\.running\_jobs module
 -----------------------------------
 
 .. automodule:: job.messages.running_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.messages\.uncancel\_jobs module
+------------------------------------
+
+.. automodule:: job.messages.uncancel_jobs
     :members:
     :undoc-members:
     :show-inheritance:

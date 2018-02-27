@@ -324,6 +324,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.process_job_inputs.ProcessJobInputs.add_job">(job.messages.process_job_inputs.ProcessJobInputs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs.add_job">(job.messages.uncancel_jobs.UncancelJobs method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs.add_job">(job.messages.unpublish_jobs.UnpublishJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.messages.html#queue.messages.queued_jobs.QueuedJobs.add_job">(queue.messages.queued_jobs.QueuedJobs method)</a>
@@ -769,6 +771,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.can_be_running">can_be_running() (job.models.Job method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.can_be_uncanceled">can_be_uncanceled() (job.models.Job method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.BlockedJobs.can_fit_more">can_fit_more() (job.messages.blocked_jobs.BlockedJobs method)</a>
 
       <ul>
@@ -785,6 +789,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.process_job_inputs.ProcessJobInputs.can_fit_more">(job.messages.process_job_inputs.ProcessJobInputs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.can_fit_more">(job.messages.running_jobs.RunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs.can_fit_more">(job.messages.uncancel_jobs.UncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs.can_fit_more">(job.messages.unpublish_jobs.UnpublishJobs method)</a>
 </li>
@@ -804,6 +810,10 @@
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.canceled_count">canceled_count (metrics.models.MetricsJobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs">CancelJobs (class in job.messages.cancel_jobs)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.CancelJobsBulk">CancelJobsBulk (class in job.messages.cancel_jobs_bulk)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView">CancelJobsView (class in job.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.Error.CATEGORIES">CATEGORIES (error.models.Error attribute)</a>
 </li>
@@ -1037,10 +1047,10 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
@@ -1086,6 +1096,8 @@
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_recipe">create_batch_recipe() (in module batch.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.create_blocked_jobs_messages">create_blocked_jobs_messages() (in module job.messages.blocked_jobs)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.create_cancel_jobs_bulk_message">create_cancel_jobs_bulk_message() (in module job.messages.cancel_jobs_bulk)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.create_cancel_jobs_messages">create_cancel_jobs_messages() (in module job.messages.cancel_jobs)</a>
 </li>
@@ -1269,6 +1281,8 @@
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRuleManager.create_trigger_rule">(trigger.models.TriggerRuleManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.create_uncancel_jobs_messages">create_uncancel_jobs_messages() (in module job.messages.uncancel_jobs)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.create_unpublish_jobs_messages">create_unpublish_jobs_messages() (in module job.messages.unpublish_jobs)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.create_update_recipes_messages">create_update_recipes_messages() (in module recipe.messages.update_recipes)</a>
@@ -2037,10 +2051,10 @@
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig">ErrorConfig (class in error.apps)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorDetailsSerializer">ErrorDetailsSerializer (class in error.serializers)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView">ErrorDetailsView (class in error.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.errored_count">errored_count (metrics.models.MetricsIngest attribute)</a>
@@ -2094,6 +2108,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.execute">(job.messages.cancel_jobs.CancelJobs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.CancelJobsBulk.execute">(job.messages.cancel_jobs_bulk.CancelJobsBulk method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.CompletedJobs.execute">(job.messages.completed_jobs.CompletedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.failed_jobs.FailedJobs.execute">(job.messages.failed_jobs.FailedJobs method)</a>
@@ -2107,6 +2123,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.execute">(job.messages.publish_job.PublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.execute">(job.messages.running_jobs.RunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs.execute">(job.messages.uncancel_jobs.UncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs.execute">(job.messages.unpublish_jobs.UnpublishJobs method)</a>
 </li>
@@ -2412,6 +2430,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.from_json">(job.messages.cancel_jobs.CancelJobs static method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.CancelJobsBulk.from_json">(job.messages.cancel_jobs_bulk.CancelJobsBulk static method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.CompletedJobs.from_json">(job.messages.completed_jobs.CompletedJobs static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.failed_jobs.FailedJobs.from_json">(job.messages.failed_jobs.FailedJobs static method)</a>
@@ -2425,6 +2445,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.from_json">(job.messages.publish_job.PublishJob static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.from_json">(job.messages.running_jobs.RunningJobs static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs.from_json">(job.messages.uncancel_jobs.UncancelJobs static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs.from_json">(job.messages.unpublish_jobs.UnpublishJobs static method)</a>
 </li>
@@ -4639,6 +4661,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.cancel_jobs">job.messages.cancel_jobs (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.cancel_jobs_bulk">job.messages.cancel_jobs_bulk (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.completed_jobs">job.messages.completed_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs (module)</a>
@@ -4652,6 +4676,8 @@
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.publish_job">job.messages.publish_job (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.uncancel_jobs">job.messages.uncancel_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.unpublish_jobs">job.messages.unpublish_jobs (module)</a>
 </li>
@@ -4821,6 +4847,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_cancel_jobs">job.test.messages.test_cancel_jobs (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_cancel_jobs_bulk">job.test.messages.test_cancel_jobs_bulk (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_completed_jobs">job.test.messages.test_completed_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs (module)</a>
@@ -4834,6 +4862,8 @@
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_uncancel_jobs">job.test.messages.test_uncancel_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_unpublish_jobs">job.test.messages.test_unpublish_jobs (module)</a>
 </li>
@@ -4863,6 +4893,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_completed">job_completed (job.models.JobExecution attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEnd.job_exe">job_exe (job.models.JobExecutionEnd attribute)</a>
 
       <ul>
@@ -4875,8 +4907,6 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_exe">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEnd.JOB_EXE_END_STATUSES">JOB_EXE_END_STATUSES (job.models.JobExecutionEnd attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exe_file_links">job_exe_file_links (job.models.JobExecution attribute)</a>
@@ -6970,6 +7000,8 @@
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.parser_classes">(diagnostic.views.QueueScaleRouletteView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView.parser_classes">(job.views.CancelJobsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.RequeueJobsView.parser_classes">(job.views.RequeueJobsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.parser_classes">(port.views.ConfigurationUploadView attribute)</a>
@@ -7159,6 +7191,8 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansValidationView.post">(ingest.views.ScansValidationView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView.post">(ingest.views.StrikesValidationView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView.post">(job.views.CancelJobsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesValidationView.post">(job.views.JobTypesValidationView method)</a>
 </li>
@@ -7406,6 +7440,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.queryset">(ingest.views.StrikesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView.queryset">(job.views.CancelJobsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.queryset">(job.views.JobDetailsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.queryset">(job.views.JobExecutionDetailsView attribute)</a>
@@ -7511,10 +7547,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_exe">queue.job_exe (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs (module)</a>
@@ -8696,6 +8732,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.serializer_class">(ingest.views.StrikesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView.serializer_class">(job.views.CancelJobsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobInputFilesView.serializer_class">(job.views.JobInputFilesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeDetailsView.serializer_class">(job.views.JobTypeDetailsView attribute)</a>
@@ -8966,6 +9004,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs.setUp">(job.test.messages.test_cancel_jobs.TestCancelJobs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk.setUp">(job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_completed_jobs.TestCompletedJobs.setUp">(job.test.messages.test_completed_jobs.TestCompletedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_failed_jobs.TestFailedJobs.setUp">(job.test.messages.test_failed_jobs.TestFailedJobs method)</a>
@@ -8979,6 +9019,8 @@
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.setUp">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.setUp">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_uncancel_jobs.TestUncancelJobs.setUp">(job.test.messages.test_uncancel_jobs.TestUncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_unpublish_jobs.TestUnpublishJobs.setUp">(job.test.messages.test_unpublish_jobs.TestUnpublishJobs method)</a>
 </li>
@@ -9005,6 +9047,8 @@
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeRunningStatus.setUp">(job.test.test_models.TestJobTypeRunningStatus method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsView.setUp">(job.test.test_views.OldTestJobDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsView.setUp">(job.test.test_views.TestCancelJobsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsView.setUp">(job.test.test_views.TestJobDetailsView method)</a>
 </li>
@@ -10219,6 +10263,8 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.test_calculate_strike_is_none">test_calculate_strike_is_none() (metrics.test.test_models.TestMetricsIngest method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsView.test_cancel">test_cancel() (job.test.test_views.TestCancelJobsView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsView.test_cancel_bad_param">test_cancel_bad_param() (job.test.test_views.OldTestJobDetailsView method)</a>
 
       <ul>
@@ -10708,6 +10754,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs.test_execute">(job.test.messages.test_cancel_jobs.TestCancelJobs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk.test_execute">(job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_completed_jobs.TestCompletedJobs.test_execute">(job.test.messages.test_completed_jobs.TestCompletedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_failed_jobs.TestFailedJobs.test_execute">(job.test.messages.test_failed_jobs.TestFailedJobs method)</a>
@@ -10721,6 +10769,8 @@
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.test_execute">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.test_execute">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_uncancel_jobs.TestUncancelJobs.test_execute">(job.test.messages.test_uncancel_jobs.TestUncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_unpublish_jobs.TestUnpublishJobs.test_execute">(job.test.messages.test_unpublish_jobs.TestUnpublishJobs method)</a>
 </li>
@@ -11488,6 +11538,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs.test_json">(job.test.messages.test_cancel_jobs.TestCancelJobs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk.test_json">(job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_completed_jobs.TestCompletedJobs.test_json">(job.test.messages.test_completed_jobs.TestCompletedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_failed_jobs.TestFailedJobs.test_json">(job.test.messages.test_failed_jobs.TestFailedJobs method)</a>
@@ -11501,6 +11553,8 @@
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_publish_job.TestPublishJob.test_json">(job.test.messages.test_publish_job.TestPublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_running_jobs.TestRunningJobs.test_json">(job.test.messages.test_running_jobs.TestRunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_uncancel_jobs.TestUncancelJobs.test_json">(job.test.messages.test_uncancel_jobs.TestUncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_unpublish_jobs.TestUnpublishJobs.test_json">(job.test.messages.test_unpublish_jobs.TestUnpublishJobs method)</a>
 </li>
@@ -13243,6 +13297,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs">TestCancelJobs (class in job.test.messages.test_cancel_jobs)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs_bulk.TestCancelJobsBulk">TestCancelJobsBulk (class in job.test.messages.test_cancel_jobs_bulk)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsView">TestCancelJobsView (class in job.test.test_views)</a>
+</li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_messages.TestChainedCommandMessage">TestChainedCommandMessage (class in messaging.test.test_messages)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock">TestClock (class in job.test.test_clock)</a>
@@ -13777,6 +13835,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_metrics.TestTotalJobExeMetrics">TestTotalJobExeMetrics (class in job.test.execution.test_metrics)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_uncancel_jobs.TestUncancelJobs">TestUncancelJobs (class in job.test.messages.test_uncancel_jobs)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_unpublish_jobs.TestUnpublishJobs">TestUnpublishJobs (class in job.test.messages.test_unpublish_jobs)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipes.TestUpdateRecipes">TestUpdateRecipes (class in recipe.test.messages.test_update_recipes)</a>
@@ -13850,6 +13910,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.to_json">(job.messages.cancel_jobs.CancelJobs method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs_bulk.CancelJobsBulk.to_json">(job.messages.cancel_jobs_bulk.CancelJobsBulk method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.CompletedJobs.to_json">(job.messages.completed_jobs.CompletedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.failed_jobs.FailedJobs.to_json">(job.messages.failed_jobs.FailedJobs method)</a>
@@ -13863,6 +13925,8 @@
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.publish_job.PublishJob.to_json">(job.messages.publish_job.PublishJob method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.to_json">(job.messages.running_jobs.RunningJobs method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs.to_json">(job.messages.uncancel_jobs.UncancelJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs.to_json">(job.messages.unpublish_jobs.UnpublishJobs method)</a>
 </li>
@@ -14055,6 +14119,8 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs">UncancelJobs (class in job.messages.uncancel_jobs)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.UNEDITABLE_FIELDS">UNEDITABLE_FIELDS (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.UNKNOWN">UNKNOWN (job.tasks.update.TaskStatusUpdate attribute)</a>
@@ -14129,10 +14195,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">update_to_now() (job.execution.metrics.FinishedJobExeMetricsOverTime method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.update_uuid">update_uuid() (storage.models.ScaleFile method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.update_uuid">update_uuid() (storage.models.ScaleFile method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.UpdateRecipes">UpdateRecipes (class in recipe.messages.update_recipes)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.upload_files">upload_files() (product.models.ProductFileManager method)</a>

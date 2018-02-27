@@ -378,6 +378,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.blocked_jobs">job.messages.blocked_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.cancel_jobs">job.messages.cancel_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.cancel_jobs_bulk">job.messages.cancel_jobs_bulk module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.completed_jobs">job.messages.completed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
@@ -385,6 +386,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.process_job_inputs">job.messages.process_job_inputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.publish_job">job.messages.publish_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.uncancel_jobs">job.messages.uncancel_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.unpublish_jobs">job.messages.unpublish_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages">Module contents</a></li>
 </ul>
@@ -546,6 +548,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_blocked_jobs">job.test.messages.test_blocked_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_cancel_jobs">job.test.messages.test_cancel_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_cancel_jobs_bulk">job.test.messages.test_cancel_jobs_bulk module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_completed_jobs">job.test.messages.test_completed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
@@ -553,6 +556,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_process_job_inputs">job.test.messages.test_process_job_inputs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_uncancel_jobs">job.test.messages.test_uncancel_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_unpublish_jobs">job.test.messages.test_unpublish_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
 </ul>
@@ -983,6 +987,23 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be set to RUNNING status, false otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.can_be_uncanceled">
+<code class="descname">can_be_uncanceled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.can_be_uncanceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job can be uncanceled. Jobs can be uncanceled if they are currently canceled and have
+never been queued before.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the job can be uncanceled, false otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -5715,6 +5736,45 @@ object the first time, the query is executed.</p>
 </div>
 <div class="section" id="module-job.views">
 <span id="job-views-module"></span><h2>job.views module<a class="headerlink" href="#module-job.views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.views.CancelJobsView">
+<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">CancelJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.CancelJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for canceling jobs</p>
+<dl class="attribute">
+<dt id="job.views.CancelJobsView.parser_classes">
+<code class="descname">parser_classes</code><em class="property"> = (&lt;class 'rest_framework.parsers.JSONParser'&gt;,)</em><a class="headerlink" href="#job.views.CancelJobsView.parser_classes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.views.CancelJobsView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.CancelJobsView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit command message to cancel jobs that fit the given filter criteria</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.CancelJobsView.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#job.views.CancelJobsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.CancelJobsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.CancelJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="job.views.JobDetailsView">
 <em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView" title="Permalink to this definition">¶</a></dt>
