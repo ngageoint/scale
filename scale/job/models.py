@@ -1161,6 +1161,16 @@ class Job(models.Model):
 
         return self.status == 'QUEUED'
 
+    def can_be_uncanceled(self):
+        """Indicates whether this job can be uncanceled. Jobs can be uncanceled if they are currently canceled and have
+        never been queued before.
+
+        :returns: True if the job can be uncanceled, false otherwise
+        :rtype: bool
+        """
+
+        return self.status == 'CANCELED' and not self.has_been_queued()
+
     def get_job_data(self):
         """Returns the data for this job
 

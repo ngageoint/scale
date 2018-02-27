@@ -334,7 +334,7 @@ class ProductFileManager(models.GeoManager):
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
-                                    job_ids=None, is_operational=is_operational, is_published=is_published,
+                                    job_ids=job_ids, is_operational=is_operational, is_published=is_published,
                                     is_superseded=False, file_name=file_name, job_output=job_output,
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
