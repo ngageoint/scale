@@ -36,3 +36,9 @@ class TerminatedCommand(Exception):
     """Exception that can be thrown to indicate that a Scale command recieved a SIGTERM signal"""
 
     pass
+
+
+class UnbalancedBrackets(Exception):
+    """Exception thrown when a string is provided that contains unbalanced curly brackets"""
+
+    pass

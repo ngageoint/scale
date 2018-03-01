@@ -130,19 +130,20 @@ class SeedManifest(object):
 
         return self.get_interface().get('command', None)
 
-    def get_injected_command_args(self, values):
-        """Gets the command and ignores the values parameter
+    def get_injected_command_args(self, values, env_vars):
+        """Gets the command, injecting env_vars and input variables
 
-        TODO: Remove once old style job types are removed.
-        This method exists as a placeholder for compatibility until old style job types are removed.
-        Once this occurs get_command should be used in its place.
         :param values: Input values to replace named placeholders in command value
         :type values: {str, str}
+        :param env_vars: Incoming environment variables
+        :type env_vars: dict
         :return: the command
         :rtype: str
         """
 
-        return self.get_command()
+        from util.command import environment_expansion
+
+        return environment_expansion(env_vars, self.get_command())
 
     def get_interface(self):
         """Gets the interface for the Seed job

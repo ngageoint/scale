@@ -370,14 +370,18 @@ class JobInterface(object):
 
         return self.definition['command_arguments']
 
-    def get_injected_command_args(self, values):
+    def get_injected_command_args(self, values, env_vars):
         """Gets the command arguments with values injected
 
         :param values: Input values to replace named placeholders in command value
         :type values: {str, str}
+        :param env_vars: Incoming environment variables
+        :type env_vars: {}
         :return: the command args
         :rtype: str
         """
+
+        # env_vars are ignored for old job types
 
         return self.replace_command_parameters(self.get_command_args(), values)
 

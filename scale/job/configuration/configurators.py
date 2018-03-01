@@ -76,7 +76,9 @@ class QueuedExecutionConfigurator(object):
             config.set_output_workspaces(output_workspaces)
 
         # Create main task with fields populated from input data
-        args = job.get_job_interface().get_injected_command_args(input_values)
+        interface = job.get_job_interface()
+        # TODO: v6 this should directly use util.command.environment_expansion
+        args = interface.get_injected_command_args(input_values, env_vars)
         config.create_tasks(['main'])
         config.add_to_task('main', args=args, env_vars=env_vars, workspaces=task_workspaces)
         return config
