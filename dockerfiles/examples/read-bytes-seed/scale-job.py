@@ -1,7 +1,6 @@
 import argparse
 import logging
 import sys
-import json
 import os
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
