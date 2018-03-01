@@ -201,8 +201,8 @@ class RecipeHandler(object):
                 continue  # Skip jobs that are already created
             job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
                                          batch_id=batch_id)
-            if self.recipe.batch and self.recipe.batch.priority is not None:
-                job.priority = self.recipe.batch.priority
+            if self.recipe.batch and self.recipe.batch.get_batch_definition().priority is not None:
+                job.priority = self.recipe.batch.get_batch_definition().priority
             job_models[job_name] = [job]
 
         return job_models

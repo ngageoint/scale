@@ -143,7 +143,7 @@ def edit_recipe_type(recipe_type, definition):
     RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(definition), None, False)
 
 
-def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None):
+def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None, batch=None):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -166,6 +166,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     recipe.input = input
     recipe.is_superseded = is_superseded
     recipe.superseded = superseded
+    recipe.batch = batch
     recipe.save()
 
     return recipe

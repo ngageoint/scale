@@ -4,6 +4,7 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
+from batch.test import utils as batch_test_utils
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from job.test import utils as job_test_utils
@@ -14,6 +15,8 @@ from storage.test import utils as storage_test_utils
 
 
 class TestUpdateRecipes(TestCase):
+
+    fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -337,6 +340,8 @@ class TestUpdateRecipes(TestCase):
     def test_execute_create_jobs(self):
         """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
 
+        batch = batch_test_utils.create_batch(definition={'priority': 999})
+
         # Create recipes
         job_type_1 = job_test_utils.create_job_type()
         job_type_2 = job_test_utils.create_job_type()
@@ -386,7 +391,7 @@ class TestUpdateRecipes(TestCase):
             }]
         }
         recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
-        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, batch=batch)
 
         # Add recipes to message
         message = UpdateRecipes()
@@ -400,6 +405,7 @@ class TestUpdateRecipes(TestCase):
         self.assertTrue(result)
 
         # Make sure jobs get created and that "top" recipe jobs (job_1 and job_a) have input populated
+        # Recipe 2 jobs (job_a and job_b) should have priority set to 999 from batch
         rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
         recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
         self.assertEqual(len(recipe_jobs), 4)
@@ -418,11 +424,13 @@ class TestUpdateRecipes(TestCase):
         self.assertEqual(recipe_jobs[2].job.job_type_id, job_type_3.id)
         self.assertTrue(recipe_jobs[2].is_original)
         self.assertTrue(recipe_jobs[2].job.has_input())
+        self.assertEqual(recipe_jobs[2].job.priority, 999)
         self.assertEqual(recipe_jobs[3].recipe_id, recipe_2.id)
         self.assertEqual(recipe_jobs[3].job_name, 'job_b')
         self.assertEqual(recipe_jobs[3].job.job_type_id, job_type_4.id)
         self.assertTrue(recipe_jobs[3].is_original)
         self.assertFalse(recipe_jobs[3].job.has_input())
+        self.assertEqual(recipe_jobs[3].job.priority, 999)
 
         jobs = Job.objects.filter(recipe_id__in=[recipe_1.id, recipe_2.id])
         self.assertEqual(len(jobs), 4)
