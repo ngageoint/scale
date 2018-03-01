@@ -314,22 +314,22 @@ def deploy_logstash(client, app_name, es_urls, es_lb):
     marathon = initialize_app_template('logstash', app_name, os.getenv(
         'LOGSTASH_DOCKER_IMAGE', logstash_docker_img_default))
 
-        arbitrary_env = {
-            'ELASTICSEARCH_LB': es_lb,
-            'ELASTICSEARCH_URLS': es_urls,
-        }
-        # For all environment variable that are set add to marathon json.
-        for env in arbitrary_env:
-            marathon['env'][env] = arbitrary_env[env]
+    arbitrary_env = {
+        'ELASTICSEARCH_LB': es_lb,
+        'ELASTICSEARCH_URLS': es_urls,
+    }
+    # For all environment variable that are set add to marathon json.
+    for env in arbitrary_env:
+        marathon['env'][env] = arbitrary_env[env]
 
-        env_map = {
+    env_map = {
 
-            'LOGSTASH_WATCHDOG_SLEEP_TIME': 'SLEEP_TIME',
-            'LOGSTASH_TEMPLATE_URI': 'TEMPLATE_URI',
-            'LOGSTASH_DEBUG': 'LOGSTASH_DEBUG'
-        }
-        apply_set_envs(marathon, env_map)
-        deploy_marathon_app(client, marathon)
+        'LOGSTASH_WATCHDOG_SLEEP_TIME': 'SLEEP_TIME',
+        'LOGSTASH_TEMPLATE_URI': 'TEMPLATE_URI',
+        'LOGSTASH_DEBUG': 'LOGSTASH_DEBUG'
+    }
+    apply_set_envs(marathon, env_map)
+    deploy_marathon_app(client, marathon)
 
 
 if __name__ == '__main__':
