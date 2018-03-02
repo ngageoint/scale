@@ -38,6 +38,8 @@ def environment_expansion(env_map, cmd_string):
     ${VAR}
     ${VAR/#/PREFIX}
 
+    NOTE: All variables not matched remain unchanged
+
     WARNING: Resulting string should be treated as sensitive, due to the possibility
     of secrets being injected.
 
@@ -54,10 +56,9 @@ def environment_expansion(env_map, cmd_string):
     def dict_lookup(match):
         prefix = None
 
+        value = match.group(0)
         key = match.group(1)
         key = key.lstrip('{').rstrip('}')
-
-        value = ''
 
         # Handle special case for prefixed expansion
         if '/#/' in key:

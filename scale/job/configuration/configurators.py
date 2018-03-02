@@ -23,6 +23,7 @@ from scheduler.vault.manager import secrets_mgr
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace
 from util.environment import normalize_env_var_name
+from util.command import environment_expansion
 
 
 class QueuedExecutionConfigurator(object):
@@ -76,9 +77,7 @@ class QueuedExecutionConfigurator(object):
             config.set_output_workspaces(output_workspaces)
 
         # Create main task with fields populated from input data
-        interface = job.get_job_interface()
-        # TODO: v6 this should directly use util.command.environment_expansion
-        args = interface.get_injected_command_args(input_values, env_vars)
+        args = job.get_job_interface().get_injected_command_args(input_values, env_vars)
         config.create_tasks(['main'])
         config.add_to_task('main', args=args, env_vars=env_vars, workspaces=task_workspaces)
         return config
@@ -408,6 +407,8 @@ class ScheduledExecutionConfigurator(object):
         # TODO: Remove old-style logic for command parameters inject when with v6
         if not JobInterfaceSunset.is_seed(job_type.interface):
             args = JobInterface.replace_command_parameters(args, env_vars)
+        else:
+            args = environment_expansion(env_vars, args)
         config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources
