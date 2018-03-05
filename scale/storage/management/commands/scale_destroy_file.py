@@ -20,9 +20,9 @@ class Command(BaseCommand):
     help = 'Perform a file destruction operation on a file'
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--file-id', action='store', type=str,
+        parser.add_argument('-f', '--file_path', action='store', type=str,
                             help='Absolute path of the file to delete')
-        parser.add_argument('-j', '--job-id', action='store', type=int,
+        parser.add_argument('-j', '--job_id', action='store', type=int,
                             help='ID of the Job model')
 
     def handle(self, *args, **options):
