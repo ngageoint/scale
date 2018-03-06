@@ -18,10 +18,9 @@
 			"interface": {
 			     "version": "1.4",
                  "command": "",
-			     "command_arguments": "scale-destroy-file ${-f :file_path} ${-j :job_id}",
+			     "command_arguments": "scale_destroy_file ${-f :file_path} ${-j :job_id}",
                  "input_data": [ { "name": "file_path", "type": "property" },
-                                 { "name": "job_id", "type": "property" },
-                                 { "name": "workspace", "type": "property" } ]
+                                 { "name": "job_id", "type": "property" } ]
 			},
 			"revision_num": 1,
             "error_mapping": {
