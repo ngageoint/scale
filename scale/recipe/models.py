@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 import copy
 import math
 
-import django.utils.timezone as timezone
 import django.contrib.postgres.fields
-from django.db import models, transaction
+from django.db import connection, models, transaction
+from django.utils.timezone import now
 
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
@@ -41,7 +41,7 @@ class RecipeManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        modified = timezone.now()
+        modified = now()
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
         # Count as a completed recipe if part of a batch
@@ -142,7 +142,7 @@ class RecipeManager(models.Manager):
         recipe.event = event
         recipe.batch_id = batch_id
         recipe_definition = recipe.get_recipe_definition()
-        when = timezone.now()
+        when = now()
 
         if superseded_recipe:
             # Mark superseded recipe
@@ -581,7 +581,7 @@ class RecipeManager(models.Manager):
         :type recipes: list
         """
 
-        when = timezone.now()
+        when = now()
         recipe_input_file_ids = {}  # {Recipe ID: set}
         recipe_file_sizes = {}  # {Recipe ID: int}
         recipe_source_started = {}  # {Recipe ID: datetime}
@@ -705,7 +705,7 @@ class RecipeManager(models.Manager):
 
         # Create an event to represent this request
         description = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
+        event = TriggerEvent.objects.create_trigger_event('USER', None, description, now())
 
         # Create the new recipe while superseding the old one and queuing the associated jobs
         try:
@@ -725,7 +725,33 @@ class RecipeManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=recipe_ids).update(is_superseded=True, superseded=when, last_modified=timezone.now())
+        self.filter(id__in=recipe_ids).update(is_superseded=True, superseded=when, last_modified=now())
+
+    def update_recipe_metrics(self, recipe_ids):
+        """Updates the metrics for the recipes with the given IDs
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        """
+
+        if not recipe_ids:
+            return
+
+        qry = 'UPDATE recipe r SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
+        qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
+        qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
+        qry += 'last_modified = %s FROM (SELECT rj.recipe_id, COUNT(j.id) AS jobs_total, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
+        qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id WHERE rj.recipe_id IN %s GROUP BY rj.recipe_id) s '
+        qry += 'WHERE r.id = s.recipe_id'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [now(), tuple(recipe_ids)])
 
     # TODO: remove this once job failure, completion, cancellation, and requeue have moved to messaging system
     def _get_recipe_handlers(self, recipe_ids):
@@ -817,6 +843,25 @@ class Recipe(models.Model):
     :keyword source_ended: The end time of the source data for this recipe
     :type source_ended: :class:`django.db.models.DateTimeField`
 
+    :keyword jobs_total: The total count of all jobs within this recipe
+    :type jobs_total: :class:`django.db.models.IntegerField`
+    :keyword jobs_pending: The count of all PENDING jobs within this recipe
+    :type jobs_pending: :class:`django.db.models.IntegerField`
+    :keyword jobs_blocked: The count of all BLOCKED jobs within this recipe
+    :type jobs_blocked: :class:`django.db.models.IntegerField`
+    :keyword jobs_queued: The count of all QUEUED jobs within this recipe
+    :type jobs_queued: :class:`django.db.models.IntegerField`
+    :keyword jobs_running: The count of all RUNNING jobs within this recipe
+    :type jobs_running: :class:`django.db.models.IntegerField`
+    :keyword jobs_failed: The count of all FAILED jobs within this recipe
+    :type jobs_failed: :class:`django.db.models.IntegerField`
+    :keyword jobs_completed: The count of all COMPLETED within this recipe
+    :type jobs_completed: :class:`django.db.models.IntegerField`
+    :keyword jobs_canceled: The count of all CANCELED jobs within this recipe
+    :type jobs_canceled: :class:`django.db.models.IntegerField`
+    :keyword is_completed: Whether this recipe has completed all of its jobs
+    :type is_completed: :class:`django.db.models.BooleanField`
+
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword completed: When every job in the recipe was completed successfully
@@ -845,6 +890,17 @@ class Recipe(models.Model):
     # Optional geospatial fields
     source_started = models.DateTimeField(blank=True, null=True)
     source_ended = models.DateTimeField(blank=True, null=True)
+
+    # Metrics fields
+    jobs_total = models.IntegerField(default=0)
+    jobs_pending = models.IntegerField(default=0)
+    jobs_blocked = models.IntegerField(default=0)
+    jobs_queued = models.IntegerField(default=0)
+    jobs_running = models.IntegerField(default=0)
+    jobs_failed = models.IntegerField(default=0)
+    jobs_completed = models.IntegerField(default=0)
+    jobs_canceled = models.IntegerField(default=0)
+    is_completed = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     completed = models.DateTimeField(blank=True, null=True)
