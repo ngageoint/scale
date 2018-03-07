@@ -41,11 +41,8 @@ class Command(BaseCommand):
         logger.info('File path: %s', file_path)
         logger.info('Job ID: %i', job_id)
 
-        try:
-            destroy_file_job.destroy_file(file_path, job_id)
-        except:
-            logger.exception('Destroy File caught unexpected error, exit code 1 returning')
-            sys.exit(1)
+        destroy_file_job.destroy_file(file_path, job_id)
+
         logger.info('Command completed: scale_destroy_file')
 
     def _onsigterm(self, signum, _frame):
