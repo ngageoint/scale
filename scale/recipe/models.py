@@ -451,6 +451,22 @@ class RecipeManager(models.Manager):
         # Return handlers with updated data after all dependent jobs have been locked
         return self._get_recipe_handlers(recipe_ids).values()
 
+    def get_recipe_ids_for_jobs(self, job_ids):
+        """Returns the IDs of all recipes that contain the jobs with the given IDs. This will include superseded
+        recipes.
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The recipe IDs
+        :rtype: list
+        """
+
+        recipe_ids = set()
+        for recipe_job in RecipeJob.objects.filter(job_id__in=job_ids).only('recipe_id'):
+            recipe_ids.add(recipe_job.recipe_id)
+
+        return list(recipe_ids)
+
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
                     include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.

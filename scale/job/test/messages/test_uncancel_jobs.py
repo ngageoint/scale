@@ -107,11 +107,19 @@ class TestUncancelJobs(TransactionTestCase):
         self.assertEqual(jobs[3].status, 'FAILED')
         self.assertEqual(jobs[3].last_status_change, old_when)
 
-        # Make sure an update_recipes message was created
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'update_recipes')
-        self.assertListEqual(msg._recipe_ids, [recipe.id])
+        # Make sure update_recipes and update_recipe_metrics messages were created
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipes_msg = None
+        update_recipe_metrics_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'update_recipes':
+                update_recipes_msg = msg
+            elif msg.type == 'update_recipe_metrics':
+                update_recipe_metrics_msg = msg
+        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(update_recipe_metrics_msg)
+        self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [recipe.id])
 
         # Test executing message again
         newer_when = when + datetime.timedelta(minutes=60)
@@ -135,8 +143,16 @@ class TestUncancelJobs(TransactionTestCase):
         self.assertEqual(jobs[3].status, 'FAILED')
         self.assertEqual(jobs[3].last_status_change, old_when)
 
-        # Make sure an update_recipes message was created
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'update_recipes')
-        self.assertListEqual(msg._recipe_ids, [recipe.id])
+        # Make sure update_recipes and update_recipe_metrics messages were created
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipes_msg = None
+        update_recipe_metrics_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'update_recipes':
+                update_recipes_msg = msg
+            elif msg.type == 'update_recipe_metrics':
+                update_recipe_metrics_msg = msg
+        self.assertIsNotNone(update_recipes_msg)
+        self.assertIsNotNone(update_recipe_metrics_msg)
+        self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [recipe.id])

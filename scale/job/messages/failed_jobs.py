@@ -180,4 +180,8 @@ class FailedJobs(CommandMessage):
             if jobs_to_retry:
                 self.new_messages.extend(create_queued_jobs_messages(jobs_to_retry))
 
+        # Send messages to update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(job_ids))
+
         return True

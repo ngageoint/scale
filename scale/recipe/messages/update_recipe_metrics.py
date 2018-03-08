@@ -39,6 +39,19 @@ def create_update_recipe_metrics_messages(recipe_ids):
     return messages
 
 
+def create_update_recipe_metrics_messages_from_jobs(job_ids):
+    """Creates messages to update the metrics for the recipes affected by the given jobs
+
+    :param job_ids: The job IDs
+    :type job_ids: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    recipe_ids = Recipe.objects.get_recipe_ids_for_jobs(job_ids)
+    return create_update_recipe_metrics_messages(recipe_ids)
+
+
 class UpdateRecipeMetrics(CommandMessage):
     """Command message that updates recipe metrics
     """
@@ -90,9 +103,7 @@ class UpdateRecipeMetrics(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # TODO: job status changes should set off this message
-        # TODO: make a new bulk manager method for completing recipes
+        # TODO: make a new bulk manager method for completing recipes (update msg wiki description)
         # TODO: populate new is_completed field in database update system task
-        # TODO: update wiki message descriptions
         Recipe.objects.update_recipe_metrics(self._recipe_ids)
         return True
