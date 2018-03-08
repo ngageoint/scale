@@ -194,7 +194,7 @@ class DatabaseUpdater(object):
         """Performs any initialization piece of the setting of recipe fields on job models
         """
 
-        logger.info('Scale is now populating the new recipe fields on the job models')
+        logger.info('Scale is now populating the new recipe fields on the job models and the new recipe.is_completed field')
         logger.info('Counting the number of recipes...')
         self._total_recipe = Recipe.objects.all().count()
         logger.info('Found %d recipes that need to be done', self._total_recipe)
@@ -220,6 +220,8 @@ class DatabaseUpdater(object):
         qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_job rj'
         qry_3 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id'
         qry_3 += ' AND r.id IN %s AND r.root_superseded_recipe_id IS NOT NULL AND j.root_recipe_id IS NULL'
+        qry_4 = 'UPDATE recipe r SET is_completed = true WHERE r.id IN %s AND r.completed IS NOT NULL AND '
+        qry_4 += 'NOT r.is_completed'
         with connection.cursor() as cursor:
             cursor.execute(qry_1, [tuple(recipe_ids)])
             count = cursor.rowcount
@@ -233,6 +235,10 @@ class DatabaseUpdater(object):
             count = cursor.rowcount
             if count:
                 logger.info('%d job(s) updated with root_recipe_id field', count)
+            cursor.execute(qry_4, [tuple(recipe_ids)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d recipe(s) updated with is_completed = true', count)
 
         self._current_recipe_id = recipe_ids[-1]
         self._updated_recipe += recipe_batch_size

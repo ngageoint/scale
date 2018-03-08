@@ -103,6 +103,5 @@ class UpdateRecipeMetrics(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # TODO: populate new is_completed field in database update system task
         Recipe.objects.update_recipe_metrics(self._recipe_ids)
         return True
