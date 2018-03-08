@@ -32,23 +32,16 @@ class RecipeManager(models.Manager):
     """Provides additional methods for handling recipes
     """
 
-    def complete_recipe(self, recipe_id, when):
-        """Marks the recipe with the given ID as being completed
+    def complete_recipes(self, recipe_ids, when):
+        """Marks the recipes with the given IDs as being completed
 
-        :param recipe_id: The recipe ID
-        :type recipe_id: :int
-        :param when: The time that the recipe was completed
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: :int
+        :param when: The time that the recipes were completed
         :type when: :class:`datetime.datetime`
         """
 
-        modified = now()
-        self.filter(id=recipe_id).update(completed=when, last_modified=modified)
-
-        # Count as a completed recipe if part of a batch
-        from batch.models import Batch
-        recipe = self.get(id=recipe_id)
-        if recipe.batch_id:
-            Batch.objects.count_completed_recipe(batch.id)
+        self.filter(id__in=recipe_ids).update(is_completed=True, completed=when, last_modified=now())
 
     def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
         """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.

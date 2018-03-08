@@ -118,6 +118,8 @@ class UpdateRecipes(CommandMessage):
         when = now()
         blocked_job_ids = set()
         pending_job_ids = set()
+        completed_recipe_ids = []
+        updated_batch_ids = []
         num_jobs_with_input = 0
         job_ids_ready_for_first_queue = []
 
@@ -178,9 +180,16 @@ class UpdateRecipes(CommandMessage):
                         job.update_database_with_input(when)
                     for job in handler.get_jobs_ready_for_first_queue():
                         job_ids_ready_for_first_queue.append(job.id)
-                    # TODO: handle this in a new message where recipe models lock themselves and then update
-                    if handler.is_completed():
-                        Recipe.objects.complete_recipe(handler.recipe.id, when)
+                    if handler.is_completed() and not handler.recipe.is_completed:
+                        completed_recipe_ids.append(handler.recipe.id)
+                        if handler.recipe.batch_id:
+                            updated_batch_ids.append(handler.recipe.batch_id)
+
+            Recipe.objects.complete_recipes(completed_recipe_ids, when)
+            # TODO: move batch metrics into their own message
+            from batch.models import Batch
+            for batch_id in updated_batch_ids:
+                Batch.objects.count_completed_recipe(batch_id)
 
         # Create new messages
         self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))
