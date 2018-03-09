@@ -104,4 +104,14 @@ class UpdateRecipeMetrics(CommandMessage):
         """
 
         Recipe.objects.update_recipe_metrics(self._recipe_ids)
+
+        # Update any batches that these recipes belong to
+        from batch.messages.update_batch_metrics import create_update_batch_metrics_messages
+        batch_ids = set()
+        for recipe in Recipe.objects.filter(id__in=self._recipe_ids).only('batch_id'):
+            if recipe.batch_id:
+                batch_ids.add(recipe.batch_id)
+        if batch_ids:
+            self.new_messages.extend(create_update_batch_metrics_messages(batch_ids))
+
         return True

@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 
-import django.utils.timezone as timezone
 import django.contrib.postgres.fields
-from django.db import models, transaction
+from django.db import connection, models, transaction
 from django.db.models import F, Q
+from django.utils.timezone import now
 
 from batch.configuration.definition.batch_definition import BatchDefinition
 from batch.exceptions import BatchError
@@ -72,7 +72,7 @@ class BatchManager(models.Manager):
 
         # Create an event to represent this request
         trigger_desc = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, trigger_desc, timezone.now())
+        event = TriggerEvent.objects.create_trigger_event('USER', None, trigger_desc, now())
 
         batch = Batch()
         batch.title = title
@@ -287,6 +287,35 @@ class BatchManager(models.Manager):
                                                  Q(recipeinputfile__scale_file__data_ended__lte=definition.ended))
         return old_recipes
 
+    def update_batch_metrics(self, batch_ids):
+        """Updates the metrics for the batches with the given IDs
+
+        :param batch_ids: The batch IDs
+        :type batch_ids: list
+        """
+
+        if not batch_ids:
+            return
+
+        # TODO: implement
+        # TODO: unit tests for update_batch_metrics message
+        # TODO: create wiki description for update_batch_metrics
+        # qry = 'UPDATE recipe r SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
+        # qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
+        # qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
+        # qry += 'last_modified = %s FROM (SELECT rj.recipe_id, COUNT(j.id) AS jobs_total, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
+        # qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id WHERE rj.recipe_id IN %s GROUP BY rj.recipe_id) s '
+        # qry += 'WHERE r.id = s.recipe_id'
+        # with connection.cursor() as cursor:
+        #     cursor.execute(qry, [now(), tuple(recipe_ids)])
+
     @transaction.atomic
     def _process_trigger(self, batch, trigger_config, input_file):
         """Processes the given input file within the context of a particular batch request.
@@ -321,7 +350,7 @@ class BatchManager(models.Manager):
             'file_id': input_file.id,
             'file_name': input_file.file_name,
         }
-        event = TriggerEvent.objects.create_trigger_event('BATCH', None, description, timezone.now())
+        event = TriggerEvent.objects.create_trigger_event('BATCH', None, description, now())
         Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event, batch_id=batch.id)
         # Update the overall batch status
         batch.created_count += 1
