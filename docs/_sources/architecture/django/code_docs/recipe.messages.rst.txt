@@ -20,6 +20,14 @@ recipe\.messages\.reprocess\_recipes module
     :undoc-members:
     :show-inheritance:
 
+recipe\.messages\.update\_recipe\_metrics module
+------------------------------------------------
+
+.. automodule:: recipe.messages.update_recipe_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.update\_recipes module
 ----------------------------------------
 

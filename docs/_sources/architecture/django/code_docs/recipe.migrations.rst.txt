@@ -180,6 +180,14 @@ recipe\.migrations\.0021\_auto\_20180219\_1916 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0022\_auto\_20180307\_1617 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0022_auto_20180307_1617
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

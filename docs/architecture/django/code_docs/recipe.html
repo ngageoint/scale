@@ -262,6 +262,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_recipe_input">recipe.messages.process_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.reprocess_recipes">recipe.messages.reprocess_recipes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipe_metrics">recipe.messages.update_recipe_metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipes">recipe.messages.update_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages">Module contents</a></li>
 </ul>
@@ -290,6 +291,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0020_auto_20180119_0055">recipe.migrations.0020_auto_20180119_0055 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0020_recipe_batch">recipe.migrations.0020_recipe_batch module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0021_auto_20180219_1916">recipe.migrations.0021_auto_20180219_1916 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0022_auto_20180307_1617">recipe.migrations.0022_auto_20180307_1617 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -326,6 +328,7 @@
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipes">recipe.test.messages.test_update_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages">Module contents</a></li>
 </ul>
@@ -444,6 +447,15 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total size in MiB for all input files in this recipe</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The start time of the source data for this recipe</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the source data for this recipe</li>
+<li><strong>jobs_total</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The total count of all jobs within this recipe</li>
+<li><strong>jobs_pending</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all PENDING jobs within this recipe</li>
+<li><strong>jobs_blocked</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all BLOCKED jobs within this recipe</li>
+<li><strong>jobs_queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all QUEUED jobs within this recipe</li>
+<li><strong>jobs_running</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all RUNNING jobs within this recipe</li>
+<li><strong>jobs_failed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all FAILED jobs within this recipe</li>
+<li><strong>jobs_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all COMPLETED within this recipe</li>
+<li><strong>jobs_canceled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all CANCELED jobs within this recipe</li>
+<li><strong>is_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this recipe has completed all of its jobs</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe was created</li>
 <li><strong>completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When every job in the recipe was completed successfully</li>
 <li><strong>superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this recipe was superseded</li>
@@ -608,6 +620,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.Recipe.is_completed">
+<code class="descname">is_completed</code><a class="headerlink" href="#recipe.models.Recipe.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.Recipe.is_superseded">
 <code class="descname">is_superseded</code><a class="headerlink" href="#recipe.models.Recipe.is_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -627,6 +646,34 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_blocked">
+<code class="descname">jobs_blocked</code><a class="headerlink" href="#recipe.models.Recipe.jobs_blocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_canceled">
+<code class="descname">jobs_canceled</code><a class="headerlink" href="#recipe.models.Recipe.jobs_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_completed">
+<code class="descname">jobs_completed</code><a class="headerlink" href="#recipe.models.Recipe.jobs_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_failed">
+<code class="descname">jobs_failed</code><a class="headerlink" href="#recipe.models.Recipe.jobs_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -657,6 +704,34 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_pending">
+<code class="descname">jobs_pending</code><a class="headerlink" href="#recipe.models.Recipe.jobs_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_queued">
+<code class="descname">jobs_queued</code><a class="headerlink" href="#recipe.models.Recipe.jobs_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_running">
+<code class="descname">jobs_running</code><a class="headerlink" href="#recipe.models.Recipe.jobs_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.jobs_total">
+<code class="descname">jobs_total</code><a class="headerlink" href="#recipe.models.Recipe.jobs_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1208,16 +1283,16 @@ job_type_rev models for the given recipe IDs</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling recipes</p>
 <dl class="method">
-<dt id="recipe.models.RecipeManager.complete_recipe">
-<code class="descname">complete_recipe</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.complete_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks the recipe with the given ID as being completed</p>
+<dt id="recipe.models.RecipeManager.complete_recipes">
+<code class="descname">complete_recipes</code><span class="sig-paren">(</span><em>recipe_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.complete_recipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the recipes with the given IDs as being completed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>recipe_id</strong> (<em>:int</em>) &#8211; The recipe ID</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipe was completed</li>
+<li><strong>recipe_ids</strong> (<em>:int</em>) &#8211; The recipe IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipes were completed</li>
 </ul>
 </td>
 </tr>
@@ -1501,6 +1576,25 @@ Handlers will not be returned for jobs that are not in a recipe or for recipes t
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeManager.get_recipe_ids_for_jobs">
+<code class="descname">get_recipe_ids_for_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_ids_for_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IDs of all recipes that contain the jobs with the given IDs. This will include superseded
+recipes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe IDs</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes">
 <code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
@@ -1608,6 +1702,20 @@ parameter will override any values passed there.</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the recipes were superseded</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.update_recipe_metrics">
+<code class="descname">update_recipe_metrics</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.update_recipe_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the metrics for the recipes with the given IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
 </tr>
 </tbody>
 </table>
