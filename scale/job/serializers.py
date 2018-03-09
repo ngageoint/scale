@@ -242,7 +242,7 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
 
     job = ModelIdSerializer()
     node = ModelIdSerializer()
-    error = ModelIdSerializer()
+    error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
 
 
