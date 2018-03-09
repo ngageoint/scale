@@ -53,12 +53,15 @@ class TestFailedJobs(TransactionTestCase):
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         queued_jobs_msg = None
         update_recipes_msg = None
-        self.assertEqual(len(new_message.new_messages), 2)
+        update_recipe_metrics_msg = None
+        self.assertEqual(len(new_message.new_messages), 3)
         for msg in new_message.new_messages:
             if msg.type == 'queued_jobs':
                 queued_jobs_msg = msg
             elif msg.type == 'update_recipes':
                 update_recipes_msg = msg
+            elif msg.type == 'update_recipe_metrics':
+                update_recipe_metrics_msg = msg
         # Job 1 should be retried and put back on the queue
         self.assertEqual(jobs[0].status, 'QUEUED')
         self.assertEqual(jobs[0].num_exes, 1)
@@ -124,12 +127,15 @@ class TestFailedJobs(TransactionTestCase):
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         queued_jobs_msg = None
         update_recipes_msg = None
-        self.assertEqual(len(message.new_messages), 2)
+        update_recipe_metrics_msg = None
+        self.assertEqual(len(message.new_messages), 3)
         for msg in message.new_messages:
             if msg.type == 'queued_jobs':
                 queued_jobs_msg = msg
             elif msg.type == 'update_recipes':
                 update_recipes_msg = msg
+            elif msg.type == 'update_recipe_metrics':
+                update_recipe_metrics_msg = msg
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)  # 2 jobs should have been retried
         self.assertEqual(len(update_recipes_msg._recipe_ids), 2)  # 2 jobs should have been failed
 
@@ -170,8 +176,17 @@ class TestFailedJobs(TransactionTestCase):
         self.assertTrue(result)
 
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-        self.assertEqual(len(message.new_messages), 1)
-        queued_jobs_msg = message.new_messages[0]
+        queued_jobs_msg = None
+        update_recipes_msg = None
+        update_recipe_metrics_msg = None
+        self.assertEqual(len(message.new_messages), 2)
+        for msg in message.new_messages:
+            if msg.type == 'queued_jobs':
+                queued_jobs_msg = msg
+            elif msg.type == 'update_recipes':
+                update_recipes_msg = msg
+            elif msg.type == 'update_recipe_metrics':
+                update_recipe_metrics_msg = msg
         self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
         # The same 2 jobs should have been retried
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)

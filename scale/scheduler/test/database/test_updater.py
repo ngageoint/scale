@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from django.utils.timezone import now
 
 from batch.test import utils as batch_test_utils
 from job.models import Job, JobExecution, TaskUpdate
@@ -71,6 +72,7 @@ class TestDatabaseUpdater(TestCase):
         recipe_2 = recipe_test_utils.create_recipe()
         recipe_2.root_superseded_recipe = recipe_1
         recipe_2.superseded_recipe = recipe_1
+        recipe_2.completed = now()
         recipe_2.save()
 
         job_1 = job_test_utils.create_job()
@@ -97,6 +99,8 @@ class TestDatabaseUpdater(TestCase):
         job_3 = Job.objects.get(id=job_3.id)
         self.assertEqual(job_3.recipe_id, recipe_2.id)
         self.assertEqual(job_3.root_recipe_id, recipe_1.id)
+        recipe_2 = Recipe.objects.get(id=recipe_2.id)
+        self.assertTrue(recipe_2.is_completed)
 
     def test_update_batch_fields(self):
         """Tests running the database update to populate new batch fields in job and recipe models"""

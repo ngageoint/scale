@@ -18,7 +18,7 @@ from recipe.models import Recipe, RecipeJob, RecipeTypeRevision
 # this type is less than 25 KiB long and that each message can be processed quickly.
 MAX_NUM = 100
 
-RECIPE_JOB_BATCH_SIZE = 500  # Maximum batch size for creating RecipeJob models
+MODEL_BATCH_SIZE = 500  # Maximum batch size for creating models
 
 
 logger = logging.getLogger(__name__)
@@ -235,7 +235,7 @@ class ReprocessRecipes(CommandMessage):
                             recipe_job.is_original = False
                             recipe_job_count += 1
                             recipe_job_models.append(recipe_job)
-                            if len(recipe_job_models) >= RECIPE_JOB_BATCH_SIZE:
+                            if len(recipe_job_models) >= MODEL_BATCH_SIZE:
                                 RecipeJob.objects.bulk_create(recipe_job_models)
                                 recipe_job_models = []
 

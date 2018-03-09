@@ -390,8 +390,14 @@ class TestUpdateRecipes(TestCase):
                 }],
             }]
         }
+        superseded_recipe = recipe_test_utils.create_recipe(is_superseded=True)
+        superseded_job_a = job_test_utils.create_job(is_superseded=True)
+        superseded_job_b = job_test_utils.create_job(is_superseded=True)
+        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_a', job=superseded_job_a)
+        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_b', job=superseded_job_b)
         recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
-        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, batch=batch)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, batch=batch,
+                                                   superseded_recipe=superseded_recipe)
 
         # Add recipes to message
         message = UpdateRecipes()
@@ -406,6 +412,7 @@ class TestUpdateRecipes(TestCase):
 
         # Make sure jobs get created and that "top" recipe jobs (job_1 and job_a) have input populated
         # Recipe 2 jobs (job_a and job_b) should have priority set to 999 from batch
+        # Recipe 2 jobs (job_a and job_b) should supersede old jobs
         rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
         recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
         self.assertEqual(len(recipe_jobs), 4)
@@ -425,12 +432,14 @@ class TestUpdateRecipes(TestCase):
         self.assertTrue(recipe_jobs[2].is_original)
         self.assertTrue(recipe_jobs[2].job.has_input())
         self.assertEqual(recipe_jobs[2].job.priority, 999)
+        self.assertEqual(recipe_jobs[2].job.superseded_job_id, superseded_job_a.id)
         self.assertEqual(recipe_jobs[3].recipe_id, recipe_2.id)
         self.assertEqual(recipe_jobs[3].job_name, 'job_b')
         self.assertEqual(recipe_jobs[3].job.job_type_id, job_type_4.id)
         self.assertTrue(recipe_jobs[3].is_original)
         self.assertFalse(recipe_jobs[3].job.has_input())
         self.assertEqual(recipe_jobs[3].job.priority, 999)
+        self.assertEqual(recipe_jobs[3].job.superseded_job_id, superseded_job_b.id)
 
         jobs = Job.objects.filter(recipe_id__in=[recipe_1.id, recipe_2.id])
         self.assertEqual(len(jobs), 4)

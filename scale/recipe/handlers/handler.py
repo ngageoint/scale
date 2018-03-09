@@ -193,14 +193,22 @@ class RecipeHandler(object):
 
         event_id = self.recipe.event_id
         root_recipe_id = self.recipe.root_superseded_recipe_id
+        sup_recipe_id = self.recipe.superseded_recipe_id
         batch_id = self.recipe.batch_id
+        # TODO: this only works for 1 job per job name
+        superseded_jobs = {}  # {Job name: Job}
         for job_tuple in self.recipe.get_recipe_definition().get_jobs_to_create():
             job_name = job_tuple[0]
             job_type = job_tuple[1]
             if job_name in self._jobs_by_name:
                 continue  # Skip jobs that are already created
+            if sup_recipe_id and not superseded_jobs:
+                from recipe.models import RecipeJob
+                qry = RecipeJob.objects.select_related('job').filter(recipe_id=sup_recipe_id)
+                superseded_jobs = {r.job_name: r.job for r in qry}
+            superseded_job = superseded_jobs[job_name] if job_name in superseded_jobs else None
             job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
-                                         batch_id=batch_id)
+                                         batch_id=batch_id, superseded_job=superseded_job)
             if self.recipe.batch and self.recipe.batch.get_batch_definition().priority is not None:
                 job.priority = self.recipe.batch.get_batch_definition().priority
             job_models[job_name] = [job]

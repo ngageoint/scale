@@ -116,4 +116,8 @@ class BlockedJobs(CommandMessage):
                 job_ids = Job.objects.update_jobs_to_blocked(jobs_to_blocked, self.status_change)
                 logger.info('Set %d job(s) to BLOCKED status', len(job_ids))
 
+        # Send messages to update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(self._blocked_job_ids))
+
         return True

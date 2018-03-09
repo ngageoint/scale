@@ -113,9 +113,10 @@ class CancelJobs(CommandMessage):
                 Queue.objects.cancel_queued_jobs(job_ids)
                 logger.info('Set %d job(s) to CANCELED status', len(job_ids))
 
-        # Need to update recipes of canceled jobs so that dependent jobs are BLOCKED
+        # Need to update recipes of canceled jobs so that dependent jobs are BLOCKED and update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
         from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
-        msgs = create_update_recipes_messages_from_jobs(self._job_ids)
-        self.new_messages.extend(msgs)
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(self._job_ids))
+        self.new_messages.extend(create_update_recipes_messages_from_jobs(self._job_ids))
 
         return True
