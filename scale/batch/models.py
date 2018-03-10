@@ -91,6 +91,15 @@ class BatchManager(models.Manager):
         batch.creator_job = job
         batch.save()
 
+        # Create models for batch metrics
+        batch_metrics_models = []
+        for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+            batch_metrics_model = BatchMetrics()
+            batch_metrics_model.batch_id = batch.id
+            batch_metrics_model.job_name = job_name
+            batch_metrics_models.append(batch_metrics_model)
+        BatchMetrics.objects.bulk_create(batch_metrics_models)
+
         return batch
 
     def get_batches(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
@@ -297,24 +306,38 @@ class BatchManager(models.Manager):
         if not batch_ids:
             return
 
-        # TODO: implement
         # TODO: unit tests for update_batch_metrics message
         # TODO: create wiki description for update_batch_metrics
-        # qry = 'UPDATE recipe r SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
-        # qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
-        # qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
-        # qry += 'last_modified = %s FROM (SELECT rj.recipe_id, COUNT(j.id) AS jobs_total, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
-        # qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id WHERE rj.recipe_id IN %s GROUP BY rj.recipe_id) s '
-        # qry += 'WHERE r.id = s.recipe_id'
-        # with connection.cursor() as cursor:
-        #     cursor.execute(qry, [now(), tuple(recipe_ids)])
+        # TODO: update logic to use new metrics fields instead of old ones and document removing old fields
+
+        # Update recipe metrics for batch
+        qry = 'UPDATE batch b SET recipes_total = s.recipes_total, recipes_completed = s.recipes_completed '
+        qry += 'FROM (SELECT r.batch_id, COUNT(r.id) AS recipes_total, '
+        qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) AS recipes_completed '
+        qry += 'FROM recipe r WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
+        qry += 'WHERE b.id = s.batch_id'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [tuple(batch_ids)])
+
+        # Update job metrics for batch
+        qry = 'UPDATE batch b SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
+        qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
+        qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
+        qry += 'last_modified = %s FROM (SELECT r.batch_id, COUNT(j.id) AS jobs_total, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
+        qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
+        qry += 'WHERE b.id = s.batch_id'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [now(), tuple(batch_ids)])
+
+        BatchMetrics.objects.update_batch_metrics_per_job(batch_ids)
 
     @transaction.atomic
     def _process_trigger(self, batch, trigger_config, input_file):
@@ -412,6 +435,18 @@ class Batch(models.Model):
     completed_recipe_count = models.IntegerField(default=0)
     total_count = models.IntegerField(default=0)
 
+    # Metrics fields
+    jobs_total = models.IntegerField(default=0)
+    jobs_pending = models.IntegerField(default=0)
+    jobs_blocked = models.IntegerField(default=0)
+    jobs_queued = models.IntegerField(default=0)
+    jobs_running = models.IntegerField(default=0)
+    jobs_failed = models.IntegerField(default=0)
+    jobs_completed = models.IntegerField(default=0)
+    jobs_canceled = models.IntegerField(default=0)
+    recipes_total = models.IntegerField(default=0)
+    recipes_completed = models.IntegerField(default=0)
+
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
 
@@ -429,6 +464,116 @@ class Batch(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'batch'
+
+
+class BatchMetricsManager(models.Manager):
+    """Provides additional methods for handling batch metrics
+    """
+
+    def update_batch_metrics_per_job(self, batch_ids):
+        """Updates the metrics per job name for the batches with the given IDs
+
+        :param batch_ids: The batch IDs
+        :type batch_ids: list
+        """
+
+        if not batch_ids:
+            return
+
+        qry = 'UPDATE batch_metrics bm SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
+        qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
+        qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
+        qry += 'min_job_duration = s.min_job_duration, avg_job_duration = s.avg_job_duration, '
+        qry += 'max_job_duration = s.max_job_duration, last_modified = %s '
+        qry += 'FROM (SELECT r.batch_id, rj.job_name COUNT(j.id) AS jobs_total, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
+        qry += 'MIN(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS min_job_duration, '
+        qry += 'AVG(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS avg_job_duration, '
+        qry += 'MAX(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS max_job_duration '
+        qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.job_name) s '
+        qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.job_name'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [now(), tuple(batch_ids)])
+
+
+class BatchMetrics(models.Model):
+    """Contains a set of metrics for a given job name ("node" within a recipe graph) for a given batch
+
+    :keyword batch: The batch
+    :type batch: :class:`django.db.models.ForeignKey`
+    :keyword job_name: The unique name of the job within the batch
+    :type job_name: :class:`django.db.models.CharField`
+
+    :keyword jobs_total: The total count of all jobs for this job name within the batch
+    :type jobs_total: :class:`django.db.models.IntegerField`
+    :keyword jobs_pending: The count of all PENDING jobs for this job name within the batch
+    :type jobs_pending: :class:`django.db.models.IntegerField`
+    :keyword jobs_blocked: The count of all BLOCKED jobs for this job name within the batch
+    :type jobs_blocked: :class:`django.db.models.IntegerField`
+    :keyword jobs_queued: The count of all QUEUED jobs for this job name within the batch
+    :type jobs_queued: :class:`django.db.models.IntegerField`
+    :keyword jobs_running: The count of all RUNNING jobs for this job name within the batch
+    :type jobs_running: :class:`django.db.models.IntegerField`
+    :keyword jobs_failed: The count of all FAILED jobs for this job name within the batch
+    :type jobs_failed: :class:`django.db.models.IntegerField`
+    :keyword jobs_completed: The count of all COMPLETED jobs for this job name within the batch
+    :type jobs_completed: :class:`django.db.models.IntegerField`
+    :keyword jobs_canceled: The count of all CANCELED jobs for this job name within the batch
+    :type jobs_canceled: :class:`django.db.models.IntegerField`
+
+    :keyword min_alg_duration: The shortest algorithm duration for all completed jobs for this job name within the batch
+    :type min_alg_duration: :class:`django.db.models.DurationField`
+    :keyword avg_alg_duration: The average algorithm duration for all completed jobs for this job name within the batch
+    :type avg_alg_duration: :class:`django.db.models.DurationField`
+    :keyword max_alg_duration: The longest algorithm duration for all completed jobs for this job name within the batch
+    :type max_alg_duration: :class:`django.db.models.DurationField`
+    :keyword min_job_duration: The shortest job duration for all completed jobs for this job name within the batch
+    :type min_job_duration: :class:`django.db.models.DurationField`
+    :keyword avg_job_duration: The average job duration for all completed jobs for this job name within the batch
+    :type avg_job_duration: :class:`django.db.models.DurationField`
+    :keyword max_job_duration: The longest job duration for all completed jobs for this job name within the batch
+    :type max_job_duration: :class:`django.db.models.DurationField`
+
+    :keyword created: When these metrics were created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When these metrics were last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+    """
+
+    batch = models.ForeignKey('batch.Batch', on_delete=models.PROTECT)
+    job_name = models.CharField(max_length=100)
+
+    jobs_total = models.IntegerField(default=0)
+    jobs_pending = models.IntegerField(default=0)
+    jobs_blocked = models.IntegerField(default=0)
+    jobs_queued = models.IntegerField(default=0)
+    jobs_running = models.IntegerField(default=0)
+    jobs_failed = models.IntegerField(default=0)
+    jobs_completed = models.IntegerField(default=0)
+    jobs_canceled = models.IntegerField(default=0)
+
+    min_alg_duration = models.DurationField(blank=True, null=True)
+    avg_alg_duration = models.DurationField(blank=True, null=True)
+    max_alg_duration = models.DurationField(blank=True, null=True)
+    min_job_duration = models.DurationField(blank=True, null=True)
+    avg_job_duration = models.DurationField(blank=True, null=True)
+    max_job_duration = models.DurationField(blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    objects = BatchMetricsManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'batch_metrics'
+        unique_together = ('batch', 'job_name')
 
 
 # TODO: when removing this and BatchRecipe, remove them from the databse update and make a note in the next release that
