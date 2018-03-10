@@ -90,7 +90,7 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             if JobInterfaceSunset.is_seed(job_interface.definition):
-                job_results = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)
+                job_results = job_interface.perform_post_steps(job_exe, job_data)
             else:
                 job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)
             job_exe_output = JobExecutionOutput()

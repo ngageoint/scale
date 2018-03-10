@@ -13,6 +13,7 @@ from job.configuration.exceptions import MissingMount, MissingSetting
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.types import SeedInputFiles, SeedInputJson
 from scheduler.vault.manager import secrets_mgr
+from storage.media_type import UNKNOWN_MEDIA_TYPE
 from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
@@ -297,7 +298,7 @@ class SeedManifest(object):
         # TODO: implement JSON capture from seed.outputs.json
 
 
-        return job_data.store_output_data_files(output_files, job_exe)
+        return job_data.store_output_data_files(output_files, self.get_output_json(), job_exe)
 
     def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
@@ -521,6 +522,8 @@ class SeedManifest(object):
     def _populate_outputs_defaults(self):
         """populates the default values for any missing outputs values"""
         for output_file in self.get_output_files():
+            if 'mediaType' not in output_file:
+                output_file['mediaType'] = UNKNOWN_MEDIA_TYPE
             if 'count' not in output_file:
                 output_file['multiple'] = False
             if 'required' not in output_file:
