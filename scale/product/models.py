@@ -497,9 +497,8 @@ class ProductFileManager(models.GeoManager):
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.
 
-        :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
-            storing the file, media_type, output_name)
-        :type file_entries: list of tuple(str, str, str, str)
+        :param file_entries: List of files to upload
+        :type file_entries: list[:class:`product.types.ProductFileMetadata`]
         :param input_file_ids: List of identifiers for files used to produce the given file entries
         :type input_file_ids: list of int
         :param job_exe: The job_exe model with the related job and job_type fields

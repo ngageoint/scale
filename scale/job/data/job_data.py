@@ -518,7 +518,7 @@ class JobData(object):
             for key in seed_outputs_json:
                 results.add_output_json(key, seed_outputs_json[key])
         except IOError:
-            logger.exception('No seed.outputs.json file found to process.')
+            logger.warning('No seed.outputs.json file found to process.')
 
         return results
 

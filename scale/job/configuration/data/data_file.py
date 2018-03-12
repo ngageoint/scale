@@ -60,7 +60,7 @@ class AbstractDataFileStore(object):
 
         :param data_files: Dict with workspace ID mapping to a list of ProductFileMetadata elements with absolute local
             file paths and media type (media type is optionally None)
-        :type data_files: dict of int -> list of ProductFileMetadata elements
+        :type data_files: dict[int, :class:`product.types.ProductFileMetadata`]
         :param input_file_ids: Set of input file IDs
         :type input_file_ids: set of long
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the files
