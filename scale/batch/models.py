@@ -288,9 +288,6 @@ class BatchManager(models.Manager):
         if not batch_ids:
             return
 
-        # TODO: update logic to use new metrics fields instead of old ones and document removing old fields, including
-        # removing count_completed_job() and count_completed_recipe()
-
         # Update recipe metrics for batch
         qry = 'UPDATE batch b SET recipes_total = s.recipes_total, recipes_completed = s.recipes_completed '
         qry += 'FROM (SELECT r.batch_id, COUNT(r.id) AS recipes_total, '
@@ -405,12 +402,13 @@ class Batch(models.Model):
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    # TODO: remove this after v5 REST API is removed
     creator_job = models.ForeignKey('job.Job', related_name='batch_creator_job', blank=True, null=True,
                                     on_delete=models.PROTECT)
 
     definition = django.contrib.postgres.fields.JSONField(default=dict)
 
-    # TODO: remove these fields after v5 REST API is removed - or remove now?
+    # TODO: remove these fields after v5 REST API is removed
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)
     completed_job_count = models.IntegerField(default=0)

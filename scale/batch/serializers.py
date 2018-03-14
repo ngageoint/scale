@@ -30,8 +30,8 @@ class BatchSerializer(BatchBaseSerializer):
 
     created_count = serializers.IntegerField()
     failed_count = serializers.IntegerField()
-    completed_job_count = serializers.IntegerField()
-    completed_recipe_count = serializers.IntegerField()
+    completed_job_count = serializers.IntegerField(source='jobs_completed')
+    completed_recipe_count = serializers.IntegerField(source='recipes_completed')
     total_count = serializers.IntegerField()
 
     created = serializers.DateTimeField()
