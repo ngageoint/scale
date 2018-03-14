@@ -306,9 +306,8 @@ class BatchManager(models.Manager):
         if not batch_ids:
             return
 
-        # TODO: unit tests for update_batch_metrics message
-        # TODO: create wiki description for update_batch_metrics
-        # TODO: update logic to use new metrics fields instead of old ones and document removing old fields
+        # TODO: update logic to use new metrics fields instead of old ones and document removing old fields, including
+        # removing count_completed_job() and count_completed_recipe()
 
         # Update recipe metrics for batch
         qry = 'UPDATE batch b SET recipes_total = s.recipes_total, recipes_completed = s.recipes_completed '
@@ -484,18 +483,24 @@ class BatchMetricsManager(models.Manager):
         qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
         qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
         qry += 'min_job_duration = s.min_job_duration, avg_job_duration = s.avg_job_duration, '
-        qry += 'max_job_duration = s.max_job_duration, last_modified = %s '
-        qry += 'FROM (SELECT r.batch_id, rj.job_name COUNT(j.id) AS jobs_total, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
-        qry += 'MIN(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS min_job_duration, '
-        qry += 'AVG(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS avg_job_duration, '
-        qry += 'MAX(j.ended - j.started) FILTER(WHERE status = \'COMPLETED\') AS max_job_duration '
+        qry += 'max_job_duration = s.max_job_duration, min_alg_duration = s.min_alg_duration, '
+        qry += 'avg_alg_duration = s.avg_alg_duration, max_alg_duration = s.max_alg_duration, last_modified = %s '
+        qry += 'FROM (SELECT r.batch_id, rj.job_name, COUNT(j.id) AS jobs_total, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'PENDING\') AS jobs_pending, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'BLOCKED\') AS jobs_blocked, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'QUEUED\') AS jobs_queued, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'RUNNING\') AS jobs_running, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'FAILED\') AS jobs_failed, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'COMPLETED\') AS jobs_completed, '
+        qry += 'COUNT(j.id) FILTER(WHERE j.status = \'CANCELED\') AS jobs_canceled, '
+        qry += 'MIN(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS min_job_duration, '
+        qry += 'AVG(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_job_duration, '
+        qry += 'MAX(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS max_job_duration, '
+        qry += 'MIN(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_alg_duration, '
+        qry += 'AVG(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_alg_duration, '
+        qry += 'MAX(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_alg_duration '
         qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'LEFT OUTER JOIN job_exe_end je ON je.job_id = j.id AND je.exe_num = j.num_exes '
         qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.job_name) s '
         qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.job_name'
         with connection.cursor() as cursor:

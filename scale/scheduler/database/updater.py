@@ -334,6 +334,8 @@ class DatabaseUpdater(object):
                 job_exe_end.node_id = job_exe.node_id
                 job_exe_end.queued = job_exe.queued
                 job_exe_end.started = job_exe.started
+                job_exe_end.alg_started = task_results.get_task_started('main')
+                job_exe_end.alg_ended = task_results.get_task_ended('main')
                 job_exe_end.ended = job_exe.ended
                 job_exe_end_models.append(job_exe_end)
 
