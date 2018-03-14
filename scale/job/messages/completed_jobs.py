@@ -173,14 +173,6 @@ class CompletedJobs(CommandMessage):
                 msgs = process_completed_jobs_with_output(job_ids_to_complete, when)
                 self.new_messages.extend(msgs)
 
-            # TODO: this needs to be improved to be more efficient and not perform batch model locking
-            for job_id in completed_job_ids:
-                # Update completed job count if part of a batch
-                from batch.models import Batch
-                batch_id = job_models[job_id].batch_id
-                if batch_id:
-                    Batch.objects.count_completed_job(batch_id)
-
         # Send messages to update recipe metrics
         from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
         self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(job_ids))

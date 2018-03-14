@@ -26,24 +26,6 @@ logger = logging.getLogger(__name__)
 class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
-    def count_completed_job(self, batch_id):
-        """Performs a count-plus-one on the completed job field of a Batch
-
-        :param batch_id: The unique identifier of the batch.
-        :type batch_id: int
-        """
-
-        Batch.objects.filter(id=batch_id).update(completed_job_count=F('completed_job_count') + 1)
-
-    def count_completed_recipe(self, batch_id):
-        """Performs a count-plus-one on the completed recipe field of a Batch
-
-        :param batch_id: The unique identifier of the batch.
-        :type batch_id: int
-        """
-
-        Batch.objects.filter(id=batch_id).update(completed_recipe_count=F('completed_recipe_count') + 1)
-
     @transaction.atomic
     def create_batch(self, recipe_type, definition, title=None, description=None):
         """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
@@ -428,6 +410,7 @@ class Batch(models.Model):
 
     definition = django.contrib.postgres.fields.JSONField(default=dict)
 
+    # TODO: remove these fields after v5 REST API is removed - or remove now?
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)
     completed_job_count = models.IntegerField(default=0)
@@ -483,8 +466,8 @@ class BatchMetricsManager(models.Manager):
         qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
         qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
         qry += 'min_job_duration = s.min_job_duration, avg_job_duration = s.avg_job_duration, '
-        qry += 'max_job_duration = s.max_job_duration, min_alg_duration = s.min_alg_duration, '
-        qry += 'avg_alg_duration = s.avg_alg_duration, max_alg_duration = s.max_alg_duration, last_modified = %s '
+        qry += 'max_job_duration = s.max_job_duration, min_seed_duration = s.min_seed_duration, '
+        qry += 'avg_seed_duration = s.avg_seed_duration, max_seed_duration = s.max_seed_duration, last_modified = %s '
         qry += 'FROM (SELECT r.batch_id, rj.job_name, COUNT(j.id) AS jobs_total, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'PENDING\') AS jobs_pending, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'BLOCKED\') AS jobs_blocked, '
@@ -496,9 +479,9 @@ class BatchMetricsManager(models.Manager):
         qry += 'MIN(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS min_job_duration, '
         qry += 'AVG(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_job_duration, '
         qry += 'MAX(j.ended - j.started) FILTER(WHERE j.status = \'COMPLETED\') AS max_job_duration, '
-        qry += 'MIN(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_alg_duration, '
-        qry += 'AVG(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_alg_duration, '
-        qry += 'MAX(je.alg_ended - je.alg_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_alg_duration '
+        qry += 'MIN(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_seed_duration, '
+        qry += 'AVG(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_seed_duration, '
+        qry += 'MAX(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_seed_duration '
         qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
         qry += 'LEFT OUTER JOIN job_exe_end je ON je.job_id = j.id AND je.exe_num = j.num_exes '
         qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.job_name) s '
@@ -532,12 +515,12 @@ class BatchMetrics(models.Model):
     :keyword jobs_canceled: The count of all CANCELED jobs for this job name within the batch
     :type jobs_canceled: :class:`django.db.models.IntegerField`
 
-    :keyword min_alg_duration: The shortest algorithm duration for all completed jobs for this job name within the batch
-    :type min_alg_duration: :class:`django.db.models.DurationField`
-    :keyword avg_alg_duration: The average algorithm duration for all completed jobs for this job name within the batch
-    :type avg_alg_duration: :class:`django.db.models.DurationField`
-    :keyword max_alg_duration: The longest algorithm duration for all completed jobs for this job name within the batch
-    :type max_alg_duration: :class:`django.db.models.DurationField`
+    :keyword min_seed_duration: The shortest Seed run duration for all completed jobs for this job name within the batch
+    :type min_seed_duration: :class:`django.db.models.DurationField`
+    :keyword avg_seed_duration: The average Seed run duration for all completed jobs for this job name within the batch
+    :type avg_seed_duration: :class:`django.db.models.DurationField`
+    :keyword max_seed_duration: The longest Seed run duration for all completed jobs for this job name within the batch
+    :type max_seed_duration: :class:`django.db.models.DurationField`
     :keyword min_job_duration: The shortest job duration for all completed jobs for this job name within the batch
     :type min_job_duration: :class:`django.db.models.DurationField`
     :keyword avg_job_duration: The average job duration for all completed jobs for this job name within the batch
@@ -563,9 +546,9 @@ class BatchMetrics(models.Model):
     jobs_completed = models.IntegerField(default=0)
     jobs_canceled = models.IntegerField(default=0)
 
-    min_alg_duration = models.DurationField(blank=True, null=True)
-    avg_alg_duration = models.DurationField(blank=True, null=True)
-    max_alg_duration = models.DurationField(blank=True, null=True)
+    min_seed_duration = models.DurationField(blank=True, null=True)
+    avg_seed_duration = models.DurationField(blank=True, null=True)
+    max_seed_duration = models.DurationField(blank=True, null=True)
     min_job_duration = models.DurationField(blank=True, null=True)
     avg_job_duration = models.DurationField(blank=True, null=True)
     max_job_duration = models.DurationField(blank=True, null=True)

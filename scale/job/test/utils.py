@@ -236,8 +236,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_end.node = node
         job_exe_end.queued = queued
         job_exe_end.started = started
-        job_exe_end.alg_started = task_results.get_task_started('main')
-        job_exe_end.alg_ended = task_results.get_task_ended('main')
+        job_exe_end.seed_started = task_results.get_task_started('main')
+        job_exe_end.seed_ended = task_results.get_task_ended('main')
         if not ended:
             ended = started + datetime.timedelta(seconds=1)
         job_exe_end.ended = ended

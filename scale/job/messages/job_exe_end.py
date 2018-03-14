@@ -111,8 +111,8 @@ class CreateJobExecutionEnd(CommandMessage):
             job_exe_end.task_results = job_exe_end_dict['task_results']
             job_exe_end.status = job_exe_end_dict['status']
             job_exe_end.queued = parse_datetime(job_exe_end_dict['queued'])
-            job_exe_end.alg_started = task_results.get_task_started('main')
-            job_exe_end.alg_ended = task_results.get_task_ended('main')
+            job_exe_end.seed_started = task_results.get_task_started('main')
+            job_exe_end.seed_ended = task_results.get_task_ended('main')
             job_exe_end.ended = parse_datetime(job_exe_end_dict['ended'])
             if 'error_id' in job_exe_end_dict:
                 job_exe_end.error_id = job_exe_end_dict['error_id']

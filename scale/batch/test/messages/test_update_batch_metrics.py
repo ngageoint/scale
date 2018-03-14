@@ -260,9 +260,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertEqual(batch_metrics[0].min_job_duration, datetime.timedelta(minutes=1))
         self.assertEqual(batch_metrics[0].avg_job_duration, datetime.timedelta(minutes=1))
         self.assertEqual(batch_metrics[0].max_job_duration, datetime.timedelta(minutes=1))
-        self.assertIsNone(batch_metrics[0].min_alg_duration)
-        self.assertIsNone(batch_metrics[0].avg_alg_duration)
-        self.assertIsNone(batch_metrics[0].max_alg_duration)
+        self.assertIsNone(batch_metrics[0].min_seed_duration)
+        self.assertIsNone(batch_metrics[0].avg_seed_duration)
+        self.assertIsNone(batch_metrics[0].max_seed_duration)
 
         # Job B
         self.assertEqual(batch_metrics[1].job_name, 'b')
@@ -277,9 +277,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[1].min_job_duration)
         self.assertIsNone(batch_metrics[1].avg_job_duration)
         self.assertIsNone(batch_metrics[1].max_job_duration)
-        self.assertEqual(batch_metrics[1].min_alg_duration, datetime.timedelta(minutes=2))
-        self.assertEqual(batch_metrics[1].avg_alg_duration, datetime.timedelta(minutes=2, seconds=30))
-        self.assertEqual(batch_metrics[1].max_alg_duration, datetime.timedelta(minutes=3))
+        self.assertEqual(batch_metrics[1].min_seed_duration, datetime.timedelta(minutes=2))
+        self.assertEqual(batch_metrics[1].avg_seed_duration, datetime.timedelta(minutes=2, seconds=30))
+        self.assertEqual(batch_metrics[1].max_seed_duration, datetime.timedelta(minutes=3))
 
         # Job C
         self.assertEqual(batch_metrics[2].job_name, 'c')
@@ -294,9 +294,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertEqual(batch_metrics[2].min_job_duration, datetime.timedelta(minutes=2))
         self.assertEqual(batch_metrics[2].avg_job_duration, datetime.timedelta(minutes=4))
         self.assertEqual(batch_metrics[2].max_job_duration, datetime.timedelta(minutes=7))
-        self.assertIsNone(batch_metrics[2].min_alg_duration)
-        self.assertIsNone(batch_metrics[2].avg_alg_duration)
-        self.assertIsNone(batch_metrics[2].max_alg_duration)
+        self.assertIsNone(batch_metrics[2].min_seed_duration)
+        self.assertIsNone(batch_metrics[2].avg_seed_duration)
+        self.assertIsNone(batch_metrics[2].max_seed_duration)
 
         # Job D
         self.assertEqual(batch_metrics[3].job_name, 'd')
@@ -311,9 +311,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[3].min_job_duration)
         self.assertIsNone(batch_metrics[3].avg_job_duration)
         self.assertIsNone(batch_metrics[3].max_job_duration)
-        self.assertIsNone(batch_metrics[3].min_alg_duration)
-        self.assertIsNone(batch_metrics[3].avg_alg_duration)
-        self.assertIsNone(batch_metrics[3].max_alg_duration)
+        self.assertIsNone(batch_metrics[3].min_seed_duration)
+        self.assertIsNone(batch_metrics[3].avg_seed_duration)
+        self.assertIsNone(batch_metrics[3].max_seed_duration)
 
         # Job E
         self.assertEqual(batch_metrics[4].job_name, 'e')
@@ -328,9 +328,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[4].min_job_duration)
         self.assertIsNone(batch_metrics[4].avg_job_duration)
         self.assertIsNone(batch_metrics[4].max_job_duration)
-        self.assertIsNone(batch_metrics[4].min_alg_duration)
-        self.assertIsNone(batch_metrics[4].avg_alg_duration)
-        self.assertIsNone(batch_metrics[4].max_alg_duration)
+        self.assertIsNone(batch_metrics[4].min_seed_duration)
+        self.assertIsNone(batch_metrics[4].avg_seed_duration)
+        self.assertIsNone(batch_metrics[4].max_seed_duration)
 
         # Job F
         self.assertEqual(batch_metrics[5].job_name, 'f')
@@ -345,9 +345,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[5].min_job_duration)
         self.assertIsNone(batch_metrics[5].avg_job_duration)
         self.assertIsNone(batch_metrics[5].max_job_duration)
-        self.assertIsNone(batch_metrics[5].min_alg_duration)
-        self.assertIsNone(batch_metrics[5].avg_alg_duration)
-        self.assertIsNone(batch_metrics[5].max_alg_duration)
+        self.assertIsNone(batch_metrics[5].min_seed_duration)
+        self.assertIsNone(batch_metrics[5].avg_seed_duration)
+        self.assertIsNone(batch_metrics[5].max_seed_duration)
 
         # Job G
         self.assertEqual(batch_metrics[6].job_name, 'g')
@@ -362,9 +362,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[6].min_job_duration)
         self.assertIsNone(batch_metrics[6].avg_job_duration)
         self.assertIsNone(batch_metrics[6].max_job_duration)
-        self.assertIsNone(batch_metrics[6].min_alg_duration)
-        self.assertIsNone(batch_metrics[6].avg_alg_duration)
-        self.assertIsNone(batch_metrics[6].max_alg_duration)
+        self.assertIsNone(batch_metrics[6].min_seed_duration)
+        self.assertIsNone(batch_metrics[6].avg_seed_duration)
+        self.assertIsNone(batch_metrics[6].max_seed_duration)
 
         # Job H
         self.assertEqual(batch_metrics[7].job_name, 'h')
@@ -379,9 +379,9 @@ class TestUpdateBatchMetrics(TestCase):
         self.assertIsNone(batch_metrics[7].min_job_duration)
         self.assertIsNone(batch_metrics[7].avg_job_duration)
         self.assertIsNone(batch_metrics[7].max_job_duration)
-        self.assertIsNone(batch_metrics[7].min_alg_duration)
-        self.assertIsNone(batch_metrics[7].avg_alg_duration)
-        self.assertIsNone(batch_metrics[7].max_alg_duration)
+        self.assertIsNone(batch_metrics[7].min_seed_duration)
+        self.assertIsNone(batch_metrics[7].avg_seed_duration)
+        self.assertIsNone(batch_metrics[7].max_seed_duration)
 
         # Test executing message again
         message_json_dict = message.to_json()
