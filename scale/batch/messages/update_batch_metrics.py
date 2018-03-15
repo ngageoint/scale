@@ -40,7 +40,7 @@ def create_update_batch_metrics_messages(batch_ids):
 
 
 class UpdateBatchMetrics(CommandMessage):
-    """Command message that updates recipe metrics
+    """Command message that updates batch metrics
     """
 
     def __init__(self):
