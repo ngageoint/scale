@@ -97,18 +97,20 @@ class JobResults(object):
         json = []
         file_map = {job_file.id: job_file for job_file in job_files}
         outputs = interface.get_outputs()
-        for i in outputs['files']:
+        for i in interface.get_output_files():
             for j in self.output_data:
                 if i['name'] is j['name']:
-                    i['value'] = [file_map[x] for x in j['file_ids']]
+                    i['value'] = [file_map[str(x)] for x in j.file_ids]
                     break
             files.append(i)
-        for i in outputs['json']:
+
+        for i in interface.get_output_json():
             for j in self.output_data:
                 if i['name'] is j['name']:
                     i['value'] = j['json']
                     break
             json.append(i)
+
         outputs['files'] = files
         outputs['json'] = json
         return outputs

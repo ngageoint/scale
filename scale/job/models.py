@@ -20,18 +20,20 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.json.job.job_config import JobConfiguration
-from job.configuration.results.job_results import JobResults
+from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
+from job.seed.exceptions import SeedUnsupportedInLegacyAPI
 from job.seed.manifest import SeedManifest
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from storage.models import ScaleFile
+from seed.results.job_results import JobResults
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction
@@ -322,6 +324,8 @@ class JobManager(models.Manager):
         :rtype: :class:`job.models.Job`
         """
 
+
+
         # Attempt to fetch the requested job
         job = Job.objects.select_related(
             'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
@@ -373,16 +377,14 @@ class JobManager(models.Manager):
         job_data_dict = job.get_job_data().get_dict()
         job_results_dict = job.get_job_results().get_dict()
 
-        # TODO: Fix this to be forward / backward compatible with pre / post Seed Interface
+
         if JobInterfaceSunset.is_seed(job_interface_dict):
-            # Handle Seed injection of instance values
-            job.inputs = job.get_job_data().extend_interface_with_inputs(job.get_job_interface(), input_files)
-            job.outputs = job.get_job_results().extend_interface_with_outputs(job.get_job_interface(), output_files)
-        else:
-            # TODO: Remove in v6
-            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
-            job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
-                                               output_files)
+            raise SeedUnsupportedInLegacyAPI
+
+
+        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+                                           output_files)
 
 
         return job
@@ -1162,7 +1164,12 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        return JobResults(self.output)
+        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
+        if self.ouput and 'version' in self.output and '2.0' == self.output['version']:
+            job_results = JobResults(self.output)
+        else:
+            job_results = JobResults_1_0(self.output)
+        return job_results
 
     def get_resources(self):
         """Returns the resources required for this job

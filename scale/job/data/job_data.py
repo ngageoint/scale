@@ -378,14 +378,15 @@ class JobData(object):
         files = []
         json = []
         file_map = {job_file.id: job_file for job_file in job_files}
-        inputs = interface.get_inputs()
-        for x in inputs['files']:
+        inputs = {}
+        for in_file in interface.get_input_files():
             # Use internal JobInputFiles data structure to get Scale File IDs
             # Follow that up with a list comprehension over potentially multiple IDs to get 
             # final list of ScaleFile objects
-            x['value'] = [file_map[x] for x in self._input_files[x['name']].value]
-            files.append(x)
-        for x in inputs['json']:
+
+            in_file['value'] = [file_map[x] for x in self._input_files[in_file['name']].file_ids]
+            files.append(in_file)
+        for x in interface.get_input_json():
             x['value'] = self._input_json[x['name']].value
             json.append(x)
         inputs['files'] = files

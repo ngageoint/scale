@@ -12,3 +12,9 @@ class InvalidSeedMetadataDefinition(Exception):
     """Exception indicating that the provided definition of a Seed Metadata was invalid
     """
     pass
+
+
+class SeedUnsupportedInLegacyAPI(Exception):
+    """Exception indicating that the v5 API does not support Seed job types and derived jobs
+    """
+    pass
