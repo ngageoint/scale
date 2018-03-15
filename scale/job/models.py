@@ -1692,6 +1692,8 @@ class JobExecution(models.Model):
         job_exe_end.node_id = self.node_id
         job_exe_end.queued = self.queued
         job_exe_end.started = self.started
+        job_exe_end.seed_started = task_results.get_task_started('main')
+        job_exe_end.seed_ended = task_results.get_task_ended('main')
         job_exe_end.ended = when
         return job_exe_end
 
@@ -1891,6 +1893,10 @@ class JobExecutionEnd(models.Model):
     :type queued: :class:`django.db.models.DateTimeField`
     :keyword started: When the job execution was started (scheduled)
     :type started: :class:`django.db.models.DateTimeField`
+    :keyword seed_started: When the Seed container was started (main task)
+    :type seed_started: :class:`django.db.models.DateTimeField`
+    :keyword seed_ended: When the Seed container ended (main task)
+    :type seed_ended: :class:`django.db.models.DateTimeField`
     :keyword ended: When the job execution ended
     :type ended: :class:`django.db.models.DateTimeField`
     :keyword created: When this model was created
@@ -1915,6 +1921,8 @@ class JobExecutionEnd(models.Model):
 
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, db_index=True, null=True)
+    seed_started = models.DateTimeField(blank=True, null=True)
+    seed_ended = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True, db_index=True)
 

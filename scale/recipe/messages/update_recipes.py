@@ -186,10 +186,6 @@ class UpdateRecipes(CommandMessage):
                             updated_batch_ids.append(handler.recipe.batch_id)
 
             Recipe.objects.complete_recipes(completed_recipe_ids, when)
-            # TODO: move batch metrics into their own message
-            from batch.models import Batch
-            for batch_id in updated_batch_ids:
-                Batch.objects.count_completed_recipe(batch_id)
 
         # Create new messages
         self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))

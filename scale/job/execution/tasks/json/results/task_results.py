@@ -142,6 +142,21 @@ class TaskResults(object):
 
         return self._task_results
 
+    def get_task_ended(self, task_type):
+        """Returns the end time for the given task type, possibly None
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The task end time
+        :rtype: :class:`datetime.datetime`:
+        """
+
+        for task_dict in self._task_results['tasks']:
+            if task_dict['type'] == task_type:
+                if 'ended' in task_dict:
+                    return dateparse.parse_datetime(task_dict['ended'])
+        return None
+
     def get_task_run_length(self, task_type):
         """Returns the run time length for the given task type, possibly None
 
@@ -157,6 +172,21 @@ class TaskResults(object):
                     started = dateparse.parse_datetime(task_dict['started'])
                     ended = dateparse.parse_datetime(task_dict['ended'])
                     return ended - started
+        return None
+
+    def get_task_started(self, task_type):
+        """Returns the start time for the given task type, possibly None
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The task start time
+        :rtype: :class:`datetime.datetime`:
+        """
+
+        for task_dict in self._task_results['tasks']:
+            if task_dict['type'] == task_type:
+                if 'started' in task_dict:
+                    return dateparse.parse_datetime(task_dict['started'])
         return None
 
     def _populate_default_values(self):
