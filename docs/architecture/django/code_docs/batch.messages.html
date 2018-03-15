@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.execution.tasks.json.results package &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>batch.messages package &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="job.execution.tasks.json package" href="job.execution.tasks.json.html"/>
-        <link rel="next" title="job.handlers package" href="job.handlers.html"/>
-        <link rel="prev" title="job.execution.tasks.json package" href="job.execution.tasks.json.html"/>
+        <link rel="up" title="batch package" href="batch.html"/>
+        <link rel="next" title="batch.migrations package" href="batch.migrations.html"/>
+        <link rel="prev" title="batch.management.commands package" href="batch.management.commands.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -113,25 +113,23 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="batch.html">batch package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="batch.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.apps">batch.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.exceptions">batch.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.models">batch.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.serializers">batch.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.urls">batch.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.views">batch.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
@@ -203,21 +201,15 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="job.html">job package</a> &raquo;</li>
+          <li><a href="batch.html">batch package</a> &raquo;</li>
         
-          <li><a href="job.execution.html">job.execution package</a> &raquo;</li>
-        
-          <li><a href="job.execution.tasks.html">job.execution.tasks package</a> &raquo;</li>
-        
-          <li><a href="job.execution.tasks.json.html">job.execution.tasks.json package</a> &raquo;</li>
-        
-      <li>job.execution.tasks.json.results package</li>
+      <li>batch.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/job.execution.tasks.json.results.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/batch.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -230,108 +222,90 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-execution-tasks-json-results-package">
-<h1>job.execution.tasks.json.results package<a class="headerlink" href="#job-execution-tasks-json-results-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="batch-messages-package">
+<h1>batch.messages package<a class="headerlink" href="#batch-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-job.execution.tasks.json.results.task_results">
-<span id="job-execution-tasks-json-results-task-results-module"></span><h2>job.execution.tasks.json.results.task_results module<a class="headerlink" href="#module-job.execution.tasks.json.results.task_results" title="Permalink to this headline">¶</a></h2>
-<p>Defines the JSON schema for describing task results</p>
+<div class="section" id="module-batch.messages.update_batch_metrics">
+<span id="batch-messages-update-batch-metrics-module"></span><h2>batch.messages.update_batch_metrics module<a class="headerlink" href="#module-batch.messages.update_batch_metrics" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that updates batch metrics</p>
 <dl class="class">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.json.results.task_results.</code><code class="descname">TaskResults</code><span class="sig-paren">(</span><em>task_results=None</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the task results for a job execution</p>
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics">
+<em class="property">class </em><code class="descclassname">batch.messages.update_batch_metrics.</code><code class="descname">UpdateBatchMetrics</code><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that updates batch metrics</p>
 <dl class="method">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults.add_task_results">
-<code class="descname">add_task_results</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults.add_task_results" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given job execution tasks to the results</p>
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics.add_batch">
+<code class="descname">add_batch</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics.add_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given batch ID to this message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job execution tasks to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The batch ID</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary that represents the task results</p>
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more batches can fit in this message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more batches can fit, False otherwise</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults.get_task_ended">
-<code class="descname">get_task_ended</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults.get_task_ended" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the end time for the given task type, possibly None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task end time</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>:</td>
-</tr>
-</tbody>
-</table>
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults.get_task_run_length">
-<code class="descname">get_task_run_length</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults.get_task_run_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the run time length for the given task type, possibly None</p>
+<dt id="batch.messages.update_batch_metrics.UpdateBatchMetrics.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.UpdateBatchMetrics.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="batch.messages.update_batch_metrics.create_update_batch_metrics_messages">
+<code class="descclassname">batch.messages.update_batch_metrics.</code><code class="descname">create_update_batch_metrics_messages</code><span class="sig-paren">(</span><em>batch_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.messages.update_batch_metrics.create_update_batch_metrics_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to update the metrics for the given batches</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch IDs</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task run time length</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.timedelta</span></code>:</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.tasks.json.results.task_results.TaskResults.get_task_started">
-<code class="descname">get_task_started</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.json.results.task_results.TaskResults.get_task_started" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the start time for the given task type, possibly None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task start time</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>:</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.execution.tasks.json.results">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.execution.tasks.json.results" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-batch.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -345,10 +319,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.handlers.html" class="btn btn-neutral float-right" title="job.handlers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="batch.migrations.html" class="btn btn-neutral float-right" title="batch.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.execution.tasks.json.html" class="btn btn-neutral" title="job.execution.tasks.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="batch.management.commands.html" class="btn btn-neutral" title="batch.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

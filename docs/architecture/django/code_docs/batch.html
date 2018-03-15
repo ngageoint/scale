@@ -253,12 +253,19 @@
 <li class="toctree-l2"><a class="reference internal" href="batch.management.html#module-batch.management">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="batch.messages.html">batch.messages package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.messages.html#module-batch.messages.update_batch_metrics">batch.messages.update_batch_metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.messages.html#module-batch.messages">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="batch.migrations.html">batch.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0001_initial">batch.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0002_auto_20170412_1225">batch.migrations.0002_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0003_auto_20170706_1948">batch.migrations.0003_auto_20170706_1948 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0004_auto_20180122_1444">batch.migrations.0004_auto_20180122_1444 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0005_auto_20180314_1827">batch.migrations.0005_auto_20180314_1827 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -288,6 +295,12 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="batch.test.management.html#module-batch.test.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="batch.test.messages.html">batch.test.messages package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.messages.html#module-batch.test.messages.test_update_batch_metrics">batch.test.messages.test_update_batch_metrics module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.messages.html#module-batch.test.messages">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -322,6 +335,12 @@
 <dt id="batch.apps.BatchConfig.name">
 <code class="descname">name</code><em class="property"> = u'batch'</em><a class="headerlink" href="#batch.apps.BatchConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.apps.BatchConfig.ready">
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.apps.BatchConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers components related to batches</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.apps.BatchConfig.verbose_name">
@@ -392,6 +411,21 @@
 <dl class="attribute">
 <dt id="batch.models.Batch.batchjob_set">
 <code class="descname">batchjob_set</code><a class="headerlink" href="#batch.models.Batch.batchjob_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.batchmetrics_set">
+<code class="descname">batchmetrics_set</code><a class="headerlink" href="#batch.models.Batch.batchmetrics_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
 many-to-one relation.</p>
 <p>In the example:</p>
@@ -587,6 +621,34 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="batch.models.Batch.jobs_blocked">
+<code class="descname">jobs_blocked</code><a class="headerlink" href="#batch.models.Batch.jobs_blocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_canceled">
+<code class="descname">jobs_canceled</code><a class="headerlink" href="#batch.models.Batch.jobs_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_completed">
+<code class="descname">jobs_completed</code><a class="headerlink" href="#batch.models.Batch.jobs_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_failed">
+<code class="descname">jobs_failed</code><a class="headerlink" href="#batch.models.Batch.jobs_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="batch.models.Batch.jobs_for_batch">
 <code class="descname">jobs_for_batch</code><a class="headerlink" href="#batch.models.Batch.jobs_for_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -599,6 +661,34 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_pending">
+<code class="descname">jobs_pending</code><a class="headerlink" href="#batch.models.Batch.jobs_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_queued">
+<code class="descname">jobs_queued</code><a class="headerlink" href="#batch.models.Batch.jobs_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_running">
+<code class="descname">jobs_running</code><a class="headerlink" href="#batch.models.Batch.jobs_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.jobs_total">
+<code class="descname">jobs_total</code><a class="headerlink" href="#batch.models.Batch.jobs_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -649,6 +739,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="batch.models.Batch.recipes_completed">
+<code class="descname">recipes_completed</code><a class="headerlink" href="#batch.models.Batch.recipes_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="batch.models.Batch.recipes_for_batch">
 <code class="descname">recipes_for_batch</code><a class="headerlink" href="#batch.models.Batch.recipes_for_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -661,6 +758,13 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.recipes_total">
+<code class="descname">recipes_total</code><a class="headerlink" href="#batch.models.Batch.recipes_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -829,34 +933,6 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling batches</p>
 <dl class="method">
-<dt id="batch.models.BatchManager.count_completed_job">
-<code class="descname">count_completed_job</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.count_completed_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs a count-plus-one on the completed job field of a Batch</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The unique identifier of the batch.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="batch.models.BatchManager.count_completed_recipe">
-<code class="descname">count_completed_recipe</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.count_completed_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs a count-plus-one on the completed recipe field of a Batch</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The unique identifier of the batch.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="batch.models.BatchManager.create_batch">
 <code class="descname">create_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
@@ -992,6 +1068,259 @@ transaction.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#batch.exceptions.BatchError" title="batch.exceptions.BatchError"><code class="xref py py-class docutils literal"><span class="pre">batch.exceptions.BatchError</span></code></a>: If general batch parameters are invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchManager.update_batch_metrics">
+<code class="descname">update_batch_metrics</code><span class="sig-paren">(</span><em>batch_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.update_batch_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the metrics for the batches with the given IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch IDs</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.models.BatchMetrics">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchMetrics</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Contains a set of metrics for a given job name (&#8220;node&#8221; within a recipe graph) for a given batch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch</li>
+<li><strong>job_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The unique name of the job within the batch</li>
+<li><strong>jobs_total</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The total count of all jobs for this job name within the batch</li>
+<li><strong>jobs_pending</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all PENDING jobs for this job name within the batch</li>
+<li><strong>jobs_blocked</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all BLOCKED jobs for this job name within the batch</li>
+<li><strong>jobs_queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all QUEUED jobs for this job name within the batch</li>
+<li><strong>jobs_running</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all RUNNING jobs for this job name within the batch</li>
+<li><strong>jobs_failed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all FAILED jobs for this job name within the batch</li>
+<li><strong>jobs_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all COMPLETED jobs for this job name within the batch</li>
+<li><strong>jobs_canceled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all CANCELED jobs for this job name within the batch</li>
+<li><strong>min_seed_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The shortest Seed run duration for all completed jobs for this job name within the batch</li>
+<li><strong>avg_seed_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The average Seed run duration for all completed jobs for this job name within the batch</li>
+<li><strong>max_seed_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The longest Seed run duration for all completed jobs for this job name within the batch</li>
+<li><strong>min_job_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The shortest job duration for all completed jobs for this job name within the batch</li>
+<li><strong>avg_job_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The average job duration for all completed jobs for this job name within the batch</li>
+<li><strong>max_job_duration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DurationField</span></code>) &#8211; The longest job duration for all completed jobs for this job name within the batch</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When these metrics were created</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When these metrics were last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="batch.models.BatchMetrics.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#batch.models.BatchMetrics.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="batch.models.BatchMetrics.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchMetrics.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.avg_job_duration">
+<code class="descname">avg_job_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.avg_job_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.avg_seed_duration">
+<code class="descname">avg_seed_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.avg_seed_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.batch">
+<code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchMetrics.batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.batch_id">
+<code class="descname">batch_id</code><a class="headerlink" href="#batch.models.BatchMetrics.batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.created">
+<code class="descname">created</code><a class="headerlink" href="#batch.models.BatchMetrics.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchMetrics.get_next_by_created">
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetrics.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchMetrics.get_next_by_last_modified">
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetrics.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchMetrics.get_previous_by_created">
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetrics.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchMetrics.get_previous_by_last_modified">
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetrics.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.id">
+<code class="descname">id</code><a class="headerlink" href="#batch.models.BatchMetrics.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.job_name">
+<code class="descname">job_name</code><a class="headerlink" href="#batch.models.BatchMetrics.job_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_blocked">
+<code class="descname">jobs_blocked</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_blocked" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_canceled">
+<code class="descname">jobs_canceled</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_canceled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_completed">
+<code class="descname">jobs_completed</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_failed">
+<code class="descname">jobs_failed</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_pending">
+<code class="descname">jobs_pending</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_pending" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_queued">
+<code class="descname">jobs_queued</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_running">
+<code class="descname">jobs_running</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.jobs_total">
+<code class="descname">jobs_total</code><a class="headerlink" href="#batch.models.BatchMetrics.jobs_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#batch.models.BatchMetrics.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.max_job_duration">
+<code class="descname">max_job_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.max_job_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.max_seed_duration">
+<code class="descname">max_seed_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.max_seed_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.min_job_duration">
+<code class="descname">min_job_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.min_job_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.min_seed_duration">
+<code class="descname">min_seed_duration</code><a class="headerlink" href="#batch.models.BatchMetrics.min_seed_duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchMetrics.objects">
+<code class="descname">objects</code><em class="property"> = &lt;batch.models.BatchMetricsManager object&gt;</em><a class="headerlink" href="#batch.models.BatchMetrics.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.models.BatchMetricsManager">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchMetricsManager</code><a class="headerlink" href="#batch.models.BatchMetricsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Provides additional methods for handling batch metrics</p>
+<dl class="method">
+<dt id="batch.models.BatchMetricsManager.update_batch_metrics_per_job">
+<code class="descname">update_batch_metrics_per_job</code><span class="sig-paren">(</span><em>batch_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchMetricsManager.update_batch_metrics_per_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the metrics per job name for the batches with the given IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The batch IDs</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

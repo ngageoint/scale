@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>cli package &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>batch.test.messages package &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="cli.management package" href="cli.management.html"/>
-        <link rel="prev" title="batch.test.messages package" href="batch.test.messages.html"/>
+        <link rel="up" title="batch.test package" href="batch.test.html"/>
+        <link rel="next" title="cli package" href="cli.html"/>
+        <link rel="prev" title="batch.test.management.commands package" href="batch.test.management.commands.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -113,12 +113,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">cli package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-cli">Module contents</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="batch.html">batch package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="batch.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.apps">batch.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.exceptions">batch.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.models">batch.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.serializers">batch.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.urls">batch.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.views">batch.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -194,13 +201,17 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-      <li>cli package</li>
+          <li><a href="batch.html">batch package</a> &raquo;</li>
+        
+          <li><a href="batch.test.html">batch.test package</a> &raquo;</li>
+        
+      <li>batch.test.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/cli.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/batch.test.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -213,30 +224,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="cli-package">
-<h1>cli package<a class="headerlink" href="#cli-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.management.html">cli.management package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cli.management.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cli.management.commands.html">cli.management.commands package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cli.management.commands.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cli.management.commands.html#module-cli.management.commands.migratedata">cli.management.commands.migratedata module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cli.management.commands.html#module-cli.management.commands">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="cli.management.html#module-cli.management">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="batch-test-messages-package">
+<h1>batch.test.messages package<a class="headerlink" href="#batch-test-messages-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-batch.test.messages.test_update_batch_metrics">
+<span id="batch-test-messages-test-update-batch-metrics-module"></span><h2>batch.test.messages.test_update_batch_metrics module<a class="headerlink" href="#module-batch.test.messages.test_update_batch_metrics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics">
+<em class="property">class </em><code class="descclassname">batch.test.messages.test_update_batch_metrics.</code><code class="descname">TestUpdateBatchMetrics</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling UpdateBatchMetrics.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting an UpdateBatchMetrics message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-cli">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cli" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-batch.test.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.test.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -250,10 +275,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="cli.management.html" class="btn btn-neutral float-right" title="cli.management package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="cli package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="batch.test.messages.html" class="btn btn-neutral" title="batch.test.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="batch.test.management.commands.html" class="btn btn-neutral" title="batch.test.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

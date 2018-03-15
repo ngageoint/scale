@@ -8,6 +8,7 @@ Subpackages
 
     batch.test.configuration
     batch.test.management
+    batch.test.messages
 
 Submodules
 ----------

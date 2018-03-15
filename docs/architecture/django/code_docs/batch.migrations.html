@@ -40,7 +40,7 @@
     <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="batch package" href="batch.html"/>
         <link rel="next" title="batch.test package" href="batch.test.html"/>
-        <link rel="prev" title="batch.management.commands package" href="batch.management.commands.html"/>
+        <link rel="prev" title="batch.messages package" href="batch.messages.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -303,6 +303,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-batch.migrations.0005_auto_20180314_1827">
+<span id="batch-migrations-0005-auto-20180314-1827-module"></span><h2>batch.migrations.0005_auto_20180314_1827 module<a class="headerlink" href="#module-batch.migrations.0005_auto_20180314_1827" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.migrations.0005_auto_20180314_1827.Migration">
+<em class="property">class </em><code class="descclassname">batch.migrations.0005_auto_20180314_1827.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.migrations.0005_auto_20180314_1827.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="batch.migrations.0005_auto_20180314_1827.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'batch', u'0004_auto_20180122_1444')]</em><a class="headerlink" href="#batch.migrations.0005_auto_20180314_1827.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.migrations.0005_auto_20180314_1827.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'job_name', &lt;django.db.models.fields.CharField&gt;), (u'jobs_total', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_pending', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_blocked', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_queued', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_running', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_failed', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_completed', &lt;django.db.models.fields.IntegerField&gt;), (u'jobs_canceled', &lt;django.db.models.fields.IntegerField&gt;), (u'min_seed_duration', &lt;django.db.models.fields.DurationField&gt;), (u'avg_seed_duration', &lt;django.db.models.fields.DurationField&gt;), (u'max_seed_duration', &lt;django.db.models.fields.DurationField&gt;), (u'min_job_duration', &lt;django.db.models.fields.DurationField&gt;), (u'avg_job_duration', &lt;django.db.models.fields.DurationField&gt;), (u'max_job_duration', &lt;django.db.models.fields.DurationField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], options={u'db_table': u'batch_metrics'}, name=u'BatchMetrics'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_blocked', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_canceled', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_completed', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_failed', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_pending', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_queued', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_running', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_total', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'recipes_completed', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'recipes_total', model_name=u'batch'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'batch', model_name=u'batchmetrics'&gt;, &lt;AlterUniqueTogether  unique_together=set([(u'batch', u'job_name')]), name=u'batchmetrics'&gt;]</em><a class="headerlink" href="#batch.migrations.0005_auto_20180314_1827.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-batch.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -321,7 +340,7 @@
         <a href="batch.test.html" class="btn btn-neutral float-right" title="batch.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="batch.management.commands.html" class="btn btn-neutral" title="batch.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="batch.messages.html" class="btn btn-neutral" title="batch.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

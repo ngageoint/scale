@@ -429,6 +429,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0034_auto_20180112_1759">job.migrations.0034_auto_20180112_1759 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0035_auto_20180122_1444">job.migrations.0035_auto_20180122_1444 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0036_auto_20180123_2042">job.migrations.0036_auto_20180123_2042 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0037_auto_20180314_1827">job.migrations.0037_auto_20180314_1827 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -2462,6 +2463,8 @@ object the first time, the query is executed.</p>
 <li><strong>node</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The node on which the job execution was run (None if it was canceled before being scheduled)</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was added to the queue</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was started (scheduled)</li>
+<li><strong>seed_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Seed container was started (main task)</li>
+<li><strong>seed_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Seed container ended (main task)</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution ended</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this model was created</li>
 </ul>
@@ -2665,6 +2668,20 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.JobExecutionEnd.queued">
 <code class="descname">queued</code><a class="headerlink" href="#job.models.JobExecutionEnd.queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobExecutionEnd.seed_ended">
+<code class="descname">seed_ended</code><a class="headerlink" href="#job.models.JobExecutionEnd.seed_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobExecutionEnd.seed_started">
+<code class="descname">seed_started</code><a class="headerlink" href="#job.models.JobExecutionEnd.seed_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

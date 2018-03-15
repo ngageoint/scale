@@ -1,0 +1,22 @@
+batch\.messages package
+=======================
+
+Submodules
+----------
+
+batch\.messages\.update\_batch\_metrics module
+----------------------------------------------
+
+.. automodule:: batch.messages.update_batch_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:
