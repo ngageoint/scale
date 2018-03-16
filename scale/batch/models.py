@@ -365,18 +365,24 @@ class Batch(models.Model):
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of the batch
     :type description: :class:`django.db.models.TextField`
-    :keyword status: The status of the batch
-    :type status: :class:`django.db.models.CharField`
-
-    :keyword recipe_type: The type of recipe to re-process
+    :keyword recipe_type: The type of recipe being processed in this batch
     :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword recipe_type_rev: The revision of the recipe type being processed in this batch
+    :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this batch
     :type event: :class:`django.db.models.ForeignKey`
+
+    :keyword status: The status of the batch
+    :type status: :class:`django.db.models.CharField`
     :keyword creator_job: The job that will create the batch recipes and jobs for processing
     :type creator_job: :class:`django.db.models.ForeignKey`
 
-    :keyword definition: JSON definition for setting up the batch
+    :keyword definition: JSON definition for what is being processed by this batch
     :type definition: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON configuration for running the batch
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword is_creation_done: Indicates whether all of the recipes for the batch have been created (True)
+    :type is_creation_done: :class:`django.db.models.BooleanField`
 
     :keyword created_count: The number of batch recipes created by this batch.
     :type created_count: :class:`django.db.models.IntegerField`
@@ -385,12 +391,36 @@ class Batch(models.Model):
     :keyword total_count: An approximation of the total number of batch recipes that should be created by this batch.
     :type total_count: :class:`django.db.models.IntegerField`
 
+    :keyword jobs_total: The total count of all jobs within the batch
+    :type jobs_total: :class:`django.db.models.IntegerField`
+    :keyword jobs_pending: The count of all PENDING jobs within the batch
+    :type jobs_pending: :class:`django.db.models.IntegerField`
+    :keyword jobs_blocked: The count of all BLOCKED jobs within the batch
+    :type jobs_blocked: :class:`django.db.models.IntegerField`
+    :keyword jobs_queued: The count of all QUEUED jobs within the batch
+    :type jobs_queued: :class:`django.db.models.IntegerField`
+    :keyword jobs_running: The count of all RUNNING jobs within the batch
+    :type jobs_running: :class:`django.db.models.IntegerField`
+    :keyword jobs_failed: The count of all FAILED jobs within the batch
+    :type jobs_failed: :class:`django.db.models.IntegerField`
+    :keyword jobs_completed: The count of all COMPLETED jobs within the batch
+    :type jobs_completed: :class:`django.db.models.IntegerField`
+    :keyword jobs_canceled: The count of all CANCELED jobs within the batch
+    :type jobs_canceled: :class:`django.db.models.IntegerField`
+    :keyword recipes_estimated: The estimated count for all recipes that will be created for the batch
+    :type recipes_estimated: :class:`django.db.models.IntegerField`
+    :keyword recipes_total: The total count for all recipes within the batch
+    :type recipes_total: :class:`django.db.models.IntegerField`
+    :keyword recipes_completed: The count for all completed recipes within the batch
+    :type recipes_completed: :class:`django.db.models.IntegerField`
+
     :keyword created: When the batch was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the batch was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
+    # TODO: remove this after v5 REST API is removed
     BATCH_STATUSES = (
         ('SUBMITTED', 'SUBMITTED'),
         ('CREATED', 'CREATED'),
@@ -398,15 +428,18 @@ class Batch(models.Model):
 
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
-    status = models.CharField(choices=BATCH_STATUSES, default='SUBMITTED', max_length=50, db_index=True)
-
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
+    recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+
     # TODO: remove this after v5 REST API is removed
+    status = models.CharField(choices=BATCH_STATUSES, default='SUBMITTED', max_length=50, db_index=True)
     creator_job = models.ForeignKey('job.Job', related_name='batch_creator_job', blank=True, null=True,
                                     on_delete=models.PROTECT)
 
     definition = django.contrib.postgres.fields.JSONField(default=dict)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    is_creation_done = models.BooleanField(default=False)
 
     # TODO: remove these fields after v5 REST API is removed
     created_count = models.IntegerField(default=0)
@@ -424,6 +457,7 @@ class Batch(models.Model):
     jobs_failed = models.IntegerField(default=0)
     jobs_completed = models.IntegerField(default=0)
     jobs_canceled = models.IntegerField(default=0)
+    recipes_estimated = models.IntegerField(default=0)
     recipes_total = models.IntegerField(default=0)
     recipes_completed = models.IntegerField(default=0)
 
