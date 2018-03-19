@@ -125,7 +125,7 @@ class RequeueJobs(CommandMessage):
         job_models = {job.id: job for job in Job.objects.get_basic_jobs(job_ids)}
         for requeue_job in self._requeue_jobs:
             job_model = job_models[requeue_job.job_id]
-            if job_model.can_be_queued() and job_model.has_been_queued() and job_model.num_exes == requeue_job.exe_num:
+            if job_model.can_be_requeued() and job_model.num_exes == requeue_job.exe_num:
                 jobs_to_requeue.append(QueuedJob(job_model.id, job_model.num_exes))
             elif job_model.can_be_uncanceled():
                 job_ids_to_uncancel.append(job_model.id)
@@ -137,7 +137,7 @@ class RequeueJobs(CommandMessage):
             Job.objects.increment_max_tries(job_ids_to_requeue, when)
 
         # Create messages to queue the jobs
-        self.new_messages.extend(create_queued_jobs_messages(jobs_to_requeue, priority=self.priority))
+        self.new_messages.extend(create_queued_jobs_messages(jobs_to_requeue, requeue=True, priority=self.priority))
 
         # Create messages to uncancel jobs
         self.new_messages.extend(create_uncancel_jobs_messages(job_ids_to_uncancel, when))

@@ -270,13 +270,15 @@ class QueueManager(models.Manager):
             results.append(status)
         return results
 
-    def queue_jobs(self, jobs, priority=None):
+    def queue_jobs(self, jobs, requeue=False, priority=None):
         """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
         Any jobs that are not in a valid status for being queued, are without job input, or are superseded will be
         ignored.
 
         :param jobs: The job models to put on the queue
         :type jobs: list
+        :param requeue: Whether this is a re-queue (True) or a first queue (False)
+        :type requeue: bool
         :param priority: An optional argument to reset the jobs' priority when they are queued
         :type priority: int
         :returns: The list of job IDs that were successfully QUEUED
@@ -286,7 +288,7 @@ class QueueManager(models.Manager):
         when_queued = timezone.now()
 
         # Set job models to QUEUED
-        queued_job_ids = Job.objects.update_jobs_to_queued(jobs, when_queued)
+        queued_job_ids = Job.objects.update_jobs_to_queued(jobs, when_queued, requeue=requeue)
         if not queued_job_ids:
             return queued_job_ids  # Done if nothing was queued
 
@@ -502,7 +504,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries_old(jobs_to_queue)
-            self.queue_jobs(jobs_to_queue, priority=priority)
+            self.queue_jobs(jobs_to_queue, requeue=True, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)

@@ -67,6 +67,7 @@ class TestFailedJobs(TransactionTestCase):
         self.assertEqual(jobs[0].num_exes, 1)
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 1)
         self.assertEqual(queued_jobs_msg._queued_jobs[0].job_id, job_1.id)
+        self.assertTrue(queued_jobs_msg.requeue)
         # Job 2 should be failed since max_tries is used up
         self.assertEqual(jobs[1].status, 'FAILED')
         self.assertEqual(jobs[1].num_exes, 1)
@@ -136,6 +137,7 @@ class TestFailedJobs(TransactionTestCase):
                 update_recipes_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
+        self.assertTrue(queued_jobs_msg.requeue)
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)  # 2 jobs should have been retried
         self.assertEqual(len(update_recipes_msg._recipe_ids), 2)  # 2 jobs should have been failed
 
@@ -188,6 +190,7 @@ class TestFailedJobs(TransactionTestCase):
             elif msg.type == 'update_recipe_metrics':
                 update_recipe_metrics_msg = msg
         self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
+        self.assertTrue(queued_jobs_msg.requeue)
         # The same 2 jobs should have been retried
         self.assertEqual(len(queued_jobs_msg._queued_jobs), 2)
 

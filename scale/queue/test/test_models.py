@@ -15,6 +15,7 @@ import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
+from job.configuration.data.job_data import JobData
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
@@ -178,7 +179,7 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         """Tests calling QueueManager.handle_job_cancellation() successfully with a queued job."""
 
         # Queue the job
-        job = job_test_utils.create_job()
+        job = job_test_utils.create_job(input=JobData().get_dict(), num_exes=0, status='PENDING')
         Queue.objects.queue_jobs([job])
 
         # Call method to test

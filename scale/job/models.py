@@ -841,7 +841,7 @@ class JobManager(models.Manager):
         self.filter(id__in=job_ids).update(status='PENDING', last_status_change=when, last_modified=timezone.now())
         return job_ids
 
-    def update_jobs_to_queued(self, jobs, when_queued):
+    def update_jobs_to_queued(self, jobs, when_queued, requeue=False):
         """Updates the given job models to the QUEUED status and returns the IDs of the models that were successfully
         set to QUEUED. The caller must have obtained model locks on the job models in an atomic transaction. Any jobs
         that are not in a valid status for being queued, are without job input, or are superseded will be ignored.
@@ -850,14 +850,20 @@ class JobManager(models.Manager):
         :type jobs: list
         :param when_queued: The time that the jobs are queued
         :type when_queued: :class:`datetime.datetime`
+        :param requeue: Whether this is a re-queue (True) or a first queue (False)
+        :type requeue: bool
         :returns: The list of job IDs that were successfully set to QUEUED
         :rtype: list
         """
 
         job_ids = []
         for job in jobs:
-            if job.can_be_queued():
-                job_ids.append(job.id)
+            if requeue:
+                if job.can_be_requeued():
+                    job_ids.append(job.id)
+            else:
+                if job.can_be_queued():
+                    job_ids.append(job.id)
 
         self.filter(id__in=job_ids).update(status='QUEUED', node=None, error=None, queued=when_queued, started=None,
                                            ended=None, last_status_change=when_queued,
@@ -1143,14 +1149,24 @@ class Job(models.Model):
         return self.status != 'PENDING' and not self.has_been_queued()
 
     def can_be_queued(self):
-        """Indicates whether this job can be placed on the queue
+        """Indicates whether this job can be placed on the queue for the first time
 
-        :returns: True if the job can be placed on the queue, false otherwise
+        :returns: True if the job can be placed on the queue for the first time, false otherwise
+        :rtype: bool
+        """
+
+        first_time = not self.has_been_queued()
+        return self.status in ['PENDING', 'BLOCKED'] and self.has_input() and first_time and not self.is_superseded
+
+    def can_be_requeued(self):
+        """Indicates whether this job can be placed back on the queue (re-queued)
+
+        :returns: True if the job can be placed back on the queue, false otherwise
         :rtype: bool
         """
 
         # QUEUED is allowed because the RUNNING update may come after the failure
-        return self.status != 'COMPLETED' and self.has_input() and not self.is_superseded
+        return self.status != 'COMPLETED' and self.has_input() and self.has_been_queued() and not self.is_superseded
 
     def can_be_running(self):
         """Indicates whether this job can be set to RUNNING status

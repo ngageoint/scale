@@ -46,6 +46,7 @@ class TestRequeueJobs(TestCase):
         message = new_message.new_messages[0]
         self.assertEqual(message.type, 'queued_jobs')
         self.assertListEqual(message._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
+        self.assertTrue(message.requeue)
         self.assertEqual(message.priority, 1)
 
     def test_execute(self):
@@ -95,6 +96,7 @@ class TestRequeueJobs(TestCase):
         self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
         self.assertListEqual(queued_jobs_msg._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
         self.assertEqual(queued_jobs_msg.priority, 101)
+        self.assertTrue(queued_jobs_msg.requeue)
         # Job 5 is only job that should be included in message to uncancel
         uncancel_jobs_msg = message.new_messages[1]
         self.assertEqual(uncancel_jobs_msg.type, 'uncancel_jobs')
@@ -123,6 +125,7 @@ class TestRequeueJobs(TestCase):
         self.assertEqual(queued_jobs_msg.type, 'queued_jobs')
         self.assertListEqual(queued_jobs_msg._queued_jobs, [QueuedJob(job_1.id, job_1.num_exes)])
         self.assertEqual(queued_jobs_msg.priority, 101)
+        self.assertTrue(queued_jobs_msg.requeue)
         # Job 5 is only job that should be included in message to uncancel
         uncancel_jobs_msg = message.new_messages[1]
         self.assertEqual(uncancel_jobs_msg.type, 'uncancel_jobs')

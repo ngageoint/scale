@@ -327,9 +327,10 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, input={}, started=timezone.now(), ended=timezone.now())
+        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input={}, started=timezone.now(),
+                                        ended=timezone.now())
 
-        Job.objects.update_jobs_to_queued([job], timezone.now())
+        Job.objects.update_jobs_to_queued([job], timezone.now(), requeue=True)
         job = Job.objects.get(pk=job.id)
 
         self.assertEqual(job.status, 'QUEUED')
