@@ -22,7 +22,8 @@ class TestQueuedJobs(TransactionTestCase):
         job_1 = job_test_utils.create_job(num_exes=0, status='PENDING', input=data.get_dict())
         job_2 = job_test_utils.create_job(num_exes=1, status='FAILED', input=data.get_dict())
         job_3 = job_test_utils.create_job(num_exes=1, status='COMPLETED', input=data.get_dict())
-        job_ids = [job_1.id, job_2.id, job_3.id]
+        job_4 = job_test_utils.create_job(num_exes=0, status='CANCELED', input=data.get_dict())
+        job_ids = [job_1.id, job_2.id, job_3.id, job_4.id]
 
         # Add jobs to message
         message = QueuedJobs()
@@ -33,6 +34,8 @@ class TestQueuedJobs(TransactionTestCase):
             message.add_job(job_2.id, job_2.num_exes - 1)  # Mismatched exe_num
         if message.can_fit_more():
             message.add_job(job_3.id, job_3.num_exes)
+        if message.can_fit_more():
+            message.add_job(job_4.id, job_4.num_exes)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -47,6 +50,8 @@ class TestQueuedJobs(TransactionTestCase):
         self.assertEqual(jobs[1].num_exes, 1)
         self.assertEqual(jobs[2].status, 'COMPLETED')
         self.assertEqual(jobs[2].num_exes, 1)
+        self.assertEqual(jobs[3].status, 'CANCELED')
+        self.assertEqual(jobs[3].num_exes, 0)
         # Ensure priority is correctly set
         queue = Queue.objects.get(job_id=job_1.id)
         self.assertEqual(queue.priority, 1)
