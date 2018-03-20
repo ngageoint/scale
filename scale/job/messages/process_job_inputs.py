@@ -110,6 +110,6 @@ class ProcessJobInputs(CommandMessage):
                 jobs_to_queue.append(QueuedJob(job_model.id, 0))
         if jobs_to_queue:
             logger.info('Processed job inputs, %d job(s) will be queued', len(jobs_to_queue))
-            self.new_messages.extend(create_queued_jobs_messages(jobs_to_queue))
+            self.new_messages.extend(create_queued_jobs_messages(jobs_to_queue, requeue=False))
 
         return True

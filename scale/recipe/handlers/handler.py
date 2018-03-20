@@ -177,7 +177,7 @@ class RecipeHandler(object):
 
         for job_name in self._graph.get_topological_order():
             job = self._jobs_by_name[job_name].job
-            if not job.has_been_queued() and job.can_be_queued():
+            if job.can_be_queued():
                 jobs_to_queue.append(job)
 
         return jobs_to_queue
