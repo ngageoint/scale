@@ -936,7 +936,7 @@ mode</p>
 
 <dl class="method">
 <dt id="queue.models.QueueManager.queue_jobs">
-<code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queue_jobs</code><span class="sig-paren">(</span><em>jobs</em>, <em>requeue=False</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.queue_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
 Any jobs that are not in a valid status for being queued, are without job input, or are superseded will be
 ignored.</p>
@@ -946,6 +946,7 @@ ignored.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job models to put on the queue</li>
+<li><strong>requeue</strong> (<em>bool</em>) &#8211; Whether this is a re-queue (True) or a first queue (False)</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority when they are queued</li>
 </ul>
 </td>

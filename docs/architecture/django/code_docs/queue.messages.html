@@ -310,7 +310,7 @@
 
 <dl class="function">
 <dt id="queue.messages.queued_jobs.create_queued_jobs_messages">
-<code class="descclassname">queue.messages.queued_jobs.</code><code class="descname">create_queued_jobs_messages</code><span class="sig-paren">(</span><em>jobs</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.queued_jobs.create_queued_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.messages.queued_jobs.</code><code class="descname">create_queued_jobs_messages</code><span class="sig-paren">(</span><em>jobs</em>, <em>requeue=False</em>, <em>priority=None</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.messages.queued_jobs.create_queued_jobs_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to queue the given jobs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -318,6 +318,7 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The jobs to queue (QueuedJob tuple)</li>
+<li><strong>requeue</strong> (<em>bool</em>) &#8211; Whether this is a re-queue (True) or a first queue (False)</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; Optional priority to set on the queued jobs</li>
 </ul>
 </td>
