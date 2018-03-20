@@ -9,6 +9,8 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 
 import storage.destroy_file_job as destroy_file_job
+from storage.messages.delete_files import create_delete_files_messages
+from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
 
@@ -20,9 +22,9 @@ class Command(BaseCommand):
     help = 'Perform a file destruction operation on a file'
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--file_path', action='store', type=str,
-                            help='Absolute path of the file to delete')
-        parser.add_argument('-j', '--job_id', action='store', type=int,
+        parser.add_argument('-f', '--file_ids', nargs='+', type=int, required=True,
+                            help='List of file ids to delete')
+        parser.add_argument('-j', '--job_id', action='store', type=int, required=True,
                             help='ID of the Job model')
 
     def handle(self, *args, **options):
@@ -34,14 +36,22 @@ class Command(BaseCommand):
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
-        file_path = options.get('file_path')
+        file_ids = options.get('file_ids')
         job_id = options.get('job_id')
+
+        files = ScaleFile.objects.filter(id__in=file_ids).values('id', 'file_path')
+
 
         logger.info('Command starting: scale_destroy_file')
         logger.info('File path: %s', file_path)
         logger.info('Job ID: %i', job_id)
 
+        # 
         destroy_file_job.destroy_file(file_path, job_id)
+
+        # 
+        messages = create_delete_files_messages(file_ids=file_path, purge=True)
+
 
         logger.info('Command completed: scale_destroy_file')
 
