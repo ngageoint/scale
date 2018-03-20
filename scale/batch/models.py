@@ -60,6 +60,7 @@ class BatchManager(models.Manager):
         batch.title = title
         batch.description = description
         batch.recipe_type = recipe_type
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         batch.definition = definition.get_dict()
         batch.event = event
         batch.save()
@@ -167,6 +168,7 @@ class BatchManager(models.Manager):
         old_files_count = old_files.count()
         if old_recipes_count + old_files_count > batch.total_count:
             batch.total_count = old_recipes_count + old_files_count
+            batch.recipes_estimated = batch.total_count
             batch.save()
 
         # Send messages to reprocess old recipes
@@ -208,6 +210,7 @@ class BatchManager(models.Manager):
         logger.info('Created: %i, Failed: %i', batch.created_count, batch.failed_count)
         batch.status = 'CREATED'
         batch.total_count = batch.created_count + batch.failed_count
+        batch.is_creation_done = True
         batch.save()
 
     def get_matched_files(self, recipe_type, definition):
