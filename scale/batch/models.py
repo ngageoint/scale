@@ -451,6 +451,12 @@ class Batch(models.Model):
     :keyword total_count: An approximation of the total number of batch recipes that should be created by this batch.
     :type total_count: :class:`django.db.models.IntegerField`
 
+    :keyword root_batch: The first (root) batch in this chain of iterative batches. This field will be null for the
+        first batch in the chain.
+    :type root_batch: :class:`django.db.models.ForeignKey`
+    :keyword prev_batch: The previous batch that was re-processed by this batch
+    :type prev_batch: :class:`django.db.models.ForeignKey`
+
     :keyword jobs_total: The total count of all jobs within the batch
     :type jobs_total: :class:`django.db.models.IntegerField`
     :keyword jobs_pending: The count of all PENDING jobs within the batch
@@ -507,6 +513,12 @@ class Batch(models.Model):
     completed_job_count = models.IntegerField(default=0)
     completed_recipe_count = models.IntegerField(default=0)
     total_count = models.IntegerField(default=0)
+
+    # Fields for linking iterative batches together
+    root_batch = models.ForeignKey('batch.Batch', related_name='linked_batches', blank=True, null=True,
+                                   on_delete=models.PROTECT)
+    prev_batch = models.ForeignKey('batch.Batch', related_name='next_batch', blank=True, null=True,
+                                   on_delete=models.PROTECT)
 
     # Metrics fields
     jobs_total = models.IntegerField(default=0)
