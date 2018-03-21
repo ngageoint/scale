@@ -9,6 +9,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 
 import storage.destroy_file_job as destroy_file_job
+from messaging.manager import CommandMessageManager
 from storage.messages.delete_files import create_delete_files_messages
 from storage.models import ScaleFile
 
@@ -23,7 +24,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--file_ids', nargs='+', type=int, required=True,
-                            help='List of file ids to delete')
+                            help='List of file IDs to delete')
         parser.add_argument('-j', '--job_id', action='store', type=int, required=True,
                             help='ID of the Job model')
 
@@ -39,19 +40,16 @@ class Command(BaseCommand):
         file_ids = options.get('file_ids')
         job_id = options.get('job_id')
 
-        files = ScaleFile.objects.filter(id__in=file_ids).values('id', 'file_path')
-
-
         logger.info('Command starting: scale_destroy_file')
-        logger.info('File path: %s', file_path)
+        logger.info('File IDs: %s', file_ids)
         logger.info('Job ID: %i', job_id)
 
-        # 
-        destroy_file_job.destroy_file(file_path, job_id)
+        file_info = ScaleFile.objects.filter(id__in=file_ids).values('id', 'file_path')
+        for f in file_info:
+            destroy_file_job.destroy_file(f['file_path'], job_id)
 
-        # 
-        messages = create_delete_files_messages(file_ids=file_path, purge=True)
-
+        messages = create_delete_files_messages(file_ids=file_ids, purge=True)
+        CommandMessageManager().send_messages(messages)
 
         logger.info('Command completed: scale_destroy_file')
 
