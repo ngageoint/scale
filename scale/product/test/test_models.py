@@ -27,7 +27,6 @@ from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
-    fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()

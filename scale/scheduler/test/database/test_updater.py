@@ -106,10 +106,12 @@ class TestDatabaseUpdater(TestCase):
     def test_update_batch_fields(self):
         """Tests running the database update to populate new batch fields in job and recipe models"""
 
-        batch_1 = batch_test_utils.create_batch()
+        batch_1 = batch_test_utils.create_batch_old()
+        batch_1.recipe_type_rev_id = 1
+        batch_1.save()
         batch_1.creator_job.status = 'COMPLETED'
         batch_1.creator_job.save()
-        batch_2 = batch_test_utils.create_batch()
+        batch_2 = batch_test_utils.create_batch_old()
 
         recipe_type = recipe_test_utils.create_recipe_type()
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type)

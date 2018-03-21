@@ -11,8 +11,8 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import util.rest as rest_util
-from batch.configuration.definition.batch_definition import BatchDefinition
-from batch.configuration.definition.exceptions import InvalidDefinition
+from batch.definition.exceptions import InvalidDefinition
+from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.models import Batch
 from batch.serializers import BatchDetailsSerializer, BatchSerializer
 from recipe.models import RecipeType
@@ -75,13 +75,13 @@ class BatchesView(ListCreateAPIView):
         definition = None
         try:
             if definition_dict:
-                definition = BatchDefinition(definition_dict)
+                definition = OldBatchDefinition(definition_dict)
                 definition.validate(recipe_type)
         except InvalidDefinition as ex:
             raise BadParameter('Batch definition invalid: %s' % unicode(ex))
 
         # Create the batch
-        batch = Batch.objects.create_batch(recipe_type, definition, title=title, description=description)
+        batch = Batch.objects.create_batch_old(recipe_type, definition, title=title, description=description)
 
         # Fetch the full batch with details
         try:
@@ -144,7 +144,7 @@ class BatchesValidationView(APIView):
         warnings = []
         try:
             if definition_dict:
-                definition = BatchDefinition(definition_dict)
+                definition = OldBatchDefinition(definition_dict)
                 warnings = definition.validate(recipe_type)
         except InvalidDefinition as ex:
             raise BadParameter('Batch definition invalid: %s' % unicode(ex))

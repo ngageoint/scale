@@ -1,16 +1,43 @@
 """Defines utility methods for testing batches"""
 from __future__ import unicode_literals
 
-import job.test.utils as job_test_utils
-import recipe.test.utils as recipe_test_utils
-from batch.configuration.definition.batch_definition import BatchDefinition
+from batch.definition.definition import BatchDefinition
+from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.models import Batch, BatchJob, BatchRecipe
+from job.test import utils as job_test_utils
+from recipe.test import utils as recipe_test_utils
 
 BATCH_TITLE_COUNTER = 1
 BATCH_DESCRIPTION_COUNTER = 1
 
 
-def create_batch(recipe_type=None, definition=None, title=None, description=None, status=None, recipe_count=0):
+def create_batch(title=None, description=None, recipe_type=None, definition=None):
+    """Creates a batch model for unit testing
+
+    :returns: The batch model
+    :rtype: :class:`batch.models.Batch`
+    """
+
+    if not recipe_type:
+        recipe_type = recipe_test_utils.create_recipe_type()
+    if not definition:
+        definition = BatchDefinition()
+    if not title:
+        global BATCH_TITLE_COUNTER
+        title = 'Test Batch Title %i' % BATCH_TITLE_COUNTER
+        BATCH_TITLE_COUNTER += 1
+    if not description:
+        global BATCH_DESCRIPTION_COUNTER
+        description = 'Test Batch Description %i' % BATCH_DESCRIPTION_COUNTER
+        BATCH_DESCRIPTION_COUNTER += 1
+
+    batch = Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, title=title,
+                                       description=description)
+    return batch
+
+
+# TODO: remove this when v5 batch creation is removed
+def create_batch_old(recipe_type=None, definition=None, title=None, description=None, status=None, recipe_count=0):
     """Creates a batch model for unit testing
 
     :returns: The batch model
@@ -21,8 +48,8 @@ def create_batch(recipe_type=None, definition=None, title=None, description=None
         recipe_type = recipe_test_utils.create_recipe_type()
     if not definition:
         definition = {}
-    if not isinstance(definition, BatchDefinition):
-        definition = BatchDefinition(definition)
+    if not isinstance(definition, OldBatchDefinition):
+        definition = OldBatchDefinition(definition)
     if not title:
         global BATCH_TITLE_COUNTER
         title = 'Test Batch Title %i' % BATCH_TITLE_COUNTER
@@ -35,8 +62,8 @@ def create_batch(recipe_type=None, definition=None, title=None, description=None
     for i in range(recipe_count):
         recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
-    batch = Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, title=title,
-                                       description=description)
+    batch = Batch.objects.create_batch_old(recipe_type=recipe_type, definition=definition, title=title,
+                                           description=description)
     if status:
         batch.status = status
         batch.save()

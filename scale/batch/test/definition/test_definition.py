@@ -1,0 +1,62 @@
+from __future__ import unicode_literals
+
+import django
+from django.test import TestCase
+
+from batch.definition.exceptions import InvalidDefinition
+from batch.definition.json.definition_v6 import BatchDefinitionV6
+from batch.test import utils as batch_test_utils
+from recipe.test import utils as recipe_test_utils
+
+
+class TestBatchDefinition(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_create_from_json(self):
+        """Tests creating a BatchDefinition from a JSON"""
+
+        # Valid previous batch definition
+        definition = {'version': '6', 'previous_batch': {'batch_id': 1234, 'job_names': ['job_a', 'job_b'],
+                                                         'all_jobs': True}}
+        json = BatchDefinitionV6(definition=definition, do_validate=True)
+        self.assertIsNotNone(json.get_definition())
+
+    def test_validate(self):
+        """Tests calling BatchDefinition.validate()"""
+
+        recipe_type_1 = recipe_test_utils.create_recipe_type()
+        recipe_type_2 = recipe_test_utils.create_recipe_type()
+
+        # TODO: create new test utils create_batch method
+        bad_recipe_type_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_1)
+        still_creating_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
+        prev_batch.is_creation_done = True
+        prev_batch.save()
+        batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
+
+        # No recipes would be created
+        json_dict = {'version': '6'}
+        json = BatchDefinitionV6(definition=json_dict)
+        definition = json.get_definition()
+        self.assertRaises(InvalidDefinition, definition.validate, batch)
+
+        # Mismatched recipe types
+        json_dict = {'version': '6', 'previous_batch': {'batch_id': bad_recipe_type_prev_batch.id}}
+        json = BatchDefinitionV6(definition=json_dict)
+        definition = json.get_definition()
+        self.assertRaises(InvalidDefinition, definition.validate, batch)
+
+        # Previous batch not done creating recipes
+        json_dict = {'version': '6', 'previous_batch': {'batch_id': still_creating_prev_batch.id}}
+        json = BatchDefinitionV6(definition=json_dict)
+        definition = json.get_definition()
+        self.assertRaises(InvalidDefinition, definition.validate, batch)
+
+        # Valid definition with previous batch
+        json_dict = {'version': '6', 'previous_batch': {'batch_id': prev_batch.id}}
+        json = BatchDefinitionV6(definition=json_dict)
+        definition = json.get_definition()
+        definition.validate(batch)

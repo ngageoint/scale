@@ -8,7 +8,7 @@ from django.db import connection, models, transaction
 from django.db.models import F, Q
 from django.utils.timezone import now
 
-from batch.configuration.definition.batch_definition import BatchDefinition
+from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
 from job.models import JobType
@@ -20,13 +20,14 @@ from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 
+
 logger = logging.getLogger(__name__)
 
 
 class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
-    @transaction.atomic
+    # TODO: finish implementing
     def create_batch(self, recipe_type, definition, title=None, description=None):
         """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
         method also queues a new system job that will process the batch request. All database changes occur in an atomic
@@ -35,7 +36,59 @@ class BatchManager(models.Manager):
         :param recipe_type: The type of recipes that should be re-processed
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param definition: The definition for running a batch
-        :type definition: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :type definition: :class:`batch.definition.definition.BatchDefinition`
+        :param title: The human-readable name of the batch
+        :type title: string
+        :param description: An optional description of the batch
+        :type description: string
+        :returns: The newly created batch
+        :rtype: :class:`batch.models.Batch`
+
+        :raises :class:`batch.exceptions.BatchError`: If general batch parameters are invalid
+        """
+
+        # Attempt to get the batch job type
+        try:
+            job_type = JobType.objects.filter(name='scale-batch-creator').last()
+        except JobType.DoesNotExist:
+            raise BatchError('Missing required job type: scale-batch-creator')
+
+        # Create an event to represent this request
+        trigger_desc = {'user': 'Anonymous'}
+        event = TriggerEvent.objects.create_trigger_event('USER', None, trigger_desc, now())
+
+        batch = Batch()
+        batch.title = title
+        batch.description = description
+        batch.recipe_type = recipe_type
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        from batch.definition.json.definition_v6 import get_v6_definition_json
+        batch.definition = get_v6_definition_json(definition).get_dict()
+        batch.event = event
+        batch.save()
+
+        # Create models for batch metrics
+        batch_metrics_models = []
+        for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+            batch_metrics_model = BatchMetrics()
+            batch_metrics_model.batch_id = batch.id
+            batch_metrics_model.job_name = job_name
+            batch_metrics_models.append(batch_metrics_model)
+        BatchMetrics.objects.bulk_create(batch_metrics_models)
+
+        return batch
+
+    # TODO: remove this when v5 REST API is removed
+    @transaction.atomic
+    def create_batch_old(self, recipe_type, definition, title=None, description=None):
+        """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
+        method also queues a new system job that will process the batch request. All database changes occur in an atomic
+        transaction.
+
+        :param recipe_type: The type of recipes that should be re-processed
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param definition: The definition for running a batch
+        :type definition: :class:`batch.definition.json.old.batch_definition.BatchDefinition`
         :param title: The human-readable name of the batch
         :type title: string
         :param description: An optional description of the batch
@@ -142,6 +195,7 @@ class BatchManager(models.Manager):
         # Attempt to get the batch
         return Batch.objects.select_related('creator_job', 'event', 'recipe_type').get(pk=batch_id)
 
+    # TODO: remove this when v5 REST API is removed
     def schedule_recipes(self, batch_id):
         """Schedules each recipe that matches the batch for re-processing and creates associated batch models.
 
@@ -213,13 +267,14 @@ class BatchManager(models.Manager):
         batch.is_creation_done = True
         batch.save()
 
+    # TODO: remove this when v5 REST API is removed
     def get_matched_files(self, recipe_type, definition):
         """Gets all the input files that were never triggered against the given batch criteria.
 
         :param recipe_type: The type of recipes that should be re-processed
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param definition: The definition for running a batch
-        :type definition: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :type definition: :class:`batch.definition.json.old.batch_definition.BatchDefinition`
         :returns: A list of files that match the batch definition and were never run before.
         :rtype: [:class:`storage.models.ScaleFile`]
         """
@@ -247,13 +302,14 @@ class BatchManager(models.Manager):
                                              Q(data_ended__lte=definition.ended))
         return old_files
 
+    # TODO: remove this when v5 REST API is removed
     def get_matched_recipes(self, recipe_type, definition):
         """Gets all the recipes that might be affected by the given batch criteria.
 
         :param recipe_type: The type of recipes that should be re-processed
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param definition: The definition for running a batch
-        :type definition: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :type definition: :class:`batch.definition.json.old.batch_definition.BatchDefinition`
         :returns: A list of recipes that match the batch definition.
         :rtype: [:class:`recipe.models.Recipe`]
         """
@@ -320,6 +376,7 @@ class BatchManager(models.Manager):
 
         BatchMetrics.objects.update_batch_metrics_per_job(batch_ids)
 
+    # TODO: remove this when v5 REST API is removed
     @transaction.atomic
     def _process_trigger(self, batch, trigger_config, input_file):
         """Processes the given input file within the context of a particular batch request.
@@ -330,7 +387,7 @@ class BatchManager(models.Manager):
         :param batch: The batch that defines the recipes to schedule
         :type batch: :class:`batch.models.Batch`
         :param trigger_config: The trigger rule configuration to use when evaluating source files.
-        :type trigger_config: :class:`batch.configuration.definition.batch_definition.BatchTriggerConfiguration`
+        :type trigger_config: :class:`batch.definition.json.old.batch_definition.BatchTriggerConfiguration`
         :param input_file: The input file that should trigger a new batch recipe
         :type input_file: :class:`storage.models.ScaleFile`
         """
@@ -473,10 +530,10 @@ class Batch(models.Model):
         """Returns the definition for this batch
 
         :returns: The definition for this batch
-        :rtype: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :rtype: :class:`batch.definition.json.old.batch_definition.BatchDefinition`
         """
 
-        return BatchDefinition(self.definition)
+        return OldBatchDefinition(self.definition)
 
     class Meta(object):
         """meta information for the db"""

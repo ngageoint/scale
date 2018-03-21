@@ -5,7 +5,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 import util.parse as parse
-from batch.configuration.definition.exceptions import InvalidDefinition
+from batch.definition.exceptions import InvalidDefinition
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
 from trigger.configuration.trigger_rule import TriggerRuleConfiguration
@@ -203,7 +203,7 @@ class BatchDefinition(object):
         :param recipe_type: The recipe type associated with the batch.
         :type recipe_type: :class:`recipe.models.RecipeType`
         :returns: A list of warnings discovered during validation.
-        :rtype: [:class:`batch.configuration.definition.batch_definition.ValidationWarning`]
+        :rtype: list
         """
 
         if self.trigger_config:
@@ -255,7 +255,7 @@ class BatchTriggerConfiguration(TriggerRuleConfiguration):
         """Returns the condition for this batch trigger rule
 
         :return: The trigger condition
-        :rtype: :class:`batch.configuration.definition.batch_definition.BatchTriggerCondition`
+        :rtype: :class:`batch.definition.json.old.batch_definition.BatchTriggerCondition`
         """
 
         media_type = None

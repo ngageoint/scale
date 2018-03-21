@@ -21,10 +21,10 @@ class TestBatchesView(TestCase):
         django.setup()
 
         self.recipe_type1 = recipe_test_utils.create_recipe_type(name='test1', version='1.0')
-        self.batch1 = batch_test_utils.create_batch(recipe_type=self.recipe_type1, status='SUBMITTED')
+        self.batch1 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type1, status='SUBMITTED')
 
         self.recipe_type2 = recipe_test_utils.create_recipe_type(name='test2', version='1.0')
-        self.batch2 = batch_test_utils.create_batch(recipe_type=self.recipe_type2, status='CREATED')
+        self.batch2 = batch_test_utils.create_batch_old(recipe_type=self.recipe_type2, status='CREATED')
 
     def test_successful(self):
         """Tests successfully calling the batches view."""
@@ -82,10 +82,10 @@ class TestBatchesView(TestCase):
         """Tests successfully calling the batches view with sorting."""
 
         recipe_type1b = recipe_test_utils.create_recipe_type(name='test1', version='2.0')
-        batch_test_utils.create_batch(recipe_type=recipe_type1b)
+        batch_test_utils.create_batch_old(recipe_type=recipe_type1b)
 
         recipe_type1c = recipe_test_utils.create_recipe_type(name='test1', version='3.0')
-        batch_test_utils.create_batch(recipe_type=recipe_type1c)
+        batch_test_utils.create_batch_old(recipe_type=recipe_type1c)
 
         url = rest_util.get_url('/batches/?order=recipe_type__name&order=-recipe_type__version')
         response = self.client.generic('GET', url)
@@ -384,7 +384,7 @@ class TestBatchDetailsView(TestCase):
         django.setup()
 
         self.recipe_type = recipe_test_utils.create_recipe_type()
-        self.batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
     def test_not_found(self):
         """Tests successfully calling the get batch details view with a batch id that does not exist."""

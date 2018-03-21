@@ -12,8 +12,6 @@ from recipe.test import utils as recipe_test_utils
 
 class TestUpdateRecipes(TestCase):
 
-    fixtures = ['batch_job_types.json']
-
     def setUp(self):
         django.setup()
 

@@ -16,8 +16,6 @@ from storage.test import utils as storage_test_utils
 
 class TestUpdateRecipes(TestCase):
 
-    fixtures = ['batch_job_types.json']
-
     def setUp(self):
         django.setup()
 
@@ -340,7 +338,10 @@ class TestUpdateRecipes(TestCase):
     def test_execute_create_jobs(self):
         """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
 
-        batch = batch_test_utils.create_batch(definition={'priority': 999})
+        # TODO: need to fix this with new batch configuration
+        batch = batch_test_utils.create_batch()
+        batch.definition = {'priority': 999}
+        batch.save()
 
         # Create recipes
         job_type_1 = job_test_utils.create_job_type()

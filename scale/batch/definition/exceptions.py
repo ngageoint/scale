@@ -3,4 +3,5 @@
 
 class InvalidDefinition(Exception):
     """Exception indicating that the provided batch definition was invalid"""
+
     pass
