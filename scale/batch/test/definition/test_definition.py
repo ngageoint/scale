@@ -29,7 +29,6 @@ class TestBatchDefinition(TestCase):
         recipe_type_1 = recipe_test_utils.create_recipe_type()
         recipe_type_2 = recipe_test_utils.create_recipe_type()
 
-        # TODO: create new test utils create_batch method
         bad_recipe_type_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_1)
         still_creating_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)

@@ -25,7 +25,7 @@ class BatchDefinition(object):
         :returns: A list of warnings discovered during validation
         :rtype: list
 
-        :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the given definition is invalid
+        :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
 
         if self.prev_batch_id is None:

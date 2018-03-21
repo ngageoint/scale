@@ -12,6 +12,7 @@ SCHEMA_VERSION = '6'
 
 BATCH_DEFINITION_SCHEMA = {
     'type': 'object',
+    'required': ['version'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -59,9 +60,10 @@ def get_v6_definition_json(definition):
     :rtype: :class:`batch.definition.json.definition_v6.BatchDefinitionV6`:
     """
 
-    json_dict = {'version': '6', 'previous_batch': {'batch_id': definition.prev_batch_id,
-                                                    'job_names': definition.job_names,
-                                                    'all_jobs': definition.all_jobs}}
+    json_dict = {'version': '6'}
+    if definition.prev_batch_id is not None:
+        json_dict['previous_batch'] = {'batch_id': definition.prev_batch_id, 'job_names': definition.job_names,
+                                       'all_jobs': definition.all_jobs}
     return BatchDefinitionV6(definition=json_dict, do_validate=False)
 
 
