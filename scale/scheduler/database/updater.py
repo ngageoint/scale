@@ -5,6 +5,8 @@ import logging
 
 from django.db import connection, transaction
 
+from batch.configuration.configuration import BatchConfiguration
+from batch.configuration.json.configuration_v6 import get_v6_configuration_json
 from batch.models import Batch
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
@@ -146,6 +148,16 @@ class DatabaseUpdater(object):
             count = cursor.rowcount
             if count:
                 logger.info('Batch with batch_id %d set to correct recipe type revision', batch_id)
+
+        batch = Batch.objects.get(id=batch_id)
+        if not batch.configuration:
+            definition = batch.get_batch_definition()
+            if definition.priority is not None:
+                configuration = BatchConfiguration()
+                configuration.priority = definition.priority
+                config_dict = get_v6_configuration_json(configuration).get_dict()
+                Batch.objects.filter(id=batch_id).update(configuration=config_dict)
+                logger.info('Batch with batch_id %d updated with new configuration', batch_id)
 
         self._current_batch_id = batch_id
         self._updated_batch += 1

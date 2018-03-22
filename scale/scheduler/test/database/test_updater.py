@@ -106,12 +106,13 @@ class TestDatabaseUpdater(TestCase):
     def test_update_batch_fields(self):
         """Tests running the database update to populate new batch fields in job and recipe models"""
 
-        batch_1 = batch_test_utils.create_batch_old()
+        definition = {"priority": 303}
+        batch_1 = batch_test_utils.create_batch_old(definition=definition)
         batch_1.recipe_type_rev_id = 1
         batch_1.save()
         batch_1.creator_job.status = 'COMPLETED'
         batch_1.creator_job.save()
-        batch_2 = batch_test_utils.create_batch_old()
+        batch_2 = batch_test_utils.create_batch()
 
         recipe_type = recipe_test_utils.create_recipe_type()
         recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type)
@@ -144,6 +145,7 @@ class TestDatabaseUpdater(TestCase):
         self.assertEqual(batch_1.recipes_estimated, 2)
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         self.assertEqual(batch_1.recipe_type_rev_id, recipe_type_rev.id)
+        self.assertEqual(batch_1.get_configuration().priority, 303)
         job_1 = Job.objects.get(id=job_1.id)
         self.assertEqual(job_1.batch_id, batch_1.id)
         job_2 = Job.objects.get(id=job_2.id)
