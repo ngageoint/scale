@@ -104,5 +104,6 @@ class DeleteFiles(CommandMessage):
                 scale_files = ScaleFile.objects.filter(id__in=self._file_ids)
                 for scale_file in scale_files:
                     scale_file.set_deleted()
+                    scale_file.save()
 
         return True

@@ -14,7 +14,7 @@ def destroy_file(file_path, job_id):
 
     :param file_path: The absolute path of the file to delete
     :type file_path: string
-    :param job_id: The ID of the ingest to perform
+    :param job_id: The ID of the job associated with the file
     :type job_id: int
     """
 
