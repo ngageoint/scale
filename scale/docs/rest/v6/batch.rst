@@ -30,7 +30,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Batch Definition**                                                                                                        |
-+=============================================+==========+====================================================================+
++=========================+===================+==========+====================================================================+
 | previous_batch          | JSON object       | Optional | Indicates that the batch should re-process the recipes from a      |
 |                         |                   |          | previous batch. This will link the previous and new batch together |
 |                         |                   |          | so that their metrics can be easily compared.                      |
@@ -47,4 +47,25 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | all_jobs                | Boolean           | Optional | If true, then *job_names* is ignored and ALL jobs within the batch |
 |                         |                   |          | recipes will be re-processed.                                      |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_batch_json_configuration:
+
+Batch Configuration JSON
+========================
+
+A batch configuration JSON configures how the jobs and recipes within a batch should be run.
+
+**Example batch configuration:**
+
+.. code-block:: javascript
+
+   {
+      "priority": 100
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Batch Definition**                                                                                                        |
++=========================+===================+==========+====================================================================+
+| priority                | Integer           | Optional | Sets a new priority to use for all jobs within the batch           |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
