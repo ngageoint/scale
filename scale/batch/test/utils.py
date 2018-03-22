@@ -1,6 +1,7 @@
 """Defines utility methods for testing batches"""
 from __future__ import unicode_literals
 
+from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.models import Batch, BatchJob, BatchRecipe
@@ -11,7 +12,7 @@ BATCH_TITLE_COUNTER = 1
 BATCH_DESCRIPTION_COUNTER = 1
 
 
-def create_batch(title=None, description=None, recipe_type=None, definition=None):
+def create_batch(title=None, description=None, recipe_type=None, definition=None, configuration=None):
     """Creates a batch model for unit testing
 
     :returns: The batch model
@@ -22,6 +23,8 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
         recipe_type = recipe_test_utils.create_recipe_type()
     if not definition:
         definition = BatchDefinition()
+    if not configuration:
+        configuration = BatchConfiguration()
     if not title:
         global BATCH_TITLE_COUNTER
         title = 'Test Batch Title %i' % BATCH_TITLE_COUNTER
@@ -31,8 +34,8 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
         description = 'Test Batch Description %i' % BATCH_DESCRIPTION_COUNTER
         BATCH_DESCRIPTION_COUNTER += 1
 
-    batch = Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, title=title,
-                                       description=description)
+    batch = Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, configuration=configuration,
+                                       title=title, description=description)
     return batch
 
 

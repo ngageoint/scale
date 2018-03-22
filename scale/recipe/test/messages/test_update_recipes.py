@@ -4,6 +4,7 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
+from batch.configuration.configuration import BatchConfiguration
 from batch.test import utils as batch_test_utils
 from job.configuration.results.job_results import JobResults
 from job.models import Job
@@ -338,10 +339,9 @@ class TestUpdateRecipes(TestCase):
     def test_execute_create_jobs(self):
         """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
 
-        # TODO: need to fix this with new batch configuration
-        batch = batch_test_utils.create_batch()
-        batch.definition = {'priority': 999}
-        batch.save()
+        configuration = BatchConfiguration()
+        configuration.priority = 999
+        batch = batch_test_utils.create_batch(configuration=configuration)
 
         # Create recipes
         job_type_1 = job_test_utils.create_job_type()

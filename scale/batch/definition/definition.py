@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from batch.definition.exceptions import InvalidDefinition
-from batch.models import Batch
 
 
 class BatchDefinition(object):
@@ -32,6 +31,7 @@ class BatchDefinition(object):
             raise InvalidDefinition('Batch definition must result in creating at least one recipe')
 
         if self.prev_batch_id:
+            from batch.models import Batch
             prev_batch = Batch.objects.get(id=self.prev_batch_id)
             if batch.recipe_type_id != prev_batch.recipe_type_id:
                 raise InvalidDefinition('New batch and previous batch must have the same recipe type')

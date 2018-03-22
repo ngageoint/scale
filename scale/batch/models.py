@@ -8,6 +8,9 @@ from django.db import connection, models, transaction
 from django.db.models import F, Q
 from django.utils.timezone import now
 
+from batch.configuration.configuration import BatchConfiguration
+from batch.configuration.json.configuration_v6 import get_v6_configuration_json, BatchConfigurationV6
+from batch.definition.json.definition_v6 import get_v6_definition_json
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
@@ -28,7 +31,7 @@ class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
     # TODO: finish implementing
-    def create_batch(self, recipe_type, definition, title=None, description=None):
+    def create_batch(self, recipe_type, definition, configuration, title=None, description=None):
         """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
         method also queues a new system job that will process the batch request. All database changes occur in an atomic
         transaction.
@@ -37,6 +40,8 @@ class BatchManager(models.Manager):
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param definition: The definition for running a batch
         :type definition: :class:`batch.definition.definition.BatchDefinition`
+        :param configuration: The batch configuration
+        :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
         :param title: The human-readable name of the batch
         :type title: string
         :param description: An optional description of the batch
@@ -60,9 +65,9 @@ class BatchManager(models.Manager):
         batch = Batch()
         batch.title = title
         batch.description = description
+        batch.configuration = get_v6_configuration_json(configuration).get_dict()
         batch.recipe_type = recipe_type
         batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
-        from batch.definition.json.definition_v6 import get_v6_definition_json
         batch.definition = get_v6_definition_json(definition).get_dict()
         batch.event = event
         batch.save()
@@ -115,6 +120,10 @@ class BatchManager(models.Manager):
         batch.recipe_type = recipe_type
         batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         batch.definition = definition.get_dict()
+        configuration = BatchConfiguration()
+        if 'priority' in definition.get_dict():
+            configuration.priority = definition.get_dict()['priority']
+        batch.configuration = get_v6_configuration_json(configuration).get_dict()
         batch.event = event
         batch.save()
 
@@ -537,6 +546,15 @@ class Batch(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = BatchManager()
+
+    def get_configuration(self):
+        """Returns the configuration for this batch
+
+        :returns: The configuration for this batch
+        :rtype: :class:`batch.configuration.configuration.BatchConfiguration`
+        """
+
+        return BatchConfigurationV6(configuration=self.configuration, do_validate=False).get_configuration()
 
     def get_batch_definition(self):
         """Returns the definition for this batch

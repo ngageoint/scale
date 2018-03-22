@@ -209,8 +209,10 @@ class RecipeHandler(object):
             superseded_job = superseded_jobs[job_name] if job_name in superseded_jobs else None
             job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
                                          batch_id=batch_id, superseded_job=superseded_job)
-            if self.recipe.batch and self.recipe.batch.get_batch_definition().priority is not None:
-                job.priority = self.recipe.batch.get_batch_definition().priority
+            if self.recipe.batch:
+                priority = self.recipe.batch.get_configuration().priority
+                if priority is not None:
+                    job.priority = priority
             job_models[job_name] = [job]
 
         return job_models
