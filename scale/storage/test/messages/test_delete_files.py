@@ -1,7 +1,10 @@
 from __future__ import unicode_literals
 
+import os
+
 import django
 from django.test import TestCase
+from mock import call, patch
 
 from storage.messages.delete_files import DeleteFiles
 from storage.models import ScaleFile
@@ -16,9 +19,11 @@ class TestDeleteFiles(TestCase):
     def test_json(self):
         """Tests coverting a DeleteFiles message to and from JSON"""
 
-        file_1 = storage_test_utils.create_file()
-        file_2 = storage_test_utils.create_file()
-        file_ids = [file_1.id, file_2.id]
+        file_path_1 = os.path.join('my_dir', 'my_file.txt')
+        file_path_2 = os.path.join('my_dir', 'my_file.json')
+
+        file_1 = storage_test_utils.create_file(file_path=file_path_1)
+        file_2 = storage_test_utils.create_file(file_path=file_path_2)
 
         # Add files to message
         message = DeleteFiles()
@@ -32,91 +37,73 @@ class TestDeleteFiles(TestCase):
         message_json_dict = message.to_json()
         new_message = DeleteFiles.from_json(message_json_dict)
         result = new_message.execute()
-
         self.assertTrue(result)
-        files = ScaleFile.objects.filter(id__in=file_ids).order_by('id')
-        # Both jobs should have been canceled
-    #     self.assertEqual(files[0].status, 'CANCELED')
-    #     self.assertEqual(files[0].last_status_change)
-    #     self.assertEqual(files[1].status, 'CANCELED')
-    #     self.assertEqual(files[1].last_status_change)
-    #     # No new messages since these jobs do not belong to a recipe
-    #     self.assertEqual(len(new_message.new_messages), 0)
 
-    # def test_execute(self):
-    #     """Tests calling DeleteFile.execute() successfully"""
+        # Both files should have been deleted
+        self.assertEqual(ScaleFile.objects.filter(id=file_1.id).count(), 0)
+        self.assertEqual(ScaleFile.objects.filter(id=file_2.id).count(), 0)
 
-    #     when = now()
-    #     data = JobData()
-    #     job_type = job_test_utils.create_job_type()
-    #     job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', input=data.get_dict())
-    #     job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='CANCELED', input=data.get_dict())
-    #     job_3 = job_test_utils.create_job(job_type=job_type, num_exes=1, status='COMPLETED', input=data.get_dict())
-    #     job_4 = job_test_utils.create_job(job_type=job_type, num_exes=0, status='PENDING')
-    #     job_ids = [job_1.id, job_2.id, job_3.id, job_4.id]
-    #     from recipe.test import utils as recipe_test_utils
-    #     recipe = recipe_test_utils.create_recipe()
-    #     recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_1', job=job_1)
-    #     recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_2', job=job_2)
-    #     recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_3', job=job_3)
-    #     recipe_test_utils.create_recipe_job(recipe=recipe, job_name='job_4', job=job_4)
+        # No new messages
+        self.assertEqual(len(new_message.new_messages), 0)
 
-    #     # Add jobs to message
-    #     message = CancelJobs()
-    #     message.when = when
-    #     if message.can_fit_more():
-    #         message.add_job(job_1.id)
-    #     if message.can_fit_more():
-    #         message.add_job(job_2.id)
-    #     if message.can_fit_more():
-    #         message.add_job(job_3.id)
-    #     if message.can_fit_more():
-    #         message.add_job(job_4.id)
+    def test_execute(self):
+        """Tests calling DeleteFile.execute() successfully"""
 
-    #     # Execute message
-    #     result = message.execute()
-    #     self.assertTrue(result)
+        file_path_1 = os.path.join('my_dir', 'my_file.txt')
+        file_path_2 = os.path.join('my_dir', 'my_file1.json')
+        file_path_3 = os.path.join('my_dir', 'my_file2.json')
+        file_path_4 = os.path.join('my_dir', 'my_file3.json')
 
-    #     jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-    #     # Job 1 should have been canceled
-    #     self.assertEqual(jobs[0].status, 'CANCELED')
-    #     self.assertEqual(jobs[0].last_status_change, when)
-    #     # Job 2 was already canceled
-    #     self.assertEqual(jobs[1].status, 'CANCELED')
-    #     self.assertNotEqual(jobs[1].last_status_change, when)
-    #     # Job 3 was already COMPLETED, so can't be canceled
-    #     self.assertEqual(jobs[2].status, 'COMPLETED')
-    #     self.assertNotEqual(jobs[2].last_status_change, when)
-    #     # Job 4 should have been canceled
-    #     self.assertEqual(jobs[3].status, 'CANCELED')
-    #     self.assertEqual(jobs[3].last_status_change, when)
-    #     # Should be a message to update recipe after canceling jobs
-    #     self.assertEqual(len(message.new_messages), 1)
-    #     update_recipes_msg = message.new_messages[0]
-    #     self.assertEqual(update_recipes_msg.type, 'update_recipes')
-    #     self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        file_1 = storage_test_utils.create_file(file_path=file_path_1)
+        file_2 = storage_test_utils.create_file(file_path=file_path_2)
+        file_3 = storage_test_utils.create_file(file_path=file_path_3)
+        file_4 = storage_test_utils.create_file(file_path=file_path_4)
 
-    #     # Test executing message again
-    #     message.new_messages = []
-    #     result = message.execute()
-    #     self.assertTrue(result)
+        # Add files to message
+        message = DeleteFiles()
+        message.purge = False
+        if message.can_fit_more():
+            message.add_file(file_1.id)
+        if message.can_fit_more():
+            message.add_file(file_2.id)
+        if message.can_fit_more():
+            message.add_file(file_3.id)
+        if message.can_fit_more():
+            message.add_file(file_4.id)
 
-    #     # All results should be the same
-    #     jobs = Job.objects.filter(id__in=job_ids).order_by('id')
-    #     # Job 1 should have been canceled
-    #     self.assertEqual(jobs[0].status, 'CANCELED')
-    #     self.assertEqual(jobs[0].last_status_change, when)
-    #     # Job 2 was already canceled
-    #     self.assertEqual(jobs[1].status, 'CANCELED')
-    #     self.assertNotEqual(jobs[1].last_status_change, when)
-    #     # Job 3 was already COMPLETED, so can't be canceled
-    #     self.assertEqual(jobs[2].status, 'COMPLETED')
-    #     self.assertNotEqual(jobs[2].last_status_change, when)
-    #     # Job 4 should have been canceled
-    #     self.assertEqual(jobs[3].status, 'CANCELED')
-    #     self.assertEqual(jobs[3].last_status_change, when)
-    #     # Should be a message to update recipe after canceling jobs
-    #     self.assertEqual(len(message.new_messages), 1)
-    #     update_recipes_msg = message.new_messages[0]
-    #     self.assertEqual(update_recipes_msg.type, 'update_recipes')
-    #     self.assertListEqual(update_recipes_msg._recipe_ids, [recipe.id])
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # All files should have marked as deleted
+        self.assertTrue(ScaleFile.objects.filter(id=file_1.id).values('is_deleted'))
+        self.assertTrue(ScaleFile.objects.filter(id=file_2.id).values('is_deleted'))
+        self.assertTrue(ScaleFile.objects.filter(id=file_3.id).values('is_deleted'))
+        self.assertTrue(ScaleFile.objects.filter(id=file_4.id).values('is_deleted'))
+
+        file_5 = storage_test_utils.create_file(file_path=file_path_1)
+        file_6 = storage_test_utils.create_file(file_path=file_path_2)
+        file_7 = storage_test_utils.create_file(file_path=file_path_3)
+        file_8 = storage_test_utils.create_file(file_path=file_path_4)
+
+        # Add files to message
+        message = DeleteFiles()
+        message.purge = True
+        if message.can_fit_more():
+            message.add_file(file_5.id)
+        if message.can_fit_more():
+            message.add_file(file_6.id)
+        if message.can_fit_more():
+            message.add_file(file_7.id)
+        if message.can_fit_more():
+            message.add_file(file_8.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # All files should have been purged
+        self.assertEqual(ScaleFile.objects.filter(id=file_5.id).count(), 0)
+        self.assertEqual(ScaleFile.objects.filter(id=file_6.id).count(), 0)
+        self.assertEqual(ScaleFile.objects.filter(id=file_7.id).count(), 0)
+        self.assertEqual(ScaleFile.objects.filter(id=file_8.id).count(), 0)
