@@ -13,7 +13,7 @@ import util.rest as rest_util
 from batch.models import Batch
 
 
-class TestBatchesView(TestCase):
+class TestBatchesViewV5(TestCase):
 
     fixtures = ['batch_job_types.json']
 
@@ -29,7 +29,7 @@ class TestBatchesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the batches view."""
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -48,7 +48,7 @@ class TestBatchesView(TestCase):
     def test_status(self):
         """Tests successfully calling the batches view filtered by status."""
 
-        url = rest_util.get_url('/batches/?status=SUBMITTED')
+        url = '/v5/batches/?status=SUBMITTED'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -59,7 +59,7 @@ class TestBatchesView(TestCase):
     def test_recipe_type_id(self):
         """Tests successfully calling the batches view filtered by recipe type identifier."""
 
-        url = rest_util.get_url('/batches/?recipe_type_id=%s' % self.batch1.recipe_type.id)
+        url = '/v5/batches/?recipe_type_id=%s' % self.batch1.recipe_type.id
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -70,7 +70,7 @@ class TestBatchesView(TestCase):
     def test_recipe_type_name(self):
         """Tests successfully calling the batches view filtered by recipe type name."""
 
-        url = rest_util.get_url('/batches/?recipe_type_name=%s' % self.batch1.recipe_type.name)
+        url = '/v5/batches/?recipe_type_name=%s' % self.batch1.recipe_type.name
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -87,7 +87,7 @@ class TestBatchesView(TestCase):
         recipe_type1c = recipe_test_utils.create_recipe_type(name='test1', version='3.0')
         batch_test_utils.create_batch_old(recipe_type=recipe_type1c)
 
-        url = rest_util.get_url('/batches/?order=recipe_type__name&order=-recipe_type__version')
+        url = '/v5/batches/?order=recipe_type__name&order=-recipe_type__version'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -110,7 +110,7 @@ class TestBatchesView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -139,7 +139,7 @@ class TestBatchesView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -178,7 +178,7 @@ class TestBatchesView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -199,7 +199,7 @@ class TestBatchesView(TestCase):
             'title': 'batch-test',
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -216,7 +216,7 @@ class TestBatchesView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -235,10 +235,93 @@ class TestBatchesView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/batches/')
+        url = '/v5/batches/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestBatchesViewV6(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.recipe_type_1 = recipe_test_utils.create_recipe_type()
+        self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=True)
+
+        self.recipe_type_2 = recipe_test_utils.create_recipe_type()
+        self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2)
+
+    def test_invalid_version(self):
+        """Tests calling the batches view with an invalid version"""
+
+        url = '/v1/batches/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful_get(self):
+        """Tests successfully calling the batches view"""
+
+        url = '/v6/batches/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.batch_1.id:
+                expected = self.batch_1
+            elif entry['id'] == self.batch_2.id:
+                expected = self.batch_2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['recipe_type']['id'], expected.recipe_type.id)
+
+    def test_recipe_type_id(self):
+        """Tests successfully calling the batches view filtered by recipe type identifier"""
+
+        url = '/v6/batches/?recipe_type_id=%s' % self.batch_1.recipe_type.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['recipe_type']['id'], self.batch_1.recipe_type.id)
+
+    def test_is_creation_done(self):
+        """Tests successfully calling the batches view filtered by is_creation_done"""
+
+        url = '/v6/batches/?is_creation_done=true'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.batch_1.id)
+
+    def test_root_batch_id(self):
+        """Tests successfully calling the batches view filtered by root_batch_id"""
+
+        url = '/v6/batches/?root_batch_id=%s' % self.batch_2.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.batch_2.id)
+
+    def test_order_by(self):
+        """Tests successfully calling the batches view with sorting"""
+
+        url = '/v6/batches/?order=-id'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['id'], self.batch_2.id)
+        self.assertEqual(result['results'][1]['id'], self.batch_1.id)
 
 
 class TestBatchesValidationView(TestCase):

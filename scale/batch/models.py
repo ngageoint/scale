@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
-    # TODO: finish implementing
+    # TODO: finish implementing, rename to create_batch_v6
     def create_batch(self, recipe_type, definition, configuration, title=None, description=None):
         """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
         method also queues a new system job that will process the batch request. All database changes occur in an atomic
@@ -147,8 +147,54 @@ class BatchManager(models.Manager):
 
         return batch
 
-    def get_batches(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
-                    order=None):
+    def get_batches_v6(self, started=None, ended=None, recipe_type_ids=None, is_creation_done=None, root_batch_ids=None,
+                       order=None):
+        """Returns a list of batches for the v6 batches REST API
+
+        :param started: Query batches updated after this time
+        :type started: :class:`datetime.datetime`
+        :param ended: Query batches updated before this time
+        :type ended: :class:`datetime.datetime`
+        :param recipe_type_ids: Query batches with these recipe types
+        :type recipe_type_ids: list
+        :param is_creation_done: Query batches that match this value
+        :type is_creation_done: bool
+        :param root_batch_ids: Query batches with these root batches
+        :type root_batch_ids: list
+        :param order: A list of fields to control the sort order
+        :type order: list
+        :returns: The list of batches that match the given criteria
+        :rtype: list
+        """
+
+        # Fetch a list of batches
+        batches = Batch.objects.all()
+        batches = batches.select_related('event', 'recipe_type', 'recipe_type_rev', 'root_batch', 'prev_batch')
+        batches = batches.defer('definition', 'configuration')
+
+        # Apply time range filtering
+        if started:
+            batches = batches.filter(last_modified__gte=started)
+        if ended:
+            batches = batches.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if recipe_type_ids:
+            batches = batches.filter(recipe_type_id__in=recipe_type_ids)
+        if is_creation_done is not None:
+            batches = batches.filter(is_creation_done=is_creation_done)
+        if root_batch_ids:
+            batches = batches.filter(Q(root_batch_id__in=root_batch_ids) | Q(id__in=root_batch_ids))
+
+        # Apply sorting
+        if order:
+            batches = batches.order_by(*order)
+        else:
+            batches = batches.order_by('last_modified')
+        return batches
+
+    def get_batches_v5(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
+                       order=None):
         """Returns a list of batches within the given time range.
 
         :param started: Query batches updated after this amount of time.

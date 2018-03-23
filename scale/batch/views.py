@@ -14,9 +14,10 @@ import util.rest as rest_util
 from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.models import Batch
-from batch.serializers import BatchDetailsSerializer, BatchSerializer
+from batch.serializers import BatchDetailsSerializerV5, BatchDetailsSerializerV6, BatchSerializerV5, BatchSerializerV6
 from recipe.models import RecipeType
 from util.rest import BadParameter
+
 
 logger = logging.getLogger(__name__)
 
@@ -24,10 +25,19 @@ logger = logging.getLogger(__name__)
 class BatchesView(ListCreateAPIView):
     """This view is the endpoint for retrieving existing batches."""
     queryset = Batch.objects.all()
-    serializer_class = BatchSerializer
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return BatchSerializerV6
+        elif self.request.version == 'v5':
+            return BatchSerializerV5
+        elif self.request.version == 'v4':
+            return BatchSerializerV5
 
     def list(self, request):
-        """Retrieves the batches and returns it in JSON form
+        """Retrieves the batches and returns them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -35,22 +45,14 @@ class BatchesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
+        if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v5':
+            return self._list_v5(request)
+        elif request.version == 'v4':
+            return self._list_v5(request)
 
-        statuses = rest_util.parse_string_list(request, 'status', required=False)
-        recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
-        recipe_type_names = rest_util.parse_string_list(request, 'recipe_type_name', required=False)
-        order = rest_util.parse_string_list(request, 'order', required=False)
-
-        batches = Batch.objects.get_batches(started=started, ended=ended, statuses=statuses,
-                                            recipe_type_ids=recipe_type_ids, recipe_type_names=recipe_type_names,
-                                            order=order)
-
-        page = self.paginate_queryset(batches)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        raise Http404()
 
     def create(self, request):
         """Creates a new batch and returns a link to the detail URL
@@ -90,14 +92,66 @@ class BatchesView(ListCreateAPIView):
             raise Http404
 
         url = reverse('batch_details_view', args=[batch.id], request=request)
-        serializer = BatchDetailsSerializer(batch)
+        serializer = BatchDetailsSerializerV5(batch)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+    def _list_v5(self, request):
+        """The v5 version for retrieving batches
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        statuses = rest_util.parse_string_list(request, 'status', required=False)
+        recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
+        recipe_type_names = rest_util.parse_string_list(request, 'recipe_type_name', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        batches = Batch.objects.get_batches_v5(started=started, ended=ended, statuses=statuses,
+                                               recipe_type_ids=recipe_type_ids, recipe_type_names=recipe_type_names,
+                                               order=order)
+
+        page = self.paginate_queryset(batches)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def _list_v6(self, request):
+        """The v6 version for retrieving batches
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
+        is_creation_done = rest_util.parse_bool(request, 'is_creation_done', required=False)
+        root_batch_ids = rest_util.parse_int_list(request, 'root_batch_id', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        batches = Batch.objects.get_batches_v6(started=started, ended=ended, recipe_type_ids=recipe_type_ids,
+                                               is_creation_done=is_creation_done, root_batch_ids=root_batch_ids,
+                                               order=order)
+
+        page = self.paginate_queryset(batches)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class BatchDetailsView(RetrieveAPIView):
     """This view is the endpoint for viewing batch detail"""
     queryset = Batch.objects.all()
-    serializer_class = BatchDetailsSerializer
+    serializer_class = BatchDetailsSerializerV5
 
     def retrieve(self, request, batch_id):
         """Retrieves the details for a batch and return them in JSON form
