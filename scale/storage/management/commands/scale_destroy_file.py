@@ -1,10 +1,10 @@
 """Defines the command line method for running a destroy file task"""
 from __future__ import unicode_literals
 
+import json
 import logging
 import signal
 import sys
-from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
@@ -23,10 +23,13 @@ class Command(BaseCommand):
     help = 'Perform a file destruction operation on a file'
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--file_ids', nargs='+', type=int, required=True,
-                            help='List of file IDs to delete')
+        parser.add_argument('-f', '--files', nargs='+', type=json.loads, required=True,
+                            help='File path and ID in a dictionary string.' +
+                                 ' e.g: "{"file_path":"/some/path/to.file", "file_id":"399"}"')
         parser.add_argument('-j', '--job_id', action='store', type=int, required=True,
                             help='ID of the Job model')
+        parser.add_argument('-p', '--purge', action='store', type=bool, required=True,
+                            help='Purge all records for the given file')
 
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
@@ -37,18 +40,20 @@ class Command(BaseCommand):
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
-        file_ids = options.get('file_ids')
+        files = options.get('files')
         job_id = options.get('job_id')
+        purge = options.get('purge')
+
+        file_ids = [int(x['file_id']) for x in files]
 
         logger.info('Command starting: scale_destroy_file')
         logger.info('File IDs: %s', file_ids)
         logger.info('Job ID: %i', job_id)
 
-        file_info = ScaleFile.objects.filter(id__in=file_ids).values('id', 'file_path')
-        for f in file_info:
+        for f in files:
             destroy_file_job.destroy_file(f['file_path'], job_id)
 
-        messages = create_delete_files_messages(file_ids=file_ids, purge=True)
+        messages = create_delete_files_messages(file_ids=file_ids, purge=purge)
         CommandMessageManager().send_messages(messages)
 
         logger.info('Command completed: scale_destroy_file')
