@@ -13,9 +13,6 @@ class BatchBaseSerializerV6(ModelIdSerializer):
 
     title = serializers.CharField()
     description = serializers.CharField()
-    recipe_type = ModelIdSerializer()
-    recipe_type_rev = ModelIdSerializer()
-    event = ModelIdSerializer()
 
 
 class BatchSerializerV6(BatchBaseSerializerV6):

@@ -12,9 +12,9 @@ to Scale. The following sections describe the services available.
 
 API Versions
 ------------
-:Future Version: ``v6``
-:Current Version: ``v5``
-:Deprecated Versions: ``v4``
+Future Version: ``v6``
+Current Version: ``v5``
+Deprecated Versions: ``v4``
 
 The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
@@ -28,8 +28,7 @@ current version.
 All endpoints should include a prefix of the form ``vX``, where ``X`` is the desired version number. Making a request
 without a version prefix or an invalid version prefix will result in a 404 error.
 
-| Documentation Example: ``/job-types/``
-| Actual Request Example: ``/v5/job-types/``
+| Request Example: ``/v5/jobs/``
 |
 
 .. _rest_services:

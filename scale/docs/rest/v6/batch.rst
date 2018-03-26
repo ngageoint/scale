@@ -8,6 +8,171 @@ These services allow for the creation and management of batches. A batch is a us
 single recipe type. Batches can be used for running recipes over a given data set or for performing iterative test runs
 for algorithm development and validation.
 
+.. _rest_v6_batch_list:
+
+v6 Retrieve Batch List
+======================
+
+**Example GET /v6/batches/ API call**
+
+Request: GET http://.../v6/batches/?recipe_type_id=208
+
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "count": 1,
+      "next": null,
+      "previous": null,
+      "results": [{
+         "id": 1234,
+         "title": "My Batch",
+         "description": "My Batch Description",
+         "recipe_type": {
+            "id": 208,
+            "name": "my-recipe-type",
+            "title": "My Recipe Type",
+            "description": "My Recipe Type Description"
+         },
+         "recipe_type_rev": {
+            "id": 4,
+            "recipe_type": {
+               "id": 208
+            },
+            "revision_num": 1
+         },
+         "event": {
+            "id": 4000,
+            "type": "USER",
+            "rule": {
+               "id": 345
+            },
+            "occurred": "1970-01-01T00:00:00Z"
+         },
+         "root_batch": {
+            "id": 1232,
+            "title": "My Root Batch",
+            "description": "My Root Batch Description"
+         },
+         "prev_batch": {
+            "id": 1233,
+            "title": "My Previous Batch",
+            "description": "My Previous Batch Description"
+         },
+         "is_creation_done": true,
+         "jobs_total": 10,
+         "jobs_pending": 0,
+         "jobs_blocked": 0,
+         "jobs_queued": 1,
+         "jobs_running": 3,
+         "jobs_failed": 0,
+         "jobs_completed": 6,
+         "jobs_canceled": 0,
+         "recipes_estimated": 2,
+         "recipes_total": 2,
+         "recipes_completed": 1,
+         "created": "1970-01-01T00:00:00Z",
+         "last_modified": "1970-01-01T00:00:00Z"
+      }]
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Batch List**                                                                                                              |
++=============================================================================================================================+
+| Returns a list of batches that match the given filter criteria                                                              |
++-----------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/batches/                                                                                                        |
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                        |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| page                    | Integer           | Optional | The page of the results to return. Defaults to 1.                  |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| page_size               | Integer           | Optional | The size of the page to use for pagination of results.             |
+|                         |                   |          | Defaults to 100, and can be anywhere from 1-1000.                  |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| started                 | ISO-8601 Datetime | Optional | The start of the time range to query.                              |
+|                         |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).|
+|                         |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).             |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| ended                   | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.      |
+|                         |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).|
+|                         |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).             |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| recipe_type_id          | Integer           | Optional | Return only batches for a given recipe type.                       |
+|                         |                   |          | Duplicate it to filter by multiple values.                         |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| is_creation_done        | Boolean           | Optional | Return only batches that match this value, indicating if the batch |
+|                         |                   |          | has/has not finishing creating its recipes.                        |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| root_batch_id           | Integer           | Optional | Return only batches that belong to the chain with this root batch. |
+|                         |                   |          | Duplicate it to filter by multiple values.                         |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| order                   | String            | Optional | One or more fields to use when ordering the results.               |
+|                         |                   |          | Duplicate it to multi-sort, (ex: order=title&order=recipe_type_id).|
+|                         |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-title). |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| **Successful Response**                                                                                                     |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **Status**              | 200 OK                                                                                            |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**        | *application/json*                                                                                |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                             |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| count                   | Integer           | The total number of results that match the query parameters                   |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| next                    | URL               | A URL to the next page of results                                             |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| previous                | URL               | A URL to the previous page of results                                         |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| results                 | Array             | List of result JSON objects that match the query parameters                   |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| id                      | Integer           | The unique identifier of the batch                                            |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| title                   | String            | The human readable display name of the batch                                  |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| description             | String            | A longer description of the batch                                             |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| recipe_type             | JSON Object       | The recipe type that is associated with the batch                             |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| recipe_type_rev         | JSON Object       | The recipe type revision that is associated with the batch                    |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| event                   | JSON Object       | The trigger event that is associated with the batch                           |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| root_batch              | JSON Object       | The root batch for the chain that contains this batch, possibly null          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| prev_batch              | JSON Object       | The previous batch in the chain that contains this batch, possibly null       |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| is_creation_done        | Boolean           | Whether this batch has finished creating all of its recipes                   |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_total              | Integer           | The total count of jobs within this batch's recipes                           |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_pending            | Integer           | The count of PENDING jobs within this batch's recipes                         |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_blocked            | Integer           | The count of BLOCKED jobs within this batch's recipes                         |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_queued             | Integer           | The count of QUEUED jobs within this batch's recipes                          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_running            | Integer           | The count of RUNNING jobs within this batch's recipes                         |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_failed             | Integer           | The count of FAILED jobs within this batch's recipes                          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_completed          | Integer           | The count of COMPLETED jobs within this batch's recipes                       |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| jobs_canceled           | Integer           | The count of CANCELED jobs within this batch's recipes                        |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| recipes_estimated       | Integer           | The estimated count of recipes that will be created for this batch            |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| recipes_total           | Integer           | The total count of recipes within this batch                                  |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| recipes_completed       | Integer           | The count of completed recipes within this batch                              |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| created                 | ISO-8601 Datetime | When the batch was initially created                                          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| last_modified           | ISO-8601 Datetime | When the batch was last updated                                               |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+
 .. _rest_v6_batch_json_definition:
 
 Batch Definition JSON
