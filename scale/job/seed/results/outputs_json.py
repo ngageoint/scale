@@ -27,7 +27,7 @@ class SeedOutputsJson(object):
         """Dynamically build a schema to validate seed.outputs.json
 
         :param interface_outputs: Seed Interface definition for types of JSON outputs
-        :type interface_outputs: :class:`job.seed.types.SeedOutputJson`
+        :type interface_outputs: [:class:`job.seed.types.SeedOutputJson`]
         :return: Schema for validation of seed.outputs.json
         :rtype: dict
         """
@@ -53,16 +53,16 @@ class SeedOutputsJson(object):
 
         :param interface_outputs: Seed Interface definition for types of JSON outputs
         :type interface_outputs: :class:`job.seed.types.SeedOutputJson`
-        :return: All outputs captured from seed.outputs.json
-        :type: dict
+        :return: All outputs captured from seed.outputs.json in { key: value } format
+        :type: { string: typed_value }
         """
 
         # Used to remap any keys to the associated named interface JSON output
         remap = {x.json_key: x.name for x in interface_outputs}
 
         values = {}
-        for key, value in self._dict:
+        for key, value in self._dict.iteritems():
             if key in remap:
                 values[remap[key]] = value
 
-        return self._dict
+        return values

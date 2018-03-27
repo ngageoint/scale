@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 from job.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.exceptions import MissingMount, MissingSetting
 from job.seed.exceptions import InvalidSeedManifestDefinition
-from job.seed.types import SeedInputFiles, SeedInputJson
+from job.seed.types import SeedInputFiles, SeedInputJson, SeedOutputJson, SeedOutputFiles
 from scheduler.vault.manager import secrets_mgr
 from storage.media_type import UNKNOWN_MEDIA_TYPE
 from util.environment import normalize_env_var_name
@@ -200,6 +200,15 @@ class SeedManifest(object):
 
         return self.get_inputs().get('json', [])
 
+    def get_seed_output_files(self):
+        """Get the list of SeedOutputFiles typed results
+
+        :return: list of output files elements
+        :rtype: [`job.seed.types.SeedOutputFiles`]
+        """
+
+        return [SeedOutputFiles(x) for x in self.get_output_files()]
+
     def get_output_files(self):
         """Gets the list of output files defined in the interface
 
@@ -210,6 +219,15 @@ class SeedManifest(object):
         """
 
         return self.get_outputs().get('files', [])
+
+    def get_seed_output_json(self):
+        """Get the list of SeedOutputJson typed results
+
+        :return: list of output json elements
+        :rtype: [`job.seed.types.SeedOutputJson`]
+        """
+
+        return [SeedOutputJson(x) for x in self.get_output_json()]
 
     def get_output_json(self):
         """Gets the list of output json defined in the interface

@@ -143,22 +143,20 @@ class JobResults(object):
         # For compliance with Seed we must capture all files directly from the output directory.
         # The capture expressions can be found within `interface.outputs.files.pattern`
 
-        output_files = self._capture_output_files(job_interface.get_output_files())
+        output_files = self._capture_output_files(job_interface.get_seed_output_files())
 
-        self._capture_output_json(job_interface.get_output_json())
+        self._capture_output_json(job_interface.get_seed_output_json())
 
-        self._store_output_data_files(output_files, job_interface.get_output_json(), job_data, job_exe)
+        self._store_output_data_files(output_files, job_data, job_exe)
 
-    def _capture_output_files(self, output_files):
+    def _capture_output_files(self, seed_output_files):
         """Evaluate files patterns and capture any available side-car metadata associated with matched files
 
-        :param output_files: interface definition of Seed output files that should be captured
-        :type output_files: list
+        :param seed_output_files: interface definition of Seed output files that should be captured
+        :type seed_output_files: [`job.seed.types.SeedOutputFiles`]
         :return: collection of files name keys mapped to a ProductFileMetadata list. { name : [`ProductFileMetadata`]
         :rtype: dict
         """
-
-        seed_output_files = [SeedOutputFiles(x) for x in output_files]
 
         # Dict of detected files and associated metadata
         captured_files = {}
@@ -212,20 +210,18 @@ class JobResults(object):
         try:
             schema = SeedOutputsJson.construct_schema(output_json_interface)
             outputs = SeedOutputsJson.read_outputs(schema)
-            seed_outputs_json = outputs.get_values()
+            seed_outputs_json = outputs.get_values(output_json_interface)
 
             for key in seed_outputs_json:
                 self.add_output_json(key, seed_outputs_json[key])
         except IOError:
             logger.warning('No seed.outputs.json file found to process.')
 
-    def _store_output_data_files(self, data_files, outputs_json_interface, job_data, job_exe):
+    def _store_output_data_files(self, data_files, job_data, job_exe):
         """Stores the given output data
 
         :param data_files: Dict with each file parameter name mapping to a ProductFileMetadata class
         :type data_files: {string: ProductFileMetadata)
-        :param outputs_json_interface: List of output json interface objects
-        :type outputs_json_interface: [:class:`job.seed.types.SeedOutputJson`]
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
         :type job_exe: :class:`job.models.JobExecution`

@@ -118,7 +118,7 @@ class SeedJson(object):
 
     @property
     def required(self):
-        return self.dict['required']
+        return self.dict.get('required', True)
 
 
 class SeedInputJson(SeedJson):
@@ -131,11 +131,7 @@ class SeedOutputJson(SeedJson):
 
     @property
     def key(self):
-        value = None
-        if 'key' in self.dict:
-            value = self.dict['key']
-
-        return value
+        return self.dict.get('key', None)
 
     @property
     def json_key(self):
