@@ -11,6 +11,7 @@ from django.db import transaction
 from error.exceptions import ScaleError, get_error_by_exception
 from job.deprecation import JobInterfaceSunset
 from job.models import JobExecution, JobExecutionOutput
+from job.seed.results.job_results import JobResults
 from util.retry import retry_database_query
 
 
@@ -90,7 +91,8 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             if JobInterfaceSunset.is_seed(job_interface.definition):
-                job_results = job_interface.perform_post_steps(job_exe, job_data)
+                job_results = JobResults()
+                job_results.perform_post_steps(job_interface, job_data, job_exe)
             else:
                 job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)
             job_exe_output = JobExecutionOutput()

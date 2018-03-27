@@ -486,6 +486,13 @@ class TestJob(TestCase):
         self.assertFalse(Job(status='COMPLETED').is_ready_to_requeue)
         self.assertTrue(Job(status='CANCELED').is_ready_to_requeue)
 
+    def test_get_seed_job_results(self):
+        """Test retrieving job results from a Seed job type"""
+        job = Job()
+
+        self.assertIsNone(job.get_job_results())
+
+
 
 class TestJobExecutionManager(TransactionTestCase):
     """Tests for the job execution model manager"""

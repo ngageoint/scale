@@ -135,58 +135,6 @@ class JobData(object):
         self._data_names[output.name] = output
         self._output_files[output.name] = output
 
-    def capture_output_files(self, output_files):
-        """Evaluate files patterns and capture any available side-car metadata associated with matched files
-
-        :param output_files: interface definition of Seed output files that should be captured
-        :type output_files: list
-        :return: collection of files name keys mapped to a ProductFileMetadata list. { name : [`ProductFileMetadata`]
-        :rtype: dict
-        """
-
-        seed_output_files = [SeedOutputFiles(x) for x in output_files]
-
-        # Dict of detected files and associated metadata
-        captured_files = {}
-
-        # Iterate over each files object
-        for output_file in seed_output_files:
-            # For files obj that are detected, handle results (may be multiple)
-            product_files = []
-            for matched_file in output_file.get_files():
-
-                product_file_meta = ProductFileMetadata(output_file.name, matched_file, output_file.media_type)
-
-                # check to see if there is side-car metadata files
-                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
-
-                # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
-                if os.path.isfile(metadata_file):
-                    with open(metadata_file) as metadata_file_handle:
-                        metadata = SeedMetadata(json.load(metadata_file_handle))
-
-                        # Create a GeoJSON object, as the present Seed Metadata schema only uses the Geometry fragment
-                        # TODO: Update if Seed schema updates.  Ref: https://github.com/ngageoint/seed/issues/95
-                        product_file_meta.geojson = \
-                            {
-                                'type': 'Feature',
-                                'geometry': metadata.get_geometry()
-                            }
-
-                        timestamp = metadata.get_time()
-
-                        # Seed Metadata Schema defines start / end as required
-                        # so we do not need to check here.
-                        if timestamp:
-                            product_file_meta.data_start = timestamp['start']
-                            product_file_meta.data_end = timestamp['end']
-
-                product_files.append(product_file_meta)
-
-            captured_files[output_file.name] = product_files
-
-        return captured_files
-
     def get_all_properties(self):
         """Retrieves all properties from this job data and returns them in ascending order of their names
 
@@ -252,6 +200,18 @@ class JobData(object):
                     file_info.add((file_id, data_input.name))
 
         return file_info
+
+    def get_output_file_by_id(self, key):
+        """Attempt to return an output_file by id
+
+        :param id: key for an output file
+        :type id: str
+        :returns: value for output_files key
+        :rtype: str
+        """
+
+
+        return self._output_files[key]
 
     def get_output_workspace_ids(self):
         """Returns a list of the IDs for every workspace used to store the output files for this data
@@ -432,96 +392,6 @@ class JobData(object):
         # Download the job execution input files
         self.retrieve_input_data_files(data_files)
 
-    def capture_output_json(self, output_json_interface):
-        """
-
-        :param output_json_interface:
-        :return:
-        """
-        # Identify any outputs from seed.outputs.json
-        schema = SeedOutputsJson.construct_schema(output_json_interface)
-        outputs = SeedOutputsJson.read_outputs(schema)
-        seed_outputs_json = outputs.get_values()
-
-        json_results = {}
-        for key, value in seed_outputs_json.iteritems():
-
-            if key in [x.json_key for x in output_json_interface]:
-                json_results[key] = value
-            else:
-                logger.warning("Skipping capture of key '%s' in %s not found in interface." %
-                               (key, SEED_OUPUTS_JSON_FILENAME))
-
-        return json_results
-
-    def store_output_data_files(self, data_files, outputs_json_interface, job_exe):
-        """Stores the given output data
-
-        :param data_files: Dict with each file parameter name mapping to a ProductFileMetadata class
-        :type data_files: {string: ProductFileMetadata)
-        :param outputs_json_interface: List of output json interface objects
-        :type outputs_json_interface: [:class:`job.seed.types.SeedOutputJson`]
-        :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
-            files
-        :type job_exe: :class:`job.models.JobExecution`
-        :returns: The job results
-        :rtype: :class:`job.configuration.results.job_results.JobResults`
-        """
-
-        # Organize the data files
-        workspace_files = {}  # Workspace ID -> [`ProductFileMetadata`]
-        params_by_file_path = {}  # Absolute local file path -> output parameter name
-        for name in data_files:
-            file_output = self._output_files[name]
-            workspace_id = file_output.workspace_id
-            if workspace_id in workspace_files:
-                workspace_file_list = workspace_files[workspace_id]
-            else:
-                workspace_file_list = []
-                workspace_files[workspace_id] = workspace_file_list
-            data_file_entry = data_files[name]
-            for entry in data_file_entry:
-                file_path = os.path.normpath(entry.local_path)
-                if not os.path.isfile(file_path):
-                    raise Exception('%s is not a valid file' % file_path)
-                params_by_file_path[file_path] = name
-                workspace_file_list.append(entry)
-
-        data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
-        if not data_file_store:
-            raise Exception('No data file store found')
-        stored_files = data_file_store.store_files(workspace_files, self.get_input_file_ids(), job_exe)
-
-        # Organize results
-        param_file_ids = {}  # Output parameter name -> file ID or [file IDs]
-        for file_path in stored_files:
-            file_id = stored_files[file_path]
-            name = params_by_file_path[file_path]
-            if name in param_file_ids:
-                file_id_list = param_file_ids[name]
-            else:
-                file_id_list = []
-                param_file_ids[name] = file_id_list
-            file_id_list.append(file_id)
-
-        # Create job results
-        results = JobResults()
-        for name in param_file_ids:
-            param_entry = param_file_ids[name]
-            results.add_file_list_parameter(name, param_entry)
-
-        # Identify any outputs from seed.outputs.json
-        try:
-            schema = SeedOutputsJson.construct_schema(outputs_json_interface)
-            outputs = SeedOutputsJson.read_outputs(schema)
-            seed_outputs_json = outputs.get_values()
-
-            for key in seed_outputs_json:
-                results.add_output_json(key, seed_outputs_json[key])
-        except IOError:
-            logger.warning('No seed.outputs.json file found to process.')
-
-        return results
 
     def validate_input_files(self, files):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.

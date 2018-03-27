@@ -1164,8 +1164,10 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
+        logger.info(self.__dict__)
+
         # TODO: Remove old JobResults in v6 when we transition to only Seed job types
-        if self.ouput and 'version' in self.output and '2.0' == self.output['version']:
+        if self.output and 'version' in self.output and '2.0' == self.output['version']:
             job_results = JobResults(self.output)
         else:
             job_results = JobResults_1_0(self.output)
