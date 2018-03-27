@@ -373,17 +373,20 @@ class JobManager(models.Manager):
         output_files = output_files.order_by('id').distinct('id')
 
         # Merge job interface definitions with mapped values
-        job_interface_dict = job.get_job_interface().get_dict()
-        job_data_dict = job.get_job_data().get_dict()
-        job_results_dict = job.get_job_results().get_dict()
+        job_interface = job.get_job_interface()
+        job_interface_dict = job_interface.get_dict()
+        job_data = job.get_job_data()
+        job_data_dict = job_data.get_dict()
+        job_results = job.get_job_results()
+        job_results_dict = job_results.get_dict()
 
 
         if JobInterfaceSunset.is_seed(job_interface_dict):
-            raise SeedUnsupportedInLegacyAPI
-
-
-        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
-        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+            job.inputs = job_data.extend_interface_with_inputs(job_interface, input_files)
+            job.outputs = job_results.extend_interface_with_outputs(job_interface, output_files)
+        else:
+            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+            job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
                                            output_files)
 
 

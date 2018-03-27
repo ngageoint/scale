@@ -352,8 +352,12 @@ class OldJobDetailsSerializer(OldJobSerializer):
 
     job_exes = OldJobExecutionBaseSerializer(many=True)
 
-    inputs = JobDetailsInputSerializer(many=True)
-    outputs = JobDetailsOutputSerializer(many=True)
+    try:
+        inputs = JobDetailsInputSerializer(many=True)
+        outputs = JobDetailsOutputSerializer(many=True)
+    except AttributeError:
+        inputs = JobDetailsSeedInputsSerializer()
+        outputs = JobDetailsSeedOutputsSerializer()
 
 
 class JobDetailsSerializer(JobSerializer):

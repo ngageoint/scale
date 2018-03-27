@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import json
 import logging
+from copy import deepcopy
 
 import os
 from job.configuration.data.data_file import DATA_FILE_STORE
@@ -105,18 +106,21 @@ class JobResults(object):
         :rtype: dict
         """
 
+        outputs = deepcopy(interface.get_outputs())
+        output_files = deepcopy(interface.get_output_files())
+        output_json = deepcopy(interface.get_output_json())
+
         files = []
         json = []
         file_map = {job_file.id: job_file for job_file in job_files}
-        outputs = interface.get_outputs()
-        for i in interface.get_output_files():
+        for i in output_files:
             for j in self.output_data:
                 if i['name'] is j['name']:
                     i['value'] = [file_map[str(x)] for x in j.file_ids]
                     break
             files.append(i)
 
-        for i in interface.get_output_json():
+        for i in output_json:
             for j in self.output_data:
                 if i['name'] is j['name']:
                     i['value'] = j['json']
