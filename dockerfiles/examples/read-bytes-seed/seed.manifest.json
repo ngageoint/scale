@@ -27,6 +27,17 @@
             "name": "OUTPUT_FILE",
             "pattern": "output_file/*"
           }
+        ],
+        "json": [
+          {
+            "name": "INPUT_SIZE",
+            "type": "integer"
+          },
+          {
+            "name": "MISSING_KEY",
+            "type": "string",
+            "required": false
+          }
         ]
       }
     }

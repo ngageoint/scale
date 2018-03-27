@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import sys
 import os
@@ -43,6 +44,8 @@ def run_algorithm(bytes_total, input_file, out_dir):
     return output_file
 
 if __name__ == '__main__':
+    for key in os.environ.keys():
+        print "%30s %s" % (key,os.environ[key])
     parser = argparse.ArgumentParser(description='Copy x number of bytes from input file to output file.')
     parser.add_argument('bytes_total', type=int, help='number of bytes to copy from input to output file')
     parser.add_argument('input_file', help='absolute path to input file')
@@ -54,5 +57,11 @@ if __name__ == '__main__':
     logging.debug('Output directory: {}'.format(args.output_dir))
 
     output_file = run_algorithm(args.bytes_total, args.input_file, args.output_dir)
+
+    # Write an output manifest for testing JSON property capture
+    with open(os.path.join(args.output_dir, 'seed.outputs.json'), 'w') as output_json:
+        input_size = os.path.getsize(args.input_file)
+        contents = {'INPUT_FILE_NAME': args.input_file, 'INPUT_SIZE': input_size}
+        json.dump(contents, output_json)
 
     sys.exit(0)
