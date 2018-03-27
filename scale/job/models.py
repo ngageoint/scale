@@ -1140,7 +1140,6 @@ class Job(models.Model):
         :rtype: :class:`job.configuration.data.job_data.JobData` or :class:`job.data.job_data.JobData`
         """
 
-
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
         if 'version' in self.input and '2.0' == self.input['version']:
             job_data = JobData(self.input)
