@@ -51,7 +51,7 @@ BATCH_DEFINITION_SCHEMA = {
 }
 
 
-def get_v6_definition_json(definition):
+def convert_definition_to_v6(definition):
     """Returns the v6 definition JSON for the given batch definition
 
     :param definition: The batch definition

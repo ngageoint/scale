@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from batch.configuration.configuration import BatchConfiguration
 from batch.configuration.exceptions import InvalidConfiguration
-from batch.configuration.json.configuration_v6 import get_v6_configuration_json, BatchConfigurationV6
+from batch.configuration.json.configuration_v6 import convert_configuration_to_v6, BatchConfigurationV6
 
 
 class TestBatchConfigurationV6(TestCase):
@@ -18,13 +18,13 @@ class TestBatchConfigurationV6(TestCase):
 
         # Try configuration with nothing set
         configuration = BatchConfiguration()
-        json = get_v6_configuration_json(configuration)
+        json = convert_configuration_to_v6(configuration)
         BatchConfigurationV6(configuration=json.get_dict(), do_validate=True)  # Revalidate
 
         # Try configuration with priority set
         configuration = BatchConfiguration()
         configuration.priority = 100
-        json = get_v6_configuration_json(configuration)
+        json = convert_configuration_to_v6(configuration)
         BatchConfigurationV6(configuration=json.get_dict(), do_validate=True)  # Revalidate
         self.assertEqual(json.get_configuration().priority, configuration.priority)
 

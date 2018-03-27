@@ -27,7 +27,7 @@ BATCH_CONFIGURATION_SCHEMA = {
 }
 
 
-def get_v6_configuration_json(configuration):
+def convert_configuration_to_v6(configuration):
     """Returns the v6 configuration JSON for the given batch configuration
 
     :param configuration: The batch configuration

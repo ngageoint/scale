@@ -9,8 +9,8 @@ from django.db.models import F, Q
 from django.utils.timezone import now
 
 from batch.configuration.configuration import BatchConfiguration
-from batch.configuration.json.configuration_v6 import get_v6_configuration_json, BatchConfigurationV6
-from batch.definition.json.definition_v6 import get_v6_definition_json
+from batch.configuration.json.configuration_v6 import convert_configuration_to_v6, BatchConfigurationV6
+from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
@@ -20,6 +20,7 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeTypeRevision
+from util import rest as rest_utils
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 
@@ -65,10 +66,10 @@ class BatchManager(models.Manager):
         batch = Batch()
         batch.title = title
         batch.description = description
-        batch.configuration = get_v6_configuration_json(configuration).get_dict()
+        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
         batch.recipe_type = recipe_type
         batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
-        batch.definition = get_v6_definition_json(definition).get_dict()
+        batch.definition = convert_definition_to_v6(definition).get_dict()
         batch.event = event
         batch.save()
 
@@ -123,7 +124,7 @@ class BatchManager(models.Manager):
         configuration = BatchConfiguration()
         if 'priority' in definition.get_dict():
             configuration.priority = definition.get_dict()['priority']
-        batch.configuration = get_v6_configuration_json(configuration).get_dict()
+        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
         batch.event = event
         batch.save()
 
@@ -146,52 +147,6 @@ class BatchManager(models.Manager):
         BatchMetrics.objects.bulk_create(batch_metrics_models)
 
         return batch
-
-    def get_batches_v6(self, started=None, ended=None, recipe_type_ids=None, is_creation_done=None, root_batch_ids=None,
-                       order=None):
-        """Returns a list of batches for the v6 batches REST API
-
-        :param started: Query batches updated after this time
-        :type started: :class:`datetime.datetime`
-        :param ended: Query batches updated before this time
-        :type ended: :class:`datetime.datetime`
-        :param recipe_type_ids: Query batches with these recipe types
-        :type recipe_type_ids: list
-        :param is_creation_done: Query batches that match this value
-        :type is_creation_done: bool
-        :param root_batch_ids: Query batches with these root batches
-        :type root_batch_ids: list
-        :param order: A list of fields to control the sort order
-        :type order: list
-        :returns: The list of batches that match the given criteria
-        :rtype: list
-        """
-
-        # Fetch a list of batches
-        batches = Batch.objects.all()
-        batches = batches.select_related('event', 'recipe_type', 'recipe_type_rev', 'root_batch', 'prev_batch')
-        batches = batches.defer('definition', 'configuration')
-
-        # Apply time range filtering
-        if started:
-            batches = batches.filter(last_modified__gte=started)
-        if ended:
-            batches = batches.filter(last_modified__lte=ended)
-
-        # Apply additional filters
-        if recipe_type_ids:
-            batches = batches.filter(recipe_type_id__in=recipe_type_ids)
-        if is_creation_done is not None:
-            batches = batches.filter(is_creation_done=is_creation_done)
-        if root_batch_ids:
-            batches = batches.filter(Q(root_batch_id__in=root_batch_ids) | Q(id__in=root_batch_ids))
-
-        # Apply sorting
-        if order:
-            batches = batches.order_by(*order)
-        else:
-            batches = batches.order_by('last_modified')
-        return batches
 
     def get_batches_v5(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
                        order=None):
@@ -238,7 +193,53 @@ class BatchManager(models.Manager):
             batches = batches.order_by('last_modified')
         return batches
 
-    def get_details(self, batch_id):
+    def get_batches_v6(self, started=None, ended=None, recipe_type_ids=None, is_creation_done=None, root_batch_ids=None,
+                       order=None):
+        """Returns a list of batches for the v6 batches REST API
+
+        :param started: Query batches updated after this time
+        :type started: :class:`datetime.datetime`
+        :param ended: Query batches updated before this time
+        :type ended: :class:`datetime.datetime`
+        :param recipe_type_ids: Query batches with these recipe types
+        :type recipe_type_ids: list
+        :param is_creation_done: Query batches that match this value
+        :type is_creation_done: bool
+        :param root_batch_ids: Query batches with these root batches
+        :type root_batch_ids: list
+        :param order: A list of fields to control the sort order
+        :type order: list
+        :returns: The list of batches that match the given criteria
+        :rtype: list
+        """
+
+        # Fetch a list of batches
+        batches = Batch.objects.all()
+        batches = batches.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'prev_batch')
+        batches = batches.defer('definition', 'configuration')
+
+        # Apply time range filtering
+        if started:
+            batches = batches.filter(last_modified__gte=started)
+        if ended:
+            batches = batches.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if recipe_type_ids:
+            batches = batches.filter(recipe_type_id__in=recipe_type_ids)
+        if is_creation_done is not None:
+            batches = batches.filter(is_creation_done=is_creation_done)
+        if root_batch_ids:
+            batches = batches.filter(Q(root_batch_id__in=root_batch_ids) | Q(id__in=root_batch_ids))
+
+        # Apply sorting
+        if order:
+            batches = batches.order_by(*order)
+        else:
+            batches = batches.order_by('last_modified')
+        return batches
+
+    def get_details_v5(self, batch_id):
         """Returns the batch for the given ID with all detail fields included.
 
         :param batch_id: The unique identifier of the batch.
@@ -249,6 +250,18 @@ class BatchManager(models.Manager):
 
         # Attempt to get the batch
         return Batch.objects.select_related('creator_job', 'event', 'recipe_type').get(pk=batch_id)
+
+    def get_details_v6(self, batch_id):
+        """Returns the batch (and related fields) with the given ID for the v6 batch details REST API
+
+        :param batch_id: The unique identifier of the batch
+        :type batch_id: int
+        :returns: The batch with all related fields included
+        :rtype: :class:`batch.models.Batch`
+        """
+
+        qry = Batch.objects.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'prev_batch')
+        return qry.get(pk=batch_id)
 
     # TODO: remove this when v5 REST API is removed
     def schedule_recipes(self, batch_id):
@@ -264,7 +277,7 @@ class BatchManager(models.Manager):
         batch = Batch.objects.select_related('recipe_type', 'recipe_type__trigger_rule').get(pk=batch_id)
         if batch.status == 'CREATED':
             raise BatchError('Batch already completed: %i', batch_id)
-        batch_definition = batch.get_batch_definition()
+        batch_definition = batch.get_old_definition()
 
         # Fetch all the recipes of the requested type that are not already superseded
         old_recipes = self.get_matched_recipes(batch.recipe_type, batch_definition)
@@ -602,7 +615,16 @@ class Batch(models.Model):
 
         return BatchConfigurationV6(configuration=self.configuration, do_validate=False).get_configuration()
 
-    def get_batch_definition(self):
+    def get_definition(self):
+        """Returns the definition for this batch
+
+        :returns: The definition for this batch
+        :rtype: :class:`batch.definition.definition.BatchDefinition`
+        """
+
+        return BatchDefinitionV6(definition=self.definition, do_validate=False).get_definition()
+
+    def get_old_definition(self):
         """Returns the definition for this batch
 
         :returns: The definition for this batch
@@ -610,6 +632,48 @@ class Batch(models.Model):
         """
 
         return OldBatchDefinition(self.definition)
+
+    def get_old_definition_json(self):
+        """Returns the batch definition in the old version of the JSON schema
+
+        :returns: The batch definition in the old version of the JSON schema
+        :rtype: dict
+        """
+
+        # Handle batches with new (v6 and newer) definitions
+        if 'version' in self.definition and self.definition['version'] == '6':
+            json_dict = {'version': '1.0'}
+            if 'previous_batch' in self.definition:
+                prev_batch_dict = self.definition['previous_batch']
+                if 'job_names' in prev_batch_dict:
+                    json_dict['job_names'] = prev_batch_dict['job_names']
+                if 'all_jobs' in prev_batch_dict:
+                    json_dict['all_jobs'] = prev_batch_dict['all_jobs']
+            return json_dict
+
+        return self.definition
+
+    def get_v6_configuration_json(self):
+        """Returns the batch configuration in v6 of the JSON schema
+
+        :returns: The batch configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_configuration_to_v6(self.get_configuration()).get_dict())
+
+    def get_v6_definition_json(self):
+        """Returns the batch definition in v6 of the JSON schema
+
+        :returns: The batch definition in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        # Handle batches with old (pre-v6) definitions
+        if 'version' in self.definition and self.definition['version'] == '1.0':
+            return {}
+
+        return rest_utils.strip_schema_version(convert_definition_to_v6(self.get_definition()).get_dict())
 
     class Meta(object):
         """meta information for the db"""

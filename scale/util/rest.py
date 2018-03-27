@@ -480,6 +480,20 @@ def parse_dict(request, name, default_value=None, required=True):
     return value or {}
 
 
+def strip_schema_version(json_dict):
+    """Returns the given JSON dict after stripping its schema version out
+
+    :param json_dict: The JSON dict
+    :type json_dict: dict
+    :returns: The JSON dict with its schema version stripped out
+    :rtype: dict
+    """
+
+    if 'version' in json_dict:
+        del json_dict['version']
+    return json_dict
+
+
 def _get_param(request, name, default_value=None, required=True):
     """Gets a parameter from the given request that works for either read or write operations.
 

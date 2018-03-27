@@ -10,6 +10,7 @@ import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+from batch.definition.definition import BatchDefinition
 from batch.models import Batch
 
 
@@ -324,6 +325,122 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(result['results'][1]['id'], self.batch_1.id)
 
 
+class TestBatchDetailsViewV5(TestCase):
+
+    fixtures = ['batch_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.recipe_type = recipe_test_utils.create_recipe_type()
+        self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
+
+    def test_not_found(self):
+        """Tests successfully calling the v5 batch details view with a batch id that does not exist"""
+
+        url = '/v5/batches/100000/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the v5 batch details view"""
+
+        url = '/v5/batches/%d/' % self.batch.id
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.batch.id)
+        self.assertEqual(result['title'], self.batch.title)
+        self.assertEqual(result['description'], self.batch.description)
+        self.assertEqual(result['status'], self.batch.status)
+
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type.id)
+        self.assertIsNotNone(result['event'])
+        self.assertIsNotNone(result['creator_job'])
+        self.assertIsNotNone(result['definition'])
+
+    def test_successful_with_new_batch(self):
+        """Tests successfully calling the v5 batch details view with a new (v6) batch"""
+
+        definition = BatchDefinition()
+        definition.prev_batch_id = 1
+        definition.job_names = ['job_a', 'job_b']
+        definition.all_jobs = True
+        new_batch = batch_test_utils.create_batch(definition=definition)
+
+        url = '/v5/batches/%d/' % new_batch.id
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], new_batch.id)
+        self.assertEqual(result['title'], new_batch.title)
+        self.assertEqual(result['description'], new_batch.description)
+        self.assertDictEqual(result['definition'], {'version': '1.0', 'job_names': ['job_a', 'job_b'],
+                                                    'all_jobs': True})
+
+
+class TestBatchDetailsViewV6(TestCase):
+
+    fixtures = ['batch_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+    def test_invalid_version(self):
+        """Tests calling the v6 batch details view with an invalid version"""
+
+        batch = batch_test_utils.create_batch()
+
+        url = '/v1/batches/%d' % batch.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_not_found(self):
+        """Tests successfully calling the v6 batch details view with a batch id that does not exist"""
+
+        url = '/v6/batches/100000/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the v6 batch details view"""
+
+        batch = batch_test_utils.create_batch()
+
+        url = '/v6/batches/%d/' % batch.id
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], batch.id)
+        self.assertEqual(result['title'], batch.title)
+        self.assertEqual(result['description'], batch.description)
+        self.assertEqual(result['recipe_type']['id'], batch.recipe_type.id)
+        self.assertDictEqual(result['definition'], batch.get_v6_definition_json())
+        self.assertDictEqual(result['configuration'], batch.get_v6_configuration_json())
+
+    def test_successful_with_old_batch(self):
+        """Tests successfully calling the v6 batch details view with an old-style batch"""
+
+        batch = batch_test_utils.create_batch_old()
+
+        url = '/v6/batches/%d/' % batch.id
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], batch.id)
+        self.assertEqual(result['title'], batch.title)
+        self.assertEqual(result['description'], batch.description)
+        self.assertEqual(result['recipe_type']['id'], batch.recipe_type.id)
+        self.assertDictEqual(result['definition'], {})
+        self.assertDictEqual(result['configuration'], {})
+
+
 class TestBatchesValidationView(TestCase):
 
     fixtures = ['batch_job_types.json']
@@ -457,41 +574,3 @@ class TestBatchesValidationView(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-
-class TestBatchDetailsView(TestCase):
-
-    fixtures = ['batch_job_types.json']
-
-    def setUp(self):
-        django.setup()
-
-        self.recipe_type = recipe_test_utils.create_recipe_type()
-        self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
-
-    def test_not_found(self):
-        """Tests successfully calling the get batch details view with a batch id that does not exist."""
-
-        url = rest_util.get_url('/batches/100/')
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
-    def test_successful(self):
-        """Tests successfully calling the get batch details view."""
-
-        url = rest_util.get_url('/batches/%d/' % self.batch.id)
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.batch.id)
-        self.assertEqual(result['title'], self.batch.title)
-        self.assertEqual(result['description'], self.batch.description)
-        self.assertEqual(result['status'], self.batch.status)
-
-        self.assertEqual(result['recipe_type']['id'], self.recipe_type.id)
-        self.assertIsNotNone(result['event'])
-        self.assertIsNotNone(result['creator_job'])
-        self.assertIsNotNone(result['definition'])

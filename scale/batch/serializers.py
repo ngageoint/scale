@@ -54,8 +54,8 @@ class BatchDetailsSerializerV6(BatchSerializerV6):
     recipe_type_rev = RecipeTypeRevisionSerializer()
     event = TriggerEventDetailsSerializer()
 
-    definition = serializers.JSONField()
-    configuration = serializers.JSONField()
+    definition = serializers.JSONField(source='get_v6_definition_json')
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 
 # Serializers for v5 REST API
@@ -100,4 +100,4 @@ class BatchDetailsSerializerV5(BatchSerializerV5):
     event = TriggerEventDetailsSerializer()
     creator_job = JobSerializer()
 
-    definition = serializers.JSONField(default=dict)
+    definition = serializers.JSONField(source='get_old_definition_json')

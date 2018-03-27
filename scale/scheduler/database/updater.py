@@ -151,7 +151,7 @@ class DatabaseUpdater(object):
 
         batch = Batch.objects.get(id=batch_id)
         if not batch.configuration:
-            definition = batch.get_batch_definition()
+            definition = batch.get_old_definition()
             if definition.priority is not None:
                 configuration = BatchConfiguration()
                 configuration.priority = definition.priority

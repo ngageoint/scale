@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from batch.definition.definition import BatchDefinition
 from batch.definition.exceptions import InvalidDefinition
-from batch.definition.json.definition_v6 import get_v6_definition_json, BatchDefinitionV6
+from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
 
 
 class TestBatchDefinitionV6(TestCase):
@@ -18,13 +18,13 @@ class TestBatchDefinitionV6(TestCase):
 
         # Try definition with nothing set
         definition = BatchDefinition()
-        json = get_v6_definition_json(definition)
+        json = convert_definition_to_v6(definition)
         BatchDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
 
         # Try definition with previous batch ID set
         definition = BatchDefinition()
         definition.prev_batch_id = 1234
-        json = get_v6_definition_json(definition)
+        json = convert_definition_to_v6(definition)
         BatchDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
         self.assertEqual(json.get_definition().prev_batch_id, definition.prev_batch_id)
 

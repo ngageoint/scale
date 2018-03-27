@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class BatchesView(ListCreateAPIView):
-    """This view is the endpoint for retrieving existing batches."""
+    """This view is the endpoint for retrieving a list of batches"""
     queryset = Batch.objects.all()
 
     def get_serializer_class(self):
@@ -87,7 +87,7 @@ class BatchesView(ListCreateAPIView):
 
         # Fetch the full batch with details
         try:
-            batch = Batch.objects.get_details(batch.id)
+            batch = Batch.objects.get_details_v5(batch.id)
         except Batch.DoesNotExist:
             raise Http404
 
@@ -149,12 +149,21 @@ class BatchesView(ListCreateAPIView):
 
 
 class BatchDetailsView(RetrieveAPIView):
-    """This view is the endpoint for viewing batch detail"""
+    """This view is the endpoint for retrieving a detailed batch"""
     queryset = Batch.objects.all()
-    serializer_class = BatchDetailsSerializerV5
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return BatchDetailsSerializerV6
+        elif self.request.version == 'v5':
+            return BatchDetailsSerializerV5
+        elif self.request.version == 'v4':
+            return BatchDetailsSerializerV5
 
     def retrieve(self, request, batch_id):
-        """Retrieves the details for a batch and return them in JSON form
+        """Retrieves the details for a batch and returns them in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
@@ -163,10 +172,46 @@ class BatchDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v6':
+            return self._retrieve_v6(batch_id)
+        elif request.version == 'v5':
+            return self._retrieve_v5(batch_id)
+        elif request.version == 'v4':
+            return self._retrieve_v5(batch_id)
+
+        raise Http404()
+
+    def _retrieve_v5(self, batch_id):
+        """The v5 version for retrieving batch details
+
+        :param batch_id: the batch id
+        :type batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         try:
-            batch = Batch.objects.get_details(batch_id)
+            batch = Batch.objects.get_details_v5(batch_id)
         except Batch.DoesNotExist:
-            raise Http404
+            raise Http404()
+
+        serializer = self.get_serializer(batch)
+        return Response(serializer.data)
+
+    def _retrieve_v6(self, batch_id):
+        """The v6 version for retrieving batch details
+
+        :param batch_id: the batch id
+        :type batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            batch = Batch.objects.get_details_v6(batch_id)
+        except Batch.DoesNotExist:
+            raise Http404()
 
         serializer = self.get_serializer(batch)
         return Response(serializer.data)
