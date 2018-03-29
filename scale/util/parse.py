@@ -32,6 +32,37 @@ def datetime_to_string(value):
     return value.isoformat().replace('+00:00', 'Z')
 
 
+def duration_to_string(value):
+    """Converts the given timedelta into an appropriate ISO-8601 duration format for JSON. Only handles positive
+    durations correctly. Fractional seconds are rounded.
+
+    :param value: The timedelta to convert
+    :type value: :class:`datetime.timedelta`
+    :returns: The ISO-8601 duration format
+    :rtype: string
+    """
+
+    result = 'P'
+
+    if value.days > 0:
+        result += '%dD' % value.days
+
+    result += 'T'
+    hours = value.seconds // 3600
+    minutes = (value.seconds - (3600 * hours)) // 60
+    seconds = value.seconds - (3600 * hours) - (60 * minutes)
+    if value.microseconds >= 500000:
+        seconds += 1  # Round fractional seconds
+
+    if hours > 0:
+        result += '%dH' % hours
+    if minutes > 0:
+        result += '%dM' % minutes
+    result += '%dS' % seconds
+
+    return result
+
+
 # TODO The following is from the Django 1.8 django.utils.dateparse, we can remove this when upgrading.
 def parse_duration(value):
     """Parses a duration string and returns a datetime.timedelta.

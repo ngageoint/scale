@@ -20,9 +20,10 @@ from queue.models import Queue
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeTypeRevision
-from util import rest as rest_utils
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
+from util import parse as parse_utils
+from util import rest as rest_utils
 
 
 logger = logging.getLogger(__name__)
@@ -261,7 +262,11 @@ class BatchManager(models.Manager):
         """
 
         qry = Batch.objects.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'prev_batch')
-        return qry.get(pk=batch_id)
+        batch = qry.get(pk=batch_id)
+
+        BatchMetrics.objects.add_metrics_to_batch(batch)
+
+        return batch
 
     # TODO: remove this when v5 REST API is removed
     def schedule_recipes(self, batch_id):
@@ -684,6 +689,29 @@ class BatchMetricsManager(models.Manager):
     """Provides additional methods for handling batch metrics
     """
 
+    def add_metrics_to_batch(self, batch):
+        """Adds the metrics per recipe job to the given batch
+
+        :param batch: The batch
+        :type batch: :class:`batch.models.Batch`
+        """
+
+        job_metrics_dict = {}
+        for metrics in self.get_batch_metrics(batch.id):
+            job_metrics_dict[metrics.job_name] = metrics.to_dict()
+        batch.job_metrics = job_metrics_dict
+
+    def get_batch_metrics(self, batch_id):
+        """Returns the metrics models for the given batch ID
+
+        :param batch_id: The batch ID
+        :type batch_id: int
+        :returns: The metrics models for the batch
+        :rtype: list
+        """
+
+        return self.filter(batch_id=batch_id)
+
     def update_batch_metrics_per_job(self, batch_ids):
         """Updates the metrics per job name for the batches with the given IDs
 
@@ -789,6 +817,34 @@ class BatchMetrics(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = BatchMetricsManager()
+
+    def to_dict(self):
+        """Returns a dict representing these metrics
+
+        :returns: The dict representing these metrics
+        :rtype: dict
+        """
+
+        metrics_dict = {'jobs_total': self.jobs_total, 'jobs_pending': self.jobs_pending,
+                        'jobs_blocked': self.jobs_blocked, 'jobs_queued': self.jobs_queued,
+                        'jobs_running': self.jobs_running, 'jobs_failed': self.jobs_failed,
+                        'jobs_completed': self.jobs_completed, 'jobs_canceled': self.jobs_canceled,
+                        'min_seed_duration': None, 'avg_seed_duration': None, 'max_seed_duration': None,
+                        'min_job_duration': None, 'avg_job_duration': None, 'max_job_duration': None}
+        if self.min_seed_duration:
+            metrics_dict['min_seed_duration'] = parse_utils.duration_to_string(self.min_seed_duration)
+        if self.avg_seed_duration:
+            metrics_dict['avg_seed_duration'] = parse_utils.duration_to_string(self.avg_seed_duration)
+        if self.max_seed_duration:
+            metrics_dict['max_seed_duration'] = parse_utils.duration_to_string(self.max_seed_duration)
+        if self.min_job_duration:
+            metrics_dict['min_job_duration'] = parse_utils.duration_to_string(self.min_job_duration)
+        if self.avg_job_duration:
+            metrics_dict['avg_job_duration'] = parse_utils.duration_to_string(self.avg_job_duration)
+        if self.max_job_duration:
+            metrics_dict['max_job_duration'] = parse_utils.duration_to_string(self.max_job_duration)
+
+        return metrics_dict
 
     class Meta(object):
         """meta information for the db"""

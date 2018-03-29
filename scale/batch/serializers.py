@@ -56,6 +56,7 @@ class BatchDetailsSerializerV6(BatchSerializerV6):
 
     definition = serializers.JSONField(source='get_v6_definition_json')
     configuration = serializers.JSONField(source='get_v6_configuration_json')
+    job_metrics = serializers.JSONField()
 
 
 # Serializers for v5 REST API

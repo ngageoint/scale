@@ -6,10 +6,12 @@ import django
 from django.test import TestCase
 from rest_framework import status
 
+import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.models import Batch
 
@@ -409,7 +411,13 @@ class TestBatchDetailsViewV6(TestCase):
     def test_successful(self):
         """Tests successfully calling the v6 batch details view"""
 
-        batch = batch_test_utils.create_batch()
+        job_type = job_test_utils.create_job_type()
+        recipe_definition_dict = {'jobs': [{'name': 'job_a', 'job_type': {'name': job_type.name,
+                                                                          'version': job_type.version}}]}
+        recipe_type = recipe_test_utils.create_recipe_type(definition=recipe_definition_dict)
+        configuration = BatchConfiguration()
+        configuration.priority = 100
+        batch = batch_test_utils.create_batch(recipe_type=recipe_type, configuration=configuration)
 
         url = '/v6/batches/%d/' % batch.id
         response = self.client.get(url)

@@ -243,6 +243,24 @@ Response: 200 OK
       },
       "configuration": {
          "priority": 100
+      },
+      "job_metrics": {
+         "job_a": {
+            "jobs_total": 10,
+            "jobs_pending": 0,
+            "jobs_blocked": 0,
+            "jobs_queued": 1,
+            "jobs_running": 3,
+            "jobs_failed": 0,
+            "jobs_completed": 6,
+            "jobs_canceled": 0,
+            "min_seed_duration": "PT3M12S",
+            "avg_seed_duration": "PT5M42S",
+            "max_seed_duration": "PT8M3S",
+            "min_job_duration": "PT3M16S",
+            "avg_job_duration": "PT5M49S",
+            "max_job_duration": "PT8M10S"
+         }
       }
    }
 
@@ -311,6 +329,23 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | configuration           | JSON Object       | The configuration of the batch                                                |
 |                         |                   | See :ref:`Batch Configuration Schema <rest_v6_batch_json_configuration>`      |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| job_metrics             | JSON Object       | Object where each job name in the batch recipes maps to the metrics for those |
+|                         |                   | jobs. The jobs_total, etc fields are the same as the batch fields, just       |
+|                         |                   | referring to the counts for a specific recipe job within the batch.           |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| min_seed_duration       | ISO-8601 Duration | Shortest time to complete running a Seed image for this recipe job, may be    |
+|                         |                   | null                                                                          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| avg_seed_duration       | ISO-8601 Duration | Average time to complete running a Seed image for this recipe job, may be null|
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| max_seed_duration       | ISO-8601 Duration | Longest time to complete running a Seed image for this recipe job, may be null|
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| min_job_duration        | ISO-8601 Duration | Shortest time to complete running one of these recipe jobs, may be null       |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| avg_job_duration        | ISO-8601 Duration | Average time to complete running one of these recipe jobs, may be null        |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| max_job_duration        | ISO-8601 Duration | Longest time to complete running one of these recipe jobs, may be null        |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_json_definition:
