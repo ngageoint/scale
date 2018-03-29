@@ -95,6 +95,44 @@ class JobResults(object):
 
         return self.results_dict
 
+    def extend_interface_with_outputs_v5(self, interface, job_files):
+        """Create an output_data like object for legacy v5 API
+
+        :param interface: Seed manifest which should have concrete outputs injected
+        :type interface: :class:`job.seed.manifest.SeedManifest`
+        :param job_files: A list of files that are referenced by the job data.
+        :type job_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of Seed Manifest outputs key mapped to the corresponding data value.
+        :rtype: dict
+        """
+
+        outputs = []
+        output_files = deepcopy(interface.get_output_files())
+        output_json = deepcopy(interface.get_output_json())
+
+        file_map = {job_file.id: job_file for job_file in job_files}
+        for i in output_files:
+            for j in self.output_data:
+                if i['name'] is j['name']:
+                    i['value'] = [file_map[str(x)] for x in j.file_ids]
+                    if len(i['value']) >= 2:
+                        i['type'] = 'files'
+                    else:
+                        i['value'] = i['value'][0]
+                        i['type'] = 'file'
+                    break
+            outputs.append(i)
+
+        for i in output_json:
+            for j in self.output_data:
+                if i['name'] is j['name']:
+                    i['type'] = 'property'
+                    i['value'] = j['json']
+                    break
+            outputs.append(i)
+
+        return outputs
+
     def extend_interface_with_outputs(self, interface, job_files):
         """Add a value property to both files and json objects within Seed Manifest
 

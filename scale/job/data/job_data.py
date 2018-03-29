@@ -326,6 +326,40 @@ class JobData(object):
 
         return input_values
 
+    # TODO: Remove with v5 API
+    def extend_interface_with_inputs_v5(self, interface, job_files):
+        """Create an input_data like object for legacy v5 API
+
+        :param interface: Seed manifest which should have concrete inputs injected
+        :type interface: :class:`job.seed.manifest.SeedManifest`
+        :param job_files: A list of files that are referenced by the job data.
+        :type job_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of Seed Manifest inputs key mapped to the corresponding data value.
+        :rtype: dict
+        """
+
+        inputs = []
+        input_files = deepcopy(interface.get_input_files())
+        input_json = deepcopy(interface.get_input_json())
+
+        file_map = {job_file.id: job_file for job_file in job_files}
+        for in_file in input_files:
+            # Use internal JobInputFiles data structure to get Scale File IDs
+            # Follow that up with a list comprehension over potentially multiple IDs to get
+            # final list of ScaleFile objects
+            in_file['value'] = [file_map[x] for x in self._input_files[in_file['name']].file_ids]
+
+            if len(in_file['value']) >= 2:
+                in_file['type'] = 'files'
+            else:
+                in_file['value'] = in_file['value'][0]
+                in_file['type'] = 'file'
+            inputs.append(in_file)
+        for x in input_json:
+            x['value'] = self._input_json[x['name']].value
+            inputs.append(x)
+        return inputs
+
     def extend_interface_with_inputs(self, interface, job_files):
         """Add a value property to both files and json objects within Seed Manifest
 
