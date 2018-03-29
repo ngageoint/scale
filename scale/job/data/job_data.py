@@ -1,7 +1,6 @@
 """Defines the data needed for executing a job"""
 from __future__ import unicode_literals
 
-import json
 import logging
 from copy import deepcopy
 
@@ -13,11 +12,7 @@ from job.configuration.data.exceptions import InvalidData
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.data.types import JobDataInputFiles, JobDataInputJson, JobDataOutputFiles
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
-from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
-from job.seed.results.job_results import JobResults
-from job.seed.results.outputs_json import SeedOutputsJson, SEED_OUPUTS_JSON_FILENAME
-from job.seed.types import SeedInputFiles, SeedOutputFiles
-from product.types import ProductFileMetadata
+from job.seed.types import SeedInputFiles
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
 from util.environment import normalize_env_var_name
@@ -357,6 +352,7 @@ class JobData(object):
             inputs.append(in_file)
         for x in input_json:
             x['value'] = self._input_json[x['name']].value
+            x['type'] = 'property'
             inputs.append(x)
         return inputs
 
@@ -471,7 +467,7 @@ class JobData(object):
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
 
         # Handle extra inputs in the data that are not defined in the interface
-        for name in self._input_files:
+        for name in deepcopy(self._input_files):
             if name not in [x.name for x in files]:
                 warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
                 warnings.append(warn)

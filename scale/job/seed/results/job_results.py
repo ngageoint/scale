@@ -9,7 +9,6 @@ import os
 from job.configuration.data.data_file import DATA_FILE_STORE
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
-from job.seed.types import SeedOutputFiles
 from product.types import ProductFileMetadata
 
 logger = logging.getLogger(__name__)
@@ -27,10 +26,20 @@ class JobResults(object):
         """
 
         if results_dict:
-            self.results_dict = results_dict
+            self._results_dict = results_dict
         else:
-            self.results_dict = {'version': '2.0', 'output_data': []}
-        self.output_data = self.results_dict['output_data']
+            self._results_dict = {'version': '2.0', 'files': {}, 'json': {}}
+
+    @property
+    def files(self):
+        """Accessor for files in results"""
+        return self._results_dict['files']
+
+
+    @property
+    def json(self):
+        """Accessor for json in results"""
+        return self._results_dict['json']
 
     def add_file_list_parameter(self, name, file_ids):
         """Adds a list of files to the job results
@@ -41,7 +50,7 @@ class JobResults(object):
         :type file_ids: [long]
         """
 
-        self.output_data.append({'name': name, 'file_ids': file_ids})
+        self.files[name] = file_ids
 
     def add_file_parameter(self, name, file_id):
         """Adds a file to the job results
@@ -52,7 +61,7 @@ class JobResults(object):
         :type file_id: long
         """
 
-        self.output_data.append({'name': name, 'file_id': file_id})
+        self.files[name] = [file_id]
 
     def add_output_to_data(self, output_name, job_data, input_name):
         """Adds the given output from the results as a new input in the given job data
@@ -65,15 +74,8 @@ class JobResults(object):
         :type input_name: string
         """
 
-        for output_data in self.output_data:
-            if output_name == output_data['name']:
-                if 'file_id' in output_data:
-                    file_id = output_data['file_id']
-                    job_data.add_file_input(input_name, file_id)
-                elif 'file_ids' in output_data:
-                    file_ids = output_data['file_ids']
-                    job_data.add_file_list_input(input_name, file_ids)
-                break
+        output = self.files[output_name]
+        job_data.add_file_list_input(input_name, output)
 
     def add_output_json(self, output_name, value):
         """Adds the given output json from the seed.outputs.json file
@@ -84,7 +86,7 @@ class JobResults(object):
         :type value: float or str or dict or array
         """
 
-        self.output_data.append({'name': output_name, 'json': value})
+        self.json[output_name] = value
 
     def get_dict(self):
         """Returns the internal dictionary that represents these job results
@@ -93,7 +95,7 @@ class JobResults(object):
         :rtype: dict
         """
 
-        return self.results_dict
+        return self._results_dict
 
     def extend_interface_with_outputs_v5(self, interface, job_files):
         """Create an output_data like object for legacy v5 API
@@ -111,62 +113,32 @@ class JobResults(object):
         output_json = deepcopy(interface.get_output_json())
 
         file_map = {job_file.id: job_file for job_file in job_files}
+
         for i in output_files:
-            for j in self.output_data:
-                if i['name'] is j['name']:
-                    i['value'] = [file_map[str(x)] for x in j.file_ids]
-                    if len(i['value']) >= 2:
-                        i['type'] = 'files'
-                    else:
-                        i['value'] = i['value'][0]
-                        i['type'] = 'file'
-                    break
-            outputs.append(i)
+            try:
+                i['value'] = [file_map[x] for x in self.files[i['name']]]
+                if len(i['value']) >= 2:
+                    i['type'] = 'files'
+                else:
+                    i['value'] = i['value'][0]
+                    i['type'] = 'file'
+
+                outputs.append(i)
+            # Catch KeyError exceptions and, if not a required output, continue
+            except KeyError:
+                if i['required']:
+                    raise
 
         for i in output_json:
-            for j in self.output_data:
-                if i['name'] is j['name']:
-                    i['type'] = 'property'
-                    i['value'] = j['json']
-                    break
-            outputs.append(i)
+            try:
+                i['type'] = 'property'
+                i['value'] = self.json[i['name']]
+                outputs.append(i)
+            # Catch KeyError exceptions and, if not a required output, continue
+            except KeyError:
+                if i['required']:
+                    raise
 
-        return outputs
-
-    def extend_interface_with_outputs(self, interface, job_files):
-        """Add a value property to both files and json objects within Seed Manifest
-
-        :param interface: Seed manifest which should have concrete outputs injected
-        :type interface: :class:`job.seed.manifest.SeedManifest`
-        :param job_files: A list of files that are referenced by the job data.
-        :type job_files: [:class:`storage.models.ScaleFile`]
-        :return: A dictionary of Seed Manifest outputs key mapped to the corresponding data value.
-        :rtype: dict
-        """
-
-        outputs = deepcopy(interface.get_outputs())
-        output_files = deepcopy(interface.get_output_files())
-        output_json = deepcopy(interface.get_output_json())
-
-        files = []
-        json = []
-        file_map = {job_file.id: job_file for job_file in job_files}
-        for i in output_files:
-            for j in self.output_data:
-                if i['name'] is j['name']:
-                    i['value'] = [file_map[str(x)] for x in j.file_ids]
-                    break
-            files.append(i)
-
-        for i in output_json:
-            for j in self.output_data:
-                if i['name'] is j['name']:
-                    i['value'] = j['json']
-                    break
-            json.append(i)
-
-        outputs['files'] = files
-        outputs['json'] = json
         return outputs
 
     def perform_post_steps(self, job_interface, job_data, job_exe):

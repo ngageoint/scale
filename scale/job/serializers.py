@@ -1,10 +1,14 @@
 """Defines the serializers for jobs and job types"""
+import logging
+
 import rest_framework.serializers as serializers
 
 from job.models import Job
 from job.deprecation import JobInterfaceSunset
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class SeedFilesSerializer(serializers.Serializer):
@@ -280,6 +284,7 @@ class JobDetailsInputSerializer(serializers.Serializer):
     type = serializers.CharField()
 
     def to_representation(self, obj):
+        logger.info(obj)
         result = super(JobDetailsInputSerializer, self).to_representation(obj)
 
         value = None

@@ -380,7 +380,6 @@ class JobManager(models.Manager):
         job_results = job.get_job_results()
         job_results_dict = job_results.get_dict()
 
-
         if JobInterfaceSunset.is_seed(job_interface_dict):
             job.inputs = job_data.extend_interface_with_inputs_v5(job_interface, input_files)
             job.outputs = job_results.extend_interface_with_outputs_v5(job_interface, output_files)
@@ -1163,10 +1162,9 @@ class Job(models.Model):
         """Returns the results for this job
 
         :returns: The results for this job
-        :rtype: :class:`job.configuration.results.job_results.JobResults`
+        :rtype: :class:`job.configuration.results.job_results.JobResults` or
+                :class:`job.seed.results.job_results.JobResults`
         """
-
-        logger.info(self.__dict__)
 
         # TODO: Remove old JobResults in v6 when we transition to only Seed job types
         if self.output and 'version' in self.output and '2.0' == self.output['version']:
@@ -1956,7 +1954,12 @@ class JobExecutionOutput(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        return JobResults(self.output)
+        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
+        if self.output and 'version' in self.output and '2.0' == self.output['version']:
+            job_results = JobResults(self.output)
+        else:
+            job_results = JobResults_1_0(self.output)
+        return job_results
 
     class Meta(object):
         """Meta information for the database"""
