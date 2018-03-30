@@ -268,6 +268,17 @@ class BatchManager(models.Manager):
 
         return batch
 
+    def mark_creation_done(self, batch_id, when):
+        """Marks recipe creation as done for this batch
+
+        :param batch_id: The batch ID
+        :type batch_id: int
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id=batch_id).update(is_creation_done=True, last_modified=when)
+
     # TODO: remove this when v5 REST API is removed
     def schedule_recipes(self, batch_id):
         """Schedules each recipe that matches the batch for re-processing and creates associated batch models.
