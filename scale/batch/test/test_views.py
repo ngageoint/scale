@@ -366,8 +366,9 @@ class TestBatchDetailsViewV5(TestCase):
     def test_successful_with_new_batch(self):
         """Tests successfully calling the v5 batch details view with a new (v6) batch"""
 
+        prev_batch = batch_test_utils.create_batch()
         definition = BatchDefinition()
-        definition.prev_batch_id = 1
+        definition.prev_batch_id = prev_batch.id
         definition.job_names = ['job_a', 'job_b']
         definition.all_jobs = True
         new_batch = batch_test_utils.create_batch(definition=definition)

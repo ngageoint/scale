@@ -72,6 +72,9 @@ class BatchManager(models.Manager):
         batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         batch.definition = convert_definition_to_v6(definition).get_dict()
         batch.event = event
+        if definition.prev_batch_id is not None:
+            batch.prev_batch_id = definition.prev_batch_id
+        # TODO: set root_batch_id from previous batch
         batch.save()
 
         # Create models for batch metrics

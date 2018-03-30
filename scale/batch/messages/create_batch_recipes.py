@@ -17,7 +17,7 @@ MAX_RECIPE_NUM = 1000
 logger = logging.getLogger(__name__)
 
 
-def create_batch_recipe_message(batch_id):
+def create_batch_recipes_message(batch_id):
     """Creates a message to create the recipes for the given batch
 
     :param batch_id: The batch ID
@@ -108,16 +108,17 @@ class CreateBatchRecipes(CommandMessage):
             self.is_prev_batch_done = True
             return messages
 
-        recipe_qry = Recipe.objects.filter_recipes(batch_id=definition.prev_batch_id, order=['-id'])
+        recipe_qry = Recipe.objects.filter(batch_id=definition.prev_batch_id)
         if self.current_recipe_id:
             recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
+        recipe_qry = recipe_qry.order_by('-id')
 
         root_recipe_ids = []
         last_recipe_id = None
         for recipe in recipe_qry.defer('input')[:MAX_RECIPE_NUM]:
             last_recipe_id = recipe.id
-            if recipe.root_recipe_id is not None:
-                root_recipe_ids.append(recipe.root_recipe_id)
+            if recipe.root_superseded_recipe_id is not None:
+                root_recipe_ids.append(recipe.root_superseded_recipe_id)
             else:
                 root_recipe_ids.append(recipe.id)
         recipe_count = len(root_recipe_ids)
