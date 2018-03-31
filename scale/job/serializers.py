@@ -284,7 +284,6 @@ class JobDetailsInputSerializer(serializers.Serializer):
     type = serializers.CharField()
 
     def to_representation(self, obj):
-        logger.info(obj)
         result = super(JobDetailsInputSerializer, self).to_representation(obj)
 
         value = None
