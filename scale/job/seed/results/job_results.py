@@ -27,7 +27,7 @@ class JobResults(object):
 
         if results_dict:
             if 'version' in results_dict and '1.0' == results_dict['version']:
-                results_dict = self.migrate_from_old(results_dict)
+                results_dict = self.convert_results(results_dict)
 
             self._results_dict = results_dict
         else:
@@ -35,14 +35,16 @@ class JobResults(object):
 
 
     @staticmethod
-    def migrate_from_old(definition):
-        """Upgrade from a 1.0 JobResults
+    def convert_results(legacy):
+        """Convert a previous JobResults object to the 2.0 schema
 
-        :param definition:
-        :return: Upgraded 2.0 JobResults definition
+        :param legacy: The previous object
+        :type legacy: dict
+        :return: converted object
+        :rtype: dict
         """
         result = {'version': '2.0', 'files': {}, 'json': {}}
-        for i in definition['output_date']:
+        for i in legacy['output_data']:
             if i['file_ids']:
                 result['files'][i['name']] = i['file_ids']
             elif i['file_id']:
