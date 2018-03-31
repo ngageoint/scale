@@ -26,9 +26,31 @@ class JobResults(object):
         """
 
         if results_dict:
+            if 'version' in results_dict and '1.0' == results_dict['version']:
+                results_dict = self.migrate_from_old(results_dict)
+
             self._results_dict = results_dict
         else:
             self._results_dict = {'version': '2.0', 'files': {}, 'json': {}}
+
+
+    @staticmethod
+    def migrate_from_old(definition):
+        """Upgrade from a 1.0 JobResults
+
+        :param definition:
+        :return: Upgraded 2.0 JobResults definition
+        """
+        result = {'version': '2.0', 'files': {}, 'json': {}}
+        for i in definition['output_date']:
+            if i['file_ids']:
+                result['files'][i['name']] = i['file_ids']
+            elif i['file_id']:
+                result['files'][i['name']] = [i['file_id']]
+            else:
+                result['json'][i['name']] = i['value']
+
+        return result
 
     @property
     def files(self):
@@ -124,20 +146,18 @@ class JobResults(object):
                     i['type'] = 'file'
 
                 outputs.append(i)
-            # Catch KeyError exceptions and, if not a required output, continue
-            except KeyError:
-                if i['required']:
-                    raise
+            # Catch KeyError exceptions as a newly constructed JobResults object prior to execution will be missing keys
+            except KeyError, ex:
+                logger.debug(ex)
 
         for i in output_json:
             try:
                 i['type'] = 'property'
                 i['value'] = self.json[i['name']]
                 outputs.append(i)
-            # Catch KeyError exceptions and, if not a required output, continue
-            except KeyError:
-                if i['required']:
-                    raise
+            # Catch KeyError exceptions as a newly constructed JobResults object prior to execution will be missing keys
+            except KeyError, ex:
+                logger.debug(ex)
 
         return outputs
 
