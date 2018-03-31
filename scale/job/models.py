@@ -324,8 +324,6 @@ class JobManager(models.Manager):
         :rtype: :class:`job.models.Job`
         """
 
-
-
         # Attempt to fetch the requested job
         job = Job.objects.select_related(
             'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
@@ -1170,7 +1168,11 @@ class Job(models.Model):
         if self.output and 'version' in self.output and '2.0' == self.output['version']:
             job_results = JobResults(self.output)
         else:
-            job_results = JobResults_1_0(self.output)
+            # Handle self.output being none on Seed type jobs
+            if JobInterfaceSunset.is_seed(self.job_type_rev.interface):
+                job_results = JobResults()
+            else:
+                job_results = JobResults_1_0(self.output)
         return job_results
 
     def get_resources(self):
