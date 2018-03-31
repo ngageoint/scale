@@ -9,16 +9,39 @@ import os
 from job.configuration.data.data_file import DATA_FILE_STORE
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
+from jsonschema import validate, ValidationError
 from product.types import ProductFileMetadata
 
 logger = logging.getLogger(__name__)
+
+
+SCHEMA_VERSION = '2.0'
+JOB_RESULTS_SCHEMA = {
+    'type': 'object',
+    'required': ['files', 'json'],
+    'additionalProperties': False,
+    'properties': {
+        'version': {
+            'description': 'Version of the job_results schema',
+            "default": SCHEMA_VERSION,
+            "type": "string"
+        },
+        'files': {
+            'description': 'Output files captured from job execution',
+            'type': 'object',
+        },
+        'json': {
+            'description': 'Output JSON metadata from job execution',
+            'type': 'object',
+        }
+    }}
 
 
 class JobResults(object):
     """Represents the results obtained after executing a job
     """
 
-    def __init__(self, results_dict=None):
+    def __init__(self, results_dict=None, do_validate=True):
         """Constructor
 
         :param results_dict: The dictionary representing the job results
@@ -32,6 +55,12 @@ class JobResults(object):
             self._results_dict = results_dict
         else:
             self._results_dict = {'version': '2.0', 'files': {}, 'json': {}}
+
+        try:
+            if do_validate:
+                validate(self._results_dict, JOB_RESULTS_SCHEMA)
+        except ValidationError:
+            raise
 
 
     @staticmethod
