@@ -104,11 +104,11 @@ class CreateBatchRecipes(CommandMessage):
         """
 
         messages = []
-        if definition.prev_batch_id is None:
+        if definition.root_batch_id is None:
             self.is_prev_batch_done = True
             return messages
 
-        recipe_qry = Recipe.objects.filter(batch_id=definition.prev_batch_id)
+        recipe_qry = Recipe.objects.filter(batch_id=batch.superseded_batch_id)
         if self.current_recipe_id:
             recipe_qry = recipe_qry.filter(id__lt=self.current_recipe_id)
         recipe_qry = recipe_qry.order_by('-id')

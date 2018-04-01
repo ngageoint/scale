@@ -33,7 +33,7 @@ def convert_configuration_to_v6(configuration):
     :param configuration: The batch configuration
     :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
     :returns: The v6 configuration JSON
-    :rtype: :class:`batch.configuration.json.configuration_v6.BatchConfigurationV6`:
+    :rtype: :class:`batch.configuration.json.configuration_v6.BatchConfigurationV6`
     """
 
     json_dict = {'version': '6'}

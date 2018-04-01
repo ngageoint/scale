@@ -23,10 +23,10 @@ class TestBatchDefinitionV6(TestCase):
 
         # Try definition with previous batch ID set
         definition = BatchDefinition()
-        definition.prev_batch_id = 1234
+        definition.root_batch_id = 1234
         json = convert_definition_to_v6(definition)
         BatchDefinitionV6(definition=json.get_dict(), do_validate=True)  # Revalidate
-        self.assertEqual(json.get_definition().prev_batch_id, definition.prev_batch_id)
+        self.assertEqual(json.get_definition().root_batch_id, definition.root_batch_id)
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
@@ -38,11 +38,11 @@ class TestBatchDefinitionV6(TestCase):
         definition = {'version': 'BAD'}
         self.assertRaises(InvalidDefinition, BatchDefinitionV6, definition, True)
 
-        # Missing batch_id
+        # Missing root_batch_id
         definition = {'version': '6', 'previous_batch': {'all_jobs': True}}
         self.assertRaises(InvalidDefinition, BatchDefinitionV6, definition, True)
 
         # Valid previous batch definition
-        definition = {'version': '6', 'previous_batch': {'batch_id': 1234, 'job_names': ['job_a', 'job_b'],
+        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234, 'job_names': ['job_a', 'job_b'],
                                                          'all_jobs': True}}
         BatchDefinitionV6(definition=definition, do_validate=True)

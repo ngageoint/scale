@@ -48,15 +48,16 @@ Response: 200 OK
             "rule": null,
             "occurred": "1970-01-01T00:00:00Z"
          },
+         "is_superseded": true,
          "root_batch": {
             "id": 1232,
             "title": "My Root Batch",
             "description": "My Root Batch Description"
          },
-         "prev_batch": {
+         "superseded_batch": {
             "id": 1233,
-            "title": "My Previous Batch",
-            "description": "My Previous Batch Description"
+            "title": "My Superseded Batch",
+            "description": "My Superseded Batch Description"
          },
          "is_creation_done": true,
          "jobs_total": 10,
@@ -71,6 +72,7 @@ Response: 200 OK
          "recipes_total": 2,
          "recipes_completed": 1,
          "created": "1970-01-01T00:00:00Z",
+         "superseded": "1970-01-01T00:00:00Z",
          "last_modified": "1970-01-01T00:00:00Z"
       }]
    }
@@ -102,6 +104,9 @@ Response: 200 OK
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | is_creation_done        | Boolean           | Optional | Return only batches that match this value, indicating if the batch |
 |                         |                   |          | has/has not finishing creating its recipes.                        |
++-------------------------+-------------------+----------+--------------------------------------------------------------------+
+| is_superseded           | Boolean           | Optional | Return only batches that match this value, indicating if the batch |
+|                         |                   |          | has/has not been superseded.                                       |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | root_batch_id           | Integer           | Optional | Return only batches that belong to the chain with this root batch. |
 |                         |                   |          | Duplicate it to filter by multiple values.                         |
@@ -138,9 +143,11 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | event                   | JSON Object       | The trigger event that is associated with the batch                           |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
+| is_superseded           | Boolean           | Whether this batch has been superseded (re-processed) by another batch        |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
 | root_batch              | JSON Object       | The root batch for the chain that contains this batch, possibly null          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| prev_batch              | JSON Object       | The previous batch in the chain that contains this batch, possibly null       |
+| superseded_batch        | JSON Object       | The previous batch in the chain superseded by this batch, possibly null       |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | is_creation_done        | Boolean           | Whether this batch has finished creating all of its recipes                   |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
@@ -167,6 +174,8 @@ Response: 200 OK
 | recipes_completed       | Integer           | The count of completed recipes within this batch                              |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | created                 | ISO-8601 Datetime | When the batch was initially created                                          |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| superseded              | ISO-8601 Datetime | When the batch was superseded                                                 |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | last_modified           | ISO-8601 Datetime | When the batch was last updated                                               |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
@@ -212,15 +221,16 @@ Response: 200 OK
             "user": "Anonymous"
          }
       },
+      "is_superseded": true,
       "root_batch": {
          "id": 1232,
          "title": "My Root Batch",
          "description": "My Root Batch Description"
       },
-      "prev_batch": {
+      "superseded_batch": {
          "id": 1233,
-         "title": "My Previous Batch",
-         "description": "My Previous Batch Description"
+         "title": "My Superseded Batch",
+         "description": "My Superseded Batch Description"
       },
       "is_creation_done": true,
       "jobs_total": 10,
@@ -235,6 +245,7 @@ Response: 200 OK
       "recipes_total": 2,
       "recipes_completed": 1,
       "created": "1970-01-01T00:00:00Z",
+      "superseded": "1970-01-01T00:00:00Z",
       "last_modified": "1970-01-01T00:00:00Z",
       "definition": {
          "previous_batch": {
@@ -243,24 +254,6 @@ Response: 200 OK
       },
       "configuration": {
          "priority": 100
-      },
-      "job_metrics": {
-         "job_a": {
-            "jobs_total": 10,
-            "jobs_pending": 0,
-            "jobs_blocked": 0,
-            "jobs_queued": 1,
-            "jobs_running": 3,
-            "jobs_failed": 0,
-            "jobs_completed": 6,
-            "jobs_canceled": 0,
-            "min_seed_duration": "PT3M12S",
-            "avg_seed_duration": "PT5M42S",
-            "max_seed_duration": "PT8M3S",
-            "min_job_duration": "PT3M16S",
-            "avg_job_duration": "PT5M49S",
-            "max_job_duration": "PT8M10S"
-         }
       }
    }
 
@@ -292,9 +285,11 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | event                   | JSON Object       | The trigger event that is associated with the batch                           |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
+| is_superseded           | Boolean           | Whether this batch has been superseded (re-processed) by another batch        |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
 | root_batch              | JSON Object       | The root batch for the chain that contains this batch, possibly null          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| prev_batch              | JSON Object       | The previous batch in the chain that contains this batch, possibly null       |
+| superseded_batch        | JSON Object       | The previous batch in the chain superseded by this batch, possibly null       |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | is_creation_done        | Boolean           | Whether this batch has finished creating all of its recipes                   |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
@@ -322,6 +317,8 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | created                 | ISO-8601 Datetime | When the batch was initially created                                          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
+| superseded              | ISO-8601 Datetime | When the batch was superseded                                                 |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
 | last_modified           | ISO-8601 Datetime | When the batch was last updated                                               |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | definition              | JSON Object       | The definition of the batch                                                   |
@@ -329,23 +326,6 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | configuration           | JSON Object       | The configuration of the batch                                                |
 |                         |                   | See :ref:`Batch Configuration Schema <rest_v6_batch_json_configuration>`      |
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| job_metrics             | JSON Object       | Object where each job name in the batch recipes maps to the metrics for those |
-|                         |                   | jobs. The jobs_total, etc fields are the same as the batch fields, just       |
-|                         |                   | referring to the counts for a specific recipe job within the batch.           |
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| min_seed_duration       | ISO-8601 Duration | Shortest time to complete running a Seed image for this recipe job, may be    |
-|                         |                   | null                                                                          |
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| avg_seed_duration       | ISO-8601 Duration | Average time to complete running a Seed image for this recipe job, may be null|
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| max_seed_duration       | ISO-8601 Duration | Longest time to complete running a Seed image for this recipe job, may be null|
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| min_job_duration        | ISO-8601 Duration | Shortest time to complete running one of these recipe jobs, may be null       |
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| avg_job_duration        | ISO-8601 Duration | Average time to complete running one of these recipe jobs, may be null        |
-+-------------------------+-------------------+-------------------------------------------------------------------------------+
-| max_job_duration        | ISO-8601 Duration | Longest time to complete running one of these recipe jobs, may be null        |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_json_definition:
@@ -362,7 +342,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 
    {
       "previous_batch": {
-         "batch_id": 1234,
+         "root_batch_id": 1234,
          "job_names": ['job_a', 'job_b'],
          "all_jobs": false
       }
@@ -375,7 +355,9 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 |                         |                   |          | previous batch. This will link the previous and new batch together |
 |                         |                   |          | so that their metrics can be easily compared.                      |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| batch_id                | Integer           | Required | The ID of the previous batch                                       |
+| root_batch_id           | Integer           | Required | The root batch ID of the previous batch. Scale will find the last  |
+|                         |                   |          | (non-superseded) batch with this root ID and it will be            |
+|                         |                   |          | re-processed by this batch.                                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | job_names               | String            | Optional | A list of strings that define specific jobs within the recipes     |
 |                         |                   |          | that will be re-processed. Any job that has changed between the    |

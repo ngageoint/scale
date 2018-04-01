@@ -27,11 +27,11 @@ BATCH_DEFINITION_SCHEMA = {
         'previous_batch': {
             'description': 'Links this batch to a previous batch and re-processes the previous batch\'s recipes',
             'type': 'object',
-            'required': ['batch_id'],
+            'required': ['root_batch_id'],
             'additionalProperties': False,
             'properties': {
-                'batch_id': {
-                    'description': 'The ID of the previous batch',
+                'root_batch_id': {
+                    'description': 'The root ID of the previous batch',
                     'type': 'integer',
                 },
                 'job_names': {
@@ -57,12 +57,12 @@ def convert_definition_to_v6(definition):
     :param definition: The batch definition
     :type definition: :class:`batch.definition.definition.BatchDefinition`
     :returns: The v6 definition JSON
-    :rtype: :class:`batch.definition.json.definition_v6.BatchDefinitionV6`:
+    :rtype: :class:`batch.definition.json.definition_v6.BatchDefinitionV6`
     """
 
     json_dict = {'version': '6'}
-    if definition.prev_batch_id is not None:
-        json_dict['previous_batch'] = {'batch_id': definition.prev_batch_id, 'job_names': definition.job_names,
+    if definition.root_batch_id is not None:
+        json_dict['previous_batch'] = {'root_batch_id': definition.root_batch_id, 'job_names': definition.job_names,
                                        'all_jobs': definition.all_jobs}
     return BatchDefinitionV6(definition=json_dict, do_validate=False)
 
@@ -107,7 +107,7 @@ class BatchDefinitionV6(object):
         definition = BatchDefinition()
         if 'previous_batch' in self._definition:
             prev_batch_dict = self._definition['previous_batch']
-            definition.prev_batch_id = prev_batch_dict['batch_id']
+            definition.root_batch_id = prev_batch_dict['root_batch_id']
             if 'job_names' in prev_batch_dict:
                 definition.job_names = prev_batch_dict['job_names']
             if 'all_jobs' in prev_batch_dict:

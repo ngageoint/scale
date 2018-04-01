@@ -250,10 +250,10 @@ class TestBatchesViewV6(TestCase):
         django.setup()
 
         self.recipe_type_1 = recipe_test_utils.create_recipe_type()
-        self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=True)
+        self.batch_1 = batch_test_utils.create_batch(recipe_type=self.recipe_type_1, is_creation_done=False)
 
         self.recipe_type_2 = recipe_test_utils.create_recipe_type()
-        self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2)
+        self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
 
     def test_invalid_version(self):
         """Tests calling the batches view with an invalid version"""
@@ -270,16 +270,7 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
-        for entry in result['results']:
-            expected = None
-            if entry['id'] == self.batch_1.id:
-                expected = self.batch_1
-            elif entry['id'] == self.batch_2.id:
-                expected = self.batch_2
-            else:
-                self.fail('Found unexpected result: %s' % entry['id'])
-            self.assertEqual(entry['recipe_type']['id'], expected.recipe_type.id)
+        self.assertEqual(len(result['results']), 4)
 
     def test_recipe_type_id(self):
         """Tests successfully calling the batches view filtered by recipe type identifier"""
@@ -289,13 +280,13 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['recipe_type']['id'], self.batch_1.recipe_type.id)
 
     def test_is_creation_done(self):
         """Tests successfully calling the batches view filtered by is_creation_done"""
 
-        url = '/v6/batches/?is_creation_done=true'
+        url = '/v6/batches/?is_creation_done=false'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -303,16 +294,28 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.batch_1.id)
 
-    def test_root_batch_id(self):
-        """Tests successfully calling the batches view filtered by root_batch_id"""
+    def test_root_batch_and_superseded(self):
+        """Tests successfully calling the batches view filtered by is_superseded and root_batch_id"""
 
-        url = '/v6/batches/?root_batch_id=%s' % self.batch_2.id
+        url = '/v6/batches/?root_batch_id=%s&is_superseded=True' % self.batch_2.root_batch_id
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['id'], self.batch_2.id)
+        self.assertEqual(result['results'][0]['id'], self.batch_2.superseded_batch_id)
+
+    def test_root_batch_id(self):
+        """Tests successfully calling the batches view filtered by root_batch_id"""
+
+        url = '/v6/batches/?root_batch_id=%s&order=id' % self.batch_2.root_batch_id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['id'], self.batch_2.superseded_batch_id)
+        self.assertEqual(result['results'][1]['id'], self.batch_2.id)
 
     def test_order_by(self):
         """Tests successfully calling the batches view with sorting"""
@@ -322,9 +325,11 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 4)
         self.assertEqual(result['results'][0]['id'], self.batch_2.id)
-        self.assertEqual(result['results'][1]['id'], self.batch_1.id)
+        self.assertEqual(result['results'][1]['id'], self.batch_2.superseded_batch_id)
+        self.assertEqual(result['results'][2]['id'], self.batch_1.id)
+        self.assertEqual(result['results'][3]['id'], self.batch_1.superseded_batch_id)
 
 
 class TestBatchDetailsViewV5(TestCase):
@@ -366,12 +371,13 @@ class TestBatchDetailsViewV5(TestCase):
     def test_successful_with_new_batch(self):
         """Tests successfully calling the v5 batch details view with a new (v6) batch"""
 
-        prev_batch = batch_test_utils.create_batch()
+        recipe_type = recipe_test_utils.create_recipe_type()
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True)
         definition = BatchDefinition()
-        definition.prev_batch_id = prev_batch.id
+        definition.root_batch_id = prev_batch.root_batch_id
         definition.job_names = ['job_a', 'job_b']
         definition.all_jobs = True
-        new_batch = batch_test_utils.create_batch(definition=definition)
+        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition)
 
         url = '/v5/batches/%d/' % new_batch.id
         response = self.client.get(url)

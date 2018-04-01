@@ -18,14 +18,15 @@ class TestCreateBatchRecipes(TestCase):
         """Tests coverting a CreateBatchRecipes message to and from JSON"""
 
         # Previous batch with three recipes
-        prev_batch = batch_test_utils.create_batch()
+        recipe_type = recipe_test_utils.create_recipe_type()
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_3 = recipe_test_utils.create_recipe(batch=prev_batch)
 
         definition = BatchDefinition()
-        definition.prev_batch_id = prev_batch.id
-        batch = batch_test_utils.create_batch(definition=definition)
+        definition.root_batch_id = prev_batch.root_batch_id
+        batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition)
 
         # Create message
         message = create_batch_recipes_message(batch.id)
@@ -50,7 +51,8 @@ class TestCreateBatchRecipes(TestCase):
         batch.messages.create_batch_recipes.MAX_RECIPE_NUM = 5
 
         # Previous batch with six recipes
-        prev_batch = batch_test_utils.create_batch()
+        recipe_type = recipe_test_utils.create_recipe_type()
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_3 = recipe_test_utils.create_recipe(batch=prev_batch)
@@ -59,8 +61,8 @@ class TestCreateBatchRecipes(TestCase):
         recipe_6 = recipe_test_utils.create_recipe(batch=prev_batch)
 
         definition = BatchDefinition()
-        definition.prev_batch_id = prev_batch.id
-        new_batch = batch_test_utils.create_batch(definition=definition)
+        definition.root_batch_id = prev_batch.root_batch_id
+        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition)
 
         # Create message
         message = batch.messages.create_batch_recipes.CreateBatchRecipes()

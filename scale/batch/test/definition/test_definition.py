@@ -18,7 +18,7 @@ class TestBatchDefinition(TestCase):
         """Tests creating a BatchDefinition from a JSON"""
 
         # Valid previous batch definition
-        definition = {'version': '6', 'previous_batch': {'batch_id': 1234, 'job_names': ['job_a', 'job_b'],
+        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234, 'job_names': ['job_a', 'job_b'],
                                                          'all_jobs': True}}
         json = BatchDefinitionV6(definition=definition, do_validate=True)
         self.assertIsNotNone(json.get_definition())
@@ -43,19 +43,22 @@ class TestBatchDefinition(TestCase):
         self.assertRaises(InvalidDefinition, definition.validate, batch)
 
         # Mismatched recipe types
-        json_dict = {'version': '6', 'previous_batch': {'batch_id': bad_recipe_type_prev_batch.id}}
+        json_dict = {'version': '6', 'previous_batch': {'root_batch_id': bad_recipe_type_prev_batch.root_batch_id}}
         json = BatchDefinitionV6(definition=json_dict)
         definition = json.get_definition()
+        batch.superseded_batch = bad_recipe_type_prev_batch
         self.assertRaises(InvalidDefinition, definition.validate, batch)
 
         # Previous batch not done creating recipes
-        json_dict = {'version': '6', 'previous_batch': {'batch_id': still_creating_prev_batch.id}}
+        json_dict = {'version': '6', 'previous_batch': {'root_batch_id': still_creating_prev_batch.root_batch_id}}
         json = BatchDefinitionV6(definition=json_dict)
         definition = json.get_definition()
+        batch.superseded_batch = still_creating_prev_batch
         self.assertRaises(InvalidDefinition, definition.validate, batch)
 
         # Valid definition with previous batch
-        json_dict = {'version': '6', 'previous_batch': {'batch_id': prev_batch.id}}
+        json_dict = {'version': '6', 'previous_batch': {'root_batch_id': prev_batch.root_batch_id}}
         json = BatchDefinitionV6(definition=json_dict)
         definition = json.get_definition()
+        batch.superseded_batch = prev_batch
         definition.validate(batch)

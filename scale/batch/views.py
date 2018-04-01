@@ -136,12 +136,13 @@ class BatchesView(ListCreateAPIView):
 
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
         is_creation_done = rest_util.parse_bool(request, 'is_creation_done', required=False)
+        is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
         root_batch_ids = rest_util.parse_int_list(request, 'root_batch_id', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         batches = Batch.objects.get_batches_v6(started=started, ended=ended, recipe_type_ids=recipe_type_ids,
-                                               is_creation_done=is_creation_done, root_batch_ids=root_batch_ids,
-                                               order=order)
+                                               is_creation_done=is_creation_done, is_superseded=is_superseded,
+                                               root_batch_ids=root_batch_ids, order=order)
 
         page = self.paginate_queryset(batches)
         serializer = self.get_serializer(page, many=True)

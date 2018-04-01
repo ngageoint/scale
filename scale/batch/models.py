@@ -10,6 +10,7 @@ from django.utils.timezone import now
 
 from batch.configuration.configuration import BatchConfiguration
 from batch.configuration.json.configuration_v6 import convert_configuration_to_v6, BatchConfigurationV6
+from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
 from batch.exceptions import BatchError
@@ -31,62 +32,6 @@ logger = logging.getLogger(__name__)
 
 class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
-
-    # TODO: finish implementing, rename to create_batch_v6
-    def create_batch(self, recipe_type, definition, configuration, title=None, description=None):
-        """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
-        method also queues a new system job that will process the batch request. All database changes occur in an atomic
-        transaction.
-
-        :param recipe_type: The type of recipes that should be re-processed
-        :type recipe_type: :class:`recipe.models.RecipeType`
-        :param definition: The definition for running a batch
-        :type definition: :class:`batch.definition.definition.BatchDefinition`
-        :param configuration: The batch configuration
-        :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
-        :param title: The human-readable name of the batch
-        :type title: string
-        :param description: An optional description of the batch
-        :type description: string
-        :returns: The newly created batch
-        :rtype: :class:`batch.models.Batch`
-
-        :raises :class:`batch.exceptions.BatchError`: If general batch parameters are invalid
-        """
-
-        # Attempt to get the batch job type
-        try:
-            job_type = JobType.objects.filter(name='scale-batch-creator').last()
-        except JobType.DoesNotExist:
-            raise BatchError('Missing required job type: scale-batch-creator')
-
-        # Create an event to represent this request
-        trigger_desc = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, trigger_desc, now())
-
-        batch = Batch()
-        batch.title = title
-        batch.description = description
-        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
-        batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
-        batch.definition = convert_definition_to_v6(definition).get_dict()
-        batch.event = event
-        if definition.prev_batch_id is not None:
-            batch.prev_batch_id = definition.prev_batch_id
-        # TODO: set root_batch_id from previous batch
-        batch.save()
-
-        # Create models for batch metrics
-        batch_metrics_models = []
-        for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
-            batch_metrics_model = BatchMetrics()
-            batch_metrics_model.batch_id = batch.id
-            batch_metrics_model.job_name = job_name
-            batch_metrics_models.append(batch_metrics_model)
-        BatchMetrics.objects.bulk_create(batch_metrics_models)
-
-        return batch
 
     # TODO: remove this when v5 REST API is removed
     @transaction.atomic
@@ -152,6 +97,68 @@ class BatchManager(models.Manager):
 
         return batch
 
+    def create_batch_v6(self, title, description, recipe_type, event, definition, configuration=None):
+        """Creates a new batch that will contain a collection of recipes to process. The definition and configuration
+        will be stored in version 6 of their respective schemas.
+
+        :param title: The human-readable name of the batch
+        :type title: string
+        :param description: A human-readable description of the batch
+        :type description: string
+        :param recipe_type: The type of recipes that will be created for this batch
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param event: The event that created this batch
+        :type event: :class:`trigger.models.TriggerEvent`
+        :param definition: The definition for running the batch
+        :type definition: :class:`batch.definition.definition.BatchDefinition`
+        :param configuration: The batch configuration
+        :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
+        :returns: The newly created batch
+        :rtype: :class:`batch.models.Batch`
+
+        :raises :class:`batch.configuration.exceptions.InvalidConfiguration`: If the configuration is invalid
+        :raises :class:`batch.definition.exceptions.InvalidDefinition`: If the definition is invalid
+        """
+
+        batch = Batch()
+        batch.title = title
+        batch.description = description
+        batch.recipe_type = recipe_type
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        batch.event = event
+        batch.definition = convert_definition_to_v6(definition).get_dict()
+        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
+
+        with transaction.atomic():
+            if definition.root_batch_id is not None:
+                # Find latest batch with the root ID and supersede it
+                try:
+                    superseded_batch = Batch.objects.get_locked_batch_from_root(definition.root_batch_id)
+                except Batch.DoesNotExist:
+                    raise InvalidDefinition('No batch with that root ID exists')
+                batch.root_batch_id = superseded_batch.root_batch_id
+                batch.superseded_batch = superseded_batch
+                self.supersede_batch(superseded_batch.id, now())
+
+            definition.validate(batch)
+            configuration.validate(batch)
+
+            batch.save()
+            if batch.root_batch_id is None:  # Batches with no superseded batch are their own root
+                batch.root_batch_id = batch.id
+                Batch.objects.filter(id=batch.id).update(root_batch_id=batch.id)
+
+            # Create models for batch metrics
+            batch_metrics_models = []
+            for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+                batch_metrics_model = BatchMetrics()
+                batch_metrics_model.batch_id = batch.id
+                batch_metrics_model.job_name = job_name
+                batch_metrics_models.append(batch_metrics_model)
+            BatchMetrics.objects.bulk_create(batch_metrics_models)
+
+        return batch
+
     def get_batches_v5(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
                        order=None):
         """Returns a list of batches within the given time range.
@@ -197,8 +204,8 @@ class BatchManager(models.Manager):
             batches = batches.order_by('last_modified')
         return batches
 
-    def get_batches_v6(self, started=None, ended=None, recipe_type_ids=None, is_creation_done=None, root_batch_ids=None,
-                       order=None):
+    def get_batches_v6(self, started=None, ended=None, recipe_type_ids=None, is_creation_done=None, is_superseded=None,
+                       root_batch_ids=None, order=None):
         """Returns a list of batches for the v6 batches REST API
 
         :param started: Query batches updated after this time
@@ -209,6 +216,8 @@ class BatchManager(models.Manager):
         :type recipe_type_ids: list
         :param is_creation_done: Query batches that match this value
         :type is_creation_done: bool
+        :param is_superseded: Query batches that match this value
+        :type is_superseded: bool
         :param root_batch_ids: Query batches with these root batches
         :type root_batch_ids: list
         :param order: A list of fields to control the sort order
@@ -219,7 +228,7 @@ class BatchManager(models.Manager):
 
         # Fetch a list of batches
         batches = Batch.objects.all()
-        batches = batches.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'prev_batch')
+        batches = batches.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'superseded_batch')
         batches = batches.defer('definition', 'configuration')
 
         # Apply time range filtering
@@ -233,8 +242,10 @@ class BatchManager(models.Manager):
             batches = batches.filter(recipe_type_id__in=recipe_type_ids)
         if is_creation_done is not None:
             batches = batches.filter(is_creation_done=is_creation_done)
+        if is_superseded is not None:
+            batches = batches.filter(is_superseded=is_superseded)
         if root_batch_ids:
-            batches = batches.filter(Q(root_batch_id__in=root_batch_ids) | Q(id__in=root_batch_ids))
+            batches = batches.filter(root_batch_id__in=root_batch_ids)
 
         # Apply sorting
         if order:
@@ -264,12 +275,24 @@ class BatchManager(models.Manager):
         :rtype: :class:`batch.models.Batch`
         """
 
-        qry = Batch.objects.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'prev_batch')
+        qry = Batch.objects.select_related('recipe_type', 'recipe_type_rev', 'event', 'root_batch', 'superseded_batch')
         batch = qry.get(pk=batch_id)
 
         BatchMetrics.objects.add_metrics_to_batch(batch)
 
         return batch
+
+    def get_locked_batch_from_root(self, root_batch_id):
+        """Locks and returns the latest (non-superseded) batch model with the given root batch ID. The returned model
+        will have no related fields populated. Caller must be within an atomic transaction.
+
+        :param root_batch_id: The root batch ID
+        :type root_batch_id: int
+        :returns: The batch model
+        :rtype: :class:`batch.models.Batch`
+        """
+
+        return self.select_for_update().get(root_batch_id=root_batch_id, is_superseded=False)
 
     def mark_creation_done(self, batch_id, when):
         """Marks recipe creation as done for this batch
@@ -281,6 +304,17 @@ class BatchManager(models.Manager):
         """
 
         self.filter(id=batch_id).update(is_creation_done=True, last_modified=when)
+
+    def supersede_batch(self, batch_id, when):
+        """Updates the given batch to be superseded
+
+        :param batch_id: The batch ID to supersede
+        :type batch_id: list
+        :param when: The time that the batch was superseded
+        :type when: :class:`datetime.datetime`
+        """
+
+        self.filter(id=batch_id).update(is_superseded=True, superseded=when, last_modified=now())
 
     # TODO: remove this when v5 REST API is removed
     def schedule_recipes(self, batch_id):
@@ -538,11 +572,13 @@ class Batch(models.Model):
     :keyword total_count: An approximation of the total number of batch recipes that should be created by this batch.
     :type total_count: :class:`django.db.models.IntegerField`
 
+    :keyword is_superseded: Indicates whether this batch has been superseded (re-processed by another batch)
+    :type is_superseded: :class:`django.db.models.BooleanField`
     :keyword root_batch: The first (root) batch in this chain of iterative batches. This field will be null for the
         first batch in the chain.
     :type root_batch: :class:`django.db.models.ForeignKey`
-    :keyword prev_batch: The previous batch that was re-processed by this batch
-    :type prev_batch: :class:`django.db.models.ForeignKey`
+    :keyword superseded_batch: The superseded (previous) batch that was re-processed by this batch
+    :type superseded_batch: :class:`django.db.models.OneToOneField`
 
     :keyword jobs_total: The total count of all jobs within the batch
     :type jobs_total: :class:`django.db.models.IntegerField`
@@ -569,6 +605,8 @@ class Batch(models.Model):
 
     :keyword created: When the batch was created
     :type created: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this batch was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the batch was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -602,10 +640,11 @@ class Batch(models.Model):
     total_count = models.IntegerField(default=0)
 
     # Fields for linking iterative batches together
+    is_superseded = models.BooleanField(default=False)
     root_batch = models.ForeignKey('batch.Batch', related_name='linked_batches', blank=True, null=True,
                                    on_delete=models.PROTECT)
-    prev_batch = models.ForeignKey('batch.Batch', related_name='next_batch', blank=True, null=True,
-                                   on_delete=models.PROTECT)
+    superseded_batch = models.OneToOneField('batch.Batch', related_name='next_batch', blank=True, null=True,
+                                            on_delete=models.PROTECT)
 
     # Metrics fields
     jobs_total = models.IntegerField(default=0)
@@ -621,6 +660,7 @@ class Batch(models.Model):
     recipes_completed = models.IntegerField(default=0)
 
     created = models.DateTimeField(auto_now_add=True)
+    superseded = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = BatchManager()

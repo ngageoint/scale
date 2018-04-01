@@ -25,8 +25,9 @@ class BatchSerializerV6(BatchBaseSerializerV6):
     recipe_type_rev = RecipeTypeRevisionBaseSerializer()
     event = TriggerEventBaseSerializer()
 
+    is_superseded = serializers.BooleanField()
     root_batch = BatchBaseSerializerV6()
-    prev_batch = BatchBaseSerializerV6()
+    superseded_batch = BatchBaseSerializerV6()
 
     is_creation_done = serializers.BooleanField()
     jobs_total = serializers.IntegerField()
@@ -42,6 +43,7 @@ class BatchSerializerV6(BatchBaseSerializerV6):
     recipes_completed = serializers.IntegerField()
 
     created = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
 
