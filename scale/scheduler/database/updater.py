@@ -6,7 +6,6 @@ import logging
 from django.db import connection, transaction
 
 from batch.configuration.configuration import BatchConfiguration
-from batch.configuration.json.configuration_v6 import get_v6_configuration_json
 from batch.models import Batch
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
@@ -155,6 +154,7 @@ class DatabaseUpdater(object):
             if definition.priority is not None:
                 configuration = BatchConfiguration()
                 configuration.priority = definition.priority
+                from batch.configuration.json.configuration_v6 import get_v6_configuration_json
                 config_dict = get_v6_configuration_json(configuration).get_dict()
                 Batch.objects.filter(id=batch_id).update(configuration=config_dict)
                 logger.info('Batch with batch_id %d updated with new configuration', batch_id)
