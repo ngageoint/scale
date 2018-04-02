@@ -4,19 +4,27 @@ from __future__ import unicode_literals
 import logging
 
 import rest_framework.status as status
+from django.db import transaction
 from django.http.response import Http404
+from django.utils.timezone import now
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-import util.rest as rest_util
+from batch.configuration.exceptions import InvalidConfiguration
+from batch.configuration.json.configuration_v6 import BatchConfigurationV6
 from batch.definition.exceptions import InvalidDefinition
+from batch.definition.json.definition_v6 import BatchDefinitionV6
 from batch.definition.json.old.batch_definition import BatchDefinition as OldBatchDefinition
+from batch.messages.create_batch_recipes import create_batch_recipes_message
 from batch.models import Batch
 from batch.serializers import BatchDetailsSerializerV5, BatchDetailsSerializerV6, BatchSerializerV5, BatchSerializerV6
+from messaging.manager import CommandMessageManager
 from recipe.models import RecipeType
+from trigger.models import TriggerEvent
 from util.rest import BadParameter
+from util import rest as rest_util
 
 
 logger = logging.getLogger(__name__)
@@ -62,38 +70,15 @@ class BatchesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
-        title = rest_util.parse_string(request, 'title', required=False)
-        description = rest_util.parse_string(request, 'description', required=False)
 
-        # Make sure the recipe type exists
-        try:
-            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
-        except RecipeType.DoesNotExist:
-            raise BadParameter('Unknown recipe type: %i' % recipe_type_id)
+        if request.version == 'v6':
+            return self._create_v6(request)
+        elif request.version == 'v5':
+            return self._create_v5(request)
+        elif request.version == 'v4':
+            return self._create_v5(request)
 
-        # Validate the batch definition
-        definition_dict = rest_util.parse_dict(request, 'definition')
-        definition = None
-        try:
-            if definition_dict:
-                definition = OldBatchDefinition(definition_dict)
-                definition.validate(recipe_type)
-        except InvalidDefinition as ex:
-            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
-
-        # Create the batch
-        batch = Batch.objects.create_batch_old(recipe_type, definition, title=title, description=description)
-
-        # Fetch the full batch with details
-        try:
-            batch = Batch.objects.get_details_v5(batch.id)
-        except Batch.DoesNotExist:
-            raise Http404
-
-        url = reverse('batch_details_view', args=[batch.id], request=request)
-        serializer = BatchDetailsSerializerV5(batch)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+        raise Http404()
 
     def _list_v5(self, request):
         """The v5 version for retrieving batches
@@ -147,6 +132,90 @@ class BatchesView(ListCreateAPIView):
         page = self.paginate_queryset(batches)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+    def _create_v5(self, request):
+        """The v5 version for creating batches
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+
+        # Make sure the recipe type exists
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise BadParameter('Unknown recipe type: %i' % recipe_type_id)
+
+        # Validate the batch definition
+        definition_dict = rest_util.parse_dict(request, 'definition')
+        definition = None
+        try:
+            if definition_dict:
+                definition = OldBatchDefinition(definition_dict)
+                definition.validate(recipe_type)
+        except InvalidDefinition as ex:
+            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+
+        # Create the batch
+        batch = Batch.objects.create_batch_old(recipe_type, definition, title=title, description=description)
+
+        # Fetch the full batch with details
+        try:
+            batch = Batch.objects.get_details_v5(batch.id)
+        except Batch.DoesNotExist:
+            raise Http404
+
+        url = reverse('batch_details_view', args=[batch.id], request=request)
+        serializer = BatchDetailsSerializerV5(batch)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
+
+    def _create_v6(self, request):
+        """The v6 version for creating batches
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        definition_dict = rest_util.parse_dict(request, 'definition')
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+
+        # Make sure the recipe type exists
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise BadParameter('Unknown recipe type: %i' % recipe_type_id)
+
+        # Validate and create the batch
+        try:
+            definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
+            configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
+            with transaction.atomic():
+                event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
+                batch = Batch.objects.create_batch_v6(title, description, recipe_type, event, definition,
+                                                      configuration=configuration)
+                CommandMessageManager().send_messages([create_batch_recipes_message(batch.id)])
+        except InvalidDefinition as ex:
+            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+        except InvalidConfiguration as ex:
+            raise BadParameter('Batch configuration invalid: %s' % unicode(ex))
+
+        # Fetch the full batch with details
+        batch = Batch.objects.get_details_v6(batch.id)
+
+        url = reverse('batch_details_view', args=[batch.id], request=request)
+        serializer = BatchDetailsSerializerV6(batch)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers={'Location': url})
 
 
 class BatchDetailsView(RetrieveAPIView):

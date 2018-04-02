@@ -99,7 +99,8 @@ class BatchManager(models.Manager):
 
     def create_batch_v6(self, title, description, recipe_type, event, definition, configuration=None):
         """Creates a new batch that will contain a collection of recipes to process. The definition and configuration
-        will be stored in version 6 of their respective schemas.
+        will be stored in version 6 of their respective schemas. This method will only create the batch, not its
+        recipes. To create the batch's recipes, a CreateBatchRecipes message needs to be sent to the messaging backend.
 
         :param title: The human-readable name of the batch
         :type title: string

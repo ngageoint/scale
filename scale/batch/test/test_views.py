@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+from mock import patch
 from rest_framework import status
 
 import job.test.utils as job_test_utils
@@ -13,6 +14,7 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
+from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch
 
 
@@ -244,7 +246,7 @@ class TestBatchesViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestBatchesViewV6(TestCase):
+class TestBatchesViewV6(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -256,7 +258,7 @@ class TestBatchesViewV6(TestCase):
         self.batch_2 = batch_test_utils.create_batch(recipe_type=self.recipe_type_2, is_creation_done=True)
 
     def test_invalid_version(self):
-        """Tests calling the batches view with an invalid version"""
+        """Tests calling the batches view with an invalid REST API version"""
 
         url = '/v1/batches/'
         response = self.client.generic('GET', url)
@@ -330,6 +332,117 @@ class TestBatchesViewV6(TestCase):
         self.assertEqual(result['results'][1]['id'], self.batch_2.superseded_batch_id)
         self.assertEqual(result['results'][2]['id'], self.batch_1.id)
         self.assertEqual(result['results'][3]['id'], self.batch_1.superseded_batch_id)
+
+    def test_create_invalid_version(self):
+        """Tests creating a new batch with an invalid REST API version"""
+
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_1.id,
+            'definition': {}
+        }
+
+        url = '/v1/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_create_invalid_recipe_type(self):
+        """Tests creating a new batch with an invalid recipe type"""
+
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': 999999,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': self.batch_1.root_batch_id
+                }
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_invalid_definition(self):
+        """Tests creating a new batch with an invalid definition"""
+
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_1.id,
+            'definition': {
+                'previous_batch': {
+                    'bad_definition': 'foo'
+                }
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_invalid_configuration(self):
+        """Tests creating a new batch with an invalid configuration"""
+
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_1.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': self.batch_1.root_batch_id
+                }
+            },
+            'configuration': {
+                'bad-config': 'foo'
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    @patch('batch.views.CommandMessageManager')
+    @patch('batch.views.create_batch_recipes_message')
+    def test_create_successful(self, mock_create, mock_msg_mgr):
+        """Tests creating a new batch successfully"""
+
+        msg = CreateBatchRecipes()
+        mock_create.return_value = msg
+
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        json_data = {
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'recipe_type_id': self.recipe_type_1.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': self.batch_1.root_batch_id
+                }
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+
+        url = '/v6/batches/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
+        new_batch_id = result['id']
+
+        # Check location header
+        self.assertTrue('/v6/batches/%d/' % new_batch_id in response['Location'])
+        # Check that create_batch_recipes message was created and sent
+        mock_create.assert_called_with(new_batch_id)
+        # Check correct root batch ID in new batch
+        self.assertEqual(result['root_batch']['id'], self.batch_1.root_batch_id)
 
 
 class TestBatchDetailsViewV5(TestCase):
