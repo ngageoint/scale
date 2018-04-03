@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
-from django.utils.timezone import now
+from django.utils.timezone import now, timezone
 
 from messaging.messages.message import CommandMessage
 from storage.models import ScaleFile
@@ -17,11 +17,11 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_delete_files_messages(file_ids, purge):
+def create_delete_files_messages(files, purge):
     """Creates messages to delete the given files
 
     :param file_ids: The list of file IDs to delete
-    :type file_ids: [int]
+    :type file_ids: [collections.namedtuple]
     :param purge: Boolean value to determine if the files should be purged
     :type purge: bool
     :return: The list of messages
@@ -31,7 +31,7 @@ def create_delete_files_messages(file_ids, purge):
     messages = []
 
     message = None
-    for file_id in file_ids:
+    for scale_file in files:
         if not message:
             message = DeleteFiles()
             message.purge = purge
@@ -39,7 +39,7 @@ def create_delete_files_messages(file_ids, purge):
             messages.append(message)
             message = DeleteFiles()
             message.purge = purge
-        message.add_file(file_id)
+        message.add_file(scale_file.id)
     if message:
         messages.append(message)
 
@@ -97,13 +97,8 @@ class DeleteFiles(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        with transaction.atomic():
-            if self.purge:
-                ScaleFile.objects.filter(id__in=self._file_ids).delete()
-            else:
-                scale_files = ScaleFile.objects.filter(id__in=self._file_ids)
-                for scale_file in scale_files:
-                    scale_file.set_deleted()
-                    scale_file.save()
-
+        if self.purge:
+            ScaleFile.objects.filter(id__in=self._file_ids).delete()
+        else:
+            ScaleFile.objects.filter(id__in=self._file_ids).update(is_deleted=False, deleted=timezone.now())
         return True
