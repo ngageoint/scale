@@ -9,10 +9,10 @@ import sys
 logger = logging.getLogger(__name__)
 
 
-def destroy_file(files, job_id, volume_path, broker):
-    """Deletes the given file within a workspace.
+def destroy_files(files, job_id, volume_path, broker):
+    """Deletes the given files within a workspace.
 
-    :param files: List of dicts containing path and ID of the file to delete.
+    :param files: List of named tuples containing path and ID of the file to delete.
     :type files: [collections.namedtuple]
     :param job_id: The ID of the job associated with the file
     :type job_id: int
