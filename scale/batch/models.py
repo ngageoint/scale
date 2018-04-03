@@ -160,6 +160,37 @@ class BatchManager(models.Manager):
 
         return batch
 
+    def edit_batch_v6(self, batch, title=None, description=None, configuration=None):
+        """Edits the given batch to update any of the given fields. The configuration will be stored in version 6 of its
+        schemas.
+
+        :param batch: The batch to edit
+        :type batch: :class:`batch.models.Batch`
+        :param title: The human-readable name of the batch
+        :type title: string
+        :param description: A human-readable description of the batch
+        :type description: string
+        :param configuration: The batch configuration
+        :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
+
+        :raises :class:`batch.configuration.exceptions.InvalidConfiguration`: If the configuration is invalid
+        """
+
+        update_fields = {}
+
+        if title is not None:
+            update_fields['title'] = title
+        if description is not None:
+            update_fields['description'] = description
+
+        if configuration:
+            configuration.validate(batch)
+            configuration_dict = convert_configuration_to_v6(configuration).get_dict()
+            update_fields['configuration'] = configuration_dict
+
+        if update_fields:
+            Batch.objects.filter(id=batch.id).update(**update_fields)
+
     def get_batches_v5(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
                        order=None):
         """Returns a list of batches within the given time range.

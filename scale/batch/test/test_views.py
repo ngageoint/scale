@@ -568,6 +568,94 @@ class TestBatchDetailsViewV6(TestCase):
         self.assertDictEqual(result['definition'], {})
         self.assertDictEqual(result['configuration'], {})
 
+    def test_edit_invalid_version(self):
+        """Tests editing a batch with an invalid REST API version"""
+
+        batch = batch_test_utils.create_batch()
+
+        json_data = {
+            'title': 'New Title',
+            'description': 'New Description',
+            'configuration': {
+                'priority': 200
+            }
+        }
+
+        url = '/v1/batches/%d/' % batch.id
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_edit_invalid_batch(self):
+        """Tests editing an invalid batch ID"""
+
+        json_data = {
+            'title': 'New Title',
+            'description': 'New Description',
+            'configuration': {
+                'priority': 200
+            }
+        }
+
+        url = '/v6/batches/%d/' % 999999
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_edit_invalid_configuration(self):
+        """Tests editing a batch with an invalid configuration"""
+
+        batch = batch_test_utils.create_batch()
+
+        json_data = {
+            'title': 'New Title',
+            'description': 'New Description',
+            'configuration': {
+                'bad': 'foo'
+            }
+        }
+
+        url = '/v6/batches/%d/' % batch.id
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_edit_successful(self):
+        """Tests editing a batch successfully"""
+
+        batch = batch_test_utils.create_batch()
+
+        json_data = {
+            'title': 'New Title',
+            'description': 'New Description',
+            'configuration': {
+                'priority': 267
+            }
+        }
+
+        url = '/v6/batches/%d/' % batch.id
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+        batch = Batch.objects.get(id=batch.id)
+        self.assertEqual(batch.title, 'New Title')
+        self.assertEqual(batch.description, 'New Description')
+        self.assertEqual(batch.get_configuration().priority, 267)
+
+    def test_edit_put_not_allowed(self):
+        """Tests editing a batch with HTTP PUT to ensure it is not allowed"""
+
+        batch = batch_test_utils.create_batch()
+
+        json_data = {
+            'title': 'New Title',
+            'description': 'New Description',
+            'configuration': {
+                'priority': 267
+            }
+        }
+
+        url = '/v6/batches/%d/' % batch.id
+        response = self.client.generic('PUT', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, 405, response.content)
+
 
 class TestBatchesValidationView(TestCase):
 

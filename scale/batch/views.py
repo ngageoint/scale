@@ -7,7 +7,7 @@ import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
 from django.utils.timezone import now
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 
 class BatchesView(ListCreateAPIView):
-    """This view is the endpoint for retrieving a list of batches"""
+    """This view is the endpoint for the list of batches"""
     queryset = Batch.objects.all()
 
     def get_serializer_class(self):
@@ -218,9 +218,10 @@ class BatchesView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers={'Location': url})
 
 
-class BatchDetailsView(RetrieveAPIView):
-    """This view is the endpoint for retrieving a detailed batch"""
+class BatchDetailsView(RetrieveUpdateAPIView):
+    """This view is the endpoint for a specific batch"""
     queryset = Batch.objects.all()
+    http_method_names = ['get', 'patch', 'head', 'options']
 
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API"""
@@ -249,6 +250,22 @@ class BatchDetailsView(RetrieveAPIView):
             return self._retrieve_v5(batch_id)
         elif request.version == 'v4':
             return self._retrieve_v5(batch_id)
+
+        raise Http404()
+
+    def update(self, request, batch_id, **kwargs):
+        """Updates the given batch
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param batch_id: the batch id
+        :type batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6':
+            return self._update_v6(request, batch_id)
 
         raise Http404()
 
@@ -285,6 +302,38 @@ class BatchDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(batch)
         return Response(serializer.data)
+
+    def _update_v6(self, request, batch_id):
+        """The v6 version for updating a batch
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param batch_id: the batch id
+        :type batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+
+        try:
+            batch = Batch.objects.get(id=batch_id)
+        except Batch.DoesNotExist:
+            raise Http404()
+
+        # Validate and create the batch
+        try:
+            configuration = None
+            if configuration_dict:
+                configuration_json = BatchConfigurationV6(configuration=configuration_dict, do_validate=True)
+                configuration = configuration_json.get_configuration()
+            Batch.objects.edit_batch_v6(batch, title=title, description=description, configuration=configuration)
+        except InvalidConfiguration as ex:
+            raise BadParameter('Batch configuration invalid: %s' % unicode(ex))
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class BatchesValidationView(APIView):
