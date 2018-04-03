@@ -180,6 +180,135 @@ Response: 200 OK
 | last_modified           | ISO-8601 Datetime | When the batch was last updated                                               |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
+.. _rest_v6_batch_create:
+
+v6 Create Batch
+===============
+
+**Example POST /v6/batches/ API call**
+
+Request: POST http://.../v6/batches/
+
+.. code-block:: javascript
+
+   {
+      "title": "My Batch",
+      "description": "My Batch Description",
+      "recipe_type_id": 208,
+      "definition": {
+         "previous_batch": {
+            "root_batch_id": 104
+         }
+      },
+      "configuration": {
+         "priority": 100
+      }
+   }
+
+Response: 201 Created
+Headers:
+Location http://.../v6/batches/105/
+
+.. code-block:: javascript
+
+   {
+      "id": 105,
+      "title": "My Batch",
+      "description": "My Batch Description",
+      "recipe_type": {
+         "id": 208,
+         "name": "my-recipe-type",
+         "title": "My Recipe Type",
+         "description": "My Recipe Type Description"
+      },
+      "recipe_type_rev": {
+         "id": 4,
+         "recipe_type": {
+            "id": 208
+         },
+         "revision_num": 1,
+         "definition": {...},
+         "created": "1970-01-01T00:00:00Z"
+      },
+      "event": {
+         "id": 4000,
+         "type": "USER",
+         "rule": null,
+         "occurred": "1970-01-01T00:00:00Z",
+         "description": {
+            "user": "Anonymous"
+         }
+      },
+      "is_superseded": true,
+      "root_batch": {
+         "id": 104,
+         "title": "My Superseded Batch",
+         "description": "My Superseded Batch Description"
+      },
+      "superseded_batch": {
+         "id": 104,
+         "title": "My Superseded Batch",
+         "description": "My Superseded Batch Description"
+      },
+      "is_creation_done": true,
+      "jobs_total": 10,
+      "jobs_pending": 0,
+      "jobs_blocked": 0,
+      "jobs_queued": 1,
+      "jobs_running": 3,
+      "jobs_failed": 0,
+      "jobs_completed": 6,
+      "jobs_canceled": 0,
+      "recipes_estimated": 2,
+      "recipes_total": 2,
+      "recipes_completed": 1,
+      "created": "1970-01-01T00:00:00Z",
+      "superseded": "1970-01-01T00:00:00Z",
+      "last_modified": "1970-01-01T00:00:00Z",
+      "definition": {
+         "previous_batch": {
+            "root_batch_id": 104
+         }
+      },
+      "configuration": {
+         "priority": 100
+      }
+   }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Create Batch**                                                                                                        |
++=========================================================================================================================+
+| Creates a new batch with the given fields                                                                               |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /batches/                                                                                                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| title               | String            | Optional | The human-readable name of the batch                               |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| description         | String            | Optional | A human-readable description of the batch                          |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| recipe_type_id      | Integer           | Required | The ID of the recipe type for this batch's recipes                 |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| definition          | JSON Object       | Required | JSON definition for processing the batch                           |
+|                     |                   |          | See :ref:`rest_v6_batch_json_definition`                           |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| configuration       | JSON Object       | Required | JSON configuration for processing the batch                        |
+|                     |                   |          | See :ref:`rest_v6_batch_json_configuration`                        |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL for retrieving the details of the newly created batch                                          |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_batch_details`           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
 .. _rest_v6_batch_details:
 
 v6 Retrieve Batch Details
@@ -249,7 +378,7 @@ Response: 200 OK
       "last_modified": "1970-01-01T00:00:00Z",
       "definition": {
          "previous_batch": {
-            "batch_id": 104
+            "root_batch_id": 104
          }
       },
       "configuration": {
@@ -322,10 +451,10 @@ Response: 200 OK
 | last_modified           | ISO-8601 Datetime | When the batch was last updated                                               |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | definition              | JSON Object       | The definition of the batch                                                   |
-|                         |                   | See :ref:`Batch Definition Schema <rest_v6_batch_json_definition>`            |
+|                         |                   | See :ref:`rest_v6_batch_json_definition`                                      |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | configuration           | JSON Object       | The configuration of the batch                                                |
-|                         |                   | See :ref:`Batch Configuration Schema <rest_v6_batch_json_configuration>`      |
+|                         |                   | See :ref:`rest_v6_batch_json_configuration`                                   |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_json_definition:
