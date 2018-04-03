@@ -28,7 +28,7 @@ def destroy_files(files, job_id, volume_path, broker):
         broker.delete_file(volume_path=volume_path, files=files, update_model=False)
     except:
         logger.exception('There was an error when trying to delete files for job %i', job_id)
-        sys.exit(10)
+        return 10
 
     logger.info('A file associated with job %i was deleted', job_id)
-    return
+    return 0

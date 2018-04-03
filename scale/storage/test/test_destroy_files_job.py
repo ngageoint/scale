@@ -41,13 +41,11 @@ class TestDestroyFiles(TestCase):
         file_2 = storage_test_utils.create_file(file_path=file_path_2)
 
         # Call function
-        with self.assertRaises(SystemExit) as test_1:
-            destroy_files([file_1], job_1.id, volume_path, self.broker)
-        self.assertEqual(test_1.exception.code, 0)
+        test_1 = destroy_files([file_1], job_1.id, volume_path, self.broker)
+        self.assertEqual(test_1, 0)
 
-        with self.assertRaises(SystemExit) as test_2:
-            destroy_files([file_2], job_1.id, volume_path, self.broker)
-        self.assertEqual(test_2.exception.code, 0)
+        test_2 = destroy_files([file_2], job_1.id, volume_path, self.broker)
+        self.assertEqual(test_2, 0)
 
         # Check results
         two_calls = [call(full_path_file_1), call(full_path_file_2)]

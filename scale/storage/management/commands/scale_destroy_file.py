@@ -13,6 +13,7 @@ import storage.destroy_file_job as destroy_file_job
 from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import Workspace
 from messaging.manager import CommandMessageManager
+from storage import destroy_files_job
 from storage.messages.delete_files import create_delete_files_messages
 
 logger = logging.getLogger(__name__)
@@ -60,14 +61,17 @@ class Command(BaseCommand):
         logger.info('File IDs: %s', [x.id for x in files])
         logger.info('Job ID: %i', job_id)
 
-        destroy_file_job.destroy_file(files=files, job_id=job_id, volume_path=workspace.volume_path, broker=broker)
+        destroy_job_return = destroy_files_job.destroy_files(files=files, job_id=job_id,
+                                                             volume_path=workspace.volume_path,
+                                                             broker=broker)
 
-        messages = create_delete_files_messages(files=files, purge=purge)
-        CommandMessageManager().send_messages(messages)
+        if destroy_files_job == 0:
+            messages = create_delete_files_messages(files=files, purge=purge)
+            CommandMessageManager().send_messages(messages)
 
-        logger.info('Command completed: scale_destroy_file')
+            logger.info('Command completed: scale_destroy_file')
 
-        return 0
+        return destroy_job_return
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.
