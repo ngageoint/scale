@@ -15,7 +15,7 @@ class Command(BaseCommand):
     """Command that deletes a stored file from the remote file system."""
 
     help = 'Deletes a stored file from the remote file system'
-    
+
     def add_arguments(self, parser):
         parser.add_argument('file_id', type=int,
                             help='ID of the ScaleFile object to delete.')

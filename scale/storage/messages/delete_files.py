@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
-from django.utils.timezone import now, timezone
+from django.utils import timezone
 
 from messaging.messages.message import CommandMessage
 from storage.models import ScaleFile
