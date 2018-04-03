@@ -18,16 +18,17 @@
 			"interface": {
 			     "version": "1.4",
                  "command": "",
-			     "command_arguments": "scale_destroy_file ${-f :file_paths} ${-j :job_id}",
+			     "command_arguments": "scale_destroy_file ${-f :file_paths} ${-j :job_id} ${-w :workspace} ${-p :purge}",
                  "input_data": [ { "name": "file_paths", "type": "property" },
-                                 { "name": "job_id", "type": "property" } ]
+								 { "name": "job_id", "type": "property" },
+								 { "name": "workspace", "type": "property" },
+								 { "name": "purge", "type": "property" } ]
 			},
 			"revision_num": 1,
             "error_mapping": {
 				"version": "1.0",
 				"exit_codes": {
-					"10": "filesystem-io",
-					"20": "file-not-found"
+					"10": "filesystem-io"
 				}
 			},
 			"priority": 10,
