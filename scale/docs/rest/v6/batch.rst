@@ -527,7 +527,9 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 +=========================+===================+==========+====================================================================+
 | previous_batch          | JSON object       | Optional | Indicates that the batch should re-process the recipes from a      |
 |                         |                   |          | previous batch. This will link the previous and new batch together |
-|                         |                   |          | so that their metrics can be easily compared.                      |
+|                         |                   |          | so that their metrics can be easily compared. The previous batch   |
+|                         |                   |          | must have the same recipe type as the new batch and must have      |
+|                         |                   |          | finished creating all of its recipes.                              |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
 | root_batch_id           | Integer           | Required | The root batch ID of the previous batch. Scale will find the last  |
 |                         |                   |          | (non-superseded) batch with this root ID and it will be            |

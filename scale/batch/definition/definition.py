@@ -15,6 +15,23 @@ class BatchDefinition(object):
         self.job_names = []
         self.all_jobs = False
 
+    def estimate_recipe_total(self, batch):
+        """Estimates the number of recipes that will be created for the given batch. The given batch must have all of
+        its related fields populated, though id and root_batch_id may be None.
+
+        :param batch: The batch model
+        :type batch: :class:`batch.models.Batch`
+        :returns: The estimated number of recipes that will be created by the batch
+        :rtype: int
+        """
+
+        estimate = 0
+
+        if batch.superseded_batch:
+            estimate += batch.superseded_batch.recipes_total
+
+        return estimate
+
     def validate(self, batch):
         """Validates the given batch to make sure it is valid with respect to this batch definition. The given batch
         must have all of its related fields populated, though id and root_batch_id may be None.

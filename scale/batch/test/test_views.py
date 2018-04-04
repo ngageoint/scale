@@ -416,7 +416,7 @@ class TestBatchesViewV6(TransactionTestCase):
         msg = CreateBatchRecipes()
         mock_create.return_value = msg
 
-        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True)
+        Batch.objects.filter(id=self.batch_1.id).update(is_creation_done=True, recipes_total=777)
         json_data = {
             'title': 'batch-title-test',
             'description': 'batch-description-test',
@@ -443,6 +443,8 @@ class TestBatchesViewV6(TransactionTestCase):
         mock_create.assert_called_with(new_batch_id)
         # Check correct root batch ID in new batch
         self.assertEqual(result['root_batch']['id'], self.batch_1.root_batch_id)
+        # Check correct recipe estimation count
+        self.assertEqual(result['recipes_estimated'], 777)
 
 
 class TestBatchDetailsViewV5(TestCase):

@@ -144,6 +144,7 @@ class BatchManager(models.Manager):
             definition.validate(batch)
             configuration.validate(batch)
 
+            batch.recipes_estimated = definition.estimate_recipe_total(batch)
             batch.save()
             if batch.root_batch_id is None:  # Batches with no superseded batch are their own root
                 batch.root_batch_id = batch.id
