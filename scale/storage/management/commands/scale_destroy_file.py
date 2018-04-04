@@ -67,7 +67,7 @@ class Command(BaseCommand):
                                                              volume_path=workspace_config['broker']['host_path'],
                                                              broker=broker)
 
-        if destroy_files_job == 0:
+        if destroy_job_return == 0:
             messages = create_delete_files_messages(files=files, purge=purge)
             CommandMessageManager().send_messages(messages)
 
