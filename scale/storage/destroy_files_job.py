@@ -19,8 +19,8 @@ def destroy_files(files, job_id, volume_path, broker):
     :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
     :type volume_path: string
-    :param workspace: The storage broker
-    :type workspace: `storage.brokers.broker.Broker`
+    :param broker: The storage broker
+    :type broker: `storage.brokers.broker.Broker`
     """
 
     logger.info('Deleting %i files', len(files))
