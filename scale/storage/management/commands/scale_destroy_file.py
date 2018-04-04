@@ -1,6 +1,7 @@
 """Defines the command line method for running a destroy file task"""
 from __future__ import unicode_literals
 
+import ast
 import json
 import logging
 import signal
@@ -11,7 +12,7 @@ from django.core.management.base import BaseCommand
 
 import storage.destroy_file_job as destroy_file_job
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import Workspace
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from messaging.manager import CommandMessageManager
 from storage import destroy_files_job
 from storage.messages.delete_files import create_delete_files_messages
@@ -47,22 +48,23 @@ class Command(BaseCommand):
 
         files = options.get('files')
         job_id = options.get('job_id')
-        workspace_config = options.get('workspace')
+        workspace_config = ast.literal_eval(options.get('workspace'))
         purge = options.get('purge')
 
         scale_file = namedtuple('ScaleFile', ['id', 'file_path'])
         files = [scale_file(id=int(x['id']), file_path=x['file_path']) for x in files]
 
-        workspace = Workspace(workspace_config)
+        workspace = WorkspaceConfiguration(workspace_config)
         workspace.validate_broker()
-        broker = get_broker(workspace.broker_type)
+        workspace_config = workspace.get_dict()
+        broker = get_broker(workspace_config['broker']['type'])
 
         logger.info('Command starting: scale_destroy_file')
         logger.info('File IDs: %s', [x.id for x in files])
         logger.info('Job ID: %i', job_id)
 
         destroy_job_return = destroy_files_job.destroy_files(files=files, job_id=job_id,
-                                                             volume_path=workspace.volume_path,
+                                                             volume_path=workspace_config['broker']['host_path'],
                                                              broker=broker)
 
         if destroy_files_job == 0:

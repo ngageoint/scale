@@ -9,6 +9,7 @@ from mock import call, patch
 from job.test import utils as job_test_utils
 from storage.brokers.host_broker import HostBroker
 from storage.destroy_files_job import destroy_files
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.test import utils as storage_test_utils
 
 
@@ -29,9 +30,11 @@ class TestCallScaleDestroyFile(TestCase):
             return 0
         mock_destroy.side_effect = new_destroy
 
-        files_str = '-f "{"file_path":"/dir/file.name", "id":"12300"} {"file_path":"/dir/file.txt", "id":"32100"}"'
+        config = WorkspaceConfiguration(self.workspace.json_config)
+
+        files_str = '-f {"file_path":"/dir/file.name", "id":"12300"}'
         job_id_str = '-j %i' % (self.job_1.id)
-        workspace_str = '-w %s' % (self.workspace.get_dict)
+        workspace_str = '-w "%s"' % (config.get_dict())
         purge_str = '-p False'
 
         django.core.management.call_command('scale_destroy_file', files_str, job_id_str, workspace_str, purge_str)
