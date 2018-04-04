@@ -59,7 +59,7 @@ class Command(BaseCommand):
         workspace_config = workspace.get_dict()
         broker = get_broker(workspace_config['broker']['type'])
 
-        logger.info('Command starting: scale_destroy_file')
+        logger.info('Command starting: scale_delete_files')
         logger.info('File IDs: %s', [x.id for x in files])
         logger.info('Job ID: %i', job_id)
 
@@ -71,7 +71,7 @@ class Command(BaseCommand):
             messages = create_delete_files_messages(files=files, purge=purge)
             CommandMessageManager().send_messages(messages)
 
-            logger.info('Command completed: scale_destroy_file')
+            logger.info('Command completed: scale_delete_files')
 
         return destroy_job_return
 

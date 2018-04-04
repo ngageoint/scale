@@ -24,7 +24,7 @@ class TestCallScaleDestroyFile(TestCase):
 
     @patch('storage.destroy_files_job.destroy_files')
     @patch('messaging.manager.CommandMessageManager.send_messages')
-    def test_scale_destroy_file(self, mock_message, mock_destroy):
+    def test_scale_delete_files(self, mock_message, mock_destroy):
         """Tests calling Scale to delete files"""
 
         def new_destroy(files, job_id, volume_path, broker):
@@ -38,6 +38,6 @@ class TestCallScaleDestroyFile(TestCase):
         workspace_str = '-w "%s"' % (config.get_dict())
         purge_str = '-p False'
 
-        msg = django.core.management.call_command('scale_destroy_file', files_str, job_id_str, workspace_str, purge_str)
+        msg = django.core.management.call_command('scale_delete_files', files_str, job_id_str, workspace_str, purge_str)
         
         self.assertEqual(msg, 0)
