@@ -10,7 +10,7 @@ from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 
-import storage.destroy_file_job as destroy_file_job
+import storage.destroy_files_job as destroy_files_job
 from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from messaging.manager import CommandMessageManager
