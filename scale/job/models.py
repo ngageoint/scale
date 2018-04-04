@@ -17,7 +17,6 @@ import util.parse
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
-from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults as JobResults_1_0
@@ -26,7 +25,6 @@ from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
-from job.seed.exceptions import SeedUnsupportedInLegacyAPI
 from job.seed.manifest import SeedManifest
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
@@ -2796,7 +2794,7 @@ class JobType(models.Model):
     uses_docker = models.NullBooleanField(default=True) # TODO: remove for v6
     docker_privileged = models.NullBooleanField(default=False) # TODO: remove for v6
     docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
+    interface = django.contrib.postgres.fields.JSONField(default=dict) # TODO: rename to manifest for v6
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
     docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove for v6
     revision_num = models.IntegerField(default=1, null=True) # TODO: remove for v6

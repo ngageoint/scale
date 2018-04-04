@@ -28,7 +28,7 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
                              OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer,
-                             OldJobSerializer)
+                             OldJobSerializer, OldJobTypeDetailsSerializer)
 from messaging.manager import CommandMessageManager
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
@@ -48,6 +48,7 @@ logger = logging.getLogger(__name__)
 class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
+
     serializer_class = JobTypeSerializer
 
     def list(self, request):
@@ -90,8 +91,12 @@ class JobTypesView(ListCreateAPIView):
         version = rest_util.parse_string(request, 'version', required=False)
         title = None
 
-        # Validate the job interface
-        interface_dict = rest_util.parse_dict(request, 'interface')
+        # Validate the job interface / manifest
+        # TODO: Remove all reference to interface in models and views come v6 API
+        interface_dict = manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
+        if not interface_dict:
+            interface_dict = rest_util.parse_dict(request, 'interface')
+
         interface = None
 
         try:
@@ -101,7 +106,7 @@ class JobTypesView(ListCreateAPIView):
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
         # Pull down top-level fields from Seed Interface
-        if isinstance(interface, SeedManifest):
+        if manifest_dict:
             if not name:
                 name = interface.get_name()
 
@@ -198,14 +203,30 @@ class JobTypesView(ListCreateAPIView):
             raise Http404
 
         url = reverse('job_type_details_view', args=[job_type.id], request=request)
-        serializer = JobTypeDetailsSerializer(job_type)
+
+        # TODO: remove conditional and un-comment serializer instantiation when REST API v5 is removed
+        # serializer = JobTypeDetailsSerializer(job_type)
+        if self.request.version == 'v6':
+            serializer = JobTypeDetailsSerializer(job_type)
+        else:
+            serializer = OldJobTypeDetailsSerializer(job_type)
+
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
 class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
     queryset = JobType.objects.all()
-    serializer_class = JobTypeDetailsSerializer
+
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    # serializer_class =     JobTypeDetailsSerializer
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobTypeDetailsSerializer
+        else:
+            return OldJobTypeDetailsSerializer
 
     def get(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
@@ -368,17 +389,30 @@ class JobTypesValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        name = rest_util.parse_string(request, 'name')
-        version = rest_util.parse_string(request, 'version')
+        name = rest_util.parse_string(request, 'name', required=False)
+        version = rest_util.parse_string(request, 'version', required=False)
 
         # Validate the job interface
-        interface_dict = rest_util.parse_dict(request, 'interface')
+        # TODO: Remove all reference to interface in models and views come v6 API
+        interface_dict = manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
+        if not interface_dict:
+            interface_dict = rest_util.parse_dict(request, 'interface')
+
         interface = None
+
         try:
             if interface_dict:
-                interface = JobInterface(interface_dict)
+                interface = JobInterfaceSunset.create(interface_dict)
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+
+        # Pull down top-level fields from Seed Interface
+        if manifest_dict:
+            if not name:
+                name = interface.get_name()
+
+            if not version:
+                version = interface.get_job_version()
 
         # Validate the job configuration
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)

@@ -4,7 +4,6 @@ import logging
 import rest_framework.serializers as serializers
 
 from job.models import Job
-from job.deprecation import JobInterfaceSunset
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
@@ -89,12 +88,11 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
     category = serializers.CharField()
 
 
-class JobTypeDetailsSerializer(JobTypeSerializer):
+class BaseJobTypeDetailsSerializer(JobTypeSerializer):
     """Converts job type model fields to REST output."""
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.JSONField(default=dict)
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
@@ -104,6 +102,16 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     job_counts_6h = JobTypeStatusCountsSerializer(many=True)
     job_counts_12h = JobTypeStatusCountsSerializer(many=True)
     job_counts_24h = JobTypeStatusCountsSerializer(many=True)
+
+
+class JobTypeDetailsSerializer(BaseJobTypeDetailsSerializer):
+    """Converts job type model fields to REST output for Seed type jobs."""
+    manifest = serializers.JSONField(default=dict, source='interface')
+
+
+class OldJobTypeDetailsSerializer(BaseJobTypeDetailsSerializer):
+    """Converts job type model fields to REST output for legacy job types."""
+    interface = serializers.JSONField(default=dict)
 
 
 class JobTypeStatusSerializer(serializers.Serializer):
@@ -146,6 +154,7 @@ class JobTypeRevisionBaseSerializer(ModelIdSerializer):
 class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
     interface = serializers.JSONField(default=dict)
+    manifest = serializers.JSONField(default=dict)
     created = serializers.DateTimeField()
 
 

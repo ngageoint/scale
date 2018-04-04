@@ -12,7 +12,7 @@ class JobInterfaceSunset(object):
         """Instantiate an instance of the JobInterface based on inferred type
 
         :param interface: deserialized JSON interface
-        :type interface: type
+        :type interface: dict
         :param do_validate: whether schema validation should be applied
         :type do_validate: bool
         :return: instance of the job interface appropriate for input data
