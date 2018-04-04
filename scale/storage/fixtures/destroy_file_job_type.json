@@ -36,7 +36,7 @@
 			"timeout": 3600,
 			"max_tries": 3,
 			"cpus_required": 0.5,
-			"mem_const_required": 5120.0,
+			"mem_const_required": 128.0,
             "shared_mem_required": 0.0,
 			"disk_out_const_required": 0.0,
 			"disk_out_mult_required": 0.0,
