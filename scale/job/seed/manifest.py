@@ -529,9 +529,8 @@ class SeedManifest(object):
 
     def _populate_resource_defaults(self):
         """populates the default values for any missing shared_resource values"""
-        for scalar in self.get_scalar_resources():
-            if 'required' not in scalar:
-                scalar['required'] = True
+
+        pass
 
     def _validate_mount_paths(self):
         """Ensures that all mount paths are valid
