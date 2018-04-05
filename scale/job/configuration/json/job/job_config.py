@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 import os
+from job.deprecation import JobInterfaceSunset
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -190,30 +191,31 @@ class JobConfiguration(object):
 
         return None
 
-    def validate(self, interface):
+    def validate(self, interface_dict):
         """Validates the configuration against the interface to find setting and mount usages
 
-        :param interface: The interface dict for the job type
-        :type interface: dict
+        :param interface_dict: The interface for the job type
+        :type interface_dict: dict
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
         """
 
         warnings = []
 
-        settings_to_delete = []
-        if 'settings' in self._configuration and 'settings' in interface:
-            interface_settings = interface['settings']
+        # TODO: In v6 remove sunset and just use SeedManifest class
+        interface = JobInterfaceSunset.create(interface_dict)
 
+        settings_to_delete = []
+        if 'settings' in self._configuration and interface.get_settings():
             # Remove settings not used in the interface
-            interface_setting_names = [setting['name'] for setting in interface_settings]
+            interface_setting_names = [setting['name'] for setting in interface.get_settings()]
             for setting_name in self._configuration['settings']:
                 if setting_name not in interface_setting_names:
                     warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
                     settings_to_delete.append({'name': setting_name, 'warning': warning_str})
 
-             # Detect any secrets and remove them as settings in configuration
-            interface_secret_names = [setting['name'] for setting in interface_settings if setting['secret']]
+            # Detect any secrets and remove them as settings in configuration
+            interface_secret_names = [setting['name'] for setting in interface.get_settings() if setting['secret']]
             for setting_name in interface_secret_names:
                 if setting_name in self._configuration['settings']:
                     if setting_name not in settings_to_delete:
@@ -231,11 +233,9 @@ class JobConfiguration(object):
                 warnings.append(ValidationWarning('settings', setting['warning']))
 
         mounts_to_delete = []
-        if 'mounts' in interface and 'mounts' in self._configuration:
-            interface_mounts = interface['mounts']
-
+        if interface.get_mounts() and 'mounts' in self._configuration:
             # Remove mounts not used in the interface
-            interface_mount_names = [mount['name'] for mount in interface_mounts]
+            interface_mount_names = [mount['name'] for mount in interface.get_mounts()]
             for mount_name, _mount_value in self._configuration['mounts'].items():
                 if mount_name not in interface_mount_names:
                     warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
@@ -250,6 +250,8 @@ class JobConfiguration(object):
         for mount in mounts_to_delete:
             del self._configuration['mounts'][mount['name']]
             warnings.append(ValidationWarning('mounts', mount['warning']))
+
+        logger.info(warnings)
 
         return warnings
 
