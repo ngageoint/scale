@@ -493,9 +493,6 @@ class SeedManifest(object):
         """populates the default values for any missing settings values"""
 
         for setting in self.get_settings():
-            if 'required' not in setting:
-                setting['required'] = True
-
             if 'secret' not in setting:
                 setting['secret'] = False
 
