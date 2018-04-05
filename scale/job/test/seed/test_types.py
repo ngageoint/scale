@@ -7,11 +7,16 @@ from django.test import TestCase
 from job.seed.results.outputs_json import SeedOutputsJson
 from mock import patch, mock_open
 
-from job.seed.types import SeedOutputJson
+from job.seed.types import SeedInputFiles, SeedOutputJson
+
+
+class TestSeedInputsJson(TestCase):
+
+    def setUp(self):
+        django.setup()
 
 
 class TestSeedOutputsJson(TestCase):
-    """Tests functions in the JobData module."""
 
     def setUp(self):
         django.setup()

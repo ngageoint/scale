@@ -107,6 +107,8 @@ class SeedJson(object):
             return basestring
         elif value_type == 'NUMBER':
             return float
+        elif value_type == 'INTEGER':
+            return int
         elif value_type == 'BOOLEAN':
             return bool
         elif value_type == 'OBJECT':
@@ -114,7 +116,7 @@ class SeedJson(object):
         elif value_type == 'ARRAY':
             return list
 
-        raise Exception("Unrecognized type '%s' specified for name %s." % (self.type, self.name()))
+        raise Exception("Unrecognized type '%s' specified for name %s." % (self.type, self.name))
 
     @property
     def required(self):
