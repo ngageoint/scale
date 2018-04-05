@@ -408,7 +408,7 @@ class JobData(object):
                 if input_file.local_file_name:
                     file_name = input_file.local_file_name
                 env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
-        for json_input in self._input_json:
+        for json_input in self._input_json.itervalues():
             env_vars[normalize_env_var_name(json_input.name)] = json_input.value
 
         return env_vars
