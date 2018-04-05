@@ -1,4 +1,4 @@
-"""Defines the command line method for running a destroy file task"""
+"""Defines the command line method for running a delete files task"""
 from __future__ import unicode_literals
 
 import ast
@@ -10,18 +10,18 @@ from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 
-import storage.destroy_files_job as destroy_files_job
+import storage.delete_files_job as delete_files_job
 from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from messaging.manager import CommandMessageManager
-from storage import destroy_files_job
+from storage import delete_files_job
 from storage.messages.delete_files import create_delete_files_messages
 
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    """Command that executes the destroy file process for a given file
+    """Command that executes the delete file process for a given file
     """
 
     help = 'Perform a file destruction operation on a file'
@@ -63,17 +63,17 @@ class Command(BaseCommand):
         logger.info('File IDs: %s', [x.id for x in files])
         logger.info('Job ID: %i', job_id)
 
-        destroy_job_return = destroy_files_job.destroy_files(files=files, job_id=job_id,
+        delete_job_return = delete_files_job.delete_files(files=files, job_id=job_id,
                                                              volume_path=workspace_config['broker']['host_path'],
                                                              broker=broker)
 
-        if destroy_job_return == 0:
+        if delete_job_return == 0:
             messages = create_delete_files_messages(files=files, purge=purge)
             CommandMessageManager().send_messages(messages)
 
             logger.info('Command completed: scale_delete_files')
 
-        return destroy_job_return
+        return delete_job_return
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.
@@ -81,5 +81,5 @@ class Command(BaseCommand):
         This callback performs a clean shutdown when a TERM signal is received.
         """
 
-        logger.info('Destroy File terminating due to receiving sigterm')
+        logger.info('Delete Files terminating due to receiving sigterm')
         sys.exit(1)

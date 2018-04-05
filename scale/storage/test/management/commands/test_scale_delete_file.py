@@ -8,12 +8,12 @@ from mock import call, patch
 
 from job.test import utils as job_test_utils
 from storage.brokers.host_broker import HostBroker
-from storage.destroy_files_job import destroy_files
+from storage.delete_files_job import delete_files
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.test import utils as storage_test_utils
 
 
-class TestCallScaleDestroyFile(TestCase):
+class TestCallScaleDeleteFile(TestCase):
 
     def setUp(self):
         django.setup()
@@ -22,14 +22,14 @@ class TestCallScaleDestroyFile(TestCase):
         self.file_1 = storage_test_utils.create_file()
         self.workspace = storage_test_utils.create_workspace()
 
-    @patch('storage.destroy_files_job.destroy_files')
+    @patch('storage.delete_files_job.delete_files')
     @patch('messaging.manager.CommandMessageManager.send_messages')
-    def test_scale_delete_files(self, mock_message, mock_destroy):
+    def test_scale_delete_files(self, mock_message, mock_delete):
         """Tests calling Scale to delete files"""
 
-        def new_destroy(files, job_id, volume_path, broker):
+        def new_delete(files, job_id, volume_path, broker):
             return 0
-        mock_destroy.side_effect = new_destroy
+        mock_delete.side_effect = new_delete
 
         config = WorkspaceConfiguration(self.workspace.json_config)
 
@@ -39,5 +39,5 @@ class TestCallScaleDestroyFile(TestCase):
         purge_str = '-p False'
 
         msg = django.core.management.call_command('scale_delete_files', files_str, job_id_str, workspace_str, purge_str)
-        
+
         self.assertEqual(msg, 0)

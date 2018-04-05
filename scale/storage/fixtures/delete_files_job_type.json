@@ -3,9 +3,9 @@
 		"model": "job.JobType",
 		"pk": null,
 		"fields": {
-			"name": "scale-delete-file",
+			"name": "scale-delete-files",
 			"version": "1.0",
-			"title": "Scale Destroy File",
+			"title": "Scale Delete Files",
 			"description": "Deletes a given file from a storage system.",
             "category": "system",
 			"is_system": true,
