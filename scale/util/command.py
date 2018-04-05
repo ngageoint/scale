@@ -69,11 +69,11 @@ def environment_expansion(env_map, cmd_string):
             if prefix:
                 value = prefix + value
 
-        return value
+        # Cast to str as replacement could potentially be a non-string value
+        return str(value)
 
     if cmd_string.count('{') != cmd_string.count('}'):
         raise UnbalancedBrackets
-
 
     return re.sub(r'\$(\w+|\{[^}]*\})', dict_lookup, cmd_string)
 

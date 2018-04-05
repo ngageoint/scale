@@ -11,11 +11,15 @@ class TestEnvironmentExpansion(TestCase):
     def setUp(self):
         django.setup()
 
-        self.env_dict = {'HELLO': 'Hello', 'THERE': 'there', 'SUPER_FRIEND': 'friend'}
+        self.env_dict = {'HELLO': 'Hello', 'THERE': 'there', 'SUPER_FRIEND': 'friend', "COUNT": 1}
 
     def test_naked_var_expansion_success(self):
         result = environment_expansion(self.env_dict, '$HELLO $THERE')
         self.assertEquals('Hello there', result)
+
+    def test_naked_var_expansion_numeral_success(self):
+        result = environment_expansion(self.env_dict, '$HELLO $THERE number $COUNT')
+        self.assertEquals('Hello there number 1', result)
 
     def test_wrapped_var_expansion_success(self):
         result = environment_expansion(self.env_dict, '${HELLO} ${THERE}')
