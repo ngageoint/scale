@@ -11,7 +11,6 @@ scale-ui/app/bower_components/
 scale-ui/app/test/
 scale-ui/node_modules/
 scale-ui/build/
-scale-ui/dist/
 scale-ui/deploy/
 scale-ui/reports/
 scale-ui/.idea/

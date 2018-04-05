@@ -10,6 +10,5 @@ then
     cd ..
 fi
 
-pwd
 docker build -t $1 -f Dockerfile-fast .
 docker push $1
