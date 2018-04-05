@@ -351,7 +351,7 @@ class SeedManifest(object):
 
         for name, mount_volume in exe_configuration.get_mounts('main').items():
             if mount_volume is None:
-                raise MissingMount('Required mount %s was not provided' % name)
+                raise MissingMount(name)
 
     def validate_populated_settings(self, exe_configuration):
         """Ensures that all required settings are defined in the execution configuration
@@ -362,7 +362,7 @@ class SeedManifest(object):
 
         for name, value in exe_configuration.get_settings('main').items():
             if value is None:
-                raise MissingSetting('Required setting %s was not provided' % name)
+                raise MissingSetting(name)
 
     def _check_for_name_collisions(self):
         """Ensures all names that map to environment variables are unique, and throws a
