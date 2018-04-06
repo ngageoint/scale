@@ -2944,6 +2944,93 @@ class JobType(models.Model):
         """
         return self.name, self.version
 
+    def get_cpus_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: cpus required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('cpus', self.cpus_required, True)
+
+    def get_mem_const_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: memory constant required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('mem', self.mem_const_required, True)
+
+    def get_mem_mult_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: memory multiplier required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('mem', self.mem_mult_required, False)
+
+    def get_shared_mem_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: shared memory required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('sharedmem', self.shared_mem_required, True)
+
+    def get_disk_out_const_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: disk constant required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('disk', self.disk_out_const_required, True)
+
+    def get_disk_out_mult_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: disk multiplier required by job
+        :rtype: float
+        """
+
+        self._get_legacy_resource('disk', self.disk_out_mult_required, False)
+
+    def _get_legacy_resource(self, key, legacy_field, is_value):
+        """Helper function to support bridging v5 / v6 storage of resources
+
+        # TODO: remove in v6 in deference to direct exposure of Seed Manifest
+
+        :param key: the key name for the resource
+        :param legacy_field: the legacy field value to use
+        :param is_value: if True lookup `value` key otherwise `inputMultiplier` key
+        :return:
+        """
+        value = 0.0
+
+        if JobInterfaceSunset.is_seed(self.interface):
+            for resource in JobInterfaceSunset.create(self.interface).get_scalar_resources():
+                if key in resource['name'].lower():
+                    value = resource['value' if is_value else 'inputMultiplier']
+        else:
+            value = legacy_field
+
+        return value
+
     class Meta(object):
         """meta information for the db"""
         db_table = 'job_type'
