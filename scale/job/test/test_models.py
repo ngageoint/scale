@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
+import json
 import time
 
 import django
@@ -547,6 +548,231 @@ class TestJobExecutionManager(TransactionTestCase):
         }
         latest_job_exes = JobExecution.objects.get_latest(job_query)
         self.assertDictEqual(latest_job_exes, expected_result, 'latest job executions do not match expected results')
+
+
+class TestJobType(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        seed_interface_str = \
+            """
+            {
+              "seedVersion": "1.0.0",
+              "job": {
+                "name": "test",
+                "jobVersion": "1.0.0",
+                "packageVersion": "1.0.0",
+                "title": "Test job to exercise Seed functionality",
+                "description": "Reads input file and ",
+                "tags": [
+                  "testing",
+                  "seed"
+                ],
+                "maintainer": {
+                  "name": "John Doe",
+                  "organization": "E-corp",
+                  "email": "jdoe@example.com",
+                  "url": "http://www.example.com",
+                  "phone": "666-555-4321"
+                },
+                "timeout": 3600,
+                "interface": {
+                  "command": "${INPUT_TEXT} ${INPUT_FILES} ${READ_LENGTH}",
+                  "inputs": {
+                    "files": [
+                      {
+                        "name": "INPUT_TEXT",
+                        "mediaTypes": [
+                          "text/plain"
+                        ],
+                        "partial": true
+                      },
+                      {
+                        "name": "INPUT_FILES",
+                        "multiple": true
+                      }
+                    ],
+                    "json": [
+                      {
+                        "name": "READ_LENGTH",
+                        "type": "integer"
+                      },
+                      {
+                        "name": "OUTPUT_COUNT",
+                        "type": "integer"
+                      }
+                    ]
+                  },
+                  "outputs": {
+                    "files": [
+                      {
+                        "name": "OUTPUT_FILES",
+                        "mediaType": "text/plain",
+                        "multiple": true,
+                        "pattern": "output_files*.txt"
+                      },
+                      {
+                        "name": "OUTPUT_TEXT",
+                        "mediaType": "text/plain",
+                        "pattern": "output_text.txt"
+                      }
+                    ],
+                    "json": [
+                      {
+                        "name": "cell_count",
+                        "key": "cellCount",
+                        "type": "integer"
+                      }
+                    ]
+                  },
+                  "mounts": [
+                    {
+                      "name": "MOUNT_PATH",
+                      "path": "/the/container/path",
+                      "mode": "ro"
+                    }
+                  ],
+                  "settings": [
+                    {
+                      "name": "DB_HOST",
+                      "secret": false
+                    },
+                    {
+                      "name": "DB_PASS",
+                      "secret": true
+                    }
+                  ]
+                },
+                "resources": {
+                  "scalar": [
+                    { "name": "cpus", "value": 1.5 },
+                    { "name": "mem", "value": 244.0 },
+                    { "name": "sharedMem", "value": 1.0 },
+                    { "name": "disk", "value": 11.0, "inputMultiplier": 4.0 }
+                  ]
+                },
+                "errors": [
+                  {
+                    "code": 1,
+                    "title": "Data Issue discovered",
+                    "description": "There was a problem with input data",
+                    "category": "data"
+                  },
+                  {
+                    "code": 2,
+                    "title": "Missing mount",
+                    "description": "Expected mount point not available at run time",
+                    "category": "job"
+                  },
+                  {
+                    "code": 3,
+                    "title": "Missing setting",
+                    "description": "Expected setting not defined in environment variable",
+                    "category": "job"
+                  },
+                  {
+                    "code": 4,
+                    "title": "Missing environment",
+                    "description": "Expected environment not provided",
+                    "category": "job"
+                  }
+                ]
+              }
+            }
+        """
+
+        self.seed_job_type = job_test_utils.create_job_type(interface=json.loads(seed_interface_str))
+        self.legacy_job_type = job_test_utils.create_job_type()
+        self.legacy_job_type.cpus_required = 5.0
+        self.legacy_job_type.mem_const_required = 6.0
+        self.legacy_job_type.mem_mult_required = 7.0
+        self.legacy_job_type.shared_mem_required = 8.0
+        self.legacy_job_type.disk_out_const_required = 9.0
+        self.legacy_job_type.disk_out_mult_required = 10.0
+
+    def test_get_legacy_cpu_resource_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_cpus_required()
+
+        self.assertEqual(job_type.cpus_required, value)
+
+    def test_get_legacy_mem_resource_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_mem_const_required()
+
+        self.assertEqual(job_type.mem_const_required, value)
+
+    def test_get_legacy_mem_resource_multiplier_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_mem_mult_required()
+
+        self.assertEqual(job_type.mem_mult_required, value)
+
+    def test_get_legacy_sharedmem_resource_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_shared_mem_required()
+
+        self.assertEqual(job_type.shared_mem_required, value)
+
+    def test_get_legacy_disk_resource_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_disk_out_const_required()
+
+        self.assertEqual(job_type.disk_out_const_required, value)
+
+    def test_get_legacy_disk_resource_multiplier_from_legacy_interface(self):
+        job_type = self.legacy_job_type
+        value = job_type.get_disk_out_mult_required()
+
+        self.assertEqual(job_type.disk_out_mult_required, value)
+
+    def test_get_legacy_cpu_resource_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_cpus_required()
+        self.assertEqual(1.5, value)
+
+    def test_get_legacy_cpu_resource_multiplier_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type._get_legacy_resource('cpus', job_type.cpus_required, False)
+
+        self.assertEqual(0.0, value)
+
+    def test_get_legacy_mem_resource_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_mem_const_required()
+
+        self.assertEqual(244.0, value)
+
+    def test_get_legacy_mem_resource_multiplier_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_mem_mult_required()
+
+        self.assertEqual(0.0, value)
+
+    def test_get_legacy_sharedmem_resource_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_shared_mem_required()
+
+        self.assertEqual(1.0, value)
+
+    def test_get_legacy_sharedmem_resource_multiplier_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type._get_legacy_resource('sharedmem', job_type.shared_mem_required, False)
+
+        self.assertEqual(0.0, value)
+
+    def test_get_legacy_disk_resource_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_disk_out_const_required()
+
+        self.assertEqual(11.0, value)
+
+    def test_get_legacy_disk_resource_multiplier_from_seed_interface(self):
+        job_type = self.seed_job_type
+        value = job_type.get_disk_out_mult_required()
+
+        self.assertEqual(4.0, value)
 
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
