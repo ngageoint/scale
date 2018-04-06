@@ -2922,7 +2922,7 @@ class JobType(models.Model):
                 name = x['name'].lower()
                 # Ensure resource meets minimums set
                 seed_resources[name] = max(x['value'], MIN_RESOURCE.get(name, 0.0))
-            resources = Resources(seed_resources).get_node_resources()
+            resources = Resources({'resources':seed_resources}).get_node_resources()
 
         return resources
 
