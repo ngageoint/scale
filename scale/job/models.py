@@ -1228,7 +1228,7 @@ class Job(models.Model):
                 resources.increase_up_to(NodeResources(scalar_resources))
 
             # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
-            resources.increase_up_to(NodeResources[Disk(input_file_size)])
+            resources.increase_up_to(NodeResources([Disk(input_file_size)]))
 
         return resources
 
