@@ -1,2 +1,2 @@
-# scale-read-bytes
-Scale algorithm to read x bytes from input file into output file
+# test-seed
+Seed algorithm to exercise the spec and validate executor completeness

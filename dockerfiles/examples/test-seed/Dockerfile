@@ -1,6 +1,6 @@
 FROM python:2.7-alpine
 MAINTAINER Jonathan Meyer <jon@gisjedi.com>
 
-COPY scale-job.py /scale-job.py
+COPY test.py /test.py
 
-ENTRYPOINT ["python", "scale-job.py"]
+ENTRYPOINT ["python", "test.py"]
