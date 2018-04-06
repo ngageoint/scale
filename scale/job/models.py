@@ -29,7 +29,7 @@ from job.seed.manifest import SeedManifest
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
 from seed.results.job_results import JobResults
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -42,9 +42,17 @@ logger = logging.getLogger(__name__)
 
 
 # Required resource minimums for jobs (e.g. resources required for pre and post tasks)
+# TODO: We can roll-up these specific minimums in deference to MIN_RESOURCE dict in v6
 MIN_CPUS = 0.25
 MIN_MEM = 128.0
 MIN_DISK = 0.0
+
+MIN_RESOURCE = {
+    'cpus': MIN_CPUS,
+    'mem': MIN_MEM,
+    'disk': MIN_DISK,
+    'sharedmem': 0.0
+}
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile models
 
@@ -1182,22 +1190,46 @@ class Job(models.Model):
 
         resources = self.job_type.get_resources()
 
-        # Calculate memory required in MiB rounded up to the nearest whole MiB
-        multiplier = self.job_type.mem_mult_required
-        const = self.job_type.mem_const_required
+        # Input File Size in MiB
         input_file_size = self.input_file_size
         if not input_file_size:
             input_file_size = 0.0
-        memory_mb = long(math.ceil(multiplier * input_file_size + const))
-        memory_required = max(memory_mb, MIN_MEM)
 
-        # Calculate output space required in MiB rounded up to the nearest whole MiB
-        multiplier = self.job_type.disk_out_mult_required
-        const = self.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * input_file_size + const))
-        disk_out_required = max(output_size_mb, MIN_DISK)
+        interface = self.job_type.get_job_interface()
 
-        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
+        # TODO: remove legacy code branch in v6
+        if not isinstance(interface, SeedManifest):
+            # Calculate memory required in MiB rounded up to the nearest whole MiB
+            multiplier = self.job_type.mem_mult_required
+            const = self.job_type.mem_const_required
+
+            memory_mb = long(math.ceil(multiplier * input_file_size + const))
+            memory_required = max(memory_mb, MIN_MEM)
+
+            # Calculate output space required in MiB rounded up to the nearest whole MiB
+            multiplier = self.job_type.disk_out_mult_required
+            const = self.job_type.disk_out_const_required
+            output_size_mb = long(math.ceil(multiplier * input_file_size + const))
+            disk_out_required = max(output_size_mb, MIN_DISK)
+
+            resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
+        # TODO: Seed logic block to keep in v6
+        else:
+            scalar_resources = []
+            # Iterate over all scalar resources and
+            for resource in interface.get_scalar_resources():
+                if 'inputMultiplier' in resource:
+                    multiplier = resource['inputMultiplier']
+                    initial_value = long(math.ceil(multiplier * input_file_size + resource['value']))
+                    value_required = max(initial_value, MIN_RESOURCE.get(resource['name'], 0.0))
+                    scalar_resources.append(ScalarResource(resource['name'], value_required))
+
+            if scalar_resources:
+                resources.increase_up_to(NodeResources(scalar_resources))
+
+            # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
+            resources.increase_up_to(NodeResources[Disk(input_file_size)])
+
         return resources
 
     def get_resources_dict(self):
@@ -2875,12 +2907,23 @@ class JobType(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        resources = Resources(self.custom_resources).get_node_resources()
-        resources.remove_resource('cpus')
-        resources.remove_resource('mem')
-        resources.remove_resource('disk')
-        cpus = max(self.cpus_required, MIN_CPUS)
-        resources.add(NodeResources([Cpus(cpus)]))
+        # TODO: Remove first block of conditional come v6
+        if not JobInterfaceSunset.is_seed(self.interface):
+            resources = Resources(self.custom_resources).get_node_resources()
+            resources.remove_resource('cpus')
+            resources.remove_resource('mem')
+            resources.remove_resource('disk')
+            cpus = max(self.cpus_required, MIN_CPUS)
+            resources.add(NodeResources([Cpus(cpus)]))
+        else:
+            interface = self.get_job_interface()
+            seed_resources = {}
+            for x in interface.get_scalar_resources():
+                name = x['name'].lower()
+                # Ensure resource meets minimums set
+                seed_resources[name] = max(x['value'], MIN_RESOURCE.get(name, 0.0))
+            resources = Resources(seed_resources).get_node_resources()
+
         return resources
 
     def get_secrets_key(self):

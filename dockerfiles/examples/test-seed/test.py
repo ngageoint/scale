@@ -48,7 +48,7 @@ def validate_environment():
     """
     expected_environment = [
         'OUTPUT_DIR',
-        'ALLOCATED_CPU',
+        'ALLOCATED_CPUS',
         'ALLOCATED_MEM',
         'ALLOCATED_SHAREDMEM',
         'ALLOCATED_DISK',
