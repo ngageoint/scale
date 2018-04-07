@@ -28,8 +28,7 @@ current version.
 All endpoints should include a prefix of the form ``vX``, where ``X`` is the desired version number. Making a request
 without a version prefix or an invalid version prefix will result in a 404 error.
 
-| Request Example: ``/v5/jobs/``
-|
+Request Example: ``/v5/jobs/``
 
 .. _rest_services:
 

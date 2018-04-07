@@ -325,7 +325,7 @@ class JobTypeDetailsView(GenericAPIView):
                                               custom_resources=custom_resources, configuration=configuration,
                                               secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                InvalidSecretsConfiguration, ValueError) as ex:
+                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
             raise BadParameter(unicode(ex))
 
@@ -423,7 +423,7 @@ class JobTypesValidationView(APIView):
             warnings = JobType.objects.validate_job_type(name=name, version=version, interface=interface,
                                                          error_mapping=error_mapping, trigger_config=trigger_config,
                                                          configuration=configuration)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
+        except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
 
