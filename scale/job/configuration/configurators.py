@@ -329,10 +329,15 @@ class ScheduledExecutionConfigurator(object):
         """
 
         # Set shared memory if required by this job type
-        shared_mem = job_type.shared_mem_required
+        shared_mem = job_type.get_shared_mem_required()
         if shared_mem > 0:
             shared_mem = int(math.ceil(shared_mem))
-            env_vars = {'ALLOCATED_SHARED_MEM': '%.1f' % float(shared_mem)}
+            if JobInterfaceSunset.is_seed(job_type.interface):
+                env_vars = {'ALLOCATED_SHAREDMEM': '%.1f' % float(shared_mem)}
+            # Remove legacy code in v6
+            else:
+                env_vars = {'ALLOCATED_SHARED_MEM': '%.1f' % float(shared_mem)}
+
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
 
