@@ -5,8 +5,13 @@ import logging
 import os
 import sys
 
+from error.exceptions import ScaleError, get_error_by_exception
+
 
 logger = logging.getLogger(__name__)
+
+
+GENERAL_FAIL_EXIT_CODE = 1
 
 
 def delete_files(files, job_id, volume_path, broker):
@@ -26,9 +31,18 @@ def delete_files(files, job_id, volume_path, broker):
     logger.info('Deleting %i files', len(files))
     try:
         broker.delete_files(volume_path=volume_path, files=files, update_model=False)
-    except:
-        logger.exception('There was an error when trying to delete files for job %i', job_id)
-        return 10
+    except ScaleError as err:
+        err.log()
+        sys.exit(err.exit_code)
+    except Exception as ex:
+        exit_code = GENERAL_FAIL_EXIT_CODE
+        err = get_error_by_exception(ex.__class__.__name__)
+        if err:
+            err.log()
+            exit_code = err.exit_code
+        else:
+            logger.exception('Error performing delete_files steps')
+        sys.exit(exit_code)
 
     logger.info('A file associated with job %i was deleted', job_id)
-    return 0
+    return

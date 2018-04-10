@@ -42,10 +42,10 @@ class TestDeleteFiles(TestCase):
 
         # Call function
         test_1 = delete_files([file_1], job_1.id, volume_path, self.broker)
-        self.assertEqual(test_1, 0)
+        self.assertEqual(test_1, None)
 
         test_2 = delete_files([file_2], job_1.id, volume_path, self.broker)
-        self.assertEqual(test_2, 0)
+        self.assertEqual(test_2, None)
 
         # Check results
         two_calls = [call(full_path_file_1), call(full_path_file_2)]

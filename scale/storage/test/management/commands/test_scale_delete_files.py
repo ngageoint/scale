@@ -13,7 +13,7 @@ from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.test import utils as storage_test_utils
 
 
-class TestCallScaleDeleteFile(TestCase):
+class TestCallScaleDeleteFiles(TestCase):
 
     def setUp(self):
         django.setup()
@@ -28,7 +28,7 @@ class TestCallScaleDeleteFile(TestCase):
         """Tests calling Scale to delete files"""
 
         def new_delete(files, job_id, volume_path, broker):
-            return 0
+            return
         mock_delete.side_effect = new_delete
 
         config = WorkspaceConfiguration(self.workspace.json_config)

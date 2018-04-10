@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import ast
 import json
 import logging
+import os
 import signal
 import sys
 from collections import namedtuple
@@ -63,17 +64,16 @@ class Command(BaseCommand):
         logger.info('File IDs: %s', [x.id for x in files])
         logger.info('Job ID: %i', job_id)
 
-        delete_job_return = delete_files_job.delete_files(files=files, job_id=job_id,
-                                                             volume_path=workspace_config['broker']['host_path'],
-                                                             broker=broker)
+        delete_files_job.delete_files(files=files, job_id=job_id,
+                                      volume_path=workspace_config['broker']['host_path'],
+                                      broker=broker)
 
-        if delete_job_return == 0:
-            messages = create_delete_files_messages(files=files, purge=purge)
-            CommandMessageManager().send_messages(messages)
+        messages = create_delete_files_messages(files=files, purge=purge)
+        CommandMessageManager().send_messages(messages)
 
-            logger.info('Command completed: scale_delete_files')
+        logger.info('Command completed: scale_delete_files')
 
-        return delete_job_return
+        sys.exit(0)
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.
