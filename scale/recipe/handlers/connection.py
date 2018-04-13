@@ -124,6 +124,9 @@ class RecipeInputConnection(NodeInputConnection):
         if not isinstance(connection, RecipeInputConnection):
             return False
 
+        if connection.recipe_input.input_name not in matched_recipe_inputs:
+            return False
+
         same_input_name = self.input_name == connection.input_name
         matched_recipe_input_name = matched_recipe_inputs[connection.recipe_input.input_name]
         same_recipe_input_name = self.recipe_input.input_name == matched_recipe_input_name

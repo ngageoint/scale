@@ -13,8 +13,8 @@ class TestBatchConfigurationV6(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_get_v6_configuration_json(self):
-        """Tests calling get_v6_configuration_json()"""
+    def test_convert_configuration_to_v6(self):
+        """Tests calling convert_configuration_to_v6()"""
 
         # Try configuration with nothing set
         configuration = BatchConfiguration()

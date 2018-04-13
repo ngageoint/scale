@@ -9,7 +9,6 @@ from recipe.diff.exceptions import InvalidDiff
 
 SCHEMA_VERSION = '6'
 
-# TODO: v6 Diff Plan, need to do conversion from RecipeGraphDelta to this JSON
 # TODO: validation REST return will include recipe type name and current recipe type revision number at top level
 # TODO: validation REST return will include previous batch revision number and diff under previous batch section
 # {
@@ -195,12 +194,15 @@ def convert_diff_to_v6(graph_diff):
     for recipe_node in graph_diff._graph_b._nodes.values():
         name = recipe_node.job_name
         force_reprocess = name in graph_diff._force_reprocess
-        status = 'NEW'
-        if name in graph_diff._identical_nodes:
+        if name in graph_diff._new_nodes:
+            status = 'NEW'
+        elif name in graph_diff._identical_nodes:
             status = 'UNCHANGED'
         elif name in graph_diff._changed_nodes:
             status = 'CHANGED'
-        will_be_reprocessed = status in ['NEW', 'CHANGED'] or force_reprocess
+        else:
+            continue
+        will_be_reprocessed = (status in ['NEW', 'CHANGED'] or force_reprocess) and graph_diff.can_be_reprocessed
         changes = []
         if status == 'CHANGED' and name in graph_diff._changes:
             changes.extend([{'name': c.name, 'description': c.description} for c in graph_diff._changes[name]])
@@ -209,12 +211,20 @@ def convert_diff_to_v6(graph_diff):
             prev_node = graph_diff._graph_a._nodes[name]
             job_type['prev_name'] = prev_node.job_type_name
             job_type['prev_version'] = prev_node.job_type_version
-        dependencies = [{'name': p.name} for p in recipe_node.parents]
+        dependencies = [{'name': p.job_name} for p in recipe_node.parents]
         job = {'name': name, 'will_be_reprocessed': will_be_reprocessed, 'force_reprocess': force_reprocess,
                'status': status, 'changes': changes, 'job_type': job_type, 'dependencies': dependencies}
         jobs.append(job)
 
-    # TODO: handle deleted jobs from graph A
+    for recipe_node in graph_diff._graph_a._nodes.values():
+        name = recipe_node.job_name
+        if name not in graph_diff._deleted_nodes:
+            continue
+        job_type = {'name': recipe_node.job_type_name, 'version': recipe_node.job_type_version}
+        dependencies = [{'name': p.job_name} for p in recipe_node.parents]
+        job = {'name': name, 'will_be_reprocessed': False, 'force_reprocess': False,
+               'status': 'DELETED', 'changes': [], 'job_type': job_type, 'dependencies': dependencies}
+        jobs.append(job)
 
     return RecipeGraphDiffV6(diff=json_dict, do_validate=False)
 
@@ -243,6 +253,8 @@ class RecipeGraphDiffV6(object):
         if self._diff['version'] != SCHEMA_VERSION:
             raise InvalidDiff('%s is an unsupported version number' % self._diff['version'])
 
+        self._populate_default_values()
+
         try:
             if do_validate:
                 validate(diff, RECIPE_GRAPH_DIFF_SCHEMA)
@@ -257,3 +269,14 @@ class RecipeGraphDiffV6(object):
         """
 
         return self._diff
+
+    def _populate_default_values(self):
+        """Populates any missing required values with defaults
+        """
+
+        if 'can_be_reprocessed' not in self._diff:
+            self._diff['can_be_reprocessed'] = True
+        if 'reasons' not in self._diff:
+            self._diff['reasons'] = []
+        if 'jobs' not in self._diff:
+            self._diff['jobs'] = []

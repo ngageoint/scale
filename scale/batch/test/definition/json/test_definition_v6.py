@@ -13,8 +13,8 @@ class TestBatchDefinitionV6(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_get_v6_definition_json(self):
-        """Tests calling get_v6_definition_json()"""
+    def test_convert_definition_to_v6(self):
+        """Tests calling convert_definition_to_v6()"""
 
         # Try definition with nothing set
         definition = BatchDefinition()
