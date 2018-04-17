@@ -21,7 +21,9 @@ from batch.messages.create_batch_recipes import create_batch_recipes_message
 from batch.models import Batch
 from batch.serializers import BatchDetailsSerializerV5, BatchDetailsSerializerV6, BatchSerializerV5, BatchSerializerV6
 from messaging.manager import CommandMessageManager
+from recipe.diff.json.diff_v6 import convert_diff_to_v6
 from recipe.models import RecipeType
+from recipe.serializers import RecipeTypeBaseSerializerV6, RecipeTypeRevisionBaseSerializerV6
 from trigger.models import TriggerEvent
 from util.rest import BadParameter
 from util import rest as rest_util
@@ -194,7 +196,7 @@ class BatchesView(ListCreateAPIView):
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
-            raise BadParameter('Unknown recipe type: %i' % recipe_type_id)
+            raise BadParameter('Unknown recipe type: %d' % recipe_type_id)
 
         # Validate and create the batch
         try:
@@ -206,9 +208,9 @@ class BatchesView(ListCreateAPIView):
                                                       configuration=configuration)
                 CommandMessageManager().send_messages([create_batch_recipes_message(batch.id)])
         except InvalidDefinition as ex:
-            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+            raise BadParameter(unicode(ex))
         except InvalidConfiguration as ex:
-            raise BadParameter('Batch configuration invalid: %s' % unicode(ex))
+            raise BadParameter(unicode(ex))
 
         # Fetch the full batch with details
         batch = Batch.objects.get_details_v6(batch.id)
@@ -341,13 +343,30 @@ class BatchesValidationView(APIView):
     queryset = Batch.objects.all()
 
     def post(self, request):
-        """Validates a new batch and returns any warnings discovered
+        """Validates a new batch
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def _post_v5(self, request):
+        """The v5 version for validating a new batch
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
 
         # Make sure the recipe type exists
@@ -376,3 +395,46 @@ class BatchesValidationView(APIView):
             'file_count': old_files.count(),
             'warnings': warnings,
         })
+
+    def _post_v6(self, request):
+        """The v6 version for validating a new batch
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        definition_dict = rest_util.parse_dict(request, 'definition')
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+
+        # Make sure the recipe type exists
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise BadParameter('Unknown recipe type: %d' % recipe_type_id)
+
+        try:
+            definition = BatchDefinitionV6(definition=definition_dict, do_validate=True).get_definition()
+            configuration = BatchConfigurationV6(configuration=configuration_dict, do_validate=True).get_configuration()
+        except InvalidDefinition as ex:
+            raise BadParameter(unicode(ex))
+        except InvalidConfiguration as ex:
+            raise BadParameter(unicode(ex))
+
+        # Validate the batch
+        validation = Batch.objects.validate_batch_v6(recipe_type, definition, configuration=configuration)
+        batch = validation.batch
+        recipe_type_serializer = RecipeTypeBaseSerializerV6(batch.recipe_type)
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings],
+                     'recipes_estimated': definition.estimated_recipes, 'recipe_type': recipe_type_serializer.data}
+        if batch.superseded_batch:
+            recipe_type_rev_serializer = RecipeTypeRevisionBaseSerializerV6(batch.superseded_batch.recipe_type_rev)
+            prev_batch_dict = {'recipe_type_rev': recipe_type_rev_serializer.data}
+            resp_dict['prev_batch'] = prev_batch_dict
+            if definition.prev_batch_diff:
+                diff = rest_util.strip_schema_version(convert_diff_to_v6(definition.prev_batch_diff).get_dict())
+                prev_batch_dict['diff'] = diff
+        return Response(resp_dict)

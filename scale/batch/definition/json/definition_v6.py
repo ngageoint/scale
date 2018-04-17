@@ -89,13 +89,14 @@ class BatchDefinitionV6(object):
             self._definition['version'] = SCHEMA_VERSION
 
         if self._definition['version'] != SCHEMA_VERSION:
-            raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
+            msg = '%s is an unsupported version number' % self._definition['version']
+            raise InvalidDefinition('INVALID_BATCH_DEFINITION', msg)
 
         try:
             if do_validate:
                 validate(definition, BATCH_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('Invalid batch definition: %s' % unicode(ex))
+            raise InvalidDefinition('INVALID_BATCH_DEFINITION', 'Invalid batch definition: %s' % unicode(ex))
 
     def get_definition(self):
         """Returns the batch definition represented by this JSON

@@ -36,9 +36,6 @@ class RecipeGraphDelta(object):
         self._unresolved_b_nodes = set(self._topo_b_nodes)  # {Job Name B}
 
         self._match_recipe_inputs()
-        #if not self.can_be_reprocessed:
-        #    return
-
         self._match_identical_nodes()
         self._match_changed_nodes()
         self._new_nodes = self._unresolved_b_nodes
@@ -227,7 +224,7 @@ class RecipeGraphDelta(object):
         """
 
         for job_name_b in self._topo_b_nodes:
-            for job_name_a in self._topo_a_nodes:
+            for job_name_a in self._unresolved_a_nodes:
                 if self._is_node_identical(job_name_a, job_name_b):
                     self._identical_nodes[job_name_b] = job_name_a
                     self._unresolved_a_nodes.remove(job_name_a)

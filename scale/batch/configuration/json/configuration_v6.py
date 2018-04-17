@@ -64,13 +64,14 @@ class BatchConfigurationV6(object):
             self._configuration['version'] = SCHEMA_VERSION
 
         if self._configuration['version'] != SCHEMA_VERSION:
-            raise InvalidConfiguration('%s is an unsupported version number' % self._configuration['version'])
+            msg = '%s is an unsupported version number' % self._configuration['version']
+            raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', msg)
 
         try:
             if do_validate:
                 validate(configuration, BATCH_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidConfiguration('Invalid batch configuration: %s' % unicode(ex))
+            raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', 'Invalid batch configuration: %s' % unicode(ex))
 
     def get_configuration(self):
         """Returns the batch configuration represented by this JSON

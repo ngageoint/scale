@@ -9,27 +9,6 @@ from recipe.diff.exceptions import InvalidDiff
 
 SCHEMA_VERSION = '6'
 
-# TODO: validation REST return will include recipe type name and current recipe type revision number at top level
-# TODO: validation REST return will include previous batch revision number and diff under previous batch section
-# {
-#   "can_be_reprocessed": false|true,
-#   "reasons": [{"name": "foo", "description": "foo desc"}],  # Used for why cannot be reprocessed
-#   "jobs": [{
-#       "name": "foo",
-#       "will_be_reprocessed": false|true,
-#       "force_reprocess": false|true,
-#       "status": "DELETED"|"UNCHANGED"|"CHANGED"|"NEW",
-#       "changes": [{"name": "foo", "description": "Job version changed from 0.1 to 1.0"}],
-#       "job_type": {
-#          "name": "geotiff-maker",
-#          "version": "1.0",
-#          "prev_name": "old-geotiff-maker",  # Only if state is CHANGED
-#          "prev_version": "0.1"  # Only if state is CHANGED
-#       },
-#       "dependencies": [{"name": "other-foo"}]
-#   }]
-# }
-
 
 RECIPE_GRAPH_DIFF_SCHEMA = {
     'type': 'object',

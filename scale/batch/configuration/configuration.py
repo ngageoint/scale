@@ -24,4 +24,4 @@ class BatchConfiguration(object):
         """
 
         # Currently nothing to do
-        pass
+        return []

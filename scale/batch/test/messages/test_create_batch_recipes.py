@@ -19,7 +19,7 @@ class TestCreateBatchRecipes(TestCase):
 
         # Previous batch with three recipes
         recipe_type = recipe_test_utils.create_recipe_type()
-        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True)
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=3)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_3 = recipe_test_utils.create_recipe(batch=prev_batch)
@@ -52,7 +52,7 @@ class TestCreateBatchRecipes(TestCase):
 
         # Previous batch with six recipes
         recipe_type = recipe_test_utils.create_recipe_type()
-        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True)
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=6)
         recipe_1 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_2 = recipe_test_utils.create_recipe(batch=prev_batch)
         recipe_3 = recipe_test_utils.create_recipe(batch=prev_batch)

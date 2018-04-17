@@ -18,11 +18,11 @@ class BatchBaseSerializerV6(ModelIdSerializer):
 class BatchSerializerV6(BatchBaseSerializerV6):
     """Serializer for a list of batches"""
 
-    from recipe.serializers import RecipeTypeBaseSerializer, RecipeTypeRevisionBaseSerializer
+    from recipe.serializers import RecipeTypeBaseSerializerV6, RecipeTypeRevisionBaseSerializerV6
     from trigger.serializers import TriggerEventBaseSerializer
 
-    recipe_type = RecipeTypeBaseSerializer()
-    recipe_type_rev = RecipeTypeRevisionBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializerV6()
+    recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
     event = TriggerEventBaseSerializer()
 
     is_superseded = serializers.BooleanField()
@@ -50,10 +50,10 @@ class BatchSerializerV6(BatchBaseSerializerV6):
 class BatchDetailsSerializerV6(BatchSerializerV6):
     """Detailed serializer for a single batch"""
 
-    from recipe.serializers import RecipeTypeRevisionSerializer
+    from recipe.serializers import RecipeTypeRevisionSerializerV6
     from trigger.serializers import TriggerEventDetailsSerializer
 
-    recipe_type_rev = RecipeTypeRevisionSerializer()
+    recipe_type_rev = RecipeTypeRevisionSerializerV6()
     event = TriggerEventDetailsSerializer()
 
     definition = serializers.JSONField(source='get_v6_definition_json')

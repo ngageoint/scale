@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+from collections import namedtuple
 
 import django.contrib.postgres.fields
 from django.db import connection, models, transaction
@@ -9,6 +10,7 @@ from django.db.models import F, Q
 from django.utils.timezone import now
 
 from batch.configuration.configuration import BatchConfiguration
+from batch.configuration.exceptions import InvalidConfiguration
 from batch.configuration.json.configuration_v6 import convert_configuration_to_v6, BatchConfigurationV6
 from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
@@ -25,9 +27,14 @@ from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 from util import parse as parse_utils
 from util import rest as rest_utils
+from util.exceptions import ValidationException
+from util.validation import ValidationError
 
 
 logger = logging.getLogger(__name__)
+
+
+BatchValidation = namedtuple('BatchValidation', ['is_valid', 'errors', 'warnings', 'batch'])
 
 
 class BatchManager(models.Manager):
@@ -136,7 +143,7 @@ class BatchManager(models.Manager):
                 try:
                     superseded_batch = Batch.objects.get_locked_batch_from_root(definition.root_batch_id)
                 except Batch.DoesNotExist:
-                    raise InvalidDefinition('No batch with that root ID exists')
+                    raise InvalidDefinition('PREV_BATCH_NOT_FOUND', 'No batch with that root ID exists')
                 batch.root_batch_id = superseded_batch.root_batch_id
                 batch.superseded_batch = superseded_batch
                 self.supersede_batch(superseded_batch.id, now())
@@ -144,7 +151,7 @@ class BatchManager(models.Manager):
             definition.validate(batch)
             configuration.validate(batch)
 
-            batch.recipes_estimated = definition.estimate_recipe_total(batch)
+            batch.recipes_estimated = definition.estimated_recipes
             batch.save()
             if batch.root_batch_id is None:  # Batches with no superseded batch are their own root
                 batch.root_batch_id = batch.id
@@ -160,6 +167,18 @@ class BatchManager(models.Manager):
             BatchMetrics.objects.bulk_create(batch_metrics_models)
 
         return batch
+
+    def get_batch_from_root(self, root_batch_id):
+        """Returns the latest (non-superseded) batch model with the given root batch ID. The returned model
+        will have no related fields populated.
+
+        :param root_batch_id: The root batch ID
+        :type root_batch_id: int
+        :returns: The batch model
+        :rtype: :class:`batch.models.Batch`
+        """
+
+        return self.get(root_batch_id=root_batch_id, is_superseded=False)
 
     def edit_batch_v6(self, batch, title=None, description=None, configuration=None):
         """Edits the given batch to update any of the given fields. The configuration will be stored in version 6 of its
@@ -529,6 +548,48 @@ class BatchManager(models.Manager):
             cursor.execute(qry, [now(), tuple(batch_ids)])
 
         BatchMetrics.objects.update_batch_metrics_per_job(batch_ids)
+
+    def validate_batch_v6(self, recipe_type, definition, configuration=None):
+        """Validates the given recipe type, definition, and configuration for creating a new batch
+
+        :param recipe_type: The type of recipes that will be created for this batch
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param definition: The definition for running the batch
+        :type definition: :class:`batch.definition.definition.BatchDefinition`
+        :param configuration: The batch configuration
+        :type configuration: :class:`batch.configuration.configuration.BatchConfiguration`
+        :returns: The batch validation
+        :rtype: :class:`batch.models.BatchValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+
+        batch = Batch()
+        batch.recipe_type = recipe_type
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        batch.definition = convert_definition_to_v6(definition).get_dict()
+        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
+
+        if definition.root_batch_id is not None:
+            # Find latest batch with the root ID
+            try:
+                superseded_batch = Batch.objects.get_batch_from_root(definition.root_batch_id)
+            except Batch.DoesNotExist:
+                raise InvalidDefinition('PREV_BATCH_NOT_FOUND', 'No batch with that root ID exists')
+            batch.root_batch_id = superseded_batch.root_batch_id
+            batch.superseded_batch = superseded_batch
+
+        try:
+            warnings.extend(definition.validate(batch))
+            warnings.extend(configuration.validate(batch))
+        except ValidationException as ex:
+            is_valid = False
+            errors.append(ex.error)
+
+        batch.recipes_estimated = definition.estimated_recipes
+        return BatchValidation(is_valid, errors, warnings, batch)
 
     # TODO: remove this when v5 REST API is removed
     @transaction.atomic

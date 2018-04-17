@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from mock import patch
 
 from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.definition_v6 import BatchDefinitionV6
@@ -31,15 +32,15 @@ class TestBatchDefinition(TestCase):
 
         bad_recipe_type_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_1)
         still_creating_prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
-        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
-        prev_batch.is_creation_done = True
-        prev_batch.save()
+        prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type_2, is_creation_done=True, recipes_total=10)
         batch = batch_test_utils.create_batch(recipe_type=recipe_type_2)
+        
 
         # No recipes would be created
         json_dict = {'version': '6'}
         json = BatchDefinitionV6(definition=json_dict)
         definition = json.get_definition()
+        batch.superseded_batch = None
         self.assertRaises(InvalidDefinition, definition.validate, batch)
 
         # Mismatched recipe types
@@ -55,6 +56,17 @@ class TestBatchDefinition(TestCase):
         definition = json.get_definition()
         batch.superseded_batch = still_creating_prev_batch
         self.assertRaises(InvalidDefinition, definition.validate, batch)
+
+        # Previous batch cannot be reprocessed
+        json_dict = {'version': '6', 'previous_batch': {'root_batch_id': prev_batch.root_batch_id}}
+        json = BatchDefinitionV6(definition=json_dict)
+        definition = json.get_definition()
+        batch.superseded_batch = prev_batch
+
+        with patch('batch.definition.definition.RecipeGraphDelta') as mock_delta:
+            instance = mock_delta.return_value
+            instance.can_be_reprocessed = False
+            self.assertRaises(InvalidDefinition, definition.validate, batch)
 
         # Valid definition with previous batch
         json_dict = {'version': '6', 'previous_batch': {'root_batch_id': prev_batch.root_batch_id}}

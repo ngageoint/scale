@@ -146,11 +146,11 @@ class BatchDefinition(object):
         try:
             validate(definition, BATCH_DEFINITION_SCHEMA)
         except ValidationError as ex:
-            raise InvalidDefinition('Invalid batch definition: %s' % unicode(ex))
+            raise InvalidDefinition('', 'Invalid batch definition: %s' % unicode(ex))
 
         self._populate_default_values()
         if not self._definition['version'] == '1.0':
-            raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
+            raise InvalidDefinition('', '%s is an unsupported version number' % self._definition['version'])
 
         date_range = self._definition['date_range'] if 'date_range' in self._definition else None
         self.date_range_type = None
@@ -162,13 +162,13 @@ class BatchDefinition(object):
             try:
                 self.started = parse.parse_datetime(date_range['started'])
             except ValueError:
-                raise InvalidDefinition('Invalid start date format: %s' % date_range['started'])
+                raise InvalidDefinition('', 'Invalid start date format: %s' % date_range['started'])
         self.ended = None
         if date_range and 'ended' in date_range:
             try:
                 self.ended = parse.parse_datetime(date_range['ended'])
             except ValueError:
-                raise InvalidDefinition('Invalid end date format: %s' % date_range['ended'])
+                raise InvalidDefinition('', 'Invalid end date format: %s' % date_range['ended'])
 
         self.job_names = self._definition['job_names']
         self.all_jobs = self._definition['all_jobs']
@@ -178,7 +178,7 @@ class BatchDefinition(object):
             try:
                 self.priority = self._definition['priority']
             except ValueError:
-                raise InvalidDefinition('Invalid priority: %s' % self._definition['priority'])
+                raise InvalidDefinition('', 'Invalid priority: %s' % self._definition['priority'])
 
         self.trigger_rule = False
         self.trigger_config = None

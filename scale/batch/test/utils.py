@@ -17,7 +17,7 @@ BATCH_DESCRIPTION_COUNTER = 1
 
 
 def create_batch(title=None, description=None, recipe_type=None, definition=None, configuration=None,
-                 is_creation_done=False):
+                 is_creation_done=False, recipes_total=None):
     """Creates a batch model for unit testing
 
     :returns: The batch model
@@ -35,6 +35,7 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
         prev_batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         prev_batch.event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         prev_batch.is_creation_done = True
+        prev_batch.recipes_total = 10
         prev_batch.save()
         prev_batch.root_batch_id = prev_batch.id
         prev_batch.save()
@@ -54,7 +55,9 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
     batch = Batch.objects.create_batch_v6(title, description, recipe_type, event, definition, configuration)
     if is_creation_done:
         batch.is_creation_done = True
-        batch.save()
+    if recipes_total is not None:
+        batch.recipes_total = recipes_total
+    batch.save()
     return batch
 
 
