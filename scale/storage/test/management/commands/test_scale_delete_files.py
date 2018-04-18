@@ -38,5 +38,5 @@ class TestCallScaleDeleteFiles(TestCase):
         workspace_str = '-w "%s"' % (config.get_dict())
         purge_str = '-p False'
 
-        with self.assertRaises(SystemExit): 
+        with self.assertRaises(SystemExit):
             django.core.management.call_command('scale_delete_files', files_str, job_id_str, workspace_str, purge_str)

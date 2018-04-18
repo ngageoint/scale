@@ -597,7 +597,10 @@ class ScaleFile(models.Model):
     def set_deleted(self):
         """Marks the current file as deleted and updates the corresponding fields."""
         self.is_deleted = True
-        self.deleted = timezone.now()
+        self.is_published = False
+        when = timezone.now()
+        self.deleted = when
+        self.unpublished = when
 
     def _set_data_type_tags(self, tags):
         """Sets the data type tags on the model
