@@ -188,8 +188,10 @@ def convert_diff_to_v6(graph_diff):
         job_type = {'name': recipe_node.job_type_name, 'version': recipe_node.job_type_version}
         if status == 'CHANGED' and name in graph_diff._graph_a._nodes:
             prev_node = graph_diff._graph_a._nodes[name]
-            job_type['prev_name'] = prev_node.job_type_name
-            job_type['prev_version'] = prev_node.job_type_version
+            if recipe_node.job_type_name != prev_node.job_type_name:
+                job_type['prev_name'] = prev_node.job_type_name
+            if recipe_node.job_type_version != prev_node.job_type_version:
+                job_type['prev_version'] = prev_node.job_type_version
         dependencies = [{'name': p.job_name} for p in recipe_node.parents]
         job = {'name': name, 'will_be_reprocessed': will_be_reprocessed, 'force_reprocess': force_reprocess,
                'status': status, 'changes': changes, 'job_type': job_type, 'dependencies': dependencies}

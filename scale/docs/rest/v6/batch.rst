@@ -33,7 +33,8 @@ Response: 200 OK
             "id": 208,
             "name": "my-recipe-type",
             "title": "My Recipe Type",
-            "description": "My Recipe Type Description"
+            "description": "My Recipe Type Description",
+            "revision_num": 1
          },
          "recipe_type_rev": {
             "id": 4,
@@ -219,7 +220,8 @@ Location http://.../v6/batches/105/
          "id": 208,
          "name": "my-recipe-type",
          "title": "My Recipe Type",
-         "description": "My Recipe Type Description"
+         "description": "My Recipe Type Description",
+         "revision_num": 1,
       },
       "recipe_type_rev": {
          "id": 4,
@@ -281,9 +283,9 @@ Location http://.../v6/batches/105/
 | Creates a new batch with the given fields                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /batches/                                                                                                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
++---------------------+---------------------------------------------------------------------------------------------------+
 | **Content Type**    | *application/json*                                                                                |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
++---------------------+---------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
 | title               | String            | Optional | The human-readable name of the batch                               |
@@ -295,7 +297,7 @@ Location http://.../v6/batches/105/
 | definition          | JSON Object       | Required | JSON definition for processing the batch                           |
 |                     |                   |          | See :ref:`rest_v6_batch_json_definition`                           |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
-| configuration       | JSON Object       | Required | JSON configuration for processing the batch                        |
+| configuration       | JSON Object       | Optional | JSON configuration for processing the batch                        |
 |                     |                   |          | See :ref:`rest_v6_batch_json_configuration`                        |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -308,6 +310,109 @@ Location http://.../v6/batches/105/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_batch_details`           |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
+.. _rest_v6_batch_validation:
+
+v6 Validate Batch
+=================
+
+**Example POST /v6/batches/validation/ API call**
+
+Request: POST http://.../v6/batches/validation/
+
+.. code-block:: javascript
+
+   {
+      "recipe_type_id": 208,
+      "definition": {
+         "previous_batch": {
+            "root_batch_id": 104
+         }
+      },
+      "configuration": {
+         "priority": 100
+      }
+   }
+
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}],
+      "recipes_estimated": 10,
+      "recipe_type": {
+         "id": 208,
+         "name": "my-recipe-type",
+         "title": "My Recipe Type",
+         "description": "My Recipe Type Description",
+         "revision_num": 1
+      },
+      "prev_batch": {
+         "recipe_type_rev": {
+            "id": 4,
+            "recipe_type": {
+               "id": 208
+            },
+            "revision_num": 1
+         },
+         "diff": {...}
+      }
+   }
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Validate Batch**                                                                                                      |
++=========================================================================================================================+
+| Validates the given fields for creating a new batch                                                                     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /batches/validation/                                                                                           |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| recipe_type_id      | Integer           | Required | The ID of the recipe type for this batch's recipes                 |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| definition          | JSON Object       | Required | JSON definition for processing the batch                           |
+|                     |                   |          | See :ref:`rest_v6_batch_json_definition`                           |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| configuration       | JSON Object       | Optional | JSON configuration for processing the batch                        |
+|                     |                   |          | See :ref:`rest_v6_batch_json_configuration`                        |
++---------------------+-------------------+----------+--------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new batch. If this is  |
+|                    |                   | true, then submitting the same fields to the /batches/ API will successfully   |
+|                    |                   | create a new batch.                                                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | Lists any warnings found. Warnings are useful to present to the user, but do   |
+|                    |                   | not cause *is_valid* to be false. The warnings are JSON objects with *name*    |
+|                    |                   | and *description* string fields.                                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipes_estimated  | Integer           | The estimated number of recipes that would be created by this batch            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_type        | JSON Object       | The recipe type that is associated with the batch                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| prev_batch         | JSON Object       | Object containing information about the previous batch (will be omitted if     |
+|                    |                   | there is no previous batch)                                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_type_rev    | JSON Object       | The recipe type revision of the previous batch                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| diff               | JSON Object       | The recipe graph diff between the batch's recipe type revision and the previous|
+|                    |                   | batch's recipe type revision. The diff explains which recipe jobs will be      |
+|                    |                   | reprocessed by the new batch. See :ref:`rest_v6_recipe_json_diff`              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_details:
 
@@ -485,9 +590,9 @@ Response: 204 No Content
 +-------------------------------------------------------------------------------------------------------------------------+
 | **PATCH** /v6/batches/{id}/                                                                                             |
 |           Where {id} is the unique ID of the batch to edit                                                              |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
++---------------------+---------------------------------------------------------------------------------------------------+
 | **Content Type**    | *application/json*                                                                                |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
++---------------------+---------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +---------------------+-------------------+----------+--------------------------------------------------------------------+
 | title               | String            | Optional | The human-readable name of the batch                               |
@@ -535,7 +640,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 |                         |                   |          | (non-superseded) batch with this root ID and it will be            |
 |                         |                   |          | re-processed by this batch.                                        |
 +-------------------------+-------------------+----------+--------------------------------------------------------------------+
-| job_names               | String            | Optional | A list of strings that define specific jobs within the recipes     |
+| job_names               | Array             | Optional | A list of strings that define specific jobs within the recipes     |
 |                         |                   |          | that will be re-processed. Any job that has changed between the    |
 |                         |                   |          | previously run recipe revision and the current revision will       |
 |                         |                   |          | automatically be included in the batch, however this parameter can |
