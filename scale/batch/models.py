@@ -211,6 +211,96 @@ class BatchManager(models.Manager):
         if update_fields:
             Batch.objects.filter(id=batch.id).update(**update_fields)
 
+    def get_batch_comparison_v6(self, root_batch_id):
+        """Returns the batch metrics for the v6 batch comparison REST API
+
+        :param root_batch_id: The root batch ID of the batches to compare
+        :type root_batch_id: int
+        :returns: The list of batches in the chain
+        :rtype: list
+        """
+
+        from batch.serializers import BatchBaseSerializerV6
+
+        batches = Batch.objects.filter(root_batch_id=root_batch_id).prefetch_related('metrics')
+        batches = batches.defer('definition', 'configuration').order_by('id')
+
+        batch_list = []
+        job_metrics_dict = {}
+        for batch in batches:
+            batch_list.append(BatchBaseSerializerV6(batch).data)
+            batch.batch_metrics_dict = {}
+            for batch_metrics in batch.metrics.all():
+                batch.batch_metrics_dict[batch_metrics.job_name] = batch_metrics
+                if batch_metrics.job_name not in job_metrics_dict:
+                    job_metrics = {'jobs_total': [], 'jobs_pending': [], 'jobs_blocked': [], 'jobs_queued': [],
+                                   'jobs_running': [], 'jobs_failed': [], 'jobs_completed': [], 'jobs_canceled': [],
+                                   'min_seed_duration': [], 'avg_seed_duration': [], 'max_seed_duration': [],
+                                   'min_job_duration': [], 'avg_job_duration': [], 'max_job_duration': []}
+                    job_metrics_dict[batch_metrics.job_name] = job_metrics
+        metrics_dict = {'jobs_total': [], 'jobs_pending': [], 'jobs_blocked': [], 'jobs_queued': [], 'jobs_running': [],
+                        'jobs_failed': [], 'jobs_completed': [], 'jobs_canceled': [], 'recipes_estimated': [],
+                        'recipes_total': [], 'recipes_completed': [], 'job_metrics': job_metrics_dict}
+
+        for batch in batches:
+            metrics_dict['jobs_total'].append(batch.jobs_total)
+            metrics_dict['jobs_pending'].append(batch.jobs_pending)
+            metrics_dict['jobs_blocked'].append(batch.jobs_blocked)
+            metrics_dict['jobs_queued'].append(batch.jobs_queued)
+            metrics_dict['jobs_running'].append(batch.jobs_running)
+            metrics_dict['jobs_failed'].append(batch.jobs_failed)
+            metrics_dict['jobs_completed'].append(batch.jobs_completed)
+            metrics_dict['jobs_canceled'].append(batch.jobs_canceled)
+            metrics_dict['recipes_estimated'].append(batch.recipes_estimated)
+            metrics_dict['recipes_total'].append(batch.recipes_total)
+            metrics_dict['recipes_completed'].append(batch.recipes_completed)
+            for job_name, job_metrics in job_metrics_dict.items():
+                if job_name in batch.batch_metrics_dict:
+                    batch_metrics = batch.batch_metrics_dict[job_name]
+                    job_metrics['jobs_total'].append(batch_metrics.jobs_total)
+                    job_metrics['jobs_pending'].append(batch_metrics.jobs_pending)
+                    job_metrics['jobs_blocked'].append(batch_metrics.jobs_blocked)
+                    job_metrics['jobs_queued'].append(batch_metrics.jobs_queued)
+                    job_metrics['jobs_running'].append(batch_metrics.jobs_running)
+                    job_metrics['jobs_failed'].append(batch_metrics.jobs_failed)
+                    job_metrics['jobs_completed'].append(batch_metrics.jobs_completed)
+                    job_metrics['jobs_canceled'].append(batch_metrics.jobs_canceled)
+                    if batch_metrics.min_seed_duration is not None:
+                        min_seed_duration = parse_utils.duration_to_string(batch_metrics.min_seed_duration)
+                    else:
+                        min_seed_duration = None
+                    job_metrics['min_seed_duration'].append(min_seed_duration)
+                    if batch_metrics.avg_seed_duration is not None:
+                        avg_seed_duration = parse_utils.duration_to_string(batch_metrics.avg_seed_duration)
+                    else:
+                        avg_seed_duration = None
+                    job_metrics['avg_seed_duration'].append(avg_seed_duration)
+                    if batch_metrics.max_seed_duration is not None:
+                        max_seed_duration = parse_utils.duration_to_string(batch_metrics.max_seed_duration)
+                    else:
+                        max_seed_duration = None
+                    job_metrics['max_seed_duration'].append(max_seed_duration)
+                    if batch_metrics.min_job_duration is not None:
+                        min_job_duration = parse_utils.duration_to_string(batch_metrics.min_job_duration)
+                    else:
+                        min_job_duration = None
+                    job_metrics['min_job_duration'].append(min_job_duration)
+                    if batch_metrics.avg_job_duration is not None:
+                        avg_job_duration = parse_utils.duration_to_string(batch_metrics.avg_job_duration)
+                    else:
+                        avg_job_duration = None
+                    job_metrics['avg_job_duration'].append(avg_job_duration)
+                    if batch_metrics.max_job_duration is not None:
+                        max_job_duration = parse_utils.duration_to_string(batch_metrics.max_job_duration)
+                    else:
+                        max_job_duration = None
+                    job_metrics['max_job_duration'].append(max_job_duration)
+                else:
+                    for metric_name in job_metrics:
+                        job_metrics[metric_name].append(None)  # Batch does not have this job, fill in metrics with None
+
+        return {'batches': batch_list, 'metrics': metrics_dict}
+
     def get_batches_v5(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
                        order=None):
         """Returns a list of batches within the given time range.
@@ -942,7 +1032,7 @@ class BatchMetrics(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    batch = models.ForeignKey('batch.Batch', on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', related_name='metrics', on_delete=models.PROTECT)
     job_name = models.CharField(max_length=100)
 
     jobs_total = models.IntegerField(default=0)

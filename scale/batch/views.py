@@ -240,7 +240,7 @@ class BatchDetailsView(RetrieveUpdateAPIView):
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param batch_id: the batch id
+        :param batch_id: The batch ID
         :type batch_id: int
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
@@ -274,7 +274,7 @@ class BatchDetailsView(RetrieveUpdateAPIView):
     def _retrieve_v5(self, batch_id):
         """The v5 version for retrieving batch details
 
-        :param batch_id: the batch id
+        :param batch_id: The batch ID
         :type batch_id: int
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
@@ -291,7 +291,7 @@ class BatchDetailsView(RetrieveUpdateAPIView):
     def _retrieve_v6(self, batch_id):
         """The v6 version for retrieving batch details
 
-        :param batch_id: the batch id
+        :param batch_id: The batch ID
         :type batch_id: int
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
@@ -336,6 +336,41 @@ class BatchDetailsView(RetrieveUpdateAPIView):
             raise BadParameter('Batch configuration invalid: %s' % unicode(ex))
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BatchesComparisonView(APIView):
+    """This view is the endpoint for comparing batches with the same root ID (in the same iterative chain)"""
+    queryset = Batch.objects.all()
+
+    def get(self, request, root_batch_id):
+        """Validates a new batch
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param root_batch_id: The root batch ID
+        :type root_batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v6':
+            return self._get_v6(request, root_batch_id)
+
+        raise Http404()
+
+    def _get_v6(self, request, root_batch_id):
+        """The v6 version for comparing batches
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param root_batch_id: The root batch ID
+        :type root_batch_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        comparison_dict = Batch.objects.get_batch_comparison_v6(root_batch_id)
+        return Response(comparison_dict)
 
 
 class BatchesValidationView(APIView):

@@ -13,6 +13,7 @@ class BatchBaseSerializerV6(ModelIdSerializer):
 
     title = serializers.CharField()
     description = serializers.CharField()
+    created = serializers.DateTimeField()
 
 
 class BatchSerializerV6(BatchBaseSerializerV6):
@@ -42,7 +43,6 @@ class BatchSerializerV6(BatchBaseSerializerV6):
     recipes_total = serializers.IntegerField()
     recipes_completed = serializers.IntegerField()
 
-    created = serializers.DateTimeField()
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 

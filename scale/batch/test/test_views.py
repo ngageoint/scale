@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import json
+from datetime import timedelta
 
 import django
 from django.test import TestCase, TransactionTestCase
@@ -15,7 +16,10 @@ import util.rest as rest_util
 from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
-from batch.models import Batch
+from batch.models import Batch, BatchMetrics
+from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.models import RecipeType
+from util.parse import datetime_to_string, duration_to_string
 
 
 class TestBatchesViewV5(TestCase):
@@ -657,6 +661,202 @@ class TestBatchDetailsViewV6(TestCase):
         url = '/v6/batches/%d/' % batch.id
         response = self.client.generic('PUT', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, 405, response.content)
+
+
+class TestBatchesComparisonViewV6(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_invalid_version(self):
+        """Tests calling the v6 batch comparison view with an invalid version"""
+
+        batch = batch_test_utils.create_batch()
+
+        url = '/v1/batches/comparison/%d/' % batch.root_batch_id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful_no_batches(self):
+        """Tests successfully calling the v6 batch comparison view with a root batch ID that does not exist"""
+
+        url = '/v6/batches/comparison/100000/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertDictEqual(result, {'batches': [], 'metrics': {'jobs_total': [], 'jobs_pending': [],
+                                      'jobs_blocked': [], 'jobs_queued': [], 'jobs_running': [], 'jobs_failed': [],
+                                      'jobs_completed': [], 'jobs_canceled': [], 'recipes_estimated': [],
+                                      'recipes_total': [], 'recipes_completed': [], 'job_metrics': {}}})
+
+    def test_successful(self):
+        """Tests successfully calling the v6 batch comparison view"""
+
+        job_type_1 = job_test_utils.create_job_type()
+        job_type_2 = job_test_utils.create_job_type()
+        job_type_3 = job_test_utils.create_job_type()
+
+        rt_definition_1 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_a',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                }
+            }, {
+                'name': 'job_b',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{'name': 'job_a'}]
+            }],
+        }
+        rt_definition_2 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_c',
+                'job_type': {
+                    'name': job_type_3.name,
+                    'version': job_type_3.version,
+                }
+            }, {
+                'name': 'job_b',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{'name': 'job_c'}]
+            }],
+        }
+        recipe_type = recipe_test_utils.create_recipe_type(definition=rt_definition_1)
+
+        # Create a chain of two batches
+        batch_1 = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=2)
+        # Right now test utils will automatically have batch_1 supersede another batch, so we reset this so batch_1 is
+        # its own chain
+        batch_1.root_batch_id = batch_1.id
+        batch_1.superseded_batch = None
+        batch_1.save()
+        # Change recipe type to new revision
+        RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(rt_definition_2), None, None)
+        recipe_type = RecipeType.objects.get(id=recipe_type.id)
+        definition_2 = BatchDefinition()
+        definition_2.root_batch_id = batch_1.root_batch_id
+        batch_2 = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition_2)
+
+        # Set metrics to test values
+        Batch.objects.filter(id=batch_1.id).update(jobs_total=24, jobs_pending=0, jobs_blocked=10, jobs_queued=0,
+                                                   jobs_running=0, jobs_failed=2, jobs_completed=12, jobs_canceled=0,
+                                                   recipes_estimated=2, recipes_total=2, recipes_completed=1)
+        Batch.objects.filter(id=batch_2.id).update(jobs_total=26, jobs_pending=2, jobs_blocked=6, jobs_queued=3,
+                                                   jobs_running=5, jobs_failed=6, jobs_completed=3, jobs_canceled=1,
+                                                   recipes_estimated=2, recipes_total=2, recipes_completed=0)
+        min_seed_duration_1a = timedelta(seconds=43)
+        avg_seed_duration_1a = timedelta(seconds=68)
+        max_seed_duration_1a = timedelta(seconds=77)
+        min_job_duration_1a = timedelta(seconds=45)
+        avg_job_duration_1a = timedelta(seconds=70)
+        max_job_duration_1a = timedelta(seconds=79)
+        qry = BatchMetrics.objects.filter(batch_id=batch_1.id, job_name='job_a')
+        qry.update(jobs_total=12, jobs_pending=0, jobs_blocked=0, jobs_queued=0, jobs_running=0, jobs_failed=0,
+                   jobs_completed=12, jobs_canceled=0, min_seed_duration=min_seed_duration_1a,
+                   avg_seed_duration=avg_seed_duration_1a, max_seed_duration=max_seed_duration_1a,
+                   min_job_duration=min_job_duration_1a, avg_job_duration=avg_job_duration_1a,
+                   max_job_duration=max_job_duration_1a)
+        min_seed_duration_1b = timedelta(seconds=15)
+        avg_seed_duration_1b = timedelta(seconds=18)
+        max_seed_duration_1b = timedelta(seconds=23)
+        min_job_duration_1b = timedelta(seconds=18)
+        avg_job_duration_1b = timedelta(seconds=21)
+        max_job_duration_1b = timedelta(seconds=26)
+        qry = BatchMetrics.objects.filter(batch_id=batch_1.id, job_name='job_b')
+        qry.update(jobs_total=12, jobs_pending=0, jobs_blocked=10, jobs_queued=0, jobs_running=0, jobs_failed=2,
+                   jobs_completed=0, jobs_canceled=0, min_seed_duration=min_seed_duration_1b,
+                   avg_seed_duration=avg_seed_duration_1b, max_seed_duration=max_seed_duration_1b,
+                   min_job_duration=min_job_duration_1b, avg_job_duration=avg_job_duration_1b,
+                   max_job_duration=max_job_duration_1b)
+        min_seed_duration_2b = timedelta(seconds=9)
+        avg_seed_duration_2b = timedelta(seconds=12)
+        max_seed_duration_2b = timedelta(seconds=17)
+        min_job_duration_2b = timedelta(seconds=12)
+        avg_job_duration_2b = timedelta(seconds=15)
+        max_job_duration_2b = timedelta(seconds=20)
+        qry = BatchMetrics.objects.filter(batch_id=batch_2.id, job_name='job_b')
+        qry.update(jobs_total=13, jobs_pending=0, jobs_blocked=0, jobs_queued=0, jobs_running=3, jobs_failed=6,
+                   jobs_completed=3, jobs_canceled=1, min_seed_duration=min_seed_duration_2b,
+                   avg_seed_duration=avg_seed_duration_2b, max_seed_duration=max_seed_duration_2b,
+                   min_job_duration=min_job_duration_2b, avg_job_duration=avg_job_duration_2b,
+                   max_job_duration=max_job_duration_2b)
+        min_seed_duration_2c = timedelta(seconds=101)
+        avg_seed_duration_2c = timedelta(seconds=136)
+        max_seed_duration_2c = timedelta(seconds=158)
+        min_job_duration_2c = timedelta(seconds=111)
+        avg_job_duration_2c = timedelta(seconds=146)
+        max_job_duration_2c = timedelta(seconds=168)
+        qry = BatchMetrics.objects.filter(batch_id=batch_2.id, job_name='job_c')
+        qry.update(jobs_total=13, jobs_pending=2, jobs_blocked=6, jobs_queued=3, jobs_running=2, jobs_failed=0,
+                   jobs_completed=0, jobs_canceled=0, min_seed_duration=min_seed_duration_2c,
+                   avg_seed_duration=avg_seed_duration_2c, max_seed_duration=max_seed_duration_2c,
+                   min_job_duration=min_job_duration_2c, avg_job_duration=avg_job_duration_2c,
+                   max_job_duration=max_job_duration_2c)
+        expected_job_metrics = {'job_a': {'jobs_total': [12, None], 'jobs_pending': [0, None],
+                                          'jobs_blocked': [0, None], 'jobs_queued': [0, None],
+                                          'jobs_running': [0, None], 'jobs_failed': [0, None],
+                                          'jobs_completed': [12, None], 'jobs_canceled': [0, None],
+                                          'min_seed_duration': [duration_to_string(min_seed_duration_1a), None],
+                                          'avg_seed_duration': [duration_to_string(avg_seed_duration_1a), None],
+                                          'max_seed_duration': [duration_to_string(max_seed_duration_1a), None],
+                                          'min_job_duration': [duration_to_string(min_job_duration_1a), None],
+                                          'avg_job_duration': [duration_to_string(avg_job_duration_1a), None],
+                                          'max_job_duration': [duration_to_string(max_job_duration_1a), None]},
+                                'job_b': {'jobs_total': [12, 13], 'jobs_pending': [0, 0],
+                                          'jobs_blocked': [10, 0], 'jobs_queued': [0, 0],
+                                          'jobs_running': [0, 3], 'jobs_failed': [2, 6],
+                                          'jobs_completed': [0, 3], 'jobs_canceled': [0, 1],
+                                          'min_seed_duration': [duration_to_string(min_seed_duration_1b),
+                                                                duration_to_string(min_seed_duration_2b)],
+                                          'avg_seed_duration': [duration_to_string(avg_seed_duration_1b),
+                                                                duration_to_string(avg_seed_duration_2b)],
+                                          'max_seed_duration': [duration_to_string(max_seed_duration_1b),
+                                                                duration_to_string(max_seed_duration_2b)],
+                                          'min_job_duration': [duration_to_string(min_job_duration_1b),
+                                                               duration_to_string(min_job_duration_2b)],
+                                          'avg_job_duration': [duration_to_string(avg_job_duration_1b),
+                                                               duration_to_string(avg_job_duration_2b)],
+                                          'max_job_duration': [duration_to_string(max_job_duration_1b),
+                                                               duration_to_string(max_job_duration_2b)]},
+                                'job_c': {'jobs_total': [None, 13], 'jobs_pending': [None, 2],
+                                          'jobs_blocked': [None, 6], 'jobs_queued': [None, 3],
+                                          'jobs_running': [None, 2], 'jobs_failed': [None, 0],
+                                          'jobs_completed': [None, 0], 'jobs_canceled': [None, 0],
+                                          'min_seed_duration': [None, duration_to_string(min_seed_duration_2c)],
+                                          'avg_seed_duration': [None, duration_to_string(avg_seed_duration_2c)],
+                                          'max_seed_duration': [None, duration_to_string(max_seed_duration_2c)],
+                                          'min_job_duration': [None, duration_to_string(min_job_duration_2c)],
+                                          'avg_job_duration': [None, duration_to_string(avg_job_duration_2c)],
+                                          'max_job_duration': [None, duration_to_string(max_job_duration_2c)]}
+                               }
+        expected_result = {'batches': [{'id': batch_1.id, 'title': batch_1.title, 'description': batch_1.description,
+                                        'created': datetime_to_string(batch_1.created)},
+                                       {'id': batch_2.id, 'title': batch_2.title, 'description': batch_2.description,
+                                        'created': datetime_to_string(batch_2.created)}],
+                           'metrics': {'jobs_total': [24, 26], 'jobs_pending': [0, 2], 'jobs_blocked': [10, 6],
+                                       'jobs_queued': [0, 3], 'jobs_running': [0, 5], 'jobs_failed': [2, 6],
+                                       'jobs_completed': [12, 3], 'jobs_canceled': [0, 1], 'recipes_estimated': [2, 2],
+                                       'recipes_total': [2, 2], 'recipes_completed': [1, 0],
+                                       'job_metrics': expected_job_metrics}
+                          }
+        url = '/v6/batches/comparison/%d/' % batch_2.root_batch_id
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertDictEqual(result, expected_result)
 
 
 class TestBatchesValidationViewV5(TestCase):

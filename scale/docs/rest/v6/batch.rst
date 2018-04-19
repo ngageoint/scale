@@ -53,12 +53,14 @@ Response: 200 OK
          "root_batch": {
             "id": 1232,
             "title": "My Root Batch",
-            "description": "My Root Batch Description"
+            "description": "My Root Batch Description",
+            "created": "1970-01-01T00:00:00Z"
          },
          "superseded_batch": {
             "id": 1233,
             "title": "My Superseded Batch",
-            "description": "My Superseded Batch Description"
+            "description": "My Superseded Batch Description",
+            "created": "1970-01-01T00:00:00Z"
          },
          "is_creation_done": true,
          "jobs_total": 10,
@@ -245,12 +247,14 @@ Location http://.../v6/batches/105/
       "root_batch": {
          "id": 104,
          "title": "My Superseded Batch",
-         "description": "My Superseded Batch Description"
+         "description": "My Superseded Batch Description",
+         "created": "1970-01-01T00:00:00Z"
       },
       "superseded_batch": {
          "id": 104,
          "title": "My Superseded Batch",
-         "description": "My Superseded Batch Description"
+         "description": "My Superseded Batch Description",
+         "created": "1970-01-01T00:00:00Z"
       },
       "is_creation_done": true,
       "jobs_total": 10,
@@ -274,6 +278,24 @@ Location http://.../v6/batches/105/
       },
       "configuration": {
          "priority": 100
+      },
+      "job_metrics": {
+         "job_a": {
+            "jobs_total": 10,
+            "jobs_pending": 0,
+            "jobs_blocked": 0,
+            "jobs_queued": 1,
+            "jobs_running": 3,
+            "jobs_failed": 0,
+            "jobs_completed": 6,
+            "jobs_canceled": 0,
+            "min_seed_duration": "PT9M2S",
+            "avg_seed_duration": "PT10M12S",
+            "max_seed_duration": "PT15M45S",
+            "min_job_duration": "PT9M50S",
+            "avg_job_duration": "PT10M59S",
+            "max_job_duration": "PT16M49S"
+         }
       }
    }
 
@@ -459,12 +481,14 @@ Response: 200 OK
       "root_batch": {
          "id": 1232,
          "title": "My Root Batch",
-         "description": "My Root Batch Description"
+         "description": "My Root Batch Description",
+         "created": "1970-01-01T00:00:00Z"
       },
       "superseded_batch": {
          "id": 1233,
          "title": "My Superseded Batch",
-         "description": "My Superseded Batch Description"
+         "description": "My Superseded Batch Description",
+         "created": "1970-01-01T00:00:00Z"
       },
       "is_creation_done": true,
       "jobs_total": 10,
@@ -488,6 +512,24 @@ Response: 200 OK
       },
       "configuration": {
          "priority": 100
+      },
+      "job_metrics": {
+         "job_a": {
+            "jobs_total": 10,
+            "jobs_pending": 0,
+            "jobs_blocked": 0,
+            "jobs_queued": 1,
+            "jobs_running": 3,
+            "jobs_failed": 0,
+            "jobs_completed": 6,
+            "jobs_canceled": 0,
+            "min_seed_duration": "PT9M2S",
+            "avg_seed_duration": "PT10M12S",
+            "max_seed_duration": "PT15M45S",
+            "min_job_duration": "PT9M50S",
+            "avg_job_duration": "PT10M59S",
+            "max_job_duration": "PT16M49S"
+         }
       }
    }
 
@@ -560,6 +602,13 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | configuration           | JSON Object       | The configuration of the batch                                                |
 |                         |                   | See :ref:`rest_v6_batch_json_configuration`                                   |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| job_metrics             | JSON Object       | The metrics for each recipe job in the batch. Each recipe job name maps to    |
+|                         |                   | the metrics for that job. The job count metrics (e.g. jobs_total) are similar |
+|                         |                   | to the top level batch metrics. The duration metrics (e.g. min_seed_duration) |
+|                         |                   | detail the minimum, average, and maximum durations for completing the Seed    |
+|                         |                   | run and completing the overall Scale job. The durations are provided in the   |
+|                         |                   | ISO-8601 duration format.                                                     |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_edit:
