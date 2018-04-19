@@ -333,6 +333,106 @@ Location http://.../v6/batches/105/
 | **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_batch_details`           |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
+.. _rest_v6_batch_comparison:
+
+v6 Batch Comparison
+===================
+
+**Example GET /v6/batches/comparison/{batch-id}/ API call**
+
+Request: GET http://.../v6/batches/comparison/101/
+
+Response: 200 OK
+
+.. code-block:: javascript
+
+   {
+      "batches": [{
+         "id": 101,
+         "title": "My Batch",
+         "description": "My Batch Description",
+         "created": "1970-01-01T00:00:00Z"
+      }, {
+         "id": 102,
+         "title": "My Other Batch",
+         "description": "My Other Batch Description",
+         "created": "1970-01-01T00:00:00Z"
+      }],
+      "metrics": {
+         "jobs_total": [10, 10],
+         "jobs_pending": [0, 0],
+         "jobs_blocked": [0, 0],
+         "jobs_queued": [0, 1],
+         "jobs_running": [0, 3],
+         "jobs_failed": [0, 0],
+         "jobs_completed": [10, 6],
+         "jobs_canceled": [0, 0],
+         "recipes_estimated": [2, 2],
+         "recipes_total": [2, 2],
+         "recipes_completed": [2, 1],
+         "job_metrics": {
+            "job_a": {
+               "jobs_total": [5, 5],
+               "jobs_pending": [0, 0],
+               "jobs_blocked": [0, 0],
+               "jobs_queued": [0, 1],
+               "jobs_running": [0, 1],
+               "jobs_failed": [0, 0],
+               "jobs_completed": [5, 3],
+               "jobs_canceled": [0, 0],
+               "min_seed_duration": ["PT12S", "PT11S"],
+               "avg_seed_duration": ["PT18S", "PT17S"],
+               "max_seed_duration": ["PT23S", "PT22S"],
+               "min_job_duration": ["PT15S", "PT14S"],
+               "avg_job_duration": ["PT21S", "PT20S"],
+               "max_job_duration": ["PT26S", "PT25S"]
+            },
+            "job_b": {
+               "jobs_total": [5, 5],
+               "jobs_pending": [0, 0],
+               "jobs_blocked": [0, 0],
+               "jobs_queued": [0, 0],
+               "jobs_running": [0, 2],
+               "jobs_failed": [0, 0],
+               "jobs_completed": [5, 3],
+               "jobs_canceled": [0, 0],
+               "min_seed_duration": ["PT46S", "PT41S"],
+               "avg_seed_duration": ["PT50S", "PT45S"],
+               "max_seed_duration": ["PT57S", "PT52S"],
+               "min_job_duration": ["PT48S", "PT43S"],
+               "avg_job_duration": ["PT52S", "PT47S"],
+               "max_job_duration": ["PT59S", "PT54S"]
+            }
+         }
+      }
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Batch Comparison**                                                                                                        |
++=============================================================================================================================+
+| Returns the list of batches with the given root batch ID along with their metrics                                           |
++-----------------------------------------------------------------------------------------------------------------------------+
+| **GET** /v6/batches/comparison/{id}/                                                                                        |
+|         Where {id} is the root batch ID of a chain of batches                                                               |
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                     |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **Status**              | 200 OK                                                                                            |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**        | *application/json*                                                                                |
++-------------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                             |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| batches                 | Array             | List of batches in the chain with the given root batch ID                     |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+| metrics                 | JSON Object       | Contains the top-level and per job metrics fields for each batch in the       |
+|                         |                   | chain. This is similar to the metrics in a batch details response, except     |
+|                         |                   | that instead of each metric containing a single value, each metric here holds |
+|                         |                   | an array of values. The order of the values in each array corresponds to the  |
+|                         |                   | order of the batches in the *batches* array. See :ref:`rest_v6_batch_details` |
+|                         |                   | for a description of the various metrics fields.                              |
++-------------------------+-------------------+-------------------------------------------------------------------------------+
+
 .. _rest_v6_batch_validation:
 
 v6 Validate Batch
