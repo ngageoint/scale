@@ -6,7 +6,27 @@ Subpackages
 
 .. toctree::
 
-    batch.configuration.definition
+    batch.configuration.json
+
+Submodules
+----------
+
+batch\.configuration\.configuration module
+------------------------------------------
+
+.. automodule:: batch.configuration.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.configuration\.exceptions module
+---------------------------------------
+
+.. automodule:: batch.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

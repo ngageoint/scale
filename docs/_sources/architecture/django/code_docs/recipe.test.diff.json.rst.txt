@@ -1,0 +1,22 @@
+recipe\.test\.diff\.json package
+================================
+
+Submodules
+----------
+
+recipe\.test\.diff\.json\.test\_diff\_v6 module
+-----------------------------------------------
+
+.. automodule:: recipe.test.diff.json.test_diff_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.diff.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="recipe.configuration package" href="recipe.configuration.html"/>
-        <link rel="prev" title="queue.test.messages package" href="queue.test.messages.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.configuration package" href="recipe.configuration.html" />
+    <link rel="prev" title="queue.test.messages package" href="queue.test.messages.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -164,7 +156,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -172,9 +164,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -248,6 +241,21 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.configuration.html#module-recipe.configuration">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.diff.html">recipe.diff package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.diff.json.html">recipe.diff.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json.diff_v6">recipe.diff.json.diff_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff.exceptions">recipe.diff.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="recipe.handlers.html">recipe.handlers package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="recipe.handlers.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.handlers.html#module-recipe.handlers.connection">recipe.handlers.connection module</a></li>
@@ -314,6 +322,19 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.configuration.html#module-recipe.test.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.test.diff.html">recipe.test.diff package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="recipe.test.diff.json.html">recipe.test.diff.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json.test_diff_v6">recipe.test.diff.json.test_diff_v6 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="recipe.test.diff.json.html#module-recipe.test.diff.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.diff.html#module-recipe.test.diff">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.test.handlers.html">recipe.test.handlers package</a><ul>
@@ -2226,6 +2247,21 @@ recipe type model.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.RecipeTypeRevision.batch_set">
+<code class="descname">batch_set</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.batch_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.RecipeTypeRevision.created">
 <code class="descname">created</code><a class="headerlink" href="#recipe.models.RecipeTypeRevision.created" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -2566,6 +2602,13 @@ given new revision ID. Each revision model will have its related recipe type mod
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.serializers.RecipeTypeBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Base serializer for recipe types</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeTypeDetailsSerializer">
 <em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeSerializer" title="recipe.serializers.RecipeTypeSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeSerializer</span></code></a></p>
@@ -2600,10 +2643,24 @@ given new revision ID. Each revision model will have its related recipe type mod
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.serializers.RecipeTypeRevisionBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeRevisionBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Base serializer for recipe type revisions</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeTypeRevisionSerializer">
 <em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeRevisionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeRevisionBaseSerializer" title="recipe.serializers.RecipeTypeRevisionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeRevisionBaseSerializer</span></code></a></p>
 <p>Converts recipe type revision model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.serializers.RecipeTypeRevisionSerializerV6">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeTypeRevisionSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeTypeRevisionSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeTypeRevisionBaseSerializerV6" title="recipe.serializers.RecipeTypeRevisionBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeRevisionBaseSerializerV6</span></code></a></p>
+<p>Serializer for recipe type revisions</p>
 </dd></dl>
 
 <dl class="class">
@@ -2994,9 +3051,7 @@ example: input_1</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -3018,7 +3073,7 @@ example: input_1</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -3037,6 +3092,7 @@ example: input_1</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -3054,14 +3110,13 @@ example: input_1</p>
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

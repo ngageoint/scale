@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="util.test package" href="util.test.html"/>
-        <link rel="prev" title="trigger.test package" href="trigger.test.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="util.test package" href="util.test.html" />
+    <link rel="prev" title="trigger.test package" href="trigger.test.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -148,6 +140,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-util.parse">util.parse module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.rest">util.rest module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.retry">util.retry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.validation">util.validation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util">Module contents</a></li>
 </ul>
 </li>
@@ -171,7 +164,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -179,9 +172,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -692,6 +686,13 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 <p>Exception that can be thrown to indicate that a Scale command recieved a SIGTERM signal</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="util.exceptions.ValidationException">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">ValidationException</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#util.exceptions.ValidationException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating there was a validation error</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-util.file_size">
 <span id="util-file-size-module"></span><h2>util.file_size module<a class="headerlink" href="#module-util.file_size" title="Permalink to this headline">¶</a></h2>
@@ -805,6 +806,25 @@ users however, we want to always take that name instead.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The datetime to convert</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ISO-8601 string format</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.parse.duration_to_string">
+<code class="descclassname">util.parse.</code><code class="descname">duration_to_string</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#util.parse.duration_to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the given timedelta into an appropriate ISO-8601 duration format for JSON. Only handles positive
+durations correctly. Fractional seconds are rounded.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.timedelta</span></code>) &#8211; The timedelta to convert</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ISO-8601 duration format</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
@@ -1364,6 +1384,24 @@ does not exist, there is no default value, and required is True.</li>
 <p>:raises <a class="reference internal" href="#util.rest.BadParameter" title="util.rest.BadParameter"><code class="xref py py-class docutils literal"><span class="pre">util.rest.BadParameter</span></code></a>: If the value cannot be parsed.</p>
 </dd></dl>
 
+<dl class="function">
+<dt id="util.rest.strip_schema_version">
+<code class="descclassname">util.rest.</code><code class="descname">strip_schema_version</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.strip_schema_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the given JSON dict after stripping its schema version out</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_dict</strong> (<em>dict</em>) &#8211; The JSON dict</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The JSON dict with its schema version stripped out</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-util.retry">
 <span id="util-retry-module"></span><h2>util.retry module<a class="headerlink" href="#module-util.retry" title="Permalink to this headline">¶</a></h2>
@@ -1415,6 +1453,56 @@ exceed max_ms_delay milliseconds.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-util.validation">
+<span id="util-validation-module"></span><h2>util.validation module<a class="headerlink" href="#module-util.validation" title="Permalink to this headline">¶</a></h2>
+<p>Defines classes related to validating</p>
+<dl class="class">
+<dt id="util.validation.ValidationError">
+<em class="property">class </em><code class="descclassname">util.validation.</code><code class="descname">ValidationError</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#util.validation.ValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks errors during validation</p>
+<dl class="method">
+<dt id="util.validation.ValidationError.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.validation.ValidationError.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict representation of the error</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dict representation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.validation.ValidationWarning">
+<em class="property">class </em><code class="descclassname">util.validation.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#util.validation.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks warnings during validation</p>
+<dl class="method">
+<dt id="util.validation.ValidationWarning.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.validation.ValidationWarning.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict representation of the warning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dict representation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-util">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-util" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -1422,9 +1510,7 @@ exceed max_ms_delay milliseconds.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1446,7 +1532,7 @@ exceed max_ms_delay milliseconds.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1465,6 +1551,7 @@ exceed max_ms_delay milliseconds.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -1482,14 +1569,13 @@ exceed max_ms_delay milliseconds.</p>
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -115,6 +115,14 @@ util\.retry module
     :undoc-members:
     :show-inheritance:
 
+util\.validation module
+-----------------------
+
+.. automodule:: util.validation
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

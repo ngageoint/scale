@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="source package" href="source.html"/>
-        <link rel="next" title="source.test.configuration package" href="source.test.configuration.html"/>
-        <link rel="prev" title="source.migrations package" href="source.migrations.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="source.test.configuration package" href="source.test.configuration.html" />
+    <link rel="prev" title="source.migrations package" href="source.migrations.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -164,7 +156,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -172,9 +164,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -264,7 +257,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
 <dt id="source.test.test_models.TestSourceFileManager.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json', u'ingest_job_types.json']</em><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.fixtures" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -539,11 +532,6 @@ model</p>
 <dt id="source.test.test_views.TestSourceProductsView">
 <em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceProductsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="source.test.test_views.TestSourceProductsView.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="source.test.test_views.TestSourceProductsView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -805,9 +793,7 @@ model</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -829,7 +815,7 @@ model</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -848,6 +834,7 @@ model</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -865,14 +852,13 @@ model</p>
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

@@ -6,7 +6,19 @@ Subpackages
 
 .. toctree::
 
-    batch.test.configuration.definition
+    batch.test.configuration.json
+
+Submodules
+----------
+
+batch\.test\.configuration\.test\_configuration module
+------------------------------------------------------
+
+.. automodule:: batch.test.configuration.test_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

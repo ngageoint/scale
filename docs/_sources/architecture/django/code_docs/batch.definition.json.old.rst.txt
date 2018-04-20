@@ -1,0 +1,22 @@
+batch\.definition\.json\.old package
+====================================
+
+Submodules
+----------
+
+batch\.definition\.json\.old\.batch\_definition module
+------------------------------------------------------
+
+.. automodule:: batch.definition.json.old.batch_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.definition.json.old
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>v6 Recipe Services &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Install" href="../../install/index.html" />
+    <link rel="prev" title="v6 Batch Services" href="batch.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-create-batch">v6 Create Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-batch-comparison">v6 Batch Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-validate-batch">v6 Validate Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-edit-batch">v6 Edit Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#batch-definition-json">Batch Definition JSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html#batch-configuration-json">Batch Configuration JSON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">REST API</a> &raquo;</li>
+        
+      <li>v6 Recipe Services</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rest/v6/recipe.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v6-recipe-services">
+<span id="rest-v6-recipe"></span><h1>v6 Recipe Services<a class="headerlink" href="#v6-recipe-services" title="Permalink to this headline">¶</a></h1>
+<p>These services allow for the creation and management of recipes. A recipe type is a user-defined workflow of jobs that
+allows jobs to be connected together in order to pass output from jobs to the input of other jobs.</p>
+</div>
+<div class="section" id="recipe-graph-diff-json">
+<span id="rest-v6-recipe-json-diff"></span><h1>Recipe Graph Diff JSON<a class="headerlink" href="#recipe-graph-diff-json" title="Permalink to this headline">¶</a></h1>
+<p>A recipe graph diff JSON describes the differences between two recipe graphs (two revisions). The differences explain
+which recipe jobs will be reprocessed when a newer recipe type revision is run.</p>
+<p><strong>Example recipe graph diff:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;can_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;reasons&quot;</span><span class="o">:</span> <span class="p">[],</span>
+   <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_a&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;UNCHANGED&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
+      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[]</span>
+   <span class="p">},</span> <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_b&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;CHANGED&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;JOB_TYPE_VERSION_CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Job type version changed from 1.0 to 2.0&quot;</span><span class="p">}],</span>
+      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-2&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;prev_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_a&quot;</span><span class="p">}]</span>
+   <span class="p">},</span> <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_c&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;NEW&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
+      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-3&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.1&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_b&quot;</span><span class="p">}]</span>
+   <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="16%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Graph Diff</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>can_be_reprocessed</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>Indicates whether recipes from the previous revision can be
+reprocessed as the newer revision.</td>
+</tr>
+<tr class="row-odd"><td>reasons</td>
+<td>Array</td>
+<td>Required</td>
+<td>Lists any reasons causing <em>can_be_reprocessed</em> to be false. The
+reasons are JSON objects with <em>name</em> and <em>description</em> string
+fields.</td>
+</tr>
+<tr class="row-even"><td>jobs</td>
+<td>Array</td>
+<td>Required</td>
+<td>Lists all of the jobs in the two recipe type revisions</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>Required</td>
+<td>The name of the recipe job</td>
+</tr>
+<tr class="row-even"><td>will_be_reprocessed</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>Indicates whether this job will be superseded by a new created job
+if the recipe is reprocessed</td>
+</tr>
+<tr class="row-odd"><td>force_reprocess</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>Indicates whether the user has requested that this job be
+reprocessed regardless of whether it has changed</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Required</td>
+<td><p class="first">The status indicating the job differences between the two
+revisions. The possible statuses are:</p>
+<ul class="last simple">
+<li><dl class="first docutils">
+<dt><em>DELETED</em> - the job existed in the previous revision and has been</dt>
+<dd>removed in the newer revision</dd>
+</dl>
+</li>
+<li><em>UNCHANGED</em> - the job did not change between the revisions</li>
+<li><dl class="first docutils">
+<dt><em>CHANGED</em> - the job changed between the revisions, see the</dt>
+<dd><em>changes</em> list for more details</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><em>NEW</em> - the job did not exist in the previous revision and was</dt>
+<dd>added in the newer revision</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>changes</td>
+<td>Array</td>
+<td>Required</td>
+<td>If <em>status</em> is <em>NEW</em>, lists the job&#8217;s changes between the two
+revisions. Each change is a JSON object with <em>name</em> and
+<em>description</em> string fields.</td>
+</tr>
+<tr class="row-even"><td>job_type</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>The job type of the recipe job</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>Required</td>
+<td>The name of the job type</td>
+</tr>
+<tr class="row-even"><td>version</td>
+<td>String</td>
+<td>Required</td>
+<td>The version of the job type</td>
+</tr>
+<tr class="row-odd"><td>prev_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>If the job type name changed between revisions, <em>prev_name</em> is the
+name from the previous revision while <em>name</em> is the name for the
+newer revision.</td>
+</tr>
+<tr class="row-even"><td>prev_version</td>
+<td>String</td>
+<td>Optional</td>
+<td>If the job type version changed between revisions, <em>prev_version</em>
+is the version from the previous revision while <em>version</em> is the
+version for the newer revision.</td>
+</tr>
+<tr class="row-odd"><td>dependencies</td>
+<td>Array</td>
+<td>Required</td>
+<td>The list of job dependencies for this recipe job. Each JSON object
+in the list has a single string field called <em>name</em> giving the job
+name of the dependency.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../install/index.html" class="btn btn-neutral float-right" title="Install" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="batch.html" class="btn btn-neutral" title="v6 Batch Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>

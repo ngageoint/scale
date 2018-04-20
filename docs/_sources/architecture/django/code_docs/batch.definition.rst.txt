@@ -1,0 +1,37 @@
+batch\.definition package
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.definition.json
+
+Submodules
+----------
+
+batch\.definition\.definition module
+------------------------------------
+
+.. automodule:: batch.definition.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.definition\.exceptions module
+------------------------------------
+
+.. automodule:: batch.definition.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

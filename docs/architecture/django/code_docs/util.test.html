@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="util package" href="util.html"/>
-        <link rel="next" title="vault package" href="vault.html"/>
-        <link rel="prev" title="util package" href="util.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="vault package" href="vault.html" />
+    <link rel="prev" title="util package" href="util.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -148,6 +140,7 @@
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.parse">util.parse module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.rest">util.rest module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.retry">util.retry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.validation">util.validation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util">Module contents</a></li>
 </ul>
 </li>
@@ -171,7 +164,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -179,9 +172,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -409,6 +403,12 @@
 <dt id="util.test.test_parse.TestParse.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_parse.TestParse.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_parse.TestParse.test_duration_to_string">
+<code class="descname">test_duration_to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_parse.TestParse.test_duration_to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting timedelta duration to ISO duration string</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="util.test.test_parse.TestParse.test_parse_datetime">
@@ -1061,9 +1061,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -1085,7 +1083,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -1104,6 +1102,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -1121,14 +1120,13 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

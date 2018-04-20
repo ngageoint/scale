@@ -28,17 +28,10 @@
   
 
   
-  
     <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="#"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="index.html"/>
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
     <link href="_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -47,7 +40,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -64,7 +57,7 @@
 
           
             
-            <img src="_static/scale3-transparent-128.png" class="logo" />
+            <img src="_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -115,7 +108,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">Scale</a>
@@ -123,9 +116,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -371,6 +365,8 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.add_message_type">add_message_type() (in module messaging.messages.factory)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetricsManager.add_metrics_to_batch">add_metrics_to_batch() (batch.models.BatchMetricsManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.add_monitor_type">add_monitor_type() (in module ingest.strike.monitors.factory)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.add_new_offer_count">add_new_offer_count() (scheduler.manager.SchedulerManager method)</a>
@@ -554,6 +550,8 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchRecipe.batch">(batch.models.BatchRecipe attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.batch">(batch.models.BatchValidation attribute)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch">Batch (class in batch.models)</a>
 </li>
@@ -577,11 +575,27 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.configuration.html#module-batch.configuration">batch.configuration (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#module-batch.configuration.definition">batch.configuration.definition (module)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#module-batch.configuration.configuration">batch.configuration.configuration (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#module-batch.configuration.definition.batch_definition">batch.configuration.definition.batch_definition (module)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#module-batch.configuration.exceptions">batch.configuration.exceptions (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#module-batch.configuration.definition.exceptions">batch.configuration.definition.exceptions (module)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#module-batch.configuration.json">batch.configuration.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#module-batch.configuration.json.configuration_v6">batch.configuration.json.configuration_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.html#module-batch.definition">batch.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.html#module-batch.definition.definition">batch.definition.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.html#module-batch.definition.exceptions">batch.definition.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.html#module-batch.definition.json">batch.definition.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.html#module-batch.definition.json.definition_v6">batch.definition.json.definition_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#module-batch.definition.json.old">batch.definition.json.old (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#module-batch.definition.json.old.batch_definition">batch.definition.json.old.batch_definition (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.DoesNotExist">Batch.DoesNotExist</a>
 </li>
@@ -594,6 +608,8 @@
       <li><a href="architecture/django/code_docs/batch.management.commands.html#module-batch.management.commands.scale_batch_creator">batch.management.commands.scale_batch_creator (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.messages.html#module-batch.messages">batch.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.messages.html#module-batch.messages.create_batch_recipes">batch.messages.create_batch_recipes (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.messages.html#module-batch.messages.update_batch_metrics">batch.messages.update_batch_metrics (module)</a>
 </li>
@@ -609,6 +625,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0005_auto_20180314_1827">batch.migrations.0005_auto_20180314_1827 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0006_auto_20180401_0218">batch.migrations.0006_auto_20180401_0218 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.models">batch.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.MultipleObjectsReturned">Batch.MultipleObjectsReturned</a>
@@ -619,9 +637,23 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.test.configuration.html#module-batch.test.configuration">batch.test.configuration (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#module-batch.test.configuration.definition">batch.test.configuration.definition (module)</a>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#module-batch.test.configuration.json">batch.test.configuration.json (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#module-batch.test.configuration.definition.test_batch_definition">batch.test.configuration.definition.test_batch_definition (module)</a>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#module-batch.test.configuration.json.test_configuration_v6">batch.test.configuration.json.test_configuration_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.html#module-batch.test.configuration.test_configuration">batch.test.configuration.test_configuration (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.html#module-batch.test.definition">batch.test.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.html#module-batch.test.definition.json">batch.test.definition.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#module-batch.test.definition.json.old">batch.test.definition.json.old (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#module-batch.test.definition.json.old.test_batch_definition">batch.test.definition.json.old.test_batch_definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.html#module-batch.test.definition.json.test_definition_v6">batch.test.definition.json.test_definition_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.html#module-batch.test.definition.test_definition">batch.test.definition.test_definition (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.management.html#module-batch.test.management">batch.test.management (module)</a>
 </li>
@@ -630,6 +662,8 @@
       <li><a href="architecture/django/code_docs/batch.test.management.commands.html#module-batch.test.management.commands.test_scale_batch_creator">batch.test.management.commands.test_scale_batch_creator (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.messages.html#module-batch.test.messages">batch.test.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.messages.html#module-batch.test.messages.test_create_batch_recipes">batch.test.messages.test_create_batch_recipes (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.messages.html#module-batch.test.messages.test_update_batch_metrics">batch.test.messages.test_update_batch_metrics (module)</a>
 </li>
@@ -641,6 +675,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.urls">batch.urls (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.views">batch.views (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.batch_creator_job">batch_creator_job (job.models.Job attribute)</a>
@@ -665,37 +701,57 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.batch_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.batch_set">batch_set (recipe.models.RecipeType attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevision.batch_set">(recipe.models.RecipeTypeRevision attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.batch_set">(trigger.models.TriggerEvent attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.BATCH_STATUSES">BATCH_STATUSES (batch.models.Batch attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchBaseSerializer">BatchBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchBaseSerializerV5">BatchBaseSerializerV5 (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchBaseSerializerV6">BatchBaseSerializerV6 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig">BatchConfig (class in batch.apps)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition">BatchDefinition (class in batch.configuration.definition.batch_definition)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#batch.configuration.configuration.BatchConfiguration">BatchConfiguration (class in batch.configuration.configuration)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer">BatchDetailsSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#batch.configuration.json.configuration_v6.BatchConfigurationV6">BatchConfigurationV6 (class in batch.configuration.json.configuration_v6)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer">BatchDetailsSerializer.JobSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.html#batch.definition.definition.BatchDefinition">BatchDefinition (class in batch.definition.definition)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition">(class in batch.definition.json.old.batch_definition)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer.ErrorBaseSerializer">BatchDetailsSerializer.JobSerializer.ErrorBaseSerializer (class in batch.serializers)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.html#batch.definition.json.definition_v6.BatchDefinitionV6">BatchDefinitionV6 (class in batch.definition.json.definition_v6)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer">BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5">BatchDetailsSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.RecipeTypeSerializer">BatchDetailsSerializer.RecipeTypeSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer">BatchDetailsSerializerV5.JobSerializer (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.TriggerEventDetailsSerializer">BatchDetailsSerializer.TriggerEventDetailsSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer">BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer">BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializer">BatchDetailsSerializerV5.RecipeTypeSerializer (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.TriggerEventDetailsSerializer">BatchDetailsSerializerV5.TriggerEventDetailsSerializer (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6">BatchDetailsSerializerV6 (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6.RecipeTypeRevisionSerializerV6">BatchDetailsSerializerV6.RecipeTypeRevisionSerializerV6 (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6.TriggerEventDetailsSerializer">BatchDetailsSerializerV6.TriggerEventDetailsSerializer (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView">BatchDetailsView (class in batch.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.exceptions.BatchError">BatchError</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesComparisonView">BatchesComparisonView (class in batch.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView">BatchesValidationView (class in batch.views)</a>
 </li>
@@ -721,8 +777,6 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetrics.MultipleObjectsReturned">BatchMetrics.MultipleObjectsReturned</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.batchmetrics_set">batchmetrics_set (batch.models.Batch attribute)</a>
-</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetricsManager">BatchMetricsManager (class in batch.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchRecipe">BatchRecipe (class in batch.models)</a>
@@ -737,17 +791,27 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.batchrecipe_set">(recipe.models.Recipe attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializer">BatchSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5">BatchSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializer.JobBaseSerializer">BatchSerializer.JobBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.JobBaseSerializer">BatchSerializerV5.JobBaseSerializer (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializer.RecipeTypeBaseSerializer">BatchSerializer.RecipeTypeBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializer">BatchSerializerV5.RecipeTypeBaseSerializer (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializer.TriggerEventBaseSerializer">BatchSerializer.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.TriggerEventBaseSerializer">BatchSerializerV5.TriggerEventBaseSerializer (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerCondition">BatchTriggerCondition (class in batch.configuration.definition.batch_definition)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6">BatchSerializerV6 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerConfiguration">BatchTriggerConfiguration (class in batch.configuration.definition.batch_definition)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.RecipeTypeBaseSerializerV6">BatchSerializerV6.RecipeTypeBaseSerializerV6 (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.RecipeTypeRevisionBaseSerializerV6">BatchSerializerV6.RecipeTypeRevisionBaseSerializerV6 (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.TriggerEventBaseSerializer">BatchSerializerV6.TriggerEventBaseSerializer (class in batch.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition">BatchTriggerCondition (class in batch.definition.json.old.batch_definition)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration">BatchTriggerConfiguration (class in batch.definition.json.old.batch_definition)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation">BatchValidation (class in batch.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.BLOCK_LENGTH">BLOCK_LENGTH (job.execution.metrics.FinishedJobExeMetricsOverTime attribute)</a>
 </li>
@@ -864,6 +928,8 @@
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.center_point">center_point (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage">ChainCommandMessage (class in messaging.messages.chain)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change">Change (class in recipe.handlers.graph_delta)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.check_for_starvation">check_for_starvation() (job.execution.job_exe.RunningJobExecution method)</a>
 
@@ -991,6 +1057,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.CompletedJobs">CompletedJobs (class in job.messages.completed_jobs)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.configuration">configuration (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration">Configuration (class in port.schema)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.configuration">configuration (ingest.models.Scan attribute)</a>
@@ -1043,7 +1111,13 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration.convert_configuration">convert_configuration() (job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration static method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#batch.configuration.json.configuration_v6.convert_configuration_to_v6">convert_configuration_to_v6() (in module batch.configuration.json.configuration_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.convert_custom_resources">convert_custom_resources() (job.models.JobType method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.html#batch.definition.json.definition_v6.convert_definition_to_v6">convert_definition_to_v6() (in module batch.definition.json.definition_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.convert_diff_to_v6">convert_diff_to_v6() (in module recipe.diff.json.diff_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.convert_ingest_trigger_rule_config">convert_ingest_trigger_rule_config() (ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
 </li>
@@ -1083,10 +1157,10 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Cpus">Cpus (class in node.resources.resource)</a>
@@ -1119,15 +1193,21 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.create">(storage.views.WorkspacesView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.create_batch">create_batch() (batch.models.BatchManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch">(in module batch.test.utils)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch">create_batch() (in module batch.test.utils)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_job">create_batch_job() (in module batch.test.utils)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.create_batch_old">create_batch_old() (batch.models.BatchManager method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_old">(in module batch.test.utils)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.utils.create_batch_recipe">create_batch_recipe() (in module batch.test.utils)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.create_batch_recipes.create_batch_recipes_message">create_batch_recipes_message() (in module batch.messages.create_batch_recipes)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.create_batch_v6">create_batch_v6() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.create_blocked_jobs_messages">create_blocked_jobs_messages() (in module job.messages.blocked_jobs)</a>
 </li>
@@ -1335,6 +1415,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.WorkspaceManager.create_workspace">(storage.models.WorkspaceManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.create_batch_recipes.CreateBatchRecipes">CreateBatchRecipes (class in batch.messages.create_batch_recipes)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.created">created (batch.models.Batch attribute)</a>
 
       <ul>
@@ -1523,6 +1605,8 @@
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0004_auto_20180122_1444.Migration.dependencies">(batch.migrations.0004_auto_20180122_1444.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0005_auto_20180314_1827.Migration.dependencies">(batch.migrations.0005_auto_20180314_1827.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration.dependencies">(batch.migrations.0006_auto_20180401_0218.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.dependencies">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -1840,6 +1924,10 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.description">(job.models.JobType attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change.description">(recipe.handlers.graph_delta.Change attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Reason.description">(recipe.handlers.graph_delta.Reason attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.description">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerState.description">(scheduler.manager.SchedulerState attribute)</a>
@@ -1973,6 +2061,8 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.duplicate_count">duplicate_count (metrics.models.MetricsIngest attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/util.html#util.parse.duration_to_string">duration_to_string() (in module util.parse)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1980,6 +2070,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.echo.EchoCommandMessage">EchoCommandMessage (class in messaging.messages.echo)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.edit_batch_v6">edit_batch_v6() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.edit_job_type">edit_job_type() (job.models.JobTypeManager method)</a>
 </li>
@@ -2111,8 +2203,12 @@
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.ErrorManager">ErrorManager (class in error.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.errors">errors (port.schema.Configuration attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.errors">errors (batch.models.BatchValidation attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.errors">(port.schema.Configuration attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorSerializer">ErrorSerializer (class in error.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView">ErrorsView (class in error.views)</a>
@@ -2151,9 +2247,11 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.exe_num">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.execute">execute() (batch.messages.update_batch_metrics.UpdateBatchMetrics method)</a>
+      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.create_batch_recipes.CreateBatchRecipes.execute">execute() (batch.messages.create_batch_recipes.CreateBatchRecipes method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.execute">(batch.messages.update_batch_metrics.UpdateBatchMetrics method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.BlockedJobs.execute">(job.messages.blocked_jobs.BlockedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.execute">(job.messages.cancel_jobs.CancelJobs method)</a>
@@ -2374,15 +2472,15 @@
       <li><a href="architecture/django/code_docs/batch.test.management.commands.html#batch.test.management.commands.test_scale_batch_creator.TestBatchCreator.fixtures">fixtures (batch.test.management.commands.test_scale_batch_creator.TestBatchCreator attribute)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.fixtures">(batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.fixtures">(batch.test.test_models.TestBatchManager attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.fixtures">(batch.test.test_views.TestBatchDetailsView attribute)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5.fixtures">(batch.test.test_views.TestBatchDetailsViewV5 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.fixtures">(batch.test.test_views.TestBatchesValidationView attribute)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.fixtures">(batch.test.test_views.TestBatchDetailsViewV6 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.fixtures">(batch.test.test_views.TestBatchesView attribute)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.fixtures">(batch.test.test_views.TestBatchesValidationViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.fixtures">(batch.test.test_views.TestBatchesViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.fixtures">(diagnostic.test.test_views.TestQueueScaleBakeView attribute)</a>
 </li>
@@ -2436,17 +2534,9 @@
 </li>
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.fixtures">(metrics.test.test_models.TestMetricsIngest attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.fixtures">(product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManager.fixtures">(queue.test.test_models.TestQueueManager attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.fixtures">(queue.test.test_models.TestQueueManagerQueueNewRecipe attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.fixtures">(recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes.fixtures">(recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipes.TestUpdateRecipes.fixtures">(recipe.test.messages.test_update_recipes.TestUpdateRecipes attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.fixtures">(recipe.test.test_models.TestRecipeManagerReprocessRecipe attribute)</a>
 </li>
@@ -2466,8 +2556,6 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceIngestsView.fixtures">(source.test.test_views.TestSourceIngestsView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsView.fixtures">(source.test.test_views.TestSourceProductsView attribute)</a>
-</li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -2483,9 +2571,11 @@
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.broker.BrokerDetails.from_broker_url">from_broker_url() (util.broker.BrokerDetails static method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.from_json">from_json() (batch.messages.update_batch_metrics.UpdateBatchMetrics static method)</a>
+      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.create_batch_recipes.CreateBatchRecipes.from_json">from_json() (batch.messages.create_batch_recipes.CreateBatchRecipes static method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.from_json">(batch.messages.update_batch_metrics.UpdateBatchMetrics static method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.BlockedJobs.from_json">(job.messages.blocked_jobs.BlockedJobs static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.from_json">(job.messages.cancel_jobs.CancelJobs static method)</a>
@@ -2595,9 +2685,11 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.geometry">geometry (storage.models.ScaleFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.get">get() (error.views.ErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesComparisonView.get">get() (batch.views.BatchesComparisonView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.get">(error.views.ErrorDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.get">(error.views.ErrorsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansDetailsView.get">(ingest.views.ScansDetailsView method)</a>
@@ -2649,9 +2741,15 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_basic_jobs">get_basic_jobs() (job.models.JobManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_batch_definition">get_batch_definition() (batch.models.Batch method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batch_comparison_v6">get_batch_comparison_v6() (batch.models.BatchManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batches">get_batches() (batch.models.BatchManager method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batch_from_root">get_batch_from_root() (batch.models.BatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetricsManager.get_batch_metrics">get_batch_metrics() (batch.models.BatchMetricsManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batches_v5">get_batches_v5() (batch.models.BatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_batches_v6">get_batches_v6() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.get_blocked_jobs">get_blocked_jobs() (recipe.handlers.handler.RecipeHandler method)</a>
 </li>
@@ -2707,7 +2805,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.get_command_args">get_command_args() (job.configuration.interface.job_interface.JobInterface method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerConfiguration.get_condition">get_condition() (batch.configuration.definition.batch_definition.BatchTriggerConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration.get_condition">get_condition() (batch.definition.json.old.batch_definition.BatchTriggerConfiguration method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_condition">(ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
@@ -2719,8 +2817,14 @@
         <li><a href="architecture/django/code_docs/source.triggers.configuration.html#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_condition">(source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.get_configuration">get_configuration() (trigger.models.TriggerRule method)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#batch.configuration.json.configuration_v6.BatchConfigurationV6.get_configuration">get_configuration() (batch.configuration.json.configuration_v6.BatchConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_configuration">(batch.models.Batch method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.get_configuration">(trigger.models.TriggerRule method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.get_container_names">get_container_names() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_custom_resources">get_custom_resources() (job.models.JobType method)</a>
@@ -2729,6 +2833,12 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.get_data_type_tags">(storage.models.ScaleFile method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.html#batch.definition.json.definition_v6.BatchDefinitionV6.get_definition">get_definition() (batch.definition.json.definition_v6.BatchDefinitionV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_definition">(batch.models.Batch method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_deleted_nodes">get_deleted_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
@@ -2741,11 +2851,9 @@
         <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_desired_task_count">(scheduler.tasks.services.service.Service method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details">get_details() (batch.models.BatchManager method)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_details">get_details() (ingest.models.IngestManager method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_details">(ingest.models.IngestManager method)</a>
-</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.get_details">(ingest.models.ScanManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_details">(ingest.models.StrikeManager method)</a>
@@ -2771,17 +2879,25 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/source.html#source.models.SourceFileManager.get_details_v4">get_details_v4() (source.models.SourceFileManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_details_v5">get_details_v5() (job.models.JobManager method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details_v5">get_details_v5() (batch.models.BatchManager method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_details_v5">(job.models.JobManager method)</a>
+</li>
         <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.get_details_v5">(product.models.ProductFileManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_details_v5">(recipe.models.RecipeManager method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition.get_dict">get_dict() (batch.configuration.definition.batch_definition.BatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details_v6">get_details_v6() (batch.models.BatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.configuration.json.html#batch.configuration.json.configuration_v6.BatchConfigurationV6.get_dict">get_dict() (batch.configuration.json.configuration_v6.BatchConfigurationV6 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.definition.json.html#batch.definition.json.definition_v6.BatchDefinitionV6.get_dict">(batch.definition.json.definition_v6.BatchDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition.get_dict">(batch.definition.json.old.batch_definition.BatchDefinition method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_dict">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
@@ -2817,6 +2933,8 @@
         <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.get_dict">(recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict">(recipe.configuration.definition.recipe_definition.RecipeDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeGraphDiffV6.get_dict">(recipe.diff.json.diff_v6.RecipeGraphDiffV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration.get_dict">(storage.configuration.workspace_configuration.WorkspaceConfiguration method)</a>
 </li>
@@ -2903,7 +3021,7 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests_by_scan">get_ingests_by_scan() (ingest.models.IngestManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerConfiguration.get_input_data_name">get_input_data_name() (batch.configuration.definition.batch_definition.BatchTriggerConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration.get_input_data_name">get_input_data_name() (batch.definition.json.old.batch_definition.BatchTriggerConfiguration method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_input_data_name">(ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
@@ -3027,6 +3145,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.get_latest_recipe_ids_for_jobs">get_latest_recipe_ids_for_jobs() (recipe.models.RecipeManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_locked_batch_from_root">get_locked_batch_from_root() (batch.models.BatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_locked_job">get_locked_job() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_locked_jobs">get_locked_jobs() (job.models.JobManager method)</a>
@@ -3073,7 +3193,7 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_matched_recipes">get_matched_recipes() (batch.models.BatchManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerCondition.get_media_type">get_media_type() (batch.configuration.definition.batch_definition.BatchTriggerCondition method)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition.get_media_type">get_media_type() (batch.definition.json.old.batch_definition.BatchTriggerCondition method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/storage.html#storage.media_type.get_media_type">(in module storage.media_type)</a>
@@ -3278,6 +3398,10 @@
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.get_num_job_exes">get_num_job_exes() (scheduler.cleanup.node.NodeCleanup method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.S3Client.get_object">get_object() (util.aws.S3Client method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_old_definition">get_old_definition() (batch.models.Batch method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_old_definition_json">get_old_definition_json() (batch.models.Batch method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionOutput.get_output">get_output() (job.models.JobExecutionOutput method)</a>
 </li>
@@ -3581,9 +3705,13 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_serializer">get_serializer() (in module metrics.registry)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.get_serializer_class">get_serializer_class() (job.views.JobDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.get_serializer_class">get_serializer_class() (batch.views.BatchDetailsView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.get_serializer_class">(batch.views.BatchesView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.get_serializer_class">(job.views.JobDetailsView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.get_serializer_class">(job.views.JobExecutionDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionsView.get_serializer_class">(job.views.JobExecutionsView method)</a>
@@ -3741,6 +3869,10 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v4">(scheduler.views.StatusView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_v6_configuration_json">get_v6_configuration_json() (batch.models.Batch method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_v6_definition_json">get_v6_definition_json() (batch.models.Batch method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.get_versioned_urls">get_versioned_urls() (in module util.rest)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.broker.BrokerDetails.get_virtual_host">get_virtual_host() (util.broker.BrokerDetails method)</a>
@@ -3755,7 +3887,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.get_workspace_id">get_workspace_id() (recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerConfiguration.get_workspace_name">get_workspace_name() (batch.configuration.definition.batch_definition.BatchTriggerConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration.get_workspace_name">get_workspace_name() (batch.definition.json.old.batch_definition.BatchTriggerConfiguration method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.get_workspace_name">(ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
@@ -3903,10 +4035,10 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.has_active_errors">has_active_errors() (scheduler.node.conditions.NodeConditions method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.has_been_launched">has_been_launched (job.tasks.base_task.Task attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.has_been_published">has_been_published (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.has_been_queued">has_been_queued() (job.models.Job method)</a>
@@ -4003,6 +4135,8 @@
         <li><a href="architecture/django/code_docs/util.html#util.host.HostAddress.hostname">(util.host.HostAddress attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.http_method_names">http_method_names (batch.views.BatchDetailsView attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -4273,8 +4407,6 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.views">ingest.views (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingest_ended">ingest_ended (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.ingest_set">ingest_set (ingest.models.Scan attribute)</a>
@@ -4287,6 +4419,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.ingest_set">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingest_started">ingest_started (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.INGEST_STATUSES">INGEST_STATUSES (ingest.models.Ingest attribute)</a>
@@ -4393,7 +4527,7 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.html#messaging.exceptions.InvalidCommandMessage">InvalidCommandMessage</a>
 </li>
-      <li><a href="architecture/django/code_docs/port.html#port.schema.InvalidConfiguration">InvalidConfiguration</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#batch.configuration.exceptions.InvalidConfiguration">InvalidConfiguration</a>, <a href="architecture/django/code_docs/port.html#port.schema.InvalidConfiguration">[1]</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection">InvalidConnection</a>
 </li>
@@ -4401,7 +4535,9 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.exceptions.InvalidDataTypeTag">InvalidDataTypeTag</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.exceptions.InvalidDefinition">InvalidDefinition</a>, <a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition">[1]</a>
+      <li><a href="architecture/django/code_docs/batch.definition.html#batch.definition.exceptions.InvalidDefinition">InvalidDefinition</a>, <a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition">[1]</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.exceptions.InvalidDiff">InvalidDiff</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.exceptions.InvalidEnvironment">InvalidEnvironment</a>
 </li>
@@ -4469,7 +4605,7 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.is_completed">is_completed() (recipe.handlers.handler.RecipeHandler method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerCondition.is_condition_met">is_condition_met() (batch.configuration.definition.batch_definition.BatchTriggerCondition method)</a>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition.is_condition_met">is_condition_met() (batch.definition.json.old.batch_definition.BatchTriggerCondition method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.triggers.html#ingest.triggers.ingest_trigger_condition.IngestTriggerCondition.is_condition_met">(ingest.triggers.ingest_trigger_condition.IngestTriggerCondition method)</a>
@@ -4477,6 +4613,8 @@
         <li><a href="architecture/django/code_docs/source.triggers.html#source.triggers.parse_trigger_condition.ParseTriggerCondition.is_condition_met">(source.triggers.parse_trigger_condition.ParseTriggerCondition method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.is_creation_done">is_creation_done (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.is_deleted">is_deleted (storage.models.CountryData attribute)</a>
 
       <ul>
@@ -4543,9 +4681,11 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.is_sufficient_to_meet">is_sufficient_to_meet() (node.resources.node_resources.NodeResources method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_superseded">is_superseded (job.models.Job attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.is_superseded">is_superseded (batch.models.Batch attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_superseded">(job.models.Job attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.is_superseded">(recipe.models.Recipe attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.is_superseded">(storage.models.ScaleFile attribute)</a>
@@ -4558,6 +4698,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.is_there_rule_match">is_there_rule_match() (ingest.models.Ingest method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.is_valid">is_valid (batch.models.BatchValidation attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.iso2">iso2 (storage.models.CountryData attribute)</a>
 </li>
@@ -5583,6 +5725,8 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.limit_to">limit_to() (node.resources.node_resources.NodeResources method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.linked_batches">linked_batches (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.list">list() (batch.views.BatchesView method)</a>
 
       <ul>
@@ -5739,6 +5883,8 @@
 </li>
       <li><a href="architecture/django/code_docs/manage.html#module-manage">manage (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.mark_creation_done">mark_creation_done() (batch.models.BatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.master_hostname">master_hostname (scheduler.models.Scheduler attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.master_port">master_port (scheduler.models.Scheduler attribute)</a>
@@ -5889,9 +6035,11 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricPlotView">MetricPlotView (class in metrics.views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.metrics">metrics (job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.metrics">metrics (batch.models.Batch attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.metrics">(job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#module-metrics">(module)</a>
 </li>
       </ul></li>
@@ -6033,6 +6181,8 @@
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0004_auto_20180122_1444.Migration">(class in batch.migrations.0004_auto_20180122_1444)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0005_auto_20180314_1827.Migration">(class in batch.migrations.0005_auto_20180314_1827)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration">(class in batch.migrations.0006_auto_20180401_0218)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration">(class in error.migrations.0001_initial)</a>
 </li>
@@ -6456,6 +6606,10 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig.name">(recipe.apps.RecipeConfig attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change.name">(recipe.handlers.graph_delta.Change attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Reason.name">(recipe.handlers.graph_delta.Reason attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.name">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.apps.SchedulerConfig.name">(scheduler.apps.SchedulerConfig attribute)</a>
@@ -6513,6 +6667,8 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.new_workspace_id">new_workspace_id (ingest.models.Ingest attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.next_batch">next_batch (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.next_task">next_task() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker">NfsBroker (class in storage.brokers.nfs_broker)</a>
@@ -6543,12 +6699,12 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#module-node.models">node.models (module)</a>
@@ -6817,6 +6973,8 @@
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0004_auto_20180122_1444.Migration.operations">(batch.migrations.0004_auto_20180122_1444.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0005_auto_20180314_1827.Migration.operations">(batch.migrations.0005_auto_20180314_1827.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration.operations">(batch.migrations.0006_auto_20180401_0218.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.operations">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -7578,6 +7736,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.queryset">queryset (batch.views.BatchDetailsView attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesComparisonView.queryset">(batch.views.BatchesComparisonView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView.queryset">(batch.views.BatchesValidationView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.queryset">(batch.views.BatchesView attribute)</a>
@@ -7915,6 +8075,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.apps.StorageConfig.ready">(storage.apps.StorageConfig method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Reason">Reason (class in recipe.handlers.graph_delta)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.reason">reason (job.models.TaskUpdate attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.backends.html#messaging.backends.amqp.AMQPMessagingBackend.receive_messages">receive_messages() (messaging.backends.amqp.AMQPMessagingBackend method)</a>
@@ -7970,6 +8132,14 @@
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#module-recipe.configuration.definition.exceptions">recipe.configuration.definition.exceptions (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#module-recipe.configuration.definition.recipe_definition">recipe.configuration.definition.recipe_definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff">recipe.diff (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff.exceptions">recipe.diff.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#module-recipe.diff.json">recipe.diff.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#module-recipe.diff.json.diff_v6">recipe.diff.json.diff_v6 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.DoesNotExist">Recipe.DoesNotExist</a>
 </li>
@@ -8063,6 +8233,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition">recipe.test.configuration.definition.test_recipe_definition (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#module-recipe.test.diff">recipe.test.diff (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#module-recipe.test.diff.json">recipe.test.diff.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#module-recipe.test.diff.json.test_diff_v6">recipe.test.diff.json.test_diff_v6 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#module-recipe.test.handlers">recipe.test.handlers (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#module-recipe.test.handlers.test_graph">recipe.test.handlers.test_graph (module)</a>
@@ -8149,10 +8325,18 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_type_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_rev">recipe_type_rev (recipe.models.Recipe attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipe_type_rev">recipe_type_rev (batch.models.Batch attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_rev">(recipe.models.Recipe attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_rev_id">recipe_type_rev_id (recipe.models.Recipe attribute)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipe_type_rev_id">recipe_type_rev_id (batch.models.Batch attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_rev_id">(recipe.models.Recipe attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.recipe_types">recipe_types (port.schema.Configuration attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeBaseSerializer">RecipeBaseSerializer (class in recipe.serializers)</a>
@@ -8181,12 +8365,14 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta">RecipeGraphDelta (class in recipe.handlers.graph_delta)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeGraphDiffV6">RecipeGraphDiffV6 (class in recipe.diff.json.diff_v6)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler">RecipeHandler (class in recipe.handlers.handler)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection">RecipeInputConnection (class in recipe.handlers.connection)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile">RecipeInputFile (class in recipe.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.DoesNotExist">RecipeInputFile.DoesNotExist</a>
@@ -8237,6 +8423,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipes_completed">recipes_completed (batch.models.Batch attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipes_estimated">recipes_estimated (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipes_for_batch">recipes_for_batch (batch.models.Batch attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipes_total">recipes_total (batch.models.Batch attribute)</a>
@@ -8258,6 +8446,8 @@
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.recipetype_set">recipetype_set (trigger.models.TriggerRule attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeBaseSerializer">RecipeTypeBaseSerializer (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeBaseSerializerV6">RecipeTypeBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializer">RecipeTypeDetailsSerializer (class in recipe.serializers)</a>
 </li>
@@ -8281,9 +8471,13 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionBaseSerializer">RecipeTypeRevisionBaseSerializer (class in recipe.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionBaseSerializerV6">RecipeTypeRevisionBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevisionManager">RecipeTypeRevisionManager (class in recipe.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionSerializer">RecipeTypeRevisionSerializer (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionSerializerV6">RecipeTypeRevisionSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializer">RecipeTypeSerializer (class in recipe.serializers)</a>
 </li>
@@ -8454,6 +8648,10 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.exceptions.RollbackTransaction">RollbackTransaction</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.root_batch">root_batch (batch.models.Batch attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.root_batch_id">root_batch_id (batch.models.Batch attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.root_recipe">root_recipe (job.models.Job attribute)</a>
 </li>
@@ -8889,13 +9087,9 @@
         <li><a href="architecture/django/code_docs/util.html#util.aws.SQSClient.send_messages">(util.aws.SQSClient method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.serializer_class">serializer_class (batch.views.BatchDetailsView attribute)</a>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.serializer_class">serializer_class (diagnostic.views.QueueScaleBakeView attribute)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.serializer_class">(batch.views.BatchesView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.serializer_class">(diagnostic.views.QueueScaleBakeView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleCasinoView.serializer_class">(diagnostic.views.QueueScaleCasinoView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.serializer_class">(diagnostic.views.QueueScaleHelloView attribute)</a>
@@ -9023,20 +9217,38 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id">set_workspace_id() (recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.setUp">setUp() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6.setUp">setUp() (batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.configuration.html#batch.test.configuration.test_configuration.TestBatchDefinition.setUp">(batch.test.configuration.test_configuration.TestBatchDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.setUp">(batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.definition.json.html#batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6.setUp">(batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.definition.html#batch.test.definition.test_definition.TestBatchDefinition.setUp">(batch.test.definition.test_definition.TestBatchDefinition method)</a>
+</li>
         <li><a href="architecture/django/code_docs/batch.test.management.commands.html#batch.test.management.commands.test_scale_batch_creator.TestBatchCreator.setUp">(batch.test.management.commands.test_scale_batch_creator.TestBatchCreator method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes.setUp">(batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.setUp">(batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.setUp">(batch.test.test_models.TestBatchManager method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.setUp">(batch.test.test_views.TestBatchDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5.setUp">(batch.test.test_views.TestBatchDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.setUp">(batch.test.test_views.TestBatchesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.setUp">(batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.setUp">(batch.test.test_views.TestBatchesView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesComparisonViewV6.setUp">(batch.test.test_views.TestBatchesComparisonViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.setUp">(batch.test.test_views.TestBatchesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.setUp">(batch.test.test_views.TestBatchesValidationViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.setUp">(batch.test.test_views.TestBatchesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.setUp">(batch.test.test_views.TestBatchesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.setUp">(diagnostic.test.test_views.TestQueueScaleBakeView method)</a>
 </li>
@@ -9409,6 +9621,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.setUp">(recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.setUp">(recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.setUp">(recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph.TestRecipeGraph.setUp">(recipe.test.handlers.test_graph.TestRecipeGraph method)</a>
 </li>
@@ -10027,6 +10241,8 @@
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.string_to_TaskStatusCode">string_to_TaskStatusCode() (in module mesos_api.utils)</a>
 </li>
+      <li><a href="architecture/django/code_docs/util.html#util.rest.strip_schema_version">strip_schema_version() (in module util.rest)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.subtract">subtract() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.subtract_metrics">subtract_metrics() (job.execution.metrics.FinishedJobExeMetrics method)</a>
@@ -10049,20 +10265,28 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetryDatabaseQuery.success_with_return">(util.test.test_retry.TestRetryDatabaseQuery method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.supersede_batch">supersede_batch() (batch.models.BatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.supersede_jobs">supersede_jobs() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.supersede_jobs_old">supersede_jobs_old() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.supersede_recipes">supersede_recipes() (recipe.models.RecipeManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.Job.superseded">superseded (job.models.Job attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.superseded">superseded (batch.models.Batch attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.superseded">(job.models.Job attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.superseded">(recipe.models.Recipe attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.superseded">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.superseded_batch">superseded_batch (batch.models.Batch attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.superseded_batch_id">superseded_batch_id (batch.models.Batch attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.superseded_by_batch">superseded_by_batch (job.models.Job attribute)</a>
 
       <ul>
@@ -10243,7 +10467,7 @@
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImport.test_all_edit">test_all_edit() (port.test.test_views.TestConfigurationViewImport method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_all_job">test_all_job() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_all_job">test_all_job() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_all_jobs">test_all_jobs() (recipe.test.test_views.TestRecipeReprocessView method)</a>
 </li>
@@ -10265,7 +10489,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources">test_bad_custom_resources() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_definition">test_bad_definition() (batch.test.test_views.TestBatchesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_bad_definition">test_bad_definition() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_error">test_bad_error() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
@@ -10321,7 +10545,7 @@
         <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.test_bad_num">(diagnostic.test.test_views.TestQueueScaleRouletteView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_param">test_bad_param() (batch.test.test_views.TestBatchesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_bad_param">test_bad_param() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_param">(job.test.test_views.TestJobTypesValidationView method)</a>
@@ -10649,11 +10873,21 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.execution.html#job.test.configuration.json.execution.test_exe_config.TestExecutionConfigurationConvert.test_convert_1_1_to_current">test_convert_1_1_to_current() (job.test.configuration.json.execution.test_exe_config.TestExecutionConfigurationConvert method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6.test_convert_configuration_to_v6">test_convert_configuration_to_v6() (batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.html#batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6.test_convert_definition_to_v6">test_convert_definition_to_v6() (batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_empty">test_convert_diff_to_v6_empty() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_full_diff">test_convert_diff_to_v6_full_diff() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_new_required_input">test_convert_diff_to_v6_new_required_input() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.job.html#job.test.configuration.json.job.test_job_config.TestJobConfiguration.test_convert_from_1_0">test_convert_from_1_0() (job.test.configuration.json.job.test_job_config.TestJobConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_country_data">test_country_data() (storage.test.test_models.TestScaleFile method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create">test_create() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create">test_create() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create">(job.test.test_views.TestJobTypesView method)</a>
@@ -10663,13 +10897,13 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_custom_resources">test_create_bad_custom_resources() (job.test.test_views.TestJobTypesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_bad_definition">test_create_bad_definition() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_bad_definition">test_create_bad_definition() (batch.test.test_views.TestBatchesViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_error">test_create_bad_error() (job.test.test_views.TestJobTypesView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_job">test_create_bad_job() (recipe.test.test_views.TestRecipeTypesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_bad_param">test_create_bad_param() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_bad_param">test_create_bad_param() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_param">(job.test.test_views.TestJobTypesView method)</a>
@@ -10703,13 +10937,41 @@
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_system">test_create_error_system() (error.test.test_views.TestErrorsView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.html#batch.test.configuration.test_configuration.TestBatchDefinition.test_create_from_json">test_create_from_json() (batch.test.configuration.test_configuration.TestBatchDefinition method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.definition.html#batch.test.definition.test_definition.TestBatchDefinition.test_create_from_json">(batch.test.definition.test_definition.TestBatchDefinition method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_invalid_configuration">test_create_invalid_configuration() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_create_invalid_configuration">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_invalid_definition">test_create_invalid_definition() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_create_invalid_definition">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_invalid_recipe_type">test_create_invalid_recipe_type() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_create_invalid_recipe_type">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_create_invalid_version">test_create_invalid_version() (batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_max_scheduled">test_create_max_scheduled() (job.test.test_views.TestJobTypesView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_mismatched_recipe_types">test_create_mismatched_recipe_types() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_mount">test_create_missing_mount() (job.test.test_views.TestJobTypesView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_other_setting">test_create_missing_other_setting() (job.test.test_views.TestJobTypesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_missing_param">test_create_missing_param() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_missing_param">test_create_missing_param() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_param">(job.test.test_views.TestJobTypesView method)</a>
@@ -10720,16 +10982,22 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_secrets">test_create_secrets() (job.test.test_views.TestJobTypesView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_create_successful">test_create_successful() (batch.test.test_models.TestBatchManager method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_successful">(batch.test.test_views.TestBatchesValidationViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_create_successful">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_trigger">test_create_trigger() (job.test.test_views.TestJobTypesView method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_trigger">(recipe.test.test_views.TestRecipeTypesView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_trigger_custom">test_create_trigger_custom() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_trigger_custom">test_create_trigger_custom() (batch.test.test_views.TestBatchesViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_trigger_true">test_create_trigger_true() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_trigger_true">test_create_trigger_true() (batch.test.test_views.TestBatchesViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_data_types_incorrect">test_data_types_incorrect() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
 
@@ -10737,15 +11005,15 @@
         <li><a href="architecture/django/code_docs/source.test.triggers.html#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_data_types_incorrect">(source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range">test_date_range() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_date_range">test_date_range() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range_ended">test_date_range_ended() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_date_range_ended">test_date_range_ended() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range_invalid">test_date_range_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_date_range_invalid">test_date_range_invalid() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range_started">test_date_range_started() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_date_range_started">test_date_range_started() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range_type_invalid">test_date_range_type_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_date_range_type_invalid">test_date_range_type_invalid() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/vault.test.html#vault.test.test_secrets_handler.SecretsBackendValidation.test_dcos_authenticate_bad_token">test_dcos_authenticate_bad_token() (vault.test.test_secrets_handler.SecretsBackendValidation method)</a>
 </li>
@@ -10800,6 +11068,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanProcessView.test_dry_run_process_conflict">test_dry_run_process_conflict() (ingest.test.test_views.TestScanProcessView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanProcessView.test_dry_run_process_reprocess">test_dry_run_process_reprocess() (ingest.test.test_views.TestScanProcessView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_duration_to_string">test_duration_to_string() (util.test.test_parse.TestParse method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_bad_config">test_edit_bad_config() (ingest.test.test_views.TestScanDetailsView method)</a>
 
@@ -10859,7 +11129,15 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_interface_and_trigger_rule">test_edit_interface_and_trigger_rule() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_batch">test_edit_invalid_batch() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_configuration">test_edit_invalid_configuration() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_invalid_version">test_edit_invalid_version() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_not_found">test_edit_not_found() (ingest.test.test_views.TestScanDetailsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_put_not_allowed">test_edit_put_not_allowed() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_simple">test_edit_simple() (ingest.test.test_views.TestScanDetailsView method)</a>
 
@@ -10873,6 +11151,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_edit_simple">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_edit_successful">test_edit_successful() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_system_job_invalid_field">test_edit_system_job_invalid_field() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_system_job_pause">test_edit_system_job_pause() (job.test.test_views.TestJobTypeDetailsView method)</a>
@@ -10939,9 +11219,11 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job">test_exception_with_completed_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_execute">test_execute() (batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes.test_execute">test_execute() (batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_execute">(batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_blocked_jobs.TestBlockedJobs.test_execute">(job.test.messages.test_blocked_jobs.TestBlockedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs.test_execute">(job.test.messages.test_cancel_jobs.TestCancelJobs method)</a>
@@ -11411,12 +11693,18 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_undefined_recipe_input">test_init_undefined_recipe_input() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation">test_init_validation() (job.test.configuration.interface.test_configuration_interface.TestJobConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6.test_init_validation">test_init_validation() (batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.definition.json.html#batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6.test_init_validation">(batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation">(job.test.configuration.interface.test_configuration_interface.TestJobConfiguration method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.configuration.json.execution.html#job.test.configuration.json.execution.test_exe_config.TestExecutionConfiguration.test_init_validation">(job.test.configuration.json.execution.test_exe_config.TestExecutionConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.tasks.json.results.html#job.test.execution.tasks.json.results.test_task_results.TestTaskResults.test_init_validation">(job.test.execution.tasks.json.results.test_task_results.TestTaskResults method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_init_validation">(recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_init_with_database">test_init_with_database() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
@@ -11571,7 +11859,19 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_invalid_trigger_rule">(recipe.test.test_models.TestRecipeTypeManagerEditRecipeType method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_invalid_version">test_invalid_version() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesComparisonViewV6.test_invalid_version">(batch.test.test_views.TestBatchesComparisonViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_invalid_version">(batch.test.test_views.TestBatchesValidationViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_invalid_version">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_is_active">test_is_active() (job.test.test_views.TestJobTypesView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_is_creation_done">test_is_creation_done() (batch.test.test_views.TestBatchesViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesStatusView.test_is_operational">test_is_operational() (job.test.test_views.TestJobTypesStatusView method)</a>
 
@@ -11615,7 +11915,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_ids">test_job_ids() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_job_names">test_job_names() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_job_names">test_job_names() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_job_task_launch_error">test_job_task_launch_error() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
@@ -11727,9 +12027,11 @@
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewExport.test_job_types_system">test_job_types_system() (port.test.test_views.TestConfigurationViewExport method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_json">test_json() (batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes.test_json">test_json() (batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_json">(batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_blocked_jobs.TestBlockedJobs.test_json">(job.test.messages.test_blocked_jobs.TestBlockedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_cancel_jobs.TestCancelJobs.test_json">(job.test.messages.test_cancel_jobs.TestCancelJobs method)</a>
@@ -11863,7 +12165,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_minimal_input_validation">test_minimal_input_validation() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_minimum">test_minimum() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_minimum">test_minimum() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestDetailsView.test_missing">test_missing() (ingest.test.test_views.TestIngestDetailsView method)</a>
 
@@ -11913,7 +12215,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_output">test_missing_output() (job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_missing_param">test_missing_param() (batch.test.test_views.TestBatchesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_missing_param">test_missing_param() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id">test_missing_recipe_id() (queue.test.test_views.TestQueueNewRecipeView method)</a>
 </li>
@@ -12109,9 +12411,11 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID.test_none">test_none() (storage.test.test_models.TestScaleFileUpdateUUID method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.test_not_found">test_not_found() (batch.test.test_views.TestBatchDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5.test_not_found">test_not_found() (batch.test.test_views.TestBatchDetailsViewV5 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_not_found">(batch.test.test_views.TestBatchDetailsViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_not_found">(ingest.test.test_views.TestScanDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanProcessView.test_not_found">(ingest.test.test_views.TestScanProcessView method)</a>
@@ -12143,9 +12447,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_optional_and_required">test_optional_and_required() (job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_order_by">test_order_by() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_order_by">test_order_by() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_order_by">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_order_by">(job.test.test_views.TestJobsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsView.test_order_by">(source.test.test_views.TestSourceJobsView method)</a>
@@ -12271,6 +12577,8 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
@@ -12281,8 +12589,6 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout">test_parse_stdout() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
@@ -12359,7 +12665,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_pre_task_launch_error">test_pre_task_launch_error() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_priority">test_priority() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_priority">test_priority() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_priority">(queue.test.test_views.TestRequeueJobsView method)</a>
@@ -12369,7 +12675,7 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_priority">(recipe.test.test_views.TestRecipeReprocessView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_priority_invalid">test_priority_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_priority_invalid">test_priority_invalid() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_job_load.TestJobLoadProcessor.test_process_event">test_process_event() (queue.test.test_job_load.TestJobLoadProcessor method)</a>
 </li>
@@ -12441,9 +12747,13 @@
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_recipe_link">test_recipe_link() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_recipe_type_id">test_recipe_type_id() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_recipe_type_id">test_recipe_type_id() (batch.test.test_views.TestBatchesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_recipe_type_id">(batch.test.test_views.TestBatchesViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_recipe_type_name">test_recipe_type_name() (batch.test.test_views.TestBatchesView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_recipe_type_name">test_recipe_type_name() (batch.test.test_views.TestBatchesViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewExport.test_recipe_types">test_recipe_types() (port.test.test_views.TestConfigurationViewExport method)</a>
 </li>
@@ -12529,6 +12839,10 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesView.test_reverse_sorting">(storage.test.test_views.TestWorkspacesView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_root_batch_and_superseded">test_root_batch_and_superseded() (batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_root_batch_id">test_root_batch_id() (batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesStatusView.test_running">test_running() (job.test.test_views.TestJobTypesStatusView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_metrics.TestTotalJobExeMetrics.test_running_executions">test_running_executions() (job.test.execution.test_metrics.TestTotalJobExeMetrics method)</a>
@@ -12645,7 +12959,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_start_job_exe_tasks">test_start_job_exe_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_status">test_status() (batch.test.test_views.TestBatchesView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_status">test_status() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestsView.test_status">(ingest.test.test_views.TestIngestsView method)</a>
@@ -12710,11 +13024,15 @@
       <li><a href="architecture/django/code_docs/batch.test.management.commands.html#batch.test.management.commands.test_scale_batch_creator.TestBatchCreator.test_successful">test_successful() (batch.test.management.commands.test_scale_batch_creator.TestBatchCreator method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.test_successful">(batch.test.test_views.TestBatchDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5.test_successful">(batch.test.test_views.TestBatchDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_successful">(batch.test.test_views.TestBatchesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_successful">(batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_successful">(batch.test.test_views.TestBatchesView method)</a>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesComparisonViewV6.test_successful">(batch.test.test_views.TestBatchesComparisonViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_successful">(batch.test.test_views.TestBatchesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_successful">(batch.test.test_views.TestBatchesViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.test_successful">(diagnostic.test.test_views.TestQueueScaleBakeView method)</a>
 </li>
@@ -12949,6 +13267,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsView.test_successful_files">test_successful_files() (job.test.test_views.OldTestJobDetailsView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_successful_get">test_successful_get() (batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_successful_get_secrets">test_successful_get_secrets() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessView.test_successful_ingest_body">test_successful_ingest_body() (ingest.test.test_views.TestScansProcessView method)</a>
@@ -12962,6 +13282,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.test_successful_new_recipe">test_successful_new_recipe() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesComparisonViewV6.test_successful_no_batches">test_successful_no_batches() (batch.test.test_views.TestBatchesComparisonViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_successful_no_settings">test_successful_no_settings() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
@@ -13013,9 +13335,9 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_successful_trigger">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_successful_trigger_custom">test_successful_trigger_custom() (batch.test.test_views.TestBatchesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_custom">test_successful_trigger_custom() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_successful_trigger_true">test_successful_trigger_true() (batch.test.test_views.TestBatchesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_true">test_successful_trigger_true() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_type_id">test_successful_type_id() (recipe.test.test_views.TestRecipesView method)</a>
 </li>
@@ -13040,6 +13362,10 @@
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job">test_successful_with_blocked_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job">test_successful_with_failed_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5.test_successful_with_new_batch">test_successful_with_new_batch() (batch.test.test_views.TestBatchDetailsViewV5 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6.test_successful_with_old_batch">test_successful_with_old_batch() (batch.test.test_views.TestBatchDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_pending_job">test_successful_with_pending_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
 </li>
@@ -13157,15 +13483,15 @@
         <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_system_job_task">(job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_trigger_custom">test_trigger_custom() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_trigger_custom">test_trigger_custom() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_trigger_default">test_trigger_default() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_trigger_default">test_trigger_default() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_trigger_event_first">test_trigger_event_first() (job.test.test_clock.TestClock method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_trigger_event_last">test_trigger_event_last() (job.test.test_clock.TestClock method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_trigger_invalid">test_trigger_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_trigger_invalid">test_trigger_invalid() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field">test_uneditable_field() (job.test.test_models.TestJobTypeManagerCreateJobType method)</a>
 
@@ -13341,6 +13667,12 @@
         <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_messages.TestFailingCommandMessage.test_valid_to_json">(messaging.test.test_messages.TestFailingCommandMessage method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.html#batch.test.configuration.test_configuration.TestBatchDefinition.test_validate">test_validate() (batch.test.configuration.test_configuration.TestBatchDefinition method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.definition.html#batch.test.definition.test_definition.TestBatchDefinition.test_validate">(batch.test.definition.test_definition.TestBatchDefinition method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_monitor_type">test_validate_bad_monitor_type() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_bad_scanner_type">test_validate_bad_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
@@ -13477,15 +13809,33 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_backends.TestBackendsFactory">TestBackendsFactory (class in messaging.test.test_backends)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.json.html#batch.test.configuration.json.test_configuration_v6.TestBatchConfigurationV6">TestBatchConfigurationV6 (class in batch.test.configuration.json.test_configuration_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.management.commands.html#batch.test.management.commands.test_scale_batch_creator.TestBatchCreator">TestBatchCreator (class in batch.test.management.commands.test_scale_batch_creator)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition">TestBatchDefinition (class in batch.test.configuration.definition.test_batch_definition)</a>
+      <li><a href="architecture/django/code_docs/batch.test.configuration.html#batch.test.configuration.test_configuration.TestBatchDefinition">TestBatchDefinition (class in batch.test.configuration.test_configuration)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition">(class in batch.test.definition.json.old.test_batch_definition)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView">TestBatchDetailsView (class in batch.test.test_views)</a>
+        <li><a href="architecture/django/code_docs/batch.test.definition.html#batch.test.definition.test_definition.TestBatchDefinition">(class in batch.test.definition.test_definition)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView">TestBatchesValidationView (class in batch.test.test_views)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/batch.test.definition.json.html#batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6">TestBatchDefinitionV6 (class in batch.test.definition.json.test_definition_v6)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView">TestBatchesView (class in batch.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV5">TestBatchDetailsViewV5 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsViewV6">TestBatchDetailsViewV6 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesComparisonViewV6">TestBatchesComparisonViewV6 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5">TestBatchesValidationViewV5 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6">TestBatchesValidationViewV6 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5">TestBatchesViewV5 (class in batch.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6">TestBatchesViewV6 (class in batch.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager">TestBatchManager (class in batch.test.test_models)</a>
 </li>
@@ -13520,6 +13870,8 @@
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImport">TestConfigurationViewImport (class in port.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData">TestCountryData (class in storage.test.test_models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_create_batch_recipes.TestCreateBatchRecipes">TestCreateBatchRecipes (class in batch.test.messages.test_create_batch_recipes)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd">TestCreateJobExecutionEnd (class in job.test.messages.test_job_exe_end)</a>
 </li>
@@ -13869,6 +14221,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta">TestRecipeGraphDelta (class in recipe.test.handlers.test_graph_delta)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6">TestRecipeGraphDiffV6 (class in recipe.test.diff.json.test_diff_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler">TestRecipeHandler (class in recipe.test.handlers.test_handler)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView">TestRecipeInputFilesView (class in recipe.test.test_views)</a>
@@ -14099,19 +14453,27 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.title">(storage.models.Workspace attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources.to_dict">to_dict() (mesos_api.api.HardwareResources method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetrics.to_dict">to_dict() (batch.models.BatchMetrics method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources.to_dict">(mesos_api.api.HardwareResources method)</a>
+</li>
         <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SchedulerInfo.to_dict">(mesos_api.api.SchedulerInfo method)</a>
 </li>
         <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SlaveInfo.to_dict">(mesos_api.api.SlaveInfo method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/util.html#util.validation.ValidationError.to_dict">(util.validation.ValidationError method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/util.html#util.validation.ValidationWarning.to_dict">(util.validation.ValidationWarning method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.volume.Volume.to_docker_param">to_docker_param() (job.configuration.volume.Volume method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.to_json">to_json() (batch.messages.update_batch_metrics.UpdateBatchMetrics method)</a>
+      <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.create_batch_recipes.CreateBatchRecipes.to_json">to_json() (batch.messages.create_batch_recipes.CreateBatchRecipes method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics.to_json">(batch.messages.update_batch_metrics.UpdateBatchMetrics method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.blocked_jobs.BlockedJobs.to_json">(job.messages.blocked_jobs.BlockedJobs method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.messages.html#job.messages.cancel_jobs.CancelJobs.to_json">(job.messages.cancel_jobs.CancelJobs method)</a>
@@ -14341,9 +14703,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.unpublish_jobs.UnpublishJobs">UnpublishJobs (class in job.messages.unpublish_jobs)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.update">update() (job.tasks.base_task.Task method)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.update">update() (batch.views.BatchDetailsView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.update">(job.tasks.base_task.Task method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.database.html#scheduler.database.updater.DatabaseUpdater.update">(scheduler.database.updater.DatabaseUpdater method)</a>
 </li>
       </ul></li>
@@ -14487,6 +14851,8 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#module-util.test.test_retry">util.test.test_retry (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/util.html#module-util.validation">util.validation (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.apps.UtilConfig">UtilConfig (class in util.apps)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.uuid">uuid (storage.models.ScaleFile attribute)</a>
@@ -14505,10 +14871,14 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.VALID_TIME_FIELDS">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition.validate">validate() (batch.configuration.definition.batch_definition.BatchDefinition method)</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#batch.configuration.configuration.BatchConfiguration.validate">validate() (batch.configuration.configuration.BatchConfiguration method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchTriggerConfiguration.validate">(batch.configuration.definition.batch_definition.BatchTriggerConfiguration method)</a>
+        <li><a href="architecture/django/code_docs/batch.definition.html#batch.definition.definition.BatchDefinition.validate">(batch.definition.definition.BatchDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition.validate">(batch.definition.json.old.batch_definition.BatchDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration.validate">(batch.definition.json.old.batch_definition.BatchTriggerConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.validate">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
@@ -14541,6 +14911,8 @@
         <li><a href="architecture/django/code_docs/trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate">(trigger.configuration.trigger_rule.TriggerRuleConfiguration method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.validate_batch_v6">validate_batch_v6() (batch.models.BatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration.validate_broker">validate_broker() (storage.configuration.workspace_configuration.WorkspaceConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.importer.validate_config">validate_config() (in module port.importer)</a>
@@ -14669,7 +15041,11 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.WorkspaceManager.validate_workspace">(storage.models.WorkspaceManager method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.ValidationWarning">ValidationWarning (class in batch.configuration.definition.batch_definition)</a>
+      <li><a href="architecture/django/code_docs/util.html#util.validation.ValidationError">ValidationError (class in util.validation)</a>
+</li>
+      <li><a href="architecture/django/code_docs/util.html#util.exceptions.ValidationException">ValidationException</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.ValidationWarning">ValidationWarning (class in batch.definition.json.old.batch_definition)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ValidationWarning">(class in ingest.scan.configuration.scan_configuration)</a>
@@ -14687,6 +15063,8 @@
         <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning">(class in recipe.configuration.data.recipe_data)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.configuration.html#storage.configuration.workspace_configuration.ValidationWarning">(class in storage.configuration.workspace_configuration)</a>
+</li>
+        <li><a href="architecture/django/code_docs/util.html#util.validation.ValidationWarning">(class in util.validation)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/vault.html#module-vault">vault (module)</a>
@@ -14773,6 +15151,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.cluster_utils.wait_for_leader">wait_for_leader() (in module scheduler.cluster_utils)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.warnings">warnings (batch.models.BatchValidation attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WktField">WktField (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace">Workspace (class in storage.models)</a>
@@ -14793,10 +15173,10 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.workspace_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.workspace_volume_path">workspace_volume_path (storage.models.Workspace attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.workspace_volume_path">workspace_volume_path (storage.models.Workspace attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WorkspaceBaseSerializer">WorkspaceBaseSerializer (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration">WorkspaceConfiguration (class in storage.configuration.workspace_configuration)</a>
@@ -14825,9 +15205,7 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -14840,7 +15218,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -14859,6 +15237,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -14876,14 +15255,13 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

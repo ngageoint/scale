@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     batch.test.configuration
+    batch.test.definition
     batch.test.management
     batch.test.messages
 

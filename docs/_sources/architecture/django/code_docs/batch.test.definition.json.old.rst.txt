@@ -1,0 +1,22 @@
+batch\.test\.definition\.json\.old package
+==========================================
+
+Submodules
+----------
+
+batch\.test\.definition\.json\.old\.test\_batch\_definition module
+------------------------------------------------------------------
+
+.. automodule:: batch.test.definition.json.old.test_batch_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test.definition.json.old
+    :members:
+    :undoc-members:
+    :show-inheritance:

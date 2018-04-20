@@ -1,0 +1,29 @@
+recipe\.diff package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.diff.json
+
+Submodules
+----------
+
+recipe\.diff\.exceptions module
+-------------------------------
+
+.. automodule:: recipe.diff.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.diff
+    :members:
+    :undoc-members:
+    :show-inheritance:

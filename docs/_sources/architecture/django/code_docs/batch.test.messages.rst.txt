@@ -4,6 +4,14 @@ batch\.test\.messages package
 Submodules
 ----------
 
+batch\.test\.messages\.test\_create\_batch\_recipes module
+----------------------------------------------------------
+
+.. automodule:: batch.test.messages.test_create_batch_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 batch\.test\.messages\.test\_update\_batch\_metrics module
 ----------------------------------------------------------
 

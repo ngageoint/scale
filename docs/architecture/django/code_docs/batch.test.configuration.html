@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="batch.test package" href="batch.test.html"/>
-        <link rel="next" title="batch.test.configuration.definition package" href="batch.test.configuration.definition.html"/>
-        <link rel="prev" title="batch.test package" href="batch.test.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="batch.test.configuration.json package" href="batch.test.configuration.json.html" />
+    <link rel="prev" title="batch.test package" href="batch.test.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -164,7 +156,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -172,9 +164,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -230,14 +223,43 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="batch.test.configuration.definition.html">batch.test.configuration.definition package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.definition.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.definition.html#module-batch.test.configuration.definition.test_batch_definition">batch.test.configuration.definition.test_batch_definition module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.definition.html#module-batch.test.configuration.definition">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="batch.test.configuration.json.html">batch.test.configuration.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.json.html#module-batch.test.configuration.json.test_configuration_v6">batch.test.configuration.json.test_configuration_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.configuration.json.html#module-batch.test.configuration.json">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-batch.test.configuration.test_configuration">
+<span id="batch-test-configuration-test-configuration-module"></span><h2>batch.test.configuration.test_configuration module<a class="headerlink" href="#module-batch.test.configuration.test_configuration" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.test.configuration.test_configuration.TestBatchDefinition">
+<em class="property">class </em><code class="descclassname">batch.test.configuration.test_configuration.</code><code class="descname">TestBatchDefinition</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.configuration.test_configuration.TestBatchDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="batch.test.configuration.test_configuration.TestBatchDefinition.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.configuration.test_configuration.TestBatchDefinition.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.configuration.test_configuration.TestBatchDefinition.test_create_from_json">
+<code class="descname">test_create_from_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.configuration.test_configuration.TestBatchDefinition.test_create_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a BatchConfiguration from a JSON</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.configuration.test_configuration.TestBatchDefinition.test_validate">
+<code class="descname">test_validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.configuration.test_configuration.TestBatchDefinition.test_validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling BatchConfiguration.validate()</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-batch.test.configuration">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.test.configuration" title="Permalink to this headline">¶</a></h2>
@@ -246,15 +268,13 @@
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="batch.test.configuration.definition.html" class="btn btn-neutral float-right" title="batch.test.configuration.definition package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="batch.test.configuration.json.html" class="btn btn-neutral float-right" title="batch.test.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="batch.test.html" class="btn btn-neutral" title="batch.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -270,7 +290,7 @@
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -289,6 +309,7 @@
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -306,14 +327,13 @@
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

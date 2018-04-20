@@ -1,0 +1,22 @@
+batch\.test\.configuration\.json package
+========================================
+
+Submodules
+----------
+
+batch\.test\.configuration\.json\.test\_configuration\_v6 module
+----------------------------------------------------------------
+
+.. automodule:: batch.test.configuration.json.test_configuration_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

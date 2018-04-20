@@ -4,6 +4,14 @@ batch\.messages package
 Submodules
 ----------
 
+batch\.messages\.create\_batch\_recipes module
+----------------------------------------------
+
+.. automodule:: batch.messages.create_batch_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 batch\.messages\.update\_batch\_metrics module
 ----------------------------------------------
 

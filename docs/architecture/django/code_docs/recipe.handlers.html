@@ -27,20 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="recipe package" href="recipe.html"/>
-        <link rel="next" title="recipe.messages package" href="recipe.messages.html"/>
-        <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html"/>
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.messages package" href="recipe.messages.html" />
+    <link rel="prev" title="recipe.diff.json package" href="recipe.diff.json.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -49,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -66,7 +58,7 @@
 
           
             
-            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -164,7 +156,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">Scale</a>
@@ -172,9 +164,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -442,6 +435,42 @@ graphs are provided.</p>
 <div class="section" id="module-recipe.handlers.graph_delta">
 <span id="recipe-handlers-graph-delta-module"></span><h2>recipe.handlers.graph_delta module<a class="headerlink" href="#module-recipe.handlers.graph_delta" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class for handling recipe graph deltas</p>
+<dl class="class">
+<dt id="recipe.handlers.graph_delta.Change">
+<em class="property">class </em><code class="descclassname">recipe.handlers.graph_delta.</code><code class="descname">Change</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.Change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.handlers.graph_delta.Change.description">
+<code class="descname">description</code><a class="headerlink" href="#recipe.handlers.graph_delta.Change.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.handlers.graph_delta.Change.name">
+<code class="descname">name</code><a class="headerlink" href="#recipe.handlers.graph_delta.Change.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.handlers.graph_delta.Reason">
+<em class="property">class </em><code class="descclassname">recipe.handlers.graph_delta.</code><code class="descname">Reason</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.Reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.handlers.graph_delta.Reason.description">
+<code class="descname">description</code><a class="headerlink" href="#recipe.handlers.graph_delta.Reason.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.handlers.graph_delta.Reason.name">
+<code class="descname">name</code><a class="headerlink" href="#recipe.handlers.graph_delta.Reason.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="recipe.handlers.graph_delta.RecipeGraphDelta">
 <em class="property">class </em><code class="descclassname">recipe.handlers.graph_delta.</code><code class="descname">RecipeGraphDelta</code><span class="sig-paren">(</span><em>graph_a</em>, <em>graph_b</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.handlers.graph_delta.RecipeGraphDelta" title="Permalink to this definition">¶</a></dt>
@@ -784,9 +813,7 @@ parent node that this node depends upon.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -795,7 +822,7 @@ parent node that this node depends upon.</p>
         <a href="recipe.messages.html" class="btn btn-neutral float-right" title="recipe.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.diff.json.html" class="btn btn-neutral" title="recipe.diff.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -808,7 +835,7 @@ parent node that this node depends upon.</p>
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -827,6 +854,7 @@ parent node that this node depends upon.</p>
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -844,14 +872,13 @@ parent node that this node depends upon.</p>
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

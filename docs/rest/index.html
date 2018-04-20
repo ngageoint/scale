@@ -27,19 +27,12 @@
   
 
   
-  
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Scale 5.4.0-snapshot documentation" href="../index.html"/>
-        <link rel="next" title="Batch Services" href="batch.html"/>
-        <link rel="prev" title="manage module" href="../architecture/django/code_docs/manage.html"/>
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Batch Services" href="batch.html" />
+    <link rel="prev" title="manage module" href="../architecture/django/code_docs/manage.html" />
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -48,7 +41,7 @@
 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
@@ -65,7 +58,7 @@
 
           
             
-            <img src="../_static/scale3-transparent-128.png" class="logo" />
+            <img src="../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -104,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">REST API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#api-versions">API Versions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#services">Services</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#current-v5-services">Current v5 Services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="batch.html">Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">Diagnostic Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
@@ -128,6 +121,20 @@
 <li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#future-v6-services">Future v6 Services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-create-batch">v6 Create Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-batch-comparison">v6 Batch Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-validate-batch">v6 Validate Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#v6-edit-batch">v6 Edit Batch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#batch-definition-json">Batch Definition JSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/batch.html#batch-configuration-json">Batch Configuration JSON</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="v6/recipe.html#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
@@ -143,7 +150,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">Scale</a>
@@ -151,9 +158,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -197,35 +205,26 @@
             
   <div class="section" id="rest-api">
 <span id="rest"></span><h1>REST API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h1>
-<p>Scale provides a RESTful HTTP interface for its own web UI and for any external
-applications that would like to connect to Scale. The following sections
-describe the services available for each component of Scale.</p>
+<p>Scale provides a RESTful HTTP interface for its own web UI and for any external applications that would like to connect
+to Scale. The following sections describe the services available.</p>
 <div class="section" id="api-versions">
 <span id="rest-versions"></span><h2>API Versions<a class="headerlink" href="#api-versions" title="Permalink to this headline">¶</a></h2>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Latest Version:</th><td class="field-body"><code class="docutils literal"><span class="pre">v5</span></code></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Other Versions:</th><td class="field-body"><code class="docutils literal"><span class="pre">v4</span></code></td>
-</tr>
-</tbody>
-</table>
+<p>Future Version: <code class="docutils literal"><span class="pre">v6</span></code>
+Current Version: <code class="docutils literal"><span class="pre">v5</span></code>
+Deprecated Versions: <code class="docutils literal"><span class="pre">v4</span></code></p>
 <p>The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
-will support both the old and new API versions within the same release. Eventually, old API versions will be deprecated
-and subsequently removed in later releases.</p>
+will support both the old (deprecated) and current API versions within the same release. Eventually, deprecated API
+versions will be removed in later releases.</p>
+<p>It is recommended to make calls to the current REST API version. The future API version is still under construction and
+may change at any time. The deprecated versions will be removed in the future, so please migrate any calls to the
+current version.</p>
 <p>All endpoints should include a prefix of the form <code class="docutils literal"><span class="pre">vX</span></code>, where <code class="docutils literal"><span class="pre">X</span></code> is the desired version number. Making a request
 without a version prefix or an invalid version prefix will result in a 404 error.</p>
-<div class="line-block">
-<div class="line">Documentation Example: <code class="docutils literal"><span class="pre">/job-types/</span></code></div>
-<div class="line">Actual Request Example: <code class="docutils literal"><span class="pre">/v5/job-types/</span></code></div>
-<div class="line"><br /></div>
+<p>Request Example: <code class="docutils literal"><span class="pre">/v5/jobs/</span></code></p>
 </div>
-</div>
-<div class="section" id="services">
-<span id="rest-services"></span><h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="current-v5-services">
+<span id="rest-services"></span><h2>Current v5 Services<a class="headerlink" href="#current-v5-services" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="batch.html">Batch Services</a></li>
@@ -252,13 +251,29 @@ without a version prefix or an invalid version prefix will result in a 404 error
 </ul>
 </div>
 </div>
+<div class="section" id="future-v6-services">
+<h2>Future v6 Services<a class="headerlink" href="#future-v6-services" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html">v6 Batch Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-create-batch">v6 Create Batch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-batch-comparison">v6 Batch Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-validate-batch">v6 Validate Batch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#v6-edit-batch">v6 Edit Batch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#batch-definition-json">Batch Definition JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/batch.html#batch-configuration-json">Batch Configuration JSON</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="v6/recipe.html#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -280,7 +295,7 @@ without a version prefix or an invalid version prefix will result in a 404 error
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -299,6 +314,7 @@ without a version prefix or an invalid version prefix will result in a 404 error
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
             VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -316,14 +332,13 @@ without a version prefix or an invalid version prefix will result in a 404 error
     <script type="text/javascript" src="../_static/js/theme.js"></script>
   
 
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
       });
-  </script>
-   
+  </script> 
 
 </body>
 </html>

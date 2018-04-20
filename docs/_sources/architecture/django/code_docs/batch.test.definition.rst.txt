@@ -1,0 +1,29 @@
+batch\.test\.definition package
+===============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.test.definition.json
+
+Submodules
+----------
+
+batch\.test\.definition\.test\_definition module
+------------------------------------------------
+
+.. automodule:: batch.test.definition.test_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

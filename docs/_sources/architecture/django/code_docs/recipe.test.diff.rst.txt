@@ -1,0 +1,17 @@
+recipe\.test\.diff package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.test.diff.json
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.diff
+    :members:
+    :undoc-members:
+    :show-inheritance:
