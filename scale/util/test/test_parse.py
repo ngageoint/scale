@@ -14,6 +14,17 @@ class TestParse(TestCase):
     def setUp(self):
         django.setup()
 
+    def test_duration_to_string(self):
+        """Tests converting timedelta duration to ISO duration string"""
+        duration_1 = datetime.timedelta(seconds=0)
+        self.assertEqual(parse_util.duration_to_string(duration_1), 'PT0S')
+        duration_2 = datetime.timedelta(days=4, seconds=58426)
+        self.assertEqual(parse_util.duration_to_string(duration_2), 'P4DT16H13M46S')
+        duration_3 = datetime.timedelta(seconds=542.0894)
+        self.assertEqual(parse_util.duration_to_string(duration_3), 'PT9M2S')
+        duration_4 = datetime.timedelta(seconds=542.5894)
+        self.assertEqual(parse_util.duration_to_string(duration_4), 'PT9M3S')
+
     def test_parse_duration(self):
         """Tests parsing a valid ISO duration."""
         self.assertEqual(parse_util.parse_duration('PT3H0M0S'), datetime.timedelta(0, 10800))

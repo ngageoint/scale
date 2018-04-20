@@ -14,7 +14,9 @@ class BatchConfig(AppConfig):
         """Registers components related to batches"""
 
         # Register batch message types
+        from batch.messages.create_batch_recipes import CreateBatchRecipes
         from batch.messages.update_batch_metrics import UpdateBatchMetrics
         from messaging.messages.factory import add_message_type
 
+        add_message_type(CreateBatchRecipes)
         add_message_type(UpdateBatchMetrics)

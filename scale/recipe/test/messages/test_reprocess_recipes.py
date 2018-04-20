@@ -15,8 +15,6 @@ from trigger.test import utils as trigger_test_utils
 
 class TestReprocessRecipes(TransactionTestCase):
 
-    fixtures = ['batch_job_types.json']
-
     def setUp(self):
         django.setup()
 

@@ -3,6 +3,30 @@ import rest_framework.serializers as serializers
 from util.rest import ModelIdSerializer
 
 
+# Serializers for v6 REST API
+class RecipeTypeBaseSerializerV6(ModelIdSerializer):
+    """Base serializer for recipe types"""
+
+    name = serializers.CharField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    revision_num = serializers.IntegerField()
+
+
+class RecipeTypeRevisionBaseSerializerV6(ModelIdSerializer):
+    """Base serializer for recipe type revisions"""
+
+    recipe_type = ModelIdSerializer()
+    revision_num = serializers.IntegerField()
+
+
+class RecipeTypeRevisionSerializerV6(RecipeTypeRevisionBaseSerializerV6):
+    """Serializer for recipe type revisions"""
+
+    definition = serializers.JSONField(default=dict)
+    created = serializers.DateTimeField()
+
+
 class RecipeTypeBaseSerializer(ModelIdSerializer):
     """Converts recipe type model fields to REST output."""
     name = serializers.CharField()

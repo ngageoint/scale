@@ -1,4 +1,5 @@
 """Defines utility exceptions"""
+from util.validation import ValidationError
 
 
 class FileDoesNotExist(Exception):
@@ -36,3 +37,20 @@ class TerminatedCommand(Exception):
     """Exception that can be thrown to indicate that a Scale command recieved a SIGTERM signal"""
 
     pass
+
+
+class ValidationException(Exception):
+    """Exception indicating there was a validation error
+    """
+
+    def __init__(self, name, description):
+        """Constructor
+
+        :param name: The name of the validation error
+        :type name: string
+        :param description: The description of the validation error
+        :type description: string
+        """
+
+        super(ValidationException, self).__init__(description)
+        self.error = ValidationError(name, description)

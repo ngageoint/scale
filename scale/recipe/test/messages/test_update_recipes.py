@@ -4,6 +4,7 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
+from batch.configuration.configuration import BatchConfiguration
 from batch.test import utils as batch_test_utils
 from job.configuration.results.job_results import JobResults
 from job.models import Job
@@ -15,8 +16,6 @@ from storage.test import utils as storage_test_utils
 
 
 class TestUpdateRecipes(TestCase):
-
-    fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -340,7 +339,9 @@ class TestUpdateRecipes(TestCase):
     def test_execute_create_jobs(self):
         """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
 
-        batch = batch_test_utils.create_batch(definition={'priority': 999})
+        configuration = BatchConfiguration()
+        configuration.priority = 999
+        batch = batch_test_utils.create_batch(configuration=configuration)
 
         # Create recipes
         job_type_1 = job_test_utils.create_job_type()

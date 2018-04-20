@@ -17,7 +17,7 @@ class TestBatchCreator(TransactionTestCase):
         django.setup()
 
         self.recipe_type = recipe_test_utils.create_recipe_type()
-        self.batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        self.batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
     def test_missing_batch(self):
         """Tests calling command for an invalid batch"""

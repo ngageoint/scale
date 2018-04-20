@@ -6,8 +6,8 @@ import django
 from django.test import TestCase
 from django.utils.timezone import utc
 
-from batch.configuration.definition.exceptions import InvalidDefinition
-from batch.configuration.definition.batch_definition import BatchDefinition
+from batch.definition.exceptions import InvalidDefinition
+from batch.definition.json.old.batch_definition import BatchDefinition
 
 
 class TestBatchDefinition(TestCase):

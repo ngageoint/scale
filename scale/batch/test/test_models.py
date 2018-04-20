@@ -140,9 +140,9 @@ class TestBatchManager(TransactionTestCase):
         }
 
     def test_create_successful(self):
-        """Tests calling BatchManager.create_batch() successfully"""
+        """Tests calling BatchManager.create_batch_old() successfully"""
 
-        batch = batch_test_utils.create_batch(self.recipe_type)
+        batch = batch_test_utils.create_batch_old(self.recipe_type)
 
         batch = Batch.objects.get(pk=batch.id)
         self.assertIsNotNone(batch.title)
@@ -158,7 +158,7 @@ class TestBatchManager(TransactionTestCase):
         """Tests calling BatchManager.schedule_recipes() for a recipe type that has nothing to reprocess"""
 
         Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -175,7 +175,7 @@ class TestBatchManager(TransactionTestCase):
         handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
                                                    event=self.event)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -198,7 +198,7 @@ class TestBatchManager(TransactionTestCase):
             handler.recipe.save()
             partials.append(handler.recipe)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -221,7 +221,7 @@ class TestBatchManager(TransactionTestCase):
         """Tests calling BatchManager.schedule_recipes() for a batch that was already created"""
 
         Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -248,7 +248,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-02-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -270,7 +270,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-01-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -317,7 +317,7 @@ class TestBatchManager(TransactionTestCase):
                 'started': '2016-01-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -366,7 +366,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-01-15T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -428,7 +428,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-02-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -446,7 +446,7 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'all_jobs': True,
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -465,7 +465,7 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'job_names': ['Job 1'],
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -484,7 +484,7 @@ class TestBatchManager(TransactionTestCase):
             'trigger_rule': True,
         }
 
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -516,7 +516,7 @@ class TestBatchManager(TransactionTestCase):
             },
         }
 
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
