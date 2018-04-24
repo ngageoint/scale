@@ -153,11 +153,13 @@ class DatabaseUpdater(object):
             cursor.execute(qry_3, [str(batch_id), str(batch_id), str(batch_id)])
             count = cursor.rowcount
             if count:
-                logger.info('Batch with batch_id %d set to correct recipe type revision', batch_id)
+                logger.info('Batch with batch_id %d set to correct recipe type revision (based on old batch recipe)',
+                            batch_id)
             cursor.execute(qry_4, [str(batch_id), str(batch_id)])
             count = cursor.rowcount
             if count:
-                logger.info('Batch with batch_id %d set to correct recipe type revision', batch_id)
+                logger.info('Batch with batch_id %d set to correct recipe type revision (based on revision creation)',
+                            batch_id)
 
         batch = Batch.objects.get(id=batch_id)
         if not batch.configuration:
