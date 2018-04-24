@@ -10,7 +10,7 @@ allows jobs to be connected together in order to pass output from jobs to the in
 .. _rest_v6_recipe_json_diff:
 
 Recipe Graph Diff JSON
-======================
+----------------------
 
 A recipe graph diff JSON describes the differences between two recipe graphs (two revisions). The differences explain
 which recipe jobs will be reprocessed when a newer recipe type revision is run.

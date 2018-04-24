@@ -100,16 +100,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-create-batch">v6 Create Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-batch-comparison">v6 Batch Comparison</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-validate-batch">v6 Validate Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#v6-edit-batch">v6 Edit Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#batch-definition-json">Batch Definition JSON</a></li>
-<li class="toctree-l3"><a class="reference internal" href="batch.html#batch-configuration-json">Batch Configuration JSON</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -186,9 +180,8 @@
 <span id="rest-v6-recipe"></span><h1>v6 Recipe Services<a class="headerlink" href="#v6-recipe-services" title="Permalink to this headline">¶</a></h1>
 <p>These services allow for the creation and management of recipes. A recipe type is a user-defined workflow of jobs that
 allows jobs to be connected together in order to pass output from jobs to the input of other jobs.</p>
-</div>
 <div class="section" id="recipe-graph-diff-json">
-<span id="rest-v6-recipe-json-diff"></span><h1>Recipe Graph Diff JSON<a class="headerlink" href="#recipe-graph-diff-json" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-recipe-json-diff"></span><h2>Recipe Graph Diff JSON<a class="headerlink" href="#recipe-graph-diff-json" title="Permalink to this headline">¶</a></h2>
 <p>A recipe graph diff JSON describes the differences between two recipe graphs (two revisions). The differences explain
 which recipe jobs will be reprocessed when a newer recipe type revision is run.</p>
 <p><strong>Example recipe graph diff:</strong></p>
@@ -350,6 +343,7 @@ name of the dependency.</td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 

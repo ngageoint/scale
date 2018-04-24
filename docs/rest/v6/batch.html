@@ -99,17 +99,18 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Batch Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-create-batch">v6 Create Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-batch-comparison">v6 Batch Comparison</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-validate-batch">v6 Validate Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#v6-edit-batch">v6 Edit Batch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#batch-definition-json">Batch Definition JSON</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#batch-configuration-json">Batch Configuration JSON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Batch Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-batch-list">v6 Retrieve Batch List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-batch">v6 Create Batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-batch-comparison">v6 Batch Comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-validate-batch">v6 Validate Batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-retrieve-batch-details">v6 Retrieve Batch Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-edit-batch">v6 Edit Batch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#batch-definition-json">Batch Definition JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#batch-configuration-json">Batch Configuration JSON</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
 </ul>
 </li>
 </ul>
@@ -187,9 +188,8 @@
 <p>These services allow for the creation and management of batches. A batch is a user-created collection of recipes of a
 single recipe type. Batches can be used for running recipes over a given data set or for performing iterative test runs
 for algorithm development and validation.</p>
-</div>
 <div class="section" id="v6-retrieve-batch-list">
-<span id="rest-v6-batch-list"></span><h1>v6 Retrieve Batch List<a class="headerlink" href="#v6-retrieve-batch-list" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-list"></span><h2>v6 Retrieve Batch List<a class="headerlink" href="#v6-retrieve-batch-list" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example GET /v6/batches/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/batches/?recipe_type_id=208">http://.../v6/batches/?recipe_type_id=208</a></p>
 <p>Response: 200 OK</p>
@@ -453,7 +453,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-title).</td>
 </table>
 </div>
 <div class="section" id="v6-create-batch">
-<span id="rest-v6-batch-create"></span><h1>v6 Create Batch<a class="headerlink" href="#v6-create-batch" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-create"></span><h2>v6 Create Batch<a class="headerlink" href="#v6-create-batch" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example POST /v6/batches/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/batches/">http://.../v6/batches/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -627,7 +627,7 @@ See <a class="reference internal" href="#rest-v6-batch-json-configuration"><span
 </table>
 </div>
 <div class="section" id="v6-batch-comparison">
-<span id="rest-v6-batch-comparison"></span><h1>v6 Batch Comparison<a class="headerlink" href="#v6-batch-comparison" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-comparison"></span><h2>v6 Batch Comparison<a class="headerlink" href="#v6-batch-comparison" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example GET /v6/batches/comparison/{batch-id}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/batches/comparison/101/">http://.../v6/batches/comparison/101/</a></p>
 <p>Response: 200 OK</p>
@@ -739,7 +739,7 @@ for a description of the various metrics fields.</td>
 </table>
 </div>
 <div class="section" id="v6-validate-batch">
-<span id="rest-v6-batch-validation"></span><h1>v6 Validate Batch<a class="headerlink" href="#v6-validate-batch" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-validation"></span><h2>v6 Validate Batch<a class="headerlink" href="#v6-validate-batch" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example POST /v6/batches/validation/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/batches/validation/">http://.../v6/batches/validation/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -875,7 +875,7 @@ reprocessed by the new batch. See <a class="reference internal" href="recipe.htm
 </table>
 </div>
 <div class="section" id="v6-retrieve-batch-details">
-<span id="rest-v6-batch-details"></span><h1>v6 Retrieve Batch Details<a class="headerlink" href="#v6-retrieve-batch-details" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-details"></span><h2>v6 Retrieve Batch Details<a class="headerlink" href="#v6-retrieve-batch-details" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example GET /v6/batches/{batch-id}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/batches/105/">http://.../v6/batches/105/</a></p>
 <p>Response: 200 OK</p>
@@ -1112,7 +1112,7 @@ ISO-8601 duration format.</td>
 </table>
 </div>
 <div class="section" id="v6-edit-batch">
-<span id="rest-v6-batch-edit"></span><h1>v6 Edit Batch<a class="headerlink" href="#v6-edit-batch" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-edit"></span><h2>v6 Edit Batch<a class="headerlink" href="#v6-edit-batch" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example PATCH /v6/batches/{batch-id}/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/batches/100/">http://.../v6/batches/100/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -1176,7 +1176,7 @@ See <a class="reference internal" href="#rest-v6-batch-json-configuration"><span
 </table>
 </div>
 <div class="section" id="batch-definition-json">
-<span id="rest-v6-batch-json-definition"></span><h1>Batch Definition JSON<a class="headerlink" href="#batch-definition-json" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-json-definition"></span><h2>Batch Definition JSON<a class="headerlink" href="#batch-definition-json" title="Permalink to this headline">¶</a></h2>
 <p>A batch definition JSON defines what a batch is going to run. Currently the v6 batch definition only supports running a
 batch that re-processes the same set of recipes that ran in a previous batch.</p>
 <p><strong>Example batch definition:</strong></p>
@@ -1238,7 +1238,7 @@ recipes will be re-processed.</td>
 </table>
 </div>
 <div class="section" id="batch-configuration-json">
-<span id="rest-v6-batch-json-configuration"></span><h1>Batch Configuration JSON<a class="headerlink" href="#batch-configuration-json" title="Permalink to this headline">¶</a></h1>
+<span id="rest-v6-batch-json-configuration"></span><h2>Batch Configuration JSON<a class="headerlink" href="#batch-configuration-json" title="Permalink to this headline">¶</a></h2>
 <p>A batch configuration JSON configures how the jobs and recipes within a batch should be run.</p>
 <p><strong>Example batch configuration:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -1265,6 +1265,7 @@ recipes will be re-processed.</td>
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 
 
