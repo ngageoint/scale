@@ -11,7 +11,7 @@ for algorithm development and validation.
 .. _rest_v6_batch_list:
 
 v6 Retrieve Batch List
-======================
+----------------------
 
 **Example GET /v6/batches/ API call**
 
@@ -186,7 +186,7 @@ Response: 200 OK
 .. _rest_v6_batch_create:
 
 v6 Create Batch
-===============
+---------------
 
 **Example POST /v6/batches/ API call**
 
@@ -336,7 +336,7 @@ Location http://.../v6/batches/105/
 .. _rest_v6_batch_comparison:
 
 v6 Batch Comparison
-===================
+-------------------
 
 **Example GET /v6/batches/comparison/{batch-id}/ API call**
 
@@ -436,7 +436,7 @@ Response: 200 OK
 .. _rest_v6_batch_validation:
 
 v6 Validate Batch
-=================
+-----------------
 
 **Example POST /v6/batches/validation/ API call**
 
@@ -539,7 +539,7 @@ Response: 200 OK
 .. _rest_v6_batch_details:
 
 v6 Retrieve Batch Details
-=========================
+-------------------------
 
 **Example GET /v6/batches/{batch-id}/ API call**
 
@@ -714,7 +714,7 @@ Response: 200 OK
 .. _rest_v6_batch_edit:
 
 v6 Edit Batch
-=============
+-------------
 
 **Example PATCH /v6/batches/{batch-id}/ API call**
 
@@ -759,7 +759,7 @@ Response: 204 No Content
 .. _rest_v6_batch_json_definition:
 
 Batch Definition JSON
-=====================
+---------------------
 
 A batch definition JSON defines what a batch is going to run. Currently the v6 batch definition only supports running a
 batch that re-processes the same set of recipes that ran in a previous batch.
@@ -804,7 +804,7 @@ batch that re-processes the same set of recipes that ran in a previous batch.
 .. _rest_v6_batch_json_configuration:
 
 Batch Configuration JSON
-========================
+------------------------
 
 A batch configuration JSON configures how the jobs and recipes within a batch should be run.
 
