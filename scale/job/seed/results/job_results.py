@@ -291,7 +291,7 @@ class JobResults(object):
             files
         :type job_exe: :class:`job.models.JobExecution`
         :returns: The job results
-        :rtype: :class:`job.configuration.results.job_results.JobResults`
+        :rtype: :class:`job.seed.results.job_results.JobResults`
         """
 
         # Organize the data files
@@ -334,3 +334,5 @@ class JobResults(object):
         for name in param_file_ids:
             param_entry = param_file_ids[name]
             self.add_file_list_parameter(name, param_entry)
+
+        return self

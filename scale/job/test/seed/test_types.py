@@ -51,7 +51,6 @@ class TestSeedOutputsJson(TestCase):
 
         self.assertDictEqual(self.outputs_json_dict, result._dict)
 
-
     def test_get_values(self):
         outputs_obj = SeedOutputsJson(self.outputs_json_dict, self.schema)
 

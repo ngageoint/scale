@@ -19,6 +19,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
+from job.seed.results.job_results import JobResults as SeedJobResults
 from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision
 from node.resources.json.resources import Resources
 from trigger.models import TriggerRule
@@ -489,10 +490,17 @@ class TestJob(TestCase):
 
     def test_get_seed_job_results(self):
         """Test retrieving job results from a Seed job type"""
-        job = Job()
+        job_type = job_test_utils.create_seed_job_type()
 
-        self.assertIsNone(job.get_job_results())
+        input = {
+            "version": "2.0",
+            "input_data": {},
+            "output_data": {}
+        }
 
+        job = job_test_utils.create_job(job_type, input=input)
+
+        self.assertIsInstance(job.get_job_results(), SeedJobResults)
 
 
 class TestJobExecutionManager(TransactionTestCase):
@@ -819,13 +827,13 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         })
 
     def test_successful_no_trigger_rule(self):
-        """Tests calling JobTypeManager.create_job_type() successfully with no trigger rule or error mapping"""
+        """Tests calling JobTypeManager.create_legacy_job_type() successfully with no trigger rule or error mapping"""
 
         name = 'my-job-type'
         version = '1.0'
 
         # Call test
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -835,7 +843,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertDictEqual(job_type.get_error_interface().get_dict(), ErrorInterface(None).get_dict())
 
     def test_successful_with_trigger_rule(self):
-        """Tests calling JobTypeManager.create_job_type() successfully with a trigger rule and error mapping"""
+        """Tests calling JobTypeManager.create_legacy_job_type() successfully with a trigger rule and error mapping"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -843,7 +851,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
                                                               configuration=self.trigger_config.get_dict())
 
         # Call test
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, self.error_mapping)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, self.error_mapping)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -855,7 +863,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertDictEqual(job_type.get_error_interface().get_dict(), self.error_mapping.get_dict())
 
     def test_invalid_trigger_rule(self):
-        """Tests calling JobTypeManager.create_job_type() with an invalid trigger rule"""
+        """Tests calling JobTypeManager.create_legacy_job_type() with an invalid trigger rule"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -863,11 +871,11 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
                                                               configuration=self.trigger_config.get_dict())
 
         # Call test
-        self.assertRaises(InvalidConnection, JobType.objects.create_job_type, name, version, self.job_interface,
+        self.assertRaises(InvalidConnection, JobType.objects.create_legacy_job_type, name, version, self.job_interface,
                           trigger_rule, self.error_mapping)
 
     def test_successful_other_fields(self):
-        """Tests calling JobTypeManager.create_job_type() successfully with additional fields"""
+        """Tests calling JobTypeManager.create_legacy_job_type() successfully with additional fields"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -878,9 +886,9 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         docker_params = [["a","1"],["b","2"]]
 
         # Call test
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, title=title,
-                                                   description=description, priority=priority,
-                                                   docker_params=docker_params, custom_resources=custom_resources)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, title=title,
+                                                          description=description, priority=priority,
+                                                          docker_params=docker_params, custom_resources=custom_resources)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -896,7 +904,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertEqual(job_type.docker_params, docker_params)
 
     def test_successful_paused(self):
-        """Tests calling JobTypeManager.create_job_type() and pausing it"""
+        """Tests calling JobTypeManager.create_legacy_job_type() and pausing it"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -906,8 +914,8 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         is_paused = True
 
         # Call test
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, title=title,
-                                                   description=description, priority=priority, is_paused=is_paused)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, title=title,
+                                                          description=description, priority=priority, is_paused=is_paused)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -921,7 +929,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertIsNotNone(job_type.paused)
 
     def test_uneditable_field(self):
-        """Tests calling JobTypeManager.create_job_type() with an uneditable field"""
+        """Tests calling JobTypeManager.create_legacy_job_type() with an uneditable field"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -931,11 +939,11 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         is_system = True
 
         # Call test
-        self.assertRaises(Exception, JobType.objects.create_job_type, name, version, self.job_interface, title=title,
+        self.assertRaises(Exception, JobType.objects.create_legacy_job_type, name, version, self.job_interface, title=title,
                           description=description, priority=priority, is_system=is_system)
 
     def test_invalid_error_mapping(self):
-        """Tests calling JobTypeManager.create_job_type() with an invalid error mapping"""
+        """Tests calling JobTypeManager.create_legacy_job_type() with an invalid error mapping"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -951,7 +959,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         })
 
         # Call test
-        self.assertRaises(Exception, JobType.objects.create_job_type, name, version, self.job_interface,
+        self.assertRaises(Exception, JobType.objects.create_legacy_job_type, name, version, self.job_interface,
                           error_mapping=error_mapping, title=title, description=description, priority=priority,
                           is_system=is_system)
 
@@ -1046,9 +1054,9 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         new_is_paused = True
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, title=title,
-                                                   priority=priority, error_mapping=error_mapping,
-                                                   custom_resources=custom_resources)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, title=title,
+                                                          priority=priority, error_mapping=error_mapping,
+                                                          custom_resources=custom_resources)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, title=new_title, priority=new_priority,
@@ -1076,7 +1084,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         version = '1.0'
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, self.new_job_interface, None, False)
@@ -1101,7 +1109,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                               configuration=self.trigger_config.get_dict())
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, None, new_trigger_rule, False)
@@ -1125,7 +1133,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         version = '1.0'
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, None, None, True)
@@ -1150,7 +1158,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                               configuration=self.trigger_config.get_dict())
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, self.new_job_interface, new_trigger_rule, False)
@@ -1177,7 +1185,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                               configuration=self.trigger_config.get_dict())
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_ERROR_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
         self.assertRaises(InvalidConnection, JobType.objects.edit_job_type, job_type.id, self.new_job_interface,
@@ -1202,7 +1210,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         new_title = 'my new title'
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, title=title)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, title=title)
         job_type.is_system = True
         job_type.save()
 
@@ -1221,7 +1229,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         version = '1.0'
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, is_paused=False)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, is_paused=False)
         job_type.is_system = True
         job_type.save()
 
@@ -1241,7 +1249,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         new_title = 'my new title'
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, title=title)
+        job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, title=title)
 
         # Call test
         self.assertRaises(Exception, JobType.objects.edit_job_type, job_type.id, title=new_title, is_system=True)

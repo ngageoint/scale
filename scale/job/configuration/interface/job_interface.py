@@ -17,6 +17,7 @@ from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from product.types import ProductFileMetadata
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
@@ -471,18 +472,28 @@ class JobInterface(object):
                 if not os.path.isfile(file_entry['path']):
                     raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                 if 'geo_metadata' in file_entry:
-                    files_to_store[param_name] = (file_entry['path'], media_type, file_entry['geo_metadata'])
+                    files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
+                                                                     local_path=file_entry['path'],
+                                                                     media_type=media_type,
+                                                                     geojson=file_entry['geo_metadata'])
                 else:
-                    files_to_store[param_name] = (file_entry['path'], media_type)
+                    files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
+                                                                     local_path=file_entry['path'],
+                                                                     media_type=media_type)
             elif 'files' in manifest_file_entry:
                 file_tuples = []
                 for file_entry in manifest_file_entry['files']:
                     if not os.path.isfile(file_entry['path']):
                         raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                     if 'geo_metadata' in file_entry:
-                        file_tuples.append((file_entry['path'], media_type, file_entry['geo_metadata']))
+                        file_tuples.append(ProductFileMetadata(output_name=param_name,
+                                                               local_path=file_entry['path'],
+                                                               media_type=media_type,
+                                                               geojson=file_entry['geo_metadata']))
                     else:
-                        file_tuples.append((file_entry['path'], media_type))
+                        file_tuples.append(ProductFileMetadata(output_name=param_name,
+                                                               local_path=file_entry['path'],
+                                                               media_type=media_type))
                 files_to_store[param_name] = file_tuples
 
         job_data_parse_results = {}  # parse results formatted for job_data

@@ -2166,10 +2166,12 @@ class JobTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, custom_resources=None,
-                        configuration=None, secrets=None, **kwargs):
+    def create_legacy_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None,
+                               custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
+
+        # TODO Removed in v6
 
         :param name: The identifying name of the job type used by clients for queries
         :type name: string
@@ -2183,6 +2185,73 @@ class JobTypeManager(models.Manager):
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
         :param custom_resources: Custom resources required by this job type. Deprecated - removed in v6.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :param secrets: Secret settings required by this job type
+        :type secrets: dict
+        :returns: The new job type
+        :rtype: :class:`job.models.JobType`
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
+        """
+
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
+
+        # Validate the trigger rule
+        if trigger_rule:
+            trigger_config = trigger_rule.get_configuration()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
+            trigger_config.validate_trigger_for_job(interface)
+
+        # Create the new job type
+        job_type = JobType(**kwargs)
+        job_type.name = name
+        job_type.version = version
+        job_type.interface = interface.get_dict()
+        job_type.trigger_rule = trigger_rule
+        if configuration:
+            configuration.validate(job_type.interface)
+            job_type.configuration = configuration.get_dict()
+        if error_mapping:
+            error_mapping.validate()
+            job_type.error_mapping = error_mapping.get_dict()
+        if custom_resources:
+            job_type.custom_resources = custom_resources.get_dict()
+        if 'is_active' in kwargs:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        job_type.save()
+
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
+
+        # Create first revision of the job type
+        JobTypeRevision.objects.create_job_type_revision(job_type)
+
+        return job_type
+
+
+    @transaction.atomic
+    def create_seed_job_type(self, interface, trigger_rule=None, configuration=None, secrets=None, **kwargs):
+        """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
+        transaction.
+
+        :param interface: The interface for running a job of this type
+        :type interface: :class:`job.seed.manifest.SeedManifest`
+        :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
+        :type trigger_rule: :class:`trigger.models.TriggerRule`
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
         :param secrets: Secret settings required by this job type

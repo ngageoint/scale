@@ -46,7 +46,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_legacy_job_type('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',
@@ -155,7 +155,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_legacy_job_type('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',

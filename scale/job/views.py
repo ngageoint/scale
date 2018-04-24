@@ -186,11 +186,11 @@ class JobTypesView(ListCreateAPIView):
                     trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name,
                                                                     is_active)
                 # Create the job type
-                job_type = JobType.objects.create_job_type(name=name, version=version, interface=interface,
-                                                           trigger_rule=trigger_rule, error_mapping=error_mapping,
-                                                           custom_resources=custom_resources,
-                                                           configuration=configuration, secrets=secrets,
-                                                           **extra_fields)
+                job_type = JobType.objects.create_legacy_job_type(name=name, version=version, interface=interface,
+                                                                  trigger_rule=trigger_rule, error_mapping=error_mapping,
+                                                                  custom_resources=custom_resources,
+                                                                  configuration=configuration, secrets=secrets,
+                                                                  **extra_fields)
 
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection,
                 InvalidSecretsConfiguration, ValueError) as ex:
