@@ -384,6 +384,11 @@ class JobInterface(object):
 
         # env_vars are ignored for old job types
 
+        # ensure no optional inputs are empty
+        for input in self.get_dict()['input_data']:
+            if input['name'] not in values and not input['required']:
+                values[input['name']] = ''
+
         return self.replace_command_parameters(self.get_command_args(), values)
 
     def get_dict(self):

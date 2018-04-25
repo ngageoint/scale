@@ -448,16 +448,12 @@ class JobData(object):
                     params_by_file_path[file_path] = name
                     workspace_file_list.append(file_entry)
             else:
-                file_path = os.path.normpath(data_file_entry[0])
+                file_path = os.path.normpath(data_file_entry.local_path)
                 if not os.path.isfile(file_path):
                     raise Exception('%s is not a valid file' % file_path)
                 params_by_file_path[file_path] = name
-                # Adjust file path to be relative to upload_dir
-                if len(data_file_entry) == 2:
-                    new_tuple = (file_path, data_file_entry[1], name)
-                else:
-                    new_tuple = (file_path, data_file_entry[1], name, data_file_entry[2])
-                workspace_file_list.append(new_tuple)
+                data_file_entry.local_path = file_path
+                workspace_file_list.append(data_file_entry)
 
         data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
         if not data_file_store:

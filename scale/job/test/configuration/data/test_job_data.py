@@ -28,8 +28,8 @@ class DummyDataFileStore(AbstractDataFileStore):
 
         results = {}
         for workspace_id in files:
-            for file_tuple in files[workspace_id]:
-                file_path = file_tuple[0]
+            for file_metadata in files[workspace_id]:
+                file_path = file_metadata.local_path
                 results[file_path] = sequence
                 sequence += 1
         return results
