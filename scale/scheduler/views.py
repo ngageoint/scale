@@ -81,18 +81,12 @@ class StatusView(GenericAPIView):
 
         if request.version == 'v4':
             return self.get_v4(request)
+        elif request.version == 'v5':
+            return self.get_v5(request)
+        elif request.version == 'v6':
+            return self.get_v6(request)
 
-        status_dict = Scheduler.objects.get_master().status
-
-        if not status_dict:  # Empty dict from model initialization
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        # If status dict has not been updated recently, assume scheduler is down
-        status_timestamp = parse_datetime(status_dict['timestamp'])
-        if (now() - status_timestamp).total_seconds() > StatusView.STATUS_FRESHNESS_THRESHOLD:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        return Response(status_dict)
+        raise Http404()
 
     # TODO: remove when REST API v4 is removed
     def get_v4(self, request):
@@ -106,6 +100,48 @@ class StatusView(GenericAPIView):
 
         status = Scheduler.objects.get_status()
         return Response(status)
+        
+    def get_v5(self, request):
+        """The v5 version to get high level status information
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        status_dict = Scheduler.objects.get_master().status
+
+        if not status_dict:  # Empty dict from model initialization
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # If status dict has not been updated recently, assume scheduler is down
+        status_timestamp = parse_datetime(status_dict['timestamp'])
+        if (now() - status_timestamp).total_seconds() > StatusView.STATUS_FRESHNESS_THRESHOLD:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status_dict)
+
+    def get_v6(self, request):
+        """The v6 version to get high level status information
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        status_dict = Scheduler.objects.get_master().status
+
+        if not status_dict:  # Empty dict from model initialization
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # If status dict has not been updated recently, assume scheduler is down
+        status_timestamp = parse_datetime(status_dict['timestamp'])
+        if (now() - status_timestamp).total_seconds() > StatusView.STATUS_FRESHNESS_THRESHOLD:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status_dict)
 
 
 class VersionView(GenericAPIView):
@@ -113,6 +149,53 @@ class VersionView(GenericAPIView):
 
     def get(self, request):
         """Gets various version/build information
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.get_v4(request)
+        elif request.version == 'v5':
+            return self.get_v5(request)
+        elif request.version == 'v6':
+            return self.get_v6(request)
+
+        raise Http404()
+
+    # TODO: remove when REST API v4 is removed
+    def get_v4(self, request):
+        """Gets various version/build information for a v4 request
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        version_info = {
+            'version': getattr(settings, 'VERSION', 'snapshot'),
+        }
+        return Response(version_info)
+        
+    def get_v5(self, request):
+        """Gets various version/build information for a v5 request
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        version_info = {
+            'version': getattr(settings, 'VERSION', 'snapshot'),
+        }
+        return Response(version_info)
+
+    def get_v6(self, request):
+        """Gets various version/build information for a v6 request
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
