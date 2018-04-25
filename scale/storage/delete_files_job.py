@@ -14,13 +14,11 @@ logger = logging.getLogger(__name__)
 GENERAL_FAIL_EXIT_CODE = 1
 
 
-def delete_files(files, job_id, volume_path, broker):
+def delete_files(files, volume_path, broker):
     """Deletes the given files within a workspace.
 
     :param files: List of named tuples containing path and ID of the file to delete.
     :type files: [collections.namedtuple]
-    :param job_id: The ID of the job associated with the file
-    :type job_id: int
     :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
     :type volume_path: string
@@ -44,5 +42,4 @@ def delete_files(files, job_id, volume_path, broker):
             logger.exception('Error performing delete_files steps')
         sys.exit(exit_code)
 
-    logger.info('A file associated with job %i was deleted', job_id)
     return

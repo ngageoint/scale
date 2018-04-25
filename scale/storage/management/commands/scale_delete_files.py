@@ -31,8 +31,6 @@ class Command(BaseCommand):
         parser.add_argument('-f', '--files', nargs='+', type=json.loads, required=True,
                             help='File path and ID in a JSON string.' +
                             ' e.g: "{"file_path":"some.file", "id":"399"}"')
-        parser.add_argument('-j', '--job_id', action='store', type=int, required=True,
-                            help='ID of the Job model')
         parser.add_argument('-w', '--workspace', action='store', type=json.loads, required=True,
                             help='Workspace configuration in a JSON string.')
         parser.add_argument('-p', '--purge', action='store', type=bool, required=True,
@@ -48,7 +46,6 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         files = options.get('files')
-        job_id = options.get('job_id')
         workspace_config = ast.literal_eval(options.get('workspace'))
         purge = options.get('purge')
 
@@ -62,10 +59,8 @@ class Command(BaseCommand):
 
         logger.info('Command starting: scale_delete_files')
         logger.info('File IDs: %s', [x.id for x in files])
-        logger.info('Job ID: %i', job_id)
 
-        delete_files_job.delete_files(files=files, job_id=job_id,
-                                      volume_path=workspace_config['broker']['host_path'],
+        delete_files_job.delete_files(files=files, volume_path=workspace_config['broker']['host_path'],
                                       broker=broker)
 
         messages = create_delete_files_messages(files=files, purge=purge)
