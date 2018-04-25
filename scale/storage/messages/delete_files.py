@@ -100,5 +100,7 @@ class DeleteFiles(CommandMessage):
         if self.purge:
             ScaleFile.objects.filter(id__in=self._file_ids).delete()
         else:
-            ScaleFile.objects.filter(id__in=self._file_ids).update(is_deleted=False, deleted=timezone.now())
+            when = timezone.now()
+            ScaleFile.objects.filter(id__in=self._file_ids).update(is_deleted=False, deleted=when,
+                                                                   is_published=False, unpublished=when)
         return True
