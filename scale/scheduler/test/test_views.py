@@ -190,7 +190,21 @@ class TestVersionView(TestCase):
 
     def test_success(self):
         """Test getting overall version/build information successfully"""
-        url = rest_util.get_url('/version/')
+        url = '/v4/version/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertIsNotNone(result['version'])
+        
+        url = '/v5/version/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertIsNotNone(result['version'])
+        
+        url = '/v6/version/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
