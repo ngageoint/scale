@@ -97,7 +97,8 @@ class DatabaseUpdater(object):
         qry_2 = 'UPDATE batch b SET is_creation_done = true FROM '
         qry_2 += '(SELECT b.id, j.status FROM batch b JOIN job j ON b.creator_job_id = j.id) s '
         qry_2 += 'WHERE b.id = s.id AND s.status = \'COMPLETED\' AND b.is_creation_done = false'
-        # Populate batch.recipe_type_rev if it hasn't been set yet
+        qry_3 = 'UPDATE batch SET root_batch_id = id WHERE root_batch_id is null'
+
         with connection.cursor() as cursor:
             cursor.execute(qry_1, [])
             count = cursor.rowcount
@@ -107,6 +108,10 @@ class DatabaseUpdater(object):
             count = cursor.rowcount
             if count:
                 logger.info('%d batch(s) updated with correct is_creation_done value', count)
+            cursor.execute(qry_3, [])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d batch(s) updated with correct root_batch_id value', count)
 
         logger.info('Scale is now populating the new batch fields on the job, recipe, and batch models')
         logger.info('Counting the number of batches...')

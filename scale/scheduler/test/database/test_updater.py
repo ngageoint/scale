@@ -164,6 +164,7 @@ class TestDatabaseUpdater(TestCase):
         self.assertEqual(batch_1.recipes_estimated, 2)
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
         self.assertEqual(batch_1.recipe_type_rev_id, recipe_type_rev.id)
+        self.assertEqual(batch_1.root_batch_id, batch_1.id)
         self.assertEqual(batch_1.get_configuration().priority, 303)
         job_1 = Job.objects.get(id=job_1.id)
         self.assertEqual(job_1.batch_id, batch_1.id)
@@ -184,3 +185,4 @@ class TestDatabaseUpdater(TestCase):
         batch_3 = Batch.objects.get(id=batch_3.id)
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type_3.id, 2)
         self.assertEqual(batch_3.recipe_type_rev_id, recipe_type_rev.id)
+        self.assertEqual(batch_3.root_batch_id, batch_3.id)
