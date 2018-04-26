@@ -190,6 +190,8 @@ class TestVersionView(TestCase):
 
     def test_success(self):
         """Test getting overall version/build information successfully"""
+        
+        # TODO: remove when REST API v4 is removed
         url = '/v4/version/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
