@@ -1,5 +1,5 @@
 
-.. _rest_system:
+.. _rest_v6_system:
 
 v6 System Services
 ===============
@@ -8,12 +8,234 @@ These services provide access to general system information.
 
 .. _rest_v6_system_status:
 
+v6 Get Scheduler Status
+----------------------
+
+**Example GET /v6/status/ API call**
+
+Request: GET http://.../v6/status/
+
+Response: 200 OK
+
+  .. code-block:: javascript
+
+    {
+       "timestamp": "1970-01-01T00:00:00Z",
+       "scheduler": {
+          "metrics": {
+             "task_updates_per_sec": 0.0,
+             "new_offers_per_sec": 0.0,
+             "jobs_finished_per_sec": 0.0,
+             "jobs_launched_per_sec": 0.0,
+             "tasks_launched_per_sec": 0.0,
+             "offers_launched_per_sec": 0.0,
+             "tasks_finished_per_sec": 0.0
+          },
+          "hostname": "scheduler-host.com",
+          "mesos": {
+             "framework_id": "framework-1234",
+             "master_hostname": "192.168.1.1", 
+             "master_port": 5050 
+          }, 
+          "state": { 
+             "name": "READY", 
+             "title": "Ready", 
+             "description": "Scheduler is ready to run new jobs." 
+          } 
+       }, 
+       "system": { 
+          "database_update": { 
+             "is_completed": true, 
+             "completed": "1970-01-01T00:00:00Z" 
+          }, 
+          "services": [ 
+             { 
+                "name": "messaging", 
+                "title": "Messaging", 
+                "description": "Processes the backend messaging system", 
+                "actual_count": 1, 
+                "desired_count": 1 
+             } 
+          ] 
+       }, 
+       "num_offers": 4, 
+       "resources": { 
+          "mem": { 
+             "offered": 91445.0, 
+             "total": 177501.0, 
+             "running": 1024.0, 
+             "free": 72744.0, 
+             "unavailable": 12288.0 
+          }, 
+          "gpus": { 
+             "offered": 0.0, 
+             "total": 0.0, 
+             "running": 0.0, 
+             "free": 0.0, 
+             "unavailable": 0.0 
+          }, 
+          "disk": { 
+             "offered": 383051.0, 
+             "total": 676101.0, 
+             "running": 0.0, 
+             "free": 289722.0, 
+             "unavailable": 3328.0 
+          }, 
+          "cpus": { 
+             "offered": 7.3, 
+             "total": 28.0, 
+             "running": 1.0, 
+             "free": 11.0, 
+             "unavailable": 8.7 
+          } 
+       }, 
+       "job_types": [ 
+          { 
+             "id": 1, 
+             "name": "my-job", 
+             "version": "1.0", 
+             "title": "My Job", 
+             "description": "My Job Description", 
+             "is_system": false, 
+             "icon_code": "f186" 
+          } 
+       ], 
+       "nodes": [ 
+          { 
+             "id": 1, 
+             "hostname": "my-host", 
+             "agent_id": "my-agent", 
+             "is_active": true, 
+             "state": { 
+                "name": "READY", 
+                "title": "Ready", 
+                "description": "Node is ready to run new jobs." 
+             }, 
+             "errors": [ 
+                { 
+                   "name": "my-error", 
+                   "title": "My Error", 
+                   "description": "My Error Description", 
+                   "started": "1970-01-01T00:00:00Z", 
+                   "last_updated": "1970-01-01T00:00:00Z" 
+                } 
+             ], 
+             "warnings": [ 
+                { 
+                   "name": "my-warning", 
+                   "title": "My Warning", 
+                   "description": "My Warning Description", 
+                   "started": "1970-01-01T00:00:00Z", 
+                   "last_updated": "1970-01-01T00:00:00Z" 
+                } 
+             ], 
+             "node_tasks": [ 
+                { 
+                   "type": "cleanup", 
+                   "title": "Node Cleanup", 
+                   "description": "Performs Docker container and volume cleanup on the node", 
+                   "count": 1 
+                } 
+             ], 
+             "system_tasks": [ 
+                { 
+                   "type": "message-handler", 
+                   "title": "Message Handler", 
+                   "description": "Processes messages from Scale's backend messaging system", 
+                   "count": 1 
+                } 
+             ], 
+             "num_offers": 1, 
+             "resources": { 
+                "mem": { 
+                   "offered": 26893.0, 
+                   "total": 29965.0, 
+                   "running": 0.0, 
+                   "free": 0.0, 
+                   "unavailable": 3072.0 
+                }, 
+                "gpus": { 
+                   "offered": 0.0, 
+                   "total": 0.0, 
+                   "running": 0.0, 
+                   "free": 0.0, 
+                   "unavailable": 0.0 
+                }, 
+                "disk": { 
+                   "offered": 95553.0, 
+                   "total": 96577.0, 
+                   "running": 0.0, 
+                   "free": 0.0, 
+                   "unavailable": 1024.0 
+                }, 
+                "cpus": { 
+                   "offered": 1.0, 
+                   "total": 4.0, 
+                   "running": 0.0, 
+                   "free": 0.0, 
+                   "unavailable": 3.0 
+                } 
+             }, 
+             "job_executions": { 
+                "running": { 
+                   "total": 3, 
+                   "by_job_type": [ 
+                      { 
+                         "job_type_id": 1, 
+                         "count": 3 
+                      } 
+                   ] 
+                }, 
+                "completed": { 
+                   "total": 3, 
+                   "by_job_type": [ 
+                      { 
+                         "job_type_id": 1, 
+                         "count": 3 
+                      } 
+                   ] 
+                }, 
+                "failed": { 
+                   "total": 9, 
+                   "data": { 
+                      "total": 3, 
+                      "by_job_type": [ 
+                         { 
+                            "job_type_id": 1, 
+                            "count": 3 
+                         } 
+                      ] 
+                   }, 
+                   "algorithm": { 
+                      "total": 3, 
+                      "by_job_type": [ 
+                         { 
+                            "job_type_id": 1, 
+                            "count": 3 
+                         } 
+                      ] 
+                   }, 
+                   "system": { 
+                      "total": 3, 
+                      "by_job_type": [ 
+                         { 
+                            "job_type_id": 1, 
+                            "count": 3 
+                         } 
+                      ] 
+                   } 
+                } 
+             } 
+          } 
+       ] 
+    } 
+
 +-------------------------------------------------------------------------------------------------------------------------------+
 | **Get Scheduler Status**                                                                                                      |
 +===============================================================================================================================+
 | Returns the current status of the scheduler, including information about nodes and running jobs.                              |
 +-------------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/status/                                                                                                              |
+| **GET** /v6/status/                                                                                                           |
 +-------------------------------------------------------------------------------------------------------------------------------+
 | **Successful Responses**                                                                                                      |
 +--------------------------+----------------------------------------------------------------------------------------------------+
@@ -81,229 +303,30 @@ These services provide access to general system information.
 |                          |                   | field is similar to *completed*, just with failed executions grouped by error  |
 |                          |                   | category.                                                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                                    |
-|                                                                                                                               |
-|   {                                                                                                                           |
-|      "timestamp": "1970-01-01T00:00:00Z",                                                                                     |
-|      "scheduler": {                                                                                                           |
-|         "metrics": {                                                                                                          |
-|            "task_updates_per_sec": 0.0,                                                                                       |
-|            "new_offers_per_sec": 0.0,                                                                                         |
-|            "jobs_finished_per_sec": 0.0,                                                                                      |
-|            "jobs_launched_per_sec": 0.0,                                                                                      |
-|            "tasks_launched_per_sec": 0.0,                                                                                     |
-|            "offers_launched_per_sec": 0.0,                                                                                    |
-|            "tasks_finished_per_sec": 0.0                                                                                      |
-|         },                                                                                                                    |
-|         "hostname": "scheduler-host.com",                                                                                     |
-|         "mesos": {                                                                                                            |
-|            "framework_id": "framework-1234",                                                                                  |
-|            "master_hostname": "192.168.1.1",                                                                                  |
-|            "master_port": 5050                                                                                                |
-|         },                                                                                                                    |
-|         "state": {                                                                                                            |
-|            "name": "READY",                                                                                                   |
-|            "title": "Ready",                                                                                                  |
-|            "description": "Scheduler is ready to run new jobs."                                                               |
-|         }                                                                                                                     |
-|      },                                                                                                                       |
-|      "system": {                                                                                                              |
-|         "database_update": {                                                                                                  |
-|            "is_completed": true,                                                                                              |
-|            "completed": "1970-01-01T00:00:00Z"                                                                                |
-|         },                                                                                                                    |
-|         "services": [                                                                                                         |
-|            {                                                                                                                  |
-|               "name": "messaging",                                                                                            |
-|               "title": "Messaging",                                                                                           |
-|               "description": "Processes the backend messaging system",                                                        |
-|               "actual_count": 1,                                                                                              |
-|               "desired_count": 1                                                                                              |
-|            }                                                                                                                  |
-|         ]                                                                                                                     |
-|      },                                                                                                                       |
-|      "num_offers": 4,                                                                                                         |
-|      "resources": {                                                                                                           |
-|         "mem": {                                                                                                              |
-|            "offered": 91445.0,                                                                                                |
-|            "total": 177501.0,                                                                                                 |
-|            "running": 1024.0,                                                                                                 |
-|            "free": 72744.0,                                                                                                   |
-|            "unavailable": 12288.0                                                                                             |
-|         },                                                                                                                    |
-|         "gpus": {                                                                                                             |
-|            "offered": 0.0,                                                                                                    |
-|            "total": 0.0,                                                                                                      |
-|            "running": 0.0,                                                                                                    |
-|            "free": 0.0,                                                                                                       |
-|            "unavailable": 0.0                                                                                                 |
-|         },                                                                                                                    |
-|         "disk": {                                                                                                             |
-|            "offered": 383051.0,                                                                                               |
-|            "total": 676101.0,                                                                                                 |
-|            "running": 0.0,                                                                                                    |
-|            "free": 289722.0,                                                                                                  |
-|            "unavailable": 3328.0                                                                                              |
-|         },                                                                                                                    |
-|         "cpus": {                                                                                                             |
-|            "offered": 7.3,                                                                                                    |
-|            "total": 28.0,                                                                                                     |
-|            "running": 1.0,                                                                                                    |
-|            "free": 11.0,                                                                                                      |
-|            "unavailable": 8.7                                                                                                 |
-|         }                                                                                                                     |
-|      },                                                                                                                       |
-|      "job_types": [                                                                                                           |
-|         {                                                                                                                     |
-|            "id": 1,                                                                                                           |
-|            "name": "my-job",                                                                                                  |
-|            "version": "1.0",                                                                                                  |
-|            "title": "My Job",                                                                                                 |
-|            "description": "My Job Description",                                                                               |
-|            "is_system": false,                                                                                                |
-|            "icon_code": "f186"                                                                                                |
-|         }                                                                                                                     |
-|      ],                                                                                                                       |
-|      "nodes": [                                                                                                               |
-|         {                                                                                                                     |
-|            "id": 1,                                                                                                           |
-|            "hostname": "my-host",                                                                                             |
-|            "agent_id": "my-agent",                                                                                            |
-|            "is_active": true,                                                                                                 |
-|            "state": {                                                                                                         |
-|               "name": "READY",                                                                                                |
-|               "title": "Ready",                                                                                               |
-|               "description": "Node is ready to run new jobs."                                                                 |
-|            },                                                                                                                 |
-|            "errors": [                                                                                                        |
-|               {                                                                                                               |
-|                  "name": "my-error",                                                                                          |
-|                  "title": "My Error",                                                                                         |
-|                  "description": "My Error Description",                                                                       |
-|                  "started": "1970-01-01T00:00:00Z",                                                                           |
-|                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
-|               }                                                                                                               |
-|            ],                                                                                                                 |
-|            "warnings": [                                                                                                      |
-|               {                                                                                                               |
-|                  "name": "my-warning",                                                                                        |
-|                  "title": "My Warning",                                                                                       |
-|                  "description": "My Warning Description",                                                                     |
-|                  "started": "1970-01-01T00:00:00Z",                                                                           |
-|                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
-|               }                                                                                                               |
-|            ],                                                                                                                 |
-|            "node_tasks": [                                                                                                    |
-|               {                                                                                                               |
-|                  "type": "cleanup",                                                                                           |
-|                  "title": "Node Cleanup",                                                                                     |
-|                  "description": "Performs Docker container and volume cleanup on the node",                                   |
-|                  "count": 1                                                                                                   |
-|               }                                                                                                               |
-|            ],                                                                                                                 |
-|            "system_tasks": [                                                                                                  |
-|               {                                                                                                               |
-|                  "type": "message-handler",                                                                                   |
-|                  "title": "Message Handler",                                                                                  |
-|                  "description": "Processes messages from Scale's backend messaging system",                                   |
-|                  "count": 1                                                                                                   |
-|               }                                                                                                               |
-|            ],                                                                                                                 |
-|            "num_offers": 1,                                                                                                   |
-|            "resources": {                                                                                                     |
-|               "mem": {                                                                                                        |
-|                  "offered": 26893.0,                                                                                          |
-|                  "total": 29965.0,                                                                                            |
-|                  "running": 0.0,                                                                                              |
-|                  "free": 0.0,                                                                                                 |
-|                  "unavailable": 3072.0                                                                                        |
-|               },                                                                                                              |
-|               "gpus": {                                                                                                       |
-|                  "offered": 0.0,                                                                                              |
-|                  "total": 0.0,                                                                                                |
-|                  "running": 0.0,                                                                                              |
-|                  "free": 0.0,                                                                                                 |
-|                  "unavailable": 0.0                                                                                           |
-|               },                                                                                                              |
-|               "disk": {                                                                                                       |
-|                  "offered": 95553.0,                                                                                          |
-|                  "total": 96577.0,                                                                                            |
-|                  "running": 0.0,                                                                                              |
-|                  "free": 0.0,                                                                                                 |
-|                  "unavailable": 1024.0                                                                                        |
-|               },                                                                                                              |
-|               "cpus": {                                                                                                       |
-|                  "offered": 1.0,                                                                                              |
-|                  "total": 4.0,                                                                                                |
-|                  "running": 0.0,                                                                                              |
-|                  "free": 0.0,                                                                                                 |
-|                  "unavailable": 3.0                                                                                           |
-|               }                                                                                                               |
-|            },                                                                                                                 |
-|            "job_executions": {                                                                                                |
-|               "running": {                                                                                                    |
-|                  "total": 3,                                                                                                  |
-|                  "by_job_type": [                                                                                             |
-|                     {                                                                                                         |
-|                        "job_type_id": 1,                                                                                      |
-|                        "count": 3                                                                                             |
-|                     }                                                                                                         |
-|                  ]                                                                                                            |
-|               },                                                                                                              |
-|               "completed": {                                                                                                  |
-|                  "total": 3,                                                                                                  |
-|                  "by_job_type": [                                                                                             |
-|                     {                                                                                                         |
-|                        "job_type_id": 1,                                                                                      |
-|                        "count": 3                                                                                             |
-|                     }                                                                                                         |
-|                  ]                                                                                                            |
-|               },                                                                                                              |
-|               "failed": {                                                                                                     |
-|                  "total": 9,                                                                                                  |
-|                  "data": {                                                                                                    |
-|                     "total": 3,                                                                                               |
-|                     "by_job_type": [                                                                                          |
-|                        {                                                                                                      |
-|                           "job_type_id": 1,                                                                                   |
-|                           "count": 3                                                                                          |
-|                        }                                                                                                      |
-|                     ]                                                                                                         |
-|                  },                                                                                                           |
-|                  "algorithm": {                                                                                               |
-|                     "total": 3,                                                                                               |
-|                     "by_job_type": [                                                                                          |
-|                        {                                                                                                      |
-|                           "job_type_id": 1,                                                                                   |
-|                           "count": 3                                                                                          |
-|                        }                                                                                                      |
-|                     ]                                                                                                         |
-|                  },                                                                                                           |
-|                  "system": {                                                                                                  |
-|                     "total": 3,                                                                                               |
-|                     "by_job_type": [                                                                                          |
-|                        {                                                                                                      |
-|                           "job_type_id": 1,                                                                                   |
-|                           "count": 3                                                                                          |
-|                        }                                                                                                      |
-|                     ]                                                                                                         |
-|                  }                                                                                                            |
-|               }                                                                                                               |
-|            }                                                                                                                  |
-|         }                                                                                                                     |
-|      ]                                                                                                                        |
-|   }                                                                                                                           |
-+-------------------------------------------------------------------------------------------------------------------------------+
 
 
 .. _rest_v6_system_version:
+
+v6 Get System Version
+----------------------
+
+**Example GET /v6/version/ API call**
+
+Request: GET http://.../v6/version/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+   { 
+       "version": "6.0.0" 
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------------+
 | **Get System Version**                                                                                                        |
 +===============================================================================================================================+
 | Returns version and build information.                                                                                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
-| **GET** /v6/version/                                                                                                             |
+| **GET** /v6/version/                                                                                                          |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
@@ -316,9 +339,3 @@ These services provide access to general system information.
 | version                  | String            | The full version identifier of Scale.                                          |
 |                          |                   | The format follows the Semantic scheme: http://semver.org/                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                                    |
-|                                                                                                                               |
-|   {                                                                                                                           |
-|       "version": "6.0.0"                                                                                                      |
-|   }                                                                                                                           |
-+-------------------------------------------------------------------------------------------------------------------------------+
