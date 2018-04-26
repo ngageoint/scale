@@ -108,14 +108,64 @@ class TestJobData(TransactionTestCase):
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_success_multiple_input_file(self, retrieve_files, join):
-        raise NotImplementedError
+        job_data = JobData()
+        job_data.add_file_input({'name': 'TEST_FILE_INPUT', 'file_ids': [1, 2]})
+        retrieve_files.return_value = {1: '/scale/input/TEST_FILE_INPUT1', 2: '/scale/input/TEST_FILE_INPUT2'}
+
+        data_files = [SeedInputFiles(
+            {'name': 'TEST_FILE_INPUT', 'multiple': True, 'required': True, 'mediaTypes': [], 'partial': False})]
+
+        result = job_data.retrieve_input_data_files(data_files)
+        self.assertEqual(result, {'TEST_FILE_INPUT': ['/scale/input/TEST_FILE_INPUT1', '/scale/input/TEST_FILE_INPUT2']})
+
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_failure_multiple_for_single_input_file(self, retrieve_files, join):
+        job_data = JobData()
+        job_data.add_file_input({'name': 'TEST_FILE_INPUT', 'file_ids': [1, 2]})
+        retrieve_files.return_value = {1: '/scale/input/TEST_FILE_INPUT1', 2: '/scale/input/TEST_FILE_INPUT2'}
+
+        data_files = [SeedInputFiles(
+            {'name': 'TEST_FILE_INPUT', 'multiple': False, 'required': True, 'mediaTypes': [], 'partial': False})]
+
+        with self.assertRaises(Exception):
+            job_data.retrieve_input_data_files(data_files)
 
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_missing_file(self, retrieve_files, join):
-        raise NotImplementedError
+        job_data = JobData()
+        job_data.add_file_input({'name': 'TEST_FILE_INPUT', 'file_ids': [1]})
+        retrieve_files.return_value = {}
+
+        data_files = [SeedInputFiles(
+            {'name': 'TEST_FILE_INPUT', 'multiple': False, 'required': True, 'mediaTypes': [], 'partial': False})]
+
+        with self.assertRaises(Exception):
+            job_data.retrieve_input_data_files(data_files)
 
     @patch('os.path.join', return_value='/scale/input')
     @patch('job.data.job_data.JobData._retrieve_files')
     def test_retrieve_input_data_files_missing_plurality_mismatch(self, retrieve_files, join):
-        raise NotImplementedError
+        job_data = JobData()
+        job_data.add_file_input({'name': 'TEST_FILE_INPUT', 'file_ids': [1]})
+        retrieve_files.return_value = {}
+
+        data_files = [SeedInputFiles(
+            {'name': 'TEST_FILE_INPUT', 'multiple': True, 'required': True, 'mediaTypes': [], 'partial': False})]
+
+        with self.assertRaises(Exception):
+            job_data.retrieve_input_data_files(data_files)
+
+    @patch('os.path.join', return_value='/scale/input')
+    @patch('job.data.job_data.JobData._retrieve_files')
+    def test_retrieve_input_data_files_missing_file_not_required(self, retrieve_files, join):
+        job_data = JobData()
+        job_data.add_file_input({'name': 'TEST_FILE_INPUT', 'file_ids': []})
+        retrieve_files.return_value = {}
+
+        data_files = [SeedInputFiles(
+            {'name': 'TEST_FILE_INPUT', 'multiple': False, 'required': False, 'mediaTypes': [],
+             'partial': False})]
+
+        job_data.retrieve_input_data_files(data_files)
