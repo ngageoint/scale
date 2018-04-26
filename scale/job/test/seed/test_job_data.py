@@ -168,4 +168,5 @@ class TestJobData(TransactionTestCase):
             {'name': 'TEST_FILE_INPUT', 'multiple': False, 'required': False, 'mediaTypes': [],
              'partial': False})]
 
-        job_data.retrieve_input_data_files(data_files)
+        result = job_data.retrieve_input_data_files(data_files)
+        self.assertEqual(result, {'TEST_FILE_INPUT': []})
