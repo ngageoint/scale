@@ -656,22 +656,22 @@ class BatchManager(models.Manager):
         errors = []
         warnings = []
 
-        batch = Batch()
-        batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
-        batch.definition = convert_definition_to_v6(definition).get_dict()
-        batch.configuration = convert_configuration_to_v6(configuration).get_dict()
-
-        if definition.root_batch_id is not None:
-            # Find latest batch with the root ID
-            try:
-                superseded_batch = Batch.objects.get_batch_from_root(definition.root_batch_id)
-            except Batch.DoesNotExist:
-                raise InvalidDefinition('PREV_BATCH_NOT_FOUND', 'No batch with that root ID exists')
-            batch.root_batch_id = superseded_batch.root_batch_id
-            batch.superseded_batch = superseded_batch
-
         try:
+            batch = Batch()
+            batch.recipe_type = recipe_type
+            batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+            batch.definition = convert_definition_to_v6(definition).get_dict()
+            batch.configuration = convert_configuration_to_v6(configuration).get_dict()
+
+            if definition.root_batch_id is not None:
+                # Find latest batch with the root ID
+                try:
+                    superseded_batch = Batch.objects.get_batch_from_root(definition.root_batch_id)
+                except Batch.DoesNotExist:
+                    raise InvalidDefinition('PREV_BATCH_NOT_FOUND', 'No batch with that root ID exists')
+                batch.root_batch_id = superseded_batch.root_batch_id
+                batch.superseded_batch = superseded_batch
+
             warnings.extend(definition.validate(batch))
             warnings.extend(configuration.validate(batch))
         except ValidationException as ex:

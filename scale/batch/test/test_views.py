@@ -1072,6 +1072,41 @@ class TestBatchesValidationViewV6(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_create_invalid_prev_batch(self):
+        """Tests creating a new batch with an invalid previous batch"""
+
+        json_data = {
+            'recipe_type_id': self.recipe_type_2.id,
+            'definition': {
+                'previous_batch': {
+                    'root_batch_id': 9999
+                }
+            },
+            'configuration': {
+                'priority': 100
+            }
+        }
+
+        url = '/v6/batches/validation/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        expected_recipe_type = {'id': self.recipe_type_2.id, 'name': self.recipe_type_2.name,
+                                'title': self.recipe_type_2.title, 'description': self.recipe_type_2.description,
+                                'revision_num': self.recipe_type_2.revision_num}
+
+        # Ensure the new batch is not valid
+        self.assertFalse(result['is_valid'])
+        self.assertEqual(len(result['errors']), 1)
+        self.assertEqual(result['errors'][0]['name'], 'PREV_BATCH_NOT_FOUND')
+        self.assertListEqual(result['warnings'], [])
+        # Check correct recipe estimation count
+        self.assertEqual(result['recipes_estimated'], 0)
+        # Check for correct recipe type
+        self.assertDictEqual(result['recipe_type'], expected_recipe_type)
+        # CHeck that there is no previous batch
+        self.assertTrue('prev_batch' not in result)
+
     def test_create_mismatched_recipe_types(self):
         """Tests creating a new batch with a mismatched recipe type"""
 
