@@ -95,6 +95,10 @@ class TestStatusView(TestCase):
         url = '/v5/status/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        url = '/v6/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_status_old(self):
         """Test getting scheduler status with old data"""
@@ -107,6 +111,10 @@ class TestStatusView(TestCase):
         url = '/v5/status/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        
+        url = '/v6/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_status_successful(self):
         """Test getting scheduler status successfully"""
@@ -117,6 +125,12 @@ class TestStatusView(TestCase):
 
         # url = rest_util.get_url('/status/')
         url = '/v5/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(result['timestamp'], datetime_to_string(when))
+        
+        url = '/v6/status/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
@@ -176,7 +190,23 @@ class TestVersionView(TestCase):
 
     def test_success(self):
         """Test getting overall version/build information successfully"""
-        url = rest_util.get_url('/version/')
+        
+        # TODO: remove when REST API v4 is removed
+        url = '/v4/version/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertIsNotNone(result['version'])
+        
+        url = '/v5/version/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertIsNotNone(result['version'])
+        
+        url = '/v6/version/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
