@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>v6 System Services &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>v6 System Services</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rest/v6/system.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v6-system-services">
+<span id="rest-v6-system"></span><h1>v6 System Services<a class="headerlink" href="#v6-system-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to general system information.</p>
+<div class="section" id="v6-get-scheduler-status">
+<span id="rest-v6-system-status"></span><h2>v6 Get Scheduler Status<a class="headerlink" href="#v6-get-scheduler-status" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/status/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/status/">http://.../v6/status/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;task_updates_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;new_offers_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;tasks_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;offers_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;tasks_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;scheduler-host.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;mesos&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;framework_id&quot;</span><span class="o">:</span> <span class="s2">&quot;framework-1234&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;state&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scheduler is ready to run new jobs.&quot;</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;system&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;database_update&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;is_completed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;services&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;messaging&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Messaging&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Processes the backend messaging system&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;actual_count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;desired_count&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
+      <span class="p">]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+   <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">91445.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">177501.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">1024.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">72744.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">12288.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;gpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">383051.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">676101.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">289722.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3328.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">7.3</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">28.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">11.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">8.7</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job Description&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f186&quot;</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;agent_id&quot;</span><span class="o">:</span> <span class="s2">&quot;my-agent&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;state&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Node is ready to run new jobs.&quot;</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-error&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Error&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Error Description&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;last_updated&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-warning&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Warning&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Warning Description&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;last_updated&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;node_tasks&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;cleanup&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Node Cleanup&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Performs Docker container and volume cleanup on the node&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;system_tasks&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;message-handler&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Message Handler&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Processes messages from Scale&#39;s backend messaging system&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">26893.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">29965.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3072.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;gpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">95553.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">96577.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">1024.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">4.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3.0</span>
+            <span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;job_executions&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
+                  <span class="p">{</span>
+                     <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
+                  <span class="p">}</span>
+               <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+               <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
+                  <span class="p">{</span>
+                     <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
+                  <span class="p">}</span>
+               <span class="p">]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;failed&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+               <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                  <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
+                     <span class="p">{</span>
+                        <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
+                     <span class="p">}</span>
+                  <span class="p">]</span>
+               <span class="p">},</span>
+               <span class="s2">&quot;algorithm&quot;</span><span class="o">:</span> <span class="p">{</span>
+                  <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
+                     <span class="p">{</span>
+                        <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
+                     <span class="p">}</span>
+                  <span class="p">]</span>
+               <span class="p">},</span>
+               <span class="s2">&quot;system&quot;</span><span class="o">:</span> <span class="p">{</span>
+                  <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
+                     <span class="p">{</span>
+                        <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
+                     <span class="p">}</span>
+                  <span class="p">]</span>
+               <span class="p">}</span>
+            <span class="p">}</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="15%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Get Scheduler Status</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns the current status of the scheduler, including information about nodes and running jobs.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /v6/status/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Responses</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">204 NO CONTENT</td>
+</tr>
+<tr class="row-even"><td colspan="3">The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to
+provide.</td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>timestamp</td>
+<td>ISO-8601 Datetime</td>
+<td>When the status information was generated</td>
+</tr>
+<tr class="row-odd"><td>scheduler</td>
+<td>JSON Object</td>
+<td>Scheduler configuration and metrics information</td>
+</tr>
+<tr class="row-even"><td>scheduler.metrics</td>
+<td>JSON Object</td>
+<td>Contains various near real-time metrics related to scheudling tasks and jobs</td>
+</tr>
+<tr class="row-odd"><td>scheduler.hostname</td>
+<td>String</td>
+<td>The name of the host where the scheduler is running</td>
+</tr>
+<tr class="row-even"><td>scheduler.mesos</td>
+<td>JSON Object</td>
+<td>Contains Scale&#8217;s framework ID and hostname and port of the Mesos master</td>
+</tr>
+<tr class="row-odd"><td>scheduler.state</td>
+<td>JSON Object</td>
+<td>The current scheduler state, with a title and description</td>
+</tr>
+<tr class="row-even"><td>system</td>
+<td>JSON Object</td>
+<td>System information</td>
+</tr>
+<tr class="row-odd"><td>system.database_update</td>
+<td>JSON Object</td>
+<td>Information on if and when the current Scale database update completed</td>
+</tr>
+<tr class="row-even"><td>system.services</td>
+<td>Array</td>
+<td>List of services, with name, title, description, and task counts</td>
+</tr>
+<tr class="row-odd"><td>num_offers</td>
+<td>Integer</td>
+<td>Number of resource offers currently held by Scale</td>
+</tr>
+<tr class="row-even"><td>resources</td>
+<td>JSON Object</td>
+<td>Describes the resource totals across all of Scale&#8217;s nodes. Each resource name
+is a key and its corresponding object breaks down the resource into several
+categories: <em>running</em> resources are used by current Scale tasks, <em>offered</em>
+resources are currently offered to Scale, <em>free</em> resources are available on
+the node and may be offered to Scale soon, <em>unavailable</em> resources are used by
+other tasks and cannot be used by Scale, and <em>total</em> resources are the total
+amounts for the node.</td>
+</tr>
+<tr class="row-odd"><td>job_types</td>
+<td>Array</td>
+<td>List of job type objects, with a few basic fields</td>
+</tr>
+<tr class="row-even"><td>nodes</td>
+<td>Array</td>
+<td>List of node objects, with a few basic fields including the current node state</td>
+</tr>
+<tr class="row-odd"><td>nodes.state</td>
+<td>JSON Object</td>
+<td>The current node state, with a title and description</td>
+</tr>
+<tr class="row-even"><td>nodes.errors</td>
+<td>Array</td>
+<td>List of node error objects, with a title, description, and when the error
+began and was last updated</td>
+</tr>
+<tr class="row-odd"><td>nodes.warnings</td>
+<td>Array</td>
+<td>List of node warning objects, with a title, description, and when the warning
+began and was last updated</td>
+</tr>
+<tr class="row-even"><td>nodes.node_tasks</td>
+<td>Array</td>
+<td>List of node tasks running on the node, with a type, title, description, and
+count</td>
+</tr>
+<tr class="row-odd"><td>nodes.system_tasks</td>
+<td>Array</td>
+<td>List of system tasks running on the node, with a type, title, description, and
+count</td>
+</tr>
+<tr class="row-even"><td>nodes.job_executions</td>
+<td>JSON Object</td>
+<td>The job executions related to this node. The <em>running</em> field describes the
+jobs currently running on the node, with a total count and count per job type.
+The <em>completed</em> field describes job executions that have completed on the node
+in the last 3 hours, with a total count and count per job type. The <em>failed</em>
+field is similar to <em>completed</em>, just with failed executions grouped by error
+category.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-get-system-version">
+<span id="rest-v6-system-version"></span><h2>v6 Get System Version<a class="headerlink" href="#v6-get-system-version" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/version/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/version/">http://.../v6/version/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div></div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="15%" />
+<col width="64%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Get System Version</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns version and build information.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>GET</strong> /v6/version/</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>version</td>
+<td>String</td>
+<td>The full version identifier of Scale.
+The format follows the Semantic scheme: <a class="reference external" href="http://semver.org/">http://semver.org/</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          
+          SphinxRtdTheme.Navigation.enableSticky();
+          
+      });
+  </script> 
+
+</body>
+</html>
