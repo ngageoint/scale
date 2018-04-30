@@ -31,8 +31,8 @@ class TestCallScaleDeleteFiles(TestCase):
 
         config = WorkspaceConfiguration(self.workspace.json_config)
 
-        files_str = '-f {"file_path":"/dir/file.name", "id":"12300"}'
-        workspace_str = '-w "%s"' % (config.get_dict())
+        files_str = '-f {"file_path":"/dir/file.name", "id":"12300", "workspace":"workspace_1"}'
+        workspace_str = '-w {"workspace_1": %s}' % (config.get_dict())
         purge_str = '-p False'
 
         with self.assertRaises(SystemExit):

@@ -12,6 +12,7 @@ from collections import namedtuple
 from django.core.management.base import BaseCommand
 
 import storage.delete_files_job as delete_files_job
+from error.exceptions import ScaleError, get_error_by_exception
 from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from messaging.manager import CommandMessageManager
@@ -19,6 +20,15 @@ from storage import delete_files_job
 from storage.messages.delete_files import create_delete_files_messages
 
 logger = logging.getLogger(__name__)
+
+GENERAL_FAIL_EXIT_CODE = 1
+
+
+def eval_input(string):
+    """Evaluates the input string
+    """
+
+    return ast.literal_eval(string.lstrip())
 
 
 class Command(BaseCommand):
@@ -29,10 +39,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('-f', '--files', nargs='+', type=json.loads, required=True,
-                            help='File path and ID in a JSON string.' +
-                            ' e.g: "{"file_path":"some.file", "id":"399"}"')
-        parser.add_argument('-w', '--workspace', action='store', type=json.loads, required=True,
-                            help='Workspace configuration in a JSON string.')
+                            help='File path and ID in a JSON string.  Submit multiple if needed.' +
+                            ' e.g: "{"file_path":"some.file", "id":"399", "workspace":"cool_workspace_name"}"')
+        parser.add_argument('-w', '--workspace', action='append', type=eval_input, required=True,
+                            help='Named workspace configuration in a JSON string. Submit multiple if needed.' +
+                            ' e.g: "{"cool_workspace_name": {...} }"')
         parser.add_argument('-p', '--purge', action='store', type=bool, required=True,
                             help='Purge all records for the given file')
 
@@ -46,22 +57,18 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         files = options.get('files')
-        workspace_config = ast.literal_eval(options.get('workspace'))
+        workspace_list = options.get('workspace')
         purge = options.get('purge')
 
-        scale_file = namedtuple('ScaleFile', ['id', 'file_path'])
-        files = [scale_file(id=int(x['id']), file_path=x['file_path']) for x in files]
-
-        workspace = WorkspaceConfiguration(workspace_config)
-        workspace.validate_broker()
-        workspace_config = workspace.get_dict()
-        broker = get_broker(workspace_config['broker']['type'])
+        workspaces = self._detect_workspaces(workspace_list)
+        files = self._configure_files(files, workspaces)
 
         logger.info('Command starting: scale_delete_files')
         logger.info('File IDs: %s', [x.id for x in files])
 
-        delete_files_job.delete_files(files=files, volume_path=workspace_config['broker']['host_path'],
-                                      broker=broker)
+        for wrkspc_name, wrkspc in workspaces.iteritems():
+            delete_files_job.delete_files(files=[f for f in files if f.workspace == wrkspc_name],
+                                          broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
 
         messages = create_delete_files_messages(files=files, purge=purge)
         CommandMessageManager().send_messages(messages)
@@ -69,6 +76,52 @@ class Command(BaseCommand):
         logger.info('Command completed: scale_delete_files')
 
         sys.exit(0)
+
+    def _configure_files(self, file_list, workspaces):
+        """Parses and returns files associated with their respective workspace.
+
+        :param file_list: The file list that was given
+        :type file_list: [dict]
+        :return: All workspaces by given name with associated broker and volume_path
+        :rtype: dict
+        """
+
+        scale_file = namedtuple('ScaleFile', ['id', 'file_path', 'workspace'])
+
+        files = []
+        for f in file_list:
+            try:
+                wrkspc = workspaces[f['workspace']]
+            except KeyError:
+                exit_code = GENERAL_FAIL_EXIT_CODE
+                logger.exception('Workspace referenced in files list not found in given workspaces')
+                sys.exit(exit_code)
+
+            files.append(scale_file(id=int(f['id']), file_path=f['file_path'], workspace=f['workspace']))
+        return files
+
+    def _detect_workspaces(self, workspace_list):
+        """Parses, validates, and returns workspace information for the given workspaces
+
+        :param workspace_list: The workspace list that was given
+        :type workspace_list: [dict]
+        :return: All workspaces by given name with associated broker and volume_path
+        :rtype: dict
+        """
+
+        workspaces = {}
+        for workspace in workspace_list:
+            name = workspace.keys()[0]
+            wrkspc = WorkspaceConfiguration(workspace[name])
+            wrkspc.validate_broker()
+            valid_wrkspc = wrkspc.get_dict()
+
+            workspaces[name] = {
+                'broker': get_broker(valid_wrkspc['broker']['type']),
+                'volume_path' : valid_wrkspc['broker']['host_path']
+            }
+
+        return workspaces
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.
