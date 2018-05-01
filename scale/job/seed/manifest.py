@@ -383,7 +383,7 @@ class SeedManifest(object):
 
         if len(env_vars) != len(set(env_vars)):
             raise InvalidSeedManifestDefinition('Collisions are not allowed between reserved keywords, resources, settings'
-                                             'and input names.')
+                                                'and input names.')
 
     def _check_mount_name_uniqueness(self):
         """Ensures all the mount names are unique, and throws a
@@ -531,6 +531,15 @@ class SeedManifest(object):
         """populates the default values for any missing shared_resource values"""
 
         pass
+
+    def _populate_errors_defaults(self):
+        """populates the default values for any missing errors values"""
+
+        for error in self.get_errors():
+            if 'category' not in error:
+                error['category'] = 'job'
+            if 'description' not in error:
+                error['description'] = error['title']
 
     def _validate_mount_paths(self):
         """Ensures that all mount paths are valid

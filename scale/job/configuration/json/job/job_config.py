@@ -159,6 +159,8 @@ class JobConfiguration(object):
         """Returns a dict of configuration settings that are secret based off the job interface
         setting designations.
 
+        # TODO: Remove when legacy JobType are deprecated in v6
+
         :param interface: The interface dict for the job type
         :type interface: dict
         :returns: name:value pairs of secret settings, possibly None
@@ -174,6 +176,25 @@ class JobConfiguration(object):
             for setting_name in secret_settings:
                 if setting_name in self._configuration['settings']:
                     secrets[setting_name] = self._configuration['settings'][setting_name]
+
+        return secrets
+
+    def get_seed_secret_settings(self, settings):
+        """Returns a dict of configuration settings that are secret based off the Seed Manifest
+        setting designations.
+
+        :param settings: The settings associated with a Job Type defined with Seed Manifest
+        :type settings: [dict]
+        :returns: name:value pairs of secret settings, possibly None
+        :rtype: dict
+        """
+
+        secrets = {}
+
+        for setting in settings:
+            name = settings['name']
+            if setting['secret'] and name in self._configuration['settings']:
+                secrets[name] = self._configuration['settings'][name]
 
         return secrets
 

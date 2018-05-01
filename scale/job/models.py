@@ -14,6 +14,7 @@ from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
+import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
@@ -32,7 +33,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
 from seed.results.job_results import JobResults
-from trigger.configuration.exceptions import InvalidTriggerType
+from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction
 from vault.secrets_handler import SecretsHandler
@@ -2242,20 +2243,17 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
-
     @transaction.atomic
-    def create_seed_job_type(self, interface, trigger_rule=None, configuration=None, secrets=None, **kwargs):
+    def create_seed_job_type(self, manifest_dict, trigger_rule_dict=None, configuration_dict=None, **kwargs):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
-        :param interface: The interface for running a job of this type
-        :type interface: :class:`job.seed.manifest.SeedManifest`
-        :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
-        :type trigger_rule: :class:`trigger.models.TriggerRule`
-        :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
-        :param secrets: Secret settings required by this job type
-        :type secrets: dict
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param trigger_rule_dict: The trigger rule that creates jobs of this type, possibly None
+        :type trigger_rule_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -2268,32 +2266,51 @@ class JobTypeManager(models.Manager):
         type interface is invalid
         """
 
+        # Create manifest and validate
+        manifest = SeedManifest(manifest_dict)
+
         for field_name in kwargs:
-            if field_name in JobType.UNEDITABLE_FIELDS:
+            if field_name in JobType.UNEDITABLE_FIELDS_V6:
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
-        # Validate the trigger rule
-        if trigger_rule:
-            trigger_config = trigger_rule.get_configuration()
-            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
-            trigger_config.validate_trigger_for_job(interface)
+        trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
+
+        configuration = None
+        secrets = None
+        if configuration_dict:
+            configuration = JobConfiguration(configuration_dict)
+            secrets = configuration.get_seed_secret_settings(manifest.get_settings())
+            configuration.validate(manifest_dict)
+
+        # Create any errors defined in manifest
+        error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
+        for error in manifest.get_errors():
+            category = Error.CATEGORIES.ALGORITHM if 'job' in error['category'] else Error.CATEGORIES.DATA
+
+            name = '-'.join([manifest.get_name(), manifest.get_job_version(), error['name']])
+
+            Error.objects.create_error(name=name,
+                                       title=error['title'],
+                                       description=error['description'],
+                                       category=category)
+
+            error_mapping_dict['exit_codes'][error['code']] = name
+
+        error_mapping = ErrorInterface(error_mapping_dict)
 
         # Create the new job type
         job_type = JobType(**kwargs)
-        job_type.name = name
-        job_type.version = version
-        job_type.interface = interface.get_dict()
+
+        job_type.name = manifest.get_name()
+        job_type.version = manifest.get_job_version()
+        job_type.interface = manifest_dict
         job_type.trigger_rule = trigger_rule
         if configuration:
-            configuration.validate(job_type.interface)
-            job_type.configuration = configuration.get_dict()
+            job_type.configuration = configuration_dict
         if error_mapping:
             error_mapping.validate()
-            job_type.error_mapping = error_mapping.get_dict()
-        if custom_resources:
-            job_type.custom_resources = custom_resources.get_dict()
+            job_type.error_mapping = error_mapping_dict
         if 'is_active' in kwargs:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs:
@@ -2308,6 +2325,48 @@ class JobTypeManager(models.Manager):
         JobTypeRevision.objects.create_job_type_revision(job_type)
 
         return job_type
+
+    def _create_seed_job_trigger_rule(self, manifest, trigger_rule_dict):
+        """Creates a trigger rule to be attached to a Seed job type.
+
+        Must be called from within an existing transaction. This is intended for use with create and edit job type
+        methods.
+
+        :param manifest: Instantiated Manifest to pass to trigger validation
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :param trigger_rule_dict: Trigger rule definition to be used for data models
+        :type trigger_rule_dict: dict
+        :returns: The new trigger rule
+        :rtype: :class:`trigger.models.TriggerRule`
+
+        :raises trigger.configuration.exceptions.InvalidTriggerMissingConfiguration:
+            If both rule and configuration do not exist
+        :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
+        :raises trigger.configuration.exceptions.InvalidTriggerType: If the trigger is invalid
+        """
+        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
+                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
+            raise InvalidTriggerMissingConfiguration('Trigger type and configuration are required together.')
+
+        # Attempt to look up the trigger handler for the type
+        rule_handler = None
+        if trigger_rule_dict and 'type' in trigger_rule_dict:
+            rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
+
+        # Attempt to create the trigger rule
+        is_active = trigger_rule_dict.get('is_active', True)
+        trigger_rule = None
+        if rule_handler and 'configuration' in trigger_rule_dict:
+            trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], manifest.get_name(),
+                                                            is_active)
+
+        # Validate the trigger rule
+        if trigger_rule:
+            trigger_config = trigger_rule.get_configuration()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
+            trigger_config.validate_trigger_for_job(manifest)
+        return trigger_rule
 
     @transaction.atomic
     def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
@@ -2880,6 +2939,10 @@ class JobType(models.Model):
 
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'archived', 'paused', 'last_modified')
+
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'is_system', 'is_active', 'is_operational', 'is_paused', 'icon_code')
+
+    UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'archived', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
