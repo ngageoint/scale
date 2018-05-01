@@ -1,0 +1,22 @@
+storage\.test\.management\.commands package
+===========================================
+
+Submodules
+----------
+
+storage\.test\.management\.commands\.test\_scale\_delete\_files module
+----------------------------------------------------------------------
+
+.. automodule:: storage.test.management.commands.test_scale_delete_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.test.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

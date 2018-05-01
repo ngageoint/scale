@@ -12,6 +12,14 @@ storage\.management\.commands\.scale\_delete\_file module
     :undoc-members:
     :show-inheritance:
 
+storage\.management\.commands\.scale\_delete\_files module
+----------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_delete_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 storage\.management\.commands\.scale\_download\_file module
 -----------------------------------------------------------
 

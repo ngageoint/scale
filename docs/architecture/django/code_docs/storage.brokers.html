@@ -127,6 +127,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.apps">storage.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.container">storage.container module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.delete_files_job">storage.delete_files_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.exceptions">storage.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
@@ -250,15 +251,15 @@
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em>, <em>update_model=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given files.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
 that volume file system is mounted. This means that the path to where a ScaleFile currently exists is the result
 of os.path.join(volume_path, files[i].file_path). If this broker does not use a container volume, None will be
 given for volume_path.</p>
 <p>The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
-each file itself and not any parent directories. Each file model should be updated and saved when a delete is
-successful, including fields such as is_deleted and deleted.</p>
+each file itself and not any parent directories. If the update model flag is set each file model should be
+updated and saved when a delete is successful, including fields such as is_deleted and deleted.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -267,6 +268,7 @@ successful, including fields such as is_deleted and deleted.</p>
 <li><strong>volume_path</strong> (<em>string</em>) &#8211; Absolute path to the local container location onto which the volume file system was mounted,
 None if this broker does not use a container volume</li>
 <li><strong>files</strong> ([<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]) &#8211; List of files to delete</li>
+<li><strong>update_model</strong> (<em>bool</em>) &#8211; Flag to determine if ScaleFile model should be updated after delete</li>
 </ul>
 </td>
 </tr>
@@ -639,7 +641,7 @@ None.</p>
 <p>Broker that utilizes a local host path mounted into the task container</p>
 <dl class="method">
 <dt id="storage.brokers.host_broker.HostBroker.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em>, <em>update_model=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></code></a></p>
 </dd></dl>
 
@@ -699,7 +701,7 @@ None.</p>
 mount an NFS volume into the task container</p>
 <dl class="method">
 <dt id="storage.brokers.nfs_broker.NfsBroker.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em>, <em>update_model=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.nfs_broker.NfsBroker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></code></a></p>
 </dd></dl>
 
@@ -752,7 +754,7 @@ mount an NFS volume into the task container</p>
 <p>Broker that utilizes the AWS Boto library to read/write files to S3 cloud storage.</p>
 <dl class="method">
 <dt id="storage.brokers.s3_broker.S3Broker.delete_files">
-<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>files</em>, <em>update_model=True</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.delete_files" title="storage.brokers.broker.Broker.delete_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.delete_files()</span></code></a></p>
 </dd></dl>
 

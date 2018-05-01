@@ -1,0 +1,22 @@
+storage\.test\.messages package
+===============================
+
+Submodules
+----------
+
+storage\.test\.messages\.test\_delete\_files module
+---------------------------------------------------
+
+.. automodule:: storage.test.messages.test_delete_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.test.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

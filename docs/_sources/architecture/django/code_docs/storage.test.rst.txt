@@ -8,9 +8,19 @@ Subpackages
 
     storage.test.brokers
     storage.test.configuration
+    storage.test.management
+    storage.test.messages
 
 Submodules
 ----------
+
+storage\.test\.test\_delete\_files\_job module
+----------------------------------------------
+
+.. automodule:: storage.test.test_delete_files_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 storage\.test\.test\_geospatial\_utils module
 ---------------------------------------------

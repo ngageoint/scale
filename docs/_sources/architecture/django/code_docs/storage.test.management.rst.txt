@@ -1,0 +1,17 @@
+storage\.test\.management package
+=================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    storage.test.management.commands
+
+Module contents
+---------------
+
+.. automodule:: storage.test.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

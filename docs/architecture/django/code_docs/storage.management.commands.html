@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="storage.migrations package" href="storage.migrations.html" />
+    <link rel="next" title="storage.messages package" href="storage.messages.html" />
     <link rel="prev" title="storage.management package" href="storage.management.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -127,6 +127,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.apps">storage.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.container">storage.container module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.delete_files_job">storage.delete_files_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.exceptions">storage.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.geospatial_utils">storage.geospatial_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.html#module-storage.media_type">storage.media_type module</a></li>
@@ -251,6 +252,40 @@
 <code class="descname">help</code><em class="property"> = u'Deletes a stored file from the remote file system'</em><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command.help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.management.commands.scale_delete_files">
+<span id="storage-management-commands-scale-delete-files-module"></span><h2>storage.management.commands.scale_delete_files module<a class="headerlink" href="#module-storage.management.commands.scale_delete_files" title="Permalink to this headline">¶</a></h2>
+<p>Defines the command line method for running a delete files task</p>
+<dl class="class">
+<dt id="storage.management.commands.scale_delete_files.Command">
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_delete_files.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_files.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
+<p>Command that executes the delete file process for a given file</p>
+<dl class="method">
+<dt id="storage.management.commands.scale_delete_files.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_files.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.management.commands.scale_delete_files.Command.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_files.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
+<p>This method starts the file destruction process.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.management.commands.scale_delete_files.Command.help">
+<code class="descname">help</code><em class="property"> = u'Perform a file destruction operation on a file'</em><a class="headerlink" href="#storage.management.commands.scale_delete_files.Command.help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.management.commands.scale_delete_files.eval_input">
+<code class="descclassname">storage.management.commands.scale_delete_files.</code><code class="descname">eval_input</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_files.eval_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the input string</p>
 </dd></dl>
 
 </div>
@@ -379,7 +414,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="storage.migrations.html" class="btn btn-neutral float-right" title="storage.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="storage.messages.html" class="btn btn-neutral float-right" title="storage.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="storage.management.html" class="btn btn-neutral" title="storage.management package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

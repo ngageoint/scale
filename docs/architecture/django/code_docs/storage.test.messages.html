@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.management package &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>storage.test.messages package &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -31,8 +31,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="storage.management.commands package" href="storage.management.commands.html" />
-    <link rel="prev" title="storage.configuration package" href="storage.configuration.html" />
+    <link rel="next" title="trigger package" href="trigger.html" />
+    <link rel="prev" title="storage.test.management.commands package" href="storage.test.management.commands.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -201,13 +201,15 @@
         
           <li><a href="storage.html">storage package</a> &raquo;</li>
         
-      <li>storage.management package</li>
+          <li><a href="storage.test.html">storage.test package</a> &raquo;</li>
+        
+      <li>storage.test.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/storage.management.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.test.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -220,28 +222,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="storage-management-package">
-<h1>storage.management package<a class="headerlink" href="#storage-management-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="storage.management.commands.html">storage.management.commands package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_delete_file">storage.management.commands.scale_delete_file module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_delete_files">storage.management.commands.scale_delete_files module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_list_files">storage.management.commands.scale_list_files module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands">Module contents</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="storage-test-messages-package">
+<h1>storage.test.messages package<a class="headerlink" href="#storage-test-messages-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-storage.test.messages.test_delete_files">
+<span id="storage-test-messages-test-delete-files-module"></span><h2>storage.test.messages.test_delete_files module<a class="headerlink" href="#module-storage.test.messages.test_delete_files" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.test.messages.test_delete_files.TestDeleteFiles">
+<em class="property">class </em><code class="descclassname">storage.test.messages.test_delete_files.</code><code class="descname">TestDeleteFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.messages.test_delete_files.TestDeleteFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.messages.test_delete_files.TestDeleteFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.messages.test_delete_files.TestDeleteFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.messages.test_delete_files.TestDeleteFiles.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling DeleteFile.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.messages.test_delete_files.TestDeleteFiles.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.messages.test_delete_files.TestDeleteFiles.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a DeleteFiles message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-storage.management">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.management" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-storage.test.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.test.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -253,10 +266,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="storage.management.commands.html" class="btn btn-neutral float-right" title="storage.management.commands package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="trigger.html" class="btn btn-neutral float-right" title="trigger package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="storage.configuration.html" class="btn btn-neutral" title="storage.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="storage.test.management.commands.html" class="btn btn-neutral" title="storage.test.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

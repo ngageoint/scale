@@ -1,0 +1,22 @@
+storage\.messages package
+=========================
+
+Submodules
+----------
+
+storage\.messages\.delete\_files module
+---------------------------------------
+
+.. automodule:: storage.messages.delete_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

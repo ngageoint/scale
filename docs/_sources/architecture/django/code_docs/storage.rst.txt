@@ -9,6 +9,7 @@ Subpackages
     storage.brokers
     storage.configuration
     storage.management
+    storage.messages
     storage.migrations
     storage.test
 
@@ -27,6 +28,14 @@ storage\.container module
 -------------------------
 
 .. automodule:: storage.container
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.delete\_files\_job module
+----------------------------------
+
+.. automodule:: storage.delete_files_job
     :members:
     :undoc-members:
     :show-inheritance:
