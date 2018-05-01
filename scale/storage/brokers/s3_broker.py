@@ -32,7 +32,7 @@ class S3Broker(Broker):
         self._bucket_name = None
         self._region_name = None
 
-    def delete_files(self, volume_path, files):
+    def delete_files(self, volume_path, files, update_model=True):
         """See :meth:`storage.brokers.broker.Broker.delete_files`"""
 
         with S3Client(self._credentials, self._region_name) as client:
@@ -41,9 +41,10 @@ class S3Broker(Broker):
 
                 self._delete_file(s3_object, scale_file)
 
-                # Update model attributes
-                scale_file.set_deleted()
-                scale_file.save()
+                if update_model:
+                    # Update model attributes
+                    scale_file.set_deleted()
+                    scale_file.save()
 
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""

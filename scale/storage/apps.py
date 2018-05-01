@@ -10,7 +10,7 @@ class StorageConfig(AppConfig):
     verbose_name = 'Storage'
 
     def ready(self):
-        """Registers the storage brokers and storage errors"""
+        """Registers components related to storage"""
         import storage.brokers.factory as factory
 
         from storage.brokers.host_broker import HostBroker
@@ -28,3 +28,9 @@ class StorageConfig(AppConfig):
 
         register_error(DeletedFile(''))
         register_error(MissingFile(''))
+
+        # Register storage message types
+        from storage.messages.delete_files import DeleteFiles
+        from messaging.messages.factory import add_message_type
+
+        add_message_type(DeleteFiles)

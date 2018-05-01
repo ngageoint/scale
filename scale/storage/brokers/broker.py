@@ -52,7 +52,7 @@ class Broker(object):
 
         return self._volume
 
-    def delete_files(self, volume_path, files):
+    def delete_files(self, volume_path, files, update_model=True):
         """Deletes the given files.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
@@ -61,14 +61,16 @@ class Broker(object):
         given for volume_path.
 
         The files list contains the ScaleFile models representing the files to be deleted. The broker should only delete
-        each file itself and not any parent directories. Each file model should be updated and saved when a delete is
-        successful, including fields such as is_deleted and deleted.
+        each file itself and not any parent directories. If the update model flag is set each file model should be
+        updated and saved when a delete is successful, including fields such as is_deleted and deleted.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param files: List of files to delete
         :type files: [:class:`storage.models.ScaleFile`]
+        :param update_model: Flag to determine if ScaleFile model should be updated after delete
+        :type update_model: bool
         """
 
         raise NotImplementedError
