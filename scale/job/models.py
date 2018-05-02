@@ -2287,7 +2287,7 @@ class JobTypeManager(models.Manager):
         error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
         for error in manifest.get_errors():
             error_obj = Error.objects.get_or_create_seed_error(manifest.get_name(), manifest.get_job_version(), error)
-            logger.info(error_obj)
+
             # Create error mapping from code to constructed Error object
             error_mapping_dict['exit_codes'][error['code']] = error_obj.name
 
@@ -2935,7 +2935,8 @@ class JobType(models.Model):
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'archived', 'paused', 'last_modified')
 
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'is_system', 'is_active', 'is_operational', 'is_paused', 'icon_code')
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'is_system', 'is_active', 'is_operational', 'is_paused',
+                      'icon_code')
 
     UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'archived', 'last_modified')
 
@@ -2948,7 +2949,7 @@ class JobType(models.Model):
     author_url = models.TextField(blank=True, null=True) # TODO: remove for v6
 
     is_system = models.BooleanField(default=False)
-    is_long_running = models.BooleanField(default=False)
+    is_long_running = models.BooleanField(default=False) # TODO: Remove for v6 - manifest handles via timeout 0
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)

@@ -171,14 +171,14 @@ class ErrorManager(models.Manager):
 
         name = '-'.join([job_type_name, job_version, str(error['code'])])
 
-        error_obj = Error.objects.get_or_create(name=name,
-                                                defaults={
-                                                    'title': error['title'],
-                                                    'description': error['description'],
-                                                    'category': category
-                                                })
-        logger.info(error_obj)
-        return error_obj
+        result = Error.objects.get_or_create(name=name,
+                                             defaults={
+                                                 'title': error['title'],
+                                                 'description': error['description'],
+                                                 'category': category
+                                             })
+
+        return result[0]
 
     @transaction.atomic
     def create_error(self, name, title, description, category):
