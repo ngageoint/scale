@@ -2286,16 +2286,10 @@ class JobTypeManager(models.Manager):
         # Create any errors defined in manifest
         error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
         for error in manifest.get_errors():
-            category = Error.CATEGORIES.ALGORITHM if 'job' in error['category'] else Error.CATEGORIES.DATA
-
-            name = '-'.join([manifest.get_name(), manifest.get_job_version(), error['name']])
-
-            Error.objects.create_error(name=name,
-                                       title=error['title'],
-                                       description=error['description'],
-                                       category=category)
-
-            error_mapping_dict['exit_codes'][error['code']] = name
+            error_obj = Error.objects.get_or_create_seed_error(manifest.get_name(), manifest.get_job_version(), error)
+            logger.info(error_obj)
+            # Create error mapping from code to constructed Error object
+            error_mapping_dict['exit_codes'][error['code']] = error_obj.name
 
         error_mapping = ErrorInterface(error_mapping_dict)
 
@@ -2326,7 +2320,8 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
-    def _create_seed_job_trigger_rule(self, manifest, trigger_rule_dict):
+    @staticmethod
+    def _create_seed_job_trigger_rule(manifest, trigger_rule_dict):
         """Creates a trigger rule to be attached to a Seed job type.
 
         Must be called from within an existing transaction. This is intended for use with create and edit job type
