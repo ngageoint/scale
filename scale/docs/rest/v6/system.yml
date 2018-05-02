@@ -277,25 +277,68 @@ components:
       title: Error
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
         name:
           type: string
-          example: my-job
-        version:
-          type: string
-          example: 1.0
+          example: my-error
         title:
           type: string
-          example: My Job
+          example: My Error
         description:
           type: string
-          example: My Job Description 
-        is_system:
-          type: boolean
-          example: false
-        icon_code:
+          example: My Error Description 
+        started:
           type: string
-          example: f186 
-          
+          format: date-time
+          description: When the error began (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        last_updated:
+          type: string
+          format: date-time
+          description: When the error was last updated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+    warning:
+      title: Warning
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-warning
+        title:
+          type: string
+          example: My Warning
+        description:
+          type: string
+          example: My Warning Description 
+        started:
+          type: string
+          format: date-time
+          description: When the warning began (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        last_updated:
+          type: string
+          format: date-time
+          description: When the warning was last updated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+    node_task:
+      title: Node Task
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-warning
+        title:
+          type: string
+          example: My Warning
+        description:
+          type: string
+          example: My Warning Description 
+        started:
+          type: string
+          format: date-time
+          description: When the warning began (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        last_updated:
+          type: string
+          format: date-time
+          description: When the warning was last updated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
