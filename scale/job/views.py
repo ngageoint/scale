@@ -95,7 +95,7 @@ class JobTypesView(ListCreateAPIView):
             return self.create_v5(request)
 
     def create_v5(self, request):
-        """Creates a new job type and returns a link to the detail URL
+        """Creates a legacy job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
@@ -213,7 +213,7 @@ class JobTypesView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
     def create_v6(self, request):
-        """Creates a new job type and returns a link to the detail URL
+        """Creates a Seed job type and returns a link to the detail URL
 
         :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
@@ -253,10 +253,6 @@ class JobTypesView(ListCreateAPIView):
             raise BadParameter('%s: %s' % (message, unicode(ex)))
         except InvalidSeedManifestDefinition as ex:
             message = 'Job type interface invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidInterfaceDefinition as ex:
-            message = 'Invalid trigger type for new job type'
             logger.exception(message)
             raise BadParameter('%s: %s' % (message, unicode(ex)))
         except InvalidJobConfiguration as ex:
@@ -314,6 +310,22 @@ class JobTypeDetailsView(GenericAPIView):
 
     def patch(self, request, job_type_id):
         """Edits an existing job type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The ID for the job type.
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.patch_v6(request, job_type_id)
+        else:
+            return self.patch_v5(request, job_type_id)
+
+    def patch_v5(self, request, job_type_id):
+        """Edits an existing legacy job type and returns the updated details
 
         :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
@@ -437,6 +449,78 @@ class JobTypeDetailsView(GenericAPIView):
         # Fetch the full job type with details
         try:
             job_type = JobType.objects.get_details(job_type.id)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
+
+    def patch_v6(self, request, job_type_id):
+        """Edits an existing Seed job type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The ID for the job type.
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        # Validate the job interface / manifest
+        manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
+
+        # Validate the job configuration and pull out secrets
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+
+        # Check for optional trigger rule parameters
+        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
+        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
+
+        # Extract the fields that should be updated as keyword arguments
+        extra_fields = {}
+        restricted_fields = []
+        for key, value in request.data.iteritems():
+            if key in JobType.UNEDITABLE_FIELDS_V6:
+                restricted_fields.append(key)
+            if key not in JobType.BASE_FIELDS_V6:
+                extra_fields[key] = value
+
+        # Fail request if an attempt was made to manipulate restricted fields
+        if restricted_fields:
+            raise BadParameter("Attempt was made to edit restricted fields: %s" % ','.join(restricted_fields))
+
+        try:
+            with transaction.atomic():
+
+                # Create the job type
+                job_type = JobType.objects.edit_seed_job_type(job_type_id=job_type_id,
+                                                              manifest_dict=manifest_dict,
+                                                              trigger_rule_dict=trigger_rule_dict,
+                                                              configuration_dict=configuration_dict,
+                                                              remove_trigger_rule=remove_trigger_rule,
+                                                              **extra_fields)
+
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
+                InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
+            message = 'Unable to edit job type'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        except InvalidSeedManifestDefinition as ex:
+            message = 'Job type interface invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        except InvalidJobConfiguration as ex:
+            message = 'Job type configuration invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        except InvalidResources as ex:
+            message = 'Job type resources invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+        # Fetch the full job type with details
+        try:
+            job_type = JobType.objects.get_details(job_type_id)
         except JobType.DoesNotExist:
             raise Http404
 

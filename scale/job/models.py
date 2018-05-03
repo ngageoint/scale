@@ -2276,7 +2276,6 @@ class JobTypeManager(models.Manager):
 
         trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
 
-        configuration = None
         secrets = None
         if configuration_dict:
             configuration = JobConfiguration(configuration_dict)
@@ -2300,7 +2299,7 @@ class JobTypeManager(models.Manager):
         job_type.version = manifest.get_job_version()
         job_type.interface = manifest_dict
         job_type.trigger_rule = trigger_rule
-        if configuration:
+        if configuration_dict:
             job_type.configuration = configuration_dict
         if error_mapping:
             error_mapping.validate()
@@ -2364,8 +2363,8 @@ class JobTypeManager(models.Manager):
         return trigger_rule
 
     @transaction.atomic
-    def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
+    def edit_legacy_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
+                             error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -2464,6 +2463,106 @@ class JobTypeManager(models.Manager):
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
         if interface:
+            # Create new revision of the job type for new interface
+            JobTypeRevision.objects.create_job_type_revision(job_type)
+
+    @transaction.atomic
+    def edit_seed_job_type(self, job_type_id, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
+                           remove_trigger_rule=False, **kwargs):
+        """Edits the given job type and saves the changes in the database. The caller must provide the related
+        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
+        indicates that the field should not change. If trigger_rule_dict is set to None it is assumed trigger
+        is being removed.
+
+        :param job_type_id: The unique identifier of the job type to edit
+        :type job_type_id: int
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param trigger_rule_dict: The trigger rule that creates jobs of this type, None results in removal
+        :type trigger_rule_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
+        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
+            when trigger_rule is None
+        :type remove_trigger_rule: bool
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
+        """
+
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
+
+        recipe_types = []
+        if manifest_dict:
+            # Lock all recipe types so they can be validated after changing job type interface
+            from recipe.models import RecipeType
+            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
+
+        # Acquire model lock for job type
+        job_type = JobType.objects.select_for_update().get(pk=job_type_id)
+        if job_type.is_system:
+            if len(kwargs) > 1 or 'is_paused' not in kwargs:
+                raise InvalidJobField('You can only modify the is_paused field for a System Job')
+
+        if manifest_dict:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+            job_type.interface = manifest_dict
+            job_type.revision_num += 1
+
+            # Create any errors defined in manifest
+            error_mapping_dict = {'version': '1.0', 'exit_codes': {}}
+            for error in manifest.get_errors():
+                error_obj = Error.objects.get_or_create_seed_error(manifest.get_name(), manifest.get_job_version(),
+                                                                   error)
+
+                # Create error mapping from code to constructed Error object
+                error_mapping_dict['exit_codes'][error['code']] = error_obj.name
+
+            job_type.error_mapping = ErrorInterface(error_mapping_dict)  # New job configuration
+            job_type.save()
+
+            # New job interface, validate all existing recipes
+            for recipe_type in recipe_types:
+                recipe_type.get_recipe_definition().validate_job_interfaces()
+        else:
+            manifest = SeedManifest(job_type.interface)
+
+        secrets = None
+        if configuration_dict:
+            configuration = JobConfiguration(configuration_dict)
+            secrets = configuration.get_seed_secret_settings(manifest.get_settings())
+            configuration.validate(manifest.get_dict())
+            job_type.configuration = configuration_dict
+
+        if trigger_rule_dict or remove_trigger_rule:
+            if job_type.trigger_rule:
+                # Archive old trigger rule since we are changing to a new one
+                TriggerRule.objects.archive_trigger_rule(job_type.trigger_rule_id)
+
+            if not remove_trigger_rule:
+                job_type.trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
+
+        if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        for field_name in kwargs:
+            setattr(job_type, field_name, kwargs[field_name])
+        job_type.save()
+
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
+
+        if manifest_dict:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
@@ -2935,8 +3034,8 @@ class JobType(models.Model):
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'archived', 'paused', 'last_modified')
 
-    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'is_system', 'is_active', 'is_operational', 'is_paused',
-                      'icon_code')
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+                      'configuration')
 
     UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'archived', 'last_modified')
 

@@ -192,7 +192,7 @@ class JobConfiguration(object):
         secrets = {}
 
         for setting in settings:
-            name = settings['name']
+            name = setting['name']
             if setting['secret'] and name in self._configuration['settings']:
                 secrets[name] = self._configuration['settings'][name]
 

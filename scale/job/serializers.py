@@ -36,7 +36,8 @@ class SeedJsonSerializer(serializers.Serializer):
     value = serializers.CharField()
 
 
-class JobTypeBaseSerializer(ModelIdSerializer):
+# TODO: Remove in v6
+class OldJobTypeBaseSerializer(ModelIdSerializer):
     """Converts job type model fields to REST output"""
     name = serializers.CharField()
     version = serializers.CharField()
@@ -55,7 +56,21 @@ class JobTypeBaseSerializer(ModelIdSerializer):
     icon_code = serializers.CharField()
 
 
-class JobTypeSerializer(JobTypeBaseSerializer):
+class JobTypeBaseSerializer(ModelIdSerializer):
+    """Converts job type model fields to REST output"""
+    name = serializers.CharField()
+    version = serializers.CharField()
+
+    is_system = serializers.BooleanField()
+    is_active = serializers.BooleanField()
+    is_operational = serializers.BooleanField()
+    is_paused = serializers.BooleanField()
+
+    icon_code = serializers.CharField()
+
+
+# TODO: Remove in v6
+class OldJobTypeSerializer(OldJobTypeBaseSerializer):
     """Converts job type model fields to REST output"""
     uses_docker = serializers.NullBooleanField()
     docker_privileged = serializers.NullBooleanField()
@@ -80,6 +95,21 @@ class JobTypeSerializer(JobTypeBaseSerializer):
     last_modified = serializers.DateTimeField()
 
 
+class JobTypeSerializer(JobTypeBaseSerializer):
+    """Converts job type model fields to REST output"""
+    docker_image = serializers.CharField()
+    revision_num = serializers.IntegerField()
+
+    priority = serializers.IntegerField()
+    max_scheduled = serializers.IntegerField()
+    max_tries = serializers.IntegerField()
+
+    created = serializers.DateTimeField()
+    archived = serializers.DateTimeField()
+    paused = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+
 class JobTypeStatusCountsSerializer(serializers.Serializer):
     """Converts node status count object fields to REST output."""
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
@@ -88,10 +118,30 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
     category = serializers.CharField()
 
 
-class BaseJobTypeDetailsSerializer(JobTypeSerializer):
-    """Converts job type model fields to REST output."""
+class JobTypeDetailsSerializer(JobTypeSerializer):
+    """Converts job type model fields to REST output for Seed type jobs."""
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
+
+    # TODO: rename interface to manifest in model once v5 is gone
+    manifest = serializers.JSONField(default=dict, source='interface')
+
+    configuration = serializers.JSONField(default=dict)
+    error_mapping = serializers.JSONField(default=dict)
+    errors = ErrorSerializer(many=True)
+    trigger_rule = TriggerRuleDetailsSerializer()
+
+    job_counts_6h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_12h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_24h = JobTypeStatusCountsSerializer(many=True)
+
+
+class OldJobTypeDetailsSerializer(OldJobTypeSerializer):
+    """Converts job type model fields to REST output for legacy job types."""
+    from error.serializers import ErrorSerializer
+    from trigger.serializers import TriggerRuleDetailsSerializer
+
+    interface = serializers.JSONField(default=dict)
 
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
@@ -102,16 +152,6 @@ class BaseJobTypeDetailsSerializer(JobTypeSerializer):
     job_counts_6h = JobTypeStatusCountsSerializer(many=True)
     job_counts_12h = JobTypeStatusCountsSerializer(many=True)
     job_counts_24h = JobTypeStatusCountsSerializer(many=True)
-
-
-class JobTypeDetailsSerializer(BaseJobTypeDetailsSerializer):
-    """Converts job type model fields to REST output for Seed type jobs."""
-    manifest = serializers.JSONField(default=dict, source='interface')
-
-
-class OldJobTypeDetailsSerializer(BaseJobTypeDetailsSerializer):
-    """Converts job type model fields to REST output for legacy job types."""
-    interface = serializers.JSONField(default=dict)
 
 
 class JobTypeStatusSerializer(serializers.Serializer):
@@ -342,7 +382,7 @@ class OldJobDetailsSerializer(OldJobSerializer):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
 
-    job_type = JobTypeSerializer()
+    job_type = OldJobTypeSerializer()
     job_type_rev = JobTypeRevisionSerializer()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
