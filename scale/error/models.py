@@ -156,7 +156,10 @@ class ErrorManager(models.Manager):
 
     @transaction.atomic
     def get_or_create_seed_error(self, job_type_name, job_version, error):
-        """Get existing error object or create new one
+        """Update existing error object or create new one
+
+        This method WILL mutate an existing error object if the title / description / category changes.
+        The name is created by the joining of job type name, job version and the error code.
 
         :param job_type_name: Seed compliant name for job type
         :type job_type_name: str`
@@ -171,14 +174,17 @@ class ErrorManager(models.Manager):
 
         name = '-'.join([job_type_name, job_version, str(error['code'])])
 
-        result = Error.objects.get_or_create(name=name,
-                                             defaults={
-                                                 'title': error['title'],
-                                                 'description': error['description'],
-                                                 'category': category
-                                             })
+        try:
+            error_obj = Error.objects.get_by_natural_key(name)
+        except Error.DoesNotExist:
+            error_obj = Error(name=name)
 
-        return result[0]
+        error_obj.title = error['title']
+        error_obj.description = error['description']
+        error_obj.category = category
+        error_obj.save()
+
+        return error_obj
 
     @transaction.atomic
     def create_error(self, name, title, description, category):

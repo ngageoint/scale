@@ -2526,7 +2526,8 @@ class JobTypeManager(models.Manager):
                 # Create error mapping from code to constructed Error object
                 error_mapping_dict['exit_codes'][error['code']] = error_obj.name
 
-            job_type.error_mapping = ErrorInterface(error_mapping_dict)  # New job configuration
+            ErrorInterface(error_mapping_dict).validate()
+            job_type.error_mapping = error_mapping_dict
             job_type.save()
 
             # New job interface, validate all existing recipes
