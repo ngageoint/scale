@@ -155,7 +155,7 @@ class ErrorManager(models.Manager):
         return self.get(name=name)
 
     @transaction.atomic
-    def get_or_create_seed_error(self, job_type_name, job_version, error):
+    def update_or_create_seed_error(self, job_type_name, job_version, error):
         """Update existing error object or create new one
 
         This method WILL mutate an existing error object if the title / description / category changes.

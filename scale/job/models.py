@@ -2285,7 +2285,9 @@ class JobTypeManager(models.Manager):
         # Create any errors defined in manifest
         error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
         for error in manifest.get_errors():
-            error_obj = Error.objects.get_or_create_seed_error(manifest.get_name(), manifest.get_job_version(), error)
+            error_obj = Error.objects.update_or_create_seed_error(manifest.get_name(),
+                                                                  manifest.get_job_version(),
+                                                                  error)
 
             # Create error mapping from code to constructed Error object
             error_mapping_dict['exit_codes'][error['code']] = error_obj.name
@@ -2520,8 +2522,9 @@ class JobTypeManager(models.Manager):
             # Create any errors defined in manifest
             error_mapping_dict = {'version': '1.0', 'exit_codes': {}}
             for error in manifest.get_errors():
-                error_obj = Error.objects.get_or_create_seed_error(manifest.get_name(), manifest.get_job_version(),
-                                                                   error)
+                error_obj = Error.objects.update_or_create_seed_error(manifest.get_name(),
+                                                                      manifest.get_job_version(),
+                                                                      error)
 
                 # Create error mapping from code to constructed Error object
                 error_mapping_dict['exit_codes'][error['code']] = error_obj.name
