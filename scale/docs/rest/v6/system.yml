@@ -15,7 +15,24 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schema/status'
+                $ref: '#/components/schemas/status'
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
+  /v6/version:
+    get:
+      operationId: _rest_v6_system_version
+      summary: Get System Version
+      description: Returns the current version of the scheduler
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/version'
+            
             
 components:
   schemas:
@@ -431,3 +448,11 @@ components:
         count:
           type: integer
           example: 3
+    version:
+      title: System Version response
+      type: object
+      properties:
+        version:
+          type: string
+          description: The full version identifier of Scale. 
+          example: 6.0.0
