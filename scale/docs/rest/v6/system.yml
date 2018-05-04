@@ -234,7 +234,7 @@ components:
           type: string
           example: f186 
     node:
-      title: Job Type
+      title: Node
       type: object
       properties:
         id:
@@ -271,6 +271,12 @@ components:
           items:
             $ref: '#/components/schemas/system_task'
           description: List of node tasks running on the node, with a type, title, description, and count 
+        num_offers:
+          type: integer
+          description: Number of resource offers for this node
+          example: 1
+        resources:
+          $ref: '#/components/schemas/resources'
         job_executions:
           $ref: '#/components/schemas/job_executions'
     error:
@@ -323,22 +329,105 @@ components:
       title: Node Task
       type: object
       properties:
-        name:
+        type:
           type: string
-          example: my-warning
+          example: cleanup
         title:
           type: string
-          example: My Warning
+          example: Node cleanup
         description:
           type: string
-          example: My Warning Description 
-        started:
+          example: Performs Docker container and volume cleanup on the node 
+        count:
+          type: integer
+          description: Number of tasks of this type
+          example: 1
+    system_task:
+      title: System Task
+      type: object
+      properties:
+        type:
           type: string
-          format: date-time
-          description: When the warning began (in ISO-8601 Datetime)
-          example: 1970-01-01T00:00:00Z
-        last_updated:
+          example: message-handler
+        title:
           type: string
-          format: date-time
-          description: When the warning was last updated (in ISO-8601 Datetime)
-          example: 1970-01-01T00:00:00Z
+          example: Message Handler
+        description:
+          type: string
+          example: Processes messages from Scale's backend messaging system 
+        count:
+          type: integer
+          description: Number of tasks of this type
+          example: 1
+    job_executions:
+      title: Job Executions
+      type: object
+      description: The job executions related to this node. The *running* field describes the |
+            jobs currently running on the node, with a total count and count per job type. |
+            The *completed* field describes job executions that have completed on the node |
+            in the last 3 hours, with a total count and count per job type. The *failed*   |
+            field is similar to *completed*, just with failed executions grouped by error  |
+            category. 
+      properties:
+        running:
+          $ref: "#/components/schemas/job_execution"
+        completed:
+          $ref: "#/components/schemas/job_execution"
+        failed:
+          $ref: "#/components/schemas/job_execution"
+    job_execution:
+      title: Job Execution
+      type: object
+      description: The job executions related to this node. The *running* field describes the |
+            jobs currently running on the node, with a total count and count per job type. |
+            The *completed* field describes job executions that have completed on the node |
+            in the last 3 hours, with a total count and count per job type. The *failed*   |
+            field is similar to *completed*, just with failed executions grouped by error  |
+            category. 
+      properties:
+        running:
+          $ref: "#/components/schemas/job_execution_count"
+        completed:
+          $ref: "#/components/schemas/job_execution_count"
+        failed:
+          $ref: "#/components/schemas/failed"
+    job_execution_count:
+      title: Job Execution Count
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 3
+        by_job_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_execution'
+    failed:
+      title: Failed Job Execution Count
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 9
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+        algorithm:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+        system:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+    job_type_execution_count:
+      title: Job Execution Count
+      type: object
+      properties:
+        job_type_id:
+          type: integer
+          example: 1
+        count:
+          type: integer
+          example: 3
