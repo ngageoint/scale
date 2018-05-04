@@ -339,3 +339,5 @@ Response: 200 OK
 | version                  | String            | The full version identifier of Scale.                                          |
 |                          |                   | The format follows the Semantic scheme: http://semver.org/                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. openapi:: system.yml

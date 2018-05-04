@@ -192,7 +192,7 @@ components:
       type: object
       description: Describes the resource totals across all of Scale's nodes. Each resource name  |
             is a key and its corresponding object breaks down the resource into several    |
-            categories: *running* resources are used by current Scale tasks, *offered*     |
+            categories. *running* resources are used by current Scale tasks, *offered*     |
             resources are currently offered to Scale, *free* resources are available on    |
             the node and may be offered to Scale soon, *unavailable* resources are used by |
             other tasks and cannot be used by Scale, and *total* resources are the total   |
@@ -418,7 +418,7 @@ components:
         by_job_type:
           type: array
           items:
-            $ref: '#/components/schemas/job_type_execution'
+            $ref: '#/components/schemas/job_type_execution_count'
     failed:
       title: Failed Job Execution Count
       type: object
