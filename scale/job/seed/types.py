@@ -42,6 +42,17 @@ class SeedInputFiles(SeedFiles):
     def partial(self):
         return self.dict['partial']
 
+    def is_media_type_allowed(self, media_type):
+        """Indicates whether the given media type is allowed by this file description
+
+        :param media_type: The media type
+        :type media_type: str
+        :returns: True if the media type is allowed, False otherwise
+        :rtype: bool
+        """
+
+        return media_type in self.media_types
+
 
 class SeedOutputFiles(SeedFiles):
     """Concrete class for Seed output files elements"""

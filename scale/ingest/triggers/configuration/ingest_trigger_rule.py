@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 import logging
 
+from job.seed.manifest import SeedManifest
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from ingest.triggers.ingest_trigger_condition import IngestTriggerCondition
 from ingest.triggers.configuration import ingest_trigger_rule_1_0 as previous_ingest_trigger_config
 from job.configuration.data.job_connection import JobConnection
+from job.seed.connection.job_connection import SeedJobConnection
 from recipe.configuration.data.recipe_connection import RecipeConnection
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import Workspace
@@ -176,7 +178,11 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         media_type = self.get_condition().get_media_type()
         media_types = [media_type] if media_type else None
 
-        connection = JobConnection()
+        if isinstance(job_interface, SeedManifest):
+            connection = SeedJobConnection()
+        # TODO: Remove conditional branch in v6
+        else:
+            connection = JobConnection()
         connection.add_input_file(input_file_name, False, media_types, False, False)
         connection.add_workspace()
 

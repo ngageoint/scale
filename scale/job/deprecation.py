@@ -33,4 +33,3 @@ class JobInterfaceSunset(object):
         :rtype: bool
         """
         return 'seedVersion' in interface
-

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db.models import Q
+from job.seed.manifest import SeedManifest
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
@@ -12,6 +13,7 @@ from job.handlers.inputs.file import FileInput
 from job.handlers.inputs.files import FilesInput
 from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
+from job.seed.connection.job_connection import SeedJobConnection
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.handlers.graph import RecipeGraph
@@ -502,8 +504,14 @@ class RecipeDefinition(object):
             If there are any invalid job connections in the definition
         """
 
+        job_type = job_types_by_name[job_dict['name']]
+
         # Job connection will represent data to be passed to the job to validate
-        job_conn = JobConnection()
+        if isinstance(job_type.get_job_interface, SeedManifest):
+            job_conn = SeedJobConnection()
+        # TODO: Remove conditional branch in v6
+        else:
+            job_conn = JobConnection()
         # Assume a workspace is provided, this will be verified when validating the recipe data
         job_conn.add_workspace()
 
@@ -520,7 +528,7 @@ class RecipeDefinition(object):
                 job_output = conn_dict['output']
                 job_type.get_job_interface().add_output_to_connection(job_output, job_conn, conn_input)
 
-        job_type = job_types_by_name[job_dict['name']]
+
         try:
             warnings.extend(job_type.get_job_interface().validate_connection(job_conn))
         except InvalidConnection as ex:
