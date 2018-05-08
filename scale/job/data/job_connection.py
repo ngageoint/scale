@@ -1,9 +1,8 @@
 """Defines connections that will provide data to execute jobs"""
 from __future__ import unicode_literals
 
-from job.seed.data.job_data import ValidationWarning
-
-from job.data.exceptions import InvalidConnection
+from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.data.job_data import ValidationWarning
 from storage.media_type import UNKNOWN_MEDIA_TYPE
 
 
@@ -76,10 +75,8 @@ class SeedJobConnection(object):
     def validate_input_files(self, files):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.
 
-        :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
-            (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
-        :type files: dict of str ->
-            tuple(bool, bool, :class:`job.configuration.interface.scale_file.ScaleFileDescription`)
+        :param files: List of file inputs
+        :type files: [:class:`job.seed.types.SeedInputFiles`]
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -87,33 +84,32 @@ class SeedJobConnection(object):
         """
 
         warnings = []
-        for name in files:
-            required = files[name][0]
-            multiple = files[name][1]
-            file_desc = files[name][2]
-            if name not in self.files:
-                if required:
-                    raise InvalidConnection('Data input %s is required and was not provided' % name)
+        for file in files:
+            if file.name not in self.files:
+                if file.required:
+                    raise InvalidConnection('Data input %s is required and was not provided' % file.name)
                 continue
 
-            conn_file = self.files[name]
+            conn_file = self.files[file.name]
             conn_multiple = conn_file[0]
             conn_media_types = conn_file[1]
             conn_optional = conn_file[2]
             if conn_optional:
-                if required:
-                    raise InvalidConnection('Data input %s is required and data from connection is optional' % name)
-            if not multiple and conn_multiple:
-                raise InvalidConnection('Data input %s only accepts a single file' % name)
+                if file.required:
+                    raise InvalidConnection('Data input %s is required and data from connection is optional' %
+                                            file.name)
+            if not file.multiple and conn_multiple:
+                raise InvalidConnection('Data input %s only accepts a single file' % file.name)
             for conn_media_type in conn_media_types:
-                if not file_desc.is_media_type_allowed(conn_media_type):
+                if not file.is_media_type_allowed(conn_media_type):
                     warn = ValidationWarning('media_type',
-                                             'Invalid media type for data input: %s -> %s' % (name, conn_media_type))
+                                             'Invalid media type for data input: %s -> %s' %
+                                             (file.name, conn_media_type))
                     warnings.append(warn)
         return warnings
 
-    def validate_input_json(self, property_names):
-        """Validates the given property names to make sure all exist if they are required.
+    def validate_properties(self, property_names):
+        """Validates the given property names to make sure all properties exist if they are required.
 
         :param property_names: Dict of property names mapped to a bool indicating if they are required
         :type property_names: dict of str -> bool

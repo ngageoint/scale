@@ -23,7 +23,6 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job.job_config import JobConfiguration
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
-from job.seed.manifest import SeedManifest
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
@@ -437,10 +436,10 @@ class JobTypeDetailsView(GenericAPIView):
                     job_type.trigger_rule.save()
 
                 # Edit the job type
-                JobType.objects.edit_job_type(job_type_id=job_type_id, interface=interface, trigger_rule=trigger_rule,
-                                              remove_trigger_rule=remove_trigger_rule, error_mapping=error_mapping,
-                                              custom_resources=custom_resources, configuration=configuration,
-                                              secrets=secrets, **extra_fields)
+                JobType.objects.edit_legacy_job_type(job_type_id=job_type_id, interface=interface,
+                                                     trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
+                                                     error_mapping=error_mapping, custom_resources=custom_resources,
+                                                     configuration=configuration, secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)

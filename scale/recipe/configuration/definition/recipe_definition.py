@@ -2,18 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db.models import Q
-from job.seed.manifest import SeedManifest
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
-
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.data.job_connection import SeedJobConnection
+from job.deprecation import JobConnectionSunset
 from job.handlers.inputs.file import FileInput
 from job.handlers.inputs.files import FilesInput
 from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
-from job.seed.connection.job_connection import SeedJobConnection
+from job.seed.manifest import SeedManifest
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.handlers.graph import RecipeGraph
@@ -507,11 +507,7 @@ class RecipeDefinition(object):
         job_type = job_types_by_name[job_dict['name']]
 
         # Job connection will represent data to be passed to the job to validate
-        if isinstance(job_type.get_job_interface, SeedManifest):
-            job_conn = SeedJobConnection()
-        # TODO: Remove conditional branch in v6
-        else:
-            job_conn = JobConnection()
+        job_conn = JobConnectionSunset.create(job_type.get_job_interface())
         # Assume a workspace is provided, this will be verified when validating the recipe data
         job_conn.add_workspace()
 
@@ -528,7 +524,7 @@ class RecipeDefinition(object):
                 job_output = conn_dict['output']
                 job_type.get_job_interface().add_output_to_connection(job_output, job_conn, conn_input)
 
-
+        job_type = job_types_by_name[job_dict['name']]
         try:
             warnings.extend(job_type.get_job_interface().validate_connection(job_conn))
         except InvalidConnection as ex:
