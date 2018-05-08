@@ -1029,7 +1029,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                                               self.new_configuration)
 
     def test_change_general_fields(self):
-        """Tests calling JobTypeManager.edit_job_type() with a change to some general fields"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() with a change to some general fields"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1059,9 +1059,9 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                           custom_resources=custom_resources)
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, title=new_title, priority=new_priority,
-                                      error_mapping=new_error_mapping, custom_resources=new_custom_resources,
-                                      is_paused=new_is_paused)
+        JobType.objects.edit_legacy_job_type(job_type.id, title=new_title, priority=new_priority,
+                                             error_mapping=new_error_mapping, custom_resources=new_custom_resources,
+                                             is_paused=new_is_paused)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1078,7 +1078,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertIsNotNone(job_type.paused)
 
     def test_change_to_interface(self):
-        """Tests calling JobTypeManager.edit_job_type() with a change to the interface"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() with a change to the interface"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1087,7 +1087,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, self.new_job_interface, None, False)
+        JobType.objects.edit_legacy_job_type(job_type.id, self.new_job_interface, None, False)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1101,7 +1101,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_change_to_trigger_rule(self):
-        """Tests calling JobTypeManager.edit_job_type() with a change to the trigger rule"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() with a change to the trigger rule"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1112,7 +1112,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, None, new_trigger_rule, False)
+        JobType.objects.edit_legacy_job_type(job_type.id, None, new_trigger_rule, False)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1127,7 +1127,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_remove_trigger_rule(self):
-        """Tests calling JobTypeManager.edit_job_type() that removes the trigger rule"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() that removes the trigger rule"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1136,7 +1136,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, None, None, True)
+        JobType.objects.edit_legacy_job_type(job_type.id, None, None, True)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1149,7 +1149,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_change_to_both(self):
-        """Tests calling JobTypeManager.edit_job_type() with a change to both the definition and the trigger rule
+        """Tests calling JobTypeManager.edit_legacy_job_type() with a change to both the definition and the trigger rule
         """
 
         name = 'my-job-type'
@@ -1161,7 +1161,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, self.new_job_interface, new_trigger_rule, False)
+        JobType.objects.edit_legacy_job_type(job_type.id, self.new_job_interface, new_trigger_rule, False)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1177,7 +1177,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_invalid_trigger_rule(self):
-        """Tests calling JobTypeManager.edit_job_type() with a new invalid trigger rule"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() with a new invalid trigger rule"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1188,7 +1188,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule)
 
         # Call test
-        self.assertRaises(InvalidConnection, JobType.objects.edit_job_type, job_type.id, self.new_job_interface,
+        self.assertRaises(InvalidConnection, JobType.objects.edit_legacy_job_type, job_type.id, self.new_job_interface,
                           new_trigger_rule, False)
 
         # Check results
@@ -1202,7 +1202,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 1)
 
     def test_system_job_type(self):
-        """Tests calling JobTypeManager.edit_job_type() for a system job type"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() for a system job type"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1215,7 +1215,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type.save()
 
         # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type, job_type.id, title=new_title)
+        self.assertRaises(Exception, JobType.objects.edit_legacy_job_type, job_type.id, title=new_title)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1223,7 +1223,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(job_type.title, title)
 
     def test_pause_system_job_type(self):
-        """Tests calling JobTypeManager.edit_job_type() and pausing a system job type"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() and pausing a system job type"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1234,14 +1234,14 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type.save()
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, is_paused=True)
+        JobType.objects.edit_legacy_job_type(job_type.id, is_paused=True)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
         self.assertEqual(job_type.is_paused, True)
 
     def test_uneditable_field(self):
-        """Tests calling JobTypeManager.edit_job_type() to change an uneditable field"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() to change an uneditable field"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1252,7 +1252,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_legacy_job_type(name, version, self.job_interface, trigger_rule, title=title)
 
         # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type, job_type.id, title=new_title, is_system=True)
+        self.assertRaises(Exception, JobType.objects.edit_legacy_job_type, job_type.id, title=new_title, is_system=True)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -1260,7 +1260,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(job_type.title, title)
 
     def test_invalid_error_mapping(self):
-        """Tests calling JobTypeManager.edit_job_type() with an invalid error mapping"""
+        """Tests calling JobTypeManager.edit_legacy_job_type() with an invalid error mapping"""
 
         name = 'my-job-type'
         version = '1.0'
@@ -1276,7 +1276,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         })
 
         # Call test
-        self.assertRaises(Exception, JobType.objects.edit_job_type, name, version, self.job_interface,
+        self.assertRaises(Exception, JobType.objects.edit_legacy_job_type, name, version, self.job_interface,
                           error_mapping=error_mapping, title=title, description=description, priority=priority,
                           is_system=is_system)
 
