@@ -1,6 +1,8 @@
 from job.configuration.data.job_connection import JobConnection
+from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.job_interface import JobInterface
 from job.data.job_connection import SeedJobConnection
+from job.data.job_data import JobData
 from job.seed.manifest import SeedManifest
 
 
@@ -52,3 +54,17 @@ class JobConnectionSunset(object):
             return SeedJobConnection()
         else:
             return JobConnection()
+
+class JobDataSunset(object):
+    """Class responsible for providing backward compatibility for old JobData interfaces as well as new Seed
+    compliant ones.
+    """
+
+    @staticmethod
+    def create(interface, data=None):
+        """Instantiate an appropriately typed Job data based on version"""
+
+        if isinstance(interface, SeedManifest):
+            return JobData(data)
+        else:
+            return JobData_1_0(data)

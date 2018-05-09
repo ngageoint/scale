@@ -78,13 +78,13 @@ class JobData(object):
             self._data['output_data']['files'] = []
 
         for data_input in self._data['input_data']['files']:
-            self.add_file_input(data_input, False)
+            self._add_file_input(data_input, False)
         for data_input in self._data['input_data']['json']:
             self.add_json_input(data_input, False)
         for data_output in self._data['output_data']['files']:
             self.add_file_output(data_output, False)
 
-    def add_file_input(self, data, add_to_internal=True):
+    def add_file_input(self, name, file_id):
         """Adds a new file parameter to this job data.
 
         :param data: The files parameter dict
@@ -93,12 +93,7 @@ class JobData(object):
         :type add_to_internal: bool
         """
 
-        self._validate_job_data_field(data, 'file_ids')
-        input = JobDataInputFiles(data)
-        if add_to_internal:
-            self._data['input_data']['files'].append(data)
-        self._data_names[input.name] = input
-        self._input_files[input.name] = input
+        self._add_file_input({'name':name, 'file_ids': [file_id]})
 
     def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
@@ -131,6 +126,22 @@ class JobData(object):
             self._data['output_data']['files'].append(data)
         self._data_names[output.name] = output
         self._output_files[output.name] = output
+
+    def _add_file_input(self, data, add_to_internal=True):
+        """Adds a new file parameter to this job data.
+
+        :param data: The files parameter dict
+        :type data: dict
+        :param add_to_internal: Whether we should add to private data dict. Unneeded when used from __init__
+        :type add_to_internal: bool
+        """
+
+        self._validate_job_data_field(data, 'file_ids')
+        input = JobDataInputFiles(data)
+        if add_to_internal:
+            self._data['input_data']['files'].append(data)
+        self._data_names[input.name] = input
+        self._input_files[input.name] = input
 
     def get_all_properties(self):
         """Retrieves all properties from this job data and returns them in ascending order of their names

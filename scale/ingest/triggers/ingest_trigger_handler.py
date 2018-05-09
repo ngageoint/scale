@@ -7,6 +7,7 @@ from django.db import transaction
 
 from ingest.triggers.configuration.ingest_trigger_rule import IngestTriggerRuleConfiguration
 from job.configuration.data.job_data import JobData
+from job.deprecation import JobDataSunset
 from job.models import JobType
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import RecipeData
@@ -66,9 +67,10 @@ class IngestTriggerHandler(TriggerRuleHandler):
 
                 if isinstance(thing_to_create, JobType):
                     job_type = thing_to_create
-                    job_data = JobData({})
+                    job_type_interface = job_type.get_job_interface()
+                    job_data = JobDataSunset.create(job_type_interface, {})
                     job_data.add_file_input(rule_config.get_input_data_name(), source_file.id)
-                    job_type.get_job_interface().add_workspace_to_data(job_data, workspace.id)
+                    job_type_interface.add_workspace_to_data(job_data, workspace.id)
                     logger.info('Queuing new job of type %s %s', job_type.name, job_type.version)
                     Queue.objects.queue_new_job(job_type, job_data, event)
                 elif isinstance(thing_to_create, RecipeType):
