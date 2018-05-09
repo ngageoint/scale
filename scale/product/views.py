@@ -9,7 +9,8 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from product.models import ProductFile
-from product.serializers import ProductFileDetailsSerializer, ProductFileSerializer, ProductFileUpdateSerializer, ProductFileDetailsSerializerV5
+from product.serializers import ProductFileDetailsSerializer, ProductFileSerializer, ProductFileUpdateSerializer, ProductFileDetailsSerializerV5, \
+    ProductFileUpdateSerializerV5, ProductFileSerializerV5
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer
 from storage.models import ScaleFile
@@ -20,7 +21,13 @@ logger = logging.getLogger(__name__)
 class ProductsView(ListAPIView):
     """This view is the endpoint for retrieving a product by filename"""
     queryset = ScaleFile.objects.all()
-    serializer_class = ProductFileSerializer
+
+    # TODO: remove when REST API v5 is removed
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v6':
+            return ProductFileSerializer
+        return ProductFileSerializerV5
 
     def list(self, request):
         """Retrieves the product for a given file name and returns it in JSON form
@@ -172,7 +179,14 @@ class ProductSourcesView(ListAPIView):
 class ProductUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving product updates over a given time range."""
     queryset = ScaleFile.objects.all()
-    serializer_class = ProductFileUpdateSerializer
+
+    # TODO: remove when REST API v5 is removed
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v6':
+            return ProductFileUpdateSerializer
+        return ProductFileUpdateSerializerV5
+
 
     def list(self, request):
         """Retrieves the product updates for a given time range and returns it in JSON form

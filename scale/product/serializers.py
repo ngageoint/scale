@@ -42,13 +42,23 @@ class ProductFileSerializer(ProductFileBaseSerializer):
     recipe_type = RecipeTypeBaseSerializer()
 
 
+# TODO: remove when REST API v5 is removed
+class ProductFileSerializerV5(ProductFileBaseSerializer):
+    """Converts product file model fields to REST output"""
+    from job.serializers import OldJobTypeBaseSerializer
+
+    job_type = OldJobTypeBaseSerializer()
+    batch = BatchBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializer()
+
+
 class ProductFileDetailsSerializer(ProductFileSerializer):
     """Converts product file model fields to REST output"""
     pass
 
 
 # TODO: remove when REST API v5 is removed
-class ProductFileDetailsSerializerV5(ProductFileSerializer):
+class ProductFileDetailsSerializerV5(ProductFileSerializerV5):
     """Converts product file model fields to REST output"""
     from source.serializers import SourceFileSerializer
 
@@ -86,6 +96,15 @@ class ProductFileUpdateField(fields.Field):
 
 
 class ProductFileUpdateSerializer(ProductFileSerializer):
+    """Converts product file updates to REST output"""
+    from source.serializers import SourceFileBaseSerializer
+
+    update = ProductFileUpdateField(source='*')
+    source_files = SourceFileBaseSerializer(many=True)
+
+
+# TODO: remove when REST API v5 is removed
+class ProductFileUpdateSerializerV5(ProductFileSerializerV5):
     """Converts product file updates to REST output"""
     from source.serializers import SourceFileBaseSerializer
 

@@ -289,6 +289,38 @@ class JobSerializer(JobBaseSerializer):
     last_modified = serializers.DateTimeField()
 
 
+# TODO: remove this function when REST API v5 is removed
+class JobSerializerV5(OldJobBaseSerializer):
+    """Converts job model fields to REST output."""
+    from error.serializers import ErrorBaseSerializer
+    from trigger.serializers import TriggerEventBaseSerializer
+
+    job_type_rev = JobTypeRevisionBaseSerializer()
+    event = TriggerEventBaseSerializer()
+    node = NodeBaseSerializer()
+    error = ErrorBaseSerializer()
+    resources = serializers.JSONField(source='get_resources_dict')
+
+    timeout = serializers.IntegerField()
+    max_tries = serializers.IntegerField()
+
+    input_file_size = serializers.FloatField()
+
+    is_superseded = serializers.BooleanField()
+    root_superseded_job = ModelIdSerializer()
+    superseded_job = ModelIdSerializer()
+    superseded_by_job = ModelIdSerializer()
+    delete_superseded = serializers.BooleanField()
+
+    created = serializers.DateTimeField()
+    queued = serializers.DateTimeField()
+    started = serializers.DateTimeField()
+    ended = serializers.DateTimeField()
+    last_status_change = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+
 class JobRevisionSerializer(JobSerializer):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializer()
@@ -449,6 +481,13 @@ class JobDetailsSerializer(JobSerializer):
 
 
 class JobUpdateSerializer(JobSerializer):
+    """Converts job updates to REST output"""
+    from storage.serializers import ScaleFileSerializer
+
+    input_files = ScaleFileSerializer(many=True)
+
+# TODO: remove this function when REST API v5 is removed
+class JobUpdateSerializerV5(JobSerializerV5):
     """Converts job updates to REST output"""
     from storage.serializers import ScaleFileSerializer
 

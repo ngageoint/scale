@@ -28,7 +28,7 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
                              OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer,
-                             OldJobSerializer, OldJobTypeDetailsSerializer, OldJobTypeSerializer)
+                             OldJobSerializer, OldJobTypeDetailsSerializer, OldJobTypeSerializer, JobUpdateSerializerV5)
 from messaging.manager import CommandMessageManager
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
@@ -970,7 +970,14 @@ class JobInputFilesView(ListAPIView):
 class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""
     queryset = Job.objects.all()
-    serializer_class = JobUpdateSerializer
+
+    # TODO: remove when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobUpdateSerializer
+        return JobUpdateSerializerV5
 
     def get(self, request):
         """Retrieves the job updates for a given time range and returns it in JSON form
