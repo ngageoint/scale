@@ -45,9 +45,9 @@ class ProductFileSerializer(ProductFileBaseSerializer):
 # TODO: remove when REST API v5 is removed
 class ProductFileSerializerV5(ProductFileBaseSerializer):
     """Converts product file model fields to REST output"""
-    from job.serializers import OldJobTypeBaseSerializer
+    from job.serializers import JobTypeBaseSerializerV5
 
-    job_type = OldJobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     batch = BatchBaseSerializer()
     recipe_type = RecipeTypeBaseSerializer()
 

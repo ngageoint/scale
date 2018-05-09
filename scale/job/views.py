@@ -27,8 +27,8 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
-                             OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer,
-                             OldJobSerializer, OldJobTypeDetailsSerializer, OldJobTypeSerializer, JobUpdateSerializerV5)
+                             JobDetailsSerializerV5, JobExecutionSerializerV5, JobExecutionDetailsSerializerV5,
+                             JobSerializerV5, JobTypeDetailsSerializerV5, JobTypeSerializerV5, JobUpdateSerializerV5)
 from messaging.manager import CommandMessageManager
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
@@ -58,7 +58,7 @@ class JobTypesView(ListCreateAPIView):
         if self.request.version == 'v6':
             return JobTypeSerializer
         else:
-            return OldJobTypeSerializer
+            return JobTypeSerializerV5
 
     def list(self, request):
         """Retrieves the list of all job types and returns it in JSON form
@@ -258,7 +258,7 @@ class JobTypesView(ListCreateAPIView):
 
         url = reverse('job_type_details_view', args=[job_type.id], request=request)
 
-        serializer = OldJobTypeDetailsSerializer(job_type)
+        serializer = JobTypeDetailsSerializerV5(job_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
@@ -338,7 +338,7 @@ class JobTypeDetailsView(GenericAPIView):
         if self.request.version == 'v6':
             return JobTypeDetailsSerializer
         else:
-            return OldJobTypeDetailsSerializer
+            return JobTypeDetailsSerializerV5
 
     def get(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
@@ -790,7 +790,7 @@ class JobsView(ListAPIView):
         if self.request.version == 'v6':
             return JobSerializer
         else:
-            return OldJobSerializer
+            return JobSerializerV5
     
     def list(self, request):
         """Retrieves jobs and returns it in JSON form
@@ -840,7 +840,7 @@ class JobDetailsView(GenericAPIView):
         if self.request.version == 'v6':
             return JobDetailsSerializer
         else:
-            return OldJobDetailsSerializer
+            return JobDetailsSerializerV5
     
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
@@ -1076,7 +1076,7 @@ class JobExecutionsView(ListAPIView):
         if self.request.version == 'v6':
             return JobExecutionSerializer
         else:
-            return OldJobExecutionSerializer
+            return JobExecutionSerializerV5
     
     def list(self, request, job_id=None):
         """Gets job executions and their associated job_type id, name, and version
@@ -1153,7 +1153,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         if self.request.version == 'v6':
             return JobExecutionDetailsSerializer
         else:
-            return OldJobExecutionDetailsSerializer
+            return JobExecutionDetailsSerializerV5
     
     def retrieve(self, request, job_id, exe_num=None):
         """Gets job execution and associated job_type id, name, and version
