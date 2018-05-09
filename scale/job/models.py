@@ -3119,6 +3119,24 @@ class JobType(models.Model):
 
         return JobInterfaceSunset.create(self.interface)
 
+    def get_category(self):
+        """Returns the category for this job type
+
+        # TODO: Remove in v6 in deference to tag access within the manifest
+        This is merely a placeholder for the short term to minimize changes associate with Seed migration
+
+
+        :returns: The category of job type (or first tag in SeedManifest as of v6)
+        :rtype: str
+        """
+
+        if not JobInterfaceSunset.is_seed(self.interface):
+            tags = self.get_job_interface().get_tags()
+            if tags:
+                return tags[0]
+        else:
+            return self.category
+
     def get_error_interface(self):
         """Returns the interface for mapping a job's exit code or
         stderr/stdout expression to an error type"""

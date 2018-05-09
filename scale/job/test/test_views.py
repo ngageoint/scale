@@ -101,10 +101,11 @@ class TestJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_util.get_url('/jobs/?job_type_category=%s' % self.job1.job_type.category)
+        url = '/v5/jobs/?job_type_category=%s' % self.job1.job_type.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -718,10 +719,11 @@ class TestJobsUpdateView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_util.get_url('/jobs/updates/?job_type_category=%s' % self.job1.job_type.category)
+        url = '/v5/jobs/updates/?job_type_category=%s' % self.job1.job_type.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -784,10 +786,11 @@ class TestJobTypesView(TestCase):
         self.assertEqual(result['results'][0]['id'], self.job_type1.id)
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
-    def test_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_legacy_category(self):
         """Tests successfully calling the job types view filtered by job type category."""
 
-        url = rest_util.get_url('/job-types/?category=%s' % self.job_type1.category)
+        url = '/v5/job-types/?category=%s' % self.job_type1.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

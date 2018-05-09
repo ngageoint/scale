@@ -210,8 +210,22 @@ class JobBaseSerializer(ModelIdSerializer):
     priority = serializers.IntegerField()
     num_exes = serializers.IntegerField()
 
+
+class OldJobBaseSerializer(ModelIdSerializer):
+    """Converts job model fields to REST output."""
+    job_type = OldJobTypeBaseSerializer()
+    job_type_rev = ModelIdSerializer()
+    event = ModelIdSerializer()
+    node = ModelIdSerializer()
+    error = ModelIdSerializer()
+
+    status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
+    priority = serializers.IntegerField()
+    num_exes = serializers.IntegerField()
+
+
 # TODO: remove this function when REST API v5 is removed
-class OldJobSerializer(JobBaseSerializer):
+class OldJobSerializer(OldJobBaseSerializer):
     """Converts job model fields to REST output."""
     from error.serializers import ErrorBaseSerializer
     from trigger.serializers import TriggerEventBaseSerializer

@@ -397,11 +397,11 @@ class TestSourceJobsView(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the source jobs view filtered by job type category."""
 
-        url = rest_util.get_url('/sources/%d/jobs/?job_type_category=%s')
-        url = url % (self.src_file.id, self.job1.job_type.category)
+        url = '/v5/sources/%d/jobs/?job_type_category=%s' % (self.src_file.id, self.job1.job_type.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -597,11 +597,11 @@ class TestSourceProductsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the source products view filtered by job type category."""
 
-        url = '/sources/%d/products/?job_type_category=%s' % (self.src_file.id, self.job_type1.category)
-        url = rest_util.get_url(url)
+        url = '/v5/sources/%d/products/?job_type_category=%s' % (self.src_file.id, self.job_type1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

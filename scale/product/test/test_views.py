@@ -101,10 +101,11 @@ class TestProductsView(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the product files view filtered by job type category."""
 
-        url = rest_util.get_url('/products/?job_type_category=%s' % self.job_type1.category)
+        url = '/v5/products/?job_type_category=%s' % self.job_type1.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -365,10 +366,11 @@ class TestProductsUpdatesView(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the product file updates view filtered by job type category."""
 
-        url = rest_util.get_url('/products/updates/?job_type_category=%s' % self.job_type1.category)
+        url = '/v5/products/updates/?job_type_category=%s' % self.job_type1.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

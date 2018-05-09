@@ -28,7 +28,7 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
                              OldJobDetailsSerializer, OldJobExecutionSerializer, OldJobExecutionDetailsSerializer,
-                             OldJobSerializer, OldJobTypeDetailsSerializer)
+                             OldJobSerializer, OldJobTypeDetailsSerializer, OldJobTypeSerializer)
 from messaging.manager import CommandMessageManager
 from models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
@@ -49,9 +49,34 @@ class JobTypesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all job types."""
     queryset = JobType.objects.all()
 
-    serializer_class = JobTypeSerializer
+    #serializer_class = JobTypeSerializer
+
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return JobTypeSerializer
+        else:
+            return OldJobTypeSerializer
 
     def list(self, request):
+        """Retrieves the list of all job types and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+
+        if self.request.version == 'v6':
+            return self.list_v6(request)
+        else:
+            return self.list_v5(request)
+
+
+    def list_v5(self, request):
         """Retrieves the list of all job types and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -71,6 +96,32 @@ class JobTypesView(ListCreateAPIView):
         order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
 
         job_types = JobType.objects.get_job_types(started=started, ended=ended, names=names, categories=categories,
+                                                  is_active=is_active, is_operational=is_operational, order=order)
+
+        page = self.paginate_queryset(job_types)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+
+    def list_v6(self, request):
+        """Retrieves the list of all job types and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        names = rest_util.parse_string_list(request, 'name', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', default_value=True)
+        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
+        order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
+
+        job_types = JobType.objects.get_job_types(started=started, ended=ended, names=names,
                                                   is_active=is_active, is_operational=is_operational, order=order)
 
         page = self.paginate_queryset(job_types)

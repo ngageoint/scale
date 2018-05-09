@@ -107,6 +107,14 @@ class SeedManifest(object):
 
         return self.get_job()['title']
 
+    def get_tags(self):
+        """Gets the Job tags
+        :return: the tags
+        :rtype: [str]
+        """
+
+        return self.get_job()['tags']
+
     def get_job(self):
         """Gets the Job object within the Seed manifest
 
