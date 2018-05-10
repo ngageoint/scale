@@ -2299,6 +2299,8 @@ class JobTypeManager(models.Manager):
 
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
+        job_type.title = manifest.get_title()
+        job_type.description = manifest.get_description()
         job_type.interface = manifest_dict
         job_type.trigger_rule = trigger_rule
         if configuration_dict:
@@ -2531,6 +2533,8 @@ class JobTypeManager(models.Manager):
 
             ErrorInterface(error_mapping_dict).validate()
             job_type.error_mapping = error_mapping_dict
+            job_type.title = manifest.get_title()
+            job_type.description = manifest.get_description()
             job_type.save()
 
             # New job interface, validate all existing recipes
@@ -3118,36 +3122,6 @@ class JobType(models.Model):
         """
 
         return JobInterfaceSunset.create(self.interface)
-
-    def get_title(self):
-        """Returns the title for this job type
-
-        # TODO: Remove with v5 in deference to title access within the manifest
-        This is merely a placeholder for the short term to minimize changes associate with Seed migration
-
-        :returns: The title of job type
-        :rtype: str
-        """
-
-        if JobInterfaceSunset.is_seed(self.interface):
-            return self.get_job_interface().get_title()
-
-        return self.title
-
-    def get_description(self):
-        """Returns the description for this job type
-
-        # TODO: Remove with v5 in deference to description access within the manifest
-        This is merely a placeholder for the short term to minimize changes associate with Seed migration
-
-        :returns: The title of job type
-        :rtype: str
-        """
-
-        if JobInterfaceSunset.is_seed(self.interface):
-            return self.get_job_interface().get_description()
-
-        return self.description
 
     def get_category(self):
         """Returns the category for this job type
