@@ -3129,10 +3129,10 @@ class JobType(models.Model):
         :rtype: str
         """
 
-        if not JobInterfaceSunset.is_seed(self.interface):
+        if JobInterfaceSunset.is_seed(self.interface):
             return self.get_job_interface().get_title()
-        else:
-            return self.title
+
+        return self.title
 
     def get_description(self):
         """Returns the description for this job type
@@ -3144,10 +3144,10 @@ class JobType(models.Model):
         :rtype: str
         """
 
-        if not JobInterfaceSunset.is_seed(self.interface):
+        if JobInterfaceSunset.is_seed(self.interface):
             return self.get_job_interface().get_description()
-        else:
-            return self.description
+
+        return self.description
 
     def get_category(self):
         """Returns the category for this job type
@@ -3160,12 +3160,12 @@ class JobType(models.Model):
         :rtype: str
         """
 
-        if not JobInterfaceSunset.is_seed(self.interface):
+        if JobInterfaceSunset.is_seed(self.interface):
             tags = self.get_job_interface().get_tags()
             if tags:
                 return tags[0]
-        else:
-            return self.category
+
+        return self.category
 
     def get_error_interface(self):
         """Returns the interface for mapping a job's exit code or
