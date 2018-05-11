@@ -94,6 +94,7 @@ INSTALLED_APPS = (
     # Scale apps
     'batch',
     'cli',
+    'data',
     'diagnostic',
     'error',
     'ingest',
