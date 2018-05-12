@@ -1,6 +1,11 @@
 """Defines the classes for representing nodes within a recipe definition"""
 from __future__ import unicode_literals
 
+from data.interface.exceptions import InvalidInterfaceConnection
+from data.interface.interface import Interface
+from recipe.definition.connection import DependencyInputConnection
+from recipe.definition.exceptions import InvalidDefinition
+
 
 class Node(object):
     """Represents a node within a recipe definition
@@ -15,19 +20,83 @@ class Node(object):
 
         self.name = name
         self.parents = {}  # {Name: Node}
+        self.connections = {}  # {Input name: InputConnection}
         self.children = {}  # {Name: Node}
 
-    # TODO: implement - will receive input interfaces in dict stored by node name
-    def validate(self):
-        """Validates this recipe definition
+    def add_connection(self, connection):
+        """Adds a connection that connects a parameter to one of this node's inputs
 
+        :param connection: The connection to add
+        :type connection: :class:`recipe.definition.connection.InputConnection`
+
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
+        """
+
+        try:
+            if connection.input_name in self.connections:
+                msg = 'Input \'%s\' has more than one parameter connected to it' % connection.input_name
+                raise InvalidInterfaceConnection('DUPLICATE_INPUT', msg)
+
+            self.connections[connection.input_name] = connection
+        except InvalidInterfaceConnection as ex:
+            msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
+            raise InvalidDefinition('NODE_INTERFACE', msg)
+
+    def add_dependency(self, node):
+        """Adds a dependency that this node has on the given node
+
+        :param node: The dependency node to add
+        :type node: :class:`recipe.definition.node.Node`
+        """
+
+        self.parents[node.name] = node
+        node.children[self.name] = self
+
+    def validate(self, recipe_input_interface, node_input_interfaces, node_output_interfaces):
+        """Validates this recipe node
+
+        :param recipe_input_interface: The interface for the recipe input
+        :type recipe_input_interface: :class:`data.interface.interface.Interface`
+        :param node_input_interfaces: The input interface for each node stored by node name
+        :type node_input_interfaces: dict
+        :param node_output_interfaces: The output interface for each node stored by node name
+        :type node_output_interfaces: dict
         :returns: A list of warnings discovered during validation
         :rtype: list
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
 
-        return []
+        warnings = []
+        input_interface = node_input_interfaces[self.name]
+        connecting_interface = Interface()
+
+        # Generate complete dependency set
+        all_dependencies = set()
+        dependency_list = list(self.parents.values())
+        while dependency_list:
+            dependency = dependency_list.pop()
+            if dependency.name not in all_dependencies:
+                all_dependencies.add(dependency.name)
+                dependency_list.extend(list(dependency.parents.values()))
+
+        try:
+            for connection in self.connections.values():
+                # Check that each connection's dependency is met
+                if isinstance(connection, DependencyInputConnection) and connection.node_name not in all_dependencies:
+                    msg = 'Cannot get output \'%s\' without dependency on node \'%s\''
+                    msg = msg % (connection.output_name, connection.node_name)
+                    raise InvalidInterfaceConnection('MISSING_DEPENDENCY', msg)
+                # Combine all connections into a connecting interface
+                warnings.extend(connection.add_parameter_to_interface(connecting_interface, recipe_input_interface,
+                                                                      node_output_interfaces))
+            # Validate that connecting interface can be passed to this interface
+            warnings.extend(input_interface.validate_connection(connecting_interface))
+        except InvalidInterfaceConnection as ex:
+            msg = 'Node \'%s\' interface error: %s' % (self.name, ex.error.description)
+            raise InvalidDefinition('NODE_INTERFACE', msg)
+
+        return warnings
 
 
 class JobNode(object):

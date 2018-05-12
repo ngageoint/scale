@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from recipe.definition.exceptions import InvalidDefinition
+from recipe.definition.node import Node
 
 
 class RecipeDefinition(object):
@@ -20,46 +21,65 @@ class RecipeDefinition(object):
         self._root_nodes = {}  # {Name: Node}, root nodes have no dependencies
         self._topological_order = None  # Cached topological ordering of the nodes (list of names)
 
-    # TODO: add hard-coded data
+    # TODO: add hard-coded data (call them default values?)
 
-    # TODO - implement adding dependencies and connections that can be validated
-    def add_dependency(self, parent_job_name, child_job_name, connections):
-        """Adds a dependency that one job has upon another job
+    def add_connection(self, node_name, connection):
+        """Adds a connection to the input of the node
 
-        :param parent_job_name: The name of the parent job
-        :type parent_job_name: string
-        :param child_job_name: The name of the child job
-        :type child_job_name: string
-        :param connections: List of tuples where first item is parent output name and second item is child input name
-        :type connections: [(string, string)]
+        :param node_name: The name of the node whose input is being connected to
+        :type node_name: string
+        :param connection: List of tuples where first item is parent output name and second item is child input name
+        :type connection: :class:`recipe.definition.connection.InputConnection`
+
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is unknown or the connection is a
+            duplicate
         """
+
+        if node_name not in self._graph:
+            raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % node_name)
+
+        node = self._graph[node_name]
+        node.add_connection(connection)
+
+    def add_dependency(self, parent_name, child_name):
+        """Adds a dependency that one node has upon another node
+
+        :param parent_name: The name of the parent node
+        :type parent_name: string
+        :param child_name: The name of the child node
+        :type child_name: string
+
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If either node is unknown
+        """
+
+        if child_name not in self._graph:
+            raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % child_name)
+        if parent_name not in self._graph:
+            raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % parent_name)
+
+        child_node = self._graph[child_name]
+        parent_node = self._graph[parent_name]
+        child_node.add_dependency(parent_node)
+        if child_name in self._root_nodes:
+            del self._root_nodes[child_name]
 
         self._topological_order = None  # Invalidate cache
 
-        # TODO: implement
-        parent_node = self.get_node(parent_job_name)
-        child_node = self.get_node(child_job_name)
-        dependency_connections = []
-        for connection in connections:
-            output_name = connection[0]
-            input_name = connection[1]
-            dependency_connection = DependencyInputConnection(input_name, parent_node, output_name)
-            dependency_connections.append(dependency_connection)
+    def add_node(self, name):
+        """Adds a node to the recipe graph with the given name
 
-        child_node.add_dependency(parent_node, dependency_connections)
-        parent_node.add_child(child_node)
-        if child_job_name in self._root_nodes:
-            del self._root_nodes[child_job_name]
+        :param name: The node name
+        :type name: string
 
-    def add_node(self, node):
-        """Adds a node to the recipe graph. Nodes should not have any parents or children defined yet.
-
-        :param node: The recipe node
-        :type node: :class:`recipe.definition.node.Node`
+        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        self._graph[node.name] = node
-        self._root_nodes[node.name] = node
+        if name in self._graph:
+            raise InvalidDefinition('DUPLICATE_NODE', 'Node \'%s\' is already defined' % name)
+
+        node = Node(name)
+        self._graph[name] = node
+        self._root_nodes[name] = node
         self._topological_order = None  # Invalidate cache
 
     def get_topological_order(self):
@@ -90,6 +110,10 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
         """
 
+        # TODO: validate recipe input?
+        # TODO: validate topological order (checks for cycles)
+        # TODO: check for recipe type containing itself?
+        # TODO: validate each node
         return []
 
     def _calculate_topological_order(self):

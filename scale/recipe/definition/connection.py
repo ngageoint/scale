@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
 
 
-class NodeConnection(object):
+class InputConnection(object):
     """Abstract base class that represents a connection between two interface parameters
     """
 
@@ -32,7 +32,7 @@ class NodeConnection(object):
         :returns: A list of warnings discovered during validation
         :rtype: list
 
-        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition is invalid
+        :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
 
         raise NotImplementedError()
@@ -53,3 +53,56 @@ class NodeConnection(object):
         """
 
         raise NotImplementedError()
+
+
+class DependencyInputConnection(InputConnection):
+    """Represents a connection from one node's output to another node's input
+    """
+
+    def __init__(self, input_name, node_name, output_name):
+        """Constructor
+
+        :param input_name: The name of the node's input
+        :type input_name: string
+        :param node_name: The name of the dependency node providing its output
+        :type node_name: string
+        :param output_name: The name of the dependency node's output
+        :type output_name: string
+        """
+
+        super(DependencyInputConnection, self).__init__(input_name)
+
+        self.node_name = node_name
+        self.output_name = output_name
+
+    def add_parameter_to_interface(self, interface, recipe_input_interface, node_output_interfaces):
+        """See :meth:`recipe.handlers.connection.InputConnection.add_parameter_to_interface`
+        """
+
+        output_interface = node_output_interfaces[self.node_name]
+        return interface.add_parameter_from_output_interface(self.input_name, self.output_name, output_interface)
+
+
+class RecipeInputConnection(InputConnection):
+    """Represents a connection from the recipe's input to a node's input
+    """
+
+    def __init__(self, input_name, recipe_input_name):
+        """Constructor
+
+        :param input_name: The name of the node's input
+        :type input_name: string
+        :param recipe_input_name: The name of the recipe input
+        :type recipe_input_name: string
+        """
+
+        super(RecipeInputConnection, self).__init__(input_name)
+
+        self.recipe_input_name = recipe_input_name
+
+    def add_parameter_to_interface(self, interface, recipe_input_interface, node_output_interfaces):
+        """See :meth:`recipe.handlers.connection.InputConnection.add_parameter_to_interface`
+        """
+
+        return interface.add_parameter_from_output_interface(self.input_name, self.recipe_input_name,
+                                                             recipe_input_interface)
