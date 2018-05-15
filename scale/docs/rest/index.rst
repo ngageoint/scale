@@ -68,3 +68,5 @@ Future v6 Services
 
    v6/batch
    v6/recipe
+   v6/system
+   v6/scheduler
