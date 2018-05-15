@@ -1820,6 +1820,10 @@ class JobExecution(models.Model):
 
         if isinstance(self.resources, basestring):
             self.resources = {}
+
+        logger.debug('Job execution for job id %d using resources: %s' % (self.job.id,
+                                                                          self.resources))
+
         return Resources(self.resources, do_validate=False).get_node_resources()
 
     def get_status(self):
@@ -3174,11 +3178,18 @@ class JobType(models.Model):
         else:
             interface = self.get_job_interface()
             seed_resources = {}
+            # Check all specified resources
             for x in interface.get_scalar_resources():
                 name = x['name'].lower()
                 # Ensure resource meets minimums set
                 seed_resources[name] = max(x['value'], MIN_RESOURCE.get(name, 0.0))
-            resources = Resources({'resources':seed_resources}).get_node_resources()
+
+            # Ensure all standard resource minimums are satisfied
+            for resource in MIN_RESOURCE:
+                if resource not in seed_resources:
+                    seed_resources[resource] = MIN_RESOURCE[resource]
+
+            resources = Resources({'resources': seed_resources}).get_node_resources()
 
         return resources
 
