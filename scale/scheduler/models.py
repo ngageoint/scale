@@ -91,6 +91,7 @@ class SchedulerManager(models.Manager):
             'is_online': False,
             'is_paused': False,
             'hostname': None,
+            'resource_level': 'GOOD',
             'system_logging_level':'INFO'
         }
         res_dict = None
@@ -135,6 +136,12 @@ class Scheduler(models.Model):
 
     :keyword is_paused: True if the entire cluster is currently paused and should not accept new jobs
     :type is_paused: :class:`django.db.models.BooleanField()`
+    :keyword num_message_handlers: The number of message handlers to have scheduled 
+    :type num_message_handlers: :class:`django.db.models.IntegerField`
+    :keyword resource_level: Describes the current resource level of scale for scaling purposes. There are three valid values:TOO HIGH, TOO LOW and GOOD.
+    :type resource_level: :class:`django.db.models.CharField`
+    :keyword system_logging_level: The logging level for all scale system components
+    :type system_logging_level: :class:`django.db.models.CharField`
     :keyword master_hostname: The full domain-qualified hostname of the Mesos master
     :type master_hostname: :class:`django.db.models.CharField`
     :keyword master_port: The port being used by the Mesos master REST API
@@ -152,6 +159,7 @@ class Scheduler(models.Model):
     status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
+    resource_level = models.CharField(max_length=10, default='GOOD')
     system_logging_level = models.CharField(max_length=10, default='INFO')
 
     objects = SchedulerManager()
