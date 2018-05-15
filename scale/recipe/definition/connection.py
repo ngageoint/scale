@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta, abstractmethod
 
+from data.interface.exceptions import InvalidInterfaceConnection
+
 
 class InputConnection(object):
     """Abstract base class that represents a connection between two interface parameters
@@ -37,22 +39,36 @@ class InputConnection(object):
 
         raise NotImplementedError()
 
-    # TODO: raise exception for invalid data
     @abstractmethod
-    def add_argument_to_data(self, data, recipe_input, node_output):
-        """Adds the parameter for this connection to the interface
+    def validate(self, all_dependencies):
+        """Validates this connection
 
-        :param data: The data to add the argument to
-        :type data: :class:`data.data.data.Data`
-        :param recipe_input: The recipe input data
-        :type recipe_input: :class:`data.data.data.Data`
-        :param node_output: The output data for each node stored by node name
-        :type node_output: dict
+        :param all_dependencies: A set of all dependencies (node names) for the input node
+        :type all_dependencies: set
         :returns: A list of warnings discovered during validation
         :rtype: list
+
+        :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
 
         raise NotImplementedError()
+
+    # TODO: raise exception for invalid data, rename to add_value_to_data
+    # @abstractmethod
+    # def add_argument_to_data(self, data, recipe_input, node_output):
+    #     """Adds the parameter for this connection to the interface
+
+    #     :param data: The data to add the argument to
+    #     :type data: :class:`data.data.data.Data`
+    #     :param recipe_input: The recipe input data
+    #     :type recipe_input: :class:`data.data.data.Data`
+    #     :param node_output: The output data for each node stored by node name
+    #     :type node_output: dict
+    #     :returns: A list of warnings discovered during validation
+    #     :rtype: list
+    #     """
+
+    #     raise NotImplementedError()
 
 
 class DependencyInputConnection(InputConnection):
@@ -82,6 +98,17 @@ class DependencyInputConnection(InputConnection):
         output_interface = node_output_interfaces[self.node_name]
         return interface.add_parameter_from_output_interface(self.input_name, self.output_name, output_interface)
 
+    def validate(self, all_dependencies):
+        """See :meth:`recipe.handlers.connection.InputConnection.validate`
+        """
+
+        # Check that the connection's dependency is met
+        if self.node_name not in all_dependencies:
+            msg = 'Cannot get output \'%s\' without dependency on node \'%s\''
+            raise InvalidInterfaceConnection('MISSING_DEPENDENCY', msg % (self.output_name, self.node_name))
+
+        return []
+
 
 class RecipeInputConnection(InputConnection):
     """Represents a connection from the recipe's input to a node's input
@@ -106,3 +133,9 @@ class RecipeInputConnection(InputConnection):
 
         return interface.add_parameter_from_output_interface(self.input_name, self.recipe_input_name,
                                                              recipe_input_interface)
+
+    def validate(self, all_dependencies):
+        """See :meth:`recipe.handlers.connection.InputConnection.validate`
+        """
+
+        return []

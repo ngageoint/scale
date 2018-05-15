@@ -11,3 +11,6 @@ class Data(object):
         """
 
         pass
+
+    # TODO: a method to validate this data after being passed an interface (ensure valid data)
+    # - return warnings for "extra" values provided

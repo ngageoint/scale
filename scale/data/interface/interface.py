@@ -39,6 +39,18 @@ class Interface(object):
         self.parameters[input_name] = new_param
         return []
 
+    def validate(self):
+        """Validates this interface
+
+        :returns: A list of warnings discovered during validation
+        :rtype: list
+
+        :raises :class:`data.interface.exceptions.InvalidInterface`: If the interface is invalid
+        """
+
+        # TODO: implement, not sure what there is to validate
+        return []
+
     def validate_connection(self, connecting_interface):
         """Validates that the given connecting interface can be accepted by this interface
 
@@ -55,8 +67,3 @@ class Interface(object):
         # TODO: make sure all required parameters are provided
         # TODO: provide warnings for mismatched media types
         return []
-
-    # TODO: a general validate method for just this interface
-
-    # TODO: a method to validate data being passed to this one (ensure valid data)
-    # - return warnings for "extra" values provided

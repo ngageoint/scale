@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from data.interface.exceptions import InvalidInterfaceConnection
 from data.interface.interface import Interface
-from recipe.definition.connection import DependencyInputConnection
 from recipe.definition.exceptions import InvalidDefinition
 
 
@@ -11,14 +10,17 @@ class Node(object):
     """Represents a node within a recipe definition
     """
 
-    def __init__(self, name):
+    def __init__(self, name, node_type):
         """Constructor
 
         :param name: The unique name of the node in the recipe graph
         :type name: string
+        :param node_type: The type of the node
+        :type node_type: string
         """
 
         self.name = name
+        self.node_type = node_type
         self.parents = {}  # {Name: Node}
         self.connections = {}  # {Input name: InputConnection}
         self.children = {}  # {Name: Node}
@@ -71,7 +73,7 @@ class Node(object):
         input_interface = node_input_interfaces[self.name]
         connecting_interface = Interface()
 
-        # Generate complete dependency set
+        # Generate complete dependency set for this node
         all_dependencies = set()
         dependency_list = list(self.parents.values())
         while dependency_list:
@@ -82,11 +84,8 @@ class Node(object):
 
         try:
             for connection in self.connections.values():
-                # Check that each connection's dependency is met
-                if isinstance(connection, DependencyInputConnection) and connection.node_name not in all_dependencies:
-                    msg = 'Cannot get output \'%s\' without dependency on node \'%s\''
-                    msg = msg % (connection.output_name, connection.node_name)
-                    raise InvalidInterfaceConnection('MISSING_DEPENDENCY', msg)
+                # Validate each connection
+                warnings.extend(connection.validate(all_dependencies))
                 # Combine all connections into a connecting interface
                 warnings.extend(connection.add_parameter_to_interface(connecting_interface, recipe_input_interface,
                                                                       node_output_interfaces))
@@ -99,9 +98,11 @@ class Node(object):
         return warnings
 
 
-class JobNode(object):
+class JobNode(Node):
     """Represents a job within a recipe definition
     """
+
+    NODE_TYPE = 'job'
 
     def __init__(self, name, job_type_name, job_type_version, revision_num):
         """Constructor
@@ -116,16 +117,18 @@ class JobNode(object):
         :type revision_num: int
         """
 
-        super(JobNode, self).__init__(name)
+        super(JobNode, self).__init__(name, JobNode.NODE_TYPE)
 
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
         self.revision_num = revision_num
 
 
-class RecipeNode(object):
+class RecipeNode(Node):
     """Represents a recipe within a recipe definition
     """
+
+    NODE_TYPE = 'recipe'
 
     def __init__(self, name, recipe_type_name, revision_num):
         """Constructor
@@ -138,7 +141,7 @@ class RecipeNode(object):
         :type revision_num: int
         """
 
-        super(RecipeNode, self).__init__(name)
+        super(RecipeNode, self).__init__(name, RecipeNode.NODE_TYPE)
 
         self.recipe_type_name = recipe_type_name
         self.revision_num = revision_num
