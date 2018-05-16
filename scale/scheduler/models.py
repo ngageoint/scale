@@ -107,6 +107,8 @@ class SchedulerManager(models.Manager):
             sched_dict['is_online'] = sched_info.is_online
             sched_dict['is_paused'] = sched.is_paused  # Note this must be pulled from the database
             sched_dict['hostname'] = sched_info.hostname
+            #TODO: Get resource level from somewhere else or set to GOOD until logic is developed
+            # sched_dict['resource_level'] = sched_info.resource_level
             sched_dict['system_logging_level'] = sched.system_logging_level
 
             # Master is online if the API above succeeded

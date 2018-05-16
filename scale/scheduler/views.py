@@ -12,7 +12,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
 from scheduler.models import Scheduler
-from scheduler.serializers import SchedulerSerializer
+from scheduler.serializers import SchedulerSerializerV5, SchedulerSerializerV6
 
 
 logger = logging.getLogger(__name__)
@@ -23,6 +23,16 @@ class SchedulerView(GenericAPIView):
     queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
     update_fields = ('is_paused', 'num_message_handlers', 'resource_level', 'system_logging_level')
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return SchedulerSerializerV6
+        elif self.request.version == 'v5':
+            return SchedulerSerializerV5
+        elif self.request.version == 'v4':
+            return SchedulerSerializerV5
 
     def get(self, request):
         """Gets scheduler information
