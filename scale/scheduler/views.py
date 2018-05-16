@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
     queryset = Scheduler.objects.all()
-    serializer_class = SchedulerSerializer
     update_fields = ('is_paused', 'num_message_handlers', 'resource_level', 'system_logging_level')
     
     def get_serializer_class(self):
