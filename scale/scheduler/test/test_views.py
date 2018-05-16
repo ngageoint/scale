@@ -53,7 +53,7 @@ class TestSchedulerView(TestCase):
 
         url = rest_util.get_url('/scheduler/')
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.status_code, status.git stat, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(result['is_paused'], True)
