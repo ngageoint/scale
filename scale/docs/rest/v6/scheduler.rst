@@ -7,7 +7,7 @@ v6 Scheduler Services
 These services provide access to information about the scheduler.
 There should be one and only one scheduler entry in the database and it is used to store global data like paused status.
 
-.. _rest_scheduler_details:
+.. _rest_v6_scheduler_details:
 
 v6 Get Scheduler
 ----------------------
@@ -57,7 +57,7 @@ Response: 200 OK
 +----------------------+-------------------+------------------------------------------------------------------------------+
 
 
-.. _rest_scheduler_update:
+.. _rest_v6_scheduler_update:
 
 v6 Update Scheduler
 ----------------------
