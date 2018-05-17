@@ -48,8 +48,12 @@ class Interface(object):
         :raises :class:`data.interface.exceptions.InvalidInterface`: If the interface is invalid
         """
 
-        # TODO: implement, not sure what there is to validate
-        return []
+        warnings = []
+
+        for parameter in self.parameters.values():
+            warnings.extend(parameter.validate())
+
+        return warnings
 
     def validate_connection(self, connecting_interface):
         """Validates that the given connecting interface can be accepted by this interface
@@ -62,8 +66,13 @@ class Interface(object):
         :raises :class:`data.interface.exceptions.InvalidInterfaceConnection`: If the interface connection is invalid
         """
 
-        # TODO: implement
-        # TODO: make sure all parameters match type and multiplicity
-        # TODO: make sure all required parameters are provided
-        # TODO: provide warnings for mismatched media types
-        return []
+        warnings = []
+
+        for parameter in self.parameters.values():
+            if parameter.name in connecting_interface.parameters:
+                connecting_parameter = connecting_interface.parameters[parameter.name]
+                warnings.extend(parameter.validate_connection(connecting_parameter))
+            elif parameter.required:
+                raise InvalidInterfaceConnection('PARAM_REQUIRED', 'Parameter \'%s\' is required' % parameter.name)
+
+        return warnings

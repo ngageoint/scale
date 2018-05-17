@@ -1,6 +1,8 @@
 """Defines the classes for representing nodes within a recipe definition"""
 from __future__ import unicode_literals
 
+from abc import ABCMeta
+
 from data.interface.exceptions import InvalidInterfaceConnection
 from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
@@ -9,6 +11,8 @@ from recipe.definition.exceptions import InvalidDefinition
 class Node(object):
     """Represents a node within a recipe definition
     """
+
+    __metaclass__ = ABCMeta
 
     def __init__(self, name, node_type):
         """Constructor

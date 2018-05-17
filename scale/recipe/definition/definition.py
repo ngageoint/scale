@@ -19,7 +19,7 @@ class RecipeDefinition(object):
         """
 
         self.input_interface = input_interface
-        self._graph = {}  # {Name: Node}
+        self.graph = {}  # {Name: Node}
         self._root_nodes = {}  # {Name: Node}, root nodes have no dependencies
         self._topological_order = None  # Cached topological ordering of the nodes (list of names)
 
@@ -34,13 +34,13 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If either node is unknown
         """
 
-        if child_name not in self._graph:
+        if child_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % child_name)
-        if parent_name not in self._graph:
+        if parent_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % parent_name)
 
-        child_node = self._graph[child_name]
-        parent_node = self._graph[parent_name]
+        child_node = self.graph[child_name]
+        parent_node = self.graph[parent_name]
         child_node.add_dependency(parent_node)
         if child_name in self._root_nodes:
             del self._root_nodes[child_name]
@@ -63,10 +63,10 @@ class RecipeDefinition(object):
             is the wrong type, or the connection is a duplicate
         """
 
-        if dependency_name not in self._graph:
+        if dependency_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % dependency_name)
 
-        if self._graph[dependency_name].node_type != JobNode.NODE_TYPE:
+        if self.graph[dependency_name].node_type != JobNode.NODE_TYPE:
             msg = 'Node \'%s\' has a connection to a node that is not a job' % node_name
             raise InvalidDefinition('CONNECTION_INVALID_NODE', msg)
 
@@ -160,7 +160,7 @@ class RecipeDefinition(object):
 
         # Processing nodes in topological order will also detect any circular dependencies
         for node_name in self.get_topological_order():
-            node = self._graph[node_name]
+            node = self.graph[node_name]
             warnings.extend(node.validate(self.input_interface, node_input_interfaces, node_output_interfaces))
 
         return warnings
@@ -177,10 +177,10 @@ class RecipeDefinition(object):
             duplicate
         """
 
-        if node_name not in self._graph:
+        if node_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % node_name)
 
-        node = self._graph[node_name]
+        node = self.graph[node_name]
         node.add_connection(connection)
 
     def _add_node(self, node):
@@ -192,10 +192,10 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        if node.name in self._graph:
+        if node.name in self.graph:
             raise InvalidDefinition('DUPLICATE_NODE', 'Node \'%s\' is already defined' % node.name)
 
-        self._graph[node.name] = node
+        self.graph[node.name] = node
         self._root_nodes[node.name] = node
         self._topological_order = None  # Invalidate cache
 
@@ -209,12 +209,12 @@ class RecipeDefinition(object):
         results = []
         perm_set = set()
         temp_set = set()
-        unmarked_set = set(self._graph.keys())
+        unmarked_set = set(self.graph.keys())
         while unmarked_set:
             node_name = unmarked_set.pop()
-            node = self._graph[node_name]
+            node = self.graph[node_name]
             self._topological_order_visit(node, results, perm_set, temp_set)
-            unmarked_set = set(self._graph.keys()) - perm_set
+            unmarked_set = set(self.graph.keys()) - perm_set
 
         self._topological_order = results
 

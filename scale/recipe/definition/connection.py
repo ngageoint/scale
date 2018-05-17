@@ -40,6 +40,18 @@ class InputConnection(object):
         raise NotImplementedError()
 
     @abstractmethod
+    def is_equal_to(self, connection):
+        """Returns true if and only if the given input connection is equal to this one
+
+        :param connection: The input connection
+        :type connection: :class:`recipe.definition.connection.InputConnection`
+        :returns: True if the connections are equal, False otherwise
+        :rtype: bool
+        """
+
+        raise NotImplementedError()
+
+    @abstractmethod
     def validate(self, all_dependencies):
         """Validates this connection
 
@@ -98,6 +110,19 @@ class DependencyInputConnection(InputConnection):
         output_interface = node_output_interfaces[self.node_name]
         return interface.add_parameter_from_output_interface(self.input_name, self.output_name, output_interface)
 
+    def is_equal_to(self, connection):
+        """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
+        """
+
+        if not isinstance(connection, DependencyInputConnection):
+            return False
+
+        same_input_name = self.input_name == connection.input_name
+        same_node_name = self.node_name == connection.node_name
+        same_output_name = self.output_name == connection.output_name
+
+        return same_input_name and same_node_name and same_output_name
+
     def validate(self, all_dependencies):
         """See :meth:`recipe.handlers.connection.InputConnection.validate`
         """
@@ -133,6 +158,17 @@ class RecipeInputConnection(InputConnection):
 
         return interface.add_parameter_from_output_interface(self.input_name, self.recipe_input_name,
                                                              recipe_input_interface)
+
+    def is_equal_to(self, connection):
+        """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
+        """
+
+        if not isinstance(connection, RecipeInputConnection):
+            return False
+
+        same_input_name = self.input_name == connection.input_name
+        same_recipe_input_name = self.recipe_input_name == connection.recipe_input_name
+        return same_input_name and same_recipe_input_name
 
     def validate(self, all_dependencies):
         """See :meth:`recipe.handlers.connection.InputConnection.validate`
