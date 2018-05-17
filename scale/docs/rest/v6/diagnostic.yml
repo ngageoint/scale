@@ -1,0 +1,104 @@
+openapi: "3.0.0"
+info:
+  title: Diagnostic Services
+  version: v6
+paths:
+  /v6/diagnostics/job/bake/:
+    post:
+      operationId: _rest_v6_queue_scale_bake_jobs
+      summary: Queue Scale Bake Jobs
+      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
+        allowing a simulation of jobs that take some amount of time to complete.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/number'
+      responses:
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates a successful update
+        '400':
+          description: |-
+            The 400 BAD REQUEST response indicates an error in the privded update fields
+        '404':
+          description: |-
+            The 404 response indicates the scheduler does not exist
+  /v6/diagnostics/recipe/casino/:
+    post:
+      operationId: _rest_v6_queue_scale_casino_recipies
+      summary: Queue Scale Casino Recipies
+      description: Creates and queues a specified number of Scale Casino recipes. Scale Casino recipes are useful for testing recipes in |
+        the presence of job failures.   
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/number'
+      responses:
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates a successful update
+        '400':
+          description: |-
+            The 400 BAD REQUEST response indicates an error in the privded update fields
+        '404':
+          description: |-
+            The 404 response indicates the scheduler does not exist
+  /v6/diagnostics/job/bake/:
+    post:
+      operationId: _rest_v6_queue_scale_bake_jobs
+      summary: Queue Scale Bake Jobs
+      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
+        allowing a simulation of jobs that take some amount of time to complete.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/number'
+      responses:
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates a successful update
+        '400':
+          description: |-
+            The 400 BAD REQUEST response indicates an error in the privded update fields
+        '404':
+          description: |-
+            The 404 response indicates the scheduler does not exist
+  /v6/diagnostics/job/bake/:
+    post:
+      operationId: _rest_v6_queue_scale_bake_jobs
+      summary: Queue Scale Bake Jobs
+      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
+        allowing a simulation of jobs that take some amount of time to complete.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/number'
+      responses:
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates a successful update
+        '400':
+          description: |-
+            The 400 BAD REQUEST response indicates an error in the privded update fields
+        '404':
+          description: |-
+            The 404 response indicates the scheduler does not exist
+            
+components:
+  schemas:
+    number:
+      title: Number
+      type: object
+      properties:
+        num:
+          type: integer
+          description: Number of jobs to queues
+          example: 100
