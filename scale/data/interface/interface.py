@@ -1,7 +1,7 @@
 """Defines the class for handling a data interface"""
 from __future__ import unicode_literals
 
-from data.interface.exceptions import InvalidInterfaceConnection
+from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnection
 
 
 class Interface(object):
@@ -13,6 +13,20 @@ class Interface(object):
         """
 
         self.parameters = {}  # {Name: Parameter}
+
+    def add_parameter(self, parameter):
+        """Adds the parameter to the interface
+
+        :param parameter: The parameter to add
+        :type parameter: :class:`data.interface.parameter.Parameter`
+
+        :raises :class:`data.interface.exceptions.InvalidInterface`: If the parameter is a duplicate
+        """
+
+        if parameter.name in self.parameters:
+            raise InvalidInterface('DUPLICATE_INPUT', 'Duplicate parameter \'%s\'' % parameter.name)
+
+        self.parameters[parameter.name] = parameter
 
     def add_parameter_from_output_interface(self, input_name, output_name, output_interface):
         """Adds an output parameter from the given output interface to this interface with the given input name. This is
@@ -36,7 +50,8 @@ class Interface(object):
 
         new_param = output_interface.parameters[output_name].copy()
         new_param.name = input_name
-        self.parameters[input_name] = new_param
+        self.add_parameter(new_param)
+
         return []
 
     def validate(self):

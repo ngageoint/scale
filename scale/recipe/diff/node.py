@@ -11,21 +11,23 @@ from util.exceptions import ScaleLogicBug
 Change = namedtuple('Change', ['name', 'description'])
 
 
-def create_diff_for_node(node, status=NodeDiff.NEW):
+def create_diff_for_node(node, diff_can_be_reprocessed, status):
     """Creates a node diff for the given node
 
     :param node: The node
     :type node: :class:`recipe.definition.node.Node`
-    :param status: The diff status, defaults to NEW
+    :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+    :type diff_can_be_reprocessed: bool
+    :param status: The diff status
     :type status: string
     :returns: The node diff
     :rtype: :class:`recipe.diff.node.NodeDiff`
     """
 
     if node.node_type == JobNode.NODE_TYPE:
-        return JobNodeDiff(node, status)
+        return JobNodeDiff(node, diff_can_be_reprocessed, status)
     if node.node_type == RecipeNode.NODE_TYPE:
-        return RecipeNodeDiff(node, status)
+        return RecipeNodeDiff(node, diff_can_be_reprocessed, status)
 
     raise ScaleLogicBug('Unknown node type %s' % node.node_type)
 
@@ -45,16 +47,19 @@ class NodeDiff(object):
     # The statuses that cause a new node to be created when reprocessed
     STATUSES_REPROCESS_NEW_NODE = [CHANGED, NEW]
 
-    def __init__(self, node, status=NodeDiff.NEW):
+    def __init__(self, node, diff_can_be_reprocessed, status=NEW):
         """Constructor
 
         :param node: The node from the recipe definition
         :type node: :class:`recipe.definition.node.Node`
+        :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+        :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW
         :type status: string
         """
 
         self._node = node
+        self._diff_can_be_reprocessed = diff_can_be_reprocessed
 
         self.name = node.name
         self.prev_node_type = None
@@ -151,6 +156,10 @@ class NodeDiff(object):
         """Recalculates the reprocess_new_node field
         """
 
+        if not self._diff_can_be_reprocessed:
+            self.reprocess_new_node = False
+            return
+
         reprocess_due_to_status = self.status in NodeDiff.STATUSES_REPROCESS_NEW_NODE
         reprocess_due_to_force = self.force_reprocess and self.status != NodeDiff.DELETED
         self.reprocess_new_node = reprocess_due_to_status or reprocess_due_to_force
@@ -165,9 +174,10 @@ class NodeDiff(object):
         for connection in self._node.connections.values():
             if connection.input_name not in prev_node.connections:
                 self.changes.append(Change('INPUT_NEW', 'New input %s added' % connection.input_name))
-            prev_connection = prev_node.connections[connection.input_name]
-            if not connection.is_equal_to(prev_connection):
-                self.changes.append(Change('INPUT_CHANGE', 'Input %s changed' % connection.input_name))
+            else:
+                prev_connection = prev_node.connections[connection.input_name]
+                if not connection.is_equal_to(prev_connection):
+                    self.changes.append(Change('INPUT_CHANGE', 'Input %s changed' % connection.input_name))
 
         input_names = self._node.connections.keys()
         for prev_input_name in prev_node.connections.keys():
@@ -181,11 +191,13 @@ class NodeDiff(object):
         :type prev_node: :class:`recipe.definition.node.Node`
         """
 
+        prev_parent_names = prev_node.parents.keys()
         for parent_diff in self.parents.values():
-            if parent_diff.status == NodeDiff.CHANGED:
-                self.changes.append(Change('PARENT_CHANGED', 'Parent node %s changed' % parent_diff.name))
-            elif parent_diff.status == NodeDiff.NEW:
+            if parent_diff.name not in prev_parent_names:
                 self.changes.append(Change('PARENT_NEW', 'New parent node %s added' % parent_diff.name))
+            else:
+                if parent_diff.status == NodeDiff.CHANGED:
+                    self.changes.append(Change('PARENT_CHANGED', 'Parent node %s changed' % parent_diff.name))
 
         parent_names = self.parents.keys()
         for prev_parent_name in prev_node.parents.keys():
@@ -207,16 +219,18 @@ class JobNodeDiff(NodeDiff):
     """Represents a diff for a job node within a recipe definition
     """
 
-    def __init__(self, job_node, status=NodeDiff.NEW):
+    def __init__(self, job_node, diff_can_be_reprocessed, status=NodeDiff.NEW):
         """Constructor
 
         :param job_node: The job node from the recipe definition
         :type job_node: :class:`recipe.definition.node.JobNode`
+        :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+        :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW
         :type status: string
         """
 
-        super(JobNodeDiff, self).__init__(job_node, status)
+        super(JobNodeDiff, self).__init__(job_node, diff_can_be_reprocessed, status)
 
         self.job_type_name = job_node.job_type_name
         self.job_type_version = job_node.job_type_version
@@ -249,16 +263,18 @@ class RecipeNodeDiff(NodeDiff):
     """Represents a diff for a recipe node within a recipe definition
     """
 
-    def __init__(self, recipe_node, status=NodeDiff.NEW):
+    def __init__(self, recipe_node, diff_can_be_reprocessed, status=NodeDiff.NEW):
         """Constructor
 
         :param recipe_node: The recipe node from the recipe definition
         :type recipe_node: :class:`recipe.definition.node.RecipeNode`
+        :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
+        :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW
         :type status: string
         """
 
-        super(RecipeNodeDiff, self).__init__(recipe_node, status)
+        super(RecipeNodeDiff, self).__init__(recipe_node, diff_can_be_reprocessed, status)
 
         self.recipe_type_name = recipe_node.recipe_type_name
         self.revision_num = recipe_node.revision_num

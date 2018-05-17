@@ -105,7 +105,7 @@ class RecipeDiff(object):
         for node_name in recipe_definition.get_topological_order():
             # Create a matching diff for this node
             node = recipe_definition.graph[node_name]
-            node_diff = create_diff_for_node(node)
+            node_diff = create_diff_for_node(node, self.can_be_reprocessed, NodeDiff.NEW)
             self.graph[node_diff.name] = node_diff
             for parent_name in node.parents.keys():
                 parent_diff = self.graph[parent_name]
@@ -121,7 +121,8 @@ class RecipeDiff(object):
             if node_name in self.graph:
                 continue
             deleted_node = prev_recipe_definition.graph[node_name]
-            deleted_node_diff = create_diff_for_node(deleted_node, NodeDiff.DELETED)
+            deleted_node_diff = create_diff_for_node(deleted_node, self.can_be_reprocessed, NodeDiff.DELETED)
+            self.graph[deleted_node_diff.name] = deleted_node_diff
             for parent_name in deleted_node.parents.keys():
                 parent_diff = self.graph[parent_name]
                 deleted_node_diff.add_dependency(parent_diff)
