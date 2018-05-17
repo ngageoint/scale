@@ -16,15 +16,10 @@ paths:
             schema:
               $ref: '#/components/schemas/number'
       responses:
-        '204':
+        '202':
           description: |-
-            The 204 NO CONTENT response indicates a successful update
-        '400':
-          description: |-
-            The 400 BAD REQUEST response indicates an error in the privded update fields
-        '404':
-          description: |-
-            The 404 response indicates the scheduler does not exist
+            The 202 ACCEPTED response indicates a successful request
+            
   /v6/diagnostics/recipe/casino/:
     post:
       operationId: _rest_v6_queue_scale_casino_recipies
@@ -38,21 +33,16 @@ paths:
             schema:
               $ref: '#/components/schemas/number'
       responses:
-        '204':
+        '202':
           description: |-
-            The 204 NO CONTENT response indicates a successful update
-        '400':
-          description: |-
-            The 400 BAD REQUEST response indicates an error in the privded update fields
-        '404':
-          description: |-
-            The 404 response indicates the scheduler does not exist
-  /v6/diagnostics/job/bake/:
+            The 202 ACCEPTED response indicates a successful request
+            
+  /v6/diagnostics/job/hello/:
     post:
-      operationId: _rest_v6_queue_scale_bake_jobs
-      summary: Queue Scale Bake Jobs
-      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
-        allowing a simulation of jobs that take some amount of time to complete.  
+      operationId: _rest_v6_queue_scale_hello_jobs
+      summary: Queue Scale Hello Jobs
+      description: Creates and queues a specified number of Scale Hello jobs. Scale Hello jobs simply print out a hello message and are |
+        useful for testing and evaluating Scale's job throughput performance.  
       requestBody:
         required: true
         content:
@@ -60,21 +50,16 @@ paths:
             schema:
               $ref: '#/components/schemas/number'
       responses:
-        '204':
+        '202':
           description: |-
-            The 204 NO CONTENT response indicates a successful update
-        '400':
-          description: |-
-            The 400 BAD REQUEST response indicates an error in the privded update fields
-        '404':
-          description: |-
-            The 404 response indicates the scheduler does not exist
-  /v6/diagnostics/job/bake/:
+            The 202 ACCEPTED response indicates a successful request
+            
+  /v6/diagnostics/job/roulette/:
     post:
-      operationId: _rest_v6_queue_scale_bake_jobs
-      summary: Queue Scale Bake Jobs
-      description: Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete, |
-        allowing a simulation of jobs that take some amount of time to complete.  
+      operationId: _rest_v6_queue_scale_roulette_jobs
+      summary: Queue Scale Roulette Jobs
+      description: Creates and queues a specified number of Scale Roulette jobs. Scale Roulette randomly complete/fail with 50% odds and |
+        are useful for testing jobs that both complete and fail.  
       requestBody:
         required: true
         content:
@@ -82,15 +67,9 @@ paths:
             schema:
               $ref: '#/components/schemas/number'
       responses:
-        '204':
+        '202':
           description: |-
-            The 204 NO CONTENT response indicates a successful update
-        '400':
-          description: |-
-            The 400 BAD REQUEST response indicates an error in the privded update fields
-        '404':
-          description: |-
-            The 404 response indicates the scheduler does not exist
+            The 202 ACCEPTED response indicates a successful request
             
 components:
   schemas:
