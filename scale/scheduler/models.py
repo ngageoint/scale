@@ -4,13 +4,22 @@ import logging
 
 import django.contrib.postgres.fields
 import mesos_api.api as mesos_api
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from django.utils.translation import ugettext as _
 from mesos_api.api import MesosError
 
 from queue.models import Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 
 logger = logging.getLogger(__name__)
 
+def validate_resource_level(value):
+    valid_values = ['TOO HIGH', 'TOO LOW', 'GOOD']
+    if value not in valid_values:
+        raise ValidationError(
+            _('%s is not valid resource level. Valid values are TOO HIGH, TOO LOW and GOOD'),
+            params={'value': value},
+        )
 
 class SchedulerManager(models.Manager):
     """Provides additional methods for handling scheduler db entry
@@ -60,6 +69,12 @@ class SchedulerManager(models.Manager):
         :type new_data: dict
         """
 
+        if 'resource_level' in new_data:
+            try:
+                validate_resource_level(new_data['resource_level'])
+            except ValidationError:
+                logger.exception('Invalid resource level given.')
+                raise 
         sched = self.select_for_update().filter(id=1)
         sched.update(**new_data)
 
@@ -154,6 +169,12 @@ class Scheduler(models.Model):
         (QUEUE_ORDER_FIFO, QUEUE_ORDER_FIFO),
         (QUEUE_ORDER_LIFO, QUEUE_ORDER_LIFO),
     )
+    
+    RESOURCE_LEVELS = (
+        ('TOO HIGH', 'TOO HIGH'),
+        ('TOO LOW', 'TOO LOW'),
+        ('GOOD', 'GOOD')
+    )
 
     is_paused = models.BooleanField(default=False)
     num_message_handlers = models.IntegerField(default=1)
@@ -161,7 +182,7 @@ class Scheduler(models.Model):
     status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
-    resource_level = models.CharField(max_length=10, default='GOOD')
+    resource_level = models.CharField(choices=RESOURCE_LEVELS, max_length=10, default='GOOD')
     system_logging_level = models.CharField(max_length=10, default='INFO')
 
     objects = SchedulerManager()

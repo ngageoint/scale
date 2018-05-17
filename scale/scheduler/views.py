@@ -5,6 +5,7 @@ import logging
 
 import rest_framework.status as status
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.http.response import Http404
 from django.utils.dateparse import parse_datetime
 from django.utils.timezone import now
@@ -182,9 +183,10 @@ class SchedulerView(GenericAPIView):
             scheduler = Scheduler.objects.get_master()
         except Scheduler.DoesNotExist:
             raise Http404
+        except ValidationError as e:
+            return Response('Validation Error: %s' % str(e), status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = self.get_serializer(scheduler)
-        return Response(serializer.data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class StatusView(GenericAPIView):

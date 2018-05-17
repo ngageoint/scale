@@ -22,10 +22,21 @@ class TestSchedulerView(TestCase):
         django.setup()
         Scheduler.objects.create(id=1)
 
+    def test_invalid_version(self):
+        """Tests calling the scheduler view with an invalid REST API version"""
+
+        url = '/v1/scheduler/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
     def test_get_scheduler_success(self):
         """Test successfully calling the Get Scheduler method."""
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        url = '/v6/scheduler/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -38,9 +49,12 @@ class TestSchedulerView(TestCase):
 
         Scheduler.objects.get_master().delete()
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.get(url)
-
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        url = '/v6/scheduler/'
+        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_update_scheduler_success(self):
@@ -51,24 +65,48 @@ class TestSchedulerView(TestCase):
             'num_message_handlers': 10
         }
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.git stat, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(result['is_paused'], True)
         self.assertEqual(result['num_message_handlers'], 10)
+        
+        json_data = {
+            'is_paused': True,
+            'num_message_handlers': 10,
+            'resource_level': 'GOOD'
+        }
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_scheduler_no_fields(self):
         """Test calling the Update Scheduler method with no fields."""
 
         json_data = {}
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_update_scheduler_invalid_fields(self):
+        """Test calling the Update Scheduler method with invalid fields."""
+
+        json_data = {
+            'resource_level': 'BAD'
+        }
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
     def test_update_scheduler_extra_fields(self):
         """Test calling the Update Scheduler method with extra fields."""
 
@@ -76,9 +114,12 @@ class TestSchedulerView(TestCase):
             'foo': 'bar',
         }
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
