@@ -11,7 +11,6 @@ from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 
-import storage.delete_files_job as delete_files_job
 from error.exceptions import ScaleError, get_error_by_exception
 from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
