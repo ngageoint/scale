@@ -269,6 +269,8 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0007_scheduler_num_message_handlers">scheduler.migrations.0007_scheduler_num_message_handlers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0008_auto_20171103_1334">scheduler.migrations.0008_auto_20171103_1334 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0009_scheduler_debugging_level">scheduler.migrations.0009_scheduler_debugging_level module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0010_scheduler_resource_level">scheduler.migrations.0010_scheduler_resource_level module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0011_auto_20180517_1559">scheduler.migrations.0011_auto_20180517_1559 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -667,6 +669,9 @@ cluster-wide state related to scheduling in mesos.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the entire cluster is currently paused and should not accept new jobs</li>
+<li><strong>num_message_handlers</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of message handlers to have scheduled</li>
+<li><strong>resource_level</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; Describes the current resource level of scale for scaling purposes. There are three valid values:TOO HIGH, TOO LOW and GOOD.</li>
+<li><strong>system_logging_level</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The logging level for all scale system components</li>
 <li><strong>master_hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the Mesos master</li>
 <li><strong>master_port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the Mesos master REST API</li>
 </ul>
@@ -691,9 +696,19 @@ cluster-wide state related to scheduling in mesos.</p>
 <code class="descname">QUEUE_MODES</code><em class="property"> = ((u'FIFO', u'FIFO'), (u'LIFO', u'LIFO'))</em><a class="headerlink" href="#scheduler.models.Scheduler.QUEUE_MODES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.RESOURCE_LEVELS">
+<code class="descname">RESOURCE_LEVELS</code><em class="property"> = ((u'TOO HIGH', u'TOO HIGH'), (u'TOO LOW', u'TOO LOW'), (u'GOOD', u'GOOD'))</em><a class="headerlink" href="#scheduler.models.Scheduler.RESOURCE_LEVELS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.models.Scheduler.get_queue_mode_display">
 <code class="descname">get_queue_mode_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_queue_mode_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.Scheduler.get_resource_level_display">
+<code class="descname">get_resource_level_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_resource_level_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -739,6 +754,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.queue_mode">
 <code class="descname">queue_mode</code><a class="headerlink" href="#scheduler.models.Scheduler.queue_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.resource_level">
+<code class="descname">resource_level</code><a class="headerlink" href="#scheduler.models.Scheduler.resource_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -820,7 +842,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="scheduler.models.SchedulerManager.update_master">
-<code class="descname">update_master</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.update_master" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_master</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.update_master" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update mesos master information.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -838,7 +860,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="scheduler.models.SchedulerManager.update_scheduler">
-<code class="descname">update_scheduler</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.update_scheduler" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_scheduler</code><span class="sig-paren">(</span><em>new_data</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.SchedulerManager.update_scheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the data for the scheduler.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -851,6 +873,11 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="scheduler.models.validate_resource_level">
+<code class="descclassname">scheduler.models.</code><code class="descname">validate_resource_level</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.validate_resource_level" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 <div class="section" id="module-scheduler.scale_scheduler">
@@ -992,23 +1019,48 @@ fails during that time.</p>
 <span id="scheduler-serializers-module"></span><h2>scheduler.serializers module<a class="headerlink" href="#module-scheduler.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for schedulers</p>
 <dl class="class">
-<dt id="scheduler.serializers.SchedulerSerializer">
-<em class="property">class </em><code class="descclassname">scheduler.serializers.</code><code class="descname">SchedulerSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.serializers.SchedulerSerializerV5">
+<em class="property">class </em><code class="descclassname">scheduler.serializers.</code><code class="descname">SchedulerSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
-<p>Serializer for the scheduler</p>
+<p>V5 Serializer for the scheduler</p>
 <dl class="class">
-<dt id="scheduler.serializers.SchedulerSerializer.Meta">
-<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.serializers.SchedulerSerializerV5.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV5.Meta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Meta class used to define what is serialized and how</p>
 <dl class="attribute">
-<dt id="scheduler.serializers.SchedulerSerializer.Meta.fields">
-<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.serializers.SchedulerSerializerV5.Meta.fields">
+<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV5.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.serializers.SchedulerSerializer.Meta.model">
-<code class="descname">model</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.serializers.SchedulerSerializerV5.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV5.Meta.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Scheduler</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.serializers.SchedulerSerializerV6">
+<em class="property">class </em><code class="descclassname">scheduler.serializers.</code><code class="descname">SchedulerSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.ModelSerializer</span></code></p>
+<p>V6 Serializer for the scheduler</p>
+<dl class="class">
+<dt id="scheduler.serializers.SchedulerSerializerV6.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Meta class used to define what is serialized and how</p>
+<dl class="attribute">
+<dt id="scheduler.serializers.SchedulerSerializerV6.Meta.fields">
+<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'resource_level', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.serializers.SchedulerSerializerV6.Meta.model">
+<code class="descname">model</code><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6.Meta.model" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">Scheduler</span></code></p>
 </dd></dl>
 
@@ -1032,7 +1084,67 @@ fails during that time.</p>
 <dl class="method">
 <dt id="scheduler.views.SchedulerView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets scheduler info</p>
+<dd><p>Gets scheduler information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.get_v4">
+<code class="descname">get_v4</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.get_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v4 scheduler info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.get_v5">
+<code class="descname">get_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.get_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v5 scheduler info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.get_v6">
+<code class="descname">get_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.get_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v6 scheduler info</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1055,7 +1167,61 @@ fails during that time.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.patch_v4">
+<code class="descname">patch_v4</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.patch_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify v4 scheduler info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.patch_v5">
+<code class="descname">patch_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.patch_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify v5 scheduler info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.SchedulerView.patch_v6">
+<code class="descname">patch_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.SchedulerView.patch_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify v6 scheduler info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
 </tr>
@@ -1071,14 +1237,8 @@ fails during that time.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.views.SchedulerView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#scheduler.views.SchedulerView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">SchedulerSerializer</span></code></p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="scheduler.views.SchedulerView.update_fields">
-<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'resource_level', u'system_logging_level')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -633,6 +633,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0006_auto_20180401_0218">batch.migrations.0006_auto_20180401_0218 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0007_auto_20180516_1915">batch.migrations.0007_auto_20180516_1915 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.models">batch.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.MultipleObjectsReturned">Batch.MultipleObjectsReturned</a>
@@ -1624,6 +1626,8 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration.dependencies">(batch.migrations.0006_auto_20180401_0218.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0007_auto_20180516_1915.Migration.dependencies">(batch.migrations.0007_auto_20180516_1915.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.dependencies">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0002_auto_20151217_1319.Migration.dependencies">(error.migrations.0002_auto_20151217_1319.Migration attribute)</a>
@@ -1871,6 +1875,10 @@
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0008_auto_20171103_1334.Migration.dependencies">(scheduler.migrations.0008_auto_20171103_1334.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0009_scheduler_debugging_level.Migration.dependencies">(scheduler.migrations.0009_scheduler_debugging_level.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0010_scheduler_resource_level.Migration.dependencies">(scheduler.migrations.0010_scheduler_resource_level.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0011_auto_20180517_1559.Migration.dependencies">(scheduler.migrations.0011_auto_20180517_1559.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration.dependencies">(shared_resource.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -2376,7 +2384,9 @@
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.serializers.ConfigurationTriggerRuleSerializer.Meta.fields">(port.serializers.ConfigurationTriggerRuleSerializer.Meta attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializer.Meta.fields">(scheduler.serializers.SchedulerSerializer.Meta attribute)</a>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV5.Meta.fields">(scheduler.serializers.SchedulerSerializerV5.Meta attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV6.Meta.fields">(scheduler.serializers.SchedulerSerializerV6.Meta attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails.file">file (storage.brokers.broker.FileDetails attribute)</a>
@@ -3641,6 +3651,8 @@
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.get_relative_days">get_relative_days() (in module util.rest)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.get_resource_level_display">get_resource_level_display() (scheduler.models.Scheduler method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.get_resources">get_resources() (job.configuration.json.execution.exe_config.ExecutionConfiguration method)</a>
 
       <ul>
@@ -3753,6 +3765,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.get_serializer_class">(recipe.views.RecipeDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.get_serializer_class">(recipe.views.RecipeReprocessView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_serializer_class">(scheduler.views.SchedulerView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceDetailsView.get_serializer_class">(source.views.SourceDetailsView method)</a>
 </li>
@@ -3888,20 +3902,26 @@
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_v4">get_v4() (node.views.NodeDetailsView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v4">(scheduler.views.SchedulerView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v4">(scheduler.views.StatusView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.VersionView.get_v4">(scheduler.views.VersionView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v5">get_v5() (scheduler.views.StatusView method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v5">get_v5() (scheduler.views.SchedulerView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v5">(scheduler.views.StatusView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.VersionView.get_v5">(scheduler.views.VersionView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v6">get_v6() (scheduler.views.StatusView method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v6">get_v6() (scheduler.views.SchedulerView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.get_v6">(scheduler.views.StatusView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.VersionView.get_v6">(scheduler.views.VersionView method)</a>
 </li>
       </ul></li>
@@ -6224,6 +6244,8 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration">(class in batch.migrations.0006_auto_20180401_0218)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0007_auto_20180516_1915.Migration">(class in batch.migrations.0007_auto_20180516_1915)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration">(class in error.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0002_auto_20151217_1319.Migration">(class in error.migrations.0002_auto_20151217_1319)</a>
@@ -6472,6 +6494,10 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0009_scheduler_debugging_level.Migration">(class in scheduler.migrations.0009_scheduler_debugging_level)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0010_scheduler_resource_level.Migration">(class in scheduler.migrations.0010_scheduler_resource_level)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0011_auto_20180517_1559.Migration">(class in scheduler.migrations.0011_auto_20180517_1559)</a>
+</li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration">(class in shared_resource.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0002_auto_20170412_1225.Migration">(class in shared_resource.migrations.0002_auto_20170412_1225)</a>
@@ -6578,7 +6604,9 @@
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.serializers.ConfigurationTriggerRuleSerializer.Meta.model">(port.serializers.ConfigurationTriggerRuleSerializer.Meta attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializer.Meta.model">(scheduler.serializers.SchedulerSerializer.Meta attribute)</a>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV5.Meta.model">(scheduler.serializers.SchedulerSerializerV5.Meta attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV6.Meta.model">(scheduler.serializers.SchedulerSerializerV6.Meta attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.ModelIdSerializer">ModelIdSerializer (class in util.rest)</a>
@@ -7016,6 +7044,8 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0006_auto_20180401_0218.Migration.operations">(batch.migrations.0006_auto_20180401_0218.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0007_auto_20180516_1915.Migration.operations">(batch.migrations.0007_auto_20180516_1915.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.operations">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0002_auto_20151217_1319.Migration.operations">(error.migrations.0002_auto_20151217_1319.Migration attribute)</a>
@@ -7264,6 +7294,10 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0009_scheduler_debugging_level.Migration.operations">(scheduler.migrations.0009_scheduler_debugging_level.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0010_scheduler_resource_level.Migration.operations">(scheduler.migrations.0010_scheduler_resource_level.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0011_auto_20180517_1559.Migration.operations">(scheduler.migrations.0011_auto_20180517_1559.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration.operations">(shared_resource.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0002_auto_20170412_1225.Migration.operations">(shared_resource.migrations.0002_auto_20170412_1225.Migration attribute)</a>
@@ -7418,6 +7452,14 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v4">patch_v4() (node.views.NodeDetailsView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v4">(scheduler.views.SchedulerView method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v5">patch_v5() (scheduler.views.SchedulerView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v6">patch_v6() (scheduler.views.SchedulerView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.pause_reason">pause_reason (node.models.Node attribute)</a>
 </li>
@@ -8445,10 +8487,10 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeGraphDiffV6">RecipeGraphDiffV6 (class in recipe.diff.json.diff_v6)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler">RecipeHandler (class in recipe.handlers.handler)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection">RecipeInputConnection (class in recipe.handlers.connection)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile">RecipeInputFile (class in recipe.models)</a>
@@ -8650,6 +8692,10 @@
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.reset_watermark">reset_watermark() (scheduler.resources.agent.AgentResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Resource">Resource (class in node.resources.resource)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.resource_level">resource_level (scheduler.models.Scheduler attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.RESOURCE_LEVELS">RESOURCE_LEVELS (scheduler.models.Scheduler attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager">ResourceManager (class in scheduler.resources.manager)</a>
 </li>
@@ -8963,6 +9009,10 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations.0009_scheduler_debugging_level">scheduler.migrations.0009_scheduler_debugging_level (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations.0010_scheduler_resource_level">scheduler.migrations.0010_scheduler_resource_level (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations.0011_auto_20180517_1559">scheduler.migrations.0011_auto_20180517_1559 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#module-scheduler.models">scheduler.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.MultipleObjectsReturned">Scheduler.MultipleObjectsReturned</a>
@@ -9115,9 +9165,13 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.SchedulerManager">(class in scheduler.models)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializer">SchedulerSerializer (class in scheduler.serializers)</a>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV5">SchedulerSerializerV5 (class in scheduler.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializer.Meta">SchedulerSerializer.Meta (class in scheduler.serializers)</a>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV5.Meta">SchedulerSerializerV5.Meta (class in scheduler.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV6">SchedulerSerializerV6 (class in scheduler.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializerV6.Meta">SchedulerSerializerV6.Meta (class in scheduler.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerState">SchedulerState (class in scheduler.manager)</a>
 </li>
@@ -9239,8 +9293,6 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.serializer_class">(recipe.views.RecipeTypesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView.serializer_class">(recipe.views.RecipesView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.serializer_class">(scheduler.views.SchedulerView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceIngestsView.serializer_class">(source.views.SourceIngestsView attribute)</a>
 </li>
@@ -9774,7 +9826,9 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_scheduler.TestScheduler.setUp">(scheduler.test.test_scheduler.TestScheduler method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.setUp">(scheduler.test.test_views.TestSchedulerView method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.setUp">(scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.setUp">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestStatusView.setUp">(scheduler.test.test_views.TestStatusView method)</a>
 </li>
@@ -11599,10 +11653,18 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs">test_get_recipe_handlers_for_jobs() (recipe.test.test_models.TestRecipeManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_not_found">test_get_scheduler_not_found() (scheduler.test.test_views.TestSchedulerView method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_get_scheduler_not_found">test_get_scheduler_not_found() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_get_scheduler_not_found">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_success">test_get_scheduler_success() (scheduler.test.test_views.TestSchedulerView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_get_scheduler_success">test_get_scheduler_success() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_get_scheduler_success">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_source_ingests">test_get_source_ingests() (source.test.test_models.TestSourceFileManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_source_jobs">test_get_source_jobs() (source.test.test_models.TestSourceFileManager method)</a>
@@ -11977,6 +12039,10 @@
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_invalid_version">(batch.test.test_views.TestBatchesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_invalid_version">(batch.test.test_views.TestBatchesViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_invalid_version">(scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_invalid_version">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_is_active">test_is_active() (job.test.test_views.TestJobTypesView method)</a>
@@ -12689,10 +12755,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
@@ -13637,12 +13703,26 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_recipe_fields">test_update_recipe_fields() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_extra_fields">test_update_scheduler_extra_fields() (scheduler.test.test_views.TestSchedulerView method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_update_scheduler_extra_fields">test_update_scheduler_extra_fields() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_update_scheduler_extra_fields">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_no_fields">test_update_scheduler_no_fields() (scheduler.test.test_views.TestSchedulerView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_update_scheduler_invalid_fields">test_update_scheduler_invalid_fields() (scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_update_scheduler_success">test_update_scheduler_success() (scheduler.test.test_views.TestSchedulerView method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_update_scheduler_no_fields">test_update_scheduler_no_fields() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_update_scheduler_no_fields">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
 </li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_update_scheduler_success">test_update_scheduler_success() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6.test_update_scheduler_success">(scheduler.test.test_views.TestSchedulerViewV6 method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobManager.test_update_status_blocked">test_update_status_blocked() (job.test.test_models.TestJobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobManager.test_update_status_canceled">test_update_status_canceled() (job.test.test_models.TestJobManager method)</a>
@@ -14453,7 +14533,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager">TestSchedulerManager (class in scheduler.test.sync.test_scheduler_manager)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView">TestSchedulerView (class in scheduler.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5">TestSchedulerViewV5 (class in scheduler.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV6">TestSchedulerViewV6 (class in scheduler.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager">TestSchedulingManager (class in scheduler.test.scheduling.test_manager)</a>
 </li>
@@ -15120,6 +15202,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.validate_recipe_type">validate_recipe_type() (recipe.models.RecipeTypeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.validate_resource_level">validate_resource_level() (in module scheduler.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_job">validate_trigger_for_job() (ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
 

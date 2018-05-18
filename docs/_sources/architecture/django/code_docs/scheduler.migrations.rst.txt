@@ -76,6 +76,22 @@ scheduler\.migrations\.0009\_scheduler\_debugging\_level module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.migrations\.0010\_scheduler\_resource\_level module
+--------------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0010_scheduler_resource_level
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0011\_auto\_20180517\_1559 module
+--------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0011_auto_20180517_1559
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

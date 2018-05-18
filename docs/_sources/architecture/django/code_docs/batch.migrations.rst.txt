@@ -52,6 +52,14 @@ batch\.migrations\.0006\_auto\_20180401\_0218 module
     :undoc-members:
     :show-inheritance:
 
+batch\.migrations\.0007\_auto\_20180516\_1915 module
+----------------------------------------------------
+
+.. automodule:: batch.migrations.0007_auto_20180516_1915
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

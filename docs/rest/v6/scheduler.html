@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>v6 Diagnostic Services &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>v6 Scheduler Services &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -31,8 +31,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="v6 Recipe Services" href="recipe.html" />
-    <link rel="prev" title="v6 Batch Services" href="batch.html" />
+    <link rel="next" title="v6 System Services" href="system.html" />
+    <link rel="prev" title="v6 Recipe Services" href="recipe.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -100,9 +100,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scheduler Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-get-scheduler">v6 Get Scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-update-scheduler">v6 Update Scheduler</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
 </ul>
 </li>
@@ -157,13 +161,13 @@
         
           <li><a href="../index.html">REST API</a> &raquo;</li>
         
-      <li>v6 Diagnostic Services</li>
+      <li>v6 Scheduler Services</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/rest/v6/diagnostic.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rest/v6/scheduler.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -176,165 +180,133 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="v6-diagnostic-services">
-<span id="rest-v6-diagnostic"></span><h1>v6 Diagnostic Services<a class="headerlink" href="#v6-diagnostic-services" title="Permalink to this headline">¶</a></h1>
-<p>These services provide methods of running tests and diagnostics on Scale.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="17%" />
-<col width="16%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Bake Jobs</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Creates and queues a specified number of Scale Bake jobs. Scale Bake jobs wait for 15 minutes and then complete,
-allowing a simulation of jobs that take some amount of time to complete.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>POST</strong> /v6/diagnostics/job/bake/</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>num</td>
-<td>Integer</td>
-<td>The number of jobs to create, must be at least one</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;num&quot;</span><span class="o">:</span> <span class="mi">100</span>
+  <div class="section" id="v6-scheduler-services">
+<span id="rest-v6-scheduler"></span><h1>v6 Scheduler Services<a class="headerlink" href="#v6-scheduler-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about the scheduler.</p>
+<div class="section" id="v6-get-scheduler">
+<span id="rest-v6-scheduler-details"></span><h2>v6 Get Scheduler<a class="headerlink" href="#v6-get-scheduler" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/scheduler/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/scheduler/">http://.../v6/scheduler/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+    <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;resource_level&quot;</span><span class="o">:</span> <span class="s1">&#39;GOOD&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">202 ACCEPTED</td>
-</tr>
-</tbody>
-</table>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
+<col width="1%" />
 <col width="16%" />
-<col width="67%" />
+<col width="66%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Casino Recipes</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Get Scheduler</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Creates and queues a specified number of Scale Casino recipes. Scale Casino recipes are useful for testing recipes in
-the presence of job failures.</td>
+<tr class="row-even"><td colspan="4">Returns data for the scheduler</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>POST</strong> /v6/diagnostics/recipe/casino/</td>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/scheduler/</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>num</td>
-<td>Integer</td>
-<td>The number of recipes to create, must be at least one</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;num&quot;</span><span class="o">:</span> <span class="mi">100</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">202 ACCEPTED</td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">is_paused</td>
+<td>Boolean</td>
+<td>True if the scheduler is paused. This functions like individually pausing
+all nodes but maintains separated state so toggling this back to unpaused
+results in the previous individual node pause state.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<td>Integer</td>
+<td>The number of message handlers to have scheduled</td>
+</tr>
+<tr class="row-even"><td colspan="2">resource_level</td>
+<td>String</td>
+<td>Describes the current resource level of scale. There are three valid values:
+TOO HIGH : Scale has more resources than required and can be scaled down
+TOO LOW : Scale needs more resources and should be scaled up
+GOOD : Scale has a good amount of resources</td>
+</tr>
+<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<td>String</td>
+<td>The logging level for all scale system components</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="v6-update-scheduler">
+<span id="rest-v6-scheduler-update"></span><h2>v6 Update Scheduler<a class="headerlink" href="#v6-update-scheduler" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example PATCH /v6/scheduler/ API call</strong></p>
+<p>Request: PATCH <a class="reference external" href="http://.../v6/scheduler/">http://.../v6/scheduler/</a></p>
+<p>Response: 204 No content</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
+<col width="1%" />
 <col width="16%" />
-<col width="67%" />
+<col width="66%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Hello Jobs</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Update Scheduler</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Creates and queues a specified number of Scale Hello jobs. Scale Hello jobs simply print out a hello message and are
-useful for testing and evaluating Scale&#8217;s job throughput performance.</td>
+<tr class="row-even"><td colspan="4">Update one or more fields for the scheduler.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>POST</strong> /v6/diagnostics/job/hello/</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>num</td>
-<td>Integer</td>
-<td>The number of jobs to create, must be at least one</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;num&quot;</span><span class="o">:</span> <span class="mi">100</span>
-<span class="p">}</span>
-</pre></div>
-</div>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>PATCH</strong> /v6/scheduler/</dt>
+<dd>All fields are optional and additional fields are not tolerated.</dd>
+</dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">is_paused</td>
+<td>Boolean</td>
+<td>(Optional) True if the scheduler should be paused, false to resume</td>
+</tr>
+<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<td>Integer</td>
+<td>(Optional) The number of message handlers to have scheduled</td>
+</tr>
+<tr class="row-even"><td colspan="2">resource_level</td>
+<td>String</td>
+<td>(Optional) The current resource level of scale. There are three valid values:
+TOO HIGH : Scale has more resources than required and can be scaled down
+TOO LOW : Scale needs more resources and should be scaled up
+GOOD : Scale has a good amount of resources</td>
+</tr>
+<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<td>String</td>
+<td>(Optional) The logging level sent to all scale system components.
+Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.
+Anything else will default to INFO</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">202 ACCEPTED</td>
+<td colspan="3">204 No content</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
-<colgroup>
-<col width="17%" />
-<col width="16%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Queue Scale Roulette Jobs</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Creates and queues a specified number of Scale Roulette jobs. Scale Roulette randomly complete/fail with 50% odds and
-are useful for testing jobs that both complete and fail.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>POST</strong> /v6/diagnostics/job/roulette/</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>num</td>
-<td>Integer</td>
-<td>The number of jobs to create, must be at least one</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;num&quot;</span><span class="o">:</span> <span class="mi">100</span>
-<span class="p">}</span>
-</pre></div>
 </div>
-</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">202 ACCEPTED</td>
-</tr>
-</tbody>
-</table>
 </div>
 
 
@@ -345,10 +317,10 @@ are useful for testing jobs that both complete and fail.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.html" class="btn btn-neutral float-right" title="v6 Recipe Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="system.html" class="btn btn-neutral float-right" title="v6 System Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="batch.html" class="btn btn-neutral" title="v6 Batch Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.html" class="btn btn-neutral" title="v6 Recipe Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
