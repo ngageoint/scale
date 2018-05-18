@@ -61,7 +61,6 @@ class SchedulerManager(models.Manager):
             pass
         return True
 
-    @transaction.atomic
     def update_scheduler(self, new_data):
         """Update the data for the scheduler.
 
@@ -70,15 +69,14 @@ class SchedulerManager(models.Manager):
         """
 
         if 'resource_level' in new_data:
+            level = new_data['resource_level']
             try:
-                validate_resource_level(new_data['resource_level'])
+                validate_resource_level(level)
             except ValidationError:
-                logger.exception('Invalid resource level given.')
+                logger.exception('Invalid resource level when updating scheduler: %s' % level)
                 raise 
-        sched = self.select_for_update().filter(id=1)
-        sched.update(**new_data)
+        self.all().update(**new_data)
 
-    @transaction.atomic
     def update_master(self, hostname, port):
         """Update mesos master information.
 
@@ -88,8 +86,7 @@ class SchedulerManager(models.Manager):
         :type port: int
         """
 
-        sched = self.select_for_update().filter(id=1)
-        sched.update(master_hostname=hostname, master_port=port)
+        self.all().update(master_hostname=hostname, master_port=port)
 
     def get_status(self):
         """Fetch summary hardware resource usage for the scheduler framework.
@@ -122,8 +119,7 @@ class SchedulerManager(models.Manager):
             sched_dict['is_online'] = sched_info.is_online
             sched_dict['is_paused'] = sched.is_paused  # Note this must be pulled from the database
             sched_dict['hostname'] = sched_info.hostname
-            #TODO: Get resource level from somewhere else or set to GOOD until logic is developed
-            # sched_dict['resource_level'] = sched_info.resource_level
+            sched_dict['resource_level'] = sched.resource_level
             sched_dict['system_logging_level'] = sched.system_logging_level
 
             # Master is online if the API above succeeded

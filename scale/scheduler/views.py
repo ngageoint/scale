@@ -180,7 +180,6 @@ class SchedulerView(GenericAPIView):
             return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
         try:
             Scheduler.objects.update_scheduler(dict(request.data))
-            scheduler = Scheduler.objects.get_master()
         except Scheduler.DoesNotExist:
             raise Http404
         except ValidationError as e:

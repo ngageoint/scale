@@ -5,7 +5,6 @@ v6 Scheduler Services
 ==================
 
 These services provide access to information about the scheduler.
-There should be one and only one scheduler entry in the database and it is used to store global data like paused status.
 
 .. _rest_v6_scheduler_details:
 
@@ -79,11 +78,11 @@ Response: 204 No content
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------------+---------------+------------------------------------------------------------------------------+
++----------------------+-------------------+------------------------------------------------------------------------------+
 | is_paused            | Boolean           | (Optional) True if the scheduler should be paused, false to resume           |
-+--------------------------+---------------+------------------------------------------------------------------------------+
++----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
-+--------------------------+---------------+------------------------------------------------------------------------------+
++----------------------+-------------------+------------------------------------------------------------------------------+
 | resource_level       | String            | (Optional) The current resource level of scale. There are three valid values:|
 |                      |                   | TOO HIGH : Scale has more resources than required and can be scaled down     |
 |                      |                   | TOO LOW : Scale needs more resources and should be scaled up                 |
@@ -92,7 +91,7 @@ Response: 204 No content
 | system_logging_level | String            | (Optional) The logging level sent to all scale system components.            |
 |                      |                   | Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.              |
 |                      |                   | Anything else will default to INFO                                           |
-+--------------------------+---------------+------------------------------------------------------------------------------+
++----------------------+-------------------+------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 204 No content                                                                                     |
