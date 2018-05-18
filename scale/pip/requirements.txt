@@ -6,7 +6,7 @@ boto3>=1.4.0,<1.5.0
 cryptography>=1.8.1,<=1.9.0
 Django>=1.11.0,<1.12.0
 djangorestframework>=3.6.2,<3.7.0
-elasticsearch>=2.4.0,<2.5
+elasticsearch>=5.5.1
 jsonschema>=2.3,<2.4
 kombu>=4.0.2,<4.1
 mesos.interface>=0.21.1,<=0.25

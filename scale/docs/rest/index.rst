@@ -67,6 +67,7 @@ Future v6 Services
    :maxdepth: 1
 
    v6/batch
+   v6/diagnostic
    v6/recipe
-   v6/system
    v6/scheduler
+   v6/system
