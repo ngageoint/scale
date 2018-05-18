@@ -21,7 +21,7 @@ class TestCallScaleDeleteFiles(TestCase):
         self.workspace = storage_test_utils.create_workspace()
 
     @patch('storage.management.commands.scale_delete_files.delete_files_job')
-    @patch('storage.management.commands.scale_delete_files.CommandMessageManager.send_messages')
+    @patch('storage.management.commands.scale_delete_files.CommandMessageManager')
     def test_scale_delete_files(self, mock_message, mock_delete):
         """Tests calling Scale to delete files"""
 
