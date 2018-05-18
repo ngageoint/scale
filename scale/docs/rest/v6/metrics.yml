@@ -68,8 +68,8 @@ components:
           example: Job Types
         description:
           type: string
-          description: Metrics for jobs and executions grouped by job type
-          example: null
+          description: A longer description of the metrics type
+          example: Metrics for jobs and executions grouped by job type
         filters:
           type: array
           items:
@@ -85,3 +85,60 @@ components:
           items:
             $ref: '#/components/schemas/column'
           description: The column definitions that can be used to select the results returned
+    filter:
+      title: Filter
+      type: object
+      properties:
+        param:
+          type: string
+          description: The identifying name of the parameter used for queries 
+          example: name
+        type:
+          type: string
+          description: The data type of the parameter clients can use for validation (bool, date, datetime, float, int, string, time, int)
+          example: string
+    group:
+      title: Group
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics group used for queries 
+          example: overview
+        title:
+          type: string
+          description: The human readable display name of the metrics group
+          example: Overview
+        description:
+          type: string
+          description: A longer description of the metrics group
+          example: Overall counts based on job status
+    column:
+      title: Column
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics column used for queries 
+          example: completed_count
+        title:
+          type: string
+          description: The human readable display name of the metrics column
+          example: Completed Count
+        description:
+          type: string
+          description: A longer description of the metrics column
+          example: Number of successfully completed jobs
+        units:
+          type: string
+          description: Each value for the metrics column is converted to this type of unit (count, seconds)
+          example: count
+        group:
+          type: string
+          description: Some metric columns are related together, which is indicated by the group name
+          example: overview
+        aggregate:
+          type: string
+          description: The math operation used to aggregate certain types of metrics (avg, max, min, sum...)
+          example: sum
+          
