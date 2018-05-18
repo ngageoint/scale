@@ -1,0 +1,87 @@
+openapi: "3.0.0"
+info:
+  title: Metrics Services
+  version: v6
+paths:
+  /v6/metrics:
+    get:
+      operationId: _rest_v6_metrics_list
+      summary: Metrics List
+      description: Returns a list of all metrics types
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/metrics_list'
+            
+components:
+  schemas:
+    metrics_list:
+      title: Metrics List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/metrics_type'
+          description: List of metrics type objects, with a few basic fields
+    metrics_type:
+      title: Metrics Type
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics type used for queries 
+          example: job-types
+        title:
+          type: string
+          description: The human readable display name of the metrics type
+          example: Job Types
+        description:
+          type: string
+          description: Metrics for jobs and executions grouped by job type
+          example: null
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/filter'
+          description: The filter parameters that can be used to query the metrics type
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/group'
+          description: The group definitions that can be used to select the results returned
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/column'
+          description: The column definitions that can be used to select the results returned
