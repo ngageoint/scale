@@ -3,15 +3,16 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
+from job.models import JobType
 from job.test import utils as job_test_utils
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.diff.exceptions import InvalidDiff
-from recipe.diff.json.diff_v6 import convert_diff_to_v6, RecipeGraphDiffV6
+from recipe.diff.json.diff_v6 import convert_diff_to_v6, RecipeDiffV6
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
 
 
-class TestRecipeGraphDiffV6(TestCase):
+class TestRecipeDiffV6(TestCase):
 
     def setUp(self):
         django.setup()
@@ -24,7 +25,7 @@ class TestRecipeGraphDiffV6(TestCase):
         graph_b = RecipeGraph()
         diff = RecipeGraphDelta(graph_a, graph_b)
         json = convert_diff_to_v6(diff)
-        RecipeGraphDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
+        RecipeDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
 
     def test_convert_diff_to_v6_full_diff(self):
         """Tests calling convert_diff_to_v6() with a full diff with all types (deleted, new, changed, etc) of nodes"""
@@ -35,6 +36,10 @@ class TestRecipeGraphDiffV6(TestCase):
         job_d = job_test_utils.create_job()
         job_e = job_test_utils.create_job()
         job_f = job_test_utils.create_job()
+
+        new_job_type_d = JobType.objects.get(id=job_d.job_type_id)
+        new_job_type_d.version = 'new_version'
+        new_job_type_d.save()
 
         definition_a = {
             'version': '1.0',
@@ -145,8 +150,8 @@ class TestRecipeGraphDiffV6(TestCase):
             }, {
                 'name': 'Job D',
                 'job_type': {
-                    'name': job_d.job_type.name,
-                    'version': 'new_version',
+                    'name': new_job_type_d.name,
+                    'version': new_job_type_d.version,
                 },
                 'dependencies': [{
                     'name': 'Job A',
@@ -193,7 +198,7 @@ class TestRecipeGraphDiffV6(TestCase):
 
         diff = RecipeGraphDelta(graph_a, graph_b)
         json = convert_diff_to_v6(diff)
-        RecipeGraphDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
+        RecipeDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
         self.assertTrue(json.get_dict()['can_be_reprocessed'])
 
     def test_convert_diff_to_v6_new_required_input(self):
@@ -251,15 +256,15 @@ class TestRecipeGraphDiffV6(TestCase):
 
         diff = RecipeGraphDelta(graph_a, graph_b)
         json = convert_diff_to_v6(diff)
-        RecipeGraphDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
+        RecipeDiffV6(diff=json.get_dict(), do_validate=True)  # Revalidate
         self.assertFalse(json.get_dict()['can_be_reprocessed'])
 
     def test_init_validation(self):
         """Tests the validation done in __init__"""
 
         # Try minimal acceptable configuration
-        RecipeGraphDiffV6(do_validate=True)
+        RecipeDiffV6(do_validate=True)
 
         # Invalid version
         diff = {'version': 'BAD'}
-        self.assertRaises(InvalidDiff, RecipeGraphDiffV6, diff, True)
+        self.assertRaises(InvalidDiff, RecipeDiffV6, diff, True)
