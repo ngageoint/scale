@@ -16,18 +16,26 @@ from scheduler.threads.scheduler_status import SchedulerStatusThread
 from util.parse import datetime_to_string
 
 
-class TestSchedulerView(TestCase):
+class TestSchedulerViewV5(TestCase):
 
     def setUp(self):
         django.setup()
         Scheduler.objects.create(id=1)
+        
+    def test_invalid_version(self):
+        """Tests calling the scheduler view with an invalid REST API version"""
 
+        url = '/v1/scheduler/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
     def test_get_scheduler_success(self):
         """Test successfully calling the Get Scheduler method."""
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
 
         result = json.loads(response.content)
         self.assertIn('is_paused', result)
@@ -38,9 +46,8 @@ class TestSchedulerView(TestCase):
 
         Scheduler.objects.get_master().delete()
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.get(url)
-
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_update_scheduler_success(self):
@@ -51,7 +58,7 @@ class TestSchedulerView(TestCase):
             'num_message_handlers': 10
         }
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -64,11 +71,11 @@ class TestSchedulerView(TestCase):
 
         json_data = {}
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+        
     def test_update_scheduler_extra_fields(self):
         """Test calling the Update Scheduler method with extra fields."""
 
@@ -76,12 +83,87 @@ class TestSchedulerView(TestCase):
             'foo': 'bar',
         }
 
-        url = rest_util.get_url('/scheduler/')
+        url = '/v5/scheduler/'
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+class TestSchedulerViewV6(TestCase):
 
+    def setUp(self):
+        django.setup()
+        Scheduler.objects.create(id=1)
+        
+    def test_invalid_version(self):
+        """Tests calling the scheduler view with an invalid REST API version"""
+
+        url = '/v1/scheduler/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+    def test_get_scheduler_success(self):
+        """Test successfully calling the Get Scheduler method."""
+        
+        url = '/v6/scheduler/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertIn('is_paused', result)
+        self.assertEqual(result['is_paused'], False)
+
+    def test_get_scheduler_not_found(self):
+        """Test calling the Get Scheduler method when the database entry is missing."""
+
+        Scheduler.objects.get_master().delete()
+        
+        url = '/v6/scheduler/'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_update_scheduler_success(self):
+        """Test successfully calling the Update Scheduler method."""
+
+        json_data = {
+            'is_paused': True,
+            'num_message_handlers': 10,
+            'resource_level': 'GOOD'
+        }
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_update_scheduler_no_fields(self):
+        """Test calling the Update Scheduler method with no fields."""
+
+        json_data = {}
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_update_scheduler_invalid_fields(self):
+        """Test calling the Update Scheduler method with invalid fields."""
+
+        json_data = {
+            'resource_level': 'BAD'
+        }
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    def test_update_scheduler_extra_fields(self):
+        """Test calling the Update Scheduler method with extra fields."""
+
+        json_data = {
+            'foo': 'bar',
+        }
+        
+        url = '/v6/scheduler/'
+        response = self.client.patch(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
 class TestStatusView(TestCase):
 
     def setUp(self):
