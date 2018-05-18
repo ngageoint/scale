@@ -271,6 +271,43 @@ def convert_diff_to_v6(graph_diff):
     return RecipeDiffV6(diff=json_dict, do_validate=False)
 
 
+def convert_recipe_diff_to_v6_json(recipe_diff):
+    """Returns the v6 recipe diff JSON for the given recipe diff
+
+    :param recipe_diff: The recipe diff
+    :type recipe_diff: :class:`recipe.diff.diff.RecipeDiff`
+    :returns: The v6 recipe diff JSON
+    :rtype: :class:`recipe.diff.json.diff_v6.RecipeDiffV6`
+    """
+
+    reasons = [{'name': r.name, 'description': r.description} for r in recipe_diff.reasons]
+    nodes_dict = {n.name: convert_node_diff_to_v6_json(n) for n in recipe_diff.graph.values()}
+    json_dict = {'can_be_reprocessed': recipe_diff.can_be_reprocessed, 'reasons': reasons, 'nodes': nodes_dict}
+
+    return RecipeDiffV6(diff=json_dict, do_validate=False)
+
+def convert_node_diff_to_v6_json(node_diff):
+    """Returns the v6 diff JSON dict for the given node diff
+
+    :param node_diff: The node diff
+    :type node_diff: :class:`recipe.diff.node.NodeDiff`
+    :returns: The v6 diff JSON dict for the node
+    :rtype: dict
+    """
+
+    changes = [{'name': c.name, 'description': c.description} for c in node_diff.changes]
+    dependencies = [{'name': name} for name in node_diff.parents.keys()]
+
+    node_dict = {'name': node_diff.name, 'status': node_diff.status, 'changes': changes,
+                 'reprocess_new_node': node_diff.reprocess_new_node, 'force_reprocess': node_diff.force_reprocess,
+                 'dependencies': dependencies, 'node_type': node_diff.get_node_type_dict()}
+
+    if node_diff.prev_node_type is not None:
+        node_dict['prev_node_type'] = node_diff.prev_node_type
+
+    return node_dict
+
+
 class RecipeDiffV6(object):
     """Represents a v6 recipe graph diff JSON for the difference between two recipe graphs"""
 

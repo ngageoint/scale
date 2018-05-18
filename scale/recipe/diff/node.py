@@ -105,6 +105,16 @@ class NodeDiff(object):
         self.status = NodeDiff.CHANGED if self.changes else NodeDiff.UNCHANGED
         self._calculate_reprocess_new_node()
 
+    @abstractmethod
+    def get_node_type_dict(self):
+        """Returns a JSON dict describing the node type details for this node diff
+
+        :returns: The JSON dict describing the node type details
+        :rtype: dict
+        """
+
+        raise NotImplementedError()
+
     def set_force_reprocess(self, reprocess_nodes):
         """Sets this node to force to reprocess. The given dict contains node names as keys representing the nodes to
         force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe nodes, the
@@ -239,6 +249,22 @@ class JobNodeDiff(NodeDiff):
         self.prev_job_type_version = None
         self.prev_revision_num = None
 
+    def get_node_type_dict(self):
+        """See :meth:`recipe.diff.node.NodeDiff.get_node_type_dict`
+        """
+
+        json_dict = {'node_type': self.node_type, 'job_type_name': self.job_type_name,
+                     'job_type_version': self.job_type_version, 'job_type_revision': self.revision_num}
+
+        if self.prev_job_type_name is not None:
+            json_dict['prev_job_type_name'] = self.prev_job_type_name
+        if self.prev_job_type_version is not None:
+            json_dict['prev_job_type_version'] = self.prev_job_type_version
+        if self.prev_revision_num is not None:
+            json_dict['prev_job_type_revision'] = self.prev_revision_num
+
+        return json_dict
+
     def _compare_node_type(self, prev_node):
         """See :meth:`recipe.diff.node.NodeDiff._compare_node_type`
         """
@@ -281,6 +307,20 @@ class RecipeNodeDiff(NodeDiff):
         self.prev_recipe_type_name = None
         self.prev_revision_num = None
         self.force_reprocess_nodes = {}  # {Node name: dict}
+
+    def get_node_type_dict(self):
+        """See :meth:`recipe.diff.node.NodeDiff.get_node_type_dict`
+        """
+
+        json_dict = {'node_type': self.node_type, 'recipe_type_name': self.recipe_type_name,
+                     'recipe_type_revision': self.revision_num}
+
+        if self.prev_recipe_type_name is not None:
+            json_dict['prev_recipe_type_name'] = self.prev_recipe_type_name
+        if self.prev_revision_num is not None:
+            json_dict['prev_recipe_type_revision'] = self.prev_revision_num
+
+        return json_dict
 
     def set_force_reprocess(self, reprocess_nodes):
         """See :meth:`recipe.diff.node.NodeDiff.set_force_reprocess`
