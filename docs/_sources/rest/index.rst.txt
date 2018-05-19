@@ -68,6 +68,7 @@ Future v6 Services
 
    v6/batch
    v6/diagnostic
+   v6/metrics
    v6/recipe
    v6/scheduler
    v6/system

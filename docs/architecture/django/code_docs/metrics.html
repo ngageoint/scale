@@ -1726,6 +1726,24 @@ are not included by default.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricDetailsView.retrieve_impl">
+<code class="descname">retrieve_impl</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricDetailsView.retrieve_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for metrics and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
 <li><strong>name</strong> (<em>string</em>) &#8211; the name of the metrics detail to retrieve.</li>
@@ -1742,6 +1760,60 @@ are not included by default.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="metrics.views.MetricDetailsView.retrieve_v4">
+<code class="descname">retrieve_v4</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricDetailsView.retrieve_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v4 metrics type details in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricDetailsView.retrieve_v5">
+<code class="descname">retrieve_v5</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricDetailsView.retrieve_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v5 metrics type details in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricDetailsView.retrieve_v6">
+<code class="descname">retrieve_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricDetailsView.retrieve_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v6 metrics type details in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1752,6 +1824,24 @@ are not included by default.</li>
 <dl class="method">
 <dt id="metrics.views.MetricPlotView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricPlotView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the plot values for metrics and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricPlotView.list_impl">
+<code class="descname">list_impl</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricPlotView.list_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the plot values for metrics and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1773,6 +1863,60 @@ are not included by default.</li>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="metrics.views.MetricPlotView.list_v4">
+<code class="descname">list_v4</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricPlotView.list_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v4 plot values for metrics in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricPlotView.list_v5">
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricPlotView.list_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v5 plot values for metrics in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricPlotView.list_v6">
+<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricPlotView.list_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v6 plot values for metrics in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="metrics.views.MetricPlotView.queryset">
 <code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#metrics.views.MetricPlotView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -1789,6 +1933,78 @@ are not included by default.</li>
 <dt id="metrics.views.MetricsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the metrics types and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsView.list_impl">
+<code class="descname">list_impl</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView.list_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the metrics types and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsView.list_v4">
+<code class="descname">list_v4</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView.list_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v4 metrics types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsView.list_v5">
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView.list_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v5 metrics types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="metrics.views.MetricsView.list_v6">
+<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.views.MetricsView.list_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets v6 metrics types</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
