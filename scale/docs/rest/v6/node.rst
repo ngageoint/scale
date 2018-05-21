@@ -18,6 +18,7 @@ Request: GET http://.../v6/nodes/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
         "count": 9, 
         "next": null, 
@@ -35,6 +36,7 @@ Response: 200 OK
            ... 
         ] 
     } 
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Node List**                                                                                                           |
 +=========================================================================================================================+
@@ -113,6 +115,7 @@ Request: GET http://.../v6/nodes/{id}/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
    { 
        "id": 4, 
        "hostname": "host.com", 
@@ -123,10 +126,11 @@ Response: 200 OK
        "last_modified": "2015-06-17T20:05:16.041Z", 
        } 
    } 
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Node Details**                                                                                                        |
 +=========================================================================================================================+
-|  Returns a specific node and all its related model information.                                                          |
+|  Returns a specific node and all its related model information.                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/{id}/                                                                                                    |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -171,6 +175,7 @@ Request: PATCH http://.../v6/nodes/{id}/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
    { 
        "id": 4, 
        "hostname": "host.com", 
@@ -181,6 +186,7 @@ Response: 200 OK
        "last_modified": "2015-06-17T20:05:16.041Z", 
        } 
    } 
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Update Node**                                                                                                         |
 +=========================================================================================================================+
@@ -215,7 +221,7 @@ Response: 200 OK
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
 |                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| hostname           | String            | The full domain-qualified hostname of the node.                                |      |
+| hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | pause_reason       | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
