@@ -90,7 +90,7 @@ INTERFACE_SCHEMA = {
 }
 
 
-def convert_interface_to_v6(interface):
+def convert_interface_to_v6_json(interface):
     """Returns the v6 interface JSON for the given interface
 
     :param interface: The interface
@@ -111,7 +111,7 @@ def convert_interface_to_v6(interface):
             json_dict = {'name': parameter.name, 'type': parameter.json_type, 'required': parameter.required}
             json.append(json_dict)
 
-    interface_dict = {'files': files, 'json': json}
+    interface_dict = {'version': '6', 'files': files, 'json': json}
 
     return InterfaceV6(interface=interface_dict, do_validate=False)
 
@@ -157,6 +157,25 @@ class InterfaceV6(object):
         """
 
         return self._interface
+
+    def get_interface(self):
+        """Returns the interface represented by this JSON
+
+        :returns: The interface
+        :rtype: :class:`data.interface.interface.Interface`:
+        """
+
+        interface = Interface()
+
+        for file_dict in self._interface['files']:
+            param = FileParameter(file_dict['name'], file_dict['media_types'], file_dict['required'],
+                                  file_dict['multiple'])
+            interface.add_parameter(param)
+        for json_dict in self._interface['json']:
+            param = JsonParameter(json_dict['name'], json_dict['type'], json_dict['required'])
+            interface.add_parameter(param)
+
+        return interface
 
     def _populate_default_values(self):
         """Populates any missing required values with defaults

@@ -70,14 +70,9 @@ RECIPE_DIFF_SCHEMA = {
         'node': {
             'description': 'The diff for a node in the recipe graph',
             'type': 'object',
-            'required': ['name', 'status', 'changes', 'reprocess_new_node', 'force_reprocess', 'dependencies',
-                         'node_type'],
+            'required': ['status', 'changes', 'reprocess_new_node', 'force_reprocess', 'dependencies', 'node_type'],
             'additionalProperties': False,
             'properties': {
-                'name': {
-                    'description': 'The name of the recipe node',
-                    'type': 'string',
-                },
                 'status': {
                     'description': 'The diff status for this recipe node compared to the previous revision',
                     'enum': ['DELETED', 'UNCHANGED', 'CHANGED', 'NEW'],
@@ -251,9 +246,9 @@ def convert_diff_to_v6(graph_diff):
             if recipe_node.job_type_version != prev_node.job_type_version:
                 job_type['prev_job_type_version'] = prev_node.job_type_version
         dependencies = [{'name': p.job_name} for p in recipe_node.parents]
-        job_node = {'name': name, 'reprocess_new_node': reprocess_new_node, 'force_reprocess': force_reprocess,
-                    'status': status, 'changes': changes, 'node_type': job_type, 'dependencies': dependencies}
-        nodes[job_node['name']] = job_node
+        job_node = {'reprocess_new_node': reprocess_new_node, 'force_reprocess': force_reprocess, 'status': status,
+                    'changes': changes, 'node_type': job_type, 'dependencies': dependencies}
+        nodes[name] = job_node
 
     for recipe_node in graph_diff._graph_a._nodes.values():
         name = recipe_node.job_name
@@ -264,9 +259,9 @@ def convert_diff_to_v6(graph_diff):
         job_type = {'node_type': 'job', 'job_type_name': job_type_name, 'job_type_version': job_type_version,
                     'job_type_revision': revision_lookup[job_type_name + ' ' + job_type_version]}
         dependencies = [{'name': p.job_name} for p in recipe_node.parents]
-        job_node = {'name': name, 'reprocess_new_node': False, 'force_reprocess': False, 'status': 'DELETED',
-                    'changes': [], 'node_type': job_type, 'dependencies': dependencies}
-        nodes[job_node['name']] = job_node
+        job_node = {'reprocess_new_node': False, 'force_reprocess': False, 'status': 'DELETED', 'changes': [],
+                    'node_type': job_type, 'dependencies': dependencies}
+        nodes[name] = job_node
 
     return RecipeDiffV6(diff=json_dict, do_validate=False)
 
@@ -298,9 +293,9 @@ def convert_node_diff_to_v6_json(node_diff):
     changes = [{'name': c.name, 'description': c.description} for c in node_diff.changes]
     dependencies = [{'name': name} for name in node_diff.parents.keys()]
 
-    node_dict = {'name': node_diff.name, 'status': node_diff.status, 'changes': changes,
-                 'reprocess_new_node': node_diff.reprocess_new_node, 'force_reprocess': node_diff.force_reprocess,
-                 'dependencies': dependencies, 'node_type': node_diff.get_node_type_dict()}
+    node_dict = {'status': node_diff.status, 'changes': changes, 'reprocess_new_node': node_diff.reprocess_new_node,
+                 'force_reprocess': node_diff.force_reprocess, 'dependencies': dependencies,
+                 'node_type': node_diff.get_node_type_dict()}
 
     if node_diff.prev_node_type is not None:
         node_dict['prev_node_type'] = node_diff.prev_node_type
