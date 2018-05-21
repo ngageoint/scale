@@ -195,6 +195,8 @@
   <div class="section" id="import-export-services">
 <span id="rest-port"></span><h1>Import/Export Services<a class="headerlink" href="#import-export-services" title="Permalink to this headline">¶</a></h1>
 <p>These services allow administrators to export recipe, job, and error records and safely import them to another system.</p>
+<p><strong>DEPRECATED</strong>
+This documentation describes the API <strong>v5</strong> version of Import/Export services. These services will be removed in API <strong>v6</strong>.</p>
 <table border="1" class="docutils" id="rest-port-export">
 <colgroup>
 <col width="17%" />
@@ -209,89 +211,96 @@
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Exports configuration records for recipe types, job types, and errors.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /configuration/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Export response.  Starting with  API <strong>v6</strong>
+this endpoint will be removed.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="4"><strong>GET</strong> /configuration/</td>
 </tr>
-<tr class="row-odd"><td>include</td>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>include</td>
 <td>String</td>
 <td>Optional</td>
 <td>The types of records to include in the export. Defaults to all.
 Choices: [recipe_types, job_types, errors].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>recipe_type_id</td>
+<tr class="row-odd"><td>recipe_type_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only recipe types with a given recipe type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>recipe_type_name</td>
+<tr class="row-even"><td>recipe_type_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only recipe types with a given recipe type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>job_type_id</td>
+<tr class="row-odd"><td>job_type_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only job types with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>job_type_name</td>
+<tr class="row-even"><td>job_type_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only job types with a given job type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>job_type_category</td>
+<tr class="row-odd"><td>job_type_category</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only job types with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>error_id</td>
+<tr class="row-even"><td>error_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only errors with a given error identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>error_name</td>
+<tr class="row-odd"><td>error_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only errors with a given error name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>version</td>
+<tr class="row-even"><td>version</td>
 <td>String</td>
 <td colspan="2">The version number of the configuration schema.</td>
 </tr>
-<tr class="row-even"><td>recipe_types</td>
+<tr class="row-odd"><td>recipe_types</td>
 <td>Array</td>
 <td colspan="2">List of exported recipe types.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>job_types</td>
+<tr class="row-even"><td>job_types</td>
 <td>Array</td>
 <td colspan="2">List of exported job types.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>errors</td>
+<tr class="row-odd"><td>errors</td>
 <td>Array</td>
 <td colspan="2">List of exported errors.
 (See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;recipe_types&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
@@ -368,64 +377,71 @@ Duplicate it to filter by multiple values.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Imports configuration records for recipe types, job types, and errors.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>POST</strong> /configuration/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Import response.  Starting with  API <strong>v6</strong>
+this endpoint will be removed.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
+<tr class="row-even"><td colspan="4"><strong>POST</strong> /configuration/</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
 </tr>
-<tr class="row-even"><td>import</td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>import</td>
 <td>JSON Object</td>
 <td>Required</td>
 <td>The previously exported configuration to load.</td>
 </tr>
-<tr class="row-odd"><td>.version</td>
+<tr class="row-even"><td>.version</td>
 <td>String</td>
 <td>Optional</td>
 <td>The version number of the configuration schema.
 Defaults to the latest version.</td>
 </tr>
-<tr class="row-even"><td>.recipe_types</td>
+<tr class="row-odd"><td>.recipe_types</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of recipe types to import.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.job_types</td>
+<tr class="row-even"><td>.job_types</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of job types to import.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.errors</td>
+<tr class="row-odd"><td>.errors</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of errors to import.
 (See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>warnings</td>
+<tr class="row-even"><td>warnings</td>
 <td>Array</td>
 <td colspan="2">A list of warnings discovered during import.</td>
 </tr>
-<tr class="row-even"><td>.id</td>
+<tr class="row-odd"><td>.id</td>
 <td>String</td>
 <td colspan="2">An identifier for the warning.</td>
 </tr>
-<tr class="row-odd"><td>.details</td>
+<tr class="row-even"><td>.details</td>
 <td>String</td>
 <td colspan="2">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
@@ -451,40 +467,47 @@ Defaults to the latest version.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Validate import configuration records for recipe types, job types, and errors.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>POST</strong> /configuration/validation/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Validate Import response.  Starting with  API
+<strong>v6</strong> this endpoint will be removed.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
+<tr class="row-even"><td colspan="4"><strong>POST</strong> /configuration/validation/</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Content Type</strong>   | <em>application/json</em></td>
 </tr>
-<tr class="row-even"><td>import</td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>import</td>
 <td>JSON Object</td>
 <td>Required</td>
 <td>The previously exported configuration to check.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>warnings</td>
+<tr class="row-even"><td>warnings</td>
 <td>Array</td>
 <td colspan="2">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="row-even"><td>.id</td>
+<tr class="row-odd"><td>.id</td>
 <td>String</td>
 <td colspan="2">An identifier for the warning.</td>
 </tr>
-<tr class="row-odd"><td>.details</td>
+<tr class="row-even"><td>.details</td>
 <td>String</td>
 <td colspan="2">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
@@ -511,9 +534,16 @@ All the request parameters and response fields are identical to the normal expor
 <p class="last">This is purely a convenience API for web applications to provide a <em>Save As...</em> download prompt to users.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><strong>GET</strong> /configuration/download/</td>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Export Download response.  Starting with  API
+<strong>v6</strong> this endpoint will be removed.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">No</span> <span class="nx">Response</span>
+<tr class="row-even"><td><strong>GET</strong> /configuration/download/</td>
+</tr>
+<tr class="row-odd"><td><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">No</span> <span class="nx">Response</span>
 </pre></div>
 </div>
 </td>
@@ -543,7 +573,14 @@ The API supports traditional file uploads using a form element like this:</p>
 <p class="last">The API also supports more modern AJAX file uploads by providing the file name in the header: <em>HTTP_X_FILE_NAME</em>.</p>
 </td>
 </tr>
-<tr class="row-odd"><td><strong>POST</strong> /configuration/upload/</td>
+<tr class="row-odd"><td><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This documentation describes the API <strong>v5</strong> version of the Import Upload response.  Starting with  API
+<strong>v6</strong> this endpoint will be removed.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><strong>POST</strong> /configuration/upload/</td>
 </tr>
 </tbody>
 </table>
