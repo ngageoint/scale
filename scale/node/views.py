@@ -30,6 +30,24 @@ class NodesView(ListAPIView):
         return NodeSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+        elif request.version == 'v6':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the list of all nodes and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -66,6 +84,24 @@ class NodeDetailsView(GenericAPIView):
         return NodeDetailsSerializer
 
     def get(self, request, node_id):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.get_v4(request, node_id)
+        elif request.version == 'v5':
+            return self.get_impl(request, node_id)
+        elif request.version == 'v6':
+            return self.get_impl(request, node_id)
+
+        raise Http404()
+        
+    def get_impl(self, request, node_id):
         """Gets node info
 
         :param request: the HTTP GET request
@@ -76,9 +112,6 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v4':
-            return self.get_v4(request, node_id)
-
         try:
             node = Node.objects.get_details(node_id)
         except Node.DoesNotExist:
@@ -88,6 +121,24 @@ class NodeDetailsView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request, node_id):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.patch_v4(request, node_id)
+        elif request.version == 'v5':
+            return self.patch_impl(request, node_id)
+        elif request.version == 'v6':
+            return self.patch_impl(request, node_id)
+
+        raise Http404()
+        
+    def patch_impl(self, request, node_id):
         """Modify node info with a subset of fields
 
         :param request: the HTTP GET request
@@ -97,10 +148,7 @@ class NodeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
-        if request.version == 'v4':
-            return self.patch_v4(request, node_id)
-
+        
         extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
             return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
@@ -210,7 +258,7 @@ class NodesStatusView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
+        if request.version != 'v4':
             raise Http404
 
         # Get a list of all node status counts
