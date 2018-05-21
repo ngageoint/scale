@@ -1,0 +1,179 @@
+openapi: "3.0.0"
+info:
+  title: Node Services
+  version: v6
+paths:
+  /v6/nodes:
+    get:
+      operationId: _rest_v6_node_list
+      summary: Node List
+      description: Returns a list of all nodes
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+        -in: query
+          name: include_inactive
+          schema:
+            type: boolean
+          description: If True, all nodes in the database are returned including those marked inactive. Default is False
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/node_list'
+  /v6/nodes/{id}/:
+    get:
+      operationId: _rest_v6_node_details
+      summary: Node Details
+      description: Returns a specific node and all its related model information
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing node
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/node_details'
+    patch:
+      operationId: _rest_v6_node_update
+      summary: Node Update
+      description: Update one or more fields in an existing node
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/node_update'
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing node
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/node_details'
+
+components:
+  schemas:
+    node_list:
+      title: Node List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/node_details'
+          description: List of node objects
+    node_details:
+      title: Node Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        host_name:
+          type: string
+          description: The full domain-qualified hostname of the node
+          example: host.com
+        pause_reason:
+          type: string
+          description: The reason this node is paused if is_paused is true. |
+            This is a descriptive field for presentation to the user
+          example: Node is undergoing scheduled maintenance
+        is_paused:
+          type: boolean
+          description: True if the node is paused and will not accept new jobs for execution. |
+            Remaining tasks for a previously executing job will complete.
+          example: False
+        is_active:
+          type: string
+          description: True if the node is actively participating in the cluster.
+          example: True
+        deprecated:
+          type: string
+          format: date-time
+          description: When the node was removed (is_active == False) from the cluster.
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+    node_update:
+      title: Node Update
+      type: object
+      properties:
+        pause_reason:
+          type: string
+          description: The reason this node is paused if is_paused is true. |
+            This is a descriptive field for presentation to the user
+          example: Node is undergoing scheduled maintenance
+        is_paused:
+          type: boolean
+          description: True if the node is paused and will not accept new jobs for execution. |
+            Remaining tasks for a previously executing job will complete.
+          example: False
+        is_active:
+          type: string
+          description: True if the node is actively participating in the cluster.
+          example: True
