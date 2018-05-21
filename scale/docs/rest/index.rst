@@ -67,4 +67,5 @@ Future v6 Services
    :maxdepth: 1
 
    v6/batch
+   v6/data
    v6/recipe
