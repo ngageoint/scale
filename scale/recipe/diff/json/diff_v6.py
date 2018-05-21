@@ -1,4 +1,4 @@
-"""Manages the v6 recipe graph diff schema"""
+"""Manages the v6 recipe diff schema"""
 from __future__ import unicode_literals
 
 from jsonschema import validate
@@ -16,7 +16,7 @@ RECIPE_DIFF_SCHEMA = {
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'Version of the recipe graph diff schema',
+            'description': 'Version of the recipe diff schema',
             'type': 'string',
         },
         'can_be_reprocessed': {
