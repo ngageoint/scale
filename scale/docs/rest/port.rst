@@ -6,12 +6,19 @@ Import/Export Services
 
 These services allow administrators to export recipe, job, and error records and safely import them to another system.
 
+**DEPRECATED**
+This documentation describes the API **v5** version of Import/Export services. These services will be removed in API **v6**.
+
 .. _rest_port_export:
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Export**                                                                                                              |
 +=========================================================================================================================+
 | Exports configuration records for recipe types, job types, and errors.                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Export response.  Starting with  API **v6**   |
+|                this endpoint will be removed.                                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /configuration/                                                                                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -129,6 +136,10 @@ These services allow administrators to export recipe, job, and error records and
 +=========================================================================================================================+
 | Imports configuration records for recipe types, job types, and errors.                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Import response.  Starting with  API **v6**   |
+|                this endpoint will be removed.                                                                           |
++-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /configuration/                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
@@ -180,6 +191,10 @@ These services allow administrators to export recipe, job, and error records and
 +=========================================================================================================================+
 | Validate import configuration records for recipe types, job types, and errors.                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Validate Import response.  Starting with  API |
+|                **v6** this endpoint will be removed.                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /configuration/validation/                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
@@ -221,6 +236,10 @@ These services allow administrators to export recipe, job, and error records and
 |                                                                                                                         |
 | This is purely a convenience API for web applications to provide a *Save As...* download prompt to users.               |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Export Download response.  Starting with  API |
+|                **v6** this endpoint will be removed.                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /configuration/download/                                                                                        |
 +-------------------------------------------------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
@@ -246,6 +265,10 @@ These services allow administrators to export recipe, job, and error records and
 |    </form>                                                                                                              |
 |                                                                                                                         |
 | The API also supports more modern AJAX file uploads by providing the file name in the header: *HTTP_X_FILE_NAME*.       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Import Upload response.  Starting with  API   |
+|                **v6** this endpoint will be removed.                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /configuration/upload/                                                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+

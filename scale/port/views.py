@@ -5,6 +5,7 @@ import json
 import logging
 import os
 
+from django.http.response import Http404
 import django.utils.timezone as timezone
 import rest_framework.status as status
 from rest_framework.parsers import MultiPartParser
@@ -43,7 +44,7 @@ class UploadRenderer(BrowsableAPIRenderer):
     def show_form_for_method(self, view, method, request, obj):
         return False
 
-
+# TODO: remove when REST API v5 is removed
 class ConfigurationView(APIView):
     """This view is the endpoint for importing/exporting job and recipe configuration."""
 
@@ -55,6 +56,9 @@ class ConfigurationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version != 'v5':
+            raise Http404()
 
         # Filter and export recipe types
         recipe_type_ids = rest_util.parse_string_list(request, 'recipe_type_id', required=False)
@@ -95,6 +99,10 @@ class ConfigurationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version != 'v5':
+            raise Http404()
+            
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:
@@ -106,7 +114,7 @@ class ConfigurationView(APIView):
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
 
-
+# TODO: remove when REST API v5 is removed
 class ConfigurationDownloadView(ConfigurationView):
     """This view is the endpoint for downloading an export of job and recipe configuration."""
     renderer_classes = (DownloadRenderer,)
@@ -123,6 +131,9 @@ class ConfigurationUploadView(APIView):
     parser_classes = (MultiPartParser,)
 
     def post(self, request, *args, **kwargs):
+        if request.version != 'v5':
+            raise Http404()
+        
         file_name = None
         file_content = None
 
@@ -163,7 +174,7 @@ class ConfigurationUploadView(APIView):
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
 
-
+# TODO: remove when REST API v5 is removed
 class ConfigurationValidationView(APIView):
     """This view is the endpoint for validation an exported job and recipe configuration."""
 
@@ -175,6 +186,10 @@ class ConfigurationValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version != 'v5':
+            raise Http404()
+            
         import_dict = rest_util.parse_dict(request, 'import')
 
         try:
