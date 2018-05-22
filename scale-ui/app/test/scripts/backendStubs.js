@@ -27,6 +27,23 @@
             return obj;
         };
 
+        // Scheduler
+        var schedulerRegex = new RegExp('^' + scaleConfig.getUrlPrefix('scheduler') + 'scheduler/', 'i');
+        $httpBackend.whenGET(schedulerRegex).respond(function () {
+            var data = {
+                is_paused: false,
+                num_message_handlers: 2,
+                resource_level: 'GOOD',
+                system_logging_level: 'INFO'
+            };
+
+            return [200, data, {}];
+        });
+
+        $httpBackend.whenPATCH(schedulerRegex).respond(function () {
+            return [200, {}, {}];
+        });
+
         // Ingests Status
         var ingestsStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('ingests') + 'ingests/status/', 'i');
         $httpBackend.whenGET(ingestsStatusRegex).respond(function () {

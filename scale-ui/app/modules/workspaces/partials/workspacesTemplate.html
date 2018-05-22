@@ -13,7 +13,6 @@
 
                     <a class="btn btn-primary"></a>
                 </div>
-                <!--<toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small pull-right"></toggle-switch>-->
                 <button class="btn btn-sm" ng-if="!vm.readonly" ng-class="vm.addBtnClass" ng-click="vm.newWorkspace()"><i class="fa" ng-class="vm.addBtnIcon"></i> Create Workspace</button>
                 <button ng-if="vm.scaleConfig.static && vm.localWorkspaces.length > 0 && !vm.readonly" class="btn btn-sm btn-default" ng-click="vm.clearLocalWorkspaces()" title="Clear local workspaces"><i class="fa fa-remove"></i></button>
             </div>
