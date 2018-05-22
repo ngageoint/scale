@@ -25,65 +25,56 @@ INTERFACE_SCHEMA = {
             'description': 'The file-based inputs for this interface',
             'type': 'array',
             'items': {
-                '$ref': '#/definitions/file_input',
+                'description': 'A file input',
+                'type': 'object',
+                'required': ['name', 'media_types', 'required', 'multiple'],
+                'additionalProperties': False,
+                'properties': {
+                    'name': {
+                        'description': 'The unique name of the input',
+                        'type': 'string',
+                        'pattern': '^[a-zA-Z_-]+$',
+                    },
+                    'media_types': {
+                        'description': 'The list of acceptable media types',
+                        'type': 'array',
+                        'items': {
+                            'type': 'string',
+                        },
+                    },
+                    'multiple': {
+                        'description': 'Whether this input contains multiple files',
+                        'type': 'boolean',
+                    },
+                    'required': {
+                        'description': 'Whether this input is required',
+                        'type': 'boolean',
+                    },
+                },
             },
         },
         'json': {
             'description': 'The JSON inputs for this interface',
             'type': 'array',
             'items': {
-                '$ref': '#/definitions/json_input',
-            },
-        },
-    },
-    'definitions': {
-        'file_input': {
-            'description': 'A file input',
-            'type': 'object',
-            'required': ['name', 'media_types', 'required', 'multiple'],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'description': 'The unique name of the input',
-                    'type': 'string',
-                    'pattern': '^[a-zA-Z_-]+$',
-                },
-                'media_types': {
-                    'description': 'The list of acceptable media types',
-                    'type': 'array',
-                    'items': {
+                'description': 'A JSON input',
+                'type': 'object',
+                'required': ['name', 'type', 'required'],
+                'additionalProperties': False,
+                'properties': {
+                    'name': {
+                        'description': 'The unique name of the input',
                         'type': 'string',
+                        'pattern': '^[a-zA-Z_-]+$',
                     },
-                },
-                'multiple': {
-                    'description': 'Whether this input contains multiple files',
-                    'type': 'boolean',
-                },
-                'required': {
-                    'description': 'Whether this input is required',
-                    'type': 'boolean',
-                },
-            },
-        },
-        'json_input': {
-            'description': 'A JSON input',
-            'type': 'object',
-            'required': ['name', 'type', 'required'],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'description': 'The unique name of the input',
-                    'type': 'string',
-                    'pattern': '^[a-zA-Z_-]+$',
-                },
-                'type': {
-                    'description': 'The JSON type accepted',
-                    'type': 'array',
-                    'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string']
-                },
-                'required': {
-                    'description': 'Whether this input is required',
-                    'type': 'boolean',
+                    'type': {
+                        'description': 'The JSON type accepted',
+                        'enum': ['array', 'boolean', 'integer', 'number', 'object', 'string']
+                    },
+                    'required': {
+                        'description': 'Whether this input is required',
+                        'type': 'boolean',
+                    },
                 },
             },
         },

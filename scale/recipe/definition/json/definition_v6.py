@@ -79,6 +79,16 @@ RECIPE_DEFINITION_SCHEMA = {
                         '$ref': '#/definitions/dependency',
                     },
                 },
+                'input': {
+                    'description': 'Each input connection to the node',
+                    'type': 'object',
+                    'additionalProperties': {
+                        'oneOf': [
+                            {'$ref': '#/definitions/dependency_connection'},
+                            {'$ref': '#/definitions/recipe_connection'},
+                        ],
+                    },
+                },
                 'node_type': {
                     'description': 'The type of the node',
                     'oneOf': [
@@ -162,7 +172,8 @@ def convert_recipe_definition_to_v6_json(definition):
     """
 
     nodes_dict = {n.name: convert_node_to_v6_json(n) for n in definition.graph.values()}
-    json_dict = {'version': '6', 'input': convert_interface_to_v6_json(definition.input_interface), 'nodes': nodes_dict}
+    json_dict = {'version': '6', 'input': convert_interface_to_v6_json(definition.input_interface).get_dict(),
+                 'nodes': nodes_dict}
 
     return RecipeDefinitionV6(definition=json_dict, do_validate=False)
 
@@ -187,10 +198,10 @@ def convert_node_to_v6_json(node):
         input_dict[connection.input_name] = conn_dict
 
     if isinstance(node, JobNode):
-        node_type_dict = {'type': 'job', 'job_type_name': node.job_type_name, 'job_type_version': node.job_type_version,
-                          'job_type_revision': node.revision_num}
+        node_type_dict = {'node_type': 'job', 'job_type_name': node.job_type_name,
+                          'job_type_version': node.job_type_version, 'job_type_revision': node.revision_num}
     elif isinstance(node, RecipeNode):
-        node_type_dict = {'type': 'recipe', 'recipe_type_name': node.recipe_type_name,
+        node_type_dict = {'node_type': 'recipe', 'recipe_type_name': node.recipe_type_name,
                           'recipe_type_revision': node.revision_num}
 
     node_dict = {'dependencies': dependencies, 'input': input_dict, 'node_type': node_type_dict}
@@ -246,7 +257,7 @@ class RecipeDefinitionV6(object):
         for node_name, node_dict in self._definition['nodes'].items():
             node_type_dict = node_dict['node_type']
             if node_type_dict['node_type'] == 'job':
-                definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_versione'],
+                definition.add_job_node(node_name, node_type_dict['job_type_name'], node_type_dict['job_type_version'],
                                         node_type_dict['job_type_revision'])
             elif node_type_dict['node_type'] == 'recipe':
                 definition.add_recipe_node(node_name, node_type_dict['recipe_type_name'],
@@ -277,6 +288,11 @@ class RecipeDefinitionV6(object):
     def _populate_default_values(self):
         """Populates any missing required values with defaults
         """
+
+        if 'input' not in self._definition:
+            self._definition['input'] = {}
+        if 'nodes' not in self._definition:
+            self._definition['nodes'] = {}
 
         # Populate defaults for input interface
         interface_json = InterfaceV6(self._definition['input'], do_validate=False)
