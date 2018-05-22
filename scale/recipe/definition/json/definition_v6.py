@@ -9,8 +9,8 @@ from recipe.definition.connection import DependencyInputConnection, RecipeInputC
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.node import JobNode, RecipeNode
-from recipe.diff.exceptions import InvalidDiff
 from util.rest import strip_schema_version
+
 
 SCHEMA_VERSION = '6'
 
@@ -24,8 +24,7 @@ RECIPE_DEFINITION_SCHEMA = {
             'description': 'Version of the recipe definition schema',
             'type': 'string',
         },
-        'input': INTERFACE_SCHEMA
-        },
+        'input': INTERFACE_SCHEMA,
         'nodes': {
             'description': 'Each node in the recipe graph',
             'type': 'object',
@@ -185,7 +184,7 @@ def convert_node_to_v6_json(node):
             conn_dict = {'type': 'dependency', 'node': connection.node_name, 'output': connection.output_name}
         elif isinstance(connection, RecipeInputConnection):
             conn_dict = {'type': 'recipe', 'input': connection.recipe_input_name}
-        input_dict[connection.input_name] = connection
+        input_dict[connection.input_name] = conn_dict
 
     if isinstance(node, JobNode):
         node_type_dict = {'type': 'job', 'job_type_name': node.job_type_name, 'job_type_version': node.job_type_version,
@@ -228,7 +227,7 @@ class RecipeDefinitionV6(object):
 
         try:
             if do_validate:
-                validate(diff, RECIPE_DDEFINITION_SCHEMA)
+                validate(self._definition, RECIPE_DEFINITION_SCHEMA)
         except ValidationError as ex:
             raise InvalidDefinition('INVALID_DEFINITION', 'Invalid recipe definition: %s' % unicode(ex))
 

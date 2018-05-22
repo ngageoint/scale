@@ -69,7 +69,7 @@ class BatchConfigurationV6(object):
 
         try:
             if do_validate:
-                validate(configuration, BATCH_CONFIGURATION_SCHEMA)
+                validate(self._configuration, BATCH_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidConfiguration('INVALID_BATCH_CONFIGURATION', 'Invalid batch configuration: %s' % unicode(ex))
 

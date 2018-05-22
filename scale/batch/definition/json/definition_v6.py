@@ -94,7 +94,7 @@ class BatchDefinitionV6(object):
 
         try:
             if do_validate:
-                validate(definition, BATCH_DEFINITION_SCHEMA)
+                validate(self._definition, BATCH_DEFINITION_SCHEMA)
         except ValidationError as ex:
             raise InvalidDefinition('INVALID_BATCH_DEFINITION', 'Invalid batch definition: %s' % unicode(ex))
 

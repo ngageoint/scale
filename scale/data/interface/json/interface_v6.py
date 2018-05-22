@@ -5,6 +5,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.interface.exceptions import InvalidInterface
+from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 
 
@@ -145,7 +146,7 @@ class InterfaceV6(object):
 
         try:
             if do_validate:
-                validate(interface, INTERFACE_SCHEMA)
+                validate(self._interface, INTERFACE_SCHEMA)
         except ValidationError as ex:
             raise InvalidInterface('INVALID_INTERFACE', 'Invalid interface: %s' % unicode(ex))
 
@@ -168,12 +169,12 @@ class InterfaceV6(object):
         interface = Interface()
 
         for file_dict in self._interface['files']:
-            param = FileParameter(file_dict['name'], file_dict['media_types'], file_dict['required'],
-                                  file_dict['multiple'])
-            interface.add_parameter(param)
+            file_param = FileParameter(file_dict['name'], file_dict['media_types'], file_dict['required'],
+                                       file_dict['multiple'])
+            interface.add_parameter(file_param)
         for json_dict in self._interface['json']:
-            param = JsonParameter(json_dict['name'], json_dict['type'], json_dict['required'])
-            interface.add_parameter(param)
+            json_param = JsonParameter(json_dict['name'], json_dict['type'], json_dict['required'])
+            interface.add_parameter(json_param)
 
         return interface
 

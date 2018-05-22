@@ -331,7 +331,7 @@ class RecipeDiffV6(object):
 
         try:
             if do_validate:
-                validate(diff, RECIPE_DIFF_SCHEMA)
+                validate(self._diff, RECIPE_DIFF_SCHEMA)
         except ValidationError as ex:
             raise InvalidDiff('Invalid recipe graph diff: %s' % unicode(ex))
 
