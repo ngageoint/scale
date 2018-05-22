@@ -52,7 +52,7 @@
                 <strong>{{ vm.statusError }}</strong>
             </div>
         </div>
-        <div ng-if="vm.schedulerResourceLevel">
+        <div ng-if="vm.schedulerResourceLevel && vm.user.is_admin">
             <h3>Resource Level</h3>
             <div class="switch-toggle alert alert-light">
                 <input id="low" name="scheduler" type="radio" ng-checked="vm.schedulerResourceLevel === 'LOW'">
