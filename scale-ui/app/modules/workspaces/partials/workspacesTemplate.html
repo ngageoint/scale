@@ -3,8 +3,17 @@
 <div class="row">
     <div class="col-xs-3 master-container" style="{{ vm.containerStyle }}">
         <div class="master-content">
-            <div class="master-controls">
-                <toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small pull-right"></toggle-switch>
+            <div class="master-controls" style="display: flex; justify-content: space-between; align-items: center">
+                <div class="switch-toggle alert alert-light">
+                    <input id="active" name="show-active" type="radio" ng-checked="vm.showActive">
+                    <label for="active" ng-click="vm.toggleShowActive(true)" ng-style="{color:vm.showActive ? '#fff' : '#000'}">Active</label>
+
+                    <input id="inactive" name="show-active" type="radio" ng-checked="!vm.showActive">
+                    <label for="inactive" ng-click="vm.toggleShowActive(false)" ng-style="{color:!vm.showActive ? '#fff' : '#000'}">Inactive</label>
+
+                    <a class="btn btn-primary"></a>
+                </div>
+                <!--<toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small pull-right"></toggle-switch>-->
                 <button class="btn btn-sm" ng-if="!vm.readonly" ng-class="vm.addBtnClass" ng-click="vm.newWorkspace()"><i class="fa" ng-class="vm.addBtnIcon"></i> Create Workspace</button>
                 <button ng-if="vm.scaleConfig.static && vm.localWorkspaces.length > 0 && !vm.readonly" class="btn btn-sm btn-default" ng-click="vm.clearLocalWorkspaces()" title="Clear local workspaces"><i class="fa fa-remove"></i></button>
             </div>
