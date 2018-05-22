@@ -63,9 +63,8 @@ Response: 200 OK
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=host_name&order=created).    |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| include_inactive   | Boolean           | Optional | If true, all nodes in the database are returned including those     |
-|                    |                   |          | marked inactive. These are typically removed from the cluster.      |
-|                    |                   |          | The default is False.                                               |
+| is_active          | Boolean           | Optional | If true, only active nodes are returned. If false, only inactive    |
+|                    |                   |          | nodes. If no value is specified, all nodes are returned.            |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -172,20 +171,7 @@ v6 Node Update
 
 Request: PATCH http://.../v6/nodes/{id}/
 
-Response: 200 OK
-
- .. code-block:: javascript  
- 
-   { 
-       "id": 4, 
-       "hostname": "host.com", 
-       "is_paused": false, 
-       "is_active": true, 
-       "deprecated": null, 
-       "created": "2015-06-15T17:18:52.414Z", 
-       "last_modified": "2015-06-17T20:05:16.041Z", 
-       } 
-   } 
+Response: 204 NO CONTENT
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Update Node**                                                                                                         |

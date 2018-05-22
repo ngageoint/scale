@@ -108,11 +108,8 @@ class TestNodeDetailsViewV5(TransactionTestCase):
 
         Scheduler.objects.create(id=1, master_hostname='localhost', master_port=5050)
 
-    @patch('mesos_api.api.get_slave')
-    def test_get_node_success(self, mock_get_slave):
+    def test_get_node_success(self):
         """Test successfully calling the Get Node method."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
 
         url = '/v5/nodes/%d/' % self.node2.id
         response = self.client.get(url)
@@ -143,11 +140,9 @@ class TestNodeDetailsViewV5(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('mesos_api.api.get_slave')
-    def test_update_node_success(self, mock_get_slave):
+    def test_update_node_success(self):
         """Test successfully calling the Update Node method."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
+
         json_data = {
             'is_paused': True,
             'pause_reason': 'Test reason',
@@ -163,11 +158,8 @@ class TestNodeDetailsViewV5(TransactionTestCase):
         self.assertIn('hostname', result)
         self.assertEqual(result['hostname'], self.node2.hostname)
 
-    @patch('mesos_api.api.get_slave')
-    def test_update_node_unpause(self, mock_get_slave):
+    def test_update_node_unpause(self):
         """Tests unpausing the node and specifying a reason."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
 
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
@@ -240,11 +232,8 @@ class TestNodeDetailsViewV6(TransactionTestCase):
 
         Scheduler.objects.create(id=1, master_hostname='localhost', master_port=5050)
 
-    @patch('mesos_api.api.get_slave')
-    def test_get_node_success(self, mock_get_slave):
+    def test_get_node_success(self):
         """Test successfully calling the Get Node method."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
 
         url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.get(url)
@@ -262,11 +251,9 @@ class TestNodeDetailsViewV6(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-    @patch('mesos_api.api.get_slave')
-    def test_update_node_success(self, mock_get_slave):
+    def test_update_node_success(self):
         """Test successfully calling the Update Node method."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
+
         json_data = {
             'is_paused': True,
             'pause_reason': 'Test reason',
@@ -274,31 +261,16 @@ class TestNodeDetailsViewV6(TransactionTestCase):
 
         url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        result = json.loads(response.content)
-        self.assertEqual(result['is_paused'], True)
-        self.assertEqual(result['pause_reason'], json_data['pause_reason'])
-        self.assertIn('hostname', result)
-        self.assertEqual(result['hostname'], self.node2.hostname)
-
-    @patch('mesos_api.api.get_slave')
-    def test_update_node_unpause(self, mock_get_slave):
+    def test_update_node_unpause(self):
         """Tests unpausing the node and specifying a reason."""
-        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
-                                                HardwareResources(4., 2048., 40000.))
 
         json_data = {'is_paused': False, 'pause_reason': 'Test reason'}
 
         url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['is_paused'], False)
-        self.assertIsNone(result['pause_reason'])
-        self.assertIn('hostname', result)
-        self.assertEqual(result['hostname'], self.node2.hostname)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_update_node_not_found(self):
         """Test calling the Update Node method with a bad node id."""
@@ -342,11 +314,8 @@ class TestNodeDetailsViewV6(TransactionTestCase):
 
         url = '/v6/nodes/%d/' % self.node2.id
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
-        result = json.loads(response.content)
-        self.assertEqual(result['is_active'], False)
-        self.assertIn('deprecated', result)
         
 # TODO: remove when REST API v4 is removed
 class TestNodesStatusViewV4(TransactionTestCase):
