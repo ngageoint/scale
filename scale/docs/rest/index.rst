@@ -67,6 +67,7 @@ Future v6 Services
    :maxdepth: 1
 
    v6/batch
+   v6/data
    v6/diagnostic
    v6/metrics
    v6/node

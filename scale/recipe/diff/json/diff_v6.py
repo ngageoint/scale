@@ -1,4 +1,4 @@
-"""Manages the v6 recipe graph diff schema"""
+"""Manages the v6 recipe diff schema"""
 from __future__ import unicode_literals
 
 from jsonschema import validate
@@ -10,13 +10,13 @@ from recipe.diff.exceptions import InvalidDiff
 SCHEMA_VERSION = '6'
 
 
-RECIPE_GRAPH_DIFF_SCHEMA = {
+RECIPE_DIFF_SCHEMA = {
     'type': 'object',
-    'required': ['version', 'can_be_reprocessed', 'reasons', 'jobs'],
+    'required': ['version', 'can_be_reprocessed', 'reasons', 'nodes'],
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'Version of the recipe graph diff schema',
+            'description': 'Version of the recipe diff schema',
             'type': 'string',
         },
         'can_be_reprocessed': {
@@ -25,22 +25,22 @@ RECIPE_GRAPH_DIFF_SCHEMA = {
         },
         'reasons': {
             'description': 'The reasons why the recipe type cannot be re-processed',
-            'type': ['array'],
+            'type': 'array',
             'items': {
                 '$ref': '#/definitions/reason',
             },
         },
-        'jobs': {
-            'description': 'The diff for each job in the recipe graph',
-            'type': ['array'],
-            'items': {
-                '$ref': '#/definitions/job',
+        'nodes': {
+            'description': 'The diff for each node in the recipe graph',
+            'type': 'object',
+            'additionalProperties': {
+                '$ref': '#/definitions/node'
             },
         },
     },
     'definitions': {
         'change': {
-            'description': 'A change that occurred for this recipe job from previous revision to current revision',
+            'description': 'A change that occurred for this recipe node from previous revision to current revision',
             'type': 'object',
             'required': ['name', 'description'],
             'additionalProperties': False,
@@ -56,81 +56,123 @@ RECIPE_GRAPH_DIFF_SCHEMA = {
             },
         },
         'dependency': {
-            'description': 'A dependency on another recipe job',
+            'description': 'A dependency on another recipe node',
             'type': 'object',
             'required': ['name'],
             'additionalProperties': False,
             'properties': {
                 'name': {
-                    'description': 'The name of the recipe job',
+                    'description': 'The name of the recipe node',
                     'type': 'string',
                 },
             },
         },
-        'job': {
-            'description': 'The diff for a job in the recipe graph',
+        'node': {
+            'description': 'The diff for a node in the recipe graph',
             'type': 'object',
-            'required': ['name', 'will_be_reprocessed', 'force_reprocess', 'status', 'changes', 'job_type',
-                         'dependencies'],
+            'required': ['status', 'changes', 'reprocess_new_node', 'force_reprocess', 'dependencies', 'node_type'],
             'additionalProperties': False,
             'properties': {
-                'name': {
-                    'description': 'The name of the recipe job',
-                    'type': 'string',
-                },
-                'will_be_reprocessed': {
-                    'description': 'Whether this job will be re-processed (have a new job created)',
-                    'type': 'boolean',
-                },
-                'force_reprocess': {
-                    'description': 'If true, this job will be re-processed even if its status is UNCHANGED',
-                    'type': 'boolean',
-                },
                 'status': {
-                    'description': 'The diff status for this recipe job compared to the previous revision',
-                    'type': 'string',
+                    'description': 'The diff status for this recipe node compared to the previous revision',
                     'enum': ['DELETED', 'UNCHANGED', 'CHANGED', 'NEW'],
                 },
                 'changes': {
-                    'description': 'The reasons why the recipe type cannot be re-processed',
-                    'type': ['array'],
+                    'description': 'The changes for this recipe node from previous revision to current revision',
+                    'type': 'array',
                     'items': {
                         '$ref': '#/definitions/change',
                     },
                 },
-                'job_type': {
-                    '$ref': '#/definitions/job_type',
+                'reprocess_new_node': {
+                    'description': 'Whether this node will be re-processed',
+                    'type': 'boolean',
+                },
+                'force_reprocess': {
+                    'description': 'If true, this node will be re-processed even if its status is UNCHANGED',
+                    'type': 'boolean',
                 },
                 'dependencies': {
-                    'description': 'The other recipe jobs upon which this job is dependent',
-                    'type': ['array'],
+                    'description': 'The other recipe nodes upon which this node is dependent',
+                    'type': 'array',
                     'items': {
                         '$ref': '#/definitions/dependency',
                     },
                 },
+                'prev_node_type': {
+                    'description': 'The type of this node in the previous revision',
+                    'enum': ['job', 'recipe'],
+                },
+                'node_type': {
+                    'description': 'The type of the node',
+                    'oneOf': [
+                        {'$ref': '#/definitions/job_node'},
+                        {'$ref': '#/definitions/recipe_node'},
+                    ],
+                },
             },
         },
-        'job_type': {
-            'description': 'Describes the job type of the recipe job',
+        'job_node': {
+            'description': 'The diff details for a job node in the recipe graph',
             'type': 'object',
-            'required': ['name', 'version'],
+            'required': ['node_type', 'job_type_name', 'job_type_version', 'job_type_revision'],
             'additionalProperties': False,
             'properties': {
-                'name': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['job'],
+                },
+                'job_type_name': {
                     'description': 'The name of the job type',
                     'type': 'string',
                 },
-                'version': {
+                'job_type_version': {
                     'description': 'The version of the job type',
                     'type': 'string',
                 },
-                'prev_name': {
+                'job_type_revision': {
+                    'description': 'The revision of the job type',
+                    'type': 'integer',
+                },
+                'prev_job_type_name': {
                     'description': 'The name of the job type in the previous revision',
                     'type': 'string',
                 },
-                'prev_version': {
+                'prev_job_type_version': {
                     'description': 'The version of the job type in the previous revision',
                     'type': 'string',
+                },
+                'prev_job_type_revision': {
+                    'description': 'The revision of the job type in the previous revision',
+                    'type': 'integer',
+                },
+            },
+        },
+        'recipe_node': {
+            'description': 'The diff details for a recipe node in the recipe graph',
+            'type': 'object',
+            'required': ['node_type', 'recipe_type_name', 'recipe_type_revision'],
+            'additionalProperties': False,
+            'properties': {
+                'node_type': {
+                    'description': 'The name of the node type',
+                    'enum': ['recipe'],
+                },
+                'recipe_type_name': {
+                    'description': 'The name of the recipe type',
+                    'type': 'string',
+                },
+                'recipe_type_revision': {
+                    'description': 'The revision of the recipe type',
+                    'type': 'integer',
+                },
+                'prev_recipe_type_name': {
+                    'description': 'The name of the recipe type in the previous revision',
+                    'type': 'string',
+                },
+                'prev_recipe_type_revision': {
+                    'description': 'The revision of the recipe type in the previous revision',
+                    'type': 'integer',
                 },
             },
         },
@@ -154,18 +196,26 @@ RECIPE_GRAPH_DIFF_SCHEMA = {
 }
 
 
+# TODO: remove this once old recipe definitions are removed
 def convert_diff_to_v6(graph_diff):
     """Returns the v6 recipe graph diff JSON for the given graph diff
 
     :param graph_diff: The recipe graph diff
     :type graph_diff: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
     :returns: The v6 recipe graph diff JSON
-    :rtype: :class:`recipe.diff.json.diff_v6.RecipeGraphDiffV6`
+    :rtype: :class:`recipe.diff.json.diff_v6.RecipeDiffV6`
     """
 
+    # Must grab job type revisions numbers from database
+    from job.models import JobType
+    revision_lookup = {}
+    for job_type in JobType.objects.all():
+        revision_lookup[job_type.name + ' ' + job_type.version] = job_type.revision_num
+
     reasons = []
-    jobs = []
-    json_dict = {'version': '6', 'can_be_reprocessed': graph_diff.can_be_reprocessed, 'reasons': reasons, 'jobs': jobs}
+    nodes = {}
+    json_dict = {'version': '6', 'can_be_reprocessed': graph_diff.can_be_reprocessed, 'reasons': reasons,
+                 'nodes': nodes}
 
     if not graph_diff.can_be_reprocessed:
         reasons.extend([{'name': r.name, 'description': r.description} for r in graph_diff.reasons])
@@ -181,36 +231,79 @@ def convert_diff_to_v6(graph_diff):
             status = 'CHANGED'
         else:
             continue
-        will_be_reprocessed = (status in ['NEW', 'CHANGED'] or force_reprocess) and graph_diff.can_be_reprocessed
+        reprocess_new_node = (status in ['NEW', 'CHANGED'] or force_reprocess) and graph_diff.can_be_reprocessed
         changes = []
         if status == 'CHANGED' and name in graph_diff._changes:
             changes.extend([{'name': c.name, 'description': c.description} for c in graph_diff._changes[name]])
-        job_type = {'name': recipe_node.job_type_name, 'version': recipe_node.job_type_version}
+        job_type_name = recipe_node.job_type_name
+        job_type_version = recipe_node.job_type_version
+        job_type = {'node_type': 'job', 'job_type_name': job_type_name, 'job_type_version': job_type_version,
+                    'job_type_revision': revision_lookup[job_type_name + ' ' + job_type_version]}
         if status == 'CHANGED' and name in graph_diff._graph_a._nodes:
             prev_node = graph_diff._graph_a._nodes[name]
             if recipe_node.job_type_name != prev_node.job_type_name:
-                job_type['prev_name'] = prev_node.job_type_name
+                job_type['prev_job_type_name'] = prev_node.job_type_name
             if recipe_node.job_type_version != prev_node.job_type_version:
-                job_type['prev_version'] = prev_node.job_type_version
+                job_type['prev_job_type_version'] = prev_node.job_type_version
         dependencies = [{'name': p.job_name} for p in recipe_node.parents]
-        job = {'name': name, 'will_be_reprocessed': will_be_reprocessed, 'force_reprocess': force_reprocess,
-               'status': status, 'changes': changes, 'job_type': job_type, 'dependencies': dependencies}
-        jobs.append(job)
+        job_node = {'reprocess_new_node': reprocess_new_node, 'force_reprocess': force_reprocess, 'status': status,
+                    'changes': changes, 'node_type': job_type, 'dependencies': dependencies}
+        nodes[name] = job_node
 
     for recipe_node in graph_diff._graph_a._nodes.values():
         name = recipe_node.job_name
         if name not in graph_diff._deleted_nodes:
             continue
-        job_type = {'name': recipe_node.job_type_name, 'version': recipe_node.job_type_version}
+        job_type_name = recipe_node.job_type_name
+        job_type_version = recipe_node.job_type_version
+        job_type = {'node_type': 'job', 'job_type_name': job_type_name, 'job_type_version': job_type_version,
+                    'job_type_revision': revision_lookup[job_type_name + ' ' + job_type_version]}
         dependencies = [{'name': p.job_name} for p in recipe_node.parents]
-        job = {'name': name, 'will_be_reprocessed': False, 'force_reprocess': False,
-               'status': 'DELETED', 'changes': [], 'job_type': job_type, 'dependencies': dependencies}
-        jobs.append(job)
+        job_node = {'reprocess_new_node': False, 'force_reprocess': False, 'status': 'DELETED', 'changes': [],
+                    'node_type': job_type, 'dependencies': dependencies}
+        nodes[name] = job_node
 
-    return RecipeGraphDiffV6(diff=json_dict, do_validate=False)
+    return RecipeDiffV6(diff=json_dict, do_validate=False)
 
 
-class RecipeGraphDiffV6(object):
+def convert_recipe_diff_to_v6_json(recipe_diff):
+    """Returns the v6 recipe diff JSON for the given recipe diff
+
+    :param recipe_diff: The recipe diff
+    :type recipe_diff: :class:`recipe.diff.diff.RecipeDiff`
+    :returns: The v6 recipe diff JSON
+    :rtype: :class:`recipe.diff.json.diff_v6.RecipeDiffV6`
+    """
+
+    reasons = [{'name': r.name, 'description': r.description} for r in recipe_diff.reasons]
+    nodes_dict = {n.name: convert_node_diff_to_v6_json(n) for n in recipe_diff.graph.values()}
+    json_dict = {'can_be_reprocessed': recipe_diff.can_be_reprocessed, 'reasons': reasons, 'nodes': nodes_dict}
+
+    return RecipeDiffV6(diff=json_dict, do_validate=False)
+
+def convert_node_diff_to_v6_json(node_diff):
+    """Returns the v6 diff JSON dict for the given node diff
+
+    :param node_diff: The node diff
+    :type node_diff: :class:`recipe.diff.node.NodeDiff`
+    :returns: The v6 diff JSON dict for the node
+    :rtype: dict
+    """
+
+    changes = [{'name': c.name, 'description': c.description} for c in node_diff.changes]
+    dependencies = [{'name': name} for name in node_diff.parents.keys()]
+
+    node_dict = {'status': node_diff.status, 'changes': changes, 'reprocess_new_node': node_diff.reprocess_new_node,
+                 'force_reprocess': node_diff.force_reprocess, 'dependencies': dependencies,
+                 'node_type': node_diff.get_node_type_dict()}
+
+    if node_diff.prev_node_type is not None:
+        node_dict['prev_node_type'] = node_diff.prev_node_type
+
+    return node_dict
+
+
+class RecipeDiffV6(object):
     """Represents a v6 recipe graph diff JSON for the difference between two recipe graphs"""
 
     def __init__(self, diff=None, do_validate=False):
@@ -238,7 +331,7 @@ class RecipeGraphDiffV6(object):
 
         try:
             if do_validate:
-                validate(diff, RECIPE_GRAPH_DIFF_SCHEMA)
+                validate(self._diff, RECIPE_DIFF_SCHEMA)
         except ValidationError as ex:
             raise InvalidDiff('Invalid recipe graph diff: %s' % unicode(ex))
 
@@ -259,5 +352,5 @@ class RecipeGraphDiffV6(object):
             self._diff['can_be_reprocessed'] = True
         if 'reasons' not in self._diff:
             self._diff['reasons'] = []
-        if 'jobs' not in self._diff:
-            self._diff['jobs'] = []
+        if 'nodes' not in self._diff:
+            self._diff['nodes'] = {}
