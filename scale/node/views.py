@@ -196,11 +196,6 @@ class NodeDetailsView(GenericAPIView):
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
 
-        try:
-            node = Node.objects.get_details(node_id)
-        except Node.DoesNotExist:
-            raise Http404
-
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     # TODO: remove when REST API v4 is removed
