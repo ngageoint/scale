@@ -244,125 +244,218 @@
 <div class="section" id="module-node.test.test_views">
 <span id="node-test-test-views-module"></span><h2>node.test.test_views module<a class="headerlink" href="#module-node.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="node.test.test_views.TestNodeDetailsView">
-<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodeDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_master_disconnected">
-<code class="descname">test_get_node_master_disconnected</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_master_disconnected" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_get_node_master_disconnected">
+<code class="descname">test_get_node_master_disconnected</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_get_node_master_disconnected" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Get Node method with a disconnected master.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_not_found">
-<code class="descname">test_get_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_get_node_not_found">
+<code class="descname">test_get_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_get_node_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Get Node method with a bad node id.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_get_node_success">
-<code class="descname">test_get_node_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_get_node_success" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_get_node_success">
+<code class="descname">test_get_node_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_get_node_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Get Node method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_active">
-<code class="descname">test_update_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_active" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_active">
+<code class="descname">test_update_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully deactivating a node.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_extra_fields">
-<code class="descname">test_update_node_extra_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_extra_fields" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_node_extra_fields">
+<code class="descname">test_update_node_extra_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_node_extra_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Update Node method with extra fields.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_no_fields">
-<code class="descname">test_update_node_no_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_no_fields" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_node_no_fields">
+<code class="descname">test_update_node_no_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_node_no_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Update Node method with no fields.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_not_found">
-<code class="descname">test_update_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_node_not_found">
+<code class="descname">test_update_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_node_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Update Node method with a bad node id.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_success">
-<code class="descname">test_update_node_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_success" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_node_success">
+<code class="descname">test_update_node_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_node_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Update Node method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodeDetailsView.test_update_node_unpause">
-<code class="descname">test_update_node_unpause</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsView.test_update_node_unpause" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV5.test_update_node_unpause">
+<code class="descname">test_update_node_unpause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV5.test_update_node_unpause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests unpausing the node and specifying a reason.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="node.test.test_views.TestNodesStatusView">
-<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusView" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV6">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodeDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<p>Test class to test the REST service to retrieve the node status for all the nodes in the cluster.</p>
 <dl class="method">
-<dt id="node.test.test_views.TestNodesStatusView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodesStatusView.test_nodes_stats">
-<code class="descname">test_nodes_stats</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.test_nodes_stats" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_get_node_not_found">
+<code class="descname">test_get_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_get_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Get Node method with a bad node id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_get_node_success">
+<code class="descname">test_get_node_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_get_node_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Get Node method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_active">
+<code class="descname">test_update_active</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully deactivating a node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_node_extra_fields">
+<code class="descname">test_update_node_extra_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_node_extra_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with extra fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_node_no_fields">
+<code class="descname">test_update_node_no_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_node_no_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with no fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_node_not_found">
+<code class="descname">test_update_node_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_node_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Update Node method with a bad node id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_node_success">
+<code class="descname">test_update_node_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_node_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Update Node method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodeDetailsViewV6.test_update_node_unpause">
+<code class="descname">test_update_node_unpause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodeDetailsViewV6.test_update_node_unpause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests unpausing the node and specifying a reason.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesStatusViewV4">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesStatusViewV4</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusViewV4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<p>Test class to test the REST service to retrieve the node status for all the nodes in the cluster.</p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesStatusViewV4.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusViewV4.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesStatusViewV4.test_nodes_stats">
+<code class="descname">test_nodes_stats</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusViewV4.test_nodes_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method tests retrieving all the nodes statistics
 for the three hour duration requested</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodesStatusView.test_nodes_system_stats">
-<code class="descname">test_nodes_system_stats</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusView.test_nodes_system_stats" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesStatusViewV4.test_nodes_system_stats">
+<code class="descname">test_nodes_system_stats</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesStatusViewV4.test_nodes_system_stats" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method tests for when a node has not processed any jobs for the duration of time requested.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="node.test.test_views.TestNodesView">
-<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesView" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesViewEmptyV5">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesViewEmptyV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
-<dt id="node.test.test_views.TestNodesView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesViewEmptyV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV5.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodesView.test_nodes_view">
-<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesView.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesViewEmptyV5.test_nodes_view">
+<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV5.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>test the REST call to retrieve an empty list of nodes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesViewEmptyV6">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesViewEmptyV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewEmptyV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewEmptyV6.test_nodes_view">
+<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmptyV6.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>test the REST call to retrieve an empty list of nodes</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.test.test_views.TestNodesViewV5">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="node.test.test_views.TestNodesViewV5.test_nodes_view">
+<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV5.test_nodes_view" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test the REST call to retrieve a list of nodes</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="node.test.test_views.TestNodesViewEmpty">
-<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesViewEmpty</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesViewV6">
+<em class="property">class </em><code class="descclassname">node.test.test_views.</code><code class="descname">TestNodesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
-<dt id="node.test.test_views.TestNodesViewEmpty.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="node.test.test_views.TestNodesViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV6.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="node.test.test_views.TestNodesViewEmpty.test_nodes_view">
-<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewEmpty.test_nodes_view" title="Permalink to this definition">¶</a></dt>
-<dd><p>test the REST call to retrieve an empty list of nodes</p>
+<dt id="node.test.test_views.TestNodesViewV6.test_nodes_view">
+<code class="descname">test_nodes_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.test.test_views.TestNodesViewV6.test_nodes_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the REST call to retrieve a list of nodes</p>
 </dd></dl>
 
 </dd></dl>

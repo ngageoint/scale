@@ -3047,6 +3047,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_identical_nodes">get_identical_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_impl">get_impl() (node.views.NodeDetailsView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingest_job_type">get_ingest_job_type() (ingest.models.IngestManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests">get_ingests() (ingest.models.IngestManager method)</a>
@@ -5870,6 +5872,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_impl">(metrics.views.MetricsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/node.html#node.views.NodesView.list_impl">(node.views.NodesView method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/vault.html#vault.secrets_handler.SecretsHandler.list_job_types">list_job_types() (vault.secrets_handler.SecretsHandler method)</a>
 </li>
@@ -7479,10 +7483,18 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v4">(scheduler.views.SchedulerView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v5">patch_v5() (scheduler.views.SchedulerView method)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v5">patch_v5() (node.views.NodeDetailsView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v5">(scheduler.views.SchedulerView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v6">patch_v6() (scheduler.views.SchedulerView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v6">patch_v6() (node.views.NodeDetailsView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.patch_v6">(scheduler.views.SchedulerView method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.pause_reason">pause_reason (node.models.Node attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.paused">paused (job.models.JobType attribute)</a>
@@ -9696,13 +9708,19 @@
 </li>
         <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources.setUp">(node.test.resources.json.test_resources.TestResources method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.setUp">(node.test.test_views.TestNodeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.setUp">(node.test.test_views.TestNodeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView.setUp">(node.test.test_views.TestNodesStatusView method)</a>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.setUp">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesView.setUp">(node.test.test_views.TestNodesView method)</a>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusViewV4.setUp">(node.test.test_views.TestNodesStatusViewV4 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmpty.setUp">(node.test.test_views.TestNodesViewEmpty method)</a>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV5.setUp">(node.test.test_views.TestNodesViewEmptyV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV6.setUp">(node.test.test_views.TestNodesViewEmptyV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV5.setUp">(node.test.test_views.TestNodesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV6.setUp">(node.test.test_views.TestNodesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationDownloadViewV5.setUp">(port.test.test_views.TestConfigurationDownloadViewV5 method)</a>
 </li>
@@ -11689,12 +11707,20 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestGetDatabaseModel.test_get_model">test_get_model() (error.test.test_models.TestGetDatabaseModel method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_get_node_master_disconnected">test_get_node_master_disconnected() (node.test.test_views.TestNodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_get_node_master_disconnected">test_get_node_master_disconnected() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_get_node_not_found">test_get_node_not_found() (node.test.test_views.TestNodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_get_node_not_found">test_get_node_not_found() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_get_node_not_found">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_get_node_success">test_get_node_success() (node.test.test_views.TestNodeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_get_node_success">test_get_node_success() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_get_node_success">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs">test_get_pending_jobs() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_plot_data">test_get_plot_data() (metrics.test.test_models.TestMetricsError method)</a>
@@ -12647,14 +12673,18 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_node_with_new_agent_id">test_node_with_new_agent_id() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView.test_nodes_stats">test_nodes_stats() (node.test.test_views.TestNodesStatusView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusViewV4.test_nodes_stats">test_nodes_stats() (node.test.test_views.TestNodesStatusViewV4 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView.test_nodes_system_stats">test_nodes_system_stats() (node.test.test_views.TestNodesStatusView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusViewV4.test_nodes_system_stats">test_nodes_system_stats() (node.test.test_views.TestNodesStatusViewV4 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesView.test_nodes_view">test_nodes_view() (node.test.test_views.TestNodesView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV5.test_nodes_view">test_nodes_view() (node.test.test_views.TestNodesViewEmptyV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmpty.test_nodes_view">(node.test.test_views.TestNodesViewEmpty method)</a>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV6.test_nodes_view">(node.test.test_views.TestNodesViewEmptyV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV5.test_nodes_view">(node.test.test_views.TestNodesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV6.test_nodes_view">(node.test.test_views.TestNodesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_non_operational_product">test_non_operational_product() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
@@ -12827,14 +12857,14 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
@@ -13763,22 +13793,46 @@
         <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_messages.TestMessagesFactory.test_unmatched_get_message_backend">(messaging.test.test_messages.TestMessagesFactory method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_active">test_update_active() (node.test.test_views.TestNodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_active">test_update_active() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_active">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_batch_fields">test_update_batch_fields() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_job_exe_dup">test_update_job_exe_dup() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_node_extra_fields">test_update_node_extra_fields() (node.test.test_views.TestNodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_node_extra_fields">test_update_node_extra_fields() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_extra_fields">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_node_no_fields">test_update_node_no_fields() (node.test.test_views.TestNodeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_node_no_fields">test_update_node_no_fields() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_no_fields">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_node_not_found">test_update_node_not_found() (node.test.test_views.TestNodeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_node_not_found">test_update_node_not_found() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_not_found">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_node_success">test_update_node_success() (node.test.test_views.TestNodeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_node_success">test_update_node_success() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_success">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.test_update_node_unpause">test_update_node_unpause() (node.test.test_views.TestNodeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_update_node_unpause">test_update_node_unpause() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_update_node_unpause">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.test_update_recipe_fields">test_update_recipe_fields() (scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerViewV5.test_update_scheduler_extra_fields">test_update_scheduler_extra_fields() (scheduler.test.test_views.TestSchedulerViewV5 method)</a>
@@ -14385,15 +14439,21 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode">TestNode (class in scheduler.test.node.test_node_class)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView">TestNodeDetailsView (class in node.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5">TestNodeDetailsViewV5 (class in node.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6">TestNodeDetailsViewV6 (class in node.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager">TestNodeManager (class in scheduler.test.node.test_manager)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView">TestNodesStatusView (class in node.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusViewV4">TestNodesStatusViewV4 (class in node.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesView">TestNodesView (class in node.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV5">TestNodesViewEmptyV5 (class in node.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmpty">TestNodesViewEmpty (class in node.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmptyV6">TestNodesViewEmptyV6 (class in node.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV5">TestNodesViewV5 (class in node.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewV6">TestNodesViewV6 (class in node.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestOldJobExecutionsView">TestOldJobExecutionsView (class in job.test.test_views)</a>
 </li>

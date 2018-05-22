@@ -566,7 +566,7 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="node.models.NodeManager.get_nodes">
-<code class="descname">get_nodes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em>, <em>include_inactive=True</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_nodes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em>, <em>is_active=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of nodes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -576,7 +576,7 @@ object the first time, the query is executed.</p>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated before this amount of time.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
-<li><strong>include_inactive</strong> (<em>boolean</em>) &#8211; Should nodes marked as inactive be included?</li>
+<li><strong>is_active</strong> (<em>boolean</em>) &#8211; Include only active nodes, only inactive nodes or both?</li>
 </ul>
 </td>
 </tr>
@@ -847,6 +847,24 @@ populated for types of ERROR status values.</li>
 <dl class="method">
 <dt id="node.views.NodeDetailsView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodeDetailsView.get_impl">
+<code class="descname">get_impl</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.get_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets node info</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -901,6 +919,24 @@ populated for types of ERROR status values.</li>
 <dl class="method">
 <dt id="node.views.NodeDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodeDetailsView.patch_v4">
+<code class="descname">patch_v4</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch_v4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify node info with a subset of fields</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -923,8 +959,32 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="node.views.NodeDetailsView.patch_v4">
-<code class="descname">patch_v4</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch_v4" title="Permalink to this definition">¶</a></dt>
+<dt id="node.views.NodeDetailsView.patch_v5">
+<code class="descname">patch_v5</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify node info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodeDetailsView.patch_v6">
+<code class="descname">patch_v6</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify node info with a subset of fields</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1008,6 +1068,24 @@ populated for types of ERROR status values.</li>
 <dl class="method">
 <dt id="node.views.NodesView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodesView.list_impl">
+<code class="descname">list_impl</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView.list_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all nodes and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
