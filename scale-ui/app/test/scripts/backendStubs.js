@@ -764,7 +764,6 @@
                 job_types: statusJobTypes,
                 nodes: statusNodes
             };
-            console.log(status);
             return [200, JSON.stringify(status), {}];
         });
 

@@ -4,8 +4,17 @@
         <div class="master-content">
             <div class="master-controls">
                 <div class="pull-right">
+                    <div class="switch-toggle alert">
+                        <input id="rd" name="show-rd" type="radio" ng-checked="vm.jobTypesParams.show_rd === true">
+                        <label for="rd" ng-click="vm.toggleRd('rd')">R&amp;D</label>
+
+                        <input id="prod" name="show-rd" type="radio" ng-checked="vm.jobTypesParams.show_rd === false">
+                        <label for="prod" ng-click="vm.toggleRd('prod')">Prod</label>
+
+                        <a class="btn btn-primary"></a>
+                    </div>
                     <!--<switch id="show-rd" name="show-rd" ng-model="vm.jobTypesParams.show_rd" class="green"></switch> <span class="switch-label ">Show R&D</span>-->
-                    <toggle-switch ng-model="vm.jobTypesParams.show_rd" on-label="R&D" off-label="Prod" class="switch-success switch-small pull-right"></toggle-switch>
+                    <!-- <toggle-switch ng-model="vm.jobTypesParams.show_rd" on-label="R&D" off-label="Prod" class="switch-success switch-small pull-right"></toggle-switch> -->
                 </div>
             </div>
             <ul class="list-unstyled">
