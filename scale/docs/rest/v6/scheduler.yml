@@ -1,0 +1,69 @@
+openapi: "3.0.0"
+info:
+  title: Scheduler Services
+  version: v6
+paths:
+  /v6/scheduler:
+    get:
+      operationId: _rest_v6_scheduler_details
+      summary: Get Scheduler Details
+      description: Returns data for the scheduler
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scheduler_data'
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
+    patch:
+      operationId: _rest_v6_scheduler_update
+      summary: Update Scheduler Details
+      description: Update one or more fields for the scheduler
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scheduler_data'
+      responses:
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates a successful update
+        '400':
+          description: |-
+            The 400 BAD REQUEST response indicates an error in the privded update fields
+        '404':
+          description: |-
+            The 404 response indicates the scheduler does not exist
+            
+components:
+  schemas:
+    scheduler_data:
+      title: System Scheduler data
+      type: object
+      properties:
+        is_paused:
+          type: boolean
+          description: True if the scheduler is paused. This functions like individually pausing |
+            all nodes but maintains separated state so toggling this back to unpaused    |
+            results in the previous individual node pause state.
+          example: false
+        num_message_handlers:
+          type: integer
+          description: The number of message handlers to have scheduled 
+          example: 2
+        resource_level:
+          type: string
+          description: Describes the current resource level of scale. There are three valid values: |
+            TOO HIGH : Scale has more resources than required and can be scaled down     |
+            TOO LOW : Scale needs more resources and should be scaled up
+            GOOD : Scale has a good amount of resources
+          example: GOOD
+        system_logging_level:
+          type: string
+          description: The logging level for all scale system components
+          example: INFO

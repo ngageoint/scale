@@ -1752,12 +1752,17 @@ class JobExecution(models.Model):
         if self.status == 'QUEUED':
             return None, timezone.now()
 
+        if settings.ELASTICSEARCH_VERSION == "2.4":
+            extension = ".raw"
+        else:
+            extension = ".keyword"
+
         q = {
                 'size': 10000,
                 'query': {
                     'bool': {
                         'must': [
-                            {'term': {'scale_job_exe.raw': self.get_cluster_id()}}
+                            {'term': {'scale_job_exe'+extension: self.get_cluster_id()}}
                         ]
                     }
                 },
@@ -1767,9 +1772,9 @@ class JobExecution(models.Model):
         if not include_stdout and not include_stderr:
             return None, timezone.now()
         elif include_stdout and not include_stderr:
-            q['query']['bool']['must'].append({'term': {'stream.raw': 'stdout'}})
+            q['query']['bool']['must'].append({'term': {'stream'+extension: 'stdout'}})
         elif include_stderr and not include_stdout:
-            q['query']['bool']['must'].append({'term': {'stream.raw': 'stderr'}})
+            q['query']['bool']['must'].append({'term': {'stream'+extension: 'stderr'}})
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 

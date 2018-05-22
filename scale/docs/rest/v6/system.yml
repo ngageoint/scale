@@ -1,0 +1,458 @@
+openapi: "3.0.0"
+info:
+  title: System Services
+  version: v6
+paths:
+  /v6/status:
+    get:
+      operationId: _rest_v6_system_status
+      summary: Get System Status
+      description: Returns the current status of the scheduler, including information about nodes and running jobs.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/status'
+        '204':
+          description: |-
+            The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
+  /v6/version:
+    get:
+      operationId: _rest_v6_system_version
+      summary: Get System Version
+      description: Returns the current version of the scheduler
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/version'
+            
+            
+components:
+  schemas:
+    status:
+      title: System Status response
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: When the status information was generated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        scheduler:
+          $ref: '#/components/schemas/scheduler'
+        system:
+          $ref: '#/components/schemas/system'
+        num_offers:
+          type: integer
+          description: Number of resource offers currently held by Scale
+          example: 4
+        resources:
+          $ref: '#/components/schemas/resources'     
+        job_types:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type'
+          description: List of job type objects, with a few basic fields
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/node'
+          description: List of node objects, with a few basic fields including the current node state
+    scheduler:
+      title: Scheduler
+      type: object
+      description: Scheduler configuration and metrics information 
+      properties:
+        metrics:
+          $ref: "#/components/schemas/metrics"
+        hostname:
+          type: string
+          description: The name of the host where the scheduler is running
+          example: scheduler-host.com
+        mesos:
+          $ref: "#/components/schemas/mesos"
+        state:
+          $ref: "#/components/schemas/state"
+    metrics:
+      title: Metrics
+      type: object
+      description: Contains various near real-time metrics related to scheudling tasks and jobs 
+      properties:
+        task_updates_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+        jobs_finished_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+        jobs_launched_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+        tasks_launched_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+        offers_launched_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+        tasks_finished_per_sec:
+          type: number
+          description: number of task updates per second
+          example: 0.0
+    mesos:
+      title: Mesos
+      type: object
+      description: Contains Scale's framework ID and hostname and port of the Mesos master 
+      properties:
+        framework_id:
+          type: string
+          description: Mesos master framework ID
+          example: framework-1234
+        master_hostname:
+          type: string
+          description: Mesos master hostname
+          example: 192.168.1.1
+        master_port:
+          type: number
+          description: Mesos master port number
+          example: 5050
+    state:
+      title: State
+      type: object
+      description: The current scheduler state, with a title and description  
+      properties:
+        name:
+          type: string
+          description: Scheduler state name
+          example: READY
+        title:
+          type: string
+          description: Scheduler state title
+          example: Ready
+        description:
+          type: string
+          description: Scheduler state description
+          example: Scheduler is ready to run new jobs.
+    system:
+      title: System
+      type: object
+      description: System information  
+      properties:
+        database_update:
+          $ref: "#/components/schemas/database_update"
+        services:
+          type: array
+          description: List of services, with name, title, description, and task counts
+          items:
+            $ref: '#/components/schemas/service'
+    database_update:
+      title: Database Update
+      type: object
+      description: Information on if and when the current Scale database update completed   
+      properties:
+        is_completed:
+          type: boolean
+          example: true
+        completed:
+          type: string
+          format: date-time
+          description: When the database update was completed (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+    service:
+      title: Service
+      type: object
+      properties:
+        name:
+          type: string
+          example: messaging
+        title:
+          type: string
+          example: Messaging
+        description:
+          type: string
+          example: Processes the backend messaging system
+        actual_count:
+          type: integer
+          example: 1
+        desired_count:
+          type: integer
+          example: 1
+    resources:
+      title: Resources
+      type: object
+      description: Describes the resource totals across all of Scale's nodes. Each resource name  |
+            is a key and its corresponding object breaks down the resource into several    |
+            categories. *running* resources are used by current Scale tasks, *offered*     |
+            resources are currently offered to Scale, *free* resources are available on    |
+            the node and may be offered to Scale soon, *unavailable* resources are used by |
+            other tasks and cannot be used by Scale, and *total* resources are the total   |
+            amounts for the node. 
+      properties:
+        mem:
+          $ref: "#/components/schemas/resource"
+        gpus:
+          $ref: "#/components/schemas/resource"
+        disk:
+          $ref: "#/components/schemas/resource"
+        cpus:
+          $ref: "#/components/schemas/resource"
+    resource:
+      title: Resource
+      type: object
+      properties:
+        offered:
+          type: number
+          example: 91445.0
+        total:
+          type: number
+          example: 177501.0
+        running:
+          type: number
+          example: 1024.0
+        free:
+          type: number
+          example: 72744.0
+        unavailable:
+          type: number
+          example: 12288.0
+    job_type:
+      title: Job Type
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-job
+        version:
+          type: string
+          example: 1.0
+        title:
+          type: string
+          example: My Job
+        description:
+          type: string
+          example: My Job Description 
+        is_system:
+          type: boolean
+          example: false
+        icon_code:
+          type: string
+          example: f186 
+    node:
+      title: Node
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        hostname:
+          type: string
+          example: my-host
+        agent_id:
+          type: string
+          example: my-agent
+        is_active:
+          type: boolean
+          example: true
+        state:
+          $ref: "#/components/schemas/state"
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/error'
+          description: List of node error objects, with a title, description, and when the error began and was last updated 
+        warnings:
+          type: array
+          items:
+            $ref: '#/components/schemas/warning'
+          description: List of node warning objects, with a title, description, and when the warning began and was last updated 
+        node_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/node_task'
+          description: List of node tasks running on the node, with a type, title, description, and count 
+        system_tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/system_task'
+          description: List of node tasks running on the node, with a type, title, description, and count 
+        num_offers:
+          type: integer
+          description: Number of resource offers for this node
+          example: 1
+        resources:
+          $ref: '#/components/schemas/resources'
+        job_executions:
+          $ref: '#/components/schemas/job_executions'
+    error:
+      title: Error
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-error
+        title:
+          type: string
+          example: My Error
+        description:
+          type: string
+          example: My Error Description 
+        started:
+          type: string
+          format: date-time
+          description: When the error began (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        last_updated:
+          type: string
+          format: date-time
+          description: When the error was last updated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+    warning:
+      title: Warning
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-warning
+        title:
+          type: string
+          example: My Warning
+        description:
+          type: string
+          example: My Warning Description 
+        started:
+          type: string
+          format: date-time
+          description: When the warning began (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+        last_updated:
+          type: string
+          format: date-time
+          description: When the warning was last updated (in ISO-8601 Datetime)
+          example: 1970-01-01T00:00:00Z
+    node_task:
+      title: Node Task
+      type: object
+      properties:
+        type:
+          type: string
+          example: cleanup
+        title:
+          type: string
+          example: Node cleanup
+        description:
+          type: string
+          example: Performs Docker container and volume cleanup on the node 
+        count:
+          type: integer
+          description: Number of tasks of this type
+          example: 1
+    system_task:
+      title: System Task
+      type: object
+      properties:
+        type:
+          type: string
+          example: message-handler
+        title:
+          type: string
+          example: Message Handler
+        description:
+          type: string
+          example: Processes messages from Scale's backend messaging system 
+        count:
+          type: integer
+          description: Number of tasks of this type
+          example: 1
+    job_executions:
+      title: Job Executions
+      type: object
+      description: The job executions related to this node. The *running* field describes the |
+            jobs currently running on the node, with a total count and count per job type. |
+            The *completed* field describes job executions that have completed on the node |
+            in the last 3 hours, with a total count and count per job type. The *failed*   |
+            field is similar to *completed*, just with failed executions grouped by error  |
+            category. 
+      properties:
+        running:
+          $ref: "#/components/schemas/job_execution"
+        completed:
+          $ref: "#/components/schemas/job_execution"
+        failed:
+          $ref: "#/components/schemas/job_execution"
+    job_execution:
+      title: Job Execution
+      type: object
+      description: The job executions related to this node. The *running* field describes the |
+            jobs currently running on the node, with a total count and count per job type. |
+            The *completed* field describes job executions that have completed on the node |
+            in the last 3 hours, with a total count and count per job type. The *failed*   |
+            field is similar to *completed*, just with failed executions grouped by error  |
+            category. 
+      properties:
+        running:
+          $ref: "#/components/schemas/job_execution_count"
+        completed:
+          $ref: "#/components/schemas/job_execution_count"
+        failed:
+          $ref: "#/components/schemas/failed"
+    job_execution_count:
+      title: Job Execution Count
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 3
+        by_job_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_execution_count'
+    failed:
+      title: Failed Job Execution Count
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 9
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+        algorithm:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+        system:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution_count'
+    job_type_execution_count:
+      title: Job Execution Count
+      type: object
+      properties:
+        job_type_id:
+          type: integer
+          example: 1
+        count:
+          type: integer
+          example: 3
+    version:
+      title: System Version response
+      type: object
+      properties:
+        version:
+          type: string
+          description: The full version identifier of Scale. 
+          example: 6.0.0

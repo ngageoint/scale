@@ -1,0 +1,329 @@
+openapi: "3.0.0"
+info:
+  title: Metrics Services
+  version: v6
+paths:
+  /v6/metrics:
+    get:
+      operationId: _rest_v6_metrics_list
+      summary: Metrics List
+      description: Returns a list of all metrics types
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/metrics_list'
+  /v6/metrics/{name}/:
+    get:
+      operationId: _rest_v6_metrics_details
+      summary: Metrics Details
+      description: Returns a specific metrics type and all its related model information including possible filter choices
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: system name of an existing model
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/metrics_type_plus_model'
+  /v6/metrics/{name}/plot-data/:
+    get:
+      operationId: _rest_v6_metrics_plot
+      summary: Metric Plot Data
+      description: Returns all the plot values for a metrics type based on optional query parameters
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: system name of an existing model
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: choice_id
+          schema:
+            type: integer
+          description: Return only metrics associated with the related model choice. |
+            Each of these values must be one of the items in the choices list. Duplicate it to filter by multiple values. |
+            When no choice filters are used, then values are aggregated across all the choice by date.
+        -in: query
+          name: column
+          schema:
+            type: string
+          description: Include only metrics with the given column name. The column name |
+            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
+        -in: query
+          name: group
+          schema:
+            type: string
+          description: Include only metrics with the given group name. The column name |
+            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
+
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/metrics_plot'
+components:
+  schemas:
+    metrics_list:
+      title: Metrics List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/metrics_type'
+          description: List of metrics type objects, with a few basic fields
+    metrics_type:
+      title: Metrics Type
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics type used for queries 
+          example: job-types
+        title:
+          type: string
+          description: The human readable display name of the metrics type
+          example: Job Types
+        description:
+          type: string
+          description: A longer description of the metrics type
+          example: Metrics for jobs and executions grouped by job type
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/filter'
+          description: The filter parameters that can be used to query the metrics type
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/group'
+          description: The group definitions that can be used to select the results returned
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/column'
+          description: The column definitions that can be used to select the results returned
+    filter:
+      title: Filter
+      type: object
+      properties:
+        param:
+          type: string
+          description: The identifying name of the parameter used for queries 
+          example: name
+        type:
+          type: string
+          description: The data type of the parameter clients can use for validation (bool, date, datetime, float, int, string, time, int)
+          example: string
+    group:
+      title: Group
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics group used for queries 
+          example: overview
+        title:
+          type: string
+          description: The human readable display name of the metrics group
+          example: Overview
+        description:
+          type: string
+          description: A longer description of the metrics group
+          example: Overall counts based on job status
+    column:
+      title: Column
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics column used for queries 
+          example: completed_count
+        title:
+          type: string
+          description: The human readable display name of the metrics column
+          example: Completed Count
+        description:
+          type: string
+          description: A longer description of the metrics column
+          example: Number of successfully completed jobs
+        units:
+          type: string
+          description: Each value for the metrics column is converted to this type of unit (count, seconds)
+          example: count
+        group:
+          type: string
+          description: Some metric columns are related together, which is indicated by the group name
+          example: overview
+        aggregate:
+          type: string
+          description: The math operation used to aggregate certain types of metrics (avg, max, min, sum...)
+          example: sum
+    metrics_type_plus_model:
+      title: Metrics Type and Model
+      type: object
+      properties:
+        name:
+          type: string
+          description: The identifying name of the metrics type used for queries 
+          example: job-types
+        title:
+          type: string
+          description: The human readable display name of the metrics type
+          example: Job Types
+        description:
+          type: string
+          description: A longer description of the metrics type
+          example: Metrics for jobs and executions grouped by job type
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/filter'
+          description: The filter parameters that can be used to query the metrics type
+        columns:
+          type: array
+          items:
+            $ref: '#/components/schemas/column'
+          description: The column definitions that can be used to select the results returned
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/choice'
+          description: The related model choices that can be used to filter the metrics records. All |
+            of the filter parameters described above are fields within the model. The list |
+            of choices allow clients to restrict filtering to only valid combinations. Each|
+            choice model is specific to a metrics type and so the actual fields vary.
+    choice: #TODO: Update to reflect open-ended nature of this field
+      title: Choice
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier
+    metrics_plot:
+      title: Metrics Plot Data
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/plot_result'
+          description: List of plot results
+    plot_result:
+      title: Plot Result
+      type: object
+      properties:
+        column:
+          type: array
+          $ref: '#/components/schemas/column'
+          description: The column definition of the selected plot data values 
+        min_x:
+          type: string
+          format: date-time
+          description: The minimum value within the x-axis for the metric column.
+        max_x:
+          type: string
+          format: date-time
+          description: The maximum value within the x-axis for the metric column.
+        min_y:
+          type: integer
+          description: The minimum value within the y-axis for the metric column. 
+        max_y:
+          type: integer
+          description: The maximum value within the y-axis for the metric column.
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/value'
+          description: List of plot value JSON objects for each choice and date in the data series. Note that the values are sorted oldest to newest.
+    value:
+      title: Plot Value
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the related choice model for this data value. |
+            This field is omitted when there are no choice filters or only 1 specified.
+        date:
+          type: string
+          format: date-time
+          description: The date when the plot value occurred. 
+        value:
+          type: integer
+          description: The statistic value that was calculated for the date. 

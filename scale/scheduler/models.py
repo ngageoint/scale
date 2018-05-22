@@ -4,13 +4,22 @@ import logging
 
 import django.contrib.postgres.fields
 import mesos_api.api as mesos_api
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from django.utils.translation import ugettext as _
 from mesos_api.api import MesosError
 
 from queue.models import Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 
 logger = logging.getLogger(__name__)
 
+def validate_resource_level(value):
+    valid_values = ['TOO HIGH', 'TOO LOW', 'GOOD']
+    if value not in valid_values:
+        raise ValidationError(
+            _('%s is not valid resource level. Valid values are TOO HIGH, TOO LOW and GOOD'),
+            params={'value': value},
+        )
 
 class SchedulerManager(models.Manager):
     """Provides additional methods for handling scheduler db entry
@@ -52,7 +61,6 @@ class SchedulerManager(models.Manager):
             pass
         return True
 
-    @transaction.atomic
     def update_scheduler(self, new_data):
         """Update the data for the scheduler.
 
@@ -60,10 +68,15 @@ class SchedulerManager(models.Manager):
         :type new_data: dict
         """
 
-        sched = self.select_for_update().filter(id=1)
-        sched.update(**new_data)
+        if 'resource_level' in new_data:
+            level = new_data['resource_level']
+            try:
+                validate_resource_level(level)
+            except ValidationError:
+                logger.exception('Invalid resource level when updating scheduler: %s' % level)
+                raise 
+        self.all().update(**new_data)
 
-    @transaction.atomic
     def update_master(self, hostname, port):
         """Update mesos master information.
 
@@ -73,8 +86,7 @@ class SchedulerManager(models.Manager):
         :type port: int
         """
 
-        sched = self.select_for_update().filter(id=1)
-        sched.update(master_hostname=hostname, master_port=port)
+        self.all().update(master_hostname=hostname, master_port=port)
 
     def get_status(self):
         """Fetch summary hardware resource usage for the scheduler framework.
@@ -91,6 +103,7 @@ class SchedulerManager(models.Manager):
             'is_online': False,
             'is_paused': False,
             'hostname': None,
+            'resource_level': 'GOOD',
             'system_logging_level':'INFO'
         }
         res_dict = None
@@ -106,6 +119,7 @@ class SchedulerManager(models.Manager):
             sched_dict['is_online'] = sched_info.is_online
             sched_dict['is_paused'] = sched.is_paused  # Note this must be pulled from the database
             sched_dict['hostname'] = sched_info.hostname
+            sched_dict['resource_level'] = sched.resource_level
             sched_dict['system_logging_level'] = sched.system_logging_level
 
             # Master is online if the API above succeeded
@@ -135,6 +149,12 @@ class Scheduler(models.Model):
 
     :keyword is_paused: True if the entire cluster is currently paused and should not accept new jobs
     :type is_paused: :class:`django.db.models.BooleanField()`
+    :keyword num_message_handlers: The number of message handlers to have scheduled 
+    :type num_message_handlers: :class:`django.db.models.IntegerField`
+    :keyword resource_level: Describes the current resource level of scale for scaling purposes. There are three valid values:TOO HIGH, TOO LOW and GOOD.
+    :type resource_level: :class:`django.db.models.CharField`
+    :keyword system_logging_level: The logging level for all scale system components
+    :type system_logging_level: :class:`django.db.models.CharField`
     :keyword master_hostname: The full domain-qualified hostname of the Mesos master
     :type master_hostname: :class:`django.db.models.CharField`
     :keyword master_port: The port being used by the Mesos master REST API
@@ -145,6 +165,12 @@ class Scheduler(models.Model):
         (QUEUE_ORDER_FIFO, QUEUE_ORDER_FIFO),
         (QUEUE_ORDER_LIFO, QUEUE_ORDER_LIFO),
     )
+    
+    RESOURCE_LEVELS = (
+        ('TOO HIGH', 'TOO HIGH'),
+        ('TOO LOW', 'TOO LOW'),
+        ('GOOD', 'GOOD')
+    )
 
     is_paused = models.BooleanField(default=False)
     num_message_handlers = models.IntegerField(default=1)
@@ -152,6 +178,7 @@ class Scheduler(models.Model):
     status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
+    resource_level = models.CharField(choices=RESOURCE_LEVELS, max_length=10, default='GOOD')
     system_logging_level = models.CharField(max_length=10, default='INFO')
 
     objects = SchedulerManager()

@@ -39,6 +39,7 @@ def dcos_login():
 def run(client):
     es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS')
     es_lb = os.getenv('SCALE_ELASTICSEARCH_LB', 'true')
+    es_ver = os.getenv('SCALE_ELASTICSEARCH_VERSION', '2.4')
 
     # if SCALE_ELASTICSEARCH_URLS is not set, assume we are running within DCOS and attempt to query Elastic scheduler
     # Also default es_lb to false in this case
@@ -48,6 +49,7 @@ def run(client):
 
     print("ELASTICSEARCH_URLS=" + es_urls)
     print("ELASTICSEARCH_LB=" + es_lb)
+    print("ELASTICSEARCH_VERSION=" + es_ver)
     rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
     log_app_name = '%s-logstash' % FRAMEWORK_NAME
     db_app_name = '%s-db' % FRAMEWORK_NAME
@@ -87,7 +89,7 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url)
+        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
 
 
@@ -191,7 +193,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url):
+def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url, es_ver):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -238,6 +240,7 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'SCALE_WEBSERVER_MEMORY': str(memory),
         'SCALE_ELASTICSEARCH_URLS': es_urls,
         'SCALE_ELASTICSEARCH_LB': es_lb,
+        'SCALE_ELASTICSEARCH_VERSION': es_ver,
         'SECRETS_SSL_WARNINGS': str(secrets_ssl_warn),
         'SECRETS_TOKEN': str(secrets_token),
         'SECRETS_URL': str(secrets_url),
