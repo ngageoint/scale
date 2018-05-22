@@ -1,0 +1,22 @@
+data\.data package
+==================
+
+Submodules
+----------
+
+data\.data\.data module
+-----------------------
+
+.. automodule:: data.data.data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.data
+    :members:
+    :undoc-members:
+    :show-inheritance:

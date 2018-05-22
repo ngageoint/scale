@@ -11,10 +11,26 @@ Subpackages
 Submodules
 ----------
 
+recipe\.diff\.diff module
+-------------------------
+
+.. automodule:: recipe.diff.diff
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.diff\.exceptions module
 -------------------------------
 
 .. automodule:: recipe.diff.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.diff\.node module
+-------------------------
+
+.. automodule:: recipe.diff.node
     :members:
     :undoc-members:
     :show-inheritance:

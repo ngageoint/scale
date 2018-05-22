@@ -8,6 +8,18 @@ Subpackages
 
     recipe.test.diff.json
 
+Submodules
+----------
+
+recipe\.test\.diff\.test\_diff module
+-------------------------------------
+
+.. automodule:: recipe.test.diff.test_diff
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

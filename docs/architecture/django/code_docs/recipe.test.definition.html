@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe.test.definition package &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.test.definition.json package" href="recipe.test.definition.json.html" />
+    <link rel="prev" title="recipe.test.configuration.definition package" href="recipe.test.configuration.definition.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+        
+          <li><a href="recipe.test.html">recipe.test package</a> &raquo;</li>
+        
+      <li>recipe.test.definition package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/recipe.test.definition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="recipe-test-definition-package">
+<h1>recipe.test.definition package<a class="headerlink" href="#recipe-test-definition-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipe.test.definition.json.html">recipe.test.definition.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.definition.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.definition.json.html#module-recipe.test.definition.json.test_definition_v6">recipe.test.definition.json.test_definition_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.definition.json.html#module-recipe.test.definition.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.test.definition.test_definition">
+<span id="recipe-test-definition-test-definition-module"></span><h2>recipe.test.definition.test_definition module<a class="headerlink" href="#module-recipe.test.definition.test_definition" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.test.definition.test_definition.</code><code class="descname">TestRecipeDefinition</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_child">
+<code class="descname">test_add_dependency_missing_child</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency() with a missing child node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_parent">
+<code class="descname">test_add_dependency_missing_parent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency() with a missing parent node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_cannot_connect_to_recipe">
+<code class="descname">test_dependency_input_conn_cannot_connect_to_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_cannot_connect_to_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency_input_connection() to connect to a recipe node (invalid)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_duplicate_input">
+<code class="descname">test_dependency_input_conn_duplicate_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_duplicate_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency_input_connection() to connect to a duplicate input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_dependency">
+<code class="descname">test_dependency_input_conn_missing_dependency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency_input_connection() with an unknown dependency node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_input_node">
+<code class="descname">test_dependency_input_conn_missing_input_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_input_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency_input_connection() with an unknown input node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_successful">
+<code class="descname">test_dependency_input_conn_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_dependency_input_connection() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_duplicate_input">
+<code class="descname">test_recipe_input_conn_duplicate_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_duplicate_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_recipe_input_connection() to connect to a duplicate input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input">
+<code class="descname">test_recipe_input_conn_missing_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_recipe_input_connection() with an unknown recipe input</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input_node">
+<code class="descname">test_recipe_input_conn_missing_input_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_recipe_input_connection() with an unknown input node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_successful">
+<code class="descname">test_recipe_input_conn_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.add_recipe_input_connection() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_circular">
+<code class="descname">test_topological_order_circular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_circular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.get_topological_order() with a circular dependency</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_successful">
+<code class="descname">test_topological_order_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.get_topological_order() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_connection">
+<code class="descname">test_validate_invalid_connection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.validate() with an invalid connection to a node&#8217;s input interface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_input_interface">
+<code class="descname">test_validate_invalid_input_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_input_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.validate() with an invalid input interface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_missing_dependency">
+<code class="descname">test_validate_missing_dependency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_missing_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.validate() with a connection that has a missing dependency</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_successful">
+<code class="descname">test_validate_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDefinition.validate() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.test.definition">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.definition" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.test.definition.json.html" class="btn btn-neutral float-right" title="recipe.test.definition.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.test.configuration.definition.html" class="btn btn-neutral" title="recipe.test.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

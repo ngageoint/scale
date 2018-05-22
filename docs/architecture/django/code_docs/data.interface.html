@@ -1,0 +1,462 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data.interface package &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>data.interface package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/data.interface.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="data-interface-package">
+<h1>data.interface package<a class="headerlink" href="#data-interface-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data.interface.json.html">data.interface.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.interface.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.interface.json.html#module-data.interface.json.interface_v6">data.interface.json.interface_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.interface.json.html#module-data.interface.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-data.interface.exceptions">
+<span id="data-interface-exceptions-module"></span><h2>data.interface.exceptions module<a class="headerlink" href="#module-data.interface.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with data interfaces</p>
+<dl class="exception">
+<dt id="data.interface.exceptions.InvalidInterface">
+<em class="property">exception </em><code class="descclassname">data.interface.exceptions.</code><code class="descname">InvalidInterface</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.exceptions.InvalidInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the interface is invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="data.interface.exceptions.InvalidInterfaceConnection">
+<em class="property">exception </em><code class="descclassname">data.interface.exceptions.</code><code class="descname">InvalidInterfaceConnection</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.exceptions.InvalidInterfaceConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the interface connection is invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.interface.interface">
+<span id="data-interface-interface-module"></span><h2>data.interface.interface module<a class="headerlink" href="#module-data.interface.interface" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for handling a data interface</p>
+<dl class="class">
+<dt id="data.interface.interface.Interface">
+<em class="property">class </em><code class="descclassname">data.interface.interface.</code><code class="descname">Interface</code><a class="headerlink" href="#data.interface.interface.Interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a grouping of parameters</p>
+<dl class="method">
+<dt id="data.interface.interface.Interface.add_parameter">
+<code class="descname">add_parameter</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.interface.Interface.add_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the parameter to the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameter</strong> (<a class="reference internal" href="#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a>) &#8211; The parameter to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterface" title="data.interface.exceptions.InvalidInterface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterface</span></code></a>: If the parameter is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.interface.Interface.add_parameter_from_output_interface">
+<code class="descname">add_parameter_from_output_interface</code><span class="sig-paren">(</span><em>input_name</em>, <em>output_name</em>, <em>output_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.interface.Interface.add_parameter_from_output_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an output parameter from the given output interface to this interface with the given input name. This is
+used to create a connecting interface that can be validated for passing to another interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>input_name</strong> (<em>string</em>) &#8211; The name of the input parameter to add</li>
+<li><strong>output_name</strong> (<em>string</em>) &#8211; The name of the output parameter in the output interface</li>
+<li><strong>output_interface</strong> (<a class="reference internal" href="#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The output interface</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.interface.Interface.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.interface.Interface.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterface" title="data.interface.exceptions.InvalidInterface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterface</span></code></a>: If the interface is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.interface.Interface.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>connecting_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.interface.Interface.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the given connecting interface can be accepted by this interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connecting_interface</strong> (<a class="reference internal" href="#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface attempting to connect to this interface</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.interface.parameter">
+<span id="data-interface-parameter-module"></span><h2>data.interface.parameter module<a class="headerlink" href="#module-data.interface.parameter" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for handling a data parameter for an interface</p>
+<dl class="class">
+<dt id="data.interface.parameter.FileParameter">
+<em class="property">class </em><code class="descclassname">data.interface.parameter.</code><code class="descname">FileParameter</code><span class="sig-paren">(</span><em>name</em>, <em>media_types</em>, <em>required=True</em>, <em>multiple=False</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.FileParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a></p>
+<p>Represents a file(s) parameter</p>
+<dl class="attribute">
+<dt id="data.interface.parameter.FileParameter.PARAM_TYPE">
+<code class="descname">PARAM_TYPE</code><em class="property"> = u'file'</em><a class="headerlink" href="#data.interface.parameter.FileParameter.PARAM_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.interface.parameter.FileParameter.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>connecting_parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.FileParameter.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#data.interface.parameter.Parameter.validate_connection" title="data.interface.parameter.Parameter.validate_connection"><code class="xref py py-meth docutils literal"><span class="pre">data.interface.parameter.Parameter.validate_connection()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="data.interface.parameter.JsonParameter">
+<em class="property">class </em><code class="descclassname">data.interface.parameter.</code><code class="descname">JsonParameter</code><span class="sig-paren">(</span><em>name</em>, <em>json_type</em>, <em>required=True</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.JsonParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a></p>
+<p>Represents a JSON parameter</p>
+<dl class="attribute">
+<dt id="data.interface.parameter.JsonParameter.PARAM_TYPE">
+<code class="descname">PARAM_TYPE</code><em class="property"> = u'json'</em><a class="headerlink" href="#data.interface.parameter.JsonParameter.PARAM_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="data.interface.parameter.JsonParameter.VALID_JSON_TYPES">
+<code class="descname">VALID_JSON_TYPES</code><em class="property"> = [u'array', u'boolean', u'integer', u'number', u'object', u'string']</em><a class="headerlink" href="#data.interface.parameter.JsonParameter.VALID_JSON_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="data.interface.parameter.JsonParameter.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.JsonParameter.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#data.interface.parameter.Parameter.validate" title="data.interface.parameter.Parameter.validate"><code class="xref py py-meth docutils literal"><span class="pre">data.interface.parameter.Parameter.validate()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.parameter.JsonParameter.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>connecting_parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.JsonParameter.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#data.interface.parameter.Parameter.validate_connection" title="data.interface.parameter.Parameter.validate_connection"><code class="xref py py-meth docutils literal"><span class="pre">data.interface.parameter.Parameter.validate_connection()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="data.interface.parameter.Parameter">
+<em class="property">class </em><code class="descclassname">data.interface.parameter.</code><code class="descname">Parameter</code><span class="sig-paren">(</span><em>name</em>, <em>param_type</em>, <em>required=True</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents an interface parameter</p>
+<dl class="method">
+<dt id="data.interface.parameter.Parameter.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.Parameter.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of this parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of this parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.parameter.Parameter.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.Parameter.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterface" title="data.interface.exceptions.InvalidInterface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterface</span></code></a>: If the interface is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.interface.parameter.Parameter.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>connecting_parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.interface.parameter.Parameter.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that the given connecting parameter can be accepted by this parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connecting_parameter</strong> (<a class="reference internal" href="#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a>) &#8211; The parameter attempting to connect to this parameter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.interface">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.interface" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

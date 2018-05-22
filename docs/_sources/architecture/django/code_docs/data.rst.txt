@@ -1,0 +1,30 @@
+data package
+============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.data
+    data.interface
+
+Submodules
+----------
+
+data\.apps module
+-----------------
+
+.. automodule:: data.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data
+    :members:
+    :undoc-members:
+    :show-inheritance:

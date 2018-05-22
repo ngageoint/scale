@@ -1,0 +1,697 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe.definition package &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.definition.json package" href="recipe.definition.json.html" />
+    <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+        
+      <li>recipe.definition package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/recipe.definition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="recipe-definition-package">
+<h1>recipe.definition package<a class="headerlink" href="#recipe-definition-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipe.definition.json.html">recipe.definition.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.definition.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.definition.json.html#module-recipe.definition.json.definition_v6">recipe.definition.json.definition_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.definition.json.html#module-recipe.definition.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.definition.connection">
+<span id="recipe-definition-connection-module"></span><h2>recipe.definition.connection module<a class="headerlink" href="#module-recipe.definition.connection" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for representing a connection between two interface parameters within a recipe definition</p>
+<dl class="class">
+<dt id="recipe.definition.connection.DependencyInputConnection">
+<em class="property">class </em><code class="descclassname">recipe.definition.connection.</code><code class="descname">DependencyInputConnection</code><span class="sig-paren">(</span><em>input_name</em>, <em>node_name</em>, <em>output_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.connection.InputConnection" title="recipe.definition.connection.InputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.connection.InputConnection</span></code></a></p>
+<p>Represents a connection from one node&#8217;s output to another node&#8217;s input</p>
+<dl class="method">
+<dt id="recipe.definition.connection.DependencyInputConnection.add_parameter_to_interface">
+<code class="descname">add_parameter_to_interface</code><span class="sig-paren">(</span><em>interface</em>, <em>recipe_input_interface</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection.add_parameter_to_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.add_parameter_to_interface()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.DependencyInputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.is_equal_to()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.DependencyInputConnection.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>all_dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.validate()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.definition.connection.InputConnection">
+<em class="property">class </em><code class="descclassname">recipe.definition.connection.</code><code class="descname">InputConnection</code><span class="sig-paren">(</span><em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.InputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract base class that represents a connection between two interface parameters</p>
+<dl class="method">
+<dt id="recipe.definition.connection.InputConnection.add_parameter_to_interface">
+<code class="descname">add_parameter_to_interface</code><span class="sig-paren">(</span><em>interface</em>, <em>recipe_input_interface</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.InputConnection.add_parameter_to_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the parameter for this connection to the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface to add the parameter to</li>
+<li><strong>recipe_input_interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface for the recipe input</li>
+<li><strong>node_output_interfaces</strong> (<em>dict</em>) &#8211; The output interface for each node stored by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.interface.html#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.InputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.InputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns true if and only if the given input connection is equal to this one</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connection</strong> (<a class="reference internal" href="#recipe.definition.connection.InputConnection" title="recipe.definition.connection.InputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.connection.InputConnection</span></code></a>) &#8211; The input connection</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the connections are equal, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.InputConnection.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>all_dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.InputConnection.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>all_dependencies</strong> (<em>set</em>) &#8211; A set of all dependencies (node names) for the input node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.interface.html#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.definition.connection.RecipeInputConnection">
+<em class="property">class </em><code class="descclassname">recipe.definition.connection.</code><code class="descname">RecipeInputConnection</code><span class="sig-paren">(</span><em>input_name</em>, <em>recipe_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.connection.InputConnection" title="recipe.definition.connection.InputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.connection.InputConnection</span></code></a></p>
+<p>Represents a connection from the recipe&#8217;s input to a node&#8217;s input</p>
+<dl class="method">
+<dt id="recipe.definition.connection.RecipeInputConnection.add_parameter_to_interface">
+<code class="descname">add_parameter_to_interface</code><span class="sig-paren">(</span><em>interface</em>, <em>recipe_input_interface</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection.add_parameter_to_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.add_parameter_to_interface()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.RecipeInputConnection.is_equal_to">
+<code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.is_equal_to()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.RecipeInputConnection.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>all_dependencies</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.validate()</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.definition.definition">
+<span id="recipe-definition-definition-module"></span><h2>recipe.definition.definition module<a class="headerlink" href="#module-recipe.definition.definition" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for representing a recipe definition</p>
+<dl class="class">
+<dt id="recipe.definition.definition.RecipeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.definition.definition.</code><code class="descname">RecipeDefinition</code><span class="sig-paren">(</span><em>input_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a recipe definition, which consists of an input interface and a directed acyclic graph of recipe nodes</p>
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>parent_name</em>, <em>child_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a dependency that one node has upon another node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>parent_name</strong> (<em>string</em>) &#8211; The name of the parent node</li>
+<li><strong>child_name</strong> (<em>string</em>) &#8211; The name of the child node</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If either node is unknown</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_dependency_input_connection">
+<code class="descname">add_dependency_input_connection</code><span class="sig-paren">(</span><em>node_name</em>, <em>node_input_name</em>, <em>dependency_name</em>, <em>dependency_output_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_dependency_input_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a connection from a dependency output to the input of a node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The name of the node whose input is being connected to</li>
+<li><strong>node_input_name</strong> (<em>string</em>) &#8211; The name of the node&#8217;s input</li>
+<li><strong>dependency_name</strong> (<em>string</em>) &#8211; The name of the dependency node whose output is being connected to the input</li>
+<li><strong>dependency_output_name</strong> (<em>string</em>) &#8211; The name of the dependency node&#8217;s output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If either node is unknown, the dependency node</dt>
+<dd>is the wrong type, or the connection is a duplicate</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_job_node">
+<code class="descname">add_job_node</code><span class="sig-paren">(</span><em>name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_job_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a job node to the recipe graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The node name</li>
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number of the job type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the node is duplicated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_recipe_input_connection">
+<code class="descname">add_recipe_input_connection</code><span class="sig-paren">(</span><em>node_name</em>, <em>node_input_name</em>, <em>recipe_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_recipe_input_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a connection from a recipe input to the input of a node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The name of the node whose input is being connected to</li>
+<li><strong>node_input_name</strong> (<em>string</em>) &#8211; The name of the node&#8217;s input</li>
+<li><strong>recipe_input_name</strong> (<em>string</em>) &#8211; The name of the recipe input being connected to the node&#8217;s input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the node or recipe input is unknown or the</dt>
+<dd>connection is a duplicate</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_recipe_node">
+<code class="descname">add_recipe_node</code><span class="sig-paren">(</span><em>name</em>, <em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_recipe_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a recipe node to the recipe graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The node name</li>
+<li><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The name of the recipe type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number of the recipe type</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the node is duplicated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.get_topological_order">
+<code class="descname">get_topological_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_topological_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe node names in a valid topological ordering (dependency order)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of nodes names in a topological ordering</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the definition contains a circular</dt>
+<dd>dependency</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>node_input_interfaces</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_input_interfaces</strong> (<em>dict</em>) &#8211; The input interface for each node stored by node name</li>
+<li><strong>node_output_interfaces</strong> (<em>dict</em>) &#8211; The output interface for each node stored by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the definition is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.definition.exceptions">
+<span id="recipe-definition-exceptions-module"></span><h2>recipe.definition.exceptions module<a class="headerlink" href="#module-recipe.definition.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with recipe definitions</p>
+<dl class="exception">
+<dt id="recipe.definition.exceptions.InvalidDefinition">
+<em class="property">exception </em><code class="descclassname">recipe.definition.exceptions.</code><code class="descname">InvalidDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.exceptions.InvalidDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the provided recipe definition was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.definition.node">
+<span id="recipe-definition-node-module"></span><h2>recipe.definition.node module<a class="headerlink" href="#module-recipe.definition.node" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for representing nodes within a recipe definition</p>
+<dl class="class">
+<dt id="recipe.definition.node.JobNode">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">JobNode</code><span class="sig-paren">(</span><em>name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.JobNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a></p>
+<p>Represents a job within a recipe definition</p>
+<dl class="attribute">
+<dt id="recipe.definition.node.JobNode.NODE_TYPE">
+<code class="descname">NODE_TYPE</code><em class="property"> = u'job'</em><a class="headerlink" href="#recipe.definition.node.JobNode.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.definition.node.Node">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>name</em>, <em>node_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a node within a recipe definition</p>
+<dl class="method">
+<dt id="recipe.definition.node.Node.add_connection">
+<code class="descname">add_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.add_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a connection that connects a parameter to one of this node&#8217;s inputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>connection</strong> (<a class="reference internal" href="#recipe.definition.connection.InputConnection" title="recipe.definition.connection.InputConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.connection.InputConnection</span></code></a>) &#8211; The connection to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the definition is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.node.Node.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a dependency that this node has on the given node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a>) &#8211; The dependency node to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.node.Node.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>recipe_input_interface</em>, <em>node_input_interfaces</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this recipe node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_input_interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface for the recipe input</li>
+<li><strong>node_input_interfaces</strong> (<em>dict</em>) &#8211; The input interface for each node stored by node name</li>
+<li><strong>node_output_interfaces</strong> (<em>dict</em>) &#8211; The output interface for each node stored by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the definition is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.definition.node.RecipeNode">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">RecipeNode</code><span class="sig-paren">(</span><em>name</em>, <em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.RecipeNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a></p>
+<p>Represents a recipe within a recipe definition</p>
+<dl class="attribute">
+<dt id="recipe.definition.node.RecipeNode.NODE_TYPE">
+<code class="descname">NODE_TYPE</code><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.definition.node.RecipeNode.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.definition">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.definition" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.definition.json.html" class="btn btn-neutral float-right" title="recipe.definition.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

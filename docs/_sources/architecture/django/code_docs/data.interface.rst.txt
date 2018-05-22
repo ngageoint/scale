@@ -1,0 +1,45 @@
+data\.interface package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.interface.json
+
+Submodules
+----------
+
+data\.interface\.exceptions module
+----------------------------------
+
+.. automodule:: data.interface.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.interface\.interface module
+---------------------------------
+
+.. automodule:: data.interface.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.interface\.parameter module
+---------------------------------
+
+.. automodule:: data.interface.parameter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.interface
+    :members:
+    :undoc-members:
+    :show-inheritance:

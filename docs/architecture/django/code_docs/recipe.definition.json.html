@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>recipe.test.diff.json package &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>recipe.definition.json package &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -31,8 +31,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="recipe.test.handlers package" href="recipe.test.handlers.html" />
-    <link rel="prev" title="recipe.test.diff package" href="recipe.test.diff.html" />
+    <link rel="next" title="recipe.diff package" href="recipe.diff.html" />
+    <link rel="prev" title="recipe.definition package" href="recipe.definition.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -196,17 +196,15 @@
         
           <li><a href="recipe.html">recipe package</a> &raquo;</li>
         
-          <li><a href="recipe.test.html">recipe.test package</a> &raquo;</li>
+          <li><a href="recipe.definition.html">recipe.definition package</a> &raquo;</li>
         
-          <li><a href="recipe.test.diff.html">recipe.test.diff package</a> &raquo;</li>
-        
-      <li>recipe.test.diff.json package</li>
+      <li>recipe.definition.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/recipe.test.diff.json.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/recipe.definition.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -219,70 +217,92 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recipe-test-diff-json-package">
-<h1>recipe.test.diff.json package<a class="headerlink" href="#recipe-test-diff-json-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="recipe-definition-json-package">
+<h1>recipe.definition.json package<a class="headerlink" href="#recipe-definition-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-recipe.test.diff.json.test_diff_v6">
-<span id="recipe-test-diff-json-test-diff-v6-module"></span><h2>recipe.test.diff.json.test_diff_v6 module<a class="headerlink" href="#module-recipe.test.diff.json.test_diff_v6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.definition.json.definition_v6">
+<span id="recipe-definition-json-definition-v6-module"></span><h2>recipe.definition.json.definition_v6 module<a class="headerlink" href="#module-recipe.definition.json.definition_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 recipe diff schema</p>
 <dl class="class">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6">
-<em class="property">class </em><code class="descclassname">recipe.test.diff.json.test_diff_v6.</code><code class="descname">TestRecipeDiffV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dt id="recipe.definition.json.definition_v6.RecipeDefinitionV6">
+<em class="property">class </em><code class="descclassname">recipe.definition.json.definition_v6.</code><code class="descname">RecipeDefinitionV6</code><span class="sig-paren">(</span><em>definition=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.RecipeDefinitionV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a v6 recipe definition JSON</p>
 <dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_empty">
-<code class="descname">test_convert_diff_to_v6_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_empty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_diff_to_v6() with an empty diff</p>
+<dt id="recipe.definition.json.definition_v6.RecipeDefinitionV6.get_definition">
+<code class="descname">get_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.RecipeDefinitionV6.get_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe definition represented by this JSON</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>:</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_full_diff">
-<code class="descname">test_convert_diff_to_v6_full_diff</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_full_diff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_diff_to_v6() with a full diff with all types (deleted, new, changed, etc) of nodes</p>
+<dt id="recipe.definition.json.definition_v6.RecipeDefinitionV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.RecipeDefinitionV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_new_required_input">
-<code class="descname">test_convert_diff_to_v6_new_required_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_new_required_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_diff_to_v6() with a diff containing a new required input that blocks reprocessing</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_empty">
-<code class="descname">test_convert_recipe_diff_to_v6_json_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_empty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_recipe_diff_to_v6_json() with an empty diff</p>
+<dl class="function">
+<dt id="recipe.definition.json.definition_v6.convert_node_to_v6_json">
+<code class="descclassname">recipe.definition.json.definition_v6.</code><code class="descname">convert_node_to_v6_json</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.convert_node_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 JSON dict for the given node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a>) &#8211; The node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 JSON dict for the node</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_new_required_input">
-<code class="descname">test_convert_recipe_diff_to_v6_json_new_required_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_new_required_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_recipe_diff_to_v6_json() with a diff where there is a breaking recipe interface
-change</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_with_changes">
-<code class="descname">test_convert_recipe_diff_to_v6_json_with_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_with_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling convert_recipe_diff_to_v6_json() with a diff containing a variety of changes</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_init_validation">
-<code class="descname">test_init_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_init_validation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the validation done in __init__</p>
-</dd></dl>
-
+<dl class="function">
+<dt id="recipe.definition.json.definition_v6.convert_recipe_definition_to_v6_json">
+<code class="descclassname">recipe.definition.json.definition_v6.</code><code class="descname">convert_recipe_definition_to_v6_json</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.convert_recipe_definition_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 recipe definition JSON for the given recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; The recipe definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 recipe definition JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.definition.json.definition_v6.RecipeDefinitionV6" title="recipe.definition.json.definition_v6.RecipeDefinitionV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.json.definition_v6.RecipeDefinitionV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.test.diff.json">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.diff.json" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-recipe.definition.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.definition.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -294,10 +314,10 @@ change</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.test.handlers.html" class="btn btn-neutral float-right" title="recipe.test.handlers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="recipe.diff.html" class="btn btn-neutral float-right" title="recipe.diff package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.test.diff.html" class="btn btn-neutral" title="recipe.test.diff package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.definition.html" class="btn btn-neutral" title="recipe.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -224,15 +224,15 @@
 </div>
 <div class="section" id="module-recipe.diff.json.diff_v6">
 <span id="recipe-diff-json-diff-v6-module"></span><h2>recipe.diff.json.diff_v6 module<a class="headerlink" href="#module-recipe.diff.json.diff_v6" title="Permalink to this headline">¶</a></h2>
-<p>Manages the v6 recipe graph diff schema</p>
+<p>Manages the v6 recipe diff schema</p>
 <dl class="class">
-<dt id="recipe.diff.json.diff_v6.RecipeGraphDiffV6">
-<em class="property">class </em><code class="descclassname">recipe.diff.json.diff_v6.</code><code class="descname">RecipeGraphDiffV6</code><span class="sig-paren">(</span><em>diff=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.RecipeGraphDiffV6" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.diff.json.diff_v6.RecipeDiffV6">
+<em class="property">class </em><code class="descclassname">recipe.diff.json.diff_v6.</code><code class="descname">RecipeDiffV6</code><span class="sig-paren">(</span><em>diff=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.RecipeDiffV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a v6 recipe graph diff JSON for the difference between two recipe graphs</p>
 <dl class="method">
-<dt id="recipe.diff.json.diff_v6.RecipeGraphDiffV6.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.RecipeGraphDiffV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.diff.json.diff_v6.RecipeDiffV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.RecipeDiffV6.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -260,7 +260,43 @@
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 recipe graph diff JSON</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.diff.json.diff_v6.RecipeGraphDiffV6" title="recipe.diff.json.diff_v6.RecipeGraphDiffV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.json.diff_v6.RecipeGraphDiffV6</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.diff.json.diff_v6.RecipeDiffV6" title="recipe.diff.json.diff_v6.RecipeDiffV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.json.diff_v6.RecipeDiffV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.diff.json.diff_v6.convert_node_diff_to_v6_json">
+<code class="descclassname">recipe.diff.json.diff_v6.</code><code class="descname">convert_node_diff_to_v6_json</code><span class="sig-paren">(</span><em>node_diff</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.convert_node_diff_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 diff JSON dict for the given node diff</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_diff</strong> (<a class="reference internal" href="recipe.diff.html#recipe.diff.node.NodeDiff" title="recipe.diff.node.NodeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.node.NodeDiff</span></code></a>) &#8211; The node diff</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 diff JSON dict for the node</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.diff.json.diff_v6.convert_recipe_diff_to_v6_json">
+<code class="descclassname">recipe.diff.json.diff_v6.</code><code class="descname">convert_recipe_diff_to_v6_json</code><span class="sig-paren">(</span><em>recipe_diff</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.diff_v6.convert_recipe_diff_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 recipe diff JSON for the given recipe diff</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_diff</strong> (<a class="reference internal" href="recipe.diff.html#recipe.diff.diff.RecipeDiff" title="recipe.diff.diff.RecipeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.diff.RecipeDiff</span></code></a>) &#8211; The recipe diff</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 recipe diff JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.diff.json.diff_v6.RecipeDiffV6" title="recipe.diff.json.diff_v6.RecipeDiffV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.json.diff_v6.RecipeDiffV6</span></code></a></td>
 </tr>
 </tbody>
 </table>

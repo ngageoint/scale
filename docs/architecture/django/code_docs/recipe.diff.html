@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="recipe.diff.json package" href="recipe.diff.json.html" />
-    <link rel="prev" title="recipe.configuration.definition package" href="recipe.configuration.definition.html" />
+    <link rel="prev" title="recipe.definition.json package" href="recipe.definition.json.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -233,6 +233,100 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.diff.diff">
+<span id="recipe-diff-diff-module"></span><h2>recipe.diff.diff module<a class="headerlink" href="#module-recipe.diff.diff" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for representing a diff between two recipe definitions</p>
+<dl class="class">
+<dt id="recipe.diff.diff.Reason">
+<em class="property">class </em><code class="descclassname">recipe.diff.diff.</code><code class="descname">Reason</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.Reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.diff.diff.Reason.description">
+<code class="descname">description</code><a class="headerlink" href="#recipe.diff.diff.Reason.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.diff.Reason.name">
+<code class="descname">name</code><a class="headerlink" href="#recipe.diff.diff.Reason.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.diff.diff.RecipeDiff">
+<em class="property">class </em><code class="descclassname">recipe.diff.diff.</code><code class="descname">RecipeDiff</code><span class="sig-paren">(</span><em>prev_recipe_definition</em>, <em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the diff (difference) betweeen two different recipe definitions</p>
+<dl class="method">
+<dt id="recipe.diff.diff.RecipeDiff.get_nodes_to_copy">
+<code class="descname">get_nodes_to_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.get_nodes_to_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of node diffs for the nodes that should be copied during a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict of node diffs stored by node name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.diff.RecipeDiff.get_nodes_to_supersede">
+<code class="descname">get_nodes_to_supersede</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.get_nodes_to_supersede" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of node diffs for the nodes that should be superseded during a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict of node diffs stored by node name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.diff.RecipeDiff.get_nodes_to_unpublish">
+<code class="descname">get_nodes_to_unpublish</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.get_nodes_to_unpublish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of node diffs for the nodes that require unpublishing as a result of a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict of node diffs stored by node name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.diff.RecipeDiff.set_force_reprocess">
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a set of nodes to force to reprocess. The given dict contains node names as keys representing the
+nodes to force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe
+nodes, the dict recursively represents the node names within that recipe that should be foreced to reprocess,
+and so on.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reprocess_nodes</strong> (<em>dict</em>) &#8211; Dict where each key is a node name mapping recursively to another dict of nodes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.diff.exceptions">
 <span id="recipe-diff-exceptions-module"></span><h2>recipe.diff.exceptions module<a class="headerlink" href="#module-recipe.diff.exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Defines exceptions that can occur when interacting with recipe graph diffs</p>
@@ -241,6 +335,225 @@
 <em class="property">exception </em><code class="descclassname">recipe.diff.exceptions.</code><code class="descname">InvalidDiff</code><a class="headerlink" href="#recipe.diff.exceptions.InvalidDiff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided recipe graph diff was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.diff.node">
+<span id="recipe-diff-node-module"></span><h2>recipe.diff.node module<a class="headerlink" href="#module-recipe.diff.node" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for representing the diff for a node within a recipe definition</p>
+<dl class="class">
+<dt id="recipe.diff.node.Change">
+<em class="property">class </em><code class="descclassname">recipe.diff.node.</code><code class="descname">Change</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.Change" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.diff.node.Change.description">
+<code class="descname">description</code><a class="headerlink" href="#recipe.diff.node.Change.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.node.Change.name">
+<code class="descname">name</code><a class="headerlink" href="#recipe.diff.node.Change.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.diff.node.JobNodeDiff">
+<em class="property">class </em><code class="descclassname">recipe.diff.node.</code><code class="descname">JobNodeDiff</code><span class="sig-paren">(</span><em>job_node</em>, <em>diff_can_be_reprocessed</em>, <em>status=u'NEW'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.JobNodeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.diff.node.NodeDiff" title="recipe.diff.node.NodeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.node.NodeDiff</span></code></a></p>
+<p>Represents a diff for a job node within a recipe definition</p>
+<dl class="method">
+<dt id="recipe.diff.node.JobNodeDiff.get_node_type_dict">
+<code class="descname">get_node_type_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.JobNodeDiff.get_node_type_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.diff.node.NodeDiff.get_node_type_dict" title="recipe.diff.node.NodeDiff.get_node_type_dict"><code class="xref py py-meth docutils literal"><span class="pre">recipe.diff.node.NodeDiff.get_node_type_dict()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.diff.node.NodeDiff">
+<em class="property">class </em><code class="descclassname">recipe.diff.node.</code><code class="descname">NodeDiff</code><span class="sig-paren">(</span><em>node</em>, <em>diff_can_be_reprocessed</em>, <em>status=u'NEW'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a diff for a node within a recipe definition</p>
+<dl class="attribute">
+<dt id="recipe.diff.node.NodeDiff.CHANGED">
+<code class="descname">CHANGED</code><em class="property"> = u'CHANGED'</em><a class="headerlink" href="#recipe.diff.node.NodeDiff.CHANGED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.node.NodeDiff.DELETED">
+<code class="descname">DELETED</code><em class="property"> = u'DELETED'</em><a class="headerlink" href="#recipe.diff.node.NodeDiff.DELETED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.node.NodeDiff.NEW">
+<code class="descname">NEW</code><em class="property"> = u'NEW'</em><a class="headerlink" href="#recipe.diff.node.NodeDiff.NEW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.node.NodeDiff.STATUSES_REPROCESS_NEW_NODE">
+<code class="descname">STATUSES_REPROCESS_NEW_NODE</code><em class="property"> = [u'CHANGED', u'NEW']</em><a class="headerlink" href="#recipe.diff.node.NodeDiff.STATUSES_REPROCESS_NEW_NODE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.diff.node.NodeDiff.UNCHANGED">
+<code class="descname">UNCHANGED</code><em class="property"> = u'UNCHANGED'</em><a class="headerlink" href="#recipe.diff.node.NodeDiff.UNCHANGED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node_diff</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a dependency that this node diff has on the given node diff</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_diff</strong> (<a class="reference internal" href="#recipe.diff.node.NodeDiff" title="recipe.diff.node.NodeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.node.NodeDiff</span></code></a>) &#8211; The dependency node diff to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.compare_to_previous">
+<code class="descname">compare_to_previous</code><span class="sig-paren">(</span><em>prev_node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.compare_to_previous" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compares this node to the given node from the previous revision and calculates the diff between the nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>prev_node</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a>) &#8211; The node from the previous revision</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.get_node_type_dict">
+<code class="descname">get_node_type_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.get_node_type_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a JSON dict describing the node type details for this node diff</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The JSON dict describing the node type details</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.set_force_reprocess">
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets this node to force to reprocess. The given dict contains node names as keys representing the nodes to
+force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe nodes, the
+dict recursively represents the node names within that recipe that should be foreced to reprocess, and so on.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reprocess_nodes</strong> (<em>dict</em>) &#8211; Dict where each key is a node name mapping recursively to another dict of nodes</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.should_be_copied">
+<code class="descname">should_be_copied</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.should_be_copied" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node should be copied from the previous recipe during a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node should be copied</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.should_be_superseded">
+<code class="descname">should_be_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.should_be_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node should be superseded in the previous recipe during a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node should be superseded</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.should_be_unpublished">
+<code class="descname">should_be_unpublished</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.should_be_unpublished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node requires unpublishing as a result of a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node should be unpublished</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.diff.node.RecipeNodeDiff">
+<em class="property">class </em><code class="descclassname">recipe.diff.node.</code><code class="descname">RecipeNodeDiff</code><span class="sig-paren">(</span><em>recipe_node</em>, <em>diff_can_be_reprocessed</em>, <em>status=u'NEW'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.diff.node.NodeDiff" title="recipe.diff.node.NodeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.node.NodeDiff</span></code></a></p>
+<p>Represents a diff for a recipe node within a recipe definition</p>
+<dl class="method">
+<dt id="recipe.diff.node.RecipeNodeDiff.get_node_type_dict">
+<code class="descname">get_node_type_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff.get_node_type_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.diff.node.NodeDiff.get_node_type_dict" title="recipe.diff.node.NodeDiff.get_node_type_dict"><code class="xref py py-meth docutils literal"><span class="pre">recipe.diff.node.NodeDiff.get_node_type_dict()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.RecipeNodeDiff.set_force_reprocess">
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.diff.node.NodeDiff.set_force_reprocess" title="recipe.diff.node.NodeDiff.set_force_reprocess"><code class="xref py py-meth docutils literal"><span class="pre">recipe.diff.node.NodeDiff.set_force_reprocess()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.diff.node.create_diff_for_node">
+<code class="descclassname">recipe.diff.node.</code><code class="descname">create_diff_for_node</code><span class="sig-paren">(</span><em>node</em>, <em>diff_can_be_reprocessed</em>, <em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.create_diff_for_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a node diff for the given node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a>) &#8211; The node</li>
+<li><strong>diff_can_be_reprocessed</strong> (<em>bool</em>) &#8211; Whether the top-level diff can be reprocessed</li>
+<li><strong>status</strong> (<em>string</em>) &#8211; The diff status</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The node diff</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.diff.node.NodeDiff" title="recipe.diff.node.NodeDiff"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.node.NodeDiff</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -260,7 +573,7 @@
         <a href="recipe.diff.json.html" class="btn btn-neutral float-right" title="recipe.diff.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.configuration.definition.html" class="btn btn-neutral" title="recipe.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.definition.json.html" class="btn btn-neutral" title="recipe.definition.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -100,11 +100,13 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#recipe-graph-diff-json">Recipe Graph Diff JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-definition-json">Recipe Definition JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-diff-json">Recipe Diff JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
@@ -183,63 +185,219 @@
             
   <div class="section" id="v6-recipe-services">
 <span id="rest-v6-recipe"></span><h1>v6 Recipe Services<a class="headerlink" href="#v6-recipe-services" title="Permalink to this headline">¶</a></h1>
-<p>These services allow for the creation and management of recipes. A recipe type is a user-defined workflow of jobs that
-allows jobs to be connected together in order to pass output from jobs to the input of other jobs.</p>
-<div class="section" id="recipe-graph-diff-json">
-<span id="rest-v6-recipe-json-diff"></span><h2>Recipe Graph Diff JSON<a class="headerlink" href="#recipe-graph-diff-json" title="Permalink to this headline">¶</a></h2>
-<p>A recipe graph diff JSON describes the differences between two recipe graphs (two revisions). The differences explain
-which recipe jobs will be reprocessed when a newer recipe type revision is run.</p>
-<p><strong>Example recipe graph diff:</strong></p>
+<p>These services allow for the creation and management of recipes. A recipe type is a user-defined workflow that allows
+jobs and recipes to be connected together in order to pass output from jobs to the input of other jobs.</p>
+<div class="section" id="recipe-definition-json">
+<span id="rest-v6-recipe-definition"></span><h2>Recipe Definition JSON<a class="headerlink" href="#recipe-definition-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe definition JSON describes a workflow of jobs and recipes connected together and able to pass output from one to
+another.</p>
+<p><strong>Example recipe definition:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;can_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-   <span class="s2">&quot;reasons&quot;</span><span class="o">:</span> <span class="p">[],</span>
-   <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[{</span>
-      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_a&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;UNCHANGED&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
-      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-1&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+   <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;media_types&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;image/tiff&#39;</span><span class="p">],</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span> <span class="s1">&#39;multiple&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">}],</span>
+      <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="o">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">False</span><span class="p">}]</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;node_a&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
       <span class="p">},</span>
-      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[]</span>
-   <span class="p">},</span> <span class="p">{</span>
-      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_b&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;CHANGED&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;JOB_TYPE_VERSION_CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Job type version changed from 1.0 to 2.0&quot;</span><span class="p">}],</span>
-      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-2&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;prev_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+      <span class="s2">&quot;node_b&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;input_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dependency&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="s2">&quot;output_1&quot;</span><span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
       <span class="p">},</span>
-      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_a&quot;</span><span class="p">}]</span>
-   <span class="p">},</span> <span class="p">{</span>
-      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_c&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;will_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;NEW&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
-      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-3&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.1&quot;</span>
-      <span class="p">},</span>
-      <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;job_b&quot;</span><span class="p">}]</span>
-   <span class="p">}]</span>
+      <span class="s2">&quot;node_c&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_b&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_1&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;input_2&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dependency&quot;</span><span class="p">,</span> <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="s2">&quot;node_b&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="o">:</span> <span class="s2">&quot;output_1&quot;</span><span class="p">}</span>
+         <span class="p">},</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_revision&quot;</span><span class="o">:</span> <span class="mi">5</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <table border="1" class="docutils">
 <colgroup>
-<col width="20%" />
-<col width="16%" />
+<col width="23%" />
+<col width="13%" />
 <col width="8%" />
 <col width="56%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Graph Diff</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Definition</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>input</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>The input interface for the recipe
+See <a class="reference internal" href="data.html#rest-v6-data-interface"><span class="std std-ref">Interface JSON</span></a></td>
+</tr>
+<tr class="row-odd"><td>nodes</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>All of the nodes within the recipe stored by node name</td>
+</tr>
+<tr class="row-even"><td>dependencies</td>
+<td>Array</td>
+<td>Required</td>
+<td>The list of dependencies for this recipe node. Each JSON object in
+the list has a single string field called <em>name</em> giving the node
+name of the dependency.</td>
+</tr>
+<tr class="row-odd"><td>input</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>An object describing the connections to the input parameters of
+the node, where each key is the input name and each value is an
+object describing the connection</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the connection, either &#8216;recipe&#8217; or &#8216;dependency&#8217;</td>
+</tr>
+<tr class="row-odd"><td>input</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; connection) The name of the recipe input being connected
+to the node input</td>
+</tr>
+<tr class="row-even"><td>node</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;dependency&#8217; connection) The name of the node being connected to
+this node</td>
+</tr>
+<tr class="row-odd"><td>output</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;dependency&#8217; connection) The name of the dependency node&#8217;s output
+being connected to this node</td>
+</tr>
+<tr class="row-even"><td>node_type</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>An object describing the type of the node</td>
+</tr>
+<tr class="row-odd"><td>node_type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The name of the job type</td>
+</tr>
+<tr class="row-odd"><td>job_type_version</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The version of the job type</td>
+</tr>
+<tr class="row-even"><td>job_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The revision of the job type</td>
+</tr>
+<tr class="row-odd"><td>recipe_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The name of the recipe type</td>
+</tr>
+<tr class="row-even"><td>recipe_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The revision of the recipe type</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="recipe-diff-json">
+<span id="rest-v6-recipe-json-diff"></span><h2>Recipe Diff JSON<a class="headerlink" href="#recipe-diff-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe diff JSON describes the differences between two recipe definitions (two revisions). The differences explain
+which pieces (nodes) within the recipe will be reprocessed when a newer recipe type revision is run.</p>
+<p><strong>Example recipe diff:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;can_be_reprocessed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;reasons&quot;</span><span class="o">:</span> <span class="p">[],</span>
+   <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;node_a&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;UNCHANGED&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="s2">&quot;reprocess_new_node&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_b&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;CHANGED&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;JOB_TYPE_VERSION_CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Job type version changed from 1.0 to 2.0&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;reprocess_new_node&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prev_job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_c&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;NEW&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="s2">&quot;reprocess_new_node&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_b&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_revision&quot;</span><span class="o">:</span> <span class="mi">5</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Diff</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -256,95 +414,133 @@ reprocessed as the newer revision.</td>
 reasons are JSON objects with <em>name</em> and <em>description</em> string
 fields.</td>
 </tr>
-<tr class="row-even"><td>jobs</td>
-<td>Array</td>
+<tr class="row-even"><td>nodes</td>
+<td>JSON object</td>
 <td>Required</td>
-<td>Lists all of the jobs in the two recipe type revisions</td>
+<td>All of the diffs for each recipe node between the two revisions,
+stored by node name</td>
 </tr>
-<tr class="row-odd"><td>name</td>
+<tr class="row-odd"><td>status</td>
 <td>String</td>
 <td>Required</td>
-<td>The name of the recipe job</td>
-</tr>
-<tr class="row-even"><td>will_be_reprocessed</td>
-<td>Boolean</td>
-<td>Required</td>
-<td>Indicates whether this job will be superseded by a new created job
-if the recipe is reprocessed</td>
-</tr>
-<tr class="row-odd"><td>force_reprocess</td>
-<td>Boolean</td>
-<td>Required</td>
-<td>Indicates whether the user has requested that this job be
-reprocessed regardless of whether it has changed</td>
-</tr>
-<tr class="row-even"><td>status</td>
-<td>String</td>
-<td>Required</td>
-<td><p class="first">The status indicating the job differences between the two
+<td><p class="first">The status indicating the node differences between the two
 revisions. The possible statuses are:</p>
 <ul class="last simple">
 <li><dl class="first docutils">
-<dt><em>DELETED</em> - the job existed in the previous revision and has been</dt>
-<dd>removed in the newer revision</dd>
+<dt><em>DELETED</em> - the node existed in the previous revision and has</dt>
+<dd>been removed in the newer revision</dd>
 </dl>
 </li>
-<li><em>UNCHANGED</em> - the job did not change between the revisions</li>
+<li><em>UNCHANGED</em> - the node did not change between the revisions</li>
 <li><dl class="first docutils">
-<dt><em>CHANGED</em> - the job changed between the revisions, see the</dt>
+<dt><em>CHANGED</em> - the node changed between the revisions, see the</dt>
 <dd><em>changes</em> list for more details</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
-<dt><em>NEW</em> - the job did not exist in the previous revision and was</dt>
+<dt><em>NEW</em> - the node did not exist in the previous revision and was</dt>
 <dd>added in the newer revision</dd>
 </dl>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="row-odd"><td>changes</td>
+<tr class="row-even"><td>changes</td>
 <td>Array</td>
 <td>Required</td>
-<td>If <em>status</em> is <em>NEW</em>, lists the job&#8217;s changes between the two
+<td>If <em>status</em> is <em>CHANGED</em>, lists the job&#8217;s changes between the two
 revisions. Each change is a JSON object with <em>name</em> and
 <em>description</em> string fields.</td>
 </tr>
-<tr class="row-even"><td>job_type</td>
-<td>JSON object</td>
+<tr class="row-odd"><td>reprocess_new_node</td>
+<td>Boolean</td>
 <td>Required</td>
-<td>The job type of the recipe job</td>
+<td>Indicates whether this node will be superseded by a new node if
+the recipe is reprocessed</td>
 </tr>
-<tr class="row-odd"><td>name</td>
-<td>String</td>
+<tr class="row-even"><td>force_reprocess</td>
+<td>Boolean</td>
 <td>Required</td>
-<td>The name of the job type</td>
-</tr>
-<tr class="row-even"><td>version</td>
-<td>String</td>
-<td>Required</td>
-<td>The version of the job type</td>
-</tr>
-<tr class="row-odd"><td>prev_name</td>
-<td>String</td>
-<td>Optional</td>
-<td>If the job type name changed between revisions, <em>prev_name</em> is the
-name from the previous revision while <em>name</em> is the name for the
-newer revision.</td>
-</tr>
-<tr class="row-even"><td>prev_version</td>
-<td>String</td>
-<td>Optional</td>
-<td>If the job type version changed between revisions, <em>prev_version</em>
-is the version from the previous revision while <em>version</em> is the
-version for the newer revision.</td>
+<td>Indicates whether the user has requested that this node be
+reprocessed regardless of whether it has changed</td>
 </tr>
 <tr class="row-odd"><td>dependencies</td>
 <td>Array</td>
 <td>Required</td>
-<td>The list of job dependencies for this recipe job. Each JSON object
-in the list has a single string field called <em>name</em> giving the job
+<td>The list of dependencies for this recipe node. Each JSON object in
+the list has a single string field called <em>name</em> giving the node
 name of the dependency.</td>
+</tr>
+<tr class="row-even"><td>prev_node_type</td>
+<td>String</td>
+<td>Optional</td>
+<td>The type of the node in the previous revision, if changed in the
+newer revision</td>
+</tr>
+<tr class="row-odd"><td>node_type</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>An object describing the type of the node</td>
+</tr>
+<tr class="row-even"><td>node_type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The name of the job type</td>
+</tr>
+<tr class="row-even"><td>job_type_version</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The version of the job type</td>
+</tr>
+<tr class="row-odd"><td>job_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The revision of the job type</td>
+</tr>
+<tr class="row-even"><td>prev_job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>(&#8216;job&#8217; node) The name of the job type in the previous revision, if
+changed in the newer revision</td>
+</tr>
+<tr class="row-odd"><td>prev_job_type_version</td>
+<td>String</td>
+<td>Optional</td>
+<td>(&#8216;job&#8217; node) The version of the job type in the previous revision,
+if changed in the newer revision</td>
+</tr>
+<tr class="row-even"><td>prev_job_type_revision</td>
+<td>String</td>
+<td>Optional</td>
+<td>(&#8216;job&#8217; node) The revision of the job type in the previous revision,
+if changed in the newer revision</td>
+</tr>
+<tr class="row-odd"><td>recipe_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The name of the recipe type</td>
+</tr>
+<tr class="row-even"><td>recipe_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The revision of the recipe type</td>
+</tr>
+<tr class="row-odd"><td>prev_recipe_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>(&#8216;recipe&#8217; node) The name of the recipe type in the previous
+revision, if changed in the newer revision</td>
+</tr>
+<tr class="row-even"><td>prev_recipe_type_revision</td>
+<td>String</td>
+<td>Optional</td>
+<td>(&#8216;recipe&#8217; node) The revision of the recipe type in the previous
+revision, if changed in the newer revision</td>
 </tr>
 </tbody>
 </table>

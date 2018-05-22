@@ -1,0 +1,53 @@
+recipe\.definition package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.definition.json
+
+Submodules
+----------
+
+recipe\.definition\.connection module
+-------------------------------------
+
+.. automodule:: recipe.definition.connection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.definition\.definition module
+-------------------------------------
+
+.. automodule:: recipe.definition.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.definition\.exceptions module
+-------------------------------------
+
+.. automodule:: recipe.definition.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.definition\.node module
+-------------------------------
+
+.. automodule:: recipe.definition.node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

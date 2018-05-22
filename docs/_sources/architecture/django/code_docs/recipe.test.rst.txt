@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     recipe.test.configuration
+    recipe.test.definition
     recipe.test.diff
     recipe.test.handlers
     recipe.test.messages

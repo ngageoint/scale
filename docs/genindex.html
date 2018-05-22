@@ -259,18 +259,28 @@
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.completed_jobs.CompletedJobs.add_completed_job">add_completed_job() (job.messages.completed_jobs.CompletedJobs method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.Node.add_connection">add_connection() (recipe.definition.node.Node method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.add_data_type_tag">add_data_type_tag() (ingest.models.Ingest method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.add_data_type_tag">(storage.models.ScaleFile method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.add_dependency">add_dependency() (recipe.handlers.graph.RecipeGraph method)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_dependency">add_dependency() (recipe.definition.definition.RecipeDefinition method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.Node.add_dependency">(recipe.definition.node.Node method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.add_dependency">(recipe.diff.node.NodeDiff method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.add_dependency">(recipe.handlers.graph.RecipeGraph method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode.add_dependency">(recipe.handlers.node.RecipeNode method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_dependency_input_connection">add_dependency_input_connection() (recipe.definition.definition.RecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.failed_jobs.FailedJobs.add_failed_job">add_failed_job() (job.messages.failed_jobs.FailedJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.add_file">add_file() (ingest.models.Ingest method)</a>
@@ -359,10 +369,12 @@
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.add_job_execution">(scheduler.node.node_class.Node method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_job_node">add_job_node() (recipe.definition.definition.RecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration.add_job_task_setting">add_job_task_setting() (job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration.add_job_task_workspace">add_job_task_workspace() (job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.add_jobs">add_jobs() (recipe.handlers.handler.RecipeHandler method)</a>
@@ -391,6 +403,18 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults.add_output_to_data">add_output_to_data() (job.configuration.results.job_results.JobResults method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.interface.Interface.add_parameter">add_parameter() (data.interface.interface.Interface method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.interface.Interface.add_parameter_from_output_interface">add_parameter_from_output_interface() (data.interface.interface.Interface method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.DependencyInputConnection.add_parameter_to_interface">add_parameter_to_interface() (recipe.definition.connection.DependencyInputConnection method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.InputConnection.add_parameter_to_interface">(recipe.definition.connection.InputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.RecipeInputConnection.add_parameter_to_interface">(recipe.definition.connection.RecipeInputConnection method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration.add_post_task_setting">add_post_task_setting() (job.configuration.json.execution.exe_config_1_1.ExecutionConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration.add_post_task_workspace">add_post_task_workspace() (job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration method)</a>
@@ -419,7 +443,13 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode.add_recipe_input">add_recipe_input() (recipe.handlers.node.RecipeNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.add_recipe_input_connection">add_recipe_input_connection() (recipe.handlers.graph.RecipeGraph method)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_recipe_input_connection">add_recipe_input_connection() (recipe.definition.definition.RecipeDefinition method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.add_recipe_input_connection">(recipe.handlers.graph.RecipeGraph method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_recipe_node">add_recipe_node() (recipe.definition.definition.RecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.add_rule">add_rule() (ingest.handlers.file_handler.FileHandler method)</a>
 </li>
@@ -939,7 +969,13 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage">ChainCommandMessage (class in messaging.messages.chain)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change">Change (class in recipe.handlers.graph_delta)</a>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.Change">Change (class in recipe.diff.node)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change">(class in recipe.handlers.graph_delta)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.CHANGED">CHANGED (recipe.diff.node.NodeDiff attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.check_for_starvation">check_for_starvation() (job.execution.job_exe.RunningJobExecution method)</a>
 
@@ -1055,6 +1091,8 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.html#messaging.manager.CommandMessageManager">CommandMessageManager (class in messaging.manager)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.compare_to_previous">compare_to_previous() (recipe.diff.node.NodeDiff method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.complete_recipes">complete_recipes() (recipe.models.RecipeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.completed">completed (recipe.models.Recipe attribute)</a>
@@ -1145,11 +1183,23 @@
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_3.JobInterface.convert_interface">(job.configuration.interface.job_interface_1_3.JobInterface static method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/data.interface.json.html#data.interface.json.interface_v6.convert_interface_to_v6_json">convert_interface_to_v6_json() (in module data.interface.json.interface_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.convert_node_diff_to_v6_json">convert_node_diff_to_v6_json() (in module recipe.diff.json.diff_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.convert_node_to_v6_json">convert_node_to_v6_json() (in module recipe.definition.json.definition_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/source.triggers.configuration.html#source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.convert_parse_trigger_rule_config">convert_parse_trigger_rule_config() (source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.copy">copy() (node.resources.node_resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.convert_recipe_definition_to_v6_json">convert_recipe_definition_to_v6_json() (in module recipe.definition.json.definition_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.convert_recipe_diff_to_v6_json">convert_recipe_diff_to_v6_json() (in module recipe.diff.json.diff_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.Parameter.copy">copy() (data.interface.parameter.Parameter method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.copy">(node.resources.node_resources.NodeResources method)</a>
+</li>
         <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Resource.copy">(node.resources.resource.Resource method)</a>
 </li>
         <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.ScalarResource.copy">(node.resources.resource.ScalarResource method)</a>
@@ -1161,6 +1211,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.count">count (job.execution.metrics.FinishedJobExeMetrics attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.task.manager.TaskUpdateManager attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
@@ -1169,8 +1221,6 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
@@ -1256,6 +1306,8 @@
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.utils.create_country">create_country() (in module storage.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.create_delete_files_messages">create_delete_files_messages() (in module storage.messages.delete_files)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.create_diff_for_node">create_diff_for_node() (in module recipe.diff.node)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.ErrorManager.create_error">create_error() (error.models.ErrorManager method)</a>
 
@@ -1519,6 +1571,28 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.daily_metrics.DailyMetricsProcessor">DailyMetricsProcessor (class in metrics.daily_metrics)</a>
 </li>
+      <li><a href="architecture/django/code_docs/data.data.html#data.data.data.Data">Data (class in data.data.data)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.html#module-data">data (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.html#module-data.apps">data.apps (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.data.html#module-data.data">data.data (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.data.html#module-data.data.data">data.data.data (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#module-data.interface">data.interface (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#module-data.interface.exceptions">data.interface.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#module-data.interface.interface">data.interface.interface (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.json.html#module-data.interface.json">data.interface.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.json.html#module-data.interface.json.interface_v6">data.interface.json.interface_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#module-data.interface.parameter">data.interface.parameter (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.data_ended">data_ended (ingest.models.Ingest attribute)</a>
 
       <ul>
@@ -1544,6 +1618,8 @@
       <li><a href="architecture/django/code_docs/scheduler.database.html#scheduler.database.updater.DatabaseUpdater">DatabaseUpdater (class in scheduler.database.updater)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.db_update_task.DatabaseUpdateTask">DatabaseUpdateTask (class in scheduler.tasks.db_update_task)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.html#data.apps.DataConfig">DataConfig (class in data.apps)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.DataTypeField">DataTypeField (class in storage.serializers)</a>
 </li>
@@ -1602,6 +1678,8 @@
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.delete_job_executions">delete_job_executions() (scheduler.cleanup.node.NodeCleanup method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.delete_superseded">delete_superseded (job.models.Job attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.DELETED">DELETED (recipe.diff.node.NodeDiff attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.deleted">deleted (storage.models.CountryData attribute)</a>
 
@@ -1923,8 +2001,12 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection">DependencyInputConnection (class in recipe.handlers.connection)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.DependencyInputConnection">DependencyInputConnection (class in recipe.definition.connection)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection">(class in recipe.handlers.connection)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.deprecated">deprecated (node.models.Node attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.DEPRECATED">DEPRECATED (scheduler.node.node_class.Node attribute)</a>
@@ -1947,6 +2029,10 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.description">(ingest.models.Strike attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.description">(job.models.JobType attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.Reason.description">(recipe.diff.diff.Reason attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.Change.description">(recipe.diff.node.Change attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change.description">(recipe.handlers.graph_delta.Change attribute)</a>
 </li>
@@ -2463,6 +2549,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileMove">FileMove (class in storage.brokers.broker)</a>
 </li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.FileParameter">FileParameter (class in data.interface.parameter)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_rule.FileRule">FileRule (class in ingest.handlers.file_rule)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.handlers.inputs.html#job.handlers.inputs.files.FilesInput">FilesInput (class in job.handlers.inputs.files)</a>
@@ -2872,6 +2960,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_definition">(batch.models.Batch method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6.get_definition">(recipe.definition.json.definition_v6.RecipeDefinitionV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_deleted_nodes">get_deleted_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
 </li>
@@ -2930,6 +3020,8 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition.get_dict">(batch.definition.json.old.batch_definition.BatchDefinition method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/data.interface.json.html#data.interface.json.interface_v6.InterfaceV6.get_dict">(data.interface.json.interface_v6.InterfaceV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_dict">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
@@ -2966,7 +3058,9 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict">(recipe.configuration.definition.recipe_definition.RecipeDefinition method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeGraphDiffV6.get_dict">(recipe.diff.json.diff_v6.RecipeGraphDiffV6 method)</a>
+        <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6.get_dict">(recipe.definition.json.definition_v6.RecipeDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeDiffV6.get_dict">(recipe.diff.json.diff_v6.RecipeDiffV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration.get_dict">(storage.configuration.workspace_configuration.WorkspaceConfiguration method)</a>
 </li>
@@ -3082,6 +3176,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.get_input_workspace_names">get_input_workspace_names() (job.configuration.json.execution.exe_config.ExecutionConfiguration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.json.html#data.interface.json.interface_v6.InterfaceV6.get_interface">get_interface() (data.interface.json.interface_v6.InterfaceV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager.get_intersects">get_intersects() (storage.models.CountryDataManager method)</a>
 </li>
@@ -3423,12 +3519,26 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/node.resources.json.html#node.resources.json.resources.Resources.get_node_resources">get_node_resources() (node.resources.json.resources.Resources method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.JobNodeDiff.get_node_type_dict">get_node_type_dict() (recipe.diff.node.JobNodeDiff method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.get_node_type_dict">(recipe.diff.node.NodeDiff method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.RecipeNodeDiff.get_node_type_dict">(recipe.diff.node.RecipeNodeDiff method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.models.NodeManager.get_nodes">get_nodes() (node.models.NodeManager method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.get_nodes">(scheduler.node.manager.NodeManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff.get_nodes_to_copy">get_nodes_to_copy() (recipe.diff.diff.RecipeDiff method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff.get_nodes_to_supersede">get_nodes_to_supersede() (recipe.diff.diff.RecipeDiff method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff.get_nodes_to_unpublish">get_nodes_to_unpublish() (recipe.diff.diff.RecipeDiff method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.get_num_job_exes">get_num_job_exes() (scheduler.cleanup.node.NodeCleanup method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.S3Client.get_object">get_object() (util.aws.S3Client method)</a>
@@ -3879,8 +3989,12 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_timeout_tasks">get_timeout_tasks() (job.tasks.manager.TaskManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.get_topological_order">get_topological_order() (recipe.handlers.graph.RecipeGraph method)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.get_topological_order">get_topological_order() (recipe.definition.definition.RecipeDefinition method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.get_topological_order">(recipe.handlers.graph.RecipeGraph method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_transfer_suffix">get_transfer_suffix() (ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.handler.get_trigger_rule_handler">get_trigger_rule_handler() (in module trigger.handler)</a>
@@ -4481,10 +4595,10 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.ingest_set">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.ingest_started">ingest_started (ingest.models.Ingest attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.INGEST_STATUSES">INGEST_STATUSES (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_avg">ingest_time_avg (metrics.models.MetricsIngest attribute)</a>
@@ -4567,9 +4681,13 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.input_file_size">(recipe.models.Recipe attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.InputConnection">InputConnection (class in recipe.definition.connection)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.input_file.InputFile">InputFile (class in job.configuration.input_file)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSClient.instantiate_credentials_from_config">instantiate_credentials_from_config() (util.aws.AWSClient static method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.interface.Interface">Interface (class in data.interface.interface)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.interface">interface (job.models.JobType attribute)</a>
 
@@ -4579,6 +4697,8 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.interface">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/data.interface.json.html#data.interface.json.interface_v6.InterfaceV6">InterfaceV6 (class in data.interface.json.interface_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_message_handler.Command.interupt">interupt() (messaging.management.commands.scale_message_handler.Command method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.exceptions.InvalidAWSCredentials">InvalidAWSCredentials</a>
@@ -4597,13 +4717,17 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.exceptions.InvalidDataTypeTag">InvalidDataTypeTag</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.definition.html#batch.definition.exceptions.InvalidDefinition">InvalidDefinition</a>, <a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition">[1]</a>
+      <li><a href="architecture/django/code_docs/batch.definition.html#batch.definition.exceptions.InvalidDefinition">InvalidDefinition</a>, <a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition">[1]</a>, <a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.exceptions.InvalidDefinition">[2]</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.exceptions.InvalidDiff">InvalidDiff</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.exceptions.InvalidEnvironment">InvalidEnvironment</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.exceptions.InvalidExecutionConfiguration">InvalidExecutionConfiguration</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.exceptions.InvalidInterface">InvalidInterface</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.exceptions.InvalidInterfaceConnection">InvalidInterfaceConnection</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.exceptions.InvalidInterfaceDefinition">InvalidInterfaceDefinition</a>
 </li>
@@ -4687,9 +4811,15 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.is_equal">is_equal() (node.resources.node_resources.NodeResources method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection.is_equal_to">is_equal_to() (recipe.handlers.connection.DependencyInputConnection method)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.DependencyInputConnection.is_equal_to">is_equal_to() (recipe.definition.connection.DependencyInputConnection method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.InputConnection.is_equal_to">(recipe.definition.connection.InputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.RecipeInputConnection.is_equal_to">(recipe.definition.connection.RecipeInputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection.is_equal_to">(recipe.handlers.connection.DependencyInputConnection method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.NodeInputConnection.is_equal_to">(recipe.handlers.connection.NodeInputConnection method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection.is_equal_to">(recipe.handlers.connection.RecipeInputConnection method)</a>
@@ -5209,10 +5339,10 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_exe_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask.job_exes">job_exes (job.execution.tasks.cleanup_task.CleanupTask attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exit_code">job_exit_code (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.job_file_links">job_file_links (job.models.Job attribute)</a>
@@ -5507,6 +5637,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager">JobManager (class in job.models)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.JobNode">JobNode (class in recipe.definition.node)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.JobNodeDiff">JobNodeDiff (class in recipe.diff.node)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults">JobResults (class in job.configuration.results.job_results)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobRevisionSerializer">JobRevisionSerializer (class in job.serializers)</a>
@@ -5677,6 +5811,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.json_config">json_config (storage.models.Workspace attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.JsonParameter">JsonParameter (class in data.interface.parameter)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.deprecation.JSONStringField">JSONStringField (class in util.deprecation)</a>
 </li>
   </ul></td>
@@ -5696,6 +5832,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.label">label (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/data.html#data.apps.DataConfig.label">(data.apps.DataConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.label">(diagnostic.apps.DiagnosticConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.label">(error.apps.ErrorConfig attribute)</a>
@@ -6666,6 +6804,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.name">name (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/data.html#data.apps.DataConfig.name">(data.apps.DataConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.name">(diagnostic.apps.DiagnosticConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.name">(error.apps.ErrorConfig attribute)</a>
@@ -6699,6 +6839,10 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.apps.QueueConfig.name">(queue.apps.QueueConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig.name">(recipe.apps.RecipeConfig attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.Reason.name">(recipe.diff.diff.Reason attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.Change.name">(recipe.diff.node.Change attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Change.name">(recipe.handlers.graph_delta.Change attribute)</a>
 </li>
@@ -6749,6 +6893,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.needs_reconciliation">needs_reconciliation() (job.tasks.base_task.Task method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.NEW">NEW (recipe.diff.node.NodeDiff attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.new_file_path">new_file_path (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.new_fill_in_command_dirs">new_fill_in_command_dirs() (in module job.test.management.commands.test_scale_pre_steps)</a>
@@ -6770,6 +6916,8 @@
       <li><a href="architecture/django/code_docs/node.html#node.models.Node">Node (class in node.models)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.Node">(class in recipe.definition.node)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node">(class in scheduler.node.node_class)</a>
 </li>
       </ul></li>
@@ -6791,10 +6939,10 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations">node.migrations (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors (module)</a>
@@ -6845,6 +6993,12 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEnd.node_id">(job.models.JobExecutionEnd attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.JobNode.NODE_TYPE">NODE_TYPE (recipe.definition.node.JobNode attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.RecipeNode.NODE_TYPE">(recipe.definition.node.RecipeNode attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.admin.NodeAdmin">NodeAdmin (class in node.admin)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers.NodeBaseSerializer">NodeBaseSerializer (class in node.serializers)</a>
@@ -6870,6 +7024,8 @@
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer">NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer (class in node.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView">NodeDetailsView (class in node.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff">NodeDiff (class in recipe.diff.node)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError">NodeError (class in scheduler.node.conditions)</a>
 </li>
@@ -7382,6 +7538,14 @@
       <li><a href="architecture/django/code_docs/util.html#util.rest.DefaultPagination.page_size">page_size (util.rest.DefaultPagination attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.DefaultPagination.page_size_query_param">page_size_query_param (util.rest.DefaultPagination attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.FileParameter.PARAM_TYPE">PARAM_TYPE (data.interface.parameter.FileParameter attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.JsonParameter.PARAM_TYPE">(data.interface.parameter.JsonParameter attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.Parameter">Parameter (class in data.interface.parameter)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.parse_bool">parse_bool() (in module util.rest)</a>
 </li>
@@ -8229,8 +8393,12 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.apps.StorageConfig.ready">(storage.apps.StorageConfig method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Reason">Reason (class in recipe.handlers.graph_delta)</a>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.Reason">Reason (class in recipe.diff.diff)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.Reason">(class in recipe.handlers.graph_delta)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.reason">reason (job.models.TaskUpdate attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.backends.html#messaging.backends.amqp.AMQPMessagingBackend.receive_messages">receive_messages() (messaging.backends.amqp.AMQPMessagingBackend method)</a>
@@ -8287,13 +8455,31 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#module-recipe.configuration.definition.recipe_definition">recipe.configuration.definition.recipe_definition (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#module-recipe.definition">recipe.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#module-recipe.definition.connection">recipe.definition.connection (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#module-recipe.definition.definition">recipe.definition.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#module-recipe.definition.exceptions">recipe.definition.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#module-recipe.definition.json">recipe.definition.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#module-recipe.definition.json.definition_v6">recipe.definition.json.definition_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#module-recipe.definition.node">recipe.definition.node (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff">recipe.diff (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff.diff">recipe.diff.diff (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff.exceptions">recipe.diff.exceptions (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#module-recipe.diff.json">recipe.diff.json (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#module-recipe.diff.json.diff_v6">recipe.diff.json.diff_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#module-recipe.diff.node">recipe.diff.node (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.DoesNotExist">Recipe.DoesNotExist</a>
 </li>
@@ -8387,11 +8573,21 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#module-recipe.test.configuration.definition.test_recipe_definition">recipe.test.configuration.definition.test_recipe_definition (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#module-recipe.test.definition">recipe.test.definition (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#module-recipe.test.definition.json">recipe.test.definition.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#module-recipe.test.definition.json.test_definition_v6">recipe.test.definition.json.test_definition_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#module-recipe.test.definition.test_definition">recipe.test.definition.test_definition (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.diff.html#module-recipe.test.diff">recipe.test.diff (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#module-recipe.test.diff.json">recipe.test.diff.json (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#module-recipe.test.diff.json.test_diff_v6">recipe.test.diff.json.test_diff_v6 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#module-recipe.test.diff.test_diff">recipe.test.diff.test_diff (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#module-recipe.test.handlers">recipe.test.handlers (module)</a>
 </li>
@@ -8502,6 +8698,12 @@
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData">RecipeData (class in recipe.configuration.data.recipe_data)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition">RecipeDefinition (class in recipe.configuration.definition.recipe_definition)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition">(class in recipe.definition.definition)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6">RecipeDefinitionV6 (class in recipe.definition.json.definition_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer">RecipeDetailsInputSerializer (class in recipe.serializers)</a>
 </li>
@@ -8513,22 +8715,28 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer">RecipeDetailsSerializer.TriggerEventDetailsSerializer (class in recipe.serializers)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView">RecipeDetailsView (class in recipe.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff">RecipeDiff (class in recipe.diff.diff)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeDiffV6">RecipeDiffV6 (class in recipe.diff.json.diff_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph">RecipeGraph (class in recipe.handlers.graph)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta">RecipeGraphDelta (class in recipe.handlers.graph_delta)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeGraphDiffV6">RecipeGraphDiffV6 (class in recipe.diff.json.diff_v6)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler">RecipeHandler (class in recipe.handlers.handler)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection">RecipeInputConnection (class in recipe.handlers.connection)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.RecipeInputConnection">RecipeInputConnection (class in recipe.definition.connection)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection">(class in recipe.handlers.connection)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile">RecipeInputFile (class in recipe.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.DoesNotExist">RecipeInputFile.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.MultipleObjectsReturned">RecipeInputFile.MultipleObjectsReturned</a>
@@ -8571,7 +8779,13 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager">RecipeManager (class in recipe.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode">RecipeNode (class in recipe.handlers.node)</a>
+      <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.RecipeNode">RecipeNode (class in recipe.definition.node)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode">(class in recipe.handlers.node)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.RecipeNodeDiff">RecipeNodeDiff (class in recipe.diff.node)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView">RecipeReprocessView (class in recipe.views)</a>
 </li>
@@ -9369,6 +9583,14 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_deleted">set_deleted() (storage.models.ScaleFile method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff.set_force_reprocess">set_force_reprocess() (recipe.diff.diff.RecipeDiff method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.set_force_reprocess">(recipe.diff.node.NodeDiff method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.RecipeNodeDiff.set_force_reprocess">(recipe.diff.node.RecipeNodeDiff method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.set_input">set_input() (job.models.Job method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.set_input_files">set_input_files() (job.configuration.json.execution.exe_config.ExecutionConfiguration method)</a>
@@ -9810,7 +10032,13 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces.setUp">(recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.setUp">(recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.setUp">(recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.setUp">(recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.setUp">(recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.setUp">(recipe.test.diff.test_diff.TestRecipeDiff method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph.TestRecipeGraph.setUp">(recipe.test.handlers.test_graph.TestRecipeGraph method)</a>
 </li>
@@ -10037,9 +10265,15 @@
 </li>
       <li><a href="architecture/django/code_docs/shared_resource.html#shared_resource.apps.SharedResourceConfig">SharedResourceConfig (class in shared_resource.apps)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.should_be_copied">should_be_copied() (recipe.diff.node.NodeDiff method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.should_be_removed">should_be_removed() (scheduler.node.node_class.Node method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.Error.should_be_retried">should_be_retried (error.models.Error attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.should_be_superseded">should_be_superseded() (recipe.diff.node.NodeDiff method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.should_be_unpublished">should_be_unpublished() (recipe.diff.node.NodeDiff method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.views.UploadRenderer.show_form_for_method">show_form_for_method() (port.views.UploadRenderer method)</a>
 </li>
@@ -10258,6 +10492,8 @@
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView.STATUS_FRESHNESS_THRESHOLD">STATUS_FRESHNESS_THRESHOLD (scheduler.views.StatusView attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.exceptions.StatusError">StatusError</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.STATUSES_REPROCESS_NEW_NODE">STATUSES_REPROCESS_NEW_NODE (recipe.diff.node.NodeDiff attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.statusUpdate">statusUpdate() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 </li>
@@ -10664,6 +10900,10 @@
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_all_tasks">test_add_allocated_offers_remove_all_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_job_exes">test_add_allocated_offers_remove_job_exes() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_child">test_add_dependency_missing_child() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_add_dependency_missing_parent">test_add_dependency_missing_parent() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_backends.TestBackendsFactory.test_add_message_backend">test_add_message_backend() (messaging.test.test_backends.TestBackendsFactory method)</a>
 </li>
@@ -11121,13 +11361,23 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.html#batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6.test_convert_definition_to_v6">test_convert_definition_to_v6() (batch.test.definition.json.test_definition_v6.TestBatchDefinitionV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_empty">test_convert_diff_to_v6_empty() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_empty">test_convert_diff_to_v6_empty() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_full_diff">test_convert_diff_to_v6_full_diff() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_full_diff">test_convert_diff_to_v6_full_diff() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_convert_diff_to_v6_new_required_input">test_convert_diff_to_v6_new_required_input() (recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_diff_to_v6_new_required_input">test_convert_diff_to_v6_new_required_input() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.job.html#job.test.configuration.json.job.test_job_config.TestJobConfiguration.test_convert_from_1_0">test_convert_from_1_0() (job.test.configuration.json.job.test_job_config.TestJobConfiguration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.test_convert_recipe_definition_to_v6_json_empty">test_convert_recipe_definition_to_v6_json_empty() (recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.test_convert_recipe_definition_to_v6_json_full">test_convert_recipe_definition_to_v6_json_full() (recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_empty">test_convert_recipe_diff_to_v6_json_empty() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_new_required_input">test_convert_recipe_diff_to_v6_json_new_required_input() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_convert_recipe_diff_to_v6_json_with_changes">test_convert_recipe_diff_to_v6_json_with_changes() (recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_country_data">test_country_data() (storage.test.test_models.TestScaleFile method)</a>
 </li>
@@ -11289,6 +11539,16 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerMoveFiles.test_deleted_file">(storage.test.test_models.TestScaleFileManagerMoveFiles method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_cannot_connect_to_recipe">test_dependency_input_conn_cannot_connect_to_recipe() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_duplicate_input">test_dependency_input_conn_duplicate_input() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_dependency">test_dependency_input_conn_missing_dependency() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_missing_input_node">test_dependency_input_conn_missing_input_node() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_dependency_input_conn_successful">test_dependency_input_conn_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.tasks.html#job.test.execution.tasks.test_post_task.TestPostTask.test_determine_error">test_determine_error() (job.test.execution.tasks.test_post_task.TestPostTask method)</a>
 
       <ul>
@@ -11592,6 +11852,10 @@
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_blocked_jobs">test_get_blocked_jobs() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_geospatial_utils.TestGeospatialUtils.test_get_center_point">test_get_center_point() (storage.test.test_geospatial_utils.TestGeospatialUtils method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.test_get_definition_empty">test_get_definition_empty() (recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.test_get_definition_full">test_get_definition_full() (recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_dependent_job_ids">test_get_dependent_job_ids() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
 </li>
@@ -11919,6 +12183,10 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_changed">test_init_changed() (recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes">test_init_changes() (recipe.test.diff.test_diff.TestRecipeDiff method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes_in_middle_of_chains">test_init_changes_in_middle_of_chains() (recipe.test.diff.test_diff.TestRecipeDiff method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_cyclic_dependency">test_init_cyclic_dependency() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_deleted_and_new">test_init_deleted_and_new() (recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
@@ -11935,14 +12203,22 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_duplicate_output_name">test_init_duplicate_output_name() (job.test.configuration.data.test_job_data.TestJobDataInit method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_identical">test_init_identical() (recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.test_init_identical">test_init_identical() (recipe.test.diff.test_diff.TestRecipeDiff method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_identical">(recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_input_data_name">test_init_input_data_name() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit.test_init_job_name">test_init_job_name() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_new_required_input">test_init_new_required_input() (recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.test_init_new_required_input">test_init_new_required_input() (recipe.test.diff.test_diff.TestRecipeDiff method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_init_new_required_input">(recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_no_input_name">test_init_no_input_name() (job.test.configuration.data.test_job_data.TestJobDataInit method)</a>
 
       <ul>
@@ -11974,7 +12250,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.tasks.json.results.html#job.test.execution.tasks.json.results.test_task_results.TestTaskResults.test_init_validation">(job.test.execution.tasks.json.results.test_task_results.TestTaskResults method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6.test_init_validation">(recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6 method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6.test_init_validation">(recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6.test_init_validation">(recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_init_with_database">test_init_with_database() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
@@ -12857,14 +13135,14 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
@@ -13024,6 +13302,14 @@
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_1">test_receive_messages_1_batch_size_1() (util.test.test_aws.TestSQSClient method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_100">test_receive_messages_1_batch_size_100() (util.test.test_aws.TestSQSClient method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_duplicate_input">test_recipe_input_conn_duplicate_input() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input">test_recipe_input_conn_missing_input() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_missing_input_node">test_recipe_input_conn_missing_input_node() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_successful">test_recipe_input_conn_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_recipe_link">test_recipe_link() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
 </li>
@@ -13200,6 +13486,8 @@
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_manager.TestCommandMessageManager.test_send_messages_no_type">test_send_messages_no_type() (messaging.test.test_manager.TestCommandMessageManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_set_deleted">test_set_deleted() (storage.test.test_models.TestScaleFile method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff.test_set_force_reprocess">test_set_force_reprocess() (recipe.test.diff.test_diff.TestRecipeDiff method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_set_recursive_false">test_set_recursive_false() (ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
 
@@ -13771,6 +14059,10 @@
         <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_system_job_task">(job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_circular">test_topological_order_circular() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_successful">test_topological_order_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_trigger_custom">test_trigger_custom() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_trigger_default">test_trigger_default() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
@@ -14053,15 +14345,23 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty">test_validate_empty() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_connection">test_validate_invalid_connection() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_input_interface">test_validate_invalid_input_interface() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type">test_validate_mismatched_monitor_type() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_mismatched_scanner_type">test_validate_mismatched_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing">test_validate_missing() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_missing_dependency">test_validate_missing_dependency() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_recursive_invalid_type">test_validate_recursive_invalid_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success">test_validate_success() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_successful">test_validate_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_successful_all">test_validate_successful_all() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
@@ -14549,6 +14849,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.data.html#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateWorkspace">TestRecipeDataValidateWorkspace (class in recipe.test.configuration.data.test_recipe_data)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition">TestRecipeDefinition (class in recipe.test.definition.test_definition)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetGraph">TestRecipeDefinitionGetGraph (class in recipe.test.configuration.definition.test_recipe_definition)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys">TestRecipeDefinitionGetJobTypeKeys (class in recipe.test.configuration.definition.test_recipe_definition)</a>
@@ -14559,17 +14861,21 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionInit">TestRecipeDefinitionInit (class in recipe.test.configuration.definition.test_recipe_definition)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.definition.json.html#recipe.test.definition.json.test_definition_v6.TestRecipeDefinitionV6">TestRecipeDefinitionV6 (class in recipe.test.definition.json.test_definition_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData">TestRecipeDefinitionValidateData (class in recipe.test.configuration.definition.test_recipe_definition)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces">TestRecipeDefinitionValidateJobInterfaces (class in recipe.test.configuration.definition.test_recipe_definition)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsView">TestRecipeDetailsView (class in recipe.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff">TestRecipeDiff (class in recipe.test.diff.test_diff)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeDiffV6">TestRecipeDiffV6 (class in recipe.test.diff.json.test_diff_v6)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph.TestRecipeGraph">TestRecipeGraph (class in recipe.test.handlers.test_graph)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta">TestRecipeGraphDelta (class in recipe.test.handlers.test_graph_delta)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.test.diff.json.html#recipe.test.diff.json.test_diff_v6.TestRecipeGraphDiffV6">TestRecipeGraphDiffV6 (class in recipe.test.diff.json.test_diff_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler">TestRecipeHandler (class in recipe.test.handlers.test_handler)</a>
 </li>
@@ -15043,6 +15349,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.uncancel_jobs.UncancelJobs">UncancelJobs (class in job.messages.uncancel_jobs)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.node.NodeDiff.UNCHANGED">UNCHANGED (recipe.diff.node.NodeDiff attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.UNEDITABLE_FIELDS">UNEDITABLE_FIELDS (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.UNKNOWN">UNKNOWN (job.tasks.update.TaskStatusUpdate attribute)</a>
@@ -15123,10 +15431,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.update_task_id_for_lost_task">update_task_id_for_lost_task() (job.execution.tasks.exe_task.JobExecutionTask method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">update_to_now() (job.execution.metrics.FinishedJobExeMetricsOverTime method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">update_to_now() (job.execution.metrics.FinishedJobExeMetricsOverTime method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.update_uuid">update_uuid() (storage.models.ScaleFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.messages.html#batch.messages.update_batch_metrics.UpdateBatchMetrics">UpdateBatchMetrics (class in batch.messages.update_batch_metrics)</a>
@@ -15215,6 +15523,8 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.JsonParameter.VALID_JSON_TYPES">VALID_JSON_TYPES (data.interface.parameter.JsonParameter attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFile.VALID_TIME_FIELDS">VALID_TIME_FIELDS (product.models.ProductFile attribute)</a>
 
       <ul>
@@ -15231,6 +15541,12 @@
         <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchDefinition.validate">(batch.definition.json.old.batch_definition.BatchDefinition method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerConfiguration.validate">(batch.definition.json.old.batch_definition.BatchTriggerConfiguration method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.interface.Interface.validate">(data.interface.interface.Interface method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.JsonParameter.validate">(data.interface.parameter.JsonParameter method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.Parameter.validate">(data.interface.parameter.Parameter method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.validate">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
@@ -15251,6 +15567,16 @@
         <li><a href="architecture/django/code_docs/job.test.html#job.test.utils.MockErrorTriggerRuleConfiguration.validate">(job.test.utils.MockErrorTriggerRuleConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.utils.MockTriggerRuleConfiguration.validate">(job.test.utils.MockTriggerRuleConfiguration method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.DependencyInputConnection.validate">(recipe.definition.connection.DependencyInputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.InputConnection.validate">(recipe.definition.connection.InputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.connection.RecipeInputConnection.validate">(recipe.definition.connection.RecipeInputConnection method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.validate">(recipe.definition.definition.RecipeDefinition method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.Node.validate">(recipe.definition.node.Node method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.utils.MockErrorTriggerRuleConfiguration.validate">(recipe.test.utils.MockErrorTriggerRuleConfiguration method)</a>
 </li>
@@ -15291,9 +15617,17 @@
         <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.validate_configuration">(storage.brokers.s3_broker.S3Broker method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.validate_connection">validate_connection() (job.configuration.interface.job_interface.JobInterface method)</a>
+      <li><a href="architecture/django/code_docs/data.interface.html#data.interface.interface.Interface.validate_connection">validate_connection() (data.interface.interface.Interface method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.FileParameter.validate_connection">(data.interface.parameter.FileParameter method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.JsonParameter.validate_connection">(data.interface.parameter.JsonParameter method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/data.interface.html#data.interface.parameter.Parameter.validate_connection">(data.interface.parameter.Parameter method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.validate_connection">(job.configuration.interface.job_interface.JobInterface method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_0.JobInterface.validate_connection">(job.configuration.interface.job_interface_1_0.JobInterface method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_3.JobInterface.validate_connection">(job.configuration.interface.job_interface_1_3.JobInterface method)</a>
@@ -15347,6 +15681,8 @@
         <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.validate_properties">(recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.validate_recipe_type">validate_recipe_type() (recipe.models.RecipeTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.validate_resource_level">validate_resource_level() (in module scheduler.models)</a>
@@ -15371,8 +15707,6 @@
         <li><a href="architecture/django/code_docs/source.triggers.configuration.html#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate_trigger_for_job">(source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_recipe">validate_trigger_for_recipe() (ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
 
       <ul>
@@ -15442,6 +15776,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.verbose_name">verbose_name (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/data.html#data.apps.DataConfig.verbose_name">(data.apps.DataConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.verbose_name">(diagnostic.apps.DiagnosticConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.verbose_name">(error.apps.ErrorConfig attribute)</a>

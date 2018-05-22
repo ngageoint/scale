@@ -1,0 +1,22 @@
+recipe\.test\.definition\.json package
+======================================
+
+Submodules
+----------
+
+recipe\.test\.definition\.json\.test\_definition\_v6 module
+-----------------------------------------------------------
+
+.. automodule:: recipe.test.definition.json.test_definition_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.definition.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

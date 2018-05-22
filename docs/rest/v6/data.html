@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>v6 Metrics Services &mdash; Scale 5.4.0-snapshot documentation</title>
+  <title>v6 Data Services &mdash; Scale 5.4.0-snapshot documentation</title>
   
 
   
@@ -31,8 +31,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="v6 Node Services" href="node.html" />
-    <link rel="prev" title="v6 Diagnostic Services" href="diagnostic.html" />
+    <link rel="next" title="v6 Diagnostic Services" href="diagnostic.html" />
+    <link rel="prev" title="v6 Batch Services" href="batch.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -100,14 +100,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Metrics Services</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#v6-metrics-list">v6 Metrics List</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#v6-metric-details">v6 Metric Details</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#v6-metric-plot-data">v6 Metric Plot Data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Data Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#interface-json">Interface JSON</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
@@ -165,13 +163,13 @@
         
           <li><a href="../index.html">REST API</a> &raquo;</li>
         
-      <li>v6 Metrics Services</li>
+      <li>v6 Data Services</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/rest/v6/metrics.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rest/v6/data.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -184,32 +182,71 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="v6-metrics-services">
-<span id="rest-v6-metrics"></span><h1>v6 Metrics Services<a class="headerlink" href="#v6-metrics-services" title="Permalink to this headline">¶</a></h1>
-<p>These services provide access to information about processing counts and timings.</p>
-<div class="section" id="v6-metrics-list">
-<span id="rest-v6-metrics-list"></span><h2>v6 Metrics List<a class="headerlink" href="#v6-metrics-list" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example GET /v6/metrics/ API call</strong></p>
-<p>Request: GET <a class="reference external" href="http://.../v6/metrics/">http://.../v6/metrics/</a></p>
-<p>Response: 200 OK</p>
-<blockquote>
-<div></div></blockquote>
+  <div class="section" id="v6-data-services">
+<span id="rest-v6-data"></span><h1>v6 Data Services<a class="headerlink" href="#v6-data-services" title="Permalink to this headline">¶</a></h1>
+<p>These services allow for the management of data within Scale.</p>
+<div class="section" id="interface-json">
+<span id="rest-v6-data-interface"></span><h2>Interface JSON<a class="headerlink" href="#interface-json" title="Permalink to this headline">¶</a></h2>
+<p>An interface JSON describes a set of parameters that can be passed data values to process.</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;media_types&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;image/tiff&#39;</span><span class="p">],</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span> <span class="s1">&#39;multiple&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">}],</span>
+   <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="o">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">False</span><span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
 </div>
-<div class="section" id="v6-metric-details">
-<span id="rest-v6-metrics-details"></span><h2>v6 Metric Details<a class="headerlink" href="#v6-metric-details" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example GET /v6/metrics/{name}/ API call</strong></p>
-<p>Request: GET /v6/metrics/{name}/</p>
-<p>Response: 200 OK</p>
-<blockquote>
-<div></div></blockquote>
-</div>
-<div class="section" id="v6-metric-plot-data">
-<span id="rest-v6-metrics-plot"></span><h2>v6 Metric Plot Data<a class="headerlink" href="#v6-metric-plot-data" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example GET /v6/metrics/{name}/plot-data/ API call</strong></p>
-<p>Request: GET /v6/metrics/{name}/plot-data/</p>
-<p>Response: 200 OK</p>
-<blockquote>
-<div></div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Interface</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>files</td>
+<td>Array</td>
+<td>Required</td>
+<td>Lists the parameters that take file(s) as input</td>
+</tr>
+<tr class="row-odd"><td>json</td>
+<td>Array</td>
+<td>Required</td>
+<td>Lists the parameters that take JSON as input</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td>String</td>
+<td>Required</td>
+<td>The unique name of the parameter</td>
+</tr>
+<tr class="row-odd"><td>required</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Indicates whether the parameter is required. Defaults to True.</td>
+</tr>
+<tr class="row-even"><td>media_types</td>
+<td>Array</td>
+<td>Optional</td>
+<td>(file parameter) List of strings describing the accepted media
+types for the parameter&#8217;s file(S)</td>
+</tr>
+<tr class="row-odd"><td>multiple</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>(file parameter) Indicates whether the parameter takes multiple
+files. Defaults to False.</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>String</td>
+<td>Required</td>
+<td>(JSON parameter) The accepted JSON data type. Must be one of
+&#8216;array&#8217;, &#8216;boolean&#8217;, &#8216;integer&#8217;, &#8216;number&#8217;, &#8216;object&#8217;, or &#8216;string&#8217;.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -221,10 +258,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="node.html" class="btn btn-neutral float-right" title="v6 Node Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="diagnostic.html" class="btn btn-neutral float-right" title="v6 Diagnostic Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="diagnostic.html" class="btn btn-neutral" title="v6 Diagnostic Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="batch.html" class="btn btn-neutral" title="v6 Batch Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

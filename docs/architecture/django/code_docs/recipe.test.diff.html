@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="recipe.test.diff.json package" href="recipe.test.diff.json.html" />
-    <link rel="prev" title="recipe.test.configuration.definition package" href="recipe.test.configuration.definition.html" />
+    <link rel="prev" title="recipe.test.definition.json package" href="recipe.test.definition.json.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -232,6 +232,53 @@
 </ul>
 </div>
 </div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.test.diff.test_diff">
+<span id="recipe-test-diff-test-diff-module"></span><h2>recipe.test.diff.test_diff module<a class="headerlink" href="#module-recipe.test.diff.test_diff" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff">
+<em class="property">class </em><code class="descclassname">recipe.test.diff.test_diff.</code><code class="descname">TestRecipeDiff</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes">
+<code class="descname">test_init_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a RecipeDiff when the newer definition has a variety of changes in it</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes_in_middle_of_chains">
+<code class="descname">test_init_changes_in_middle_of_chains</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.test_init_changes_in_middle_of_chains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a RecipeDiff where nodes are deleted from and inserted into the middle of a chain</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.test_init_identical">
+<code class="descname">test_init_identical</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.test_init_identical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a RecipeDiff between two identical recipe definitions</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.test_init_new_required_input">
+<code class="descname">test_init_new_required_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.test_init_new_required_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a RecipeDiff when the newer definition has a new required input parameter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.diff.test_diff.TestRecipeDiff.test_set_force_reprocess">
+<code class="descname">test_set_force_reprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.diff.test_diff.TestRecipeDiff.test_set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling RecipeDiff.set_force_reprocess()</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.test.diff">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.diff" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -248,7 +295,7 @@
         <a href="recipe.test.diff.json.html" class="btn btn-neutral float-right" title="recipe.test.diff.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.test.configuration.definition.html" class="btn btn-neutral" title="recipe.test.configuration.definition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.test.definition.json.html" class="btn btn-neutral" title="recipe.test.definition.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
