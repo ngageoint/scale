@@ -1,19 +1,120 @@
 
-.. _rest_ingest:
+.. _rest_v6_ingest:
 
-Ingest Services
+v6 Ingest Services
 ===============
 
 These services provide access to information about ingested files processed by the system.
 
-.. _rest_ingest_list:
+.. _rest_v6_ingest_list:
+
+v6 Ingest List
+----------------------
+
+**Example GET /v6/ingests/ API call**
+
+Request: GET http://.../v6/ingests/?scan_id=1
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+    { 
+        "count": 42, 
+        "next": null, 
+        "previous": null, 
+        "results": [ 
+            { 
+                "id": 14, 
+                "file_name": "file_name.txt", 
+                "scan": null, 
+                "strike": { 
+                    "id": 1, 
+                    "name": "my-strike", 
+                    "title": "My Strike Processor", 
+                    "description": "This Strike process handles the data feed", 
+                    "job": { 
+                        "id": 2 
+                    } 
+                }, 
+                "status": "INGESTED", 
+                "bytes_transferred": 1234, 
+                "transfer_started": "2015-09-10T14:48:08.920Z", 
+                "transfer_ended": "2015-09-10T14:48:08.956Z", 
+                "media_type": "text/plain", 
+                "file_size": 1234, 
+                "data_type": [], 
+                "file_path": "the/current/path/file_name.txt", 
+                "workspace": { 
+                    "id": 1, 
+                    "name": "my-workspace", 
+                    "title": "My Workspace", 
+                    "description": "My Workspace", 
+                    "base_url": "http://host.com/wk", 
+                    "is_active": true, 
+                    "used_size": 0, 
+                    "total_size": 0, 
+                    "created": "2015-10-05T21:26:04.855Z", 
+                    "archived": null, 
+                    "last_modified": "2015-10-05T21:26:04.855Z" 
+                }, 
+                "new_file_path": "the/new/path/file_name.txt", 
+                "new_workspace": { 
+                    "id": 1, 
+                    "name": "my-new-workspace", 
+                    "title": "My New Workspace", 
+                    "description": "My New Workspace", 
+                    "base_url": "http://host.com/new-wk", 
+                    "is_active": true, 
+                    "used_size": 0, 
+                    "total_size": 0, 
+                    "created": "2015-10-05T21:26:04.855Z", 
+                    "archived": null, 
+                    "last_modified": "2015-10-05T21:26:04.855Z" 
+                }, 
+                "job": { 
+                    "id": 1234 
+                }, 
+                "ingest_started": "2015-09-10T15:24:53.503Z", 
+                "ingest_ended": "2015-09-10T15:24:53.987Z", 
+                "source_file": { 
+                    "id": 1, 
+                    "workspace": { 
+                        "id": 1, 
+                        "name": "Raw Source" 
+                    }, 
+                    "file_name": "file_name.txt", 
+                    "media_type": "text/plain", 
+                    "file_size": 1234, 
+                    "data_type": [], 
+                    "is_deleted": false, 
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd", 
+                    "url": "http://host.com/file_name.txt", 
+                    "created": "2015-09-10T15:24:53.962Z", 
+                    "deleted": null, 
+                    "data_started": "2015-09-10T14:36:56Z", 
+                    "data_ended": "2015-09-10T14:37:01Z", 
+                    "geometry": null, 
+                    "center_point": null, 
+                    "meta_data": {...}, 
+                    "last_modified": "2015-09-10T15:25:03.797Z", 
+                    "is_parsed": true, 
+                    "parsed": "2015-09-10T15:25:03.796Z" 
+                }, 
+                "data_started": "2015-09-10T15:24:53.503Z", 
+                "data_ended": "2015-09-10T15:24:53.987Z", 
+                "created": "2015-09-10T15:24:47.412Z", 
+                "last_modified": "2015-09-10T15:24:53.987Z" 
+            }, 
+           ... 
+        ] 
+    } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Ingest List**                                                                                                         |
 +=========================================================================================================================+
 | Returns a list of all ingests.                                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /ingests/                                                                                                       |
+| **GET** /v6/ingests/                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -118,112 +219,163 @@ These services provide access to information about ingested files processed by t
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "count": 42,                                                                                                     |
-|        "next": null,                                                                                                    |
-|        "previous": null,                                                                                                |
-|        "results": [                                                                                                     |
-|            {                                                                                                            |
-|                "id": 14,                                                                                                |
-|                "file_name": "file_name.txt",                                                                            |
-|                "scan": null,                                                                                            |
-|                "strike": {                                                                                              |
-|                    "id": 1,                                                                                             |
-|                    "name": "my-strike",                                                                                 |
-|                    "title": "My Strike Processor",                                                                      |
-|                    "description": "This Strike process handles the data feed",                                          |
-|                    "job": {                                                                                             |
-|                        "id": 2                                                                                          |
-|                    }                                                                                                    |
-|                },                                                                                                       |
-|                "status": "INGESTED",                                                                                    |
-|                "bytes_transferred": 1234,                                                                               |
-|                "transfer_started": "2015-09-10T14:48:08.920Z",                                                          |
-|                "transfer_ended": "2015-09-10T14:48:08.956Z",                                                            |
-|                "media_type": "text/plain",                                                                              |
-|                "file_size": 1234,                                                                                       |
-|                "data_type": [],                                                                                         |
-|                "file_path": "the/current/path/file_name.txt",                                                           |
-|                "workspace": {                                                                                           |
-|                    "id": 1,                                                                                             |
-|                    "name": "my-workspace",                                                                              |
-|                    "title": "My Workspace",                                                                             |
-|                    "description": "My Workspace",                                                                       |
-|                    "base_url": "http://host.com/wk",                                                                    |
-|                    "is_active": true,                                                                                   |
-|                    "used_size": 0,                                                                                      |
-|                    "total_size": 0,                                                                                     |
-|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
-|                    "archived": null,                                                                                    |
-|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
-|                },                                                                                                       |
-|                "new_file_path": "the/new/path/file_name.txt",                                                           |
-|                "new_workspace": {                                                                                       |
-|                    "id": 1,                                                                                             |
-|                    "name": "my-new-workspace",                                                                          |
-|                    "title": "My New Workspace",                                                                         |
-|                    "description": "My New Workspace",                                                                   |
-|                    "base_url": "http://host.com/new-wk",                                                                |
-|                    "is_active": true,                                                                                   |
-|                    "used_size": 0,                                                                                      |
-|                    "total_size": 0,                                                                                     |
-|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
-|                    "archived": null,                                                                                    |
-|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
-|                },                                                                                                       |
-|                "job": {                                                                                                 |
-|                    "id": 1234                                                                                           |
-|                },                                                                                                       |
-|                "ingest_started": "2015-09-10T15:24:53.503Z",                                                            |
-|                "ingest_ended": "2015-09-10T15:24:53.987Z",                                                              |
-|                "source_file": {                                                                                         |
-|                    "id": 1,                                                                                             |
-|                    "workspace": {                                                                                       |
-|                        "id": 1,                                                                                         |
-|                        "name": "Raw Source"                                                                             |
-|                    },                                                                                                   |
-|                    "file_name": "file_name.txt",                                                                        |
-|                    "media_type": "text/plain",                                                                          |
-|                    "file_size": 1234,                                                                                   |
-|                    "data_type": [],                                                                                     |
-|                    "is_deleted": false,                                                                                 |
-|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
-|                    "url": "http://host.com/file_name.txt",                                                              |
-|                    "created": "2015-09-10T15:24:53.962Z",                                                               |
-|                    "deleted": null,                                                                                     |
-|                    "data_started": "2015-09-10T14:36:56Z",                                                              |
-|                    "data_ended": "2015-09-10T14:37:01Z",                                                                |
-|                    "geometry": null,                                                                                    |
-|                    "center_point": null,                                                                                |
-|                    "meta_data": {...},                                                                                  |
-|                    "last_modified": "2015-09-10T15:25:03.797Z",                                                         |
-|                    "is_parsed": true,                                                                                   |
-|                    "parsed": "2015-09-10T15:25:03.796Z"                                                                 |
-|                },                                                                                                       |
-|                "data_started": "2015-09-10T15:24:53.503Z",                                                              |
-|                "data_ended": "2015-09-10T15:24:53.987Z",                                                                |
-|                "created": "2015-09-10T15:24:47.412Z",                                                                   |
-|                "last_modified": "2015-09-10T15:24:53.987Z"                                                              |
-|            },                                                                                                           |
-|           ...                                                                                                           |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 
-.. _rest_ingest_details:
+.. _rest_v6_ingest_details:
+
+v6 Ingest Details
+----------------------
+
+**Example GET /v6/ingests/{id}/ API call**
+
+Request: GET http://.../v6/ingests/{id}/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+    { 
+        "id": 14, 
+        "file_name": "file_name.txt", 
+        "scan": null, 
+        "strike": { 
+            "id": 1, 
+            "name": "my-strike", 
+            "title": "My Strike Processor", 
+            "description": "This Strike process handles the data feed", 
+            "job": { 
+                "id": 2, 
+                "job_type": { 
+                    "id": 2, 
+                    "name": "scale-strike", 
+                    "version": "1.0", 
+                    "title": "Scale Strike", 
+                    "description": "Monitors a directory for incoming files to ingest", 
+                    "category": "system", 
+                    "author_name": null, 
+                    "author_url": null, 
+                    "is_system": true, 
+                    "is_long_running": true, 
+                    "is_active": true, 
+                    "is_operational": true, 
+                    "is_paused": false, 
+                    "icon_code": "f013" 
+                }, 
+                "job_type_rev": { 
+                    "id": 2 
+                }, 
+                "event": { 
+                    "id": 2 
+                }, 
+                "error": null, 
+                "status": "RUNNING", 
+                "priority": 5, 
+                "num_exes": 1 
+            }, 
+            "configuration": { 
+                "transfer_suffix": "_tmp", 
+                "mount": "host:/transfer", 
+                "version": "1.0", 
+                "mount_on": "/mounts/transfer", 
+                "files_to_ingest": [ 
+                    { 
+                        "workspace_path": "/workspace", 
+                        "data_types": [], 
+                        "filename_regex": "*.txt", 
+                        "workspace_name": "raw" 
+                    } 
+                ] 
+            }, 
+            "created": "2015-09-10T15:24:42.896Z", 
+            "last_modified": "2015-09-10T15:24:42.935Z" 
+        }, 
+        "status": "INGESTED", 
+        "bytes_transferred": 1234, 
+        "transfer_started": "2015-09-10T14:48:08.920Z", 
+        "transfer_ended": "2015-09-10T14:48:08.956Z", 
+        "media_type": "text/plain", 
+        "file_size": 1234, 
+        "data_type": [], 
+        "file_path": "the/current/path/file_name.txt", 
+        "workspace": { 
+            "id": 1, 
+            "name": "my-workspace", 
+            "title": "My Workspace", 
+            "description": "My Workspace", 
+            "base_url": "http://host.com/wk", 
+            "is_active": true, 
+            "used_size": 0, 
+            "total_size": 0, 
+            "created": "2015-10-05T21:26:04.855Z", 
+            "archived": null, 
+            "last_modified": "2015-10-05T21:26:04.855Z", 
+            "json_config": { 
+                 "broker": { 
+                    "type": "host", 
+                    "host_path": "/host/path" 
+                } 
+            } 
+        }, 
+        "new_file_path": "the/new/path/file_name.txt", 
+        "new_workspace": { 
+            "id": 1, 
+            "name": "my-new-workspace", 
+            "title": "My New Workspace", 
+            "description": "My New Workspace", 
+            "base_url": "http://host.com/new-wk", 
+            "is_active": true, 
+            "used_size": 0, 
+            "total_size": 0, 
+            "created": "2015-10-05T21:26:04.855Z", 
+            "archived": null, 
+            "last_modified": "2015-10-05T21:26:04.855Z", 
+            "json_config": { 
+                 "broker": { 
+                    "type": "host", 
+                    "host_path": "/host/path" 
+                } 
+            } 
+        }, 
+        "job": { 
+            "id": 1234 
+        }, 
+        "ingest_started": "2015-09-10T15:24:53.503Z", 
+        "ingest_ended": "2015-09-10T15:24:53.987Z", 
+        "source_file": { 
+            "id": 1, 
+            "workspace": { 
+                "id": 1, 
+                "name": "Raw Source" 
+            }, 
+            "file_name": "file_name.txt", 
+            "media_type": "text/plain", 
+            "file_size": 1234, 
+            "data_type": [], 
+            "is_deleted": false, 
+            "uuid": "c8928d9183fc99122948e7840ec9a0fd", 
+            "url": "http://host.com/file_name.txt", 
+            "created": "2015-09-10T15:24:53.962Z", 
+            "deleted": null, 
+            "data_started": "2015-09-10T14:36:56Z", 
+            "data_ended": "2015-09-10T14:37:01Z", 
+            "geometry": null, 
+            "center_point": null, 
+            "meta_data": {...}, 
+            "last_modified": "2015-09-10T15:25:03.797Z", 
+            "is_parsed": true, 
+            "parsed": "2015-09-10T15:25:03.796Z" 
+        }, 
+        "data_started": "2015-09-10T15:24:53.503Z", 
+        "data_ended": "2015-09-10T15:24:53.987Z", 
+        "created": "2015-09-10T15:24:47.412Z", 
+        "last_modified": "2015-09-10T15:24:53.987Z", 
+    } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Ingest Details**                                                                                                      |
 +=========================================================================================================================+
 | Returns a specific ingest and all its related model information.                                                        |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /ingests/{id}/                                                                                                  |
+| **GET** /v6/ingests/{id}/                                                                                               |
 |         Where {id} is the unique identifier of an existing model.                                                       |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /ingests/{file_name}/                                                                                           |
-|         Where {file_name} is the unique name of an ingest associated with an existing model.                            |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -233,209 +385,127 @@ These services provide access to information about ingested files processed by t
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| count              | Integer           | The total number of results that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| next               | URL               | A URL to the next page of results.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| previous           | URL               | A URL to the previous page of results.                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | Array             | List of result JSON objects that match the query parameters.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
+| id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
 |                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .file_name         | String            | The name of the file being ingested.                                           |
+| file_name          | String            | The name of the file being ingested.                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
+| scan               | JSON Object       | The scan process that triggered the ingest.                                    |
 |                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
+| strike             | JSON Object       | The strike process that triggered the ingest.                                  |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .status            | String            | The current status of the ingest.                                              |
+| status             | String            | The current status of the ingest.                                              |
 |                    |                   | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,   |
 |                    |                   | DUPLICATE].                                                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .bytes_transferred | Integer           | The total number of bytes transferred so far.                                  |
+| bytes_transferred  | Integer           | The total number of bytes transferred so far.                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .transfer_started  | ISO-8601 Datetime | When the transfer was started.                                                 |
+| transfer_started   | ISO-8601 Datetime | When the transfer was started.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .transfer_ended    | ISO-8601 Datetime | When the transfer ended.                                                       |
+| transfer_ended     | ISO-8601 Datetime | When the transfer ended.                                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .media_type        | String            | The IANA media type of the file.                                               |
+| media_type         | String            | The IANA media type of the file.                                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .file_size         | Integer           | The size of the file in bytes.                                                 |
+| file_size          | Integer           | The size of the file in bytes.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_type         | Array             | A list of string data type "tags" for the file.                                |
+| data_type          | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .file_path         | String            | The relative path of the file in the workspace.                                |
+| file_path          | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .workspace         | JSON Object       | The workspace storing the file.                                                |
+| workspace          | JSON Object       | The workspace storing the file.                                                |
 |                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
+| new_file_path      | String            | The relative path for where the file should be moved as part of ingesting.     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
+| new_workspace      | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
 |                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job               | JSON Object       | The ID of the ingest job.                                                      |
+| job                | JSON Object       | The ID of the ingest job.                                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .ingest_started    | ISO-8601 Datetime | When the ingest was started.                                                   |
+| ingest_started     | ISO-8601 Datetime | When the ingest was started.                                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
+| ingest_ended       | ISO-8601 Datetime | When the ingest ended.                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
+| source_file        | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
+| data_started       | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_ended        | ISO-8601 Datetime | The end time of the source data being ingested.                                |
+| data_ended         | ISO-8601 Datetime | The end time of the source data being ingested.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
+| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "id": 14,                                                                                                        |
-|        "file_name": "file_name.txt",                                                                                    |
-|        "scan": null,                                                                                                    |
-|        "strike": {                                                                                                      |
-|            "id": 1,                                                                                                     |
-|            "name": "my-strike",                                                                                         |
-|            "title": "My Strike Processor",                                                                              |
-|            "description": "This Strike process handles the data feed",                                                  |
-|            "job": {                                                                                                     |
-|                "id": 2,                                                                                                 |
-|                "job_type": {                                                                                            |
-|                    "id": 2,                                                                                             |
-|                    "name": "scale-strike",                                                                              |
-|                    "version": "1.0",                                                                                    |
-|                    "title": "Scale Strike",                                                                             |
-|                    "description": "Monitors a directory for incoming files to ingest",                                  |
-|                    "category": "system",                                                                                |
-|                    "author_name": null,                                                                                 |
-|                    "author_url": null,                                                                                  |
-|                    "is_system": true,                                                                                   |
-|                    "is_long_running": true,                                                                             |
-|                    "is_active": true,                                                                                   |
-|                    "is_operational": true,                                                                              |
-|                    "is_paused": false,                                                                                  |
-|                    "icon_code": "f013"                                                                                  |
-|                },                                                                                                       |
-|                "job_type_rev": {                                                                                        |
-|                    "id": 2                                                                                              |
-|                },                                                                                                       |
-|                "event": {                                                                                               |
-|                    "id": 2                                                                                              |
-|                },                                                                                                       |
-|                "error": null,                                                                                           |
-|                "status": "RUNNING",                                                                                     |
-|                "priority": 5,                                                                                           |
-|                "num_exes": 1                                                                                            |
-|            },                                                                                                           |
-|            "configuration": {                                                                                           |
-|                "transfer_suffix": "_tmp",                                                                               |
-|                "mount": "host:/transfer",                                                                               |
-|                "version": "1.0",                                                                                        |
-|                "mount_on": "/mounts/transfer",                                                                          |
-|                "files_to_ingest": [                                                                                     |
-|                    {                                                                                                    |
-|                        "workspace_path": "/workspace",                                                                  |
-|                        "data_types": [],                                                                                |
-|                        "filename_regex": "*.txt",                                                                       |
-|                        "workspace_name": "raw"                                                                          |
-|                    }                                                                                                    |
-|                ]                                                                                                        |
-|            },                                                                                                           |
-|            "created": "2015-09-10T15:24:42.896Z",                                                                       |
-|            "last_modified": "2015-09-10T15:24:42.935Z"                                                                  |
-|        },                                                                                                               |
-|        "status": "INGESTED",                                                                                            |
-|        "bytes_transferred": 1234,                                                                                       |
-|        "transfer_started": "2015-09-10T14:48:08.920Z",                                                                  |
-|        "transfer_ended": "2015-09-10T14:48:08.956Z",                                                                    |
-|        "media_type": "text/plain",                                                                                      |
-|        "file_size": 1234,                                                                                               |
-|        "data_type": [],                                                                                                 |
-|        "file_path": "the/current/path/file_name.txt",                                                                   |
-|        "workspace": {                                                                                                   |
-|            "id": 1,                                                                                                     |
-|            "name": "my-workspace",                                                                                      |
-|            "title": "My Workspace",                                                                                     |
-|            "description": "My Workspace",                                                                               |
-|            "base_url": "http://host.com/wk",                                                                            |
-|            "is_active": true,                                                                                           |
-|            "used_size": 0,                                                                                              |
-|            "total_size": 0,                                                                                             |
-|            "created": "2015-10-05T21:26:04.855Z",                                                                       |
-|            "archived": null,                                                                                            |
-|            "last_modified": "2015-10-05T21:26:04.855Z",                                                                 |
-|            "json_config": {                                                                                             |
-|                 "broker": {                                                                                             |
-|                    "type": "host",                                                                                      |
-|                    "host_path": "/host/path"                                                                            |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        },                                                                                                               |
-|        "new_file_path": "the/new/path/file_name.txt",                                                                   |
-|        "new_workspace": {                                                                                               |
-|            "id": 1,                                                                                                     |
-|            "name": "my-new-workspace",                                                                                  |
-|            "title": "My New Workspace",                                                                                 |
-|            "description": "My New Workspace",                                                                           |
-|            "base_url": "http://host.com/new-wk",                                                                        |
-|            "is_active": true,                                                                                           |
-|            "used_size": 0,                                                                                              |
-|            "total_size": 0,                                                                                             |
-|            "created": "2015-10-05T21:26:04.855Z",                                                                       |
-|            "archived": null,                                                                                            |
-|            "last_modified": "2015-10-05T21:26:04.855Z",                                                                 |
-|            "json_config": {                                                                                             |
-|                 "broker": {                                                                                             |
-|                    "type": "host",                                                                                      |
-|                    "host_path": "/host/path"                                                                            |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        },                                                                                                               |
-|        "job": {                                                                                                         |
-|            "id": 1234                                                                                                   |
-|        },                                                                                                               |
-|        "ingest_started": "2015-09-10T15:24:53.503Z",                                                                    |
-|        "ingest_ended": "2015-09-10T15:24:53.987Z",                                                                      |
-|        "source_file": {                                                                                                 |
-|            "id": 1,                                                                                                     |
-|            "workspace": {                                                                                               |
-|                "id": 1,                                                                                                 |
-|                "name": "Raw Source"                                                                                     |
-|            },                                                                                                           |
-|            "file_name": "file_name.txt",                                                                                |
-|            "media_type": "text/plain",                                                                                  |
-|            "file_size": 1234,                                                                                           |
-|            "data_type": [],                                                                                             |
-|            "is_deleted": false,                                                                                         |
-|            "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                                  |
-|            "url": "http://host.com/file_name.txt",                                                                      |
-|            "created": "2015-09-10T15:24:53.962Z",                                                                       |
-|            "deleted": null,                                                                                             |
-|            "data_started": "2015-09-10T14:36:56Z",                                                                      |
-|            "data_ended": "2015-09-10T14:37:01Z",                                                                        |
-|            "geometry": null,                                                                                            |
-|            "center_point": null,                                                                                        |
-|            "meta_data": {...},                                                                                          |
-|            "last_modified": "2015-09-10T15:25:03.797Z",                                                                 |
-|            "is_parsed": true,                                                                                           |
-|            "parsed": "2015-09-10T15:25:03.796Z"                                                                         |
-|        },                                                                                                               |
-|        "data_started": "2015-09-10T15:24:53.503Z",                                                                      |
-|        "data_ended": "2015-09-10T15:24:53.987Z",                                                                        |
-|        "created": "2015-09-10T15:24:47.412Z",                                                                           |
-|        "last_modified": "2015-09-10T15:24:53.987Z",                                                                     |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 
-.. _rest_ingest_status:
+.. _rest_v6_ingest_status:
+
+v6 Ingest Status
+----------------------
+
+**Example GET /v6/ingests/status/ API call**
+
+Request: GET http://.../v6/ingests/status/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+    { 
+        "count": 2, 
+        "next": null, 
+        "previous": null, 
+        "results": [ 
+            { 
+                "strike": { 
+                    "id": 1, 
+                    "name": "my-strike", 
+                    "title": "My Strike Processor", 
+                    "description": "This Strike process handles the data feed", 
+                    "job": { 
+                        "id": 4, 
+                        "job_type": { 
+                            "id": 2, 
+                            "name": "scale-strike", 
+                            "version": "1.0", 
+                            "title": "Scale Strike", 
+                            "description": "Monitors a directory for incoming source files to ingest", 
+                            "category": "system", 
+                            "author_name": null, 
+                            "author_url": null, 
+                            "is_system": true, 
+                            "is_long_running": true, 
+                            "is_active": true, 
+                            "is_operational": true, 
+                            "is_paused": false, 
+                            "icon_code": "f013" 
+                        }, 
+                        "event": { 
+                            "id": 5 
+                        }, 
+                        "error": null, 
+                        "status": "RUNNING", 
+                        "priority": 5, 
+                        "num_exes": 36 
+                    }, 
+                    "created": "2015-10-05T17:35:46.690Z", 
+                    "last_modified": "2015-10-05T17:35:46.740Z" 
+                }, 
+                "most_recent": "2015-10-21T21:15:56.522Z", 
+                "files": 1234, 
+                "size": 12345678900000, 
+                "values": [ 
+                    { 
+                        "time": "2015-10-21T00:00:00Z", 
+                        "files": 10, 
+                        "size": 123456789 
+                    }, 
+                    ... 
+                ] 
+            } 
+        ] 
+    } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Ingest Status**                                                                                                       |
@@ -443,7 +513,7 @@ These services provide access to information about ingested files processed by t
 | Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots.           |
 | NOTE: Time range must be within a one month period (31 days).                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /ingests/status/                                                                                                |
+| **GET** /v6/ingests/status/                                                                                             |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -499,60 +569,3 @@ These services provide access to information about ingested files processed by t
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ..size             | Integer           | The size of files ingested by the strike process in bytes within the time slot.|
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "count": 2,                                                                                                      |
-|        "next": null,                                                                                                    |
-|        "previous": null,                                                                                                |
-|        "results": [                                                                                                     |
-|            {                                                                                                            |
-|                "strike": {                                                                                              |
-|                    "id": 1,                                                                                             |
-|                    "name": "my-strike",                                                                                 |
-|                    "title": "My Strike Processor",                                                                      |
-|                    "description": "This Strike process handles the data feed",                                          |
-|                    "job": {                                                                                             |
-|                        "id": 4,                                                                                         |
-|                        "job_type": {                                                                                    |
-|                            "id": 2,                                                                                     |
-|                            "name": "scale-strike",                                                                      |
-|                            "version": "1.0",                                                                            |
-|                            "title": "Scale Strike",                                                                     |
-|                            "description": "Monitors a directory for incoming source files to ingest",                   |
-|                            "category": "system",                                                                        |
-|                            "author_name": null,                                                                         |
-|                            "author_url": null,                                                                          |
-|                            "is_system": true,                                                                           |
-|                            "is_long_running": true,                                                                     |
-|                            "is_active": true,                                                                           |
-|                            "is_operational": true,                                                                      |
-|                            "is_paused": false,                                                                          |
-|                            "icon_code": "f013"                                                                          |
-|                        },                                                                                               |
-|                        "event": {                                                                                       |
-|                            "id": 5                                                                                      |
-|                        },                                                                                               |
-|                        "error": null,                                                                                   |
-|                        "status": "RUNNING",                                                                             |
-|                        "priority": 5,                                                                                   |
-|                        "num_exes": 36                                                                                   |
-|                    },                                                                                                   |
-|                    "created": "2015-10-05T17:35:46.690Z",                                                               |
-|                    "last_modified": "2015-10-05T17:35:46.740Z"                                                          |
-|                },                                                                                                       |
-|                "most_recent": "2015-10-21T21:15:56.522Z",                                                               |
-|                "files": 1234,                                                                                           |
-|                "size": 12345678900000,                                                                                  |
-|                "values": [                                                                                              |
-|                    {                                                                                                    |
-|                        "time": "2015-10-21T00:00:00Z",                                                                  |
-|                        "files": 10,                                                                                     |
-|                        "size": 123456789                                                                                |
-|                    },                                                                                                   |
-|                    ...                                                                                                  |
-|                ]                                                                                                        |
-|            }                                                                                                            |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
