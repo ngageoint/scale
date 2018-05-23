@@ -178,22 +178,219 @@ components:
           $ref: '#/components/schemas/scan'
         strike:
           $ref: '#/components/schemas/strike'
-        is_active:
+        status:
           type: string
-          description: True if the node is actively participating in the cluster.
-          example: True
-        deprecated:
+          description: The current status of the ingest. |
+            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]
+          example: INGESTED
+        bytes_transferred:
+          type: integer
+          description: The total number of bytes transferred so far.
+          example: 1234
+        transfer_started:
           type: string
           format: date-time
-          description: When the node was removed (is_active == False) from the cluster.
+          description: When the transfer was started.
+          example: 2015-09-10T14:48:08.920Z
+        transfer_ended:
+          type: string
+          format: date-time
+          description: When the transfer ended.
+          example: 2015-09-10T14:48:08.956Z
+        media_type:
+          type: string
+          description: The IANA media type of the file. 
+          example: text/plain
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        file_path:
+          type: string
+          description: The relative path of the file in the workspace.
+          example: the/current/path/file_name.txt
+        workspace:
+          $ref: '#/components/schemas/workspace'
+        new_file_path:
+          type: string
+          description: The relative path for where the file should be moved as part of ingesting.
+          example: the/new/path/file_name.txt
+        new_workspace:
+          $ref: '#/components/schemas/workspace'
+        job:
+          $ref: '#/components/schemas/job'
+        ingest_started:
+          type: string
+          format: date-time
+          description: When the ingest was started.
+          example: 2015-09-10T15:24:53.503Z
+        ingest_ended:
+          type: string
+          format: date-time
+          description: When the ingest ended.
+          example: 2015-09-10T15:24:53.987Z
+        source_file:
+          $ref: '#/components/schemas/source_file'
+        data_started:
+          type: string
+          format: date-time
+          description: The start time of the source data being ingested.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: The end time of the source data being ingested.
+          example: 2015-09-10T15:24:53.987Z
         created:
           type: string
           format: date-time
           description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
         last_modified:
           type: string
           format: date-time
           description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+          
+    scan:
+      title: Ingest Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Scan process used for queries.  
+          example: my-scan-process
+        title:
+          type: string
+          description: The name of the file being ingested.  
+          example: My Scan Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        file_count:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        job:
+          $ref: '#/components/schemas/job'
+        dry_run_job:
+          $ref: '#/components/schemas/job'
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        configuration:
+          $ref: '#/components/schemas/scan_config'
+
+#TODO: Finish job spec after v6 details have been nailed down        
+    job:
+      title: Job Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+          
+    scan_config:
+      title: Scan Configuration
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the |
+            configuration used. This allows updates to be made to the specification while |
+            maintaining backwards compatibility by allowing Scale to recognize an older version |
+            and convert it to the current version. The default value for version if it is not included |
+            is the latest version, which is currently 1.0. It is recommended, though not required, that |
+            you include the version so that future changes to the specification will still accept your Scan configuration.
+          example: 1.0
+        workspace:
+          type: string
+          description: The workspace field is a required string that specifies the name of the |
+            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of scanner can be used.
+          example: 1.0
+        scanner:
+          $ref: '#/components/schemas/scanner'
+        recursive:
+          type: boolean
+          description: The recursive field is an optional boolean that indicates whether a scanner |
+            should be limited to the root of a workspace or traverse the entire tree. If ommitted, the default is true for full tree recursion.
+          example: True
+        files_to_ingest:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_file'
+          description: List of ingest objects
+    scanner:
+      title: Scan Configuration
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type is a required string that specifies the type of the scanner to use. |
+            The other fields that configure the scanner are based upon the type of the scanner in the type field. |
+            Certain scanner types may only be used on workspaces with corresponding broker types. The valid scanner types are dir and s3
+          example: dir
+        transfer_suffix:
+          type: string
+          description: The transfer_suffix field is an optional string that defines a suffix that is |
+            used on the file names to indicate that files are still transferring and have not yet finished |
+            being copied into the scanned directory. Only used with dir scanners.
+          example: _tmp
+    ingest_file:
+      title: File Ingest Rule
+      type: object
+      properties:
+        filename_regex:
+          type: string
+          description: The filename_regex field is a required string that defines a regular expression to check against |
+            the names of new files in the scanned workspace. When a new file appears in the workspace, the file’s name |
+            is checked against each expression in order of the files_to_ingest array. If an expression matches the new |
+            file name in the workspace, that file is ingested according to the other fields in the JSON object and all |
+            subsequent rules in the list are ignored (first rule matched is applied).
+          example: *.txt
+        data_types:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: The data_types field is an optional list of strings. Any file that matches the corresponding file |
+            name regular expression will have these data type strings “tagged” with the file. If not provided, data_types |
+            defaults to an empty array.
+          example: []
+        new_workspace:
+          type: string
+          description: The new_workspace field optionally specifies the name of a new workspace to which the file should |
+            be copied. This allows the ingest process to move files to a different workspace after they appear in the |
+            scanned workspace.
+          example: my-new-workspace
+        new_file_path:
+          type: string
+          description: The new_file_path field is an optional string that specifies a new relative path for storing new |
+            files. If new_workspace is also specified, the file is moved to the new workspace at this new path location |
+            (instead of using the current path the new file originally came in on). If new_workspace is not specified, |
+            the file is moved to this new path location within the original scanned workspace. In either of these cases, |
+            three additional and dynamically named directories, for the current year, month, and day, will be appended to |
+            the new_file_path value automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).
+          example: the/new/path/
     node_update:
       title: Node Update
       type: object
