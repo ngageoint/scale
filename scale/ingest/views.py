@@ -101,7 +101,7 @@ class IngestDetailsView(RetrieveAPIView):
         elif request.version == 'v5':
             return self.retrieve_v5(request, ingest_id, file_name)
         elif request.version == 'v6':
-            return self.list_impl(request, ingest_id)
+            return self.retrieve_v6(request, ingest_id)
 
         raise Http404()
         
