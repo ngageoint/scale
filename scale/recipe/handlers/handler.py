@@ -203,8 +203,8 @@ class RecipeHandler(object):
             if job_name in self._jobs_by_name:
                 continue  # Skip jobs that are already created
             if sup_recipe_id and not superseded_jobs:
-                from recipe.models import RecipeJob
-                qry = RecipeJob.objects.select_related('job').filter(recipe_id=sup_recipe_id)
+                from recipe.models import RecipeNode
+                qry = RecipeNode.objects.select_related('job').filter(recipe_id=sup_recipe_id)
                 superseded_jobs = {r.job_name: r.job for r in qry}
             superseded_job = superseded_jobs[job_name] if job_name in superseded_jobs else None
             job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,

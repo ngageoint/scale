@@ -10,7 +10,7 @@ from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeInputFile, RecipeJob, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -189,7 +189,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     :param job: The associated job
     :type job: :class:'job.models.Job'
     :returns: The recipe job model
-    :rtype: :class:`recipe.models.RecipeJob`
+    :rtype: :class:`recipe.models.RecipeNode`
     """
     if not recipe:
         recipe = create_recipe()
@@ -200,7 +200,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     if not job:
         job = job_test_utils.create_job()
 
-    recipe_job = RecipeJob()
+    recipe_job = RecipeNode()
     recipe_job.job_name = job_name
     recipe_job.job = job
     recipe_job.recipe = recipe

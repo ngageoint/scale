@@ -15,7 +15,7 @@ import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import RecipeJob, RecipeType
+from recipe.models import RecipeNode, RecipeType
 from rest_framework import status
 
 
@@ -1152,7 +1152,7 @@ class TestRecipeReprocessView(TransactionTestCase):
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
 
-        recipe_job_1 = RecipeJob.objects.get(recipe_id=results['id'], job_name='kml')
+        recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], job_name='kml')
         self.assertEqual(recipe_job_1.job.priority, 1111)
 
     def test_no_changes(self):

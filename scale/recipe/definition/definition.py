@@ -20,7 +20,6 @@ class RecipeDefinition(object):
 
         self.input_interface = input_interface
         self.graph = {}  # {Name: Node}
-        self._root_nodes = {}  # {Name: Node}, root nodes have no dependencies
         self._topological_order = None  # Cached topological ordering of the nodes (list of names)
 
     def add_dependency(self, parent_name, child_name):
@@ -42,8 +41,6 @@ class RecipeDefinition(object):
         child_node = self.graph[child_name]
         parent_node = self.graph[parent_name]
         child_node.add_dependency(parent_node)
-        if child_name in self._root_nodes:
-            del self._root_nodes[child_name]
 
         self._topological_order = None  # Invalidate cache
 
@@ -196,7 +193,6 @@ class RecipeDefinition(object):
             raise InvalidDefinition('DUPLICATE_NODE', 'Node \'%s\' is already defined' % node.name)
 
         self.graph[node.name] = node
-        self._root_nodes[node.name] = node
         self._topological_order = None  # Invalidate cache
 
     def _calculate_topological_order(self):
