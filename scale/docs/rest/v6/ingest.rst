@@ -227,7 +227,7 @@ v6 Ingest Details
 
 **Example GET /v6/ingests/{id}/ API call**
 
-Request: GET http://.../v6/ingests/{id}/
+Request: GET http://.../v6/ingests/14/
 
 Response: 200 OK
 
