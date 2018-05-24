@@ -100,7 +100,7 @@ class RecipeGraphDelta(object):
                 del self._identical_nodes[job_name]
                 self._force_reprocess.add(job_name)
                 for child in node.children:
-                    nodes_to_reprocess.append(child.job_name)
+                    nodes_to_reprocess.append(child.node_name)
 
     def _determine_changes(self, job_name_a, job_name_b):
         """Compares the node from graph A and the node from graph B and sets the changes found between them
@@ -127,9 +127,9 @@ class RecipeGraphDelta(object):
             return
 
         # Check that A and B have matching parents that are identical to one another
-        a_parent_names = set(a_parent.job_name for a_parent in node_a.parents)
+        a_parent_names = set(a_parent.node_name for a_parent in node_a.parents)
         for b_parent in node_b.parents:
-            b_parent_name = b_parent.job_name
+            b_parent_name = b_parent.node_name
             if b_parent_name not in self._identical_nodes:
                 changes.append(Change('PARENT_CHANGE', 'Parent job %s changed' % b_parent_name))
                 return  # B has a parent that is not identical to any other node
@@ -179,9 +179,9 @@ class RecipeGraphDelta(object):
             return False
 
         # Check that A and B have matching parents that are identical to one another
-        a_parent_names = set(a_parent.job_name for a_parent in node_a.parents)
+        a_parent_names = set(a_parent.node_name for a_parent in node_a.parents)
         for b_parent in node_b.parents:
-            b_parent_name = b_parent.job_name
+            b_parent_name = b_parent.node_name
             if b_parent_name not in self._identical_nodes:
                 return False  # B has a parent that is not identical to any other node
             matched_a_parent_name = self._identical_nodes[b_parent_name]

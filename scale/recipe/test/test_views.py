@@ -799,7 +799,7 @@ class TestRecipesView(TransactionTestCase):
         graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
         delta = RecipeGraphDelta(graph1, graph2)
 
-        superseded_jobs = {recipe_job.job_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        superseded_jobs = {recipe_job.node_name: recipe_job.job for recipe_job in self.recipe1_jobs}
         new_recipe = recipe_test_utils.create_recipe_handler(
             recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
         ).recipe
@@ -909,7 +909,7 @@ class TestRecipeDetailsView(TransactionTestCase):
         graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
         delta = RecipeGraphDelta(graph1, graph2)
 
-        superseded_jobs = {recipe_job.job_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        superseded_jobs = {recipe_job.node_name: recipe_job.job for recipe_job in self.recipe1_jobs}
         new_recipe = recipe_test_utils.create_recipe_handler(
             recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
         ).recipe
@@ -1023,7 +1023,7 @@ class OldTestRecipeDetailsView(TransactionTestCase):
         graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
         delta = RecipeGraphDelta(graph1, graph2)
 
-        superseded_jobs = {recipe_job.job_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        superseded_jobs = {recipe_job.node_name: recipe_job.job for recipe_job in self.recipe1_jobs}
         new_recipe = recipe_test_utils.create_recipe_handler(
             recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
         ).recipe
@@ -1152,7 +1152,7 @@ class TestRecipeReprocessView(TransactionTestCase):
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
 
-        recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], job_name='kml')
+        recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], node_name='kml')
         self.assertEqual(recipe_job_1.job.priority, 1111)
 
     def test_no_changes(self):

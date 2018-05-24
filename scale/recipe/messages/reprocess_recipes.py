@@ -230,7 +230,7 @@ class ReprocessRecipes(CommandMessage):
                         for job_id in job_ids[identical_job_name]:
                             recipe_job = RecipeNode()
                             recipe_job.job_id = job_id
-                            recipe_job.job_name = identical_job_name
+                            recipe_job.node_name = identical_job_name
                             recipe_job.recipe_id = recipe.id
                             recipe_job.is_original = False
                             recipe_job_count += 1

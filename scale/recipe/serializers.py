@@ -102,7 +102,7 @@ class RecipeJobsSerializer(serializers.Serializer):
     from job.serializers import JobSerializer
 
     job = JobSerializer()
-    job_name = serializers.CharField()
+    job_name = serializers.CharField(source='node_name')
     is_original = serializers.BooleanField()
     recipe = ModelIdSerializer()
 

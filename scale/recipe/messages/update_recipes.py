@@ -161,7 +161,7 @@ class UpdateRecipes(CommandMessage):
                         for job in job_list:
                             recipe_job = RecipeNode()
                             recipe_job.job = job
-                            recipe_job.job_name = job_name
+                            recipe_job.node_name = job_name
                             recipe_job.recipe_id = recipe_id
                             recipe_jobs.append(recipe_job)
                     recipe_jobs_to_create.extend(recipe_jobs)

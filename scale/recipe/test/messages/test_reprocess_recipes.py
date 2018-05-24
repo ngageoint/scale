@@ -197,10 +197,10 @@ class TestReprocessRecipes(TransactionTestCase):
             self.assertTrue(job.is_superseded)
         # Make sure identical jobs (Job 1) were copied to new recipes
         recipe_job_1 = RecipeNode.objects.get(recipe=new_recipe_1.id)
-        self.assertEqual(recipe_job_1.job_name, 'Job 1')
+        self.assertEqual(recipe_job_1.node_name, 'Job 1')
         self.assertEqual(recipe_job_1.job_id, self.job_1_1.id)
         recipe_job_2 = RecipeNode.objects.get(recipe=new_recipe_2.id)
-        self.assertEqual(recipe_job_2.job_name, 'Job 1')
+        self.assertEqual(recipe_job_2.node_name, 'Job 1')
         self.assertEqual(recipe_job_2.job_id, self.job_2_1.id)
         # Should be two messages, one for processing new recipe input and one for canceling superseded jobs
         self.assertEqual(len(message.new_messages), 2)

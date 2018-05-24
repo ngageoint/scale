@@ -201,7 +201,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
         job = job_test_utils.create_job()
 
     recipe_job = RecipeNode()
-    recipe_job.job_name = job_name
+    recipe_job.node_name = job_name
     recipe_job.job = job
     recipe_job.recipe = recipe
     recipe_job.save()

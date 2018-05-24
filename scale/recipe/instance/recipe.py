@@ -1,4 +1,5 @@
 """Defines the class for representing an instance of an executing recipe"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from data.interface.exceptions import InvalidInterface

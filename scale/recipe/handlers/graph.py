@@ -133,13 +133,13 @@ class RecipeGraph(object):
         :type temp_set: set
         """
 
-        if node.job_name in temp_set:
+        if node.node_name in temp_set:
             raise Exception('Recipe has cyclic dependencies')
 
-        if node.job_name not in perm_set:
-            temp_set.add(node.job_name)
+        if node.node_name not in perm_set:
+            temp_set.add(node.node_name)
             for child_node in node.children:
                 self._get_topological_order_visit(child_node, results, perm_set, temp_set)
-            perm_set.add(node.job_name)
-            temp_set.remove(node.job_name)
-            results.insert(0, node.job_name)
+            perm_set.add(node.node_name)
+            temp_set.remove(node.node_name)
+            results.insert(0, node.node_name)

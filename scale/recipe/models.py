@@ -254,7 +254,7 @@ class RecipeManager(models.Manager):
                     copied_job = superseded_jobs[delta.get_identical_nodes()[job_name]]
                     recipe_job = RecipeNode()
                     recipe_job.job = copied_job
-                    recipe_job.job_name = job_name
+                    recipe_job.node_name = job_name
                     recipe_job.recipe = recipe
                     recipe_job.is_original = False
                     recipe_jobs_to_create.append(recipe_job)
@@ -270,7 +270,7 @@ class RecipeManager(models.Manager):
             job.save()
             recipe_job = RecipeNode()
             recipe_job.job = job
-            recipe_job.job_name = job_name
+            recipe_job.node_name = job_name
             recipe_job.recipe = recipe
             recipe_jobs_to_create.append(recipe_job)
 
@@ -710,7 +710,7 @@ class RecipeManager(models.Manager):
         superseded_recipe = Recipe.objects.select_for_update().get(pk=recipe_id)
         prev_jobs = Job.objects.select_for_update().filter(pk__in=[rj.job_id for rj in prev_recipe_jobs])
         prev_jobs_dict = {j.id: j for j in prev_jobs}
-        superseded_jobs = {rj.job_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
+        superseded_jobs = {rj.node_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
 
         # Create an event to represent this request
         description = {'user': 'Anonymous'}
@@ -1022,6 +1022,7 @@ class RecipeNodeManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
+    # TODO: remove once old reprocess_recipes is removed
     def get_recipe_job_ids(self, recipe_ids):
         """Returns a dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
         the job IDs
@@ -1041,13 +1042,14 @@ class RecipeNodeManager(models.Manager):
             else:
                 job_dict = {}
                 recipe_job_ids[recipe_job.recipe_id] = job_dict
-            if recipe_job.job_name in job_dict:
-                job_dict[recipe_job.job_name].append(recipe_job.job_id)
+            if recipe_job.node_name in job_dict:
+                job_dict[recipe_job.node_name].append(recipe_job.job_id)
             else:
-                job_dict[recipe_job.job_name] = [recipe_job.job_id]
+                job_dict[recipe_job.node_name] = [recipe_job.job_id]
 
         return recipe_job_ids
 
+    # TODO: remove once old recipe handlers are removed
     def get_recipe_jobs(self, recipe_ids):
         """Returns the recipe_job models with related job and job_type_rev models for the given recipe IDs
 
@@ -1098,21 +1100,26 @@ class RecipeNode(models.Model):
     the is_original flag is True. When recipe B supersedes recipe A, the non-superseded nodes from recipe A that are
     being copied to recipe B will have models with is_original set to False.
 
-    :keyword recipe: The recipe that the job is linked to
+    :keyword recipe: The recipe that contains the node
     :type recipe: :class:`django.db.models.ForeignKey`
-    :keyword job: The job that the recipe is linked to
-    :type job: :class:`django.db.models.OneToOneField`
-    :keyword job_name: The unique name of the job within the recipe
-    :type job_name: :class:`django.db.models.CharField`
-    :keyword is_original: Whether this is the original recipe for the job (True) or the job is copied from a superseded
-        recipe (False)
+    :keyword node_name: The unique name of the node within the recipe
+    :type node_name: :class:`django.db.models.CharField`
+    :keyword is_original: Whether this is the original recipe for the node (True) or the node is copied from a
+        superseded recipe (False)
     :type is_original: :class:`django.db.models.BooleanField`
+    :keyword job: If not null, this node is a job node and this field is the job that the recipe contains
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword sub_recipe: If not null, this node is a recipe node and this field is the sub-recipe that the recipe
+        contains
+    :type sub_recipe: :class:`django.db.models.ForeignKey`
     """
 
-    recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
-    job_name = models.CharField(max_length=100)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='contains', on_delete=models.PROTECT)
+    node_name = models.CharField(max_length=100)
     is_original = models.BooleanField(default=True)
+    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+    sub_recipe = models.ForeignKey('recipe.Recipe', related_name='contained_by', blank=True, null=True,
+                                   on_delete=models.PROTECT)
 
     objects = RecipeNodeManager()
 
