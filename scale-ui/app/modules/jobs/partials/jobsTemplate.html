@@ -8,7 +8,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-7">
         <div class="form-inline margin-bottom-md">
             <div class="input-group margin-right-md">
                 <span class="input-group-addon" id="from-input">
@@ -24,9 +24,17 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-3 text-right">
-        Include Superseded
-        <toggle-switch ng-model="vm.includeSuperseded" class="switch-success switch-small"></toggle-switch>
+    <div class="col-xs-3 text-right" style="padding-top: 6px">Include Superseded</div>
+    <div class="col-xs-2">
+        <div class="switch-toggle alert alert-light">
+            <input id="on" name="show-superseded" type="radio" ng-checked="vm.includeSuperseded">
+            <label for="on" ng-click="vm.toggleSuperseded(true)" ng-style="{color:vm.includeSuperseded ? '#fff' : '#000'}">On</label>
+
+            <input id="off" name="show-superseded" type="radio" ng-checked="!vm.includeSuperseded">
+            <label for="off" ng-click="vm.toggleSuperseded(false)" ng-style="{color:!vm.includeSuperseded ? '#fff' : '#000'}">Off</label>
+
+            <a class="btn btn-primary"></a>
+        </div>
     </div>
 </div>
 <div class="row">

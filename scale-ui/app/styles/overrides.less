@@ -1,16 +1,16 @@
-.switch {
-  width: 35px;
-  height: 20px;
+.switch-toggle label:nth-child(2):nth-last-child(4), .switch-toggle label:nth-child(2):nth-last-child(4) ~ label, .switch-toggle label:nth-child(2):nth-last-child(4) ~ a {
+    outline: none !important;
 }
 
-.switch small {
-  width: 20px;
-  height: 20px;
+.switch-toggle input + label {
+    outline: none !important;
 }
 
-.switch.checked {
-  /* frame when enabled */
-}
-.switch.checked small {
-  left: 18px;
+.switch-toggle {
+    background: #fff;
+    margin-bottom: 0;
+
+    label {
+        cursor: pointer;
+    }
 }

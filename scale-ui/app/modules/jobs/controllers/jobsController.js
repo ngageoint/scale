@@ -298,6 +298,10 @@
             });
         };
 
+        vm.toggleSuperseded = function (value) {
+            vm.includeSuperseded = value;
+        };
+
         vm.initialize = function () {
             if ($scope.$parent.jobsData) {
                 stateService.setParentJobsParams(vm.jobsParams);

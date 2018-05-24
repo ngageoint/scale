@@ -151,6 +151,10 @@
             });
         };
 
+        vm.toggleShowActive = function (value) {
+            vm.showActive = value;
+        };
+
         var formatResults = function () {
             var currNodeType = vm.showActive ? 'Active' : 'Deprecated';
             var altNodeType = vm.showActive ? 'Deprecated' : 'Active';

@@ -1,11 +1,22 @@
 <ais-header hide-title="true" name="'Nodes (' + vm.nodes.length + ')'" loading="vm.loading"></ais-header>
 <div class="page-header">
-    <h1>
-        Nodes ({{ vm.nodes.length }})
-        <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Deprecated" class="switch-success switch-small nodes-switch"></toggle-switch></small>
-    </h1>
-    <span ng-bind="vm.nodeTotals"></span>
-    <hr />
+    <h1>Nodes ({{ vm.nodes.length }})</h1>
+    <div class="row node-header">
+        <div class="col-xs-8">
+            <span ng-bind="vm.nodeTotals"></span>
+        </div>
+        <div class="col-xs-2">
+            <div class="switch-toggle alert alert-light">
+                <input id="active" name="show-active" type="radio" ng-checked="vm.showActive">
+                <label for="active" ng-click="vm.toggleShowActive(true)" ng-style="{color:vm.showActive ? '#fff' : '#000'}">Active</label>
+
+                <input id="deprecated" name="show-active" type="radio" ng-checked="!vm.showActive">
+                <label for="deprecated" ng-click="vm.toggleShowActive(false)" ng-style="{color:!vm.showActive ? '#fff' : '#000'}">Deprecated</label>
+
+                <a class="btn btn-primary"></a>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-xs-10">
