@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from data.interface.exceptions import InvalidInterface
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.exceptions import InvalidDefinition
-from recipe.definition.node import JobNode, RecipeNode
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 
 
 class RecipeDefinition(object):
@@ -63,7 +63,7 @@ class RecipeDefinition(object):
         if dependency_name not in self.graph:
             raise InvalidDefinition('UNKNOWN_NODE', 'Node \'%s\' is not defined' % dependency_name)
 
-        if self.graph[dependency_name].node_type != JobNode.NODE_TYPE:
+        if self.graph[dependency_name].node_type != JobNodeDefinition.NODE_TYPE:
             msg = 'Node \'%s\' has a connection to a node that is not a job' % node_name
             raise InvalidDefinition('CONNECTION_INVALID_NODE', msg)
 
@@ -85,7 +85,7 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        self._add_node(JobNode(name, job_type_name, job_type_version, revision_num))
+        self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
         """Adds a connection from a recipe input to the input of a node
@@ -120,7 +120,7 @@ class RecipeDefinition(object):
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
 
-        self._add_node(RecipeNode(name, recipe_type_name, revision_num))
+        self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
 
     def get_topological_order(self):
         """Returns the recipe node names in a valid topological ordering (dependency order)
@@ -184,7 +184,7 @@ class RecipeDefinition(object):
         """Adds a node to the recipe graph
 
         :param node: The node
-        :type node: :class:`recipe.definition.node.Node`
+        :type node: :class:`recipe.definition.node.NodeDefinition`
 
         :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the node is duplicated
         """
@@ -218,7 +218,7 @@ class RecipeDefinition(object):
         """Recursive depth-first search algorithm for determining a topological ordering of the recipe nodes
 
         :param node: The current node
-        :type node: :class:`recipe.definition.node.Node`
+        :type node: :class:`recipe.definition.node.NodeDefinition`
         :param results: The list of node names in topological order
         :type results: list
         :param perm_set: A permanent set of visited nodes (node names)

@@ -14,7 +14,7 @@ class Node(object):
         """Constructor
 
         :param definition: The definition of this node in the recipe
-        :type definition: :class:`recipe.definition.node.Node`
+        :type definition: :class:`recipe.definition.node.NodeDefinition`
         """
 
         self._definition = definition
@@ -42,7 +42,7 @@ class JobNode(Node):
         """Constructor
 
         :param definition: The definition of this node in the recipe
-        :type definition: :class:`recipe.definition.node.Node`
+        :type definition: :class:`recipe.definition.node.JobNodeDefinition`
         :param job: The job model
         :type job: :class:`job.models.Job`
         """
@@ -60,7 +60,7 @@ class RecipeNode(Node):
         """Constructor
 
         :param definition: The definition of this node in the recipe
-        :type definition: :class:`recipe.definition.node.Node`
+        :type definition: :class:`recipe.definition.node.RecipeNodeDefinition`
         :param recipe: The recipe model
         :type recipe: :class:`recipe.models.Recipe`
         """

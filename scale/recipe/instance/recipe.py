@@ -2,72 +2,35 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from data.interface.exceptions import InvalidInterface
-from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
-from recipe.definition.exceptions import InvalidDefinition
-from recipe.definition.node import JobNode, RecipeNode
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.instance.node import JobNode, RecipeNode
 
 
-class RecipeDefinition(object):
+class Recipe(object):
     """Represents an executing recipe
     """
 
-    # TODO: will pass in new RecipeNode models
-    def __init__(self, definition):
+    def __init__(self, definition, recipe_nodes):
         """Constructor
 
         :param definition: The recipe definition
         :type definition: :class:`recipe.definition.node.Node`
+        :param recipe_nodes: The list of RecipeNode models with related fields populated
+        :type recipe_nodes: list
         """
 
         self._definition = definition
         self.graph = {}  # {Name: Node}
 
-        # TODO: create the graph and all dependency links from definition and RecipeNode models
-
-    def _calculate_topological_order(self):
-        """Calculates a valid topological ordering (dependency order) for the recipe
-
-        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
-            dependency
-        """
-
-        results = []
-        perm_set = set()
-        temp_set = set()
-        unmarked_set = set(self.graph.keys())
-        while unmarked_set:
-            node_name = unmarked_set.pop()
-            node = self.graph[node_name]
-            self._topological_order_visit(node, results, perm_set, temp_set)
-            unmarked_set = set(self.graph.keys()) - perm_set
-
-        self._topological_order = results
-
-    def _topological_order_visit(self, node, results, perm_set, temp_set):
-        """Recursive depth-first search algorithm for determining a topological ordering of the recipe nodes
-
-        :param node: The current node
-        :type node: :class:`recipe.definition.node.Node`
-        :param results: The list of node names in topological order
-        :type results: list
-        :param perm_set: A permanent set of visited nodes (node names)
-        :type perm_set: set
-        :param temp_set: A temporary set of visited nodes (node names)
-        :type temp_set: set
-
-        :raises :class:`recipe.definition.exceptions.InvalidDefinition`: If the definition contains a circular
-            dependency
-        """
-
-        if node.name in temp_set:
-            msg = 'Recipe node \'%s\' has a circular dependency on itself' % node.name
-            raise InvalidDefinition('CIRCULAR_DEPENDENCY', msg)
-
-        if node.name not in perm_set:
-            temp_set.add(node.name)
-            for child_node in node.children.values():
-                self._topological_order_visit(child_node, results, perm_set, temp_set)
-            perm_set.add(node.name)
-            temp_set.remove(node.name)
-            results.insert(0, node.name)
+        # Create graph of recipe nodes
+        recipe_node_dict = {recipe_node.node_name: recipe_node for recipe_node in recipe_nodes}
+        for node_name in self._definition.get_topological_order():
+            node_definition = self._definition.graph[node_name]
+            recipe_node_model = recipe_node_dict[node_name]
+            if node_definition.node_type == JobNodeDefinition.NODE_TYPE:
+                node = JobNode(node_definition, recipe_node_model.job)
+            elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
+                node = RecipeNode(node_definition, recipe_node_model.sub_recipe)
+            self.graph[node.name] = node
+            for parent_name in node_definition.parents.keys():
+                node.add_dependency(self.graph[parent_name])
