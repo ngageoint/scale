@@ -11,9 +11,11 @@ from django.utils.timezone import now
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
+from recipe.instance.recipe import RecipeInstance
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -459,6 +461,19 @@ class RecipeManager(models.Manager):
             recipe_ids.add(recipe_job.recipe_id)
 
         return list(recipe_ids)
+
+    def get_recipe_instance(self, recipe_id):
+        """Returns the recipe instance for the given recipe ID
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: The recipe instance
+        :rtype: :class:`recipe.instance.recipe.RecipeInstance`
+        """
+
+        recipe = Recipe.objects.select_related('recipe_type_rev').get(id=recipe_id)
+        recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe_id)
+        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe_nodes)
 
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
                     include_superseded=False, order=None):
@@ -1094,6 +1109,18 @@ class RecipeNodeManager(models.Manager):
         return recipes
 
 
+    def get_recipe_nodes(self, recipe_id):
+        """Returns the recipe_node models with related sub_recipe and job models for the given recipe ID
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: The recipe_node models for the recipe
+        :rtype: list
+        """
+
+        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
+
+
 class RecipeNode(models.Model):
     """Links a recipe with a node within that recipe. Nodes within a recipe may represent either a job or another
     recipe. The same node may exist in multiple recipes due to superseding. For an original node and recipe combination,
@@ -1539,6 +1566,15 @@ class RecipeTypeRevision(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     objects = RecipeTypeRevisionManager()
+
+    def get_definition(self):
+        """Returns the definition for this recipe type revision
+
+        :returns: The definition for this revision
+        :rtype: :class:`recipe.definition.definition.RecipeDefinition`
+        """
+
+        return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
 
     def get_recipe_definition(self):
         """Returns the recipe type definition for this revision

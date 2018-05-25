@@ -3,10 +3,10 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
-from recipe.instance.node import JobNode, RecipeNode
+from recipe.instance.node import JobNodeInstance, RecipeNodeInstance
 
 
-class Recipe(object):
+class RecipeInstance(object):
     """Represents an executing recipe
     """
 
@@ -28,9 +28,25 @@ class Recipe(object):
             node_definition = self._definition.graph[node_name]
             recipe_node_model = recipe_node_dict[node_name]
             if node_definition.node_type == JobNodeDefinition.NODE_TYPE:
-                node = JobNode(node_definition, recipe_node_model.job)
+                node = JobNodeInstance(node_definition, recipe_node_model.job)
             elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
-                node = RecipeNode(node_definition, recipe_node_model.sub_recipe)
+                node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe)
             self.graph[node.name] = node
             for parent_name in node_definition.parents.keys():
                 node.add_dependency(self.graph[parent_name])
+
+    def get_jobs_to_update(self):
+        """Returns the jobs within this recipe that should be updated to a new status (either BLOCKED or PENDING)
+
+        :returns: A dict with status (PENDING or BLOCKED) mapping to lists of job IDs
+        :rtype: dict
+        """
+
+        blocked_job_ids = []
+        pending_job_ids = []
+
+        for node_name in self._definition.get_topological_order():
+            node = self.graph[node_name]
+            node.get_jobs_to_update(pending_job_ids, blocked_job_ids)
+
+        return {'BLOCKED': blocked_job_ids, 'PENDING': pending_job_ids}
