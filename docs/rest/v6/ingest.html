@@ -1,0 +1,734 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>v6 Ingest Services &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="v6 Metrics Services" href="metrics.html" />
+    <link rel="prev" title="v6 Diagnostic Services" href="diagnostic.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Ingest Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-ingest-list">v6 Ingest List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-ingest-details">v6 Ingest Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-ingest-status">v6 Ingest Status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">REST API</a> &raquo;</li>
+        
+      <li>v6 Ingest Services</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/rest/v6/ingest.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="v6-ingest-services">
+<span id="rest-v6-ingest"></span><h1>v6 Ingest Services<a class="headerlink" href="#v6-ingest-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about ingested files processed by the system.</p>
+<div class="section" id="v6-ingest-list">
+<span id="rest-v6-ingest-list"></span><h2>v6 Ingest List<a class="headerlink" href="#v6-ingest-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/ingests/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/ingests/?scan_id=1">http://.../v6/ingests/?scan_id=1</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div></div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Ingest List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of all ingests.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/ingests/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=status&amp;order=created).
+Nested objects require a delimiter (ex: order=source_file__created).
+Prefix fields with a dash to reverse the sort, (ex: order=-status).</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only ingests with a status matching this string.
+Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED,
+ERRORED, DUPLICATE].
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>scan_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only ingests created by a given scan process identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>strike_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only ingests created by a given strike process identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only ingests with a specific file name.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="../ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.file_name</td>
+<td>String</td>
+<td colspan="2">The name of the file being ingested.</td>
+</tr>
+<tr class="row-even"><td>.scan</td>
+<td>JSON Object</td>
+<td colspan="2">The scan process that triggered the ingest.
+(See <a class="reference internal" href="../scan.html#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.strike</td>
+<td>JSON Object</td>
+<td colspan="2">The strike process that triggered the ingest.
+(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.status</td>
+<td>String</td>
+<td colspan="2">The current status of the ingest.
+Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
+DUPLICATE].</td>
+</tr>
+<tr class="row-odd"><td>.bytes_transferred</td>
+<td>Integer</td>
+<td colspan="2">The total number of bytes transferred so far.</td>
+</tr>
+<tr class="row-even"><td>.transfer_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the transfer was started.</td>
+</tr>
+<tr class="row-odd"><td>.transfer_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the transfer ended.</td>
+</tr>
+<tr class="row-even"><td>.media_type</td>
+<td>String</td>
+<td colspan="2">The IANA media type of the file.</td>
+</tr>
+<tr class="row-odd"><td>.file_size</td>
+<td>Integer</td>
+<td colspan="2">The size of the file in bytes.</td>
+</tr>
+<tr class="row-even"><td>.data_type</td>
+<td>Array</td>
+<td colspan="2">A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-odd"><td>.file_path</td>
+<td>String</td>
+<td colspan="2">The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-even"><td>.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace storing the file.
+(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.new_file_path</td>
+<td>String</td>
+<td colspan="2">The relative path for where the file should be moved as part of ingesting.</td>
+</tr>
+<tr class="row-even"><td>.new_workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The new workspace to move the file into as part of ingesting.
+(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job</td>
+<td>JSON Object</td>
+<td colspan="2">The ID of the ingest job.</td>
+</tr>
+<tr class="row-even"><td>.ingest_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the ingest was started.</td>
+</tr>
+<tr class="row-odd"><td>.ingest_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the ingest ended.</td>
+</tr>
+<tr class="row-even"><td>.source_file</td>
+<td>JSON Object</td>
+<td colspan="2">A reference to the source file that was stored by this ingest.
+(See <a class="reference internal" href="../source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The end time of the source data being ingested.</td>
+</tr>
+<tr class="row-odd"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-ingest-details">
+<span id="rest-v6-ingest-details"></span><h2>v6 Ingest Details<a class="headerlink" href="#v6-ingest-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/ingests/{id}/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/ingests/14/">http://.../v6/ingests/14/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div></div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Ingest Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns a specific ingest and all its related model information.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/ingests/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="../ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>file_name</td>
+<td>String</td>
+<td>The name of the file being ingested.</td>
+</tr>
+<tr class="row-even"><td>scan</td>
+<td>JSON Object</td>
+<td>The scan process that triggered the ingest.
+(See <a class="reference internal" href="../scan.html#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>strike</td>
+<td>JSON Object</td>
+<td>The strike process that triggered the ingest.
+(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>The current status of the ingest.
+Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
+DUPLICATE].</td>
+</tr>
+<tr class="row-odd"><td>bytes_transferred</td>
+<td>Integer</td>
+<td>The total number of bytes transferred so far.</td>
+</tr>
+<tr class="row-even"><td>transfer_started</td>
+<td>ISO-8601 Datetime</td>
+<td>When the transfer was started.</td>
+</tr>
+<tr class="row-odd"><td>transfer_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When the transfer ended.</td>
+</tr>
+<tr class="row-even"><td>media_type</td>
+<td>String</td>
+<td>The IANA media type of the file.</td>
+</tr>
+<tr class="row-odd"><td>file_size</td>
+<td>Integer</td>
+<td>The size of the file in bytes.</td>
+</tr>
+<tr class="row-even"><td>data_type</td>
+<td>Array</td>
+<td>A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-odd"><td>file_path</td>
+<td>String</td>
+<td>The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-even"><td>workspace</td>
+<td>JSON Object</td>
+<td>The workspace storing the file.
+(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>new_file_path</td>
+<td>String</td>
+<td>The relative path for where the file should be moved as part of ingesting.</td>
+</tr>
+<tr class="row-even"><td>new_workspace</td>
+<td>JSON Object</td>
+<td>The new workspace to move the file into as part of ingesting.
+(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>job</td>
+<td>JSON Object</td>
+<td>The ID of the ingest job.</td>
+</tr>
+<tr class="row-even"><td>ingest_started</td>
+<td>ISO-8601 Datetime</td>
+<td>When the ingest was started.</td>
+</tr>
+<tr class="row-odd"><td>ingest_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When the ingest ended.</td>
+</tr>
+<tr class="row-even"><td>source_file</td>
+<td>JSON Object</td>
+<td>A reference to the source file that was stored by this ingest.
+(See <a class="reference internal" href="../source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>data_started</td>
+<td>ISO-8601 Datetime</td>
+<td>The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td>data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>The end time of the source data being ingested.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was last saved.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-ingest-status">
+<span id="rest-v6-ingest-status"></span><h2>v6 Ingest Status<a class="headerlink" href="#v6-ingest-status" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/ingests/status/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/ingests/status/">http://.../v6/ingests/status/</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div></div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Ingest Status</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots.
+NOTE: Time range must be within a one month period (31 days).</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/ingests/status/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).
+Defaults to the past 1 week.</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>use_ingest_time</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether to group counts by ingest time or data time.
+Ingest time is when the strike process registered the file.
+Data time is the time when the data was collected by a sensor.
+Defaults to False (data time).</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.strike</td>
+<td>JSON Object</td>
+<td colspan="2">The strike process that triggered the ingest.
+(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when the strike process last completed an ingest.</td>
+</tr>
+<tr class="row-even"><td>.files</td>
+<td>Integer</td>
+<td colspan="2">The total number of files ingested by the strike process.</td>
+</tr>
+<tr class="row-odd"><td>.size</td>
+<td>Integer</td>
+<td colspan="2">The total size of files ingested by the strike process in bytes.</td>
+</tr>
+<tr class="row-even"><td>.values</td>
+<td>Array</td>
+<td colspan="2">A list of ingest statistics grouped into 1 hour time slots.</td>
+</tr>
+<tr class="row-odd"><td>..time</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time of the 1 hour time slot being counted.</td>
+</tr>
+<tr class="row-even"><td>..files</td>
+<td>Integer</td>
+<td colspan="2">The number of files ingested by the strike process within the time slot.</td>
+</tr>
+<tr class="row-odd"><td>..size</td>
+<td>Integer</td>
+<td colspan="2">The size of files ingested by the strike process in bytes within the time slot.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="metrics.html" class="btn btn-neutral float-right" title="v6 Metrics Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="diagnostic.html" class="btn btn-neutral" title="v6 Diagnostic Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
