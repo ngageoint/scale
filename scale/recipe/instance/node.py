@@ -17,9 +17,10 @@ class NodeInstance(object):
         :type definition: :class:`recipe.definition.node.NodeDefinition`
         """
 
-        self._definition = definition
+        self.definition = definition
 
-        self.name = self._definition.name
+        self.name = self.definition.name
+        self.node_type = self.definition.node_type
         self.parents = {}  # {Name: Node}
         self.children = {}  # {Name: Node}
         self.blocks_child_jobs = False  # Whether this node blocks child jobs from running
