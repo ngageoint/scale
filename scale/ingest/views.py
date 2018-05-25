@@ -30,6 +30,24 @@ class IngestsView(ListAPIView):
     serializer_class = IngestSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+        elif request.version == 'v6':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the list of all ingests and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -66,6 +84,28 @@ class IngestDetailsView(RetrieveAPIView):
     serializer_class = IngestDetailsSerializer
 
     def retrieve(self, request, ingest_id=None, file_name=None):
+        """Determine api version and call specific method
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param ingest_id: The id of the ingest
+        :type ingest_id: int encoded as a str
+        :param file_name: The name of the ingest
+        :type file_name: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.retrieve_v5(request, ingest_id, file_name)
+        elif request.version == 'v5':
+            return self.retrieve_v5(request, ingest_id, file_name)
+        elif request.version == 'v6':
+            return self.retrieve_v6(request, ingest_id)
+
+        raise Http404()
+        
+    def retrieve_v5(self, request, ingest_id=None, file_name=None):
         """Retrieves the details for an ingest and return them in JSON form
 
         :param request: the HTTP GET request
@@ -92,6 +132,25 @@ class IngestDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(ingest)
         return Response(serializer.data)
+        
+    def retrieve_v6(self, request, ingest_id):
+        """Retrieves the details for an ingest and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param ingest_id: The id of the ingest
+        :type ingest_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            ingest = Ingest.objects.get_details(ingest_id)
+        except Ingest.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(ingest)
+        return Response(serializer.data)
 
 
 class IngestsStatusView(ListAPIView):
@@ -100,6 +159,24 @@ class IngestsStatusView(ListAPIView):
     serializer_class = IngestStatusSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+        elif request.version == 'v6':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the ingest status information and returns it in JSON form
 
         :param request: the HTTP GET request
