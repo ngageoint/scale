@@ -10,7 +10,7 @@ from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeInputFile, RecipeJob, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -144,7 +144,7 @@ def edit_recipe_type(recipe_type, definition):
 
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
-                  superseded_recipe=None, batch=None):
+                  superseded_recipe=None, batch=None, save=True):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -174,11 +174,14 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
             root_id = superseded_recipe.id
         recipe.root_superseded_recipe_id = root_id
         recipe.superseded_recipe = superseded_recipe
-    recipe.save()
+
+    if save:
+        recipe.save()
 
     return recipe
 
 
+# TODO: this is deprecated and should be replaced with create_recipe_node()
 def create_recipe_job(recipe=None, job_name=None, job=None):
     """Creates a job type model for unit testing
 
@@ -189,7 +192,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     :param job: The associated job
     :type job: :class:'job.models.Job'
     :returns: The recipe job model
-    :rtype: :class:`recipe.models.RecipeJob`
+    :rtype: :class:`recipe.models.RecipeNode`
     """
     if not recipe:
         recipe = create_recipe()
@@ -200,12 +203,52 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     if not job:
         job = job_test_utils.create_job()
 
-    recipe_job = RecipeJob()
-    recipe_job.job_name = job_name
+    recipe_job = RecipeNode()
+    recipe_job.node_name = job_name
     recipe_job.job = job
     recipe_job.recipe = recipe
     recipe_job.save()
     return recipe_job
+
+
+def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=True):
+    """Creates a recipe_node model for unit testing
+
+    :param recipe: The recipe containing the node
+    :type recipe: :class:'recipe.models.Recipe'
+    :param node_name: The node name
+    :type node_name: string
+    :param job: The job in the node
+    :type job: :class:'job.models.Job'
+    :param sub_recipe: The recipe in the node
+    :type sub_recipe: :class:'recipe.models.Recipe'
+    :param save: Whether to save the model
+    :type save: bool
+    :returns: The recipe_node model
+    :rtype: :class:`recipe.models.RecipeNode`
+    """
+
+    if not recipe:
+        recipe = create_recipe()
+
+    if not node_name:
+        node_name = 'Test Node Name'
+
+    if not job and not sub_recipe:
+        job = job_test_utils.create_job()
+
+    recipe_node = RecipeNode()
+    recipe_node.recipe = recipe
+    recipe_node.node_name = node_name
+    if job:
+        recipe_node.job = job
+    else:
+        recipe_node.sub_recipe = sub_recipe
+
+    if save:
+        recipe_node.save()
+
+    return recipe_node
 
 
 def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_recipe=None, delta=None,

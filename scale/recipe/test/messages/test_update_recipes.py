@@ -10,7 +10,7 @@ from job.configuration.results.job_results import JobResults
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.messages.update_recipes import UpdateRecipes
-from recipe.models import RecipeJob
+from recipe.models import RecipeNode
 from recipe.test import utils as recipe_test_utils
 from storage.test import utils as storage_test_utils
 
@@ -414,28 +414,28 @@ class TestUpdateRecipes(TestCase):
         # Make sure jobs get created and that "top" recipe jobs (job_1 and job_a) have input populated
         # Recipe 2 jobs (job_a and job_b) should have priority set to 999 from batch
         # Recipe 2 jobs (job_a and job_b) should supersede old jobs
-        rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
-        recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
+        rj_qry = RecipeNode.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
+        recipe_jobs = rj_qry.order_by('recipe_id', 'node_name')
         self.assertEqual(len(recipe_jobs), 4)
         self.assertEqual(recipe_jobs[0].recipe_id, recipe_1.id)
-        self.assertEqual(recipe_jobs[0].job_name, 'job_1')
+        self.assertEqual(recipe_jobs[0].node_name, 'job_1')
         self.assertEqual(recipe_jobs[0].job.job_type_id, job_type_1.id)
         self.assertTrue(recipe_jobs[0].is_original)
         self.assertTrue(recipe_jobs[0].job.has_input())
         self.assertEqual(recipe_jobs[1].recipe_id, recipe_1.id)
-        self.assertEqual(recipe_jobs[1].job_name, 'job_2')
+        self.assertEqual(recipe_jobs[1].node_name, 'job_2')
         self.assertEqual(recipe_jobs[1].job.job_type_id, job_type_2.id)
         self.assertTrue(recipe_jobs[1].is_original)
         self.assertFalse(recipe_jobs[1].job.has_input())
         self.assertEqual(recipe_jobs[2].recipe_id, recipe_2.id)
-        self.assertEqual(recipe_jobs[2].job_name, 'job_a')
+        self.assertEqual(recipe_jobs[2].node_name, 'job_a')
         self.assertEqual(recipe_jobs[2].job.job_type_id, job_type_3.id)
         self.assertTrue(recipe_jobs[2].is_original)
         self.assertTrue(recipe_jobs[2].job.has_input())
         self.assertEqual(recipe_jobs[2].job.priority, 999)
         self.assertEqual(recipe_jobs[2].job.superseded_job_id, superseded_job_a.id)
         self.assertEqual(recipe_jobs[3].recipe_id, recipe_2.id)
-        self.assertEqual(recipe_jobs[3].job_name, 'job_b')
+        self.assertEqual(recipe_jobs[3].node_name, 'job_b')
         self.assertEqual(recipe_jobs[3].job.job_type_id, job_type_4.id)
         self.assertTrue(recipe_jobs[3].is_original)
         self.assertFalse(recipe_jobs[3].job.has_input())
@@ -458,8 +458,8 @@ class TestUpdateRecipes(TestCase):
         self.assertTrue(result)
 
         # Make sure no additional jobs are created
-        rj_qry = RecipeJob.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
-        recipe_jobs = rj_qry.order_by('recipe_id', 'job_name')
+        rj_qry = RecipeNode.objects.select_related('job').filter(recipe_id__in=[recipe_1.id, recipe_2.id])
+        recipe_jobs = rj_qry.order_by('recipe_id', 'node_name')
         self.assertEqual(len(recipe_jobs), 4)
 
         # Make sure the same message is returned

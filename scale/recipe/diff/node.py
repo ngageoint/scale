@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 
-from recipe.definition.node import JobNode, RecipeNode
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from util.exceptions import ScaleLogicBug
 
 
@@ -15,7 +15,7 @@ def create_diff_for_node(node, diff_can_be_reprocessed, status):
     """Creates a node diff for the given node
 
     :param node: The node
-    :type node: :class:`recipe.definition.node.Node`
+    :type node: :class:`recipe.definition.node.NodeDefinition`
     :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
     :type diff_can_be_reprocessed: bool
     :param status: The diff status
@@ -24,9 +24,9 @@ def create_diff_for_node(node, diff_can_be_reprocessed, status):
     :rtype: :class:`recipe.diff.node.NodeDiff`
     """
 
-    if node.node_type == JobNode.NODE_TYPE:
+    if node.node_type == JobNodeDefinition.NODE_TYPE:
         return JobNodeDiff(node, diff_can_be_reprocessed, status)
-    if node.node_type == RecipeNode.NODE_TYPE:
+    if node.node_type == RecipeNodeDefinition.NODE_TYPE:
         return RecipeNodeDiff(node, diff_can_be_reprocessed, status)
 
     raise ScaleLogicBug('Unknown node type %s' % node.node_type)
@@ -51,7 +51,7 @@ class NodeDiff(object):
         """Constructor
 
         :param node: The node from the recipe definition
-        :type node: :class:`recipe.definition.node.Node`
+        :type node: :class:`recipe.definition.node.NodeDefinition`
         :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
         :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW
@@ -87,7 +87,7 @@ class NodeDiff(object):
         """Compares this node to the given node from the previous revision and calculates the diff between the nodes
 
         :param prev_node: The node from the previous revision
-        :type prev_node: :class:`recipe.definition.node.Node`
+        :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         self.changes = []
@@ -178,7 +178,7 @@ class NodeDiff(object):
         """Compares this node's input connections to the input connections of the given node
 
         :param prev_node: The node from the previous revision
-        :type prev_node: :class:`recipe.definition.node.Node`
+        :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         for connection in self._node.connections.values():
@@ -198,7 +198,7 @@ class NodeDiff(object):
         """Compares this node's dependencies to the dependencies of the given node
 
         :param prev_node: The node from the previous revision
-        :type prev_node: :class:`recipe.definition.node.Node`
+        :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         prev_parent_names = prev_node.parents.keys()
@@ -219,7 +219,7 @@ class NodeDiff(object):
         """Performs comparison specifc to the node type sublass
 
         :param prev_node: The node from the previous revision
-        :type prev_node: :class:`recipe.definition.node.Node`
+        :type prev_node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         raise NotImplementedError()
@@ -233,7 +233,7 @@ class JobNodeDiff(NodeDiff):
         """Constructor
 
         :param job_node: The job node from the recipe definition
-        :type job_node: :class:`recipe.definition.node.JobNode`
+        :type job_node: :class:`recipe.definition.node.JobNodeDefinition`
         :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
         :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW
@@ -293,7 +293,7 @@ class RecipeNodeDiff(NodeDiff):
         """Constructor
 
         :param recipe_node: The recipe node from the recipe definition
-        :type recipe_node: :class:`recipe.definition.node.RecipeNode`
+        :type recipe_node: :class:`recipe.definition.node.RecipeNodeDefinition`
         :param diff_can_be_reprocessed: Whether the top-level diff can be reprocessed
         :type diff_can_be_reprocessed: bool
         :param status: The diff status, defaults to NEW

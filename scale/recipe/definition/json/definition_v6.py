@@ -8,7 +8,7 @@ from data.interface.json.interface_v6 import INTERFACE_SCHEMA, convert_interface
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
-from recipe.definition.node import JobNode, RecipeNode
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from util.rest import strip_schema_version
 
 
@@ -182,7 +182,7 @@ def convert_node_to_v6_json(node):
     """Returns the v6 JSON dict for the given node
 
     :param node: The node
-    :type node: :class:`recipe.definition.node.Node`
+    :type node: :class:`recipe.definition.node.NodeDefinition`
     :returns: The v6 JSON dict for the node
     :rtype: dict
     """
@@ -197,10 +197,10 @@ def convert_node_to_v6_json(node):
             conn_dict = {'type': 'recipe', 'input': connection.recipe_input_name}
         input_dict[connection.input_name] = conn_dict
 
-    if isinstance(node, JobNode):
+    if isinstance(node, JobNodeDefinition):
         node_type_dict = {'node_type': 'job', 'job_type_name': node.job_type_name,
                           'job_type_version': node.job_type_version, 'job_type_revision': node.revision_num}
-    elif isinstance(node, RecipeNode):
+    elif isinstance(node, RecipeNodeDefinition):
         node_type_dict = {'node_type': 'recipe', 'recipe_type_name': node.recipe_type_name,
                           'recipe_type_revision': node.revision_num}
 

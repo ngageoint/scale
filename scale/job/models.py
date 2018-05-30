@@ -293,14 +293,14 @@ class JobManager(models.Manager):
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
-            from recipe.models import RecipeJob
+            from recipe.models import RecipeNode
 
-            recipe_job = RecipeJob.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                          'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                          'recipe__event__rule').get(job=job, 
-                                                                                     recipe__is_superseded=False)
+            recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                           'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                           'recipe__event__rule').get(job=job, 
+                                                                                      recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
-        except RecipeJob.DoesNotExist:
+        except RecipeNode.DoesNotExist:
             job.recipe = None
 
         return job
@@ -331,8 +331,8 @@ class JobManager(models.Manager):
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
-            from recipe.models import RecipeJob
-            recipe_jobs = RecipeJob.objects.filter(job=job).order_by('recipe__last_modified')
+            from recipe.models import RecipeNode
+            recipe_jobs = RecipeNode.objects.filter(job=job).order_by('recipe__last_modified')
             recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
                                                      'recipe__recipe_type_rev__recipe_type', 'recipe__event',
                                                      'recipe__event__rule')

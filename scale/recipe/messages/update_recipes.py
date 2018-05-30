@@ -11,7 +11,7 @@ from job.messages.pending_jobs import create_pending_jobs_messages
 from job.messages.process_job_inputs import create_process_job_inputs_messages
 from job.models import Job
 from messaging.messages.message import CommandMessage
-from recipe.models import Recipe, RecipeJob
+from recipe.models import Recipe, RecipeNode
 
 # This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
 # this type is less than 25 KiB long and that each message can be processed quickly.
@@ -159,15 +159,15 @@ class UpdateRecipes(CommandMessage):
                     recipe_jobs = []
                     for job_name, job_list in handler_dict.iteritems():
                         for job in job_list:
-                            recipe_job = RecipeJob()
+                            recipe_job = RecipeNode()
                             recipe_job.job = job
-                            recipe_job.job_name = job_name
+                            recipe_job.node_name = job_name
                             recipe_job.recipe_id = recipe_id
                             recipe_jobs.append(recipe_job)
                     recipe_jobs_to_create.extend(recipe_jobs)
                     handler.add_jobs(recipe_jobs)
                 if recipe_jobs_to_create:
-                    RecipeJob.objects.bulk_create(recipe_jobs_to_create)
+                    RecipeNode.objects.bulk_create(recipe_jobs_to_create)
 
                 for handler in handlers:
                     for blocked_job in handler.get_blocked_jobs():

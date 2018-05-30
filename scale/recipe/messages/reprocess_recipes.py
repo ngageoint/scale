@@ -12,7 +12,7 @@ from job.models import Job
 from messaging.messages.message import CommandMessage
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
-from recipe.models import Recipe, RecipeJob, RecipeTypeRevision
+from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
 
 # This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
 # this type is less than 25 KiB long and that each message can be processed quickly.
@@ -173,7 +173,7 @@ class ReprocessRecipes(CommandMessage):
                 logger.info('Superseded %d old recipe(s)', len(recipes))
 
             # Handle superseded recipe jobs
-            recipe_job_ids = RecipeJob.objects.get_recipe_job_ids([recipe.id for recipe in superseded_recipes])
+            recipe_job_ids = RecipeNode.objects.get_recipe_job_ids([recipe.id for recipe in superseded_recipes])
             messages = self._handle_recipe_jobs(msg_already_run, recipes, self.revision_id, revisions, recipe_job_ids,
                                                 self.job_names, self.all_jobs, when)
             self.new_messages.extend(messages)
@@ -228,15 +228,15 @@ class ReprocessRecipes(CommandMessage):
                 for identical_job_name in graph_delta.get_identical_nodes():
                     if identical_job_name in job_ids:
                         for job_id in job_ids[identical_job_name]:
-                            recipe_job = RecipeJob()
+                            recipe_job = RecipeNode()
                             recipe_job.job_id = job_id
-                            recipe_job.job_name = identical_job_name
+                            recipe_job.node_name = identical_job_name
                             recipe_job.recipe_id = recipe.id
                             recipe_job.is_original = False
                             recipe_job_count += 1
                             recipe_job_models.append(recipe_job)
                             if len(recipe_job_models) >= MODEL_BATCH_SIZE:
-                                RecipeJob.objects.bulk_create(recipe_job_models)
+                                RecipeNode.objects.bulk_create(recipe_job_models)
                                 recipe_job_models = []
 
             # Jobs that changed from old recipe to new recipe should be superseded
@@ -250,9 +250,9 @@ class ReprocessRecipes(CommandMessage):
                     superseded_job_ids.extend(job_ids[deleted_job_name])
                     unpublish_job_ids.extend(job_ids[deleted_job_name])
 
-        # Finish creating any remaining RecipeJob models
+        # Finish creating any remaining RecipeNode models
         if recipe_job_models and not msg_already_run:
-            RecipeJob.objects.bulk_create(recipe_job_models)
+            RecipeNode.objects.bulk_create(recipe_job_models)
         logger.info('Copied %d job(s) to the new recipe(s)', recipe_job_count)
 
         # Supersede recipe jobs that were not copied over to a new recipe

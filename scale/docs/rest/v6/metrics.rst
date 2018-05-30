@@ -2,14 +2,14 @@
 .. _rest_v6_metrics:
 
 v6 Metrics Services
-========================================================================================================================
+===================
 
 These services provide access to information about processing counts and timings.
 
 .. _rest_v6_metrics_list:
 
 v6 Metrics List
-----------------------
+---------------
 
 **Example GET /v6/metrics/ API call**
 
@@ -17,7 +17,8 @@ Request: GET http://.../v6/metrics/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+.. code-block:: javascript
+
     { 
         "count": 10, 
         "next": null, 
@@ -63,7 +64,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Returns a list of all metrics types.                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/metrics/                                                                                                       |
+| **GET** /v6/metrics/                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -129,7 +130,7 @@ Response: 200 OK
 .. _rest_v6_metrics_details:
 
 v6 Metric Details
-----------------------
+-----------------
 
 **Example GET /v6/metrics/{name}/ API call**
 
@@ -137,7 +138,8 @@ Request: GET /v6/metrics/{name}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+.. code-block:: javascript
+
     { 
         "name": "job-types", 
         "title": "Job Types", 
@@ -189,7 +191,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Returns a specific metrics type and all its related model information including possible filter choices.                |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/metrics/{name}/                                                                                                |
+| **GET** /v6/metrics/{name}/                                                                                             |
 |         Where {name} is the system name of an existing model.                                                           |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -238,7 +240,7 @@ Response: 200 OK
 .. _rest_v6_metrics_plot:
 
 v6 Metric Plot Data
-----------------------
+-------------------
 
 **Example GET /v6/metrics/{name}/plot-data/ API call**
 
@@ -246,7 +248,8 @@ Request: GET /v6/metrics/{name}/plot-data/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+.. code-block:: javascript
+
     { 
         "count": 28, 
         "next": null, 
@@ -283,7 +286,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Returns all the plot values for a metrics type based on optional query parameters.                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/metrics/{name}/plot-data/                                                                                      |
+| **GET** /v6/metrics/{name}/plot-data/                                                                                   |
 |         Where {name} is the system name of an existing model.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |

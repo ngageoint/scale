@@ -77,7 +77,7 @@ class DependencyInputConnection(NodeInputConnection):
         """See :meth:`recipe.handlers.connection.NodeInputConnection.add_input_to_job_data`
         """
 
-        parent_results = parent_results[self.node.job_name]
+        parent_results = parent_results[self.node.node_name]
         parent_results.add_output_to_data(self.output_name, job_data, self.input_name)
 
     def is_equal_to(self, connection, matched_recipe_inputs, matched_job_names):
@@ -88,7 +88,7 @@ class DependencyInputConnection(NodeInputConnection):
             return False
 
         same_input_name = self.input_name == connection.input_name
-        same_job_name = self.node.job_name == matched_job_names[connection.node.job_name]
+        same_job_name = self.node.node_name == matched_job_names[connection.node.node_name]
         same_output_name = self.output_name == connection.output_name
 
         return same_input_name and same_job_name and same_output_name

@@ -2,14 +2,14 @@
 .. _rest_v6_scheduler:
 
 v6 Scheduler Services
-==================
+=====================
 
 These services provide access to information about the scheduler.
 
 .. _rest_v6_scheduler_details:
 
 v6 Get Scheduler
-----------------------
+----------------
 
 **Example GET /v6/scheduler/ API call**
 
@@ -59,7 +59,7 @@ Response: 200 OK
 .. _rest_v6_scheduler_update:
 
 v6 Update Scheduler
-----------------------
+-------------------
 
 **Example PATCH /v6/scheduler/ API call**
 
@@ -96,4 +96,3 @@ Response: 204 No content
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 204 No content                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
-
