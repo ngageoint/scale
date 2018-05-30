@@ -267,12 +267,12 @@ class DatabaseUpdater(object):
         recipe_ids = [recipe.id for recipe in recipe_qry.order_by('id').only('id')[:recipe_batch_size]]
 
         # Populate job.recipe_id if it is missing
-        qry_1 = 'UPDATE job j SET recipe_id = rj.recipe_id FROM recipe_job rj'
+        qry_1 = 'UPDATE job j SET recipe_id = rj.recipe_id FROM recipe_node rj'
         qry_1 += ' WHERE j.id = rj.job_id AND rj.recipe_id IN %s AND rj.is_original AND j.recipe_id IS NULL'
-        qry_2 = 'UPDATE job j SET root_recipe_id = r.id FROM recipe_job rj'
+        qry_2 = 'UPDATE job j SET root_recipe_id = r.id FROM recipe_node rj'
         qry_2 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id AND'
         qry_2 += ' r.id IN %s AND r.root_superseded_recipe_id IS NULL AND j.root_recipe_id IS NULL'
-        qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_job rj'
+        qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_node rj'
         qry_3 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id'
         qry_3 += ' AND r.id IN %s AND r.root_superseded_recipe_id IS NOT NULL AND j.root_recipe_id IS NULL'
         qry_4 = 'UPDATE recipe r SET is_completed = true WHERE r.id IN %s AND r.completed IS NOT NULL AND '

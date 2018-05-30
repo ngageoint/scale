@@ -601,7 +601,7 @@ class ProductFileManager(models.GeoManager):
             if job_recipe:
                 product.recipe_id = job_recipe.recipe.id
                 product.recipe_type = job_recipe.recipe.recipe_type
-                product.recipe_job = job_recipe.job_name
+                product.recipe_job = job_recipe.node_name
 
                 # Add batch info to product if available.
                 try:

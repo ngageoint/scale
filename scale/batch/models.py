@@ -631,7 +631,7 @@ class BatchManager(models.Manager):
         qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
         qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
-        qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'FROM recipe_node rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
         qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
         qry += 'WHERE b.id = s.batch_id'
         with connection.cursor() as cursor:
@@ -966,7 +966,7 @@ class BatchMetricsManager(models.Manager):
         qry += 'min_job_duration = s.min_job_duration, avg_job_duration = s.avg_job_duration, '
         qry += 'max_job_duration = s.max_job_duration, min_seed_duration = s.min_seed_duration, '
         qry += 'avg_seed_duration = s.avg_seed_duration, max_seed_duration = s.max_seed_duration, last_modified = %s '
-        qry += 'FROM (SELECT r.batch_id, rj.job_name, COUNT(j.id) AS jobs_total, '
+        qry += 'FROM (SELECT r.batch_id, rj.node_name, COUNT(j.id) AS jobs_total, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'PENDING\') AS jobs_pending, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'BLOCKED\') AS jobs_blocked, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'QUEUED\') AS jobs_queued, '
@@ -980,10 +980,10 @@ class BatchMetricsManager(models.Manager):
         qry += 'MIN(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_seed_duration, '
         qry += 'AVG(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_seed_duration, '
         qry += 'MAX(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_seed_duration '
-        qry += 'FROM recipe_job rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'FROM recipe_node rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
         qry += 'LEFT OUTER JOIN job_exe_end je ON je.job_id = j.id AND je.exe_num = j.num_exes '
-        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.job_name) s '
-        qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.job_name'
+        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.node_name) s '
+        qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.node_name'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
 

@@ -1,0 +1,776 @@
+openapi: "3.0.0"
+info:
+  title: Ingest Services
+  version: v6
+paths:
+  /v6/ingests:
+    get:
+      operationId: _rest_v6_ingest_list
+      summary: Ingest List
+      description: Returns a list of all ingests
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+            Nested objects require a delimiter (ex: order=source_file__created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+        -in: query
+          name: status
+          schema:
+            type: string
+          description: Return only ingests with a status matching this string. |
+            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]
+        -in: query
+          name: scan_id
+          schema:
+            type: integer
+          description: Return only ingests created by a given scan process identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: strike_id
+          schema:
+            type: integer
+          description: Return only ingests created by a given strike process identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only ingests with a specific file name. 
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ingest_list'
+  /v6/ingests/{id}/:
+    get:
+      operationId: _rest_v6_ingest_details
+      summary: Ingest Details
+      description: Returns a specific ingest and all its related model information
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing node
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ingest_details'
+ /v6/ingests/status/:
+    get:
+      operationId: _rest_v6_ingest_status
+      summary: Ingest Status
+      description: Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots. |
+        NOTE: Time range must be within a one month period (31 days).
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: use_ingest_time
+          schema:
+            type: boolean
+          description: Whether to group counts by ingest time or data time. |
+            Ingest time is when the strike process registered the file. |
+            Data time is the time when the data was collected by a sensor. |
+            Defaults to False (data time).  
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/ingest_status'
+
+components:
+  schemas:
+    ingest_list:
+      title: Ingest List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_details'
+          description: List of ingest objects
+    ingest_details:
+      title: Ingest Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        file_name:
+          type: string
+          description: The name of the file being ingested.  
+          example: file_name.txt
+        scan:
+          $ref: '#/components/schemas/scan'
+        strike:
+          $ref: '#/components/schemas/strike'
+        status:
+          type: string
+          description: The current status of the ingest. |
+            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]
+          example: INGESTED
+        bytes_transferred:
+          type: integer
+          description: The total number of bytes transferred so far.
+          example: 1234
+        transfer_started:
+          type: string
+          format: date-time
+          description: When the transfer was started.
+          example: 2015-09-10T14:48:08.920Z
+        transfer_ended:
+          type: string
+          format: date-time
+          description: When the transfer ended.
+          example: 2015-09-10T14:48:08.956Z
+        media_type:
+          type: string
+          description: The IANA media type of the file. 
+          example: text/plain
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        file_path:
+          type: string
+          description: The relative path of the file in the workspace.
+          example: the/current/path/file_name.txt
+        workspace:
+          $ref: '#/components/schemas/workspace'
+        new_file_path:
+          type: string
+          description: The relative path for where the file should be moved as part of ingesting.
+          example: the/new/path/file_name.txt
+        new_workspace:
+          $ref: '#/components/schemas/workspace'
+        job:
+          $ref: '#/components/schemas/job'
+        ingest_started:
+          type: string
+          format: date-time
+          description: When the ingest was started.
+          example: 2015-09-10T15:24:53.503Z
+        ingest_ended:
+          type: string
+          format: date-time
+          description: When the ingest ended.
+          example: 2015-09-10T15:24:53.987Z
+        source_file:
+          $ref: '#/components/schemas/source_file'
+        data_started:
+          type: string
+          format: date-time
+          description: The start time of the source data being ingested.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: The end time of the source data being ingested.
+          example: 2015-09-10T15:24:53.987Z
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+          
+    scan:
+      title: Scan Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Scan process used for queries.  
+          example: my-scan-process
+        title:
+          type: string
+          description: The human readable display name of the Scan process.  
+          example: My Scan Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        file_count:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        job:
+          $ref: '#/components/schemas/job'
+        dry_run_job:
+          $ref: '#/components/schemas/job'
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        configuration:
+          $ref: '#/components/schemas/scan_config'
+
+#TODO: Finish job spec after v6 details have been nailed down        
+    job:
+      title: Job Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+          
+    scan_config:
+      title: Scan Configuration
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the |
+            configuration used. This allows updates to be made to the specification while |
+            maintaining backwards compatibility by allowing Scale to recognize an older version |
+            and convert it to the current version. The default value for version if it is not included |
+            is the latest version, which is currently 1.0. It is recommended, though not required, that |
+            you include the version so that future changes to the specification will still accept your Scan configuration.
+          example: 1.0
+        workspace:
+          type: string
+          description: The workspace field is a required string that specifies the name of the |
+            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of scanner can be used.
+          example: my-host-workspace
+        scanner:
+          $ref: '#/components/schemas/scanner'
+        recursive:
+          type: boolean
+          description: The recursive field is an optional boolean that indicates whether a scanner |
+            should be limited to the root of a workspace or traverse the entire tree. If ommitted, the default is true for full tree recursion.
+          example: True
+        files_to_ingest:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_file'
+          description: List of ingest objects
+    scanner:
+      title: Scanner
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type is a required string that specifies the type of the scanner to use. |
+            The other fields that configure the scanner are based upon the type of the scanner in the type field. |
+            Certain scanner types may only be used on workspaces with corresponding broker types. The valid scanner types are dir and s3
+          example: dir
+        transfer_suffix:
+          type: string
+          description: The transfer_suffix field is an optional string that defines a suffix that is |
+            used on the file names to indicate that files are still transferring and have not yet finished |
+            being copied into the scanned directory. Only used with dir scanners.
+          example: _tmp
+    ingest_file:
+      title: File Ingest Rule
+      type: object
+      properties:
+        filename_regex:
+          type: string
+          description: The filename_regex field is a required string that defines a regular expression to check against |
+            the names of new files in the scanned workspace. When a new file appears in the workspace, the file’s name |
+            is checked against each expression in order of the files_to_ingest array. If an expression matches the new |
+            file name in the workspace, that file is ingested according to the other fields in the JSON object and all |
+            subsequent rules in the list are ignored (first rule matched is applied).
+          example: *.txt
+        data_types:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: The data_types field is an optional list of strings. Any file that matches the corresponding file |
+            name regular expression will have these data type strings “tagged” with the file. If not provided, data_types |
+            defaults to an empty array.
+          example: []
+        new_workspace:
+          type: string
+          description: The new_workspace field optionally specifies the name of a new workspace to which the file should |
+            be copied. This allows the ingest process to move files to a different workspace after they appear in the |
+            scanned workspace.
+          example: my-new-workspace
+        new_file_path:
+          type: string
+          description: The new_file_path field is an optional string that specifies a new relative path for storing new |
+            files. If new_workspace is also specified, the file is moved to the new workspace at this new path location |
+            (instead of using the current path the new file originally came in on). If new_workspace is not specified, |
+            the file is moved to this new path location within the original scanned workspace. In either of these cases, |
+            three additional and dynamically named directories, for the current year, month, and day, will be appended to |
+            the new_file_path value automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).
+          example: the/new/path/
+
+    strike:
+      title: Strike Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Strike process used for queries.  
+          example: my-strike-process
+        title:
+          type: string
+          description: The human readable display name of the Strike process.  
+          example: My Strike Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        job:
+          $ref: '#/components/schemas/job'
+        dry_run_job:
+          $ref: '#/components/schemas/job'
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        configuration:
+          $ref: '#/components/schemas/strike_config'
+    strike_config:
+      title: Strike Configuration
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the |
+            configuration used. This allows updates to be made to the specification while |
+            maintaining backwards compatibility by allowing Scale to recognize an older version |
+            and convert it to the current version. The default value for version if it is not |
+            included is the latest version, which is currently 2.0. It is recommended, though |
+            not required, that you include the version so that future changes to the specification |
+            will still accept your Strike configuration.
+          example: 1.0
+        workspace:
+          type: string
+          description: The workspace field is a required string that specifies the name of the |
+            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of monitor can be used.
+          example: my-host-workspace
+        monitor:
+          oneOf:
+          - $ref: '#/components/schemas/dir_monitor'
+          - $ref: '#/components/schemas/s3_monitor'
+        files_to_ingest:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_file'
+          description: List of ingest objects
+    dir_monitor:
+      title: Directory Monitor
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type is a required string that specifies the type of monitor to use. |
+            The other fields that configure the monitor are based upon the type of the monitor in the type field. |
+            Certain monitor types may only be used on workspaces with corresponding broker types. The valid |
+            monitor types are dir-watcher and s3
+          example: dir-watcher
+        transfer_suffix:
+          type: string
+          description: The transfer_suffix field is an optional string that defines a suffix that is |
+            used on the file names to indicate that files are still transferring and have not yet finished |
+            being copied into the scanned directory. Only used with dir monitors.
+          example: _tmp
+      required:
+      - type
+    s3_monitor:
+      title: S3 Monitor
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type is a required string that specifies the type of monitor to use. |
+            The other fields that configure the monitor are based upon the type of the monitor in the type field. |
+            Certain monitor types may only be used on workspaces with corresponding broker types. The valid |
+            monitor types are dir-watcher and s3
+          example: dir-watcher
+        sqs_name:
+          type: string
+          description: The sqs_name field is a required string that defines the name of the SQS queue |
+            that should be polled for object creation notifications that describe new files in the S3 bucket.
+          example: my-sqs
+        credentials:
+          $ref: '#/components/schemas/credentials'
+        region_name:
+          type: string
+          description: The region_name is an optional string that specifies the AWS region where the |
+            SQS Queue is located. This is not always required, as environment variables or configuration |
+            files could set the default region, but it is a highly recommended setting for explicitly |
+            indicating the SQS region.
+          example: us-east-1
+      required:
+      - type
+      - sqs_name
+
+    credentials:
+      title: Credentials
+      type: object
+      description: The credentials is a JSON object that provides the necessary information to access |
+        the bucket. This attribute should be omitted when using IAM role-based security. If it is |
+        included for key-based security, then both sub-attributes must be included. An IAM account |
+        should be created and granted the appropriate permissions to the bucket before attempting to use it here.
+      properties:
+        access_key_id:
+          type: string
+          description: The access_key_id is a unique identifier for the user account in IAM that will |
+            be used as a proxy for read and write operations within Scale.
+          example: AKIAIOSFODNN7EXAMPLE
+        secret_access_key:
+          type: string
+          description: The secret_access_key is a generated token that the system can use to prove it |
+            should be able to make requests on behalf of the associated IAM account without requiring |
+            the actual password used by that account.
+          example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      required:
+      - access_key_id
+      - secret_access_key
+
+    workspace:
+      title: Workspace
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the workspace used for queries.  
+          example: raw
+        title:
+          type: string
+          description: The human readable display name of the workspace.  
+          example: Raw Source
+        description:
+          type: string
+          description: A longer description of the workspace. 
+          example: Raw Source Workspace
+        base_url:
+          type: string
+          description: The URL prefix used to access all files within the workspace. This field |
+            can be null if the workspace is not web-accessible.
+          example: http://host.com/rs
+        is_active:
+          type: boolean
+          description: Whether the workspace is active (false once workspace is archived).
+          example: True
+        used_size:
+          type: number
+          description: The amount of disk space currently being used by the workspace in bytes. |
+            This field can be null if the disk space is unknown.
+          example: True
+        total_size:
+          type: number
+          description: The total amount of disk space provided by the workspace in bytes. This |
+            field can be null if the disk space is unknown.
+          example: True
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        archived:
+          type: string
+          format: date-time
+          description: When the workspace was archived (no longer active).
+          example: 2015-09-10T15:24:53.987Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        json_config:
+          $ref: '#/components/schemas/workspace_config'
+    workspace_config:
+      title: Workspace Configuration
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the |
+            version of the configuration used. This allows updates to be made to |
+            the specification while maintaining backwards compatibility by allowing |
+            Scale to recognize an older version and convert it to the current version. |
+            The default value for version if it is not included is the latest version, |
+            which is currently 1.0. It is recommended, though not required, that you |
+            include the version so that future changes to the specification will still |
+            accept your workspace configuration.
+          example: 1.0
+        broker:
+          oneOf:
+          - $ref: '#/components/schemas/host_broker'
+          - $ref: '#/components/schemas/nfs_broker'
+          - $ref: '#/components/schemas/s3_broker'
+      required:
+      - broker
+    broker:
+      title: Broker
+      type: object
+      discriminator:
+        propertyName: type
+      properties:
+        type:
+          type: string
+          description: The type is a required string that specifies the type of the broker to use. |
+            The other fields that configure the broker are based upon the type of the broker in the|
+            type field. The valid broker types are host, nfs, and s3
+          example: nfs
+      required:
+      - type
+    host_broker:
+      title: Host Broker
+      allOf:
+      - $ref: '#/components/schemas/broker'
+      type: object
+      properties: 
+        host_path:
+          type: string
+          description: The host_path is a required string that specifies the absolute path of the |
+            host’s local directory that should be mounted into a job’s container in order to |
+            access the workspace’s files.
+          example: /the/absolute/host/path
+      required:
+      - host_path
+    nfs_broker:
+      title: NFS Broker
+      allOf:
+      - $ref: '#/components/schemas/broker'
+      type: object
+      properties:
+        nfs_path:
+          type: string
+          description: The nfs_path is a required string that specifies the remote NFS path to use |
+            for storing and retrieving the workspace files. It should be in the format host:/path.
+          example: host:/my/path
+      required:
+      - nfs_path
+    s3_broker:
+      title: S3 Broker
+      allOf:
+      - $ref: '#/components/schemas/broker'
+      type: object
+      properties:
+        bucket_name:
+          type: string
+          description: The bucket_name is a required string that specifies the globally unique |
+            name of a storage bucket within S3. The bucket should be created before attempting to use it here.
+          example: my_bucket.domain.com
+        credentials:
+          $ref: '#/components/schemas/credentials'
+        host_path:
+          type: string
+          description: The host_path is an optional string that adds S3 workspace support for |
+            locally mounted buckets and partial file read-only access. If a FUSE file system |
+            (such as s3fs or goofys) mounts the S3 bucket at the host_path location on all nodes, |
+            an alternative to downloading large files is available to jobs that use only portions |
+            of a file. The job interface must indicate partial equal to true for any input files |
+            to take advantage of host_path. Only read operations are performed using the mount, |
+            all write operations will use the S3 REST API.
+          example: /my_bucket
+        region_name:
+          type: string
+          description: The region_name is an optional string that specifies the AWS region where the |
+            SQS Queue is located. This is not always required, as environment variables or configuration |
+            files could set the default region, but it is a highly recommended setting for explicitly |
+            indicating the SQS region.
+          example: us-east-1
+      required:
+      - bucket_name
+      
+    source_file:
+      title: Source File
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        workspace:
+          $ref: '#/components/schemas/workspace'
+        file_name:
+          type: string
+          description: The name of the source file.
+          example: my_file.kml
+        media_type:
+          type: string
+          description: The IANA media type of the source file.
+          example: application/vnd.google-earth.kml+xml
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        is_deleted:
+          type: boolean
+          description: Whether the source file has been deleted.
+          example: True
+        uuid:
+          type: string
+          description: A unique identifier that stays stable across multiple job execution runs.
+          example: c8928d9183fc99122948e7840ec9a0fd
+        url:
+          type: string
+          format: uri
+          description: The absolute URL to use for downloading the file.
+          example: http://host.com/file/path/my_file.kml
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deleted:
+          type: string
+          format: date-time
+          description: When the source file was deleted.
+          example: 2015-09-10T15:24:53.987Z
+        data_started:
+          type: string
+          format: date-time
+          description: When collection of the underlying data file started.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: When collection of the underlying data file ended.
+          example: 2015-09-10T15:24:53.987Z
+        geometry:
+          type: string
+          description: The full geospatial geometry footprint of the source file. (WKT format)
+          example: POLYGON((11 -11,22 -22,33 -33,44 -44))
+        center_point:
+          type: string
+          description: The central geospatial location of the source file.
+          example: POINT(11 -11)
+        meta_data:
+          $ref: '#/components/schemas/metadata'
+        countries:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of zero or more strings with the ISO3 country codes for countries |
+            contained in the geographic boundary of this file.
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        is_parsed:
+          type: boolean
+          description: Whether this source file was successfully parsed and ingested into the system.
+          example: True
+        parsed:
+          type: string
+          format: date-time
+          description: When the source file was originally parsed by Scale.
+          example: 2015-09-10T15:24:53.987Z
+      required:
+      - id
+      - secret_access_key

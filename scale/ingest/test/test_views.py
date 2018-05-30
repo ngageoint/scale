@@ -17,8 +17,9 @@ from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 
 
-class TestIngestsView(TestCase):
-
+class TestIngestsViewV5(TestCase):
+    
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -32,7 +33,7 @@ class TestIngestsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the ingests view."""
 
-        url = rest_util.get_url('/ingests/')
+        url = '/%s/ingests/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -52,7 +53,7 @@ class TestIngestsView(TestCase):
     def test_status(self):
         """Tests successfully calling the ingests view filtered by status."""
 
-        url = rest_util.get_url('/ingests/?status=%s' % self.ingest1.status)
+        url = '/%s/ingests/?status=%s' % (self.version, self.ingest1.status)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -63,7 +64,7 @@ class TestIngestsView(TestCase):
     def test_strike_id(self):
         """Tests successfully calling the ingests view filtered by strike processor."""
 
-        url = rest_util.get_url('/ingests/?strike_id=%i' % self.ingest1.strike.id)
+        url = '/%s/ingests/?strike_id=%i' % (self.version, self.ingest1.strike.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -74,7 +75,7 @@ class TestIngestsView(TestCase):
     def test_file_name(self):
         """Tests successfully calling the ingests view filtered by file name."""
 
-        url = rest_util.get_url('/ingests/?file_name=%s' % self.ingest1.file_name)
+        url = '/%s/ingests/?file_name=%s' % (self.version, self.ingest1.file_name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -82,8 +83,74 @@ class TestIngestsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
+class TestIngestsViewV6(TestCase):
+    
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
 
-class TestIngestDetailsView(TestCase):
+    def setUp(self):
+        django.setup()
+
+        self.ingest1 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test1.txt',
+                                                       status='QUEUED')
+        self.ingest2 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test2.txt',
+                                                       status='INGESTED')
+
+    def test_successful(self):
+        """Tests successfully calling the ingests view."""
+
+        url = '/%s/ingests/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.ingest1.id:
+                expected = self.ingest1
+            elif entry['id'] == self.ingest2.id:
+                expected = self.ingest2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['file_name'], expected.file_name)
+            self.assertEqual(entry['status'], expected.status)
+
+    def test_status(self):
+        """Tests successfully calling the ingests view filtered by status."""
+
+        url = '/%s/ingests/?status=%s' % (self.version, self.ingest1.status)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['status'], self.ingest1.status)
+
+    def test_strike_id(self):
+        """Tests successfully calling the ingests view filtered by strike processor."""
+
+        url = '/%s/ingests/?strike_id=%i' % (self.version, self.ingest1.strike.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
+
+    def test_file_name(self):
+        """Tests successfully calling the ingests view filtered by file name."""
+
+        url = '/%s/ingests/?file_name=%s' % (self.version, self.ingest1.file_name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
+
+class TestIngestDetailsViewV5(TestCase):
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -94,7 +161,7 @@ class TestIngestDetailsView(TestCase):
     def test_id(self):
         """Tests successfully calling the ingests view by id."""
 
-        url = rest_util.get_url('/ingests/%d/' % self.ingest.id)
+        url = '/%s/ingests/%d/' % (self.version, self.ingest.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -106,7 +173,7 @@ class TestIngestDetailsView(TestCase):
     def test_file_name(self):
         """Tests successfully calling the ingests view by file name."""
 
-        url = rest_util.get_url('/ingests/%s/' % self.ingest.file_name)
+        url = '/%s/ingests/%s/' % (self.version, self.ingest.file_name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -118,16 +185,45 @@ class TestIngestDetailsView(TestCase):
     def test_missing(self):
         """Tests calling the ingests view with an invalid id or file name."""
 
-        url = rest_util.get_url('/ingests/12345/')
+        url = '/%s/ingests/12345/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-        url = rest_util.get_url('/ingests/missing_file.txt/')
+        url = '/%s/ingests/missing_file.txt/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+class TestIngestDetailsViewV6(TestCase):
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.ingest = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
+
+    def test_id(self):
+        """Tests successfully calling the ingests view by id."""
+
+        url = '/%s/ingests/%d/' % (self.version, self.ingest.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.ingest.id)
+        self.assertEqual(result['file_name'], self.ingest.file_name)
+        self.assertEqual(result['status'], self.ingest.status)
+
+    def test_missing(self):
+        """Tests calling the ingests view with an invalid id or file name."""
+
+        url = '/%s/ingests/12345/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestIngestStatusView(TestCase):
+class TestIngestStatusViewV5(TestCase):
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -144,7 +240,7 @@ class TestIngestStatusView(TestCase):
     def test_successful(self):
         """Tests successfully calling the ingest status view."""
 
-        url = rest_util.get_url('/ingests/status/')
+        url = '/%s/ingests/status/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -160,7 +256,7 @@ class TestIngestStatusView(TestCase):
     def test_time_range(self):
         """Tests successfully calling the ingest status view with a time range filter."""
 
-        url = rest_util.get_url('/ingests/status/?started=2015-01-01T00:00:00Z')
+        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -176,8 +272,8 @@ class TestIngestStatusView(TestCase):
     def test_use_ingest_time(self):
         """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
 
-        url = rest_util.get_url('/ingests/status/?started=2015-02-01T00:00:00Z&'
-                                'ended=2015-03-01T00:00:00Z&use_ingest_time=true')
+        url = '/%s/ingests/status/?started=2015-02-01T00:00:00Z&' \
+              'ended=2015-03-01T00:00:00Z&use_ingest_time=true' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -193,7 +289,7 @@ class TestIngestStatusView(TestCase):
     def test_fill_empty_slots(self):
         """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
 
-        url = rest_util.get_url('/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z')
+        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -213,13 +309,106 @@ class TestIngestStatusView(TestCase):
         strike3 = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
 
-        url = rest_util.get_url('/ingests/status/')
+        url = '/%s/ingests/status/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
+class TestIngestStatusViewV6(TestCase):
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.strike = ingest_test_utils.create_strike()
+        self.ingest1 = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED', strike=self.strike)
+        self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED', strike=self.strike)
+        self.ingest3 = ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=self.strike)
+        self.ingest4 = ingest_test_utils.create_ingest(file_name='test4.txt', status='INGESTED', strike=self.strike,
+                                                       data_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                                       ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=utc))
+
+    def test_successful(self):
+        """Tests successfully calling the ingest status view."""
+
+        url = '/%s/ingests/status/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        entry = result['results'][0]
+        self.assertEqual(entry['strike']['id'], self.strike.id)
+        self.assertIsNotNone(entry['most_recent'])
+        self.assertEqual(entry['files'], 2)
+        self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size)
+
+    def test_time_range(self):
+        """Tests successfully calling the ingest status view with a time range filter."""
+
+        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        entry = result['results'][0]
+        self.assertEqual(entry['strike']['id'], self.strike.id)
+        self.assertIsNotNone(entry['most_recent'])
+        self.assertEqual(entry['files'], 3)
+        self.assertEqual(entry['size'], self.ingest2.file_size + self.ingest3.file_size + self.ingest4.file_size)
+
+    def test_use_ingest_time(self):
+        """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
+
+        url = '/%s/ingests/status/?started=2015-02-01T00:00:00Z&' \
+              'ended=2015-03-01T00:00:00Z&use_ingest_time=true' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        entry = result['results'][0]
+        self.assertEqual(entry['strike']['id'], self.strike.id)
+        self.assertEqual(entry['most_recent'], '2015-02-01T00:00:00Z')
+        self.assertEqual(entry['files'], 1)
+        self.assertEqual(entry['size'], self.ingest3.file_size)
+
+    def test_fill_empty_slots(self):
+        """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
+
+        url = '/%s/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+        entry = result['results'][0]
+        self.assertEqual(entry['strike']['id'], self.strike.id)
+        self.assertIsNotNone(entry['most_recent'])
+        self.assertEqual(entry['files'], 1)
+        self.assertEqual(entry['size'], self.ingest3.file_size)
+        self.assertEqual(len(entry['values']), 24)
+
+    def test_multiple_strikes(self):
+        """Tests successfully calling the ingest status view with multiple strike process groupings."""
+        ingest_test_utils.create_strike()
+        strike3 = ingest_test_utils.create_strike()
+        ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
+
+        url = '/%s/ingests/status/' % self.version
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
 
 class TestScansView(TestCase):
     def setUp(self):

@@ -8,7 +8,7 @@ from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
 
 
-class Node(object):
+class NodeDefinition(object):
     """Represents a node within a recipe definition
     """
 
@@ -52,7 +52,7 @@ class Node(object):
         """Adds a dependency that this node has on the given node
 
         :param node: The dependency node to add
-        :type node: :class:`recipe.definition.node.Node`
+        :type node: :class:`recipe.definition.node.NodeDefinition`
         """
 
         self.parents[node.name] = node
@@ -102,7 +102,7 @@ class Node(object):
         return warnings
 
 
-class JobNode(Node):
+class JobNodeDefinition(NodeDefinition):
     """Represents a job within a recipe definition
     """
 
@@ -121,14 +121,14 @@ class JobNode(Node):
         :type revision_num: int
         """
 
-        super(JobNode, self).__init__(name, JobNode.NODE_TYPE)
+        super(JobNodeDefinition, self).__init__(name, JobNodeDefinition.NODE_TYPE)
 
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
         self.revision_num = revision_num
 
 
-class RecipeNode(Node):
+class RecipeNodeDefinition(NodeDefinition):
     """Represents a recipe within a recipe definition
     """
 
@@ -145,7 +145,7 @@ class RecipeNode(Node):
         :type revision_num: int
         """
 
-        super(RecipeNode, self).__init__(name, RecipeNode.NODE_TYPE)
+        super(RecipeNodeDefinition, self).__init__(name, RecipeNodeDefinition.NODE_TYPE)
 
         self.recipe_type_name = recipe_type_name
         self.revision_num = revision_num

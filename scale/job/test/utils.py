@@ -131,7 +131,8 @@ def create_clock_event(rule=None, occurred=None):
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None,
-               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
+               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0,
+               save=True):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -178,7 +179,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     job.is_superseded = is_superseded
     job.superseded = superseded
     job.input_file_size = input_file_size
-    job.save()
+    if save:
+        job.save()
     return job
 
 

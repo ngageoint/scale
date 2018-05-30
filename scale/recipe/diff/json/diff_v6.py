@@ -221,7 +221,7 @@ def convert_diff_to_v6(graph_diff):
         reasons.extend([{'name': r.name, 'description': r.description} for r in graph_diff.reasons])
 
     for recipe_node in graph_diff._graph_b._nodes.values():
-        name = recipe_node.job_name
+        name = recipe_node.node_name
         force_reprocess = name in graph_diff._force_reprocess
         if name in graph_diff._new_nodes:
             status = 'NEW'
@@ -245,20 +245,20 @@ def convert_diff_to_v6(graph_diff):
                 job_type['prev_job_type_name'] = prev_node.job_type_name
             if recipe_node.job_type_version != prev_node.job_type_version:
                 job_type['prev_job_type_version'] = prev_node.job_type_version
-        dependencies = [{'name': p.job_name} for p in recipe_node.parents]
+        dependencies = [{'name': p.node_name} for p in recipe_node.parents]
         job_node = {'reprocess_new_node': reprocess_new_node, 'force_reprocess': force_reprocess, 'status': status,
                     'changes': changes, 'node_type': job_type, 'dependencies': dependencies}
         nodes[name] = job_node
 
     for recipe_node in graph_diff._graph_a._nodes.values():
-        name = recipe_node.job_name
+        name = recipe_node.node_name
         if name not in graph_diff._deleted_nodes:
             continue
         job_type_name = recipe_node.job_type_name
         job_type_version = recipe_node.job_type_version
         job_type = {'node_type': 'job', 'job_type_name': job_type_name, 'job_type_version': job_type_version,
                     'job_type_revision': revision_lookup[job_type_name + ' ' + job_type_version]}
-        dependencies = [{'name': p.job_name} for p in recipe_node.parents]
+        dependencies = [{'name': p.node_name} for p in recipe_node.parents]
         job_node = {'reprocess_new_node': False, 'force_reprocess': False, 'status': 'DELETED', 'changes': [],
                     'node_type': job_type, 'dependencies': dependencies}
         nodes[name] = job_node
