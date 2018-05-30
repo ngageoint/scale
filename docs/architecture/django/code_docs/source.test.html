@@ -355,29 +355,6 @@ model</p>
 <div class="section" id="module-source.test.test_views">
 <span id="source-test-test-views-module"></span><h2>source.test.test_views module<a class="headerlink" href="#module-source.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="source.test.test_views.TestSourceDetailsView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="source.test.test_views.TestSourceDetailsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="source.test.test_views.TestSourceDetailsView.test_id">
-<code class="descname">test_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView.test_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the source files view by id</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="source.test.test_views.TestSourceDetailsView.test_missing">
-<code class="descname">test_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView.test_missing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the source files view with an invalid id</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="source.test.test_views.TestSourceDetailsViewV4">
 <em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceDetailsViewV4</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -413,354 +390,407 @@ model</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="source.test.test_views.TestSourceIngestsView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceIngestsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceDetailsViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
-<dt id="source.test.test_views.TestSourceIngestsView.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceDetailsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceIngestsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceDetailsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceIngestsView.test_invalid_source_id">
-<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceDetailsViewV5.test_id">
+<code class="descname">test_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV5.test_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source files view by id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceDetailsViewV5.test_missing">
+<code class="descname">test_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsViewV5.test_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source files view with an invalid id</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="source.test.test_views.TestSourceIngestsViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceIngestsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceIngestsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceIngestsViewV5.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceIngestsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceIngestsViewV5.test_invalid_source_id">
+<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source ingests view when the source ID is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceIngestsView.test_status">
-<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.test_status" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceIngestsViewV5.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source ingests view filtered by status.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceIngestsView.test_strike_id">
-<code class="descname">test_strike_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.test_strike_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceIngestsViewV5.test_strike_id">
+<code class="descname">test_strike_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.test_strike_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source ingests view filtered by strike processor.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceIngestsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceIngestsViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceIngestsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source ingests view.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="source.test.test_views.TestSourceJobsView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceJobsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceJobsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_batch">
-<code class="descname">test_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_batch" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_batch">
+<code class="descname">test_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests filtering jobs by batch</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_error_category">
-<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_error_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by error category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_invalid_source_id">
-<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_invalid_source_id">
+<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source jobs view when the source ID is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_job_id">
-<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_job_id">
+<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_job_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by job identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_job_type_category">
-<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_job_type_category">
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_job_type_id">
-<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_job_type_name">
-<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_order_by">
-<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_order_by" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_order_by">
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_order_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view with sorting.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_status">
-<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_status" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view filtered by status.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source jobs view.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceJobsView.test_superseded">
-<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceJobsViewV5.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsViewV5.test_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting superseded jobs from source jobs view.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="source.test.test_views.TestSourceProductsView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceProductsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceProductsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceProductsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_batch_id">
-<code class="descname">test_batch_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_batch_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_batch_id">
+<code class="descname">test_batch_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_batch_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by batch identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_file_name">
-<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by file name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_invalid_ended">
-<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_invalid_ended">
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view when the ended parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_invalid_source_id">
-<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_invalid_source_id">
+<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view when the source ID is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_invalid_started">
-<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_invalid_started">
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_invalid_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view when the started parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_is_operational">
-<code class="descname">test_is_operational</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_is_operational">
+<code class="descname">test_is_operational</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_is_operational" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by is_operational flag.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_is_published">
-<code class="descname">test_is_published</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_is_published" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_is_published">
+<code class="descname">test_is_published</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_is_published" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by is_published flag.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_job_type_category">
-<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_job_type_category">
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_job_type_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_job_type_id">
-<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_job_type_name">
-<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_missing_tz_ended">
-<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_missing_tz_ended">
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view when the ended parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_missing_tz_started">
-<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_missing_tz_started">
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view when the started parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_negative_time_range">
-<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_negative_time_range">
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source products view with a negative time range.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceProductsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceProductsViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source products view.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="source.test.test_views.TestSourceUpdatesView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceUpdatesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceUpdatesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_file_name">
-<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source file updates view filtered by file name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_invalid_ended">
-<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_invalid_ended">
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view when the ended parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_invalid_started">
-<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_invalid_started">
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_invalid_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view when the started parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_invalid_time_field">
-<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_invalid_time_field">
+<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view when the time_field parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_is_parsed">
-<code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_is_parsed" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_is_parsed">
+<code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_is_parsed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by is_parsed flag.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_missing_tz_ended">
-<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_missing_tz_ended">
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view when the ended parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_missing_tz_started">
-<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_missing_tz_started">
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view when the started parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_negative_time_range">
-<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_negative_time_range">
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source file updates view with a negative time range.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source file updates view.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourceUpdatesView.test_time_field">
-<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_time_field" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourceUpdatesViewV5.test_time_field">
+<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesViewV5.test_time_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source file updates view using the time_field parameter</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="source.test.test_views.TestSourcesView">
-<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourcesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourcesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="source.test.test_views.TestSourcesView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourcesViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_file_name">
-<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourcesViewV5.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by file name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_invalid_ended">
-<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_invalid_ended">
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view when the ended parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_invalid_started">
-<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_invalid_started">
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_invalid_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view when the started parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_invalid_time_field">
-<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_invalid_time_field">
+<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view when the time_field parameter is invalid.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_is_parsed">
-<code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_is_parsed" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_is_parsed">
+<code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_is_parsed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by is_parsed flag.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_missing_tz_ended">
-<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_missing_tz_ended">
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view when the ended parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_missing_tz_started">
-<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_missing_tz_started">
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view when the started parameter is missing timezone.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_negative_time_range">
-<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_negative_time_range">
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the source files view with a negative time range.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="source.test.test_views.TestSourcesView.test_time_field">
-<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_time_field" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.test_views.TestSourcesViewV5.test_time_field">
+<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesViewV5.test_time_field" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view using the time_field parameter</p>
 </dd></dl>
 
