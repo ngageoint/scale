@@ -5,7 +5,8 @@
         subnavService.setCurrentPath('jobs');
 
         var vm = this,
-            jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
+            jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 },
+            jobTypeVersionViewAll = { label: 'ALL', value: ''};
 
         vm.jobsParams = $scope.$parent.jobsData ? stateService.getParentJobsParams() : stateService.getJobsParams();
 
@@ -13,8 +14,10 @@
         vm.loading = true;
         vm.readonly = true;
         vm.jobTypeValues = [jobTypeViewAll];
+        vm.jobTypeVersionValues = [jobTypeVersionViewAll];
         vm.jobExecution = null;
-        vm.selectedJobType = vm.jobsParams.job_type_id ? vm.jobsParams.job_type_id : jobTypeViewAll;
+        vm.selectedJobType = vm.jobsParams.job_type_id ? vm.jobsParams.job_type_id : vm.jobsParams.job_type_name ? vm.jobsParams.job_type_name : jobTypeViewAll;
+        vm.selectedJobTypeVersion = vm.jobsParams.job_type_version || null;
         vm.jobStatusValues = scaleConfig.jobStatus;
         vm.selectedJobStatus = vm.jobsParams.status || vm.jobStatusValues[0];
         vm.errorCategoryValues = _.map(scaleConfig.errorCategories, 'name');
@@ -56,7 +59,12 @@
                 field: 'job_type',
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title + \' \' + jobType.version) for jobType in grid.appScope.vm.jobTypeValues"></select></div>'
+                filterHeaderTemplate: '' +
+                    '<div class="ui-grid-filter-container">' +
+                        '<select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title) for jobType in grid.appScope.vm.jobTypeValues"></select>' +
+                        '<select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobTypeVersion" ng-options="jobVersion as (jobVersion.label) for jobVersion in grid.appScope.vm.jobTypeVersionValues"></select>' +
+                    '</div>' +
+                ''
             },
             {
                 field: 'created',
@@ -140,9 +148,13 @@
 
         vm.getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
-                vm.jobTypeValues.push(data.results);
+                vm.jobTypeValues.push(_.uniq(data.results, 'name'));
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
-                vm.selectedJobType = _.find(vm.jobTypeValues, { id: vm.jobsParams.job_type_id }) || jobTypeViewAll;
+                if (vm.jobsParams.job_type_id) {
+                    vm.selectedJobType = _.find(vm.jobTypeValues, { id: vm.jobsParams.job_type_id }) || jobTypeViewAll;
+                } else {
+                    vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobsParams.job_type_name }) || jobTypeViewAll;
+                }
                 vm.getJobs();
             }).catch(function () {
                 vm.loading = false;
@@ -238,10 +250,10 @@
         };
 
         vm.updateJobType = function (value) {
-            if (value.id !== vm.jobsParams.job_type_id) {
+            if (value.name !== vm.jobsParams.job_type_name) {
                 vm.jobsParams.page = 1;
             }
-            vm.jobsParams.job_type_id = value.id === 0 ? null : value.id;
+            vm.jobsParams.job_type_name = value.name === 'VIEW ALL' ? null : value.name;
             vm.jobsParams.page_size = vm.gridOptions.paginationPageSize;
             if (!vm.loading) {
                 vm.filterResults();
@@ -324,6 +336,17 @@
                 value = _.find(vm.jobTypeValues, {id: parseInt(value)});
             }
             if (value) {
+                vm.jobTypeVersionValues = [jobTypeVersionViewAll];
+                vm.jobTypeVersionValues = vm.jobTypeVersionValues.concat(_.map(_.map(_.filter(vm.jobTypeValues, function (d) {
+                    return d.name === value.name;
+                }), 'version'), function (v) {
+                    return { label: v, value: v };
+                }));
+                if (vm.jobsParams.job_type_id) {
+                    vm.selectedJobTypeVersion = _.find(vm.jobTypeVersionValues, { value: value.version });
+                } else {
+                    vm.selectedJobTypeVersion = _.find(vm.jobTypeVersionValues, { value: vm.jobsParams.job_type_version || '' });
+                }
                 if (vm.loading) {
                     if (filteredByJobType) {
                         vm.updateJobType(value);
@@ -332,6 +355,13 @@
                     filteredByJobType = !angular.equals(value, jobTypeViewAll);
                     vm.updateJobType(value);
                 }
+            }
+        });
+
+        $scope.$watch('vm.selectedJobTypeVersion', function (value) {
+            if (!vm.loading) {
+                vm.jobsParams.job_type_version = value.value;
+                vm.filterResults();
             }
         });
 
