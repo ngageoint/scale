@@ -6,13 +6,14 @@
 
         var vm = this,
             jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 },
-            jobTypeVersionViewAll = { label: 'ALL', value: ''};
+            jobTypeVersionViewAll = { label: 'VIEW ALL', value: ''};
 
         vm.jobsParams = $scope.$parent.jobsData ? stateService.getParentJobsParams() : stateService.getJobsParams();
 
         vm.stateService = stateService;
         vm.loading = true;
         vm.readonly = true;
+        vm.allJobTypes = null;
         vm.jobTypeValues = [jobTypeViewAll];
         vm.jobTypeVersionValues = [jobTypeVersionViewAll];
         vm.jobExecution = null;
@@ -121,14 +122,22 @@
         ];
 
         vm.getJobs = function () {
+            var params = _.clone(vm.jobsParams);
+            // if both name and version have been specified, map that to a job type id
+            if (params.job_type_name && params.job_type_name !== 'VIEW ALL' && params.job_type_version && params.job_type_version !== '') {
+                var jobType = _.find(vm.allJobTypes, { name: params.job_type_name, version: params.job_type_version });
+                if (jobType) {
+                    params.job_type_id = jobType.id;
+                }
+            }
             if ($scope.$parent.jobsData) {
                 vm.loading = false;
                 vm.gridOptions.totalItems = $scope.$parent.jobsData.count;
                 vm.gridOptions.minRowsToShow = $scope.$parent.jobsData.results.length;
                 vm.gridOptions.virtualizationThreshold = $scope.$parent.jobsData.results.length;
                 vm.gridOptions.data = Job.transformer($scope.$parent.jobsData.results);
-                vm.gridOptions.paginationCurrentPage = vm.jobsParams.page;
-                vm.gridOptions.paginationPageSize = vm.jobsParams.page_size;
+                vm.gridOptions.paginationCurrentPage = params.page;
+                vm.gridOptions.paginationPageSize = params.page_size;
             } else {
                 jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
                     vm.loading = false;
@@ -148,6 +157,7 @@
 
         vm.getJobTypes = function () {
             jobTypeService.getJobTypesOnce().then(function (data) {
+                vm.allJobTypes = data.results;
                 vm.jobTypeValues.push(_.uniq(data.results, 'name'));
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
                 if (vm.jobsParams.job_type_id) {
@@ -337,13 +347,19 @@
             }
             if (value) {
                 vm.jobTypeVersionValues = [jobTypeVersionViewAll];
-                vm.jobTypeVersionValues = vm.jobTypeVersionValues.concat(_.map(_.map(_.filter(vm.jobTypeValues, function (d) {
-                    return d.name === value.name;
-                }), 'version'), function (v) {
+                var filteredJobTypes = _.filter(vm.allJobTypes, function (d) {
+                    return d.name === value.name && d.name !== 'VIEW ALL';
+                });
+                var versionArr = _.map(filteredJobTypes, 'version');
+                var versionValuesArr = _.map(versionArr, function (v) {
                     return { label: v, value: v };
-                }));
+                });
+                vm.jobTypeVersionValues = vm.jobTypeVersionValues.concat(versionValuesArr);
                 if (vm.jobsParams.job_type_id) {
-                    vm.selectedJobTypeVersion = _.find(vm.jobTypeVersionValues, { value: value.version });
+                    var jobType = _.find(vm.allJobTypes, { id: vm.jobsParams.job_type_id });
+                    vm.selectedJobType = _.find(vm.jobTypeValues, { name: jobType.name });
+                    vm.selectedJobTypeVersion = _.find(vm.jobTypeVersionValues, { value: jobType ? jobType.version : '' });
+                    vm.jobsParams.job_type_id = null;
                 } else {
                     vm.selectedJobTypeVersion = _.find(vm.jobTypeVersionValues, { value: vm.jobsParams.job_type_version || '' });
                 }
@@ -352,6 +368,7 @@
                         vm.updateJobType(value);
                     }
                 } else {
+                    vm.jobsParams.job_type_id = null;
                     filteredByJobType = !angular.equals(value, jobTypeViewAll);
                     vm.updateJobType(value);
                 }
@@ -360,6 +377,7 @@
 
         $scope.$watch('vm.selectedJobTypeVersion', function (value) {
             if (!vm.loading) {
+                vm.jobsParams.job_type_id = null;
                 vm.jobsParams.job_type_version = value.value;
                 vm.filterResults();
             }
