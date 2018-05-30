@@ -14,15 +14,15 @@ import util.rest as rest_util
 from util.rest import BadParameter
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.models import ScaleFile, Workspace
-from storage.serializers import ScaleFileSerializer, WorkspaceDetailsSerializer, WorkspaceSerializer
+from storage.serializers import ScaleFileSerializerV5, WorkspaceDetailsSerializer, WorkspaceSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class FilesView(ListAPIView):
-    """This view is the endpoint for retrieving detailed information about files"""
+class FilesViewV5(ListAPIView):
+    """This view is the v5 endpoint for retrieving detailed information about files"""
     queryset = ScaleFile.objects.all()
-    serializer_class = ScaleFileSerializer
+    serializer_class = ScaleFileSerializerV5
 
     def get(self, request):
         """Retrieves a list of files based of filters and returns it in JSON form

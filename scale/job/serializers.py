@@ -267,8 +267,8 @@ class JobDetailsInputSerializer(serializers.Serializer):
         return result
 
     class Meta:
-        from storage.serializers import ScaleFileSerializer
-        FILE_SERIALIZER = ScaleFileSerializer
+        from storage.serializers import ScaleFileSerializerV5
+        FILE_SERIALIZER = ScaleFileSerializerV5
 
 
 class JobDetailsOutputSerializer(JobDetailsInputSerializer):
@@ -339,9 +339,9 @@ class JobDetailsSerializer(JobSerializer):
 
 class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
-    from storage.serializers import ScaleFileSerializer
+    from storage.serializers import ScaleFileSerializerV5
 
-    input_files = ScaleFileSerializer(many=True)
+    input_files = ScaleFileSerializerV5(many=True)
 
 
 # TODO: remove this function when REST API v5 is removed
