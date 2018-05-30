@@ -2,14 +2,14 @@
 .. _rest_v6_system:
 
 v6 System Services
-===============
+==================
 
 These services provide access to general system information.
 
 .. _rest_v6_system_status:
 
 v6 Get Scheduler Status
-----------------------
+-----------------------
 
 **Example GET /v6/status/ API call**
 
@@ -17,7 +17,7 @@ Request: GET http://.../v6/status/
 
 Response: 200 OK
 
-  .. code-block:: javascript
+.. code-block:: javascript
 
     {
        "timestamp": "1970-01-01T00:00:00Z",
@@ -308,7 +308,7 @@ Response: 200 OK
 .. _rest_v6_system_version:
 
 v6 Get System Version
-----------------------
+---------------------
 
 **Example GET /v6/version/ API call**
 
@@ -316,7 +316,8 @@ Request: GET http://.../v6/version/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+.. code-block:: javascript
+
    { 
        "version": "6.0.0" 
    }

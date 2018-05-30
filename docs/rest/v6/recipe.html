@@ -108,6 +108,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-definition-json">Recipe Definition JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-diff-json">Recipe Diff JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-instance-json">Recipe Instance JSON</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
@@ -189,7 +190,7 @@
 <p>These services allow for the creation and management of recipes. A recipe type is a user-defined workflow that allows
 jobs and recipes to be connected together in order to pass output from jobs to the input of other jobs.</p>
 <div class="section" id="recipe-definition-json">
-<span id="rest-v6-recipe-definition"></span><h2>Recipe Definition JSON<a class="headerlink" href="#recipe-definition-json" title="Permalink to this headline">¶</a></h2>
+<span id="rest-v6-recipe-json-definition"></span><h2>Recipe Definition JSON<a class="headerlink" href="#recipe-definition-json" title="Permalink to this headline">¶</a></h2>
 <p>A recipe definition JSON describes a workflow of jobs and recipes connected together and able to pass output from one to
 another.</p>
 <p><strong>Example recipe definition:</strong></p>
@@ -542,6 +543,178 @@ revision, if changed in the newer revision</td>
 <td>Optional</td>
 <td>(&#8216;recipe&#8217; node) The revision of the recipe type in the previous
 revision, if changed in the newer revision</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="recipe-instance-json">
+<span id="rest-v6-recipe-json-instance"></span><h2>Recipe Instance JSON<a class="headerlink" href="#recipe-instance-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe instance JSON describes an instance of a running recipe.</p>
+<p><strong>Example recipe instance:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;node_a&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span>
+         <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_b&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;job_id&quot;</span><span class="o">:</span> <span class="mi">1235</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span>
+         <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_c&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_b&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe-type-1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_type_revision&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;recipe_id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;is_completed&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_total&quot;</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_pending&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_blocked&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_queued&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_running&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_failed&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_completed&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;jobs_canceled&quot;</span><span class="o">:</span> <span class="mi">0</span>
+         <span class="p">}</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Instance</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>nodes</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>All of the nodes within the recipe stored by node name</td>
+</tr>
+<tr class="row-odd"><td>dependencies</td>
+<td>Array</td>
+<td>Required</td>
+<td>The list of dependencies for this recipe node. Each JSON object in
+the list has a single string field called <em>name</em> giving the node
+name of the dependency.</td>
+</tr>
+<tr class="row-even"><td>node_type</td>
+<td>JSON object</td>
+<td>Required</td>
+<td>An object describing the type of the node</td>
+</tr>
+<tr class="row-odd"><td>node_type</td>
+<td>String</td>
+<td>Required</td>
+<td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The name of the job type</td>
+</tr>
+<tr class="row-odd"><td>job_type_version</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The version of the job type</td>
+</tr>
+<tr class="row-even"><td>job_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The revision of the job type</td>
+</tr>
+<tr class="row-odd"><td>job_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The unique ID of the job</td>
+</tr>
+<tr class="row-even"><td>status</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;job&#8217; node) The job&#8217;s status</td>
+</tr>
+<tr class="row-odd"><td>recipe_type_name</td>
+<td>String</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The name of the recipe type</td>
+</tr>
+<tr class="row-even"><td>recipe_type_revision</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The revision of the recipe type</td>
+</tr>
+<tr class="row-odd"><td>recipe_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The unique ID of the recipe</td>
+</tr>
+<tr class="row-even"><td>is_completed</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) Whether the recipe has completed or not</td>
+</tr>
+<tr class="row-odd"><td>jobs_total</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The total number of jobs in the recipe</td>
+</tr>
+<tr class="row-even"><td>jobs_pending</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of PENDING jobs in the recipe</td>
+</tr>
+<tr class="row-odd"><td>jobs_blocked</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of BLOCKED jobs in the recipe</td>
+</tr>
+<tr class="row-even"><td>jobs_queued</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of QUEUED jobs in the recipe</td>
+</tr>
+<tr class="row-odd"><td>jobs_running</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of RUNNING jobs in the recipe</td>
+</tr>
+<tr class="row-even"><td>jobs_failed</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of FAILED jobs in the recipe</td>
+</tr>
+<tr class="row-odd"><td>jobs_completed</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of COMPLETED jobs in the recipe</td>
+</tr>
+<tr class="row-even"><td>jobs_canceled</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of CANCELED jobs in the recipe</td>
 </tr>
 </tbody>
 </table>

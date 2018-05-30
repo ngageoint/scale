@@ -107,6 +107,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -535,25 +536,25 @@
 <span id="recipe-definition-node-module"></span><h2>recipe.definition.node module<a class="headerlink" href="#module-recipe.definition.node" title="Permalink to this headline">¶</a></h2>
 <p>Defines the classes for representing nodes within a recipe definition</p>
 <dl class="class">
-<dt id="recipe.definition.node.JobNode">
-<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">JobNode</code><span class="sig-paren">(</span><em>name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.JobNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a></p>
+<dt id="recipe.definition.node.JobNodeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">JobNodeDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.JobNodeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.NodeDefinition" title="recipe.definition.node.NodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.NodeDefinition</span></code></a></p>
 <p>Represents a job within a recipe definition</p>
 <dl class="attribute">
-<dt id="recipe.definition.node.JobNode.NODE_TYPE">
-<code class="descname">NODE_TYPE</code><em class="property"> = u'job'</em><a class="headerlink" href="#recipe.definition.node.JobNode.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.JobNodeDefinition.NODE_TYPE">
+<code class="descname">NODE_TYPE</code><em class="property"> = u'job'</em><a class="headerlink" href="#recipe.definition.node.JobNodeDefinition.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.definition.node.Node">
-<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>name</em>, <em>node_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.NodeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">NodeDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>node_type</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a node within a recipe definition</p>
 <dl class="method">
-<dt id="recipe.definition.node.Node.add_connection">
-<code class="descname">add_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.add_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.NodeDefinition.add_connection">
+<code class="descname">add_connection</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition.add_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a connection that connects a parameter to one of this node&#8217;s inputs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -567,22 +568,22 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.definition.node.Node.add_dependency">
-<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.NodeDefinition.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition.add_dependency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a dependency that this node has on the given node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a>) &#8211; The dependency node to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="#recipe.definition.node.NodeDefinition" title="recipe.definition.node.NodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.NodeDefinition</span></code></a>) &#8211; The dependency node to add</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.definition.node.Node.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>recipe_input_interface</em>, <em>node_input_interfaces</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.Node.validate" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.NodeDefinition.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>recipe_input_interface</em>, <em>node_input_interfaces</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates this recipe node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -609,13 +610,13 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.definition.node.RecipeNode">
-<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">RecipeNode</code><span class="sig-paren">(</span><em>name</em>, <em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.RecipeNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.Node" title="recipe.definition.node.Node"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.Node</span></code></a></p>
+<dt id="recipe.definition.node.RecipeNodeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">RecipeNodeDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.RecipeNodeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.NodeDefinition" title="recipe.definition.node.NodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.NodeDefinition</span></code></a></p>
 <p>Represents a recipe within a recipe definition</p>
 <dl class="attribute">
-<dt id="recipe.definition.node.RecipeNode.NODE_TYPE">
-<code class="descname">NODE_TYPE</code><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.definition.node.RecipeNode.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.definition.node.RecipeNodeDefinition.NODE_TYPE">
+<code class="descname">NODE_TYPE</code><em class="property"> = u'recipe'</em><a class="headerlink" href="#recipe.definition.node.RecipeNodeDefinition.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -107,6 +107,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -662,6 +663,44 @@
 <dl class="attribute">
 <dt id="recipe.migrations.0022_auto_20180307_1617.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, name=u'is_completed', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_blocked', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_canceled', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_completed', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_failed', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_pending', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_queued', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_running', model_name=u'recipe'&gt;, &lt;AddField  field=&lt;django.db.models.fields.IntegerField&gt;, name=u'jobs_total', model_name=u'recipe'&gt;]</em><a class="headerlink" href="#recipe.migrations.0022_auto_20180307_1617.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0023_auto_20180523_1247">
+<span id="recipe-migrations-0023-auto-20180523-1247-module"></span><h2>recipe.migrations.0023_auto_20180523_1247 module<a class="headerlink" href="#module-recipe.migrations.0023_auto_20180523_1247" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0023_auto_20180523_1247.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0023_auto_20180523_1247.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0023_auto_20180523_1247.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0023_auto_20180523_1247.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0022_auto_20180307_1617')]</em><a class="headerlink" href="#recipe.migrations.0023_auto_20180523_1247.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0023_auto_20180523_1247.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RenameModel  new_name=u'RecipeNode', old_name=u'RecipeJob'&gt;, &lt;AlterModelTable  table=u'recipe_node', name=u'recipenode'&gt;]</em><a class="headerlink" href="#recipe.migrations.0023_auto_20180523_1247.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0024_auto_20180523_2057">
+<span id="recipe-migrations-0024-auto-20180523-2057-module"></span><h2>recipe.migrations.0024_auto_20180523_2057 module<a class="headerlink" href="#module-recipe.migrations.0024_auto_20180523_2057" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0024_auto_20180523_2057.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0024_auto_20180523_2057.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0024_auto_20180523_2057.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0024_auto_20180523_2057.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'recipe', u'0023_auto_20180523_1247')]</em><a class="headerlink" href="#recipe.migrations.0024_auto_20180523_2057.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0024_auto_20180523_2057.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RenameField  new_name=u'node_name', model_name=u'recipenode', old_name=u'job_name'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'sub_recipe', model_name=u'recipenode'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'job', model_name=u'recipenode'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, name=u'recipe', model_name=u'recipenode'&gt;]</em><a class="headerlink" href="#recipe.migrations.0024_auto_20180523_2057.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

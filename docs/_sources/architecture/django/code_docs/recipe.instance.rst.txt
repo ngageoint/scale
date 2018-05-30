@@ -1,0 +1,45 @@
+recipe\.instance package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.instance.json
+
+Submodules
+----------
+
+recipe\.instance\.exceptions module
+-----------------------------------
+
+.. automodule:: recipe.instance.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.instance\.node module
+-----------------------------
+
+.. automodule:: recipe.instance.node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.instance\.recipe module
+-------------------------------
+
+.. automodule:: recipe.instance.recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.instance
+    :members:
+    :undoc-members:
+    :show-inheritance:

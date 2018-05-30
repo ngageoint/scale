@@ -10,6 +10,7 @@ Subpackages
     recipe.definition
     recipe.diff
     recipe.handlers
+    recipe.instance
     recipe.messages
     recipe.migrations
     recipe.test

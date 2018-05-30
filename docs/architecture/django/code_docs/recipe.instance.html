@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe.instance package &mdash; Scale 5.4.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.instance.json package" href="recipe.instance.json.html" />
+    <link rel="prev" title="recipe.handlers package" href="recipe.handlers.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+        
+      <li>recipe.instance package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/recipe.instance.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="recipe-instance-package">
+<h1>recipe.instance package<a class="headerlink" href="#recipe-instance-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="recipe.instance.json.html">recipe.instance.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.instance.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.instance.json.html#module-recipe.instance.json.recipe_v6">recipe.instance.json.recipe_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.instance.json.html#module-recipe.instance.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.instance.exceptions">
+<span id="recipe-instance-exceptions-module"></span><h2>recipe.instance.exceptions module<a class="headerlink" href="#module-recipe.instance.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with recipe instances</p>
+<dl class="exception">
+<dt id="recipe.instance.exceptions.InvalidRecipe">
+<em class="property">exception </em><code class="descclassname">recipe.instance.exceptions.</code><code class="descname">InvalidRecipe</code><a class="headerlink" href="#recipe.instance.exceptions.InvalidRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided recipe instance was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.instance.node">
+<span id="recipe-instance-node-module"></span><h2>recipe.instance.node module<a class="headerlink" href="#module-recipe.instance.node" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for representing nodes within a recipe</p>
+<dl class="class">
+<dt id="recipe.instance.node.JobNodeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">JobNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
+<p>Represents a job within a recipe</p>
+<dl class="method">
+<dt id="recipe.instance.node.JobNodeInstance.get_jobs_to_update">
+<code class="descname">get_jobs_to_update</code><span class="sig-paren">(</span><em>pending_job_ids</em>, <em>blocked_job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance.get_jobs_to_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.get_jobs_to_update" title="recipe.instance.node.NodeInstance.get_jobs_to_update"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.get_jobs_to_update()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.instance.node.NodeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">NodeInstance</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a node within a recipe</p>
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.add_dependency">
+<code class="descname">add_dependency</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.add_dependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a dependency that this node has on the given node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a>) &#8211; The dependency node to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.get_jobs_to_update">
+<code class="descname">get_jobs_to_update</code><span class="sig-paren">(</span><em>pending_job_ids</em>, <em>blocked_job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.get_jobs_to_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a job ID to one of the given lists if it needs to be updated to PENDING or BLOCKED status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>pending_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of IDs for jobs that should be set to PENDING</li>
+<li><strong>blocked_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of IDs for jobs that should be set to BLOCKED</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.instance.node.RecipeNodeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">RecipeNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
+<p>Represents a recipe within a recipe</p>
+<dl class="method">
+<dt id="recipe.instance.node.RecipeNodeInstance.get_jobs_to_update">
+<code class="descname">get_jobs_to_update</code><span class="sig-paren">(</span><em>pending_job_ids</em>, <em>blocked_job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance.get_jobs_to_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.get_jobs_to_update" title="recipe.instance.node.NodeInstance.get_jobs_to_update"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.get_jobs_to_update()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.instance.recipe">
+<span id="recipe-instance-recipe-module"></span><h2>recipe.instance.recipe module<a class="headerlink" href="#module-recipe.instance.recipe" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for representing an instance of an executing recipe</p>
+<dl class="class">
+<dt id="recipe.instance.recipe.RecipeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.recipe.</code><code class="descname">RecipeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents an executing recipe</p>
+<dl class="method">
+<dt id="recipe.instance.recipe.RecipeInstance.get_jobs_to_update">
+<code class="descname">get_jobs_to_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_jobs_to_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the jobs within this recipe that should be updated to a new status (either BLOCKED or PENDING)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with status (PENDING or BLOCKED) mapping to lists of job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.instance">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.instance" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.instance.json.html" class="btn btn-neutral float-right" title="recipe.instance.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.handlers.html" class="btn btn-neutral" title="recipe.handlers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.4.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

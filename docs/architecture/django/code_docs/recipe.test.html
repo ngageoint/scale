@@ -107,6 +107,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -276,6 +277,21 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_graph_delta">recipe.test.handlers.test_graph_delta module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers.test_handler">recipe.test.handlers.test_handler module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.handlers.html#module-recipe.test.handlers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="recipe.test.instance.html">recipe.test.instance package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="recipe.test.instance.json.html">recipe.test.instance.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.instance.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.instance.json.html#module-recipe.test.instance.json.test_recipe_v6">recipe.test.instance.json.test_recipe_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.instance.json.html#module-recipe.test.instance.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.html#module-recipe.test.instance.test_recipe">recipe.test.instance.test_recipe module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.html#module-recipe.test.instance">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="recipe.test.messages.html">recipe.test.messages package</a><ul>
@@ -1003,7 +1019,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>input=None</em>, <em>event=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em>, <em>superseded_recipe=None</em>, <em>batch=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>input=None</em>, <em>event=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em>, <em>superseded_recipe=None</em>, <em>batch=None</em>, <em>save=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1051,7 +1067,34 @@ has one identical node, and deletes another node to replace it with a new one.</
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe job model</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.RecipeNode" title="recipe.models.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeNode</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.create_recipe_node">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_node</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>node_name=None</em>, <em>job=None</em>, <em>sub_recipe=None</em>, <em>save=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a recipe_node model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe containing the node</li>
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The node name</li>
+<li><strong>job</strong> (<em>:class:'job.models.Job'</em>) &#8211; The job in the node</li>
+<li><strong>sub_recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe in the node</li>
+<li><strong>save</strong> (<em>bool</em>) &#8211; Whether to save the model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe_node model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.RecipeNode" title="recipe.models.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeNode</span></code></a></p>
 </td>
 </tr>
 </tbody>

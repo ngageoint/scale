@@ -1,0 +1,29 @@
+recipe\.test\.instance package
+==============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.test.instance.json
+
+Submodules
+----------
+
+recipe\.test\.instance\.test\_recipe module
+-------------------------------------------
+
+.. automodule:: recipe.test.instance.test_recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.instance
+    :members:
+    :undoc-members:
+    :show-inheritance:

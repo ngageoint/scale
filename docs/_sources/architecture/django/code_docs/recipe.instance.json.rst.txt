@@ -1,0 +1,22 @@
+recipe\.instance\.json package
+==============================
+
+Submodules
+----------
+
+recipe\.instance\.json\.recipe\_v6 module
+-----------------------------------------
+
+.. automodule:: recipe.instance.json.recipe_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.instance.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

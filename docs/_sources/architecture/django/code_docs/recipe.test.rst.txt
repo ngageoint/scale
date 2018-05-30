@@ -10,6 +10,7 @@ Subpackages
     recipe.test.definition
     recipe.test.diff
     recipe.test.handlers
+    recipe.test.instance
     recipe.test.messages
 
 Submodules
