@@ -496,7 +496,7 @@ class TestBatchDetailsViewV5(TestCase):
         definition.root_batch_id = prev_batch.root_batch_id
         definition.job_names = ['job_a', 'job_b']
         definition.all_jobs = True
-        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition)
+        new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition, recipes_total=10)
 
         url = '/v5/batches/%d/' % new_batch.id
         response = self.client.get(url)
@@ -506,6 +506,8 @@ class TestBatchDetailsViewV5(TestCase):
         self.assertEqual(result['id'], new_batch.id)
         self.assertEqual(result['title'], new_batch.title)
         self.assertEqual(result['description'], new_batch.description)
+        self.assertEqual(result['created_count'], 10)
+        self.assertEqual(result['total_count'], 10)
         self.assertDictEqual(result['definition'], {'version': '1.0', 'job_names': ['job_a', 'job_b'],
                                                     'all_jobs': True})
 
