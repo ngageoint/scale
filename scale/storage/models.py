@@ -217,7 +217,7 @@ class ScaleFileManager(models.Manager):
             wp_file_downloads = wp_dict[wp_id][1]
             workspace.download_files(wp_file_downloads)
 
-    def filter_files(self, started=None, ended=None, time_field=None, file_name=None):
+    def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
         :param started: Query Scale files updated after this amount of time.
@@ -259,6 +259,105 @@ class ScaleFileManager(models.Manager):
                 files = files.filter(last_modified__lte=ended)
 
         files = files.order_by('last_modified')
+        return files
+        
+    def filter_files_v6(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
+                        job_ids=None, is_published=None, is_superseded=None, file_name=None, job_output=None, 
+                        recipe_ids=None, recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
+        """Returns a query for product models that filters on the given fields. The returned query includes the related
+        workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
+        to be pre-fetched as part of the query.
+
+        :param started: Query files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :keyword time_field: The time field to use for filtering.
+        :type time_field: string
+        :param job_type_ids: Query files with jobs with the given type identifier.
+        :type job_type_ids: list[int]
+        :param job_type_names: Query files with jobs with the given type name.
+        :type job_type_names: list[str]
+        :keyword job_ids: Query files with a given job id
+        :type job_ids: list[int]
+        :param is_published: Query files flagged as currently exposed for publication.
+        :type is_published: bool
+        :param is_superseded: Query files that have/have not been superseded.
+        :type is_superseded: bool
+        :param file_name: Query files with the given file name.
+        :type file_name: str
+        :keyword job_output: Query files with the given job output
+        :type job_output: str
+        :keyword recipe_ids: Query files with a given recipe id
+        :type recipe_ids: list[int]
+        :keyword recipe_job: Query files with a given recipe name
+        :type recipe_job: str
+        :keyword recipe_type_ids: Query files with the given recipe types
+        :type recipe_type_ids: list[int]
+        :keyword batch_ids: Query files with batches with the given identifiers.
+        :type batch_ids: list[int]
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The product file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        # Fetch a list of product files
+        files = ScaleFile.objects.all()
+        files = files.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
+        files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
+                                  'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                  'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                  'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                  'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
+                                  'batch__definition')
+        files = files.prefetch_related('countries')
+
+        # Apply time range filtering
+        if started:
+            if time_field == 'source':
+                files = files.filter(source_started__gte=started)
+            elif time_field == 'data':
+                files = files.filter(data_started__gte=started)
+            else:
+                files = files.filter(last_modified__gte=started)
+        if ended:
+            if time_field == 'source':
+                files = files.filter(source_ended__lte=ended)
+            elif time_field == 'data':
+                files = files.filter(data_ended__lte=ended)
+            else:
+                files = files.filter(last_modified__lte=ended)
+
+        if job_type_ids:
+            files = files.filter(job_type_id__in=job_type_ids)
+        if job_type_names:
+            files = files.filter(job_type__name__in=job_type_names)
+        if job_ids:
+            files = files.filter(job_id__in=job_type_ids)
+        if is_published is not None:
+            files = files.filter(is_published=is_published)
+        if is_superseded is not None:
+            files = files.filter(is_superseded=is_superseded)
+        if file_name:
+            files = files.filter(file_name=file_name)
+        if job_output:
+            files = files.filter(job_output=job_output)
+        if recipe_ids:
+            files = files.filter(recipe_id__in=recipe_ids)
+        if recipe_job:
+            files = files.filter(recipe_job=recipe_job)
+        if recipe_type_ids:
+            files = files.filter(recipe_type__in=recipe_type_ids)
+        if batch_ids:
+            files = files.filter(batch_id__in=batch_ids)
+
+        # Apply sorting
+        if order:
+            files = files.order_by(*order)
+        else:
+            files = files.order_by('last_modified')
+
         return files
 
     def get_files_for_job_summary(self, file_ids):

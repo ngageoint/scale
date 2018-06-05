@@ -13,67 +13,10 @@ from rest_framework.views import APIView
 import util.rest as rest_util
 from util.rest import BadParameter
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
-from storage.models import ScaleFile, Workspace
-from storage.serializers import ScaleFileSerializerV5, WorkspaceDetailsSerializer, WorkspaceSerializer
+from storage.models import Workspace
+from storage.serializers import WorkspaceDetailsSerializer, WorkspaceSerializer
 
 logger = logging.getLogger(__name__)
-
-
-class FilesViewV5(ListAPIView):
-    """This view is the v5 endpoint for retrieving detailed information about files"""
-    queryset = ScaleFile.objects.all()
-    serializer_class = ScaleFileSerializerV5
-
-    def get(self, request):
-        """Retrieves a list of files based of filters and returns it in JSON form
-
-        -*-*-
-        parameters:
-          - name: started
-            in: query
-            description: The start time of a start/end time range
-            required: false
-            example: 2016-01-01T00:00:00Z
-          - name: ended
-            in: query
-            description: The end time of a start/end time range
-            required: false
-            example: 2016-01-02T00:00:00Z
-          - name: time_field
-            in: query
-            description: 'The database time field to apply `started` and `ended` time filters
-                          [Valid fields: `source`, `data`, `last_modified`]'
-            required: false
-            example: source
-          - name: file_name
-            in: query
-            description: The name of a specific file in Scale
-            required: false
-            example: some_file_i_need_to_find.zip
-        responses:
-          '200':
-            description: A JSON list of files with metadata
-        -*-*-
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-        time_field = rest_util.parse_string(request, 'time_field', required=False,
-                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
-        file_name = rest_util.parse_string(request, 'file_name', required=False)
-
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
-                                               file_name=file_name)
-
-        page = self.paginate_queryset(files)
-        serializer = self.get_serializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
 
 
 class WorkspacesView(ListCreateAPIView):
