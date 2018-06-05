@@ -25,9 +25,9 @@ An interface JSON describes a set of parameters that can be passed data values t
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Interface**                                                                                                               |
 +============================+================+==========+====================================================================+
-| files                      | Array          | Required | Lists the parameters that take file(s) as input                    |
+| files                      | Array          | Optional | Lists the parameters that take file(s) as input. Defaults to [].   |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| json                       | Array          | Required | Lists the parameters that take JSON as input                       |
+| json                       | Array          | Optional | Lists the parameters that take JSON as input. Defaults to [].      |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | name                       | String         | Required | The unique name of the parameter                                   |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

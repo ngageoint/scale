@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import django
 
 from django.test.testcases import TestCase
-from mock import MagicMock
 
 from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnection
 from data.interface.interface import Interface
