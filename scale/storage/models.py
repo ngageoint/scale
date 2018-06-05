@@ -217,6 +217,22 @@ class ScaleFileManager(models.Manager):
             wp_file_downloads = wp_dict[wp_id][1]
             workspace.download_files(wp_file_downloads)
 
+    def get_details(self, file_id):
+        """Returns the file for the given ID with all detail fields included.
+
+        There are currently no additional fields included.
+
+        :param file_id: The unique identifier of the workspace.
+        :type file_id: int
+        :returns: The file with all detail fields included.
+        :rtype: :class:`storage.models.ScaleFile`
+        """
+
+        # Attempt to get the workspace
+        file = ScaleFile.objects.get(pk=file_id)
+
+        return file
+        
     def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
 
