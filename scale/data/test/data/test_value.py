@@ -27,10 +27,17 @@ class TestFileValue(TestCase):
             file_value.validate(json_param)
         self.assertEqual(context.exception.error.name, 'MISMATCHED_PARAM_TYPE')
 
-        # Multiple files not accepted
+        # Zero files not accepted
+        file_value = FileValue('input_1', [])
         with self.assertRaises(InvalidData) as context:
             file_value.validate(file_param)
-        self.assertEqual(context.exception.error.name, 'NO_MULTIPLE_FILES')
+        self.assertEqual(context.exception.error.name, 'NO_FILES')
+
+        # Multiple files not accepted
+        file_value = FileValue('input_1', [1234, 1235])
+        with self.assertRaises(InvalidData) as context:
+            file_value.validate(file_param)
+        self.assertEqual(context.exception.error.name, 'MULTIPLE_FILES')
 
         # Valid data value
         file_value = FileValue('input_1', [1234])

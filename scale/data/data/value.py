@@ -69,8 +69,11 @@ class FileValue(DataValue):
 
         warnings = super(FileValue, self).validate(parameter)
 
+        if len(self.file_ids) == 0:
+            raise InvalidData('NO_FILES', 'Parameter \'%s\' cannot accept zero files' % parameter.name)
+
         if len(self.file_ids) > 1 and not parameter.multiple:
-            raise InvalidData('NO_MULTIPLE_FILES', 'Parameter \'%s\' cannot accept multiple files' % parameter.name)
+            raise InvalidData('MULTIPLE_FILES', 'Parameter \'%s\' cannot accept multiple files' % parameter.name)
 
         return warnings
 
