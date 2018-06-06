@@ -138,7 +138,7 @@ A new release can be cut using the generate-release.sh shell script from a clone
 to MAJOR MINOR PATCH versions respectively):
 
 ```bash
-./generate-release.sh 4 0 0
+./generate-release.sh 4 0 0 
 ```
 
 There is no direct connection between the Travis CI and Docker Hub builds, but both are launched via push to the GitHub
