@@ -13,6 +13,94 @@ v6 Scale Files
 
 **Example GET /v6/files/ API call**
 
+Request: GET http://.../v6/files/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+    { 
+        "count": 55, 
+        "next": null, 
+        "previous": null, 
+        "results": [ 
+            { 
+                "id": 465, 
+                "workspace": { 
+                    "id": 2, 
+                    "name": "Products" 
+                }, 
+                "file_name": "my_file.kml", 
+                "media_type": "application/vnd.google-earth.kml+xml", 
+                "file_size": 100, 
+                "data_type": [], 
+                "is_deleted": false, 
+                "url": "http://host.com/file/path/my_file.kml", 
+                "created": "1970-01-01T00:00:00Z", 
+                "deleted": null, 
+                "data_started": null, 
+                "data_ended": null, 
+                "geometry": null, 
+                "center_point": null, 
+                "meta_data": {...}, 
+                "countries": ["TCY", "TCT"], 
+                "last_modified": "1970-01-01T00:00:00Z", 
+                "is_operational": true, 
+                "is_published": true, 
+                "has_been_published": true, 
+                "published": "1970-01-01T00:00:00Z", 
+                "unpublished": null, 
+                "source_started": "1970-01-01T00:00:00Z", 
+                "source_ended": "1970-01-02T00:00:00Z", 
+                "job_type": { 
+                    "id": 8, 
+                    "name": "kml-footprint", 
+                    "version": "1.0.0", 
+                    "title": "KML Footprint", 
+                    "description": "Creates a KML file.", 
+                    "category": "footprint", 
+                    "author_name": null, 
+                    "author_url": null, 
+                    "is_system": false, 
+                    "is_long_running": false, 
+                    "is_active": true, 
+                    "is_operational": true, 
+                    "is_paused": false, 
+                    "icon_code": "f0ac" 
+                }, 
+                "job": { 
+                    "id": 47 
+                }, 
+                "job_exe": { 
+                    "id": 49 
+                },
+                "job_output": "output_name_1",
+                "recipe": { 
+                    "id": 60 
+                }, 
+                "recipe_job": "kml-footprint",
+                "recipe_type": { 
+                    "id": 6, 
+                    "name": "my-recipe", 
+                    "version": "1.0.0", 
+                    "title": "My Recipe", 
+                    "description": "Processes some data", 
+                }, 
+                "batch": { 
+                    "id": 15, 
+                    "title": "My Batch", 
+                    "description": "My batch of recipes", 
+                    "status": "SUBMITTED", 
+                    "recipe_type": 6, 
+                    "event": 19, 
+                    "creator_job": 62, 
+                }, 
+                "is_superseded": true, 
+                "superseded": "1970-01-01T00:00:00Z", 
+            }, 
+            ... 
+        ] 
+    } 
+    
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Scale Files**                                                                                                         |
 +=========================================================================================================================+
@@ -22,25 +110,60 @@ v6 Scale Files
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| ended              | ISO-8601 Datetime | Optional | The end of the time range to query.                                 |
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
 |                    |                   |          | time filtering. Valid values are:                                   |
 |                    |                   |          |                                                                     |
-|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
-|                    |                   |          | - *data* - data time of Scale file (*data_started*, *data_ended*)   |
-|                    |                   |          | - *source* - collection time of source file (*source_started*,      |
-|                    |                   |          |              *source_ended*)                                        |
+|                    |                   |          | - *last_modified* - last modification of product file meta-data     |
+|                    |                   |          | - *data* - data time of product file (*data_started*, *data_ended*) |
+|                    |                   |          | - *source* - overall time for all associated source files           |
+|                    |                   |          |              (*source_started*, *source_ended*)                     |
 |                    |                   |          |                                                                     |
 |                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| file_name          | String            | Optional | Returns only input files with this file name.                       |
+| order              | String            | Optional | One or more fields to use when ordering the results.                |
+|                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |
+|                    |                   |          | Nested objects require a delimiter (ex: order=job_type__name).      |
+|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_output         | String            | Optional | Return only products for the given job output.                      |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_id        | Integer           | Optional | Return only products associated with a given job type identifier.   |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_name      | String            | Optional | Return only products with a given job type name.                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_id             | Integer           | Optional | Return only products produced by the given job identifier.          |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_id          | Integer           | Optional | Return only products produced by the given recipe identifier.       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_job         | String            | Optional | Return only products produced by the given recipe job.              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Optional | Return only products produced by the given recipe type identifier.  |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_id           | Integer           | Optional | Return only products produced by the given batch identifier.        |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_published       | Boolean           | Optional | Return only products flagged as currently exposed for publication.  |
+|                    |                   |          | Default is True, include only published products.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| file_name          | String            | Optional | Return only products with a given file name.                        |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -49,91 +172,78 @@ v6 Scale Files
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
+| count              | Integer           | The total number of results that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| id                 | Integer           | The unique identifier of the file.                                             |
+| next               | URL               | A URL to the next page of results.                                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_name          | String            | The name of the file                                                           |
+| previous           | URL               | A URL to the previous page of results.                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_path          | String            | The relative path of the file in the workspace.                                |
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_type          | String            | The type of Scale file, either 'SOURCE' or 'PRODUCT'                           |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| file_size          | Integer           | The size of the file in bytes.                                                 |
+| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
+|                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| media_type         | String            | The IANA media type of the file.                                               |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_type          | String            | A list of string data type "tags" for the file.                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| meta_data          | JSON Object       | A dictionary of key/value pairs that describe file-specific attributes.        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| url                | String            | A hyperlink to the file.                                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| source_started     | ISO-8601 Datetime | When collection of the source file started.                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_started       | ISO-8601 Datetime | The start time of the source data being ingested.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_ended         | ISO-8601 Datetime | The ended time of the source data being ingested.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| deleted            | ISO-8601 Datetime | When the file was deleted from storage.                                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| uuid               | String            | A unique string of characters that help determine if files are identical.      |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_deleted         | Boolean           | A flag that will indicate if the file was deleted.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| workspace          | JSON Object       | The workspace storing the file.                                                |
+| .workspace         | JSON Object       | The workspace that has stored the product.                                     |
 |                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .id                | Integer           | The unique identifier of the workspace.                                        |
+| .file_name         | String            | The name of the file.                                                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The name of the workspace                                                      |
+| .media_type        | String            | The IANA media type of the file.                                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| countries          | Array             | A list of zero or more strings with the ISO3 country codes for countries       |
+| .file_size         | Integer           | The size of the file in bytes.                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_type         | Array             | List of strings describing the data type of the file.                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .is_deleted        | Boolean           | Whether the file has been deleted.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .url               | URL               | The absolute URL to use for downloading the file.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .deleted           | ISO-8601 Datetime | When the file was deleted.                                                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_started      | ISO-8601 Datetime | When collection of the underlying data file started.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_ended        | ISO-8601 Datetime | When collection of the underlying data file ended.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .geometry          | WKT String        | The full geospatial geometry footprint of the file.                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .center_point      | WKT String        | The central geospatial location of the file.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .meta_data         | JSON Object       | A dictionary of key/value pairs that describe product-specific attributes.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .countries         | Array             | A list of zero or more strings with the ISO3 country codes for countries       |
 |                    |                   | contained in the geographic boundary of this file.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| geometry           | Array             | The geo-spatial footprint of the file.                                         |
+| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| center_point       | Array             | The center point of the file in Lat/Lon Decimal Degree.                        |
+| .source_started    | ISO-8601 Datetime | When collection of the underlying source file started.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|         "count": 68,                                                                                                    |
-|         "next": null,                                                                                                   |
-|         "previous": null,                                                                                               |
-|         "results": [                                                                                                    |
-|             {                                                                                                           |
-|                 "id": 7,                                                                                                |
-|                 "file_name": "foo.bar",                                                                                 |
-|                 "file_path": "file/path/foo.bar",                                                                       |
-|                 "file_type": "SOURCE",                                                                                  |
-|                 "file_size": 100,                                                                                       |
-|                 "media_type": "text/plain",                                                                             |
-|                 "data_type": "",                                                                                        |
-|                 "meta_data": {...},                                                                                     |
-|                 "url": null,                                                                                            |
-|                 "source_started": "2016-01-10T00:00:00Z",                                                               |
-|                 "source_ended": "2016-01-11T00:00:00Z",                                                                 |
-|                 "data_started": "2016-01-10T00:00:00Z",                                                                 |
-|                 "data_ended": "2016-01-11T00:00:00Z",                                                                   |
-|                 "created": "2017-10-12T18:59:24.398334Z",                                                               |
-|                 "deleted": null,                                                                                        |
-|                 "last_modified": "2017-10-12T18:59:24.398379Z",                                                         |
-|                 "uuid": "",                                                                                             |
-|                 "is_deleted": false,                                                                                    |
-|                 "workspace": {                                                                                          |
-|                     "id": 19,                                                                                           |
-|                     "name": "workspace-19"                                                                              |
-|                 },                                                                                                      |
-|                 "countries": ["TCY", "TCT"],                                                                            |
-|                 "geometry" :null,                                                                                       |
-|                 "center_point": null                                                                                    |
-|             }                                                                                                           |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
+| .source_ended      | ISO-8601 Datetime | When collection of the underlying source file ended.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_type          | JSON Object       | The type of job that generated the file.                                       |
+|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The job instance that generated the file.                                      |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_exe           | JSON Object       | The specific job execution that generated the product.                         |
+|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_output        | String            | The name of the output from the job related to this file.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe            | JSON Object       | The recipe instance that generated the file.                                   |
+|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe_job        | String            | The recipe job that produced this file.                                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe_type       | JSON Object       | The type of recipe that generated the file.                                    |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .batch             | JSON Object       | The batch instance that generated the file.                                    |
+|                    |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .is_superseded     | Boolean           | Whether this file has been replaced and is now obsolete.                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .superseded        | ISO-8601 Datetime | When the file became superseded by another file.                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
