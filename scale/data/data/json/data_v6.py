@@ -43,7 +43,7 @@ DATA_SCHEMA = {
 
 
 def convert_data_to_v6_json(data):
-    """Returns the v6 data JSON for the given interface
+    """Returns the v6 data JSON for the given data
 
     :param data: The data
     :type data: :class:`data.data.data.Data`

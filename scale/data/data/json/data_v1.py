@@ -2,10 +2,35 @@
 from __future__ import unicode_literals
 
 from data.data.exceptions import InvalidData
+from data.data.value import FileValue, JsonValue
 
 
 DEFAULT_VERSION = '1.0'
 
+
+def convert_data_to_v1_json(data):
+    """Returns the v1 data JSON for the given data
+
+    :param data: The data
+    :type data: :class:`data.data.data.Data`
+    :returns: The v1 data JSON
+    :rtype: :class:`data.data.json.data_v1.DataV1`
+    """
+
+    input_data = []
+
+    for value in data.values.values():
+        if isinstance(value, FileValue):
+            if len(value.file_ids) > 1:
+                input_data.append({'name': value.name, 'file_ids': value.file_ids})
+            elif len(value.file_ids) == 1:
+                input_data.append({'name': value.name, 'file_id': value.file_ids[0]})
+        elif isinstance(value, JsonValue):
+            input_data.append({'name': value.name, 'value': value.value})
+
+    data_dict = {'version': '6', 'input_data': input_data}
+
+    return DataV1(data=data_dict)
 
 class DataV1(object):
     """Represents a v1 data JSON"""
