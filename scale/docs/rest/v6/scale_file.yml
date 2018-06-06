@@ -1,0 +1,250 @@
+openapi: "3.0.0"
+info:
+  title: Scale File Services
+  version: v6
+paths:
+  /v6/ingests:
+    get:
+      operationId: _rest_v6_scale_file_list
+      summary: Scale File List
+      description: Returns a list of all scale files
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: time_field
+          schema:
+            type: string
+          description: Indicates the time field(s) that *started* and *ended* | 
+            will use for time filtering. Valid values are: *last_modified*, |
+            *data* and *source*. The default value is *last_modified*.
+        -in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+            Nested objects require a delimiter (ex: order=source_file__created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+        -in: query
+          name: job_output
+          schema:
+            type: string
+          description: Return only files for the given job output.
+        -in: query
+          name: job_type_id
+          schema:
+            type: integer
+          description: Return only files associated with a given job type identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: Return only files with a given job type name. Duplicate it |
+            to filter by multiple values.
+        -in: query
+          name: job_id
+          schema:
+            type: integer
+          description: Return only files produced by the given job identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: recipe_id
+          schema:
+            type: integer
+          description: Return only files associated with a given recipe identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: recipe_job
+          schema:
+            type: string
+          description: Return only files produced by the given recipe job.
+        -in: query
+          name: recipe_type_id
+          schema:
+            type: integer
+          description: Return only files associated with a given recipe type identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: batch_id
+          schema:
+            type: integer
+          description: Return only files associated with a given batch identifier. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: is_published
+          schema:
+            type: boolean
+          description: Return only files flagged as currently exposed for publication. |
+            Duplicate is true, include only published files
+        -in: query
+          name: file_name
+          schema:
+            type: string
+          description: Return only files with a given file name.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/file_list'
+  /v6/files/{id}/:
+    get:
+      operationId: _rest_v6_file_details
+      summary: File Details
+      description: Returns a specific file and all its related model information
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scale file
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/file_details'
+
+components:
+  schemas:
+    file_list:
+      title: File List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/file_details'
+          description: List of ingest objects
+    file_details:
+      title: Source File
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        workspace:
+          $ref: '#/components/schemas/workspace'
+        file_name:
+          type: string
+          description: The name of the source file.
+          example: my_file.kml
+        media_type:
+          type: string
+          description: The IANA media type of the source file.
+          example: application/vnd.google-earth.kml+xml
+        file_size:
+          type: integer
+          description: The size of the file in bytes.  
+          example: 1234
+        data_type:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of string data type "tags" for the file.
+        is_deleted:
+          type: boolean
+          description: Whether the source file has been deleted.
+          example: True
+        url:
+          type: string
+          format: uri
+          description: The absolute URL to use for downloading the file.
+          example: http://host.com/file/path/my_file.kml
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deleted:
+          type: string
+          format: date-time
+          description: When the source file was deleted.
+          example: 2015-09-10T15:24:53.987Z
+        data_started:
+          type: string
+          format: date-time
+          description: When collection of the underlying data file started.
+          example: 2015-09-10T15:24:53.503Z
+        data_ended:
+          type: string
+          format: date-time
+          description: When collection of the underlying data file ended.
+          example: 2015-09-10T15:24:53.987Z
+        geometry:
+          type: string
+          description: The full geospatial geometry footprint of the source file. (WKT format)
+          example: POLYGON((11 -11,22 -22,33 -33,44 -44))
+        center_point:
+          type: string
+          description: The central geospatial location of the source file.
+          example: POINT(11 -11)
+        meta_data:
+          $ref: '#/components/schemas/metadata'
+        countries:
+          type: array
+          style: simple
+          items:
+            type: string  
+          description: A list of zero or more strings with the ISO3 country codes for countries |
+            contained in the geographic boundary of this file.
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+        is_parsed:
+          type: boolean
+          description: Whether this source file was successfully parsed and ingested into the system.
+          example: True
+        parsed:
+          type: string
+          format: date-time
+          description: When the source file was originally parsed by Scale.
+          example: 2015-09-10T15:24:53.987Z
+      required:
+      - id
+      - secret_access_key
