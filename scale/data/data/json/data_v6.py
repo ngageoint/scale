@@ -6,6 +6,7 @@ from jsonschema.exceptions import ValidationError
 
 from data.data.data import Data
 from data.data.exceptions import InvalidData
+from data.data.json.data_v1 import DataV1
 from data.data.value import FileValue, JsonValue
 
 
@@ -86,7 +87,7 @@ class DataV6(object):
             self._data['version'] = SCHEMA_VERSION
 
         if self._data['version'] != SCHEMA_VERSION:
-            raise InvalidData('INVALID_VERSION', '%s is an unsupported version number' % self._data['version'])
+            self._convert_from_v1()
 
         self._populate_default_values()
 
@@ -122,6 +123,43 @@ class DataV6(object):
         """
 
         return self._data
+
+    def _convert_from_v1(self):
+        """Converts the JSON dict from v1 to the current version
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the given data is invalid
+        """
+
+        v1_json_dict = DataV1(self._data).get_dict()
+
+        # Convert data values
+        if 'input_data' in v1_json_dict:
+            files = {}
+            json = {}
+            for input_data_dict in v1_json_dict['input_data']:
+                name = input_data_dict['name']
+                if 'file_id' in input_data_dict:
+                    files[name] = [input_data_dict['file_id']]
+                elif 'file_ids' in input_data_dict:
+                    files[name] = input_data_dict['file_ids']
+                elif 'value' in input_data_dict:
+                    json[name] = input_data_dict['value']
+            del v1_json_dict['input_data']
+            v1_json_dict['files'] = files
+            v1_json_dict['json'] = json
+
+        # Remove workspace information from v1 data
+        if 'workspace_id' in v1_json_dict:
+            del v1_json_dict['workspace_id']
+        if 'output_data' in v1_json_dict:
+            del v1_json_dict['output_data']
+
+        # Update version
+        if 'version' in v1_json_dict:
+            del v1_json_dict['version']
+        v1_json_dict['version'] = SCHEMA_VERSION
+
+        self._data = v1_json_dict
 
     def _populate_default_values(self):
         """Populates any missing required values with defaults

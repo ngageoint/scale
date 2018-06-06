@@ -44,7 +44,21 @@ class TestDataV6(TestCase):
             DataV6(data, do_validate=True)
         self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
 
-        # Valid data
+        # Valid v6 data
         data = {'version': '6', 'files': {'input_a': [1234], 'input_b': [1235, 1236]},
-                                'json': {'input_c': 999, 'input_d': {'hello'}}}
+                'json': {'input_c': 999, 'input_d': {'hello'}}}
+        DataV6(data=data, do_validate=True)
+
+        # Conversion from v1 job data
+        data = {'version': '1.0', 'input_data': [{'name': 'input_a', 'file_id': 1234},
+                                                 {'name': 'input_b', 'file_ids': [1235, 1236]},
+                                                 {'name': 'input_c', 'value': 'hello'}],
+                'output_data': [{'name': 'geo_image', 'workspace_id': 12}]}
+        DataV6(data=data, do_validate=True)
+
+        # Conversion from v1 recipe data
+        data = {'version': '1.0', 'input_data': [{'name': 'input_a', 'file_id': 1234},
+                                                 {'name': 'input_b', 'file_ids': [1235, 1236]},
+                                                 {'name': 'input_c', 'value': 'hello'}],
+                'workspace_id': 12}
         DataV6(data=data, do_validate=True)
