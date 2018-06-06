@@ -17,7 +17,8 @@ Request: GET http://.../v6/ingests/?scan_id=1
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript
+
     { 
         "count": 42, 
         "next": null, 
@@ -231,7 +232,8 @@ Request: GET http://.../v6/ingests/14/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript
+
     { 
         "id": 14, 
         "file_name": "file_name.txt", 
@@ -451,7 +453,8 @@ Request: GET http://.../v6/ingests/status/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript
+
     { 
         "count": 2, 
         "next": null, 
