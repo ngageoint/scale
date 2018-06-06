@@ -60,7 +60,7 @@ def convert_data_to_v6_json(data):
         elif isinstance(value, JsonValue):
             json[value.name] = value.value
 
-    data_dict = {'version': '6', 'files': files, 'json': json}
+    data_dict = {'version': SCHEMA_VERSION, 'files': files, 'json': json}
 
     return DataV6(data=data_dict, do_validate=False)
 
