@@ -1,4 +1,4 @@
-"""Manages the v6 recipe diff schema"""
+"""Manages the v6 recipe definition schema"""
 from __future__ import unicode_literals
 
 from jsonschema import validate
@@ -8,6 +8,7 @@ from data.interface.json.interface_v6 import INTERFACE_SCHEMA, convert_interface
 from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
+from recipe.definition.json.definition_v1 import RecipeDefinitionV1
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from util.rest import strip_schema_version
 
@@ -231,8 +232,7 @@ class RecipeDefinitionV6(object):
             self._definition['version'] = SCHEMA_VERSION
 
         if self._definition['version'] != SCHEMA_VERSION:
-            msg = '%s is an unsupported version number'
-            raise InvalidDefinition('INVALID_VERSION', msg % self._definition['version'])
+            self._convert_from_v1()
 
         self._populate_default_values()
 
@@ -284,6 +284,67 @@ class RecipeDefinitionV6(object):
         """
 
         return self._definition
+
+    def _convert_from_v1(self):
+        """Converts the JSON dict from v1 to the current version
+
+        :raises :class:`recipe.definition.exceptions.InvalidDdefinition`: If the given definition is invalid
+        """
+
+        v1_json_dict = RecipeDefinitionV1(self._definition).get_dict()
+
+        # A database query here is necessary to retrieve the latest revisions for each job type (the v1 recipe
+        # definition did not store job type revision)
+        revisions = {}
+        from job.models import JobType
+        for job_type in JobType.objects.all().only('name', 'version', 'revision_num'):
+            revisions[job_type.name + job_type.version] = job_type.revision_num
+
+        # Convert input parameters
+        files = []
+        json = []
+        for input_data_dict in v1_json_dict['input_data']:
+            name = input_data_dict['name']
+            if input_data_dict['type'] in ['file', 'files']:
+                file_input_dict = {'name': name, 'required': input_data_dict['required'],
+                                   'multiple': input_data_dict['type'] == 'files'}
+                if 'media_types' in input_data_dict:
+                    file_input_dict['media_types'] = input_data_dict['media_types']
+                files.append(file_input_dict)
+            elif input_data_dict['type'] == 'property':
+                json.append({'name': name, 'type': 'string', 'required': input_data_dict['required']})
+        del v1_json_dict['input_data']
+        v1_json_dict['input'] = {'files': files, 'json': json}
+
+        # Convert jobs
+        nodes = {}
+        for job_dict in v1_json_dict['jobs']:
+            dependencies = []
+            node_input = {}
+            for dependency_dict in job_dict['dependencies']:
+                d_name = dependency_dict['name']
+                dependencies.append({'name': d_name})
+                for conn_dict in dependency_dict['connections']:
+                    node_input[conn_dict['input']] = {'type': 'dependency', 'node': d_name,
+                                                      'output': conn_dict['output']}
+            for recipe_input_dict in job_dict['recipe_inputs']:
+                node_input[recipe_input_dict['job_input']] = {'type': 'recipe',
+                                                              'input': recipe_input_dict['recipe_input']}
+            jt_name = job_dict['job_type']['name']
+            version = job_dict['job_type']['version']
+            revision = revisions[jt_name + version]
+            node_type_dict = {'node_type': 'job', 'job_type_name': jt_name, 'job_type_version': version,
+                              'job_type_revision': revision}
+            nodes[job_dict['name']] = {'dependencies': dependencies, 'input': node_input, 'node_type': node_type_dict}
+        del v1_json_dict['jobs']
+        v1_json_dict['nodes'] = nodes
+
+        # Update version
+        if 'version' in v1_json_dict:
+            del v1_json_dict['version']
+        v1_json_dict['version'] = SCHEMA_VERSION
+
+        self._definition = v1_json_dict
 
     def _populate_default_values(self):
         """Populates any missing required values with defaults
