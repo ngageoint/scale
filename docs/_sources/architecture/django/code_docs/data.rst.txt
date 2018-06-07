@@ -8,6 +8,7 @@ Subpackages
 
     data.data
     data.interface
+    data.test
 
 Submodules
 ----------

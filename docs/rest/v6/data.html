@@ -26,8 +26,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -101,6 +100,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Data Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#data-json">Data JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#interface-json">Interface JSON</a></li>
 </ul>
 </li>
@@ -186,13 +186,54 @@
   <div class="section" id="v6-data-services">
 <span id="rest-v6-data"></span><h1>v6 Data Services<a class="headerlink" href="#v6-data-services" title="Permalink to this headline">¶</a></h1>
 <p>These services allow for the management of data within Scale.</p>
+<div class="section" id="data-json">
+<span id="rest-v6-data-data"></span><h2>Data JSON<a class="headerlink" href="#data-json" title="Permalink to this headline">¶</a></h2>
+<p>A data JSON describes a set of data values that can be passed to an interface.</p>
+<p><strong>Example interface:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;foo&#39;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1234</span><span class="p">,</span> <span class="mi">1235</span><span class="p">]},</span>
+   <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s1">&#39;bar&#39;</span><span class="o">:</span> <span class="s1">&#39;hello, this is a string value&#39;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Data</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>files</td>
+<td>Object</td>
+<td>Optional</td>
+<td>A JSON object representing every file-based value in the data.
+Each key in the object is the unique name of the data value
+(corresponding to a parameter name) and each value is an array of
+one or more file IDs (integers). Defaults to {}.</td>
+</tr>
+<tr class="row-odd"><td>json</td>
+<td>Object</td>
+<td>Optional</td>
+<td>A JSON object representing every JSON value in the data. Each key
+in the object is the unique name of the data value (corresponding
+to a parameter name) and each value is the appropriate JSON
+type/object that matches the parameter. Defaults to {}.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="interface-json">
 <span id="rest-v6-data-interface"></span><h2>Interface JSON<a class="headerlink" href="#interface-json" title="Permalink to this headline">¶</a></h2>
 <p>An interface JSON describes a set of parameters that can be passed data values to process.</p>
 <p><strong>Example interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="s1">&#39;media_types&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;image/tiff&#39;</span><span class="p">],</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">,</span> <span class="s1">&#39;multiple&#39;</span><span class="o">:</span> <span class="nx">True</span><span class="p">}],</span>
-   <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="o">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">False</span><span class="p">}]</span>
+   <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;type&#39;</span><span class="o">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="nx">False</span><span class="p">}]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -210,18 +251,19 @@
 <tbody valign="top">
 <tr class="row-even"><td>files</td>
 <td>Array</td>
-<td>Required</td>
-<td>Lists the parameters that take file(s) as input</td>
+<td>Optional</td>
+<td>Lists the parameters that take file(s) as input. Defaults to [].</td>
 </tr>
 <tr class="row-odd"><td>json</td>
 <td>Array</td>
-<td>Required</td>
-<td>Lists the parameters that take JSON as input</td>
+<td>Optional</td>
+<td>Lists the parameters that take JSON as input. Defaults to [].</td>
 </tr>
 <tr class="row-even"><td>name</td>
 <td>String</td>
 <td>Required</td>
-<td>The unique name of the parameter</td>
+<td>The unique name of the parameter. Can only contain the following
+characters: [<a href="#id1"><span class="problematic" id="id2">a-zA-Z_</span></a>-]</td>
 </tr>
 <tr class="row-odd"><td>required</td>
 <td>Boolean</td>
@@ -307,10 +349,7 @@ files. Defaults to False.</td>
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

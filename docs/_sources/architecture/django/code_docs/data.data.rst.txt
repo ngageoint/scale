@@ -1,6 +1,13 @@
 data\.data package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    data.data.json
+
 Submodules
 ----------
 
@@ -8,6 +15,22 @@ data\.data\.data module
 -----------------------
 
 .. automodule:: data.data.data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.data\.exceptions module
+-----------------------------
+
+.. automodule:: data.data.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.data\.value module
+------------------------
+
+.. automodule:: data.data.value
     :members:
     :undoc-members:
     :show-inheritance:

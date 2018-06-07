@@ -1,0 +1,18 @@
+data\.test package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.test.data
+    data.test.interface
+
+Module contents
+---------------
+
+.. automodule:: data.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

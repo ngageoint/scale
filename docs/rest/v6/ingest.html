@@ -26,8 +26,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -194,7 +193,99 @@
 <p>Request: GET <a class="reference external" href="http://.../v6/ingests/?scan_id=1">http://.../v6/ingests/?scan_id=1</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;scan&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Processor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This Strike process handles the data feed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;INGESTED&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bytes_transferred&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;transfer_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:48:08.920Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;transfer_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:48:08.956Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/current/path/file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/wk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/new/path/file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/new-wk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;ingest_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ingest_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;source_file&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+                <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file_name.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:36:56Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:37:01Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.797Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.796Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:47.412Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span>
+        <span class="p">},</span>
+       <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -406,7 +497,145 @@ DUPLICATE].</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/ingests/14/">http://.../v6/ingests/14/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scan&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Processor&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This Strike process handles the data feed&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming files to ingest&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/transfer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mount_on&quot;</span><span class="o">:</span> <span class="s2">&quot;/mounts/transfer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;workspace_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/workspace&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.txt&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;raw&quot;</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:42.896Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:42.935Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;INGESTED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bytes_transferred&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+    <span class="s2">&quot;transfer_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:48:08.920Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;transfer_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:48:08.956Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+    <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/current/path/file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/wk&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/new/path/file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/new-wk&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;ingest_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ingest_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source_file&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+        <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file_name.txt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:36:56Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:37:01Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.797Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.796Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:47.412Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -545,7 +774,63 @@ DUPLICATE].</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/ingests/status/">http://.../v6/ingests/status/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Processor&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This Strike process handles the data feed&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming source files to ingest&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                        <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">36</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T17:35:46.690Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T17:35:46.740Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;most_recent&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-21T21:15:56.522Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;size&quot;</span><span class="o">:</span> <span class="mi">12345678900000</span><span class="p">,</span>
+            <span class="s2">&quot;values&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;time&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-21T00:00:00Z&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+                    <span class="s2">&quot;size&quot;</span><span class="o">:</span> <span class="mi">123456789</span>
+                <span class="p">},</span>
+                <span class="p">...</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -719,10 +1004,7 @@ Defaults to False (data time).</td>
 
   
 
-  
-  
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

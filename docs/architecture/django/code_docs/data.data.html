@@ -26,12 +26,11 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="data.interface package" href="data.interface.html" />
+    <link rel="next" title="data.data.json package" href="data.data.json.html" />
     <link rel="prev" title="data package" href="data.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -213,6 +212,20 @@
             
   <div class="section" id="data-data-package">
 <h1>data.data package<a class="headerlink" href="#data-data-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="data.data.json.html">data.data.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.data.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.data.json.html#module-data.data.json.data_v1">data.data.json.data_v1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.data.json.html#module-data.data.json.data_v6">data.data.json.data_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.data.json.html#module-data.data.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -224,6 +237,108 @@
 <em class="property">class </em><code class="descclassname">data.data.data.</code><code class="descname">Data</code><a class="headerlink" href="#data.data.data.Data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a grouping of parameters with their provided data</p>
+<dl class="method">
+<dt id="data.data.data.Data.add_value">
+<code class="descname">add_value</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data.Data.add_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the data value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<a class="reference internal" href="#data.data.value.DataValue" title="data.data.value.DataValue"><code class="xref py py-class docutils literal"><span class="pre">data.data.value.DataValue</span></code></a>) &#8211; The data value to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the value is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="data.data.data.Data.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data.Data.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this data against the given interface. Extra data values that cannot be passed to the interface
+will be removed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface to which this data is being passed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.data.exceptions">
+<span id="data-data-exceptions-module"></span><h2>data.data.exceptions module<a class="headerlink" href="#module-data.data.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with interface data values</p>
+<dl class="exception">
+<dt id="data.data.exceptions.InvalidData">
+<em class="property">exception </em><code class="descclassname">data.data.exceptions.</code><code class="descname">InvalidData</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.exceptions.InvalidData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the data is invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.data.value">
+<span id="data-data-value-module"></span><h2>data.data.value module<a class="headerlink" href="#module-data.data.value" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes for handling a data value being passed to an interface</p>
+<dl class="class">
+<dt id="data.data.value.DataValue">
+<em class="property">class </em><code class="descclassname">data.data.value.</code><code class="descname">DataValue</code><span class="sig-paren">(</span><em>name</em>, <em>param_type</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.DataValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a data value for an interface parameter</p>
+<dl class="method">
+<dt id="data.data.value.DataValue.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.DataValue.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this data value against its parameter</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>parameter</strong> (<a class="reference internal" href="data.interface.html#data.interface.parameter.Parameter" title="data.interface.parameter.Parameter"><code class="xref py py-class docutils literal"><span class="pre">data.interface.parameter.Parameter</span></code></a>) &#8211; The parameter to which this data is being passed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="data.data.value.FileValue">
+<em class="property">class </em><code class="descclassname">data.data.value.</code><code class="descname">FileValue</code><span class="sig-paren">(</span><em>name</em>, <em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.FileValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#data.data.value.DataValue" title="data.data.value.DataValue"><code class="xref py py-class docutils literal"><span class="pre">data.data.value.DataValue</span></code></a></p>
+<p>Represents a data value containing one or more files</p>
+<dl class="method">
+<dt id="data.data.value.FileValue.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.FileValue.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#data.data.value.DataValue.validate" title="data.data.value.DataValue.validate"><code class="xref py py-meth docutils literal"><span class="pre">data.data.value.DataValue.validate()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="data.data.value.JsonValue">
+<em class="property">class </em><code class="descclassname">data.data.value.</code><code class="descname">JsonValue</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.JsonValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#data.data.value.DataValue" title="data.data.value.DataValue"><code class="xref py py-class docutils literal"><span class="pre">data.data.value.DataValue</span></code></a></p>
+<p>Represents a JSON data value</p>
+<dl class="method">
+<dt id="data.data.value.JsonValue.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.JsonValue.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#data.data.value.DataValue.validate" title="data.data.value.DataValue.validate"><code class="xref py py-meth docutils literal"><span class="pre">data.data.value.DataValue.validate()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -240,7 +355,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="data.interface.html" class="btn btn-neutral float-right" title="data.interface package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="data.data.json.html" class="btn btn-neutral float-right" title="data.data.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="data.html" class="btn btn-neutral" title="data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -288,10 +403,7 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

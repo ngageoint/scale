@@ -1,0 +1,37 @@
+data\.test\.data package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.test.data.json
+
+Submodules
+----------
+
+data\.test\.data\.test\_data module
+-----------------------------------
+
+.. automodule:: data.test.data.test_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.test\.data\.test\_value module
+------------------------------------
+
+.. automodule:: data.test.data.test_value
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.test.data
+    :members:
+    :undoc-members:
+    :show-inheritance:

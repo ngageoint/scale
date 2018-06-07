@@ -26,8 +26,7 @@
 
   
 
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -223,9 +222,72 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.definition.json.definition_v1">
+<span id="recipe-definition-json-definition-v1-module"></span><h2>recipe.definition.json.definition_v1 module<a class="headerlink" href="#module-recipe.definition.json.definition_v1" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for managing a recipe definition</p>
+<dl class="class">
+<dt id="recipe.definition.json.definition_v1.RecipeDefinitionV1">
+<em class="property">class </em><code class="descclassname">recipe.definition.json.definition_v1.</code><code class="descname">RecipeDefinitionV1</code><span class="sig-paren">(</span><em>definition=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v1.RecipeDefinitionV1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a v1 recipe definition JSON</p>
+<dl class="method">
+<dt id="recipe.definition.json.definition_v1.RecipeDefinitionV1.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v1.RecipeDefinitionV1.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.definition.json.definition_v1.convert_job_to_v1_json">
+<code class="descclassname">recipe.definition.json.definition_v1.</code><code class="descname">convert_job_to_v1_json</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v1.convert_job_to_v1_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v1 JSON dict for the given job node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.node.JobNodeDefinition" title="recipe.definition.node.JobNodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.JobNodeDefinition</span></code></a>) &#8211; The job node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v1 JSON dict for the node</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.definition.json.definition_v1.convert_recipe_definition_to_v1_json">
+<code class="descclassname">recipe.definition.json.definition_v1.</code><code class="descname">convert_recipe_definition_to_v1_json</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v1.convert_recipe_definition_to_v1_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v1 recipe definition JSON for the given recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>definition</strong> (<a class="reference internal" href="recipe.definition.html#recipe.definition.definition.RecipeDefinition" title="recipe.definition.definition.RecipeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.definition.RecipeDefinition</span></code></a>) &#8211; The recipe definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v1 recipe definition JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.definition.json.definition_v1.RecipeDefinitionV1" title="recipe.definition.json.definition_v1.RecipeDefinitionV1"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.json.definition_v1.RecipeDefinitionV1</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.definition.json.definition_v6">
 <span id="recipe-definition-json-definition-v6-module"></span><h2>recipe.definition.json.definition_v6 module<a class="headerlink" href="#module-recipe.definition.json.definition_v6" title="Permalink to this headline">¶</a></h2>
-<p>Manages the v6 recipe diff schema</p>
+<p>Manages the v6 recipe definition schema</p>
 <dl class="class">
 <dt id="recipe.definition.json.definition_v6.RecipeDefinitionV6">
 <em class="property">class </em><code class="descclassname">recipe.definition.json.definition_v6.</code><code class="descname">RecipeDefinitionV6</code><span class="sig-paren">(</span><em>definition=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.json.definition_v6.RecipeDefinitionV6" title="Permalink to this definition">¶</a></dt>
@@ -363,10 +425,7 @@
 
   
 
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

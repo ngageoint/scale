@@ -4,6 +4,14 @@ recipe\.test\.definition\.json package
 Submodules
 ----------
 
+recipe\.test\.definition\.json\.test\_definition\_v1 module
+-----------------------------------------------------------
+
+.. automodule:: recipe.test.definition.json.test_definition_v1
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.test\.definition\.json\.test\_definition\_v6 module
 -----------------------------------------------------------
 
