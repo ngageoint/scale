@@ -8,8 +8,8 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from job.models import Job, JobType
-from recipe.configuration.data.recipe_data import RecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+
+from recipe.deprecation import RecipeDataSunset, RecipeDefinitionSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
@@ -657,16 +657,17 @@ class Recipe(models.Model):
         :rtype: :class:`recipe.configuration.data.recipe_data.RecipeData`
         """
 
-        return RecipeData(self.input)
+        return RecipeDataSunset.create(self.get_recipe_definition(), self.input)
 
     def get_recipe_definition(self):
         """Returns the definition for this recipe
 
         :returns: The definition for this recipe
-        :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
+        :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition` or
+                :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.recipe_type_rev.definition)
+        return RecipeDefinitionSunset(self.recipe_type_rev.definition)
 
     class Meta(object):
         """meta information for the db"""
@@ -1133,7 +1134,7 @@ class RecipeType(models.Model):
         :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.definition)
+        return RecipeDefinitionSunset.create(self.definition)
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type as the combination of name and version
@@ -1225,7 +1226,7 @@ class RecipeTypeRevision(models.Model):
         :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.definition)
+        return RecipeDefinitionSunset.create(self.definition)
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type revision as the combination of job type and

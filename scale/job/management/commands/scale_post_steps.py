@@ -90,7 +90,7 @@ class Command(BaseCommand):
             stdout_and_stderr = ''
 
         with transaction.atomic():
-            if JobInterfaceSunset.is_seed(job_interface.definition):
+            if JobInterfaceSunset.is_seed_dict(job_interface.definition):
                 job_results = JobResults()
                 job_results.perform_post_steps(job_interface, job_data, job_exe)
             else:

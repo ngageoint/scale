@@ -385,7 +385,7 @@ class JobManager(models.Manager):
         job_results = job.get_job_results()
         job_results_dict = job_results.get_dict()
 
-        if JobInterfaceSunset.is_seed(job_interface_dict):
+        if JobInterfaceSunset.is_seed_dict(job_interface_dict):
             job.inputs = job_data.extend_interface_with_inputs_v5(job_interface, input_files)
             job.outputs = job_results.extend_interface_with_outputs_v5(job_interface, output_files)
         else:
@@ -1176,7 +1176,7 @@ class Job(models.Model):
             job_results = JobResults(self.output)
         else:
             # Handle self.output being none on Seed type jobs
-            if JobInterfaceSunset.is_seed(self.job_type_rev.interface):
+            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
                 job_results = JobResults()
             else:
                 job_results = JobResults_1_0(self.output)
@@ -3138,7 +3138,7 @@ class JobType(models.Model):
         :rtype: str
         """
 
-        if JobInterfaceSunset.is_seed(self.interface):
+        if JobInterfaceSunset.is_seed_dict(self.interface):
             tags = self.get_job_interface().get_tags()
             if tags:
                 return tags[0]
@@ -3168,7 +3168,7 @@ class JobType(models.Model):
         """
 
         # TODO: Remove first block of conditional come v6
-        if not JobInterfaceSunset.is_seed(self.interface):
+        if not JobInterfaceSunset.is_seed_dict(self.interface):
             resources = Resources(self.custom_resources).get_node_resources()
             resources.remove_resource('cpus')
             resources.remove_resource('mem')
@@ -3289,7 +3289,7 @@ class JobType(models.Model):
         """
         value = 0.0
 
-        if JobInterfaceSunset.is_seed(self.interface):
+        if JobInterfaceSunset.is_seed_dict(self.interface):
             for resource in JobInterfaceSunset.create(self.interface).get_scalar_resources():
                 if key in resource['name'].lower():
                     value = resource.get('value' if is_value else 'inputMultiplier', 0.0)

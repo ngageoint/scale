@@ -18,9 +18,9 @@ class ValidationWarning(object):
         """Constructor sets basic attributes.
 
         :param key: A unique identifier clients can use to recognize the warning.
-        :type key: str
+        :type key: string
         :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: str
+        :type details: string
         """
         self.key = key
         self.details = details

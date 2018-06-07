@@ -332,7 +332,7 @@ class ScheduledExecutionConfigurator(object):
         shared_mem = job_type.get_shared_mem_required()
         if shared_mem > 0:
             shared_mem = int(math.ceil(shared_mem))
-            if JobInterfaceSunset.is_seed(job_type.interface):
+            if JobInterfaceSunset.is_seed_dict(job_type.interface):
                 env_vars = {'ALLOCATED_SHAREDMEM': '%.1f' % float(shared_mem)}
             # Remove legacy code in v6
             else:
@@ -410,7 +410,7 @@ class ScheduledExecutionConfigurator(object):
         args = config._get_task_dict('main')['args']
 
         # TODO: Remove old-style logic for command parameters inject when with v6
-        if not JobInterfaceSunset.is_seed(job_type.interface):
+        if not JobInterfaceSunset.is_seed_dict(job_type.interface):
             args = JobInterface.replace_command_parameters(args, env_vars)
         else:
             args = environment_expansion(env_vars, args)
@@ -475,7 +475,7 @@ class ScheduledExecutionConfigurator(object):
                 # TODO: command args and env var replacement from the interface should be removed once Scale drops
                 # support for old-style job types
                 args = config._get_task_dict('main')['args']
-                if JobInterfaceSunset.is_seed(interface.definition):
+                if JobInterfaceSunset.is_seed_dict(interface.definition):
                     env_vars = task_settings
                 # TODO: Remove this else block when old-style job types are removed
                 else:

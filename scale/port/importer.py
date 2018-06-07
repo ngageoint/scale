@@ -21,7 +21,7 @@ from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from port.schema import Configuration, InvalidConfiguration, ValidationWarning
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.deprecation import RecipeDefinitionSunset
 from recipe.models import RecipeType
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from trigger.models import TriggerRule
@@ -274,7 +274,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
             definition_dict = result.get('definition')
         elif recipe_type:
             definition_dict = recipe_type.definition
-        definition = RecipeDefinition(definition_dict)
+        definition = RecipeDefinitionSunset.create(definition_dict)
         warnings.extend(definition.validate_job_interfaces())
     except (InvalidDefinition, InvalidRecipeConnection) as ex:
         raise InvalidConfiguration('Recipe type definition invalid: %s -> %s' % (result.get('name'), unicode(ex)))

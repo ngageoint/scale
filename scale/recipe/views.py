@@ -5,6 +5,7 @@ import logging
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
+from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -15,7 +16,6 @@ import util.rest as rest_util
 from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
                                 RecipeTypeSerializer, OldRecipeDetailsSerializer)
@@ -86,7 +86,7 @@ class RecipeTypesView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Validate the recipe definition
-                recipe_def = RecipeDefinition(definition_dict)
+                recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
                 # Attempt to create the trigger rule
                 trigger_rule = None
@@ -176,7 +176,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 # Validate the recipe definition
                 recipe_def = None
                 if definition_dict:
-                    recipe_def = RecipeDefinition(definition_dict)
+                    recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
                 # Attempt to create the trigger rule
                 trigger_rule = None
@@ -250,7 +250,7 @@ class RecipeTypesValidationView(APIView):
 
         # Validate the recipe definition
         try:
-            recipe_def = RecipeDefinition(definition_dict)
+            recipe_def = RecipeDefinitionSunset.create(definition_dict)
             warnings = RecipeType.objects.validate_recipe_type(name, title, version, description, recipe_def,
                                                                trigger_config)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
