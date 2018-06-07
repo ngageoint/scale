@@ -277,7 +277,7 @@ class ScaleFileManager(models.Manager):
         files = files.order_by('last_modified')
         return files
         
-    def filter_files_v6(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
+    def filter_files(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
                         job_ids=None, is_published=None, is_superseded=None, file_name=None, job_output=None, 
                         recipe_ids=None, recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related

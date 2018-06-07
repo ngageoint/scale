@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
-from batch.serializers import BatchBaseSerializerV6
-from recipe.serializers import RecipeTypeBaseSerializer
 from util.rest import ModelIdSerializer
 
 class DataTypeField(CharField):
@@ -150,11 +148,6 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
 
     file_path = serializers.CharField()
-
-    # TODO: update to use GeoJson instead of WKT
-    geometry = WktField()
-    center_point = WktField()
-    meta_data = serializers.JSONField(default=dict)
     countries = serializers.StringRelatedField(many=True, read_only=True)
 
 class FileBaseSerializer(ScaleFileSerializerV6):
@@ -178,7 +171,9 @@ class FileBaseSerializer(ScaleFileSerializerV6):
 
 class FileSerializer(FileBaseSerializer):
     """Converts ScaleFile model fields to REST output"""
+    from batch.serializers import BatchBaseSerializerV6
     from job.serializers import JobTypeBaseSerializer
+    from recipe.serializers import RecipeTypeBaseSerializer
 
     job_type = JobTypeBaseSerializer()
     batch = BatchBaseSerializerV6()
@@ -187,4 +182,8 @@ class FileSerializer(FileBaseSerializer):
 
 class FileDetailsSerializer(FileSerializer):
     """Converts file model fields to REST output"""
-    pass
+    
+    # TODO: update to use GeoJson instead of WKT
+    geometry = WktField()
+    center_point = WktField()
+    meta_data = serializers.JSONField(default=dict)

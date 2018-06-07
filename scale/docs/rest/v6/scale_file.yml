@@ -172,6 +172,10 @@ components:
           type: string
           description: The name of the source file.
           example: my_file.kml
+        file_path:
+          type: string
+          description: The relative path of the file in the workspace.
+          example: path/to/the/file.png
         media_type:
           type: string
           description: The IANA media type of the source file.

@@ -43,6 +43,7 @@ Response: 200 OK
                 "center_point": null, 
                 "countries": ["TCY", "TCT"], 
                 "last_modified": "1970-01-01T00:00:00Z", 
+                "file_path": "path/to/the/file.png",
                 "is_operational": true, 
                 "is_published": true, 
                 "has_been_published": true, 
@@ -214,6 +215,8 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_path         | String            | The relative path of the file in the workspace.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .source_started    | ISO-8601 Datetime | When collection of the underlying source file started.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .source_ended      | ISO-8601 Datetime | When collection of the underlying source file ended.                           |
@@ -278,6 +281,7 @@ Response: 200 OK
         "meta_data": null, 
         "countries": [], 
         "last_modified": "1970-01-01T00:00:00Z", 
+        "file_path": "path/to/the/file.png",
         "source_started": "1970-01-01T00:00:00Z", 
         "source_ended": "1970-01-02T00:00:00Z", 
         "job": { 
@@ -380,6 +384,8 @@ Response: 200 OK
 |                    |                   | contained in the geographic boundary of this file.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| file_path          | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | source_started     | ISO-8601 Datetime | When collection of the underlying source file started.                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

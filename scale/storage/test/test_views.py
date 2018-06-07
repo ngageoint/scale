@@ -194,7 +194,7 @@ class TestFilesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 1)
 
         for entry in result['results']:
             # Make sure country info is included
@@ -210,26 +210,24 @@ class TestFileDetailsViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
-        self.product = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                         is_published=True, file_name='test.txt',
-                                                         countries=[self.country])
+        self.file = storage_test_utils.create_file(job_exe=self.job_exe1, file_name='test.txt', countries=[self.country])
 
     def test_id(self):
         """Tests successfully calling the files detail view by id"""
         
-        url = '/%s/files/%i/' % (self.api, self.product.id)
+        url = '/%s/files/%i/' % (self.api, self.file.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(result['id'], self.product.id)
-        self.assertEqual(result['file_name'], self.product.file_name)
+        self.assertEqual(result['id'], self.file.id)
+        self.assertEqual(result['file_name'], self.file.file_name)
         self.assertFalse('ancestors' in result)
         self.assertFalse('descendants' in result)
         self.assertFalse('sources' in result)
         self.assertEqual(result['countries'][0], self.country.iso3)
-        self.assertEqual(result['file_type'], self.product.file_type)
-        self.assertEqual(result['file_path'], self.product.file_path)
+        self.assertEqual(result['file_type'], self.file.file_type)
+        self.assertEqual(result['file_path'], self.file.file_path)
 
     def test_missing(self):
         """Tests calling the file details view with an invalid id"""

@@ -128,7 +128,7 @@ class FilesView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        files = ScaleFile.objects.filter_files_v6(
+        files = ScaleFile.objects.filter_files(
             started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
             job_type_names=job_type_names, job_ids=job_ids, is_published=is_published, 
             file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
