@@ -4,7 +4,10 @@ from __future__ import unicode_literals
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.interface.parameter import FileParameter, JsonParameter
+from recipe.definition.connection import DependencyInputConnection, RecipeInputConnection
 from recipe.definition.exceptions import InvalidDefinition
+from recipe.definition.node import JobNodeDefinition
 
 
 DEFAULT_VERSION = '1.0'
@@ -158,6 +161,72 @@ RECIPE_DEFINITION_SCHEMA = {
 }
 
 
+def convert_recipe_definition_to_v1_json(definition):
+    """Returns the v1 recipe definition JSON for the given recipe definition
+
+    :param definition: The recipe definition
+    :type definition: :class:`recipe.definition.definition.RecipeDefinition`
+    :returns: The v1 recipe definition JSON
+    :rtype: :class:`recipe.definition.json.definition_v1.RecipeDefinitionV1`
+    """
+
+    input_data = []
+    for parameter in definition.input_interface.parameters.values():
+        input_data_dict = {'name': parameter.name, 'required': parameter.required}
+        if parameter.param_type == FileParameter.PARAM_TYPE:
+            input_data_dict['type'] = 'files' if parameter.multiple else 'file'
+            input_data_dict['media_types'] = parameter.media_types
+        elif parameter.param_type == JsonParameter.PARAM_TYPE and parameter.json_type == 'string':
+            input_data_dict['type'] = 'property'
+        if 'type' in input_data_dict:
+            input_data.append(input_data_dict)
+
+    jobs = []
+    for node in definition.graph.values():
+        if node.node_type == JobNodeDefinition.NODE_TYPE:
+            jobs.append(convert_job_to_v1_json(node))
+
+    json_dict = {'version': DEFAULT_VERSION, 'input_data': input_data, 'jobs': jobs}
+
+    return RecipeDefinitionV1(definition=json_dict, do_validate=False)
+
+
+def convert_job_to_v1_json(node):
+    """Returns the v1 JSON dict for the given job node
+
+    :param node: The job node
+    :type node: :class:`recipe.definition.node.JobNodeDefinition`
+    :returns: The v1 JSON dict for the node
+    :rtype: dict
+    """
+
+    dependency_names = set()
+    dependencies = []
+    connections = {}  # {Dependency name: [Connection]}
+    recipe_inputs = []
+    for conn in node.connections.values():
+        if isinstance(conn, DependencyInputConnection):
+            conn_dict = {'output': conn.output_name, 'input': conn.input_name}
+            if conn.node_name not in connections:
+                connections[conn.node_name] = []
+            connections[conn.node_name].append(conn_dict)
+        elif isinstance(conn, RecipeInputConnection):
+            recipe_inputs.append({'recipe_input': conn.recipe_input_name, 'job_input': conn.input_name})
+
+    for d_name, conns in connections.items():
+        dependencies.append({'name': d_name, 'connections': conns})
+        dependency_names.add(d_name)
+    for d_name in node.parents.keys():
+        if d_name not in dependency_names:
+            dependencies.append({'name': d_name, 'connections': []})
+            dependency_names.add(d_name)
+
+    job_dict = {'name': node.name, 'job_type': {'name': node.job_type_name, 'version': node.job_type_version},
+                'dependencies': dependencies, 'recipe_inputs': recipe_inputs}
+
+    return job_dict
+
+
 class RecipeDefinitionV1(object):
     """Represents a v1 recipe definition JSON"""
 
@@ -210,6 +279,8 @@ class RecipeDefinitionV1(object):
             if 'required' not in input_dict:
                 input_dict['required'] = True
 
+        if 'jobs' not in self._definition:
+            self._definition['jobs'] = []
         for job_dict in self._definition['jobs']:
             if 'recipe_inputs' not in job_dict:
                 job_dict['recipe_inputs'] = []

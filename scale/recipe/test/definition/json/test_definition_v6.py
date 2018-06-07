@@ -19,7 +19,6 @@ class TestRecipeDefinitionV6(TestCase):
     def test_convert_recipe_definition_to_v6_json_empty(self):
         """Tests calling convert_recipe_definition_to_v6_json() with an empty definition"""
 
-        # Try diff with empty recipe definitions
         interface = Interface()
         definition = RecipeDefinition(interface)
         json = convert_recipe_definition_to_v6_json(definition)

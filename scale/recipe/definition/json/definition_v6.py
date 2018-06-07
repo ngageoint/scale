@@ -173,8 +173,8 @@ def convert_recipe_definition_to_v6_json(definition):
     """
 
     nodes_dict = {n.name: convert_node_to_v6_json(n) for n in definition.graph.values()}
-    json_dict = {'version': '6', 'input': convert_interface_to_v6_json(definition.input_interface).get_dict(),
-                 'nodes': nodes_dict}
+    json_dict = {'version': SCHEMA_VERSION, 'nodes': nodes_dict,
+                 'input': convert_interface_to_v6_json(definition.input_interface).get_dict()}
 
     return RecipeDefinitionV6(definition=json_dict, do_validate=False)
 
