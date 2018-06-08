@@ -104,7 +104,7 @@ class TestFilesViewV6(TestCase):
     def test_invalid_started(self):
         """Tests calling the files view when the started parameter is invalid."""
 
-        url = '/%s/files/?started=hello'
+        url = '/%s/files/?started=hello' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -173,7 +173,7 @@ class TestFilesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.product2a.id)
-        self.assertFalse(result['results'][0]['is_published'])
+        self.assertFalse('is_published' in result['results'][0])
 
     def test_file_name(self):
         """Tests successfully calling the files view filtered by file name."""
