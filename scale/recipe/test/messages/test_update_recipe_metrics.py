@@ -323,3 +323,85 @@ class TestUpdateRecipes(TestCase):
         msg = message.new_messages[0]
         self.assertEqual(msg.type, 'update_batch_metrics')
         self.assertListEqual(msg._batch_ids, [batch.id])
+
+    def test_execute_with_top_level_recipe(self):
+        """Tests calling UpdateRecipeMetrics.execute() successfully where a message needs to be sent to update a
+        top-level recipe
+        """
+
+        batch = batch_test_utils.create_batch()
+        top_recipe = recipe_test_utils.create_recipe(batch=batch)
+        recipe = recipe_test_utils.create_recipe(batch=batch)
+        recipe.recipe = top_recipe
+        recipe.save()
+        recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=top_recipe, sub_recipe=recipe)
+
+        # Recipe jobs
+        job_1 = job_test_utils.create_job(status='FAILED', save=False)
+        job_2 = job_test_utils.create_job(status='CANCELED', save=False)
+        job_3 = job_test_utils.create_job(status='BLOCKED', save=False)
+        job_4 = job_test_utils.create_job(status='BLOCKED', save=False)
+        job_5 = job_test_utils.create_job(status='COMPLETED', save=False)
+        Job.objects.bulk_create([job_1, job_2, job_3, job_4, job_5])
+
+        # Recipe nodes
+        recipe_node_2 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_1)
+        recipe_node_3 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_2)
+        recipe_node_4 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_3)
+        recipe_node_5 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_4)
+        recipe_node_6 = recipe_test_utils.create_recipe_node(recipe=recipe, job=job_5)
+        RecipeNode.objects.bulk_create([recipe_node_1, recipe_node_2, recipe_node_3, recipe_node_4, recipe_node_5,
+                                        recipe_node_6])
+
+        # Add recipes to message
+        message = UpdateRecipeMetrics()
+        if message.can_fit_more():
+            message.add_recipe(recipe.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        recipe = Recipe.objects.get(id=recipe.id)
+        self.assertEqual(recipe.jobs_total, 5)
+        self.assertEqual(recipe.jobs_pending, 0)
+        self.assertEqual(recipe.jobs_blocked, 2)
+        self.assertEqual(recipe.jobs_queued, 0)
+        self.assertEqual(recipe.jobs_running, 0)
+        self.assertEqual(recipe.jobs_failed, 1)
+        self.assertEqual(recipe.jobs_completed, 1)
+        self.assertEqual(recipe.jobs_canceled, 1)
+        self.assertEqual(recipe.sub_recipes_total, 0)
+        self.assertEqual(recipe.sub_recipes_completed, 0)
+
+        # Make sure message is created to update top-level recipe metrics
+        # There should be no message to update batch metrics since we did not update a top-level recipe
+        self.assertEqual(len(message.new_messages), 1)
+        msg = message.new_messages[0]
+        self.assertEqual(msg.type, 'update_recipe_metrics')
+        self.assertListEqual(msg._recipe_ids, [top_recipe.id])
+
+        # Test executing message again
+        message_json_dict = message.to_json()
+        message = UpdateRecipeMetrics.from_json(message_json_dict)
+        result = message.execute()
+        self.assertTrue(result)
+
+        recipe = Recipe.objects.get(id=recipe.id)
+        self.assertEqual(recipe.jobs_total, 5)
+        self.assertEqual(recipe.jobs_pending, 0)
+        self.assertEqual(recipe.jobs_blocked, 2)
+        self.assertEqual(recipe.jobs_queued, 0)
+        self.assertEqual(recipe.jobs_running, 0)
+        self.assertEqual(recipe.jobs_failed, 1)
+        self.assertEqual(recipe.jobs_completed, 1)
+        self.assertEqual(recipe.jobs_canceled, 1)
+        self.assertEqual(recipe.sub_recipes_total, 0)
+        self.assertEqual(recipe.sub_recipes_completed, 0)
+
+        # Make sure message is created to update top-level recipe metrics
+        # There should be no message to update batch metrics since we did not update a top-level recipe
+        self.assertEqual(len(message.new_messages), 1)
+        msg = message.new_messages[0]
+        self.assertEqual(msg.type, 'update_recipe_metrics')
+        self.assertListEqual(msg._recipe_ids, [top_recipe.id])

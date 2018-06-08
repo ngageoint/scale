@@ -457,8 +457,24 @@ class RecipeManager(models.Manager):
         """
 
         recipe_ids = set()
-        for recipe_job in RecipeNode.objects.filter(job_id__in=job_ids).only('recipe_id'):
-            recipe_ids.add(recipe_job.recipe_id)
+        for recipe_node in RecipeNode.objects.filter(job_id__in=job_ids).only('recipe_id'):
+            recipe_ids.add(recipe_node.recipe_id)
+
+        return list(recipe_ids)
+
+    def get_recipe_ids_for_sub_recipes(self, sub_recipe_ids):
+        """Returns the IDs of all recipes that contain the sub-recipes with the given IDs. This will include superseded
+        recipes.
+
+        :param sub_recipe_ids: The sub-recipe IDs
+        :type sub_recipe_ids: list
+        :returns: The recipe IDs
+        :rtype: list
+        """
+
+        recipe_ids = set()
+        for recipe_node in RecipeNode.objects.filter(sub_recipe_id__in=sub_recipe_ids).only('recipe_id'):
+            recipe_ids.add(recipe_node.recipe_id)
 
         return list(recipe_ids)
 
