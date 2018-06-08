@@ -33,7 +33,7 @@ def create_country(name=None, fips='TT', gmi='TT', iso2='TT', iso3='TST', iso_nu
                                       border=border, effective=effective)
 
 
-def create_file(file_name='my_test_file.txt', file_type='PRODUCT', media_type='text/plain', file_size=100, 
+def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='text/plain', file_size=100, 
                 data_type='', file_path=None, workspace=None, is_deleted=False, uuid='', last_modified=None,
                 data_started=None, data_ended=None, source_started=None, source_ended=None, geometry=None, 
                 center_point=None, meta_data='', countries=None,job_exe=None,job_output=None, recipe=None,

@@ -40,7 +40,6 @@ class FileAncestryLinkManager(models.Manager):
 
         new_links = []
         created = timezone.now()
-        import pdb; pdb.set_trace()
 
         # Delete any previous file ancestry links for the given job
         # This overrides any file input links that were created when the job first received its input data
