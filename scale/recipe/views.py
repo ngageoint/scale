@@ -86,6 +86,7 @@ class RecipeTypesView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Validate the recipe definition
+                logger.info(definition_dict)
                 recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
                 # Attempt to create the trigger rule

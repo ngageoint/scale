@@ -1,17 +1,17 @@
 """Defines the class for managing a recipe definition"""
 from __future__ import unicode_literals
 
+import json
+import os
+
 from django.db.models import Q
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.data.job_connection import JobConnection
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.data.job_connection import SeedJobConnection
 from job.deprecation import JobConnectionSunset
 from job.handlers.inputs.file import FileInput
 from job.handlers.inputs.files import FilesInput
 from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
-from job.seed.manifest import SeedManifest
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -21,184 +21,9 @@ from recipe.handlers.graph import RecipeGraph
 
 DEFAULT_VERSION = '2.0'
 
-
-RECIPE_DEFINITION_SCHEMA = {
-    'type': 'object',
-    'required': [
-        'jobs', 'version'
-    ],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'Version of the recipe definition schema',
-            'type': 'string',
-            'pattern': '^2\.0$',
-        },
-        'inputs': {
-            'type': 'array',
-            'items': {
-                '$ref': '#/definitions/input_item',
-            },
-        },
-        'jobs': {
-            'type': 'array',
-            'items': {
-                '$ref': '#/definitions/job_item',
-            },
-        },
-    },
-    'definitions': {
-        'input_item': {
-            'type': 'object',
-            'required': [
-                'name', 'type',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'files': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/input_file_item',
-                    },
-                },
-                'json': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/input_json_item',
-                    },
-                },
-            },
-        },
-
-        'input_file_item': {
-            'type': 'object',
-            'required': [
-                'name', 'file_ids',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                    'pattern': '^[a-zA-Z0-9\\-_ ]{0,255}$',
-                },
-                'file_ids': {
-                    'type': 'array',
-                    'items': {
-                        'type': 'int',
-                    },
-                },
-            },
-        },
-
-        'input_data_json_item': {
-            'type': 'object',
-            'required': [
-                'name', 'value',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                    'pattern': '^[a-zA-Z0-9\\-_ ]{0,255}$',
-                },
-                'value': {
-                    'type': 'string',
-                },
-            },
-        },
-
-        'job_item': {
-            'type': 'object',
-            'required': [
-                'name',
-                'job_type',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                    'pattern': '^[a-zA-Z0-9\\-_ ]{1,255}$',
-                },
-                'job_type': {
-                    'type': 'object',
-                    'required': [
-                        'name', 'version',
-                    ],
-                    'additionalProperties': False,
-                    'properties': {
-                        'name': {
-                            'type': 'string',
-                            'pattern': '^[a-zA-Z0-9\\-_ ]{1,255}$',
-                        },
-                        'version': {
-                            'type': 'string',
-                        },
-                    },
-                },
-                'recipe_inputs': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/recipe_input_item',
-                    },
-                },
-                'dependencies': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/dependency_item',
-                    },
-                },
-            },
-        },
-        'recipe_input_item': {
-            'type': 'object',
-            'required': [
-                'recipe_input', 'job_input',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'recipe_input': {
-                    'type': 'string',
-                },
-                'job_input': {
-                    'type': 'string',
-                },
-            },
-        },
-        'dependency_item': {
-            'type': 'object',
-            'required': [
-                'name',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                },
-                'connections': {
-                    'type': 'array',
-                    'items': {
-                        '$ref': '#/definitions/connection_item',
-                    },
-                },
-            },
-        },
-        'connection_item': {
-            'type': 'object',
-            'required': [
-                'output', 'input',
-            ],
-            'additionalProperties': False,
-            'properties': {
-                'output': {
-                    'type': 'string',
-                },
-                'input': {
-                    'type': 'string',
-                },
-            },
-        },
-    },
-}
+SCHEMA_FILENAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schema/recipe_definition_2_0.json')
+with open(SCHEMA_FILENAME) as schema_file:
+    RECIPE_DEFINITION_SCHEMA = json.load(schema_file)
 
 
 class RecipeDefinition(object):
@@ -217,7 +42,8 @@ class RecipeDefinition(object):
         """
 
         self._definition = definition
-        self._inputs_by_name = {}  # Name -> input data dict
+        self._input_files_by_name = {}  # Name -> input data dict
+        self._input_json_by_name = {}  # Name -> input data dict
         self._jobs_by_name = {}  # Name -> job dict
         self._property_validation_dict = {}  # Property Input name -> required
         self._input_file_validation_dict = {}  # File Input name -> (required, multiple, file description)
@@ -228,14 +54,21 @@ class RecipeDefinition(object):
             raise InvalidDefinition('Invalid recipe definition: %s' % unicode(ex))
 
         self._populate_default_values()
-        if not self._definition['version'] == '1.0':
+        if not self._definition['version'] == DEFAULT_VERSION:
             raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
 
-        for input_dict in self._definition['input_data']:
-            name = input_dict['name']
-            if name in self._inputs_by_name:
+        for input_file in self._get_input_files():
+            name = input_file['name']
+            if name in self._input_files_by_name:
                 raise InvalidDefinition('Invalid recipe definition: %s is a duplicate input data name' % name)
-            self._inputs_by_name[name] = input_dict
+            self._input_files_by_name[name] = input_file
+
+        for input_json in self._get_input_json():
+            name = input_json['name']
+            if name in self._input_json_by_name or name in self._input_files_by_name:
+                raise InvalidDefinition('Invalid recipe definition: %s is a duplicate input data name' % name)
+            self._input_json_by_name[name] = input_json
+
         for job_dict in self._definition['jobs']:
             name = job_dict['name']
             if name in self._jobs_by_name:
@@ -246,6 +79,15 @@ class RecipeDefinition(object):
         self._validate_job_dependencies()
         self._validate_no_dup_job_inputs()
         self._validate_recipe_inputs()
+
+    def _get_inputs(self):
+        return self._definition.get('inputs', {})
+
+    def _get_input_files(self):
+        return self._get_inputs().get('files', {})
+
+    def _get_input_json(self):
+        return self._get_inputs().get('json', {})
 
     def get_dict(self):
         """Returns the internal dictionary that represents this recipe definition
@@ -264,18 +106,16 @@ class RecipeDefinition(object):
         """
 
         graph = RecipeGraph()
-        for input_name in self._inputs_by_name:
-            input_dict = self._inputs_by_name[input_name]
-            input_type = input_dict['type']
-            required = input_dict['required']
-            recipe_input = None
-            if input_type == 'property':
-                recipe_input = PropertyInput(input_name, required)
-            elif input_type == 'file':
-                recipe_input = FileInput(input_name, required)
-            elif input_type == 'files':
-                recipe_input = FilesInput(input_name, required)
-            graph.add_input(recipe_input)
+        for input_file in self._get_input_files():
+            name = input_file['name']
+            required = input_file['required']
+            if input_file['multiple']:
+                graph_input = FilesInput(name, required)
+            else:
+                graph_input = FileInput(name, required)
+            graph.add_input(graph_input)
+        for input_json in self._get_input_json():
+            graph.add_input(PropertyInput(input_json['name'], input_json['required']))
 
         for job_name in self._jobs_by_name:
             job_dict = self._jobs_by_name[job_name]
@@ -459,7 +299,8 @@ class RecipeDefinition(object):
         """Populates the given connection for a job with its recipe inputs
 
         :param job_conn: The job's connection
-        :type job_conn: :class:`job.configuration.data.job_connection.JobConnection`
+        :type job_conn: :class:`job.configuration.data.job_connection.JobConnection` or
+                        :class:`job.data.job_connection.SeedJobConnection`
         :param recipe_inputs: List of recipe inputs used for the job
         :type recipe_inputs: list of dict
         """
@@ -467,49 +308,48 @@ class RecipeDefinition(object):
         for recipe_dict in recipe_inputs:
             recipe_input = recipe_dict['recipe_input']
             job_input = recipe_dict['job_input']
-            input_data_dict = self._inputs_by_name[recipe_input]
-            input_data_type = input_data_dict['type']
-            if input_data_type == 'property':
+
+            if recipe_input in self._input_json_by_name:
                 job_conn.add_property(job_input)
-            elif input_data_type in ['file', 'files']:
-                multiple = (input_data_type == 'files')
-                media_types = input_data_dict['media_types']
-                optional = not input_data_dict['required']
-                job_conn.add_input_file(job_input, multiple, media_types, optional, False)
+            elif recipe_input in self._input_files_by_name:
+                input_file = self._input_files_by_name[recipe_input]
+                multiple = input_file['multiple']
+                media_types = input_file['mediaTypes']
+                optional = not input_file['required']
+                partial = input_file['partial']
+                job_conn.add_input_file(job_input, multiple, media_types, optional, partial)
 
     def _create_validation_dicts(self):
         """Creates the validation dicts required by recipe_data to perform its validation"""
 
-        for input_data in self._definition['input_data']:
-            name = input_data['name']
-            required = input_data['required']
-            if input_data['type'] == 'property':
-                self._property_validation_dict[name] = required
-            elif input_data['type'] == 'file':
-                file_desc = ScaleFileDescription()
-                if 'media_types' in input_data:
-                    for media_type in input_data['media_types']:
-                        file_desc.add_allowed_media_type(media_type)
-                self._input_file_validation_dict[name] = (required, False, file_desc)
-            elif input_data['type'] == 'files':
-                file_desc = ScaleFileDescription()
-                if 'media_types' in input_data:
-                    for media_type in input_data['media_types']:
-                        file_desc.add_allowed_media_type(media_type)
-                self._input_file_validation_dict[name] = (required, True, file_desc)
+        for input in self._get_input_json():
+            name = input['name']
+            required = input['required']
+            self._property_validation_dict[name] = required
+        for input in self._get_input_files():
+            file_desc = ScaleFileDescription()
+            name = input['name']
+            required = input['required']
+            if 'mediaTypes' in input:
+                for media_type in input['mediaTypes']:
+                    file_desc.add_allowed_media_type(media_type)
+            self._input_file_validation_dict[name] = (required, True if input['multiple'] else False, file_desc)
 
     def _populate_default_values(self):
         """Goes through the definition and populates any missing values with defaults
         """
 
-        if not 'version' in self._definition:
-            self._definition['version'] = DEFAULT_VERSION
+        for input_file in self._get_input_files():
+            if 'required' not in input_file:
+                input_file['required'] = True
+            if 'multiple' not in input_file:
+                input_file['multiple'] = False
+            if 'partial' not in input_file:
+                input_file['partial'] = False
 
-        if not 'input_data' in self._definition:
-            self._definition['input_data'] = []
-        for input_dict in self._definition['input_data']:
-            if not 'required' in input_dict:
-                input_dict['required'] = True
+        for input_json in self._get_input_json():
+            if 'required' not in input_json:
+                input_json['required'] = True
 
         for job_dict in self._definition['jobs']:
             if not 'recipe_inputs' in job_dict:
@@ -628,6 +468,6 @@ class RecipeDefinition(object):
             job_name = job_dict['name']
             for recipe_dict in job_dict['recipe_inputs']:
                 recipe_input = recipe_dict['recipe_input']
-                if recipe_input not in self._inputs_by_name:
+                if recipe_input not in self._input_files_by_name and recipe_input not in self._input_json_by_name:
                     msg = 'Invalid recipe definition: Job %s has undefined recipe input %s' % (job_name, recipe_input)
                     raise InvalidDefinition(msg)

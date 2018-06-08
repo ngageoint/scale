@@ -14,6 +14,7 @@ from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import RecipeData
+from recipe.deprecation import RecipeDataSunset
 from recipe.models import Recipe, RecipeJob
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
@@ -332,7 +333,7 @@ class BatchManager(models.Manager):
                 return
 
         # Build recipe data to pass input file parameters to new recipes
-        recipe_data = RecipeData({})
+        recipe_data = RecipeDataSunset.create(batch.recipe_type.get_recipe_definition(), {})
         if hasattr(trigger_config, 'get_input_data_name'):
             recipe_data.add_file_input(trigger_config.get_input_data_name(), input_file.id)
         if hasattr(trigger_config, 'get_workspace_name'):

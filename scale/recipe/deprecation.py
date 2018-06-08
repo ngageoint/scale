@@ -10,21 +10,19 @@ class RecipeDefinitionSunset(object):
 
     """
     @staticmethod
-    def create(definition_dict, do_validate=True):
+    def create(definition_dict):
         """Instantiate an instance of the JobInterface based on inferred type
 
         :param definition_dict: deserialized JSON definition
         :type definition_dict: dict
-        :param do_validate: whether schema validation should be applied
-        :type do_validate: bool
         :return: instance of the RecipeDefinition appropriate for input data
         :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition`
                 or :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
         if RecipeDefinitionSunset.is_seed_dict(definition_dict):
-            return RecipeDefinition(definition_dict, do_validate=do_validate)
+            return RecipeDefinition(definition_dict)
         else:
-            return RecipeDefinition_1_0(definition_dict, do_validate=do_validate)
+            return RecipeDefinition_1_0(definition_dict)
 
     @staticmethod
     def is_seed_dict(definition_dict):
@@ -35,7 +33,7 @@ class RecipeDefinitionSunset(object):
         :return: whether definition is Seed compatible or not
         :rtype: bool
         """
-        return getattr(definition_dict, 'version', '1.0') != '1.0'
+        return definition_dict.get('version', '1.0') != '1.0'
 
     @staticmethod
     def is_seed(definition):

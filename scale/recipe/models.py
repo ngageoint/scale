@@ -667,7 +667,7 @@ class Recipe(models.Model):
                 :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinitionSunset(self.recipe_type_rev.definition)
+        return RecipeDefinitionSunset.create(self.recipe_type_rev.definition)
 
     class Meta(object):
         """meta information for the db"""
