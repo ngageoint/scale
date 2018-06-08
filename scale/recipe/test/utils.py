@@ -211,7 +211,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     return recipe_job
 
 
-def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=True):
+def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=False):
     """Creates a recipe_node model for unit testing
 
     :param recipe: The recipe containing the node
