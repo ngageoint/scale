@@ -843,6 +843,10 @@ class Recipe(models.Model):
     :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this recipe
     :type event: :class:`django.db.models.ForeignKey`
+    :keyword root_recipe: The root recipe that contains this recipe
+    :type root_recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this recipe
+    :type recipe: :class:`django.db.models.ForeignKey`
     :keyword batch: The batch that contains this recipe
     :type batch: :class:`django.db.models.ForeignKey`
 
@@ -883,6 +887,10 @@ class Recipe(models.Model):
     :type jobs_completed: :class:`django.db.models.IntegerField`
     :keyword jobs_canceled: The count of all CANCELED jobs within this recipe
     :type jobs_canceled: :class:`django.db.models.IntegerField`
+    :keyword sub_recipes_total: The total count for all sub-recipes within this recipe
+    :type sub_recipes_total: :class:`django.db.models.IntegerField`
+    :keyword sub_recipes_completed: The count for all completed sub-recipes within this recipe
+    :type sub_recipes_completed: :class:`django.db.models.IntegerField`
     :keyword is_completed: Whether this recipe has completed all of its jobs
     :type is_completed: :class:`django.db.models.BooleanField`
 
@@ -899,6 +907,10 @@ class Recipe(models.Model):
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    root_recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes_for_root', blank=True, null=True,
+                                    on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes', blank=True, null=True,
+                               on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
 
@@ -924,6 +936,8 @@ class Recipe(models.Model):
     jobs_failed = models.IntegerField(default=0)
     jobs_completed = models.IntegerField(default=0)
     jobs_canceled = models.IntegerField(default=0)
+    sub_recipes_total = models.IntegerField(default=0)
+    sub_recipes_completed = models.IntegerField(default=0)
     is_completed = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
