@@ -457,8 +457,24 @@ class RecipeManager(models.Manager):
         """
 
         recipe_ids = set()
-        for recipe_job in RecipeNode.objects.filter(job_id__in=job_ids).only('recipe_id'):
-            recipe_ids.add(recipe_job.recipe_id)
+        for recipe_node in RecipeNode.objects.filter(job_id__in=job_ids).only('recipe_id'):
+            recipe_ids.add(recipe_node.recipe_id)
+
+        return list(recipe_ids)
+
+    def get_recipe_ids_for_sub_recipes(self, sub_recipe_ids):
+        """Returns the IDs of all recipes that contain the sub-recipes with the given IDs. This will include superseded
+        recipes.
+
+        :param sub_recipe_ids: The sub-recipe IDs
+        :type sub_recipe_ids: list
+        :returns: The recipe IDs
+        :rtype: list
+        """
+
+        recipe_ids = set()
+        for recipe_node in RecipeNode.objects.filter(sub_recipe_id__in=sub_recipe_ids).only('recipe_id'):
+            recipe_ids.add(recipe_node.recipe_id)
 
         return list(recipe_ids)
 
@@ -764,15 +780,22 @@ class RecipeManager(models.Manager):
         qry = 'UPDATE recipe r SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
         qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
         qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
-        qry += 'last_modified = %s FROM (SELECT rj.recipe_id, COUNT(j.id) AS jobs_total, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
-        qry += 'FROM recipe_node rj JOIN job j ON rj.job_id = j.id WHERE rj.recipe_id IN %s GROUP BY rj.recipe_id) s '
+        qry += 'sub_recipes_total = s.sub_recipes_total, sub_recipes_completed = s.sub_recipes_completed, '
+        qry += 'last_modified = %s FROM ('
+        qry += 'SELECT rn.recipe_id, COUNT(j.id) + COALESCE(SUM(r.jobs_total), 0) AS jobs_total, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') + COALESCE(SUM(r.jobs_pending), 0) AS jobs_pending, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') + COALESCE(SUM(r.jobs_blocked), 0) AS jobs_blocked, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') + COALESCE(SUM(r.jobs_queued), 0) AS jobs_queued, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') + COALESCE(SUM(r.jobs_running), 0) AS jobs_running, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') + COALESCE(SUM(r.jobs_failed), 0) AS jobs_failed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') '
+        qry += '+ COALESCE(SUM(r.jobs_completed), 0) AS jobs_completed, '
+        qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') + COALESCE(SUM(r.jobs_canceled), 0) AS jobs_canceled, '
+        qry += 'COUNT(r.id) + COALESCE(SUM(r.sub_recipes_total), 0) AS sub_recipes_total, '
+        qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) '
+        qry += '+ COALESCE(SUM(r.sub_recipes_completed), 0) AS sub_recipes_completed '
+        qry += 'FROM recipe_node rn LEFT OUTER JOIN job j ON rn.job_id = j.id '
+        qry += 'LEFT OUTER JOIN recipe r ON rn.sub_recipe_id = r.id WHERE rn.recipe_id IN %s GROUP BY rn.recipe_id) s '
         qry += 'WHERE r.id = s.recipe_id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(recipe_ids)])
@@ -843,6 +866,10 @@ class Recipe(models.Model):
     :type recipe_type_rev: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this recipe
     :type event: :class:`django.db.models.ForeignKey`
+    :keyword root_recipe: The root recipe that contains this recipe
+    :type root_recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this recipe
+    :type recipe: :class:`django.db.models.ForeignKey`
     :keyword batch: The batch that contains this recipe
     :type batch: :class:`django.db.models.ForeignKey`
 
@@ -883,6 +910,10 @@ class Recipe(models.Model):
     :type jobs_completed: :class:`django.db.models.IntegerField`
     :keyword jobs_canceled: The count of all CANCELED jobs within this recipe
     :type jobs_canceled: :class:`django.db.models.IntegerField`
+    :keyword sub_recipes_total: The total count for all sub-recipes within this recipe
+    :type sub_recipes_total: :class:`django.db.models.IntegerField`
+    :keyword sub_recipes_completed: The count for all completed sub-recipes within this recipe
+    :type sub_recipes_completed: :class:`django.db.models.IntegerField`
     :keyword is_completed: Whether this recipe has completed all of its jobs
     :type is_completed: :class:`django.db.models.BooleanField`
 
@@ -899,6 +930,10 @@ class Recipe(models.Model):
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    root_recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes_for_root', blank=True, null=True,
+                                    on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='sub_recipes', blank=True, null=True,
+                               on_delete=models.PROTECT)
     batch = models.ForeignKey('batch.Batch', related_name='recipes_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
 
@@ -924,6 +959,8 @@ class Recipe(models.Model):
     jobs_failed = models.IntegerField(default=0)
     jobs_completed = models.IntegerField(default=0)
     jobs_canceled = models.IntegerField(default=0)
+    sub_recipes_total = models.IntegerField(default=0)
+    sub_recipes_completed = models.IntegerField(default=0)
     is_completed = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)

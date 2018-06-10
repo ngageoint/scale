@@ -287,7 +287,9 @@ A recipe instance JSON describes an instance of a running recipe.
                "jobs_running": 2,
                "jobs_failed": 1,
                "jobs_completed": 4,
-               "jobs_canceled": 0
+               "jobs_canceled": 0,
+               "sub_recipes_total": 3,
+               "sub_recipes_completed": 1
             }
          }
       }
@@ -339,4 +341,8 @@ A recipe instance JSON describes an instance of a running recipe.
 | jobs_completed             | Integer        | Required | ('recipe' node) The number of COMPLETED jobs in the recipe         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | jobs_canceled              | Integer        | Required | ('recipe' node) The number of CANCELED jobs in the recipe          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| sub_recipes_total          | Integer        | Required | ('recipe' node) The total number of sub-recipes in the recipe      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| sub_recipes_completed      | Integer        | Required | ('recipe' node) The number of completed sub-recipes in the recipe  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

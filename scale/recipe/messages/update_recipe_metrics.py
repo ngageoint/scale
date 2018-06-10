@@ -52,6 +52,19 @@ def create_update_recipe_metrics_messages_from_jobs(job_ids):
     return create_update_recipe_metrics_messages(recipe_ids)
 
 
+def create_update_recipe_metrics_messages_from_sub_recipes(sub_recipe_ids):
+    """Creates messages to update the metrics for the recipes affected by the given sub-recipes
+
+    :param sub_recipe_ids: The sub-recipe IDs
+    :type sub_recipe_ids: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    recipe_ids = Recipe.objects.get_recipe_ids_for_sub_recipes(sub_recipe_ids)
+    return create_update_recipe_metrics_messages(recipe_ids)
+
+
 class UpdateRecipeMetrics(CommandMessage):
     """Command message that updates recipe metrics
     """
@@ -105,12 +118,15 @@ class UpdateRecipeMetrics(CommandMessage):
 
         Recipe.objects.update_recipe_metrics(self._recipe_ids)
 
-        # Update any batches that these recipes belong to
+        # If any of these recipes are sub-recipes, update the metrics of the recipes that contain these
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_sub_recipes(self._recipe_ids))
+
+        # For any top-level recipes (not a sub-recipe) update any batches that these recipes belong to
         from batch.messages.update_batch_metrics import create_update_batch_metrics_messages
         batch_ids = set()
-        for recipe in Recipe.objects.filter(id__in=self._recipe_ids).only('batch_id'):
-            if recipe.batch_id:
-                batch_ids.add(recipe.batch_id)
+        qry = Recipe.objects.filter(id__in=self._recipe_ids, recipe__isnull=True, batch__isnull=False).only('batch_id')
+        for recipe in qry:
+            batch_ids.add(recipe.batch_id)
         if batch_ids:
             self.new_messages.extend(create_update_batch_metrics_messages(batch_ids))
 

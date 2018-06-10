@@ -100,7 +100,7 @@ RECIPE_INSTANCE_SCHEMA = {
             'type': 'object',
             'required': ['node_type', 'recipe_type_name', 'recipe_type_revision', 'recipe_id', 'is_completed',
                          'jobs_total', 'jobs_pending', 'jobs_blocked', 'jobs_queued', 'jobs_running', 'jobs_failed',
-                         'jobs_completed', 'jobs_canceled'],
+                         'jobs_completed', 'jobs_canceled', 'sub_recipes_total', 'sub_recipes_completed'],
             'additionalProperties': False,
             'properties': {
                 'node_type': {
@@ -155,6 +155,14 @@ RECIPE_INSTANCE_SCHEMA = {
                     'description': 'The number of CANCELED jobs in this sub-recipe',
                     'type': 'integer',
                 },
+                'sub_recipes_total': {
+                    'description': 'The total count for all sub-recipes within this sub-recipe',
+                    'type': 'integer',
+                },
+                'sub_recipes_completed': {
+                    'description': 'The count for all completed sub-recipes within this sub-recipe',
+                    'type': 'integer',
+                },
             },
         },
     },
@@ -197,7 +205,9 @@ def convert_node_to_v6_json(node):
                           'jobs_pending': node.recipe.jobs_pending, 'jobs_blocked': node.recipe.jobs_blocked,
                           'jobs_queued': node.recipe.jobs_queued, 'jobs_running': node.recipe.jobs_running,
                           'jobs_failed': node.recipe.jobs_failed, 'jobs_completed': node.recipe.jobs_completed,
-                          'jobs_canceled': node.recipe.jobs_canceled}
+                          'jobs_canceled': node.recipe.jobs_canceled,
+                          'sub_recipes_total': node.recipe.sub_recipes_total,
+                          'sub_recipes_completed': node.recipe.sub_recipes_completed}
 
     return {'dependencies': dependencies, 'node_type': node_type_dict}
 
