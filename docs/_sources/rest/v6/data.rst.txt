@@ -60,7 +60,7 @@ An interface JSON describes a set of parameters that can be passed data values t
 | json                       | Array          | Optional | Lists the parameters that take JSON as input. Defaults to [].      |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | name                       | String         | Required | The unique name of the parameter. Can only contain the following   |
-|                            |                |          | characters: [a-zA-Z_-]                                             |
+|                            |                |          | characters: \[a-zA-Z_-\]                                           |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | required                   | Boolean        | Optional | Indicates whether the parameter is required. Defaults to True.     |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

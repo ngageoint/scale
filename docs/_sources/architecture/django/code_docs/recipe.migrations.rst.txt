@@ -204,6 +204,14 @@ recipe\.migrations\.0024\_auto\_20180523\_2057 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0025\_auto\_20180608\_0114 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0025_auto_20180608_0114
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

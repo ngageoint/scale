@@ -589,7 +589,9 @@ revision, if changed in the newer revision</td>
             <span class="s2">&quot;jobs_running&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
             <span class="s2">&quot;jobs_failed&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;jobs_completed&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;jobs_canceled&quot;</span><span class="o">:</span> <span class="mi">0</span>
+            <span class="s2">&quot;jobs_canceled&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;sub_recipes_total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;sub_recipes_completed&quot;</span><span class="o">:</span> <span class="mi">1</span>
          <span class="p">}</span>
       <span class="p">}</span>
    <span class="p">}</span>
@@ -714,6 +716,16 @@ name of the dependency.</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of CANCELED jobs in the recipe</td>
+</tr>
+<tr class="row-odd"><td>sub_recipes_total</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The total number of sub-recipes in the recipe</td>
+</tr>
+<tr class="row-even"><td>sub_recipes_completed</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;recipe&#8217; node) The number of completed sub-recipes in the recipe</td>
 </tr>
 </tbody>
 </table>
