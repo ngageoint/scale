@@ -257,7 +257,6 @@ class TestFileDetailsViewV6(TestCase):
         self.assertEqual(result['recipe']['id'], self.recipe1.id)
         self.assertEqual(result['recipe_job'], self.file.recipe_job)
         self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
-        print result['batch']
         self.assertEqual(result['batch']['title'], self.batch1.title)
         self.assertTrue(result['is_superseded'])
         self.assertEqual(result['superseded'], '2017-01-01T00:00:00Z')
