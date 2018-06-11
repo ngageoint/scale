@@ -67,7 +67,7 @@ def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='te
                                           data_started=data_started, data_ended=data_ended, source_started=source_started, 
                                           source_ended=source_ended, geometry=geometry, center_point=center_point, meta_data=meta_data,
                                           job_exe=job_exe, job=job, job_type=job_type, job_output=job_output,
-                                          recipe=recipe, recipe_job=recipe_job, recipe_type=recipe_type, 
+                                          recipe=recipe, recipe_job=recipe_job, recipe_type=recipe_type, batch=batch,
                                           is_superseded=is_superseded, superseded=superseded)
     if countries:
         scale_file.countries = countries

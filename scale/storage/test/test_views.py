@@ -8,8 +8,10 @@ from django.test import TestCase
 from django.utils.timezone import utc
 from rest_framework import status
 
+import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
 import product.test.utils as product_test_utils
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from storage.models import Workspace
@@ -206,11 +208,23 @@ class TestFileDetailsViewV6(TestCase):
     def setUp(self):
         django.setup()
 
+        self.workspace1 = storage_test_utils.create_workspace(name='ws1')
         self.country = storage_test_utils.create_country()
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
-        self.file = storage_test_utils.create_file(job_exe=self.job_exe1, file_name='test.txt', countries=[self.country])
+        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
+        self.batch1 = batch_test_utils.create_batch(recipe_type=self.recipe_type1, is_creation_done=True)
+        self.file = storage_test_utils.create_file( file_name='test.txt', file_type='SOURCE', media_type='image/png', 
+                                                    file_size=1000, data_type='png',  file_path='/test/path', 
+                                                    workspace=self.workspace1, is_deleted=False, last_modified='', 
+                                                    data_started='2017-01-01T00:00:00Z', data_ended='2017-01-01T00:00:00Z', 
+                                                    source_started='2017-01-01T00:00:00Z', source_ended='2017-01-01T00:00:00Z', 
+                                                    geometry='', center_point='', meta_data='', countries=[self.country], 
+                                                    job_exe=self.job_exe1, job_output='output_name_1', recipe=self.recipe1, 
+                                                    recipe_job='my-recipe', batch=self.batch1, 
+                                                    is_superseded=True, superseded='2017-01-01T00:00:00Z')
 
     def test_id(self):
         """Tests successfully calling the files detail view by id"""
@@ -220,14 +234,33 @@ class TestFileDetailsViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(result['id'], self.file.id)
-        self.assertEqual(result['file_name'], self.file.file_name)
         self.assertFalse('ancestors' in result)
         self.assertFalse('descendants' in result)
         self.assertFalse('sources' in result)
-        self.assertEqual(result['countries'][0], self.country.iso3)
+        self.assertEqual(result['id'], self.file.id)
+        self.assertEqual(result['file_name'], self.file.file_name)
         self.assertEqual(result['file_type'], self.file.file_type)
+        self.assertEqual(result['media_type'], self.file.media_type)
+        self.assertEqual(result['file_size'], self.file.file_size)
+        self.assertEqual(result['data_type'], [self.file.data_type])
         self.assertEqual(result['file_path'], self.file.file_path)
+        self.assertEqual(result['workspace']['id'], self.file.workspace.id)
+        self.assertFalse(result['is_deleted'])
+        self.assertEqual(result['data_started'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['data_ended'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['source_started'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['source_ended'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['countries'][0], self.country.iso3)
+        self.assertEqual(result['job']['id'], self.job1.id)
+        self.assertEqual(result['job_exe']['id'], self.job_exe1.id)
+        self.assertEqual(result['job_output'], self.file.job_output)
+        self.assertEqual(result['recipe']['id'], self.recipe1.id)
+        self.assertEqual(result['recipe_job'], self.file.recipe_job)
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
+        print result['batch']
+        self.assertEqual(result['batch']['title'], self.batch1.title)
+        self.assertTrue(result['is_superseded'])
+        self.assertEqual(result['superseded'], '2017-01-01T00:00:00Z')
 
     def test_missing(self):
         """Tests calling the file details view with an invalid id"""
