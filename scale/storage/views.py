@@ -118,19 +118,18 @@ class FilesView(ListAPIView):
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
-        is_published = rest_util.parse_bool(request, 'is_published', default_value=True)
-        file_names = rest_util.parse_string(request, 'file_name', required=False)
-        job_outputs = rest_util.parse_string(request, 'job_output', required=False)
+        file_names = rest_util.parse_string_list(request, 'file_name', required=False)
+        job_outputs = rest_util.parse_string_list(request, 'job_output', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
-        recipe_jobs = rest_util.parse_string(request, 'recipe_job', required=False)
+        recipe_jobs = rest_util.parse_string_list(request, 'recipe_job', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         files = ScaleFile.objects.filter_files(
             started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-            job_type_names=job_type_names, job_ids=job_ids, is_published=is_published, 
+            job_type_names=job_type_names, job_ids=job_ids, 
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
             recipe_type_ids=recipe_type_ids, recipe_jobs=recipe_jobs, batch_ids=batch_ids, order=order,
         )

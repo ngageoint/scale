@@ -96,12 +96,6 @@ paths:
           description: Return only files associated with a given batch identifier. |
             Duplicate it to filter by multiple values.
         -in: query
-          name: is_published
-          schema:
-            type: boolean
-          description: Return only files flagged as currently exposed for publication. |
-            Duplicate is true, include only published files
-        -in: query
           name: file_name
           schema:
             type: string

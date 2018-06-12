@@ -44,11 +44,6 @@ Response: 200 OK
                 "countries": ["TCY", "TCT"], 
                 "last_modified": "1970-01-01T00:00:00Z", 
                 "file_path": "path/to/the/file.png",
-                "is_operational": true, 
-                "is_published": true, 
-                "has_been_published": true, 
-                "published": "1970-01-01T00:00:00Z", 
-                "unpublished": null, 
                 "source_started": "1970-01-01T00:00:00Z", 
                 "source_ended": "1970-01-02T00:00:00Z", 
                 "job": { 
@@ -70,7 +65,6 @@ Response: 200 OK
                     "is_system": false, 
                     "is_long_running": false, 
                     "is_active": true, 
-                    "is_operational": true, 
                     "is_paused": false, 
                     "icon_code": "f0ac" 
                 }, 
@@ -161,9 +155,6 @@ Response: 200 OK
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | batch_id           | Integer           | Optional | Return only files produced by the given batch identifier.           |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| is_published       | Boolean           | Optional | Return only files flagged as currently exposed for publication.     |
-|                    |                   |          | Default is True, include only published files.                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Return only files with a given file name.                           |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
@@ -304,7 +295,6 @@ Response: 200 OK
             "is_system": false, 
             "is_long_running": false, 
             "is_active": true, 
-            "is_operational": true, 
             "is_paused": false, 
             "icon_code": null 
         }, 

@@ -2,14 +2,14 @@
 .. _rest_v6_ingest:
 
 v6 Ingest Services
-===============
+==================
 
 These services provide access to information about ingested files processed by the system.
 
 .. _rest_v6_ingest_list:
 
 v6 Ingest List
-----------------------
+--------------
 
 **Example GET /v6/ingests/ API call**
 
@@ -17,7 +17,8 @@ Request: GET http://.../v6/ingests/?scan_id=1
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript 
+ 
     { 
         "count": 42, 
         "next": null, 
@@ -223,7 +224,7 @@ Response: 200 OK
 .. _rest_v6_ingest_details:
 
 v6 Ingest Details
-----------------------
+-----------------
 
 **Example GET /v6/ingests/{id}/ API call**
 
@@ -231,7 +232,8 @@ Request: GET http://.../v6/ingests/14/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript 
+ 
     { 
         "id": 14, 
         "file_name": "file_name.txt", 
@@ -443,7 +445,7 @@ Response: 200 OK
 .. _rest_v6_ingest_status:
 
 v6 Ingest Status
-----------------------
+----------------
 
 **Example GET /v6/ingests/status/ API call**
 
@@ -452,6 +454,7 @@ Request: GET http://.../v6/ingests/status/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
         "count": 2, 
         "next": null, 

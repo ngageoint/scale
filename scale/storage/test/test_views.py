@@ -92,15 +92,14 @@ class TestFilesViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
-        self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
-                                                          is_published=True, file_name='test.txt',
-                                                          countries=[self.country])
+        self.file1 = storage_test_utils.create_file(job_exe=self.job_exe1, job_output='out_name',
+                                                          file_name='test.txt', countries=[self.country],
+                                                          recipe_job='test-recipe-job')
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.product2a = product_test_utils.create_product(job_exe=self.job_exe2, has_been_published=True,
-                                                           is_published=False, countries=[self.country])
+        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country])
 
 
     def test_invalid_started(self):
@@ -165,18 +164,6 @@ class TestFilesViewV6(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_is_published(self):
-        """Tests successfully calling the files view filtered by is_published flag."""
-
-        url = '/%s/files/?is_published=false' % self.api
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['id'], self.product2a.id)
-        self.assertFalse('is_published' in result['results'][0])
-
     def test_file_name(self):
         """Tests successfully calling the files view filtered by file name."""
 
@@ -186,7 +173,29 @@ class TestFilesViewV6(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['file_name'], self.product1.file_name)
+        self.assertEqual(result['results'][0]['file_name'], self.file1.file_name)
+        
+    def test_job_output(self):
+        """Tests successfully calling the files view filtered by job output."""
+
+        url = '/%s/files/?job_output=out_name' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_output'], self.file1.job_output)
+        
+    def test_recipe_job(self):
+        """Tests successfully calling the files view filtered by recipe job."""
+
+        url = '/%s/files/?recipe_job=test-recipe-job' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['recipe_job'], self.file1.recipe_job)
 
     def test_successful(self):
         """Tests successfully calling the files view."""
@@ -196,7 +205,7 @@ class TestFilesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(len(result['results']), 2)
 
         for entry in result['results']:
             # Make sure country info is included
