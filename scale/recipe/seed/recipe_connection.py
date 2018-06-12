@@ -6,7 +6,7 @@ from recipe.configuration.data.recipe_data import ValidationWarning
 from storage.media_type import UNKNOWN_MEDIA_TYPE
 
 
-class LegacyRecipeConnection(object):
+class RecipeConnection(object):
     """Represents a connection that will provide data to execute recipes. This class contains the necessary description
     needed to ensure the data provided by the connection will be sufficient to execute the given recipe.
     """
@@ -109,7 +109,7 @@ class LegacyRecipeConnection(object):
                     warnings.append(warn)
         return warnings
 
-    def validate_properties(self, property_names):
+    def validate_input_json(self, property_names):
         """Validates the given property names to make sure all properties exist if they are required.
 
         :param property_names: Dict of property names mapped to a bool indicating if they are required

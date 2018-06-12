@@ -88,6 +88,22 @@ class RecipeData(object):
 
         self._add_file_input({'name':name, 'file_ids': [file_id]})
 
+    def add_input_to_data(self, recipe_input_name, job_data, job_input_name):
+        """Adds the given input from the recipe data as a new input to the given job data
+
+        :param recipe_input_name: The name of the recipe data input to add to the job data
+        :type recipe_input_name: str
+        :param job_data: The job data
+        :type job_data: :class:`job.data.job_data.JobData`
+        :param job_input_name: The name of the job data input to add
+        :type job_input_name: str
+        """
+
+        if recipe_input_name in self._input_files:
+            job_data.add_file_inputs(job_input_name, self._input_files[recipe_input_name].file_ids)
+        if recipe_input_name in self._input_json:
+            job_data.add_json_input({'name':job_input_name, 'value':self._input_json[recipe_input_name].value})
+
     def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
 
@@ -245,8 +261,10 @@ class RecipeData(object):
     def validate_input_files(self, files):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.
 
-        :param files: List of Seed Input Files
-        :type files: [:class:`job.seed.types.SeedInputFiles`]
+        :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+            (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
+        :type files: dict of str ->
+            tuple(bool, bool, :class:`job.configuration.interface.scale_file.ScaleFileDescription`)
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -254,38 +272,46 @@ class RecipeData(object):
         """
 
         warnings = []
-        for input_file in files:
-            name = input_file.name
-            required = input_file.required
-            file_desc = ScaleFileDescription()
-
-            if name in self._input_files:
-                # Have this input, make sure it is valid
+        for name in files:
+            required = files[name][0]
+            multiple = files[name][1]
+            file_desc = files[name][2]
+            try:
                 file_input = self._input_files[name]
                 file_ids = []
-
-                for media_type in input_file.media_types:
-                    file_desc.add_allowed_media_type(media_type)
-
-                for file_id in file_input.file_ids:
-                    if not isinstance(file_id, Integral):
-                        msg = ('Invalid recipe data: Data input %s must have a list of integers in its "file_ids" '
-                               'field')
+                if multiple:
+                    if file_input.file_ids is None:
+                        msg = 'Invalid recipe data: Data input %s must contain a list of files in the "file_ids" field'
                         raise InvalidRecipeData(msg % name)
+                    if not isinstance(file_input.file_ids, list):
+                        msg = 'Invalid recipe data: Data input %s must have a list of integers in its "file_ids" field'
+                        raise InvalidRecipeData(msg % name)
+                    for file_id in file_input.file_ids:
+                        if not isinstance(file_id, Integral):
+                            msg = 'Invalid recipe data: Data input %s must have a list of integers in its "file_ids"' \
+                                  'field'
+                            raise InvalidRecipeData(msg % name)
+                        file_ids.append(long(file_id))
+                else:
+                    if file_input.file_ids is None:
+                        msg = 'Invalid recipe data: Data input %s is a file and must have a "file_ids" field' % name
+                        raise InvalidRecipeData(msg)
+                    if len(file_input.file_ids) > 1:
+                        msg = 'Invalid recipe data: Data input %s is a file and must have single element in the '\
+                              '"file_ids" field' % name
+                        raise InvalidRecipeData(msg)
+                    file_id = file_input.file_ids[0]
+                    if not isinstance(file_id, Integral):
+                        msg = 'Invalid recipe data: Data input %s must have an integer in its "file_id" field' % name
+                        raise InvalidRecipeData(msg)
                     file_ids.append(long(file_id))
-
                 warnings.extend(self._validate_file_ids(file_ids, file_desc))
-            else:
+
+            except KeyError:
                 # Don't have this input, check if it is required
                 if required:
-                    raise InvalidRecipeData('Invalid recipe data: Data input %s is required and was not provided' % name)
-
-        # Handle extra inputs in the data that are not defined in the interface
-        for name in deepcopy(self._input_files):
-            if name not in [x.name for x in files]:
-                warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
-                warnings.append(warn)
-                self._delete_input(name)
+                    raise InvalidRecipeData(
+                        'Invalid recipe data: Data input %s is required and was not provided' % name)
 
         return warnings
 

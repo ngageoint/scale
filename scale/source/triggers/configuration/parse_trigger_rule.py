@@ -9,7 +9,7 @@ from job.deprecation import JobConnectionSunset
 from job.seed.manifest import SeedManifest
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
-from recipe.configuration.data.recipe_connection import RecipeConnection
+from recipe.configuration.data.recipe_connection import LegacyRecipeConnection
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from source.triggers.configuration import parse_trigger_rule_1_0 as previous_parse_trigger_config
 from source.triggers.parse_trigger_condition import ParseTriggerCondition
@@ -194,7 +194,7 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         media_type = self.get_condition().get_media_type()
         media_types = [media_type] if media_type else None
 
-        connection = RecipeConnection()
+        connection = LegacyRecipeConnection()
         connection.add_input_file(input_file_name, False, media_types, False)
         connection.add_workspace()
 

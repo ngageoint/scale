@@ -9,7 +9,7 @@ from job.configuration.data.job_data import JobData
 from job.deprecation import JobDataSunset
 from job.models import JobType
 from queue.models import Queue
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.deprecation import RecipeDataSunset
 from recipe.models import RecipeType
 from source.triggers.configuration.parse_trigger_rule import ParseTriggerRuleConfiguration

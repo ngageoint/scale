@@ -171,7 +171,7 @@ RECIPE_DEFINITION_SCHEMA = {
 }
 
 
-class RecipeDefinition(object):
+class RecipeDefinition_1_0(object):
     """Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
     recipe, and how the inputs and outputs of those jobs are connected together.
     """
@@ -344,7 +344,7 @@ class RecipeDefinition(object):
         recipe with this definition
 
         :param recipe_conn: The recipe definition
-        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.RecipeConnection`
+        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.LegacyRecipeConnection`
         :returns: A list of warnings discovered during validation
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
@@ -372,7 +372,7 @@ class RecipeDefinition(object):
         """Validates the given data against the recipe definition
 
         :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :type recipe_data: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData`
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 

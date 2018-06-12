@@ -13,7 +13,7 @@ from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.deprecation import RecipeDataSunset
 from recipe.models import Recipe, RecipeJob
 from storage.models import ScaleFile, Workspace

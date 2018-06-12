@@ -654,7 +654,7 @@ class Recipe(models.Model):
         """Returns the data for this recipe
 
         :returns: The input for this recipe
-        :rtype: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :rtype: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData`
         """
 
         return RecipeDataSunset.create(self.get_recipe_definition(), self.input)

@@ -26,7 +26,7 @@ class ValidationWarning(object):
         self.details = details
 
 
-class RecipeData(object):
+class LegacyRecipeData(object):
     """Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
     connect shared resources to resource instances in Scale, and details needed to store all resulting output.
     """

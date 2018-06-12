@@ -89,11 +89,20 @@ class JobData(object):
 
         :param data: The files parameter dict
         :type data: dict
-        :param add_to_internal: Whether we should add to private data dict. Unneeded when used from __init__
-        :type add_to_internal: bool
         """
 
         self._add_file_input({'name':name, 'file_ids': [file_id]})
+
+    def add_file_inputs(self, name, file_ids):
+        """Adds a new file parameter with multiple ids to this job data.
+
+        :param name: The files parameter id
+        :type name: str
+        :param file_ids: The Scale File IDs of input files
+        :type file_ids: [int]
+        """
+
+        self._add_file_input({'name': name, 'file_ids': file_ids})
 
     def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
@@ -217,7 +226,6 @@ class JobData(object):
         :returns: value for output_files key
         :rtype: str
         """
-
 
         return self._output_files[key]
 

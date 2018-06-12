@@ -18,7 +18,7 @@ from job.serializers import JobDetailsSerializer, JobSerializer, JobSerializerV5
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import Recipe, RecipeType
 from recipe.serializers import RecipeDetailsSerializer, OldRecipeDetailsSerializer
 
@@ -142,7 +142,7 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         try:
-            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData(recipe_data))
+            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData(recipe_data))
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 

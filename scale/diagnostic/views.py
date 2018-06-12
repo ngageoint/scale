@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from job.models import JobType
 from queue.models import Queue
 from queue.serializers import QueueStatusSerializer
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import RecipeType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -69,7 +69,7 @@ class QueueScaleCasinoView(GenericAPIView):
         # TODO: in the future, send command message to do this asynchronously
         recipe_type = RecipeType.objects.get(name='scale-casino', version='1.0')
         for _ in xrange(num):
-            Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData())
+            Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData())
 
         return Response(status=status.HTTP_202_ACCEPTED)
 

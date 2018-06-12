@@ -12,6 +12,7 @@ from job.handlers.inputs.file import FileInput
 from job.handlers.inputs.files import FilesInput
 from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
+from job.seed.types import SeedInputFiles, SeedInputJson
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -42,8 +43,8 @@ class RecipeDefinition(object):
         """
 
         self._definition = definition
-        self._input_files_by_name = {}  # Name -> input data dict
-        self._input_json_by_name = {}  # Name -> input data dict
+        self._input_files_by_name = {}  # Name -> `job.seed.types.SeedInputFiles`
+        self._input_json_by_name = {}  # Name -> `job.seed.types.SeedInputJson`
         self._jobs_by_name = {}  # Name -> job dict
         self._property_validation_dict = {}  # Property Input name -> required
         self._input_file_validation_dict = {}  # File Input name -> (required, multiple, file description)
@@ -61,13 +62,13 @@ class RecipeDefinition(object):
             name = input_file['name']
             if name in self._input_files_by_name:
                 raise InvalidDefinition('Invalid recipe definition: %s is a duplicate input data name' % name)
-            self._input_files_by_name[name] = input_file
+            self._input_files_by_name[name] = SeedInputFiles(input_file)
 
         for input_json in self._get_input_json():
             name = input_json['name']
             if name in self._input_json_by_name or name in self._input_files_by_name:
                 raise InvalidDefinition('Invalid recipe definition: %s is a duplicate input data name' % name)
-            self._input_json_by_name[name] = input_json
+            self._input_json_by_name[name] = SeedInputJson(input_json)
 
         for job_dict in self._definition['jobs']:
             name = job_dict['name']
@@ -86,8 +87,25 @@ class RecipeDefinition(object):
     def _get_input_files(self):
         return self._get_inputs().get('files', {})
 
+    def _get_seed_input_files(self):
+        """
+
+        :return: typed instance of Input Files
+        :rtype: [:class:`job.seed.types.SeedInputFiles`]
+        """
+
+        return [SeedInputFiles(x) for x in self._get_input_files()]
+
     def _get_input_json(self):
         return self._get_inputs().get('json', {})
+
+    def _get_seed_input_json(self):
+        """
+
+        :return: typed instance of Input JSON
+        :rtype: [:class:`job.seed.types.SeedInputJson`]
+        """
+        return [SeedInputJson(x) for x in self._get_input_json()]
 
     def get_dict(self):
         """Returns the internal dictionary that represents this recipe definition
@@ -106,16 +124,14 @@ class RecipeDefinition(object):
         """
 
         graph = RecipeGraph()
-        for input_file in self._get_input_files():
-            name = input_file['name']
-            required = input_file['required']
-            if input_file['multiple']:
-                graph_input = FilesInput(name, required)
+        for input_file in self._get_seed_input_files():
+            if input_file.multiple:
+                graph_input = FilesInput(input_file.name, input_file.required)
             else:
-                graph_input = FileInput(name, required)
+                graph_input = FileInput(input_file.name, input_file.required)
             graph.add_input(graph_input)
-        for input_json in self._get_input_json():
-            graph.add_input(PropertyInput(input_json['name'], input_json['required']))
+        for input_json in self._get_seed_input_json():
+            graph.add_input(PropertyInput(input_json.name, input_json.required))
 
         for job_name in self._jobs_by_name:
             job_dict = self._jobs_by_name[job_name]
@@ -214,7 +230,7 @@ class RecipeDefinition(object):
         recipe with this definition
 
         :param recipe_conn: The recipe definition
-        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.RecipeConnection`
+        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.LegacyRecipeConnection`
         :returns: A list of warnings discovered during validation
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
@@ -242,7 +258,8 @@ class RecipeDefinition(object):
         """Validates the given data against the recipe definition
 
         :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :type recipe_data: :class:`recipe.seed.recipe_data.RecipeData`
+
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
@@ -251,7 +268,7 @@ class RecipeDefinition(object):
 
         warnings = []
         warnings.extend(recipe_data.validate_input_files(self._input_file_validation_dict))
-        warnings.extend(recipe_data.validate_properties(self._property_validation_dict))
+        warnings.extend(recipe_data.validate_input_json(self._property_validation_dict))
 
         # Check all recipe jobs for any file outputs
         file_outputs = False
@@ -313,27 +330,21 @@ class RecipeDefinition(object):
                 job_conn.add_property(job_input)
             elif recipe_input in self._input_files_by_name:
                 input_file = self._input_files_by_name[recipe_input]
-                multiple = input_file['multiple']
-                media_types = input_file['mediaTypes']
-                optional = not input_file['required']
-                partial = input_file['partial']
-                job_conn.add_input_file(job_input, multiple, media_types, optional, partial)
+                job_conn.add_input_file(job_input, input_file.multiple, input_file.media_types, not input_file.required,
+                                        input_file.partial)
 
     def _create_validation_dicts(self):
         """Creates the validation dicts required by recipe_data to perform its validation"""
 
-        for input in self._get_input_json():
-            name = input['name']
-            required = input['required']
-            self._property_validation_dict[name] = required
-        for input in self._get_input_files():
+        for input in self._get_seed_input_json():
+            self._property_validation_dict[input.name] = input.required
+        for input in self._get_seed_input_files():
             file_desc = ScaleFileDescription()
-            name = input['name']
-            required = input['required']
-            if 'mediaTypes' in input:
-                for media_type in input['mediaTypes']:
-                    file_desc.add_allowed_media_type(media_type)
-            self._input_file_validation_dict[name] = (required, True if input['multiple'] else False, file_desc)
+            for media_type in input.media_types:
+                file_desc.add_allowed_media_type(media_type)
+            self._input_file_validation_dict[input.name] = (input.required,
+                                                            True if input.multiple else False,
+                                                            file_desc)
 
     def _populate_default_values(self):
         """Goes through the definition and populates any missing values with defaults
@@ -346,6 +357,8 @@ class RecipeDefinition(object):
                 input_file['multiple'] = False
             if 'partial' not in input_file:
                 input_file['partial'] = False
+            if 'mediaTypes' not in input_file:
+                input_file['mediaTypes'] = []
 
         for input_json in self._get_input_json():
             if 'required' not in input_json:

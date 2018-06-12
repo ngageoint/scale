@@ -1,5 +1,7 @@
-from recipe.configuration.data.recipe_data import RecipeData as RecipeData_1_0
-from recipe.configuration.definition.recipe_definition_1_0 import RecipeDefinition as RecipeDefinition_1_0
+from recipe.configuration.data.recipe_connection import LegacyRecipeConnection
+from recipe.configuration.data.recipe_data import LegacyRecipeData as RecipeData_1_0, LegacyRecipeData
+from recipe.configuration.definition.recipe_definition_1_0 import RecipeDefinition_1_0 as RecipeDefinition_1_0
+from recipe.seed.recipe_connection import RecipeConnection
 from recipe.seed.recipe_data import RecipeData
 from recipe.seed.recipe_definition import RecipeDefinition
 
@@ -16,8 +18,8 @@ class RecipeDefinitionSunset(object):
         :param definition_dict: deserialized JSON definition
         :type definition_dict: dict
         :return: instance of the RecipeDefinition appropriate for input data
-        :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition`
-                or :class:`recipe.seed.recipe_definition.RecipeDefinition`
+        :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition_1_0` or
+                :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
         if RecipeDefinitionSunset.is_seed_dict(definition_dict):
             return RecipeDefinition(definition_dict)
@@ -40,13 +42,33 @@ class RecipeDefinitionSunset(object):
         """Determines whether a given definition is Seed compatible
 
         :param definition: instance of Recipe definition
-        :type definition_dict: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition` or
+        :type definition_dict: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition_1_0` or
                                :class:`recipe.seed.recipe_definition.RecipeDefinition`
         :return: whether definition is Seed compatible or not
         :rtype: bool
         """
         return isinstance(definition, RecipeDefinition)
 
+
+class RecipeConnectionSunset(object):
+    """Class responsible for providing backward compatibility for old RecipeConnection interfaces as well as new Seed
+    compliant connections.
+    """
+
+    @staticmethod
+    def create(definition):
+        """Instantiate an appropriately typed Recipe connection based on interface type
+
+        :param definition: instantiated Recipe definition
+        :type definition: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition_1_0` or
+                          :class:`recipe.seed.recipe_definition.RecipeDefinition`
+        :return:
+        """
+
+        if RecipeDefinitionSunset.is_seed(definition):
+            return RecipeConnection()
+        else:
+            return LegacyRecipeConnection()
 
 class RecipeDataSunset(object):
     """Class responsible for providing backward compatibility for old RecipeData interfaces as well as new Seed
@@ -60,4 +82,4 @@ class RecipeDataSunset(object):
         if RecipeDefinitionSunset.is_seed(definition):
             return RecipeData(data)
         else:
-            return RecipeData_1_0(data)
+            return LegacyRecipeData(data)
