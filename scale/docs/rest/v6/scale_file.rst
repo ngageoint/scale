@@ -2,14 +2,14 @@
 .. _rest_v6_scale_file:
 
 v6 Scale File Services
-========================================================================================================================
+======================
 
 These services provide access to information about general files that are being tracked by Scale.
 
 .. _rest_v6_scale_file_list:
 
 v6 Scale Files
-----------------------
+--------------
 
 **Example GET /v6/files/ API call**
 
@@ -18,6 +18,7 @@ Request: GET http://.../v6/files/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
         "count": 55, 
         "next": null, 
@@ -32,13 +33,12 @@ Response: 200 OK
                 "file_name": "my_file.kml", 
                 "media_type": "application/vnd.google-earth.kml+xml", 
                 "file_size": 100, 
-                "data_type": [], 
                 "is_deleted": false, 
                 "url": "http://host.com/file/path/my_file.kml", 
                 "created": "1970-01-01T00:00:00Z", 
                 "deleted": null, 
-                "data_started": null, 
-                "data_ended": null, 
+                "data_started": "1970-01-01T00:00:00Z", 
+                "data_ended": "1970-01-01T00:00:00Z", 
                 "geometry": null, 
                 "center_point": null, 
                 "countries": ["TCY", "TCT"], 
@@ -100,7 +100,7 @@ Response: 200 OK
             ... 
         ] 
     } 
-    
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Scale Files**                                                                                                         |
 +=========================================================================================================================+
@@ -139,6 +139,7 @@ Response: 200 OK
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_output         | String            | Optional | Return only files for the given job output.                         |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_id        | Integer           | Optional | Return only files associated with a given job type identifier.      |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
@@ -153,6 +154,7 @@ Response: 200 OK
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_job         | String            | Optional | Return only files produced by the given recipe job.                 |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_type_id     | Integer           | Optional | Return only files produced by the given recipe type identifier.     |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
@@ -164,6 +166,7 @@ Response: 200 OK
 |                    |                   |          | Default is True, include only published files.                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | file_name          | String            | Optional | Return only files with a given file name.                           |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -191,8 +194,6 @@ Response: 200 OK
 | .media_type        | String            | The IANA media type of the file.                                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_size         | Integer           | The size of the file in bytes.                                                 |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_type         | Array             | List of strings describing the data type of the file.                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_deleted        | Boolean           | Whether the file has been deleted.                                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -251,7 +252,7 @@ Response: 200 OK
 .. _rest_v6_file_details:
 
 v6 Scale File Details
-----------------------
+---------------------
 
 **Example GET /v6/files/{id}/ API call**
 
@@ -259,7 +260,8 @@ Request: GET http://.../v6/files/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
+ .. code-block:: javascript 
+ 
     { 
         "id": 2, 
         "workspace": { 
@@ -269,7 +271,6 @@ Response: 200 OK
         "file_name": "my_file2.png", 
         "media_type": "image/png", 
         "file_size": 50, 
-        "data_type": [], 
         "is_deleted": false, 
         "url": "http://host.com/file/path/my_file2.png", 
         "created": "1970-01-01T00:00:00Z", 
@@ -358,11 +359,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | file_size          | Integer           | The size of the file in bytes.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_type          | Array             | List of strings describing the data type of the file.                          |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_deleted         | Boolean           | Whether the file has been deleted.                                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| uuid               | String            | A unique identifier that stays stable across multiple job execution runs.      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | url                | URL               | The absolute URL to use for downloading the file.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

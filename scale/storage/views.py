@@ -14,7 +14,7 @@ import util.rest as rest_util
 from util.rest import BadParameter
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.models import ScaleFile, Workspace
-from storage.serializers import FileSerializer, FileDetailsSerializer, ScaleFileSerializerV5, WorkspaceDetailsSerializer, WorkspaceSerializer
+from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6, ScaleFileDetailsSerializerV6, WorkspaceDetailsSerializer, WorkspaceSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class FilesView(ListAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API"""
     
         if self.request.version == 'v6':
-            return FileSerializer
+            return ScaleFileSerializerV6
         elif self.request.version == 'v5':
             return ScaleFileSerializerV5
         elif self.request.version == 'v4':
@@ -94,7 +94,7 @@ class FilesView(ListAPIView):
                                             accepted_values=ScaleFile.VALID_TIME_FIELDS)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+        files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
                                                file_name=file_name)
 
         page = self.paginate_queryset(files)
@@ -119,11 +119,11 @@ class FilesView(ListAPIView):
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         is_published = rest_util.parse_bool(request, 'is_published', default_value=True)
-        file_name = rest_util.parse_string(request, 'file_name', required=False)
-        job_output = rest_util.parse_string(request, 'job_output', required=False)
+        file_names = rest_util.parse_string(request, 'file_name', required=False)
+        job_outputs = rest_util.parse_string(request, 'job_output', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
-        recipe_job = rest_util.parse_string(request, 'recipe_job', required=False)
+        recipe_jobs = rest_util.parse_string(request, 'recipe_job', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
@@ -131,8 +131,8 @@ class FilesView(ListAPIView):
         files = ScaleFile.objects.filter_files(
             started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
             job_type_names=job_type_names, job_ids=job_ids, is_published=is_published, 
-            file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
-            recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, batch_ids=batch_ids, order=order,
+            file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
+            recipe_type_ids=recipe_type_ids, recipe_jobs=recipe_jobs, batch_ids=batch_ids, order=order,
         )
 
         page = self.paginate_queryset(files)
@@ -143,7 +143,7 @@ class FilesView(ListAPIView):
 class FileDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a scale file."""
     queryset = ScaleFile.objects.all()
-    serializer_class = FileDetailsSerializer
+    serializer_class = ScaleFileDetailsSerializerV6
 
     def retrieve(self, request, file_id):
         """Determine api version and call specific method
@@ -173,11 +173,11 @@ class FileDetailsView(RetrieveAPIView):
         """
 
         try:
-            file = ScaleFile.objects.get_details(file_id)
+            scale_file = ScaleFile.objects.get_details(file_id)
         except ScaleFile.DoesNotExist:
             raise Http404
 
-        serializer = self.get_serializer(file)
+        serializer = self.get_serializer(scale_file)
         return Response(serializer.data)
 
 class WorkspacesView(ListCreateAPIView):

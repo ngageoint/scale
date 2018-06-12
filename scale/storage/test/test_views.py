@@ -242,7 +242,6 @@ class TestFileDetailsViewV6(TestCase):
         self.assertEqual(result['file_type'], self.file.file_type)
         self.assertEqual(result['media_type'], self.file.media_type)
         self.assertEqual(result['file_size'], self.file.file_size)
-        self.assertEqual(result['data_type'], [self.file.data_type])
         self.assertEqual(result['file_path'], self.file.file_path)
         self.assertEqual(result['workspace']['id'], self.file.workspace.id)
         self.assertFalse(result['is_deleted'])

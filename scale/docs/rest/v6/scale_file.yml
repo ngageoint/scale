@@ -51,7 +51,8 @@ paths:
           name: job_output
           schema:
             type: string
-          description: Return only files for the given job output.
+          description: Return only files for the given job output. |
+            Duplicate it to filter by multiple values.
         -in: query
           name: job_type_id
           schema:
@@ -80,7 +81,8 @@ paths:
           name: recipe_job
           schema:
             type: string
-          description: Return only files produced by the given recipe job.
+          description: Return only files produced by the given recipe job. |
+            Duplicate it to filter by multiple values.
         -in: query
           name: recipe_type_id
           schema:
@@ -103,7 +105,8 @@ paths:
           name: file_name
           schema:
             type: string
-          description: Return only files with a given file name.
+          description: Return only files with a given file name. |
+            Duplicate it to filter by multiple values.
       responses:
         '200':
           description: |-

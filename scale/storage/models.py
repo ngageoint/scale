@@ -229,9 +229,9 @@ class ScaleFileManager(models.Manager):
         """
 
         # Attempt to get the workspace
-        file = ScaleFile.objects.get(pk=file_id)
+        scale_file = ScaleFile.objects.get(pk=file_id)
 
-        return file
+        return scale_file
         
     def filter_files_v5(self, started=None, ended=None, time_field=None, file_name=None):
         """Returns a query for Scale files that is filtered on the given fields.
@@ -278,8 +278,8 @@ class ScaleFileManager(models.Manager):
         return files
         
     def filter_files(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
-                        job_ids=None, is_published=None, is_superseded=None, file_name=None, job_output=None, 
-                        recipe_ids=None, recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
+                        job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None, 
+                        recipe_ids=None, recipe_type_ids=None, recipe_jobs=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -300,14 +300,14 @@ class ScaleFileManager(models.Manager):
         :type is_published: bool
         :param is_superseded: Query files that have/have not been superseded.
         :type is_superseded: bool
-        :param file_name: Query files with the given file name.
-        :type file_name: str
-        :keyword job_output: Query files with the given job output
-        :type job_output: str
+        :param file_names: Query files with the given file names.
+        :type file_names: list[str]
+        :keyword job_outputs: Query files with the given job outputs
+        :type job_outputs: list[str]
         :keyword recipe_ids: Query files with a given recipe id
         :type recipe_ids: list[int]
-        :keyword recipe_job: Query files with a given recipe name
-        :type recipe_job: str
+        :keyword recipe_jobs: Query files with a given recipe names
+        :type recipe_jobs: list[str]
         :keyword recipe_type_ids: Query files with the given recipe types
         :type recipe_type_ids: list[int]
         :keyword batch_ids: Query files with batches with the given identifiers.
@@ -355,14 +355,14 @@ class ScaleFileManager(models.Manager):
             files = files.filter(is_published=is_published)
         if is_superseded is not None:
             files = files.filter(is_superseded=is_superseded)
-        if file_name:
-            files = files.filter(file_name=file_name)
-        if job_output:
-            files = files.filter(job_output=job_output)
+        if file_names:
+            files = files.filter(file_name__in=file_names)
+        if job_outputs:
+            files = files.filter(job_output__in=job_outputs)
         if recipe_ids:
             files = files.filter(recipe_id__in=recipe_ids)
-        if recipe_job:
-            files = files.filter(recipe_job=recipe_job)
+        if recipe_jobs:
+            files = files.filter(recipe_job__in=recipe_jobs)
         if recipe_type_ids:
             files = files.filter(recipe_type__in=recipe_type_ids)
         if batch_ids:
