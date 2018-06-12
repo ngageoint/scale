@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 from job.test import utils as job_test_utils
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 
 
 class TestRecipeGraph(TestCase):

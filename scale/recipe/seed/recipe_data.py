@@ -100,7 +100,7 @@ class RecipeData(object):
         """
 
         if recipe_input_name in self._input_files:
-            job_data.add_file_inputs(job_input_name, self._input_files[recipe_input_name].file_ids)
+            job_data.add_file_list_input(job_input_name, self._input_files[recipe_input_name].file_ids)
         if recipe_input_name in self._input_json:
             job_data.add_json_input({'name':job_input_name, 'value':self._input_json[recipe_input_name].value})
 

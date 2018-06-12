@@ -1,6 +1,6 @@
 from recipe.configuration.data.recipe_connection import LegacyRecipeConnection
-from recipe.configuration.data.recipe_data import LegacyRecipeData as RecipeData_1_0, LegacyRecipeData
-from recipe.configuration.definition.recipe_definition_1_0 import RecipeDefinition_1_0 as RecipeDefinition_1_0
+from recipe.configuration.data.recipe_data import LegacyRecipeData
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.seed.recipe_connection import RecipeConnection
 from recipe.seed.recipe_data import RecipeData
 from recipe.seed.recipe_definition import RecipeDefinition
@@ -24,7 +24,7 @@ class RecipeDefinitionSunset(object):
         if RecipeDefinitionSunset.is_seed_dict(definition_dict):
             return RecipeDefinition(definition_dict)
         else:
-            return RecipeDefinition_1_0(definition_dict)
+            return LegacyRecipeDefinition(definition_dict)
 
     @staticmethod
     def is_seed_dict(definition_dict):

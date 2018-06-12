@@ -16,7 +16,7 @@ from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeJob, RecipeType, RecipeTypeRevision

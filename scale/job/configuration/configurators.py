@@ -1,6 +1,7 @@
 """Defines the classes that handle processing job and execution configuration"""
 from __future__ import unicode_literals
 
+import logging
 import math
 
 from django.conf import settings
@@ -24,6 +25,8 @@ from storage.container import get_workspace_volume_path
 from storage.models import Workspace
 from util.environment import normalize_env_var_name
 from util.command import environment_expansion
+
+logger = logging.getLogger(__name__)
 
 
 class QueuedExecutionConfigurator(object):
@@ -271,6 +274,7 @@ class ScheduledExecutionConfigurator(object):
             # Configure workspace volumes
             workspace_volumes = {}
             for task_workspace in config.get_workspaces(task_type):
+                logger.debug(self._workspaces)
                 workspace_model = self._workspaces[task_workspace.name]
                 # TODO: Should refactor workspace broker to return a Volume object and remove BrokerVolume
                 if workspace_model.volume:

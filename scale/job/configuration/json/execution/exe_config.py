@@ -527,7 +527,7 @@ class ExecutionConfiguration(object):
         :param task_type: The task type
         :type task_type: string
         :returns: The list of workspaces
-        :rtype: list
+        :rtype: [:class:`job.configuration.workspace.TaskWorkspace`]
         """
 
         workspaces = []

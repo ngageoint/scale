@@ -19,7 +19,7 @@ from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeJob
 

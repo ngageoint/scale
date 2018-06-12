@@ -93,13 +93,13 @@ class JobData(object):
 
         self._add_file_input({'name':name, 'file_ids': [file_id]})
 
-    def add_file_inputs(self, name, file_ids):
-        """Adds a new file parameter with multiple ids to this job data.
+    def add_file_list_input(self, name, file_ids):
+        """Adds a new files parameter to this job data.
 
-        :param name: The files parameter id
-        :type name: str
-        :param file_ids: The Scale File IDs of input files
-        :type file_ids: [int]
+        :param name: The files parameter name
+        :type name: string
+        :param file_ids: The ID of the file
+        :type file_ids: [long]
         """
 
         self._add_file_input({'name': name, 'file_ids': file_ids})

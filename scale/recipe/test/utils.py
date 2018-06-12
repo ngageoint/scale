@@ -5,7 +5,7 @@ import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph

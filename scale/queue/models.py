@@ -1,7 +1,6 @@
 """Defines the database model for a queue entry"""
 from __future__ import unicode_literals
 
-import abc
 import logging
 
 import django.utils.timezone as timezone
@@ -12,7 +11,6 @@ from error.models import Error
 from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData as JobData_1_0
-from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset

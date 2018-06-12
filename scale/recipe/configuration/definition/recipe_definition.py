@@ -171,7 +171,7 @@ RECIPE_DEFINITION_SCHEMA = {
 }
 
 
-class RecipeDefinition_1_0(object):
+class LegacyRecipeDefinition(object):
     """Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
     recipe, and how the inputs and outputs of those jobs are connected together.
     """

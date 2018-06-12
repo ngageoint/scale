@@ -61,23 +61,20 @@ class SeedManifest(object):
         :param output_name: The name of the output to add to the connection
         :type output_name: str
         :param job_conn: The job connection
-        :type job_conn: :class:`job.configuration.data.job_connection.JobConnection`
+        :type job_conn: :class:`job.data.job_connection.JobConnection`
         :param input_name: The name of the connection input
         :type input_name: str
         """
 
-        output_data = self._get_output_data_item_by_name(output_name)
+        output = self._get_output_data_item_by_name(output_name)
         # TODO: We are only getting files, but in the future we need to branch for file/json
 
-        if output_data:
-            multiple = False
-            if '*' not in output_data['count']:
-                multiple = int(output_data['count']) > 1
-            optional = not output_data['required']
-            media_types = output_data['mediaTypes']
-
+        if isinstance(output, SeedOutputFiles):
             # TODO: How do we want to handle down-stream partial handling? Setting to False presently
-            job_conn.add_input_file(input_name, multiple, media_types, optional, False)
+            job_conn.add_input_file(input_name, output.multiple, [output.media_type], not output.required, False)
+
+        if isinstance(output, SeedOutputJson):
+            job_conn.add_property(input_name)
 
     def add_workspace_to_data(self, job_data, workspace_id):
         """Adds the given workspace ID to the given job data for every output in this job interface
@@ -435,9 +432,11 @@ class SeedManifest(object):
         :type data_item_name: str
         """
 
-        # TODO: Handle JSON output
+        for output_json in self.get_seed_output_json():
+            if data_item_name == output_json.name:
+                return output_json
 
-        for output_file in self.get_output_files():
+        for output_file in self.get_seed_output_files():
             if data_item_name == output_file.name:
                 return output_file
 

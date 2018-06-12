@@ -15,7 +15,7 @@ from batch.exceptions import BatchError
 from batch.models import Batch, BatchJob, BatchRecipe
 from job.models import Job
 from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.models import Recipe
 
 

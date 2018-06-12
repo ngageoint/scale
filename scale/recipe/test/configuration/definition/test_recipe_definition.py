@@ -12,7 +12,7 @@ from job.models import Job
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 
 
 class DummyDataFileStore(AbstractDataFileStore):
