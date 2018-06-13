@@ -16,7 +16,7 @@ class JobConfiguration(object):
 
         # Jobs can be configured to have a main (default) workspace for all output files, as well as have a specific
         # workspace for each output name
-        self.main_output_workspace = None
+        self.default_output_workspace = None
         self.output_workspaces = {}  # {Output name: Workspace name}
 
         self.priority = DEFAULT_PRIORITY
@@ -37,6 +37,22 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('Duplicate mount \'%s\'' % mount_config.name)
 
         self.mounts[mount_config.name] = mount_config
+
+    def add_output_workspace(self, output, workspace):
+        """Adds the given output_workspace
+
+        :param output: The output name
+        :type output: string
+        :param workspace: The workspace name
+        :type workspace: string
+
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the output is a duplicate
+        """
+
+        if output in self.output_workspaces:
+            raise InvalidJobConfiguration('Duplicate output workspace \'%s\'' % output)
+
+        self.output_workspaces[output] = workspace
 
     def add_setting(self, setting_name, setting_value):
         """Adds the given setting value
@@ -73,9 +89,11 @@ class JobConfiguration(object):
         for mount_config in self.mounts.values():
             warnings.extend(mount_config.validate())
 
-        # TODO: ensure output workspaces are valid
+        # TODO: ensure output workspaces are valid (exist)
+        # TODO: ensure priority is positive
         # TODO: do warnings for ignored mounts and settings not defined in Seed
         # TODO: do warnings for mounts, settings, and output workspaces in Seed, but not defined here
+        # TODO: do warnings for ro output workspaces
         # TODO: strip out secret settings? how does this work now?
 
         return warnings

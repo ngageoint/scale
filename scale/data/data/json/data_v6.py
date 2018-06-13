@@ -95,7 +95,7 @@ class DataV6(object):
             if do_validate:
                 validate(self._data, DATA_SCHEMA)
         except ValidationError as ex:
-            raise InvalidData('INVALID_DATA', 'Invalid interface: %s' % unicode(ex))
+            raise InvalidData('INVALID_DATA', 'Invalid data: %s' % unicode(ex))
 
     def get_data(self):
         """Returns the data represented by this JSON

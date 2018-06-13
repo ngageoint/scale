@@ -84,5 +84,5 @@ class VolumeMountConfig(MountConfig):
 
         super(VolumeMountConfig, self).__init__(name, VOLUME_TYPE)
 
-        self.driver = driver
-        self.driver_opts = driver_opts
+        self.driver = driver if driver else None
+        self.driver_opts = driver_opts if driver_opts else {}
