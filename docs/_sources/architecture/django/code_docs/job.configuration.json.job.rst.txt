@@ -20,6 +20,14 @@ job\.configuration\.json\.job\.job\_config\_1\_0 module
     :undoc-members:
     :show-inheritance:
 
+job\.configuration\.json\.job\.job\_config\_v6 module
+-----------------------------------------------------
+
+.. automodule:: job.configuration.json.job.job_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

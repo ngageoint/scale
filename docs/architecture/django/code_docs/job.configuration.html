@@ -259,6 +259,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config">job.configuration.json.job.job_config module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_1_0">job.configuration.json.job.job_config_1_0 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_v6">job.configuration.json.job.job_config_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job">Module contents</a></li>
 </ul>
 </li>
@@ -289,6 +290,89 @@
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.configuration.configuration">
+<span id="job-configuration-configuration-module"></span><h2>job.configuration.configuration module<a class="headerlink" href="#module-job.configuration.configuration" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that represents a job configuration</p>
+<dl class="class">
+<dt id="job.configuration.configuration.JobConfiguration">
+<em class="property">class </em><code class="descclassname">job.configuration.configuration.</code><code class="descname">JobConfiguration</code><a class="headerlink" href="#job.configuration.configuration.JobConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the configuration for running a job</p>
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.add_mount">
+<code class="descname">add_mount</code><span class="sig-paren">(</span><em>mount_config</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.add_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given mount configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mount_config</strong> (<a class="reference internal" href="#job.configuration.mount.MountConfig" title="job.configuration.mount.MountConfig"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.mount.MountConfig</span></code></a>) &#8211; The mount configuration to add</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the mount is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.add_output_workspace">
+<code class="descname">add_output_workspace</code><span class="sig-paren">(</span><em>output</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.add_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output_workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output</strong> (<em>string</em>) &#8211; The output name</li>
+<li><strong>workspace</strong> (<em>string</em>) &#8211; The workspace name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the output is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.add_setting">
+<code class="descname">add_setting</code><span class="sig-paren">(</span><em>setting_name</em>, <em>setting_value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.add_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given setting value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>setting_name</strong> (<em>string</em>) &#8211; The setting name</li>
+<li><strong>setting_value</strong> (<em>string</em>) &#8211; The setting value</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the setting is a duplicate or invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the configuration against the given Seed manifest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The interface dict for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the configuration is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.configuration.configurators">
 <span id="job-configuration-configurators-module"></span><h2>job.configuration.configurators module<a class="headerlink" href="#module-job.configuration.configurators" title="Permalink to this headline">¶</a></h2>
@@ -437,6 +521,54 @@ scheduling.</p>
 <em class="property">class </em><code class="descclassname">job.configuration.input_file.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>scale_file</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.input_file.InputFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Defines an input file and its meta-data</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.mount">
+<span id="job-configuration-mount-module"></span><h2>job.configuration.mount module<a class="headerlink" href="#module-job.configuration.mount" title="Permalink to this headline">¶</a></h2>
+<p>Defines the configuration for a mount that will be mounted into a job&#8217;s container</p>
+<dl class="class">
+<dt id="job.configuration.mount.HostMountConfig">
+<em class="property">class </em><code class="descclassname">job.configuration.mount.</code><code class="descname">HostMountConfig</code><span class="sig-paren">(</span><em>name</em>, <em>host_path</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.HostMountConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.configuration.mount.MountConfig" title="job.configuration.mount.MountConfig"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.mount.MountConfig</span></code></a></p>
+<p>Defines the configuration for a host mount</p>
+<dl class="method">
+<dt id="job.configuration.mount.HostMountConfig.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.HostMountConfig.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.configuration.mount.MountConfig.validate" title="job.configuration.mount.MountConfig.validate"><code class="xref py py-meth docutils literal"><span class="pre">job.configuration.mount.MountConfig.validate()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.mount.MountConfig">
+<em class="property">class </em><code class="descclassname">job.configuration.mount.</code><code class="descname">MountConfig</code><span class="sig-paren">(</span><em>name</em>, <em>mount_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.MountConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Defines the configuration for a job&#8217;s mount</p>
+<dl class="method">
+<dt id="job.configuration.mount.MountConfig.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.MountConfig.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this mount configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#job.configuration.exceptions.InvalidJobConfiguration" title="job.configuration.exceptions.InvalidJobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.exceptions.InvalidJobConfiguration</span></code></a>: If the configuration is invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.mount.VolumeMountConfig">
+<em class="property">class </em><code class="descclassname">job.configuration.mount.</code><code class="descname">VolumeMountConfig</code><span class="sig-paren">(</span><em>name</em>, <em>driver=None</em>, <em>driver_opts=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.VolumeMountConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.configuration.mount.MountConfig" title="job.configuration.mount.MountConfig"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.mount.MountConfig</span></code></a></p>
+<p>Defines the configuration for a volume mount</p>
 </dd></dl>
 
 </div>

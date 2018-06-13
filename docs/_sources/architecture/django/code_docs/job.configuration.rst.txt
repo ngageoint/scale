@@ -14,6 +14,14 @@ Subpackages
 Submodules
 ----------
 
+job\.configuration\.configuration module
+----------------------------------------
+
+.. automodule:: job.configuration.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.configuration\.configurators module
 ----------------------------------------
 
@@ -42,6 +50,14 @@ job\.configuration\.input\_file module
 --------------------------------------
 
 .. automodule:: job.configuration.input_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.mount module
+--------------------------------
+
+.. automodule:: job.configuration.mount
     :members:
     :undoc-members:
     :show-inheritance:

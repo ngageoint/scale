@@ -12,6 +12,14 @@ job\.test\.configuration\.json\.job\.test\_job\_config module
     :undoc-members:
     :show-inheritance:
 
+job\.test\.configuration\.json\.job\.test\_job\_config\_v6 module
+-----------------------------------------------------------------
+
+.. automodule:: job.test.configuration.json.job.test_job_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
