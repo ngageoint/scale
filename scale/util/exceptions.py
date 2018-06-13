@@ -1,4 +1,5 @@
 """Defines utility exceptions"""
+from util.validation import ValidationError
 
 
 class FileDoesNotExist(Exception):
@@ -42,3 +43,20 @@ class UnbalancedBrackets(Exception):
     """Exception thrown when a string is provided that contains unbalanced curly brackets"""
 
     pass
+
+
+class ValidationException(Exception):
+    """Exception indicating there was a validation error
+    """
+
+    def __init__(self, name, description):
+        """Constructor
+
+        :param name: The name of the validation error
+        :type name: string
+        :param description: The description of the validation error
+        :type description: string
+        """
+
+        super(ValidationException, self).__init__(description)
+        self.error = ValidationError(name, description)

@@ -7,7 +7,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 from recipe.handlers.handler import RecipeHandler
-from recipe.models import RecipeJob
+from recipe.models import RecipeNode
 
 
 class TestRecipeHandler(TestCase):
@@ -140,7 +140,7 @@ class TestRecipeHandler(TestCase):
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_co_ru_qu_b', job=self.job_co_ru_qu_b)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_qu_ca_a', job=self.job_qu_ca_a)
         recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='job_qu_ca_b', job=self.job_qu_ca_b)
-        self.recipe_jobs = list(RecipeJob.objects.filter(recipe_id=self.recipe.id))
+        self.recipe_jobs = list(RecipeNode.objects.filter(recipe_id=self.recipe.id))
 
     def test_get_blocked_jobs(self):
         """Tests calling RecipeHandler.get_blocked_jobs()"""
@@ -250,7 +250,7 @@ class TestRecipeHandler(TestCase):
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
-        recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
+        recipe_jobs = list(RecipeNode.objects.filter(recipe_id=recipe.id))
 
         handler = RecipeHandler(recipe, recipe_jobs)
         jobs_to_queue = handler.get_existing_jobs_to_queue()
@@ -358,7 +358,7 @@ class TestRecipeHandler(TestCase):
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
-        recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
+        recipe_jobs = list(RecipeNode.objects.filter(recipe_id=recipe.id))
 
         handler = RecipeHandler(recipe, recipe_jobs)
         jobs_with_inputs = handler.get_jobs_ready_for_input()
@@ -466,7 +466,7 @@ class TestRecipeHandler(TestCase):
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 1', job=job_1)
         recipe_test_utils.create_recipe_job(recipe=recipe, job_name='Job 2', job=job_2)
-        recipe_jobs = list(RecipeJob.objects.filter(recipe_id=recipe.id))
+        recipe_jobs = list(RecipeNode.objects.filter(recipe_id=recipe.id))
 
         handler = RecipeHandler(recipe, recipe_jobs)
         handler.get_jobs_ready_for_input()  # This should populate job inputs

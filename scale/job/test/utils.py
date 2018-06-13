@@ -134,7 +134,8 @@ def create_clock_event(rule=None, occurred=None):
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None,
-               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
+               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0,
+               save=True):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -162,11 +163,11 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         output = dict()
 
     if superseded_job and not superseded_job.is_superseded:
-        Job.objects.supersede_jobs([superseded_job], timezone.now())
+        Job.objects.supersede_jobs_old([superseded_job], timezone.now())
     if is_superseded and not superseded:
         superseded = timezone.now()
 
-    job = Job.objects.create_job(job_type, event, superseded_job=superseded_job, delete_superseded=delete_superseded)
+    job = Job.objects.create_job(job_type, event.id, superseded_job=superseded_job, delete_superseded=delete_superseded)
     job.priority = priority
     job.input = input
     job.status = status
@@ -181,7 +182,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     job.is_superseded = is_superseded
     job.superseded = superseded
     job.input_file_size = input_file_size
-    job.save()
+    if save:
+        job.save()
     return job
 
 
@@ -239,6 +241,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_end.node = node
         job_exe_end.queued = queued
         job_exe_end.started = started
+        job_exe_end.seed_started = task_results.get_task_started('main')
+        job_exe_end.seed_ended = task_results.get_task_ended('main')
         if not ended:
             ended = started + datetime.timedelta(seconds=1)
         job_exe_end.ended = ended

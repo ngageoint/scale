@@ -67,6 +67,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | DJANGO_DEBUG                | ''                              | Change to '1' to enable debugging in DJANGO|
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
+| SCALE_ELASTICSEARCH_VERSION | 2.4                             | Version of elasticserach used for logging  |
 | SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
 | SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
@@ -137,7 +138,7 @@ A new release can be cut using the generate-release.sh shell script from a clone
 to MAJOR MINOR PATCH versions respectively):
 
 ```bash
-./generate-release.sh 4 0 0
+./generate-release.sh 4 0 0 
 ```
 
 There is no direct connection between the Travis CI and Docker Hub builds, but both are launched via push to the GitHub

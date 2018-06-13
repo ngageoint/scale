@@ -18,6 +18,7 @@ import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from error.models import Error
+from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from util.parse import datetime_to_string
@@ -140,9 +141,11 @@ class TestJobsView(TestCase):
 
     def test_batch(self):
         """Tests filtering jobs by batch"""
-        batch_job = batch_test_utils.create_batch_job(job=self.job1)
+        batch = batch_test_utils.create_batch()
+        self.job1.batch_id = batch.id
+        self.job1.save()
 
-        url = rest_util.get_url('/jobs/?batch_id=%d' % batch_job.batch.id)
+        url = rest_util.get_url('/jobs/?batch_id=%d' % batch.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3178,6 +3181,45 @@ class TestJobInputFilesView(TestCase):
         self.assertEqual(len(results), 2)
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+
+
+class TestCancelJobsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_cancel_jobs_bulk_message')
+    def test_cancel(self, mock_create, mock_msg_mgr):
+        """Tests calling the job cancel view successfully"""
+
+        msg = CancelJobsBulk()
+        mock_create.return_value = msg
+
+        started = now()
+        ended = started + datetime.timedelta(minutes=1)
+        error_categories = ['SYSTEM']
+        error_ids = [1, 2]
+        job_ids = [3, 4]
+        job_status = 'FAILED'
+        job_type_ids = [5, 6]
+        json_data = {
+            'started': datetime_to_string(started),
+            'ended': datetime_to_string(ended),
+            'error_categories': error_categories,
+            'error_ids': error_ids,
+            'job_ids': job_ids,
+            'status': job_status,
+            'job_type_ids': job_type_ids,
+        }
+
+        url = rest_util.get_url('/jobs/cancel/')
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
+                                       error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                       status=job_status)
 
 
 class TestRequeueJobsView(TestCase):

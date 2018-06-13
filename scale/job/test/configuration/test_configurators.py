@@ -227,7 +227,7 @@ class TestQueuedExecutionConfigurator(TestCase):
 
 class TestScheduledExecutionConfigurator(TestCase):
 
-    fixtures = ['batch_job_types.json', 'ingest_job_types.json']
+    fixtures = ['ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -266,6 +266,8 @@ class TestScheduledExecutionConfigurator(TestCase):
             mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                    'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
                                                    'PORT': 'TEST_PORT'}}
+            mock_settings.BROKER_URL = 'mock://broker-url'
+            mock_settings.QUEUE_NAME = ''
             configurator = ScheduledExecutionConfigurator(workspaces)
             exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, ingest_job_type,
                                                                            queue.get_job_interface(), 'INFO')
@@ -286,18 +288,20 @@ class TestScheduledExecutionConfigurator(TestCase):
                                            'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                            'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
                                            'NEW_WORKSPACE': new_workspace.name, 'SYSTEM_LOGGING_LEVEL': 'INFO',
-                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes)
+                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
+                                           'SCALE_BROKER_URL': 'mock://broker-url'
                               },
                               'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
                                              new_workspace.name: {'mode': 'rw', 'volume_name': new_wksp_vol_name}},
                               'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                            'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
-                                           'SCALE_DB_PORT': 'TEST_PORT'},
+                                           'SCALE_DB_PORT': 'TEST_PORT', 'SCALE_BROKER_URL': 'mock://broker-url'},
                               'volumes': {wksp_vol_name: {'container_path': wksp_vol_path, 'mode': 'rw', 'type': 'host',
                                                           'host_path': '/w_1/host/path'},
                                           new_wksp_vol_name: {'container_path': new_wksp_vol_path, 'mode': 'rw',
                                                               'type': 'host', 'host_path': '/w_2/host/path'}},
-                              'docker_params': [{'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                              'docker_params': [{'flag': 'env', 'value': 'SCALE_BROKER_URL=mock://broker-url'},
+                                                {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                 {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
                                                 {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                 {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
@@ -332,6 +336,7 @@ class TestScheduledExecutionConfigurator(TestCase):
             for docker_param in task_dict['docker_params']:
                 docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
             task_dict['docker_params'] = docker_params_set
+        self.maxDiff = None
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     def test_configure_scheduled_job_logging(self):
@@ -360,6 +365,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
                                                        'PORT': 'TEST_PORT'}}
+                mock_settings.BROKER_URL = 'mock://broker-url'
+                mock_settings.QUEUE_NAME = ''
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
                 configurator = ScheduledExecutionConfigurator({})
@@ -459,6 +466,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
                                                        'PORT': 'TEST_PORT'}}
+                mock_settings.BROKER_URL = 'mock://broker-url'
+                mock_settings.QUEUE_NAME = ''
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_2': 's_2_secret'}
                 configurator = ScheduledExecutionConfigurator(workspaces)
@@ -506,20 +515,22 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
+                                          'SCALE_BROKER_URL': 'mock://broker-url'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                              'mounts': {input_mnt_name: input_vol_name, output_mnt_name: output_vol_name},
                              'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                           'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
-                                          'SCALE_DB_PORT': 'TEST_PORT'},
+                                          'SCALE_DB_PORT': 'TEST_PORT', 'SCALE_BROKER_URL': 'mock://broker-url'},
                              'volumes': {input_wksp_vol_name: {'container_path': input_wksp_vol_path, 'mode': 'ro',
                                                                'type': 'host', 'host_path': '/w_1/host/path'},
                                          input_vol_name: {'container_path': SCALE_JOB_EXE_INPUT_PATH, 'mode': 'rw',
                                                           'type': 'volume'},
                                          output_vol_name: {'container_path': SCALE_JOB_EXE_OUTPUT_PATH, 'mode': 'rw',
                                                            'type': 'volume'}},
-                             'docker_params': [{'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                             'docker_params': [{'flag': 'env', 'value': 'SCALE_BROKER_URL=mock://broker-url'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
                                                {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
@@ -549,21 +560,23 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
-                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id)
+                                          'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
+                                          'SCALE_BROKER_URL': 'mock://broker-url'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'rw', 'volume_name': input_wksp_vol_name},
                                             output_workspace.name: {'mode': 'rw', 'volume_name': output_wksp_vol_name}},
                              'mounts': {output_mnt_name: output_vol_name},
                              'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                           'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
-                                          'SCALE_DB_PORT': 'TEST_PORT'},
+                                          'SCALE_DB_PORT': 'TEST_PORT', 'SCALE_BROKER_URL': 'mock://broker-url'},
                              'volumes': {input_wksp_vol_name: {'container_path': input_wksp_vol_path, 'mode': 'rw',
                                                                'type': 'host', 'host_path': '/w_1/host/path'},
                                          output_wksp_vol_name: {'container_path': output_wksp_vol_path, 'mode': 'rw',
                                                                 'type': 'host', 'host_path': '/w_2/host/path'},
                                          output_vol_name: {'container_path': SCALE_JOB_EXE_OUTPUT_PATH, 'mode': 'ro',
                                                            'type': 'volume'}},
-                             'docker_params': [{'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                             'docker_params': [{'flag': 'env', 'value': 'SCALE_BROKER_URL=mock://broker-url'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
                                                {'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.num_exes},
@@ -654,6 +667,7 @@ class TestScheduledExecutionConfigurator(TestCase):
             for docker_param in task_dict['docker_params']:
                 docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
             task_dict['docker_params'] = docker_params_set
+        self.maxDiff = None
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     def test_configure_scheduled_job_secrets(self):
@@ -689,22 +703,26 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
                                                        'PORT': 'TEST_PORT'}}
+                mock_settings.BROKER_URL = 'mock://broker-url'
+                mock_settings.QUEUE_NAME = ''
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_1': 's_1_secret', 's_2': 's_2_secret'}
                 configurator = ScheduledExecutionConfigurator({})
                 exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                               queue.get_job_interface(),'INFO')
+                                                                               queue.get_job_interface(), 'INFO')
 
         expected_pre_secret_settings = {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                         'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
-                                        'SCALE_DB_PORT': 'TEST_PORT'}
+                                        'SCALE_DB_PORT': 'TEST_PORT', 'SCALE_BROKER_URL': 'mock://broker-url'}
         expected_pre_censored_settings = {'SCALE_DB_NAME': '*****', 'SCALE_DB_USER': '*****', 'SCALE_DB_PASS': '*****',
-                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****'}
+                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****',
+                                          'SCALE_BROKER_URL': '*****'}
         expected_pre_secret_env_vars = {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                         'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
-                                        'SCALE_DB_PORT': 'TEST_PORT'}
+                                        'SCALE_DB_PORT': 'TEST_PORT', 'SCALE_BROKER_URL': 'mock://broker-url'}
         expected_pre_censored_env_vars = {'SCALE_DB_NAME': '*****', 'SCALE_DB_USER': '*****', 'SCALE_DB_PASS': '*****',
-                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****'}
+                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****',
+                                          'SCALE_BROKER_URL': '*****'}
         expected_main_secret_settings = {'s_1': 's_1_secret', 's_2': 's_2_secret', 's_3': 's_3_value'}
         expected_main_censored_settings = {'s_1': '*****', 's_2': '*****', 's_3': 's_3_value'}
         expected_main_secret_env_vars = {'S_1': 's_1_secret', 'S_2': 's_2_secret', 'S_3': 's_3_value',
@@ -814,6 +832,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_settings.DATABASES = {'default': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
                                                        'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
                                                        'SCALE_DB_PORT': 'TEST_PORT'}}
+                mock_settings.BROKER_URL = 'mock://broker-url'
+                mock_settings.QUEUE_NAME = ''
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
             configurator = ScheduledExecutionConfigurator({})

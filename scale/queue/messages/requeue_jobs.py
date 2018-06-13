@@ -5,6 +5,7 @@ import logging
 
 from django.utils.timezone import now
 
+from job.messages.uncancel_jobs import create_uncancel_jobs_messages
 from job.models import Job
 from messaging.messages.message import CommandMessage
 from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
@@ -115,22 +116,30 @@ class RequeueJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        when = now()
         job_ids = [requeue_job.job_id for requeue_job in self._requeue_jobs]
         jobs_to_requeue = []
+        job_ids_to_uncancel = []
 
         # Find jobs that can be re-queued and have valid exe_num
         job_models = {job.id: job for job in Job.objects.get_basic_jobs(job_ids)}
         for requeue_job in self._requeue_jobs:
             job_model = job_models[requeue_job.job_id]
-            if job_model.can_be_queued() and job_model.has_been_queued() and job_model.num_exes == requeue_job.exe_num:
+            if job_model.can_be_requeued() and job_model.num_exes == requeue_job.exe_num:
                 jobs_to_requeue.append(QueuedJob(job_model.id, job_model.num_exes))
+            elif job_model.can_be_uncanceled():
+                job_ids_to_uncancel.append(job_model.id)
         job_ids_to_requeue = [job.job_id for job in jobs_to_requeue]
-        logger.info('There are %d job(s) to re-queue, increasing max tries', len(job_ids_to_requeue))
 
         # Reset max_tries for jobs that will be re-queued
-        Job.objects.increment_max_tries(job_ids_to_requeue, now())
+        if job_ids_to_requeue:
+            logger.info('There are %d job(s) to re-queue, increasing max tries', len(job_ids_to_requeue))
+            Job.objects.increment_max_tries(job_ids_to_requeue, when)
 
-        # Create message to queue the jobs
-        self.new_messages.extend(create_queued_jobs_messages(jobs_to_requeue, priority=self.priority))
+        # Create messages to queue the jobs
+        self.new_messages.extend(create_queued_jobs_messages(jobs_to_requeue, requeue=True, priority=self.priority))
+
+        # Create messages to uncancel jobs
+        self.new_messages.extend(create_uncancel_jobs_messages(job_ids_to_uncancel, when))
 
         return True

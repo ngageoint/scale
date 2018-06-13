@@ -23,6 +23,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job.job_config import JobConfiguration
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
+from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
@@ -492,7 +493,7 @@ class JobTypeDetailsView(GenericAPIView):
                                                      error_mapping=error_mapping, custom_resources=custom_resources,
                                                      configuration=configuration, secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                InvalidSecretsConfiguration, ValueError) as ex:
+                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
             raise BadParameter(unicode(ex))
 
@@ -675,7 +676,7 @@ class JobTypesValidationView(APIView):
             warnings = JobType.objects.validate_job_type(name=name, version=version, interface=interface,
                                                          error_mapping=error_mapping, trigger_config=trigger_config,
                                                          configuration=configuration)
-        except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
+        except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -824,8 +825,75 @@ class JobsView(ListAPIView):
 
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
-        
+
         return self.get_paginated_response(serializer.data)
+
+
+class CancelJobsView(GenericAPIView):
+    """This view is the endpoint for canceling jobs"""
+    parser_classes = (JSONParser,)
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+    def post(self, request):
+        """Submit command message to cancel jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
+        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
+
+        # Create and send message
+        msg = create_cancel_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
+                                              error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                              status=job_status)
+        CommandMessageManager().send_messages([msg])
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class RequeueJobsView(GenericAPIView):
+    """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
+    parser_classes = (JSONParser,)
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+    def post(self, request):
+        """Submit command message to re-queue jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
+        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
+        priority = rest_util.parse_int(request, 'priority', required=False)
+
+        # Create and send message
+        msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
+                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                               priority=priority, status=job_status)
+        CommandMessageManager().send_messages([msg])
+
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class JobDetailsView(GenericAPIView):
@@ -1251,36 +1319,3 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         else:
             rsp = Response(data=logs)
         return rsp
-
-
-class RequeueJobsView(GenericAPIView):
-    """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
-    parser_classes = (JSONParser,)
-    queryset = Job.objects.all()
-
-    def post(self, request):
-        """Submit command message to re-queue jobs that fit the given filter criteria
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :returns: the HTTP response to send back to the user
-        """
-
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-
-        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
-        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
-        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
-        job_status = rest_util.parse_string(request, 'status', required=False)
-        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
-        priority = rest_util.parse_int(request, 'priority', required=False)
-
-        # Create and send message
-        msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
-                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                               priority=priority, status=job_status)
-        CommandMessageManager().send_messages([msg])
-
-        return Response(status=status.HTTP_202_ACCEPTED)

@@ -24,7 +24,7 @@ class NfsBroker(Broker):
 
         super(NfsBroker, self).__init__('nfs')
 
-    def delete_files(self, volume_path, files):
+    def delete_files(self, volume_path, files, update_model=True):
         """See :meth:`storage.brokers.broker.Broker.delete_files`
         """
 
@@ -34,9 +34,10 @@ class NfsBroker(Broker):
                 logger.info('Deleting %s', path_to_delete)
                 os.remove(path_to_delete)
 
-                # Update model attributes
-                scale_file.set_deleted()
-                scale_file.save()
+                if update_model:
+                    # Update model attributes
+                    scale_file.set_deleted()
+                    scale_file.save()
 
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`

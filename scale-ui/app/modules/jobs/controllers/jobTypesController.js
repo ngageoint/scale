@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, stateService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
         var vm = this;
-        
+
         vm.containerStyle = '';
         vm.requestedJobTypeId = parseInt($routeParams.id);
         vm.jobTypes = [];
@@ -64,6 +64,10 @@
 
         vm.getJobTypeListItemClass = function(jobType){
             return jobType.is_paused ? 'paused' : '';
+        };
+
+        vm.toggleRd = function (value) {
+            vm.jobTypesParams.show_rd = value === 'rd';
         };
 
         var formatDateTime = function (dt) {

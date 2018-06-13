@@ -21,11 +21,13 @@ QueuedJob = namedtuple('QueuedJob', ['job_id', 'exe_num'])
 logger = logging.getLogger(__name__)
 
 
-def create_queued_jobs_messages(jobs, priority=None):
+def create_queued_jobs_messages(jobs, requeue=False, priority=None):
     """Creates messages to queue the given jobs
 
     :param jobs: The jobs to queue (QueuedJob tuple)
     :type jobs: list
+    :param requeue: Whether this is a re-queue (True) or a first queue (False)
+    :type requeue: bool
     :param priority: Optional priority to set on the queued jobs
     :type priority: int
     :return: The list of messages
@@ -39,10 +41,12 @@ def create_queued_jobs_messages(jobs, priority=None):
         if not message:
             message = QueuedJobs()
             message.priority = priority
+            message.requeue = requeue
         elif not message.can_fit_more():
             messages.append(message)
             message = QueuedJobs()
             message.priority = priority
+            message.requeue = requeue
         message.add_job(job.job_id, job.exe_num)
     if message:
         messages.append(message)
@@ -61,6 +65,7 @@ class QueuedJobs(CommandMessage):
         super(QueuedJobs, self).__init__('queued_jobs')
 
         self.priority = None
+        self.requeue = False
         self._queued_jobs = []
 
     def add_job(self, job_id, exe_num):
@@ -91,7 +96,7 @@ class QueuedJobs(CommandMessage):
         job_list = []
         for queued_job in self._queued_jobs:
             job_list.append({'id': queued_job.job_id, 'exe_num': queued_job.exe_num})
-        cmd_dict = {'jobs': job_list}
+        cmd_dict = {'jobs': job_list, 'requeue': self.requeue}
 
         if self.priority is not None:
             cmd_dict['priority'] = self.priority
@@ -104,6 +109,9 @@ class QueuedJobs(CommandMessage):
         """
 
         message = QueuedJobs()
+
+        if 'requeue' in json_dict:
+            message.requeue = json_dict['requeue']
 
         if 'priority' in json_dict:
             message.priority = json_dict['priority']
@@ -142,7 +150,11 @@ class QueuedJobs(CommandMessage):
 
             # Queue jobs
             if jobs_to_queue:
-                queued_job_ids = Queue.objects.queue_jobs(jobs_to_queue, self.priority)
+                queued_job_ids = Queue.objects.queue_jobs(jobs_to_queue, requeue=self.requeue, priority=self.priority)
                 logger.info('Queued %d job(s)', len(queued_job_ids))
+
+        # Send messages to update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(job_ids))
 
         return True

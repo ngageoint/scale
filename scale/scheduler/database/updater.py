@@ -5,6 +5,7 @@ import logging
 
 from django.db import connection, transaction
 
+from batch.configuration.configuration import BatchConfiguration
 from batch.models import Batch
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, TaskUpdate
@@ -90,7 +91,29 @@ class DatabaseUpdater(object):
         """Performs any initialization piece of the setting of batch fields on job and recipe models
         """
 
-        logger.info('Scale is now populating the new batch fields on the job and recipe models')
+        logger.info('Scale is checking batch models to update new recipe estimation/creation fields')
+        # Set batch.recipes_estimated and batch.is_creation_done to correct values
+        qry_1 = 'UPDATE batch SET recipes_estimated = total_count WHERE recipes_estimated = 0'
+        qry_2 = 'UPDATE batch b SET is_creation_done = true FROM '
+        qry_2 += '(SELECT b.id, j.status FROM batch b JOIN job j ON b.creator_job_id = j.id) s '
+        qry_2 += 'WHERE b.id = s.id AND s.status = \'COMPLETED\' AND b.is_creation_done = false'
+        qry_3 = 'UPDATE batch SET root_batch_id = id WHERE root_batch_id is null'
+
+        with connection.cursor() as cursor:
+            cursor.execute(qry_1, [])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d batch(s) updated with correct recipes_estimated value', count)
+            cursor.execute(qry_2, [])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d batch(s) updated with correct is_creation_done value', count)
+            cursor.execute(qry_3, [])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d batch(s) updated with correct root_batch_id value', count)
+
+        logger.info('Scale is now populating the new batch fields on the job, recipe, and batch models')
         logger.info('Counting the number of batches...')
         self._total_batch = Batch.objects.all().count()
         logger.info('Found %d batches that need to be done', self._total_batch)
@@ -112,6 +135,17 @@ class DatabaseUpdater(object):
         qry_1 += ' WHERE j.id = bj.job_id AND bj.batch_id = %s AND j.batch_id IS NULL'
         qry_2 = 'UPDATE recipe r SET batch_id = br.batch_id FROM batch_recipe br'
         qry_2 += ' WHERE r.id = br.recipe_id AND br.batch_id = %s AND r.batch_id IS NULL'
+        qry_3 = 'UPDATE batch b SET recipe_type_rev_id = '
+        qry_3 += '(SELECT recipe_type_rev_id FROM recipe r WHERE r.batch_id = %s LIMIT 1) '
+        qry_3 += 'WHERE b.id = %s AND b.recipe_type_rev_id = 1 '
+        qry_3 += 'AND (SELECT count(*) FROM recipe r WHERE r.batch_id = %s) > 0'
+        qry_4 = 'UPDATE batch b SET recipe_type_rev_id = '
+        qry_4 += '(SELECT rtv.id FROM recipe_type_revision rtv '
+        qry_4 += 'JOIN recipe_type rt ON rtv.recipe_type_id = rt.id '
+        qry_4 += 'JOIN batch b ON rt.id = b.recipe_type_id '
+        qry_4 += 'WHERE b.id = %s AND b.created > rtv.created ORDER BY rtv.created DESC LIMIT 1) '
+        qry_4 += 'WHERE b.id = %s AND b.recipe_type_rev_id = 1'
+        # Populate batch.recipe_type_rev if it hasn't been set yet
         with connection.cursor() as cursor:
             cursor.execute(qry_1, [str(batch_id)])
             count = cursor.rowcount
@@ -121,6 +155,27 @@ class DatabaseUpdater(object):
             count = cursor.rowcount
             if count:
                 logger.info('%d recipe(s) updated with batch_id %d', count, batch_id)
+            cursor.execute(qry_3, [str(batch_id), str(batch_id), str(batch_id)])
+            count = cursor.rowcount
+            if count:
+                logger.info('Batch with batch_id %d set to correct recipe type revision (based on old batch recipe)',
+                            batch_id)
+            cursor.execute(qry_4, [str(batch_id), str(batch_id)])
+            count = cursor.rowcount
+            if count:
+                logger.info('Batch with batch_id %d set to correct recipe type revision (based on revision creation)',
+                            batch_id)
+
+        batch = Batch.objects.get(id=batch_id)
+        if not batch.configuration:
+            definition = batch.get_old_definition()
+            if definition.priority is not None:
+                configuration = BatchConfiguration()
+                configuration.priority = definition.priority
+                from batch.configuration.json.configuration_v6 import convert_configuration_to_v6
+                config_dict = convert_configuration_to_v6(configuration).get_dict()
+                Batch.objects.filter(id=batch_id).update(configuration=config_dict)
+                logger.info('Batch with batch_id %d updated with new configuration', batch_id)
 
         self._current_batch_id = batch_id
         self._updated_batch += 1
@@ -194,7 +249,7 @@ class DatabaseUpdater(object):
         """Performs any initialization piece of the setting of recipe fields on job models
         """
 
-        logger.info('Scale is now populating the new recipe fields on the job models')
+        logger.info('Scale is now populating the new recipe fields on the job models and the new recipe.is_completed field')
         logger.info('Counting the number of recipes...')
         self._total_recipe = Recipe.objects.all().count()
         logger.info('Found %d recipes that need to be done', self._total_recipe)
@@ -212,14 +267,16 @@ class DatabaseUpdater(object):
         recipe_ids = [recipe.id for recipe in recipe_qry.order_by('id').only('id')[:recipe_batch_size]]
 
         # Populate job.recipe_id if it is missing
-        qry_1 = 'UPDATE job j SET recipe_id = rj.recipe_id FROM recipe_job rj'
+        qry_1 = 'UPDATE job j SET recipe_id = rj.recipe_id FROM recipe_node rj'
         qry_1 += ' WHERE j.id = rj.job_id AND rj.recipe_id IN %s AND rj.is_original AND j.recipe_id IS NULL'
-        qry_2 = 'UPDATE job j SET root_recipe_id = r.id FROM recipe_job rj'
+        qry_2 = 'UPDATE job j SET root_recipe_id = r.id FROM recipe_node rj'
         qry_2 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id AND'
         qry_2 += ' r.id IN %s AND r.root_superseded_recipe_id IS NULL AND j.root_recipe_id IS NULL'
-        qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_job rj'
+        qry_3 = 'UPDATE job j SET root_recipe_id = r.root_superseded_recipe_id FROM recipe_node rj'
         qry_3 += ' JOIN recipe r ON rj.recipe_id = r.id WHERE j.id = rj.job_id'
         qry_3 += ' AND r.id IN %s AND r.root_superseded_recipe_id IS NOT NULL AND j.root_recipe_id IS NULL'
+        qry_4 = 'UPDATE recipe r SET is_completed = true WHERE r.id IN %s AND r.completed IS NOT NULL AND '
+        qry_4 += 'NOT r.is_completed'
         with connection.cursor() as cursor:
             cursor.execute(qry_1, [tuple(recipe_ids)])
             count = cursor.rowcount
@@ -233,6 +290,10 @@ class DatabaseUpdater(object):
             count = cursor.rowcount
             if count:
                 logger.info('%d job(s) updated with root_recipe_id field', count)
+            cursor.execute(qry_4, [tuple(recipe_ids)])
+            count = cursor.rowcount
+            if count:
+                logger.info('%d recipe(s) updated with is_completed = true', count)
 
         self._current_recipe_id = recipe_ids[-1]
         self._updated_recipe += recipe_batch_size
@@ -328,6 +389,8 @@ class DatabaseUpdater(object):
                 job_exe_end.node_id = job_exe.node_id
                 job_exe_end.queued = job_exe.queued
                 job_exe_end.started = job_exe.started
+                job_exe_end.seed_started = task_results.get_task_started('main')
+                job_exe_end.seed_ended = task_results.get_task_ended('main')
                 job_exe_end.ended = job_exe.ended
                 job_exe_end_models.append(job_exe_end)
 

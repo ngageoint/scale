@@ -349,7 +349,7 @@ class TestRecipeGraphDelta(TestCase):
                 'type': 'property'
             }],
             'jobs': [{
-                'name': 'Job 1',
+                'name': 'Job A',
                 'job_type': {
                     'name': self.job_a.job_type.name,
                     'version': self.job_a.job_type.version,
@@ -385,9 +385,9 @@ class TestRecipeGraphDelta(TestCase):
         delta = RecipeGraphDelta(graph_a, graph_b)
 
         self.assertFalse(delta.can_be_reprocessed)
-        self.assertDictEqual(delta.get_changed_nodes(), {})
+        self.assertDictEqual(delta.get_changed_nodes(), {'Job A': 'Job A'})
         self.assertSetEqual(delta.get_deleted_nodes(), set())
-        self.assertDictEqual(delta.get_identical_nodes(), {})
+        self.assertDictEqual(delta.get_identical_nodes(), {'Job 2': 'Job B', 'Job 3': 'Job C'})
         self.assertSetEqual(delta.get_new_nodes(), set())
 
     def test_init_deleted_and_new(self):

@@ -44,6 +44,7 @@
         vm.gridOptions.paginationCurrentPage = vm.jobsParams.page || 1;
         vm.gridOptions.paginationPageSize = vm.jobsParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+        vm.includeSuperseded = vm.jobsParams.include_superseded === 'false' ? false : vm.jobsParams.include_superseded;
 
         var filteredByJobType = vm.jobsParams.job_type_id ? true : false,
             filteredByJobStatus = vm.jobsParams.status ? true : false,
@@ -297,6 +298,10 @@
             });
         };
 
+        vm.toggleSuperseded = function (value) {
+            vm.includeSuperseded = value;
+        };
+
         vm.initialize = function () {
             if ($scope.$parent.jobsData) {
                 stateService.setParentJobsParams(vm.jobsParams);
@@ -362,6 +367,13 @@
         $scope.$watch('vm.lastModifiedStop', function (value) {
             if (!vm.loading) {
                 vm.jobsParams.ended = value.toISOString();
+                vm.filterResults();
+            }
+        });
+
+        $scope.$watch('vm.includeSuperseded', function (value) {
+            if (!vm.loading) {
+                vm.jobsParams.include_superseded = value === 'false' ? false : value;
                 vm.filterResults();
             }
         });

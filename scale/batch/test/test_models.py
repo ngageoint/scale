@@ -5,6 +5,7 @@ import datetime
 import django
 from django.test import TransactionTestCase
 from django.utils.timezone import utc
+from mock import patch
 
 import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
@@ -138,36 +139,10 @@ class TestBatchManager(TransactionTestCase):
             'workspace_id': self.workspace.id,
         }
 
-    def test_count_completed_job(self):
-        """Tests calling BatchManger.count_completed_job()"""
-
-        batch = batch_test_utils.create_batch(self.recipe_type)
-        batch_job = batch_test_utils.create_batch_job(batch=batch)
-
-        Batch.objects.count_completed_job(batch.id)
-        count = Batch.objects.get(id=batch.id).completed_job_count
-
-        Batch.objects.count_completed_job(batch_job.batch.id)
-        next_count = Batch.objects.get(id=batch.id).completed_job_count
-        self.assertEqual(count + 1, next_count)
-
-    def test_count_completed_recipe(self):
-        """Tests calling BatchManger.count_completed_recipe()"""
-
-        batch = batch_test_utils.create_batch(self.recipe_type)
-        batch_recipe = batch_test_utils.create_batch_recipe(batch=batch)
-
-        Batch.objects.count_completed_recipe(batch.id)
-        count = Batch.objects.get(id=batch.id).completed_recipe_count
-
-        Batch.objects.count_completed_recipe(batch_recipe.batch.id)
-        next_count = Batch.objects.get(id=batch.id).completed_recipe_count
-        self.assertEqual(count + 1, next_count)
-
     def test_create_successful(self):
-        """Tests calling BatchManager.create_batch() successfully"""
+        """Tests calling BatchManager.create_batch_old() successfully"""
 
-        batch = batch_test_utils.create_batch(self.recipe_type)
+        batch = batch_test_utils.create_batch_old(self.recipe_type)
 
         batch = Batch.objects.get(pk=batch.id)
         self.assertIsNotNone(batch.title)
@@ -182,8 +157,8 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_no_changes(self):
         """Tests calling BatchManager.schedule_recipes() for a recipe type that has nothing to reprocess"""
 
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data), event=self.event)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -194,12 +169,13 @@ class TestBatchManager(TransactionTestCase):
         batch_recipes = BatchRecipe.objects.all()
         self.assertEqual(len(batch_recipes), 0)
 
-    def test_schedule_new_batch(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_new_batch(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch that has never been started"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -208,25 +184,21 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].batch, batch)
-        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
-        self.assertEqual(batch_recipes[0].superseded_recipe, handler.recipe)
-
-    def test_schedule_partial_batch(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_partial_batch(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch that is incomplete"""
         for i in range(5):
-            Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data), event=self.event)
+            Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                             event=self.event)
         partials = []
         for i in range(5):
-            handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                                   event=self.event)
+            handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                       event=self.event)
             handler.recipe.is_superseded = True
             handler.recipe.save()
             partials.append(handler.recipe)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -244,32 +216,28 @@ class TestBatchManager(TransactionTestCase):
 
         batch = Batch.objects.get(pk=batch.id)
         self.assertEqual(batch.status, 'CREATED')
-        self.assertEqual(batch.created_count, 10)
-        self.assertEqual(batch.total_count, 10)
-
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 10)
 
     def test_schedule_invalid_status(self):
         """Tests calling BatchManager.schedule_recipes() for a batch that was already created"""
 
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data), event=self.event)
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type)
 
         Batch.objects.schedule_recipes(batch.id)
 
         self.assertRaises(BatchError, Batch.objects.schedule_recipes, batch.id)
 
-    def test_schedule_date_range_created(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_date_range_created(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction"""
-        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event).recipe
+        recipe1 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1, tzinfo=utc))
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe2.id).update(created=datetime.datetime(2016, 2, 1, tzinfo=utc))
-        recipe3 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event).recipe
+        recipe3 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event).recipe
         Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1, tzinfo=utc))
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
@@ -280,7 +248,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-02-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -289,13 +257,9 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
-
     def test_schedule_date_range_data_none(self):
         """Tests calling BatchManager.schedule_recipes() for a batch data date range where no data matches"""
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -306,7 +270,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-01-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -315,7 +279,8 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 0)
         self.assertEqual(batch.total_count, 0)
 
-    def test_schedule_date_range_data_started(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_date_range_data_started(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data started date range restriction"""
         file1 = storage_test_utils.create_file()
         file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
@@ -328,7 +293,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data1), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -341,8 +306,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data2),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2),
+                                                   event=self.event).recipe
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -352,7 +317,7 @@ class TestBatchManager(TransactionTestCase):
                 'started': '2016-01-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -361,11 +326,8 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
-
-    def test_schedule_date_range_data_ended(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_date_range_data_ended(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data ended date range restriction"""
         file1 = storage_test_utils.create_file()
         file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
@@ -379,8 +341,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data1),
-                                               event=self.event).recipe
+        recipe1 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1),
+                                                   event=self.event).recipe
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -394,7 +356,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data2), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -404,7 +366,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-01-15T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -413,11 +375,8 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].superseded_recipe, recipe1)
-
-    def test_schedule_date_range_data_full(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_date_range_data_full(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data date range restriction"""
         file1 = storage_test_utils.create_file()
         file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
@@ -430,7 +389,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data1), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
         file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
@@ -444,8 +403,8 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data2),
-                                               event=self.event).recipe
+        recipe2 = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data2),
+                                                   event=self.event).recipe
 
         file3 = storage_test_utils.create_file()
         file3.data_ended = datetime.datetime(2016, 3, 1, tzinfo=utc)
@@ -458,7 +417,7 @@ class TestBatchManager(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(data3), event=self.event)
+        Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(data3), event=self.event)
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -469,7 +428,7 @@ class TestBatchManager(TransactionTestCase):
                 'ended': '2016-02-10T00:00:00.000Z',
             },
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -478,19 +437,16 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
-
-    def test_schedule_all_jobs(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_all_jobs(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
 
         definition = {
             'all_jobs': True,
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -499,22 +455,17 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].batch, batch)
-        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
-        self.assertEqual(batch_recipes[0].superseded_recipe, handler.recipe)
-
-    def test_schedule_job_names(self):
+    @patch('batch.models.CommandMessageManager')
+    def test_schedule_job_names(self, mock_msg_mgr):
         """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
-                                               event=self.event)
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+                                                   event=self.event)
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
         definition = {
             'job_names': ['Job 1'],
         }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -522,37 +473,6 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.status, 'CREATED')
         self.assertEqual(batch.created_count, 1)
         self.assertEqual(batch.total_count, 1)
-
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].batch, batch)
-        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
-        self.assertEqual(batch_recipes[0].superseded_recipe, handler.recipe)
-
-        batch_jobs = BatchJob.objects.all()
-        self.assertEqual(len(batch_jobs), 2)
-        for batch_job in batch_jobs:
-            self.assertIn(batch_job.job.job_type, [self.job_type_1, self.job_type_2])
-
-    def test_schedule_priority(self):
-        """Tests calling BatchManager.schedule_recipes() for a batch that overrides job priority"""
-        Recipe.objects.create_recipe(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data), event=self.event)
-
-        definition = {
-            'all_jobs': True,
-            'priority': 1111,
-        }
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
-
-        Batch.objects.schedule_recipes(batch.id)
-
-        batch = Batch.objects.get(pk=batch.id)
-        self.assertEqual(batch.status, 'CREATED')
-        self.assertEqual(batch.created_count, 1)
-        self.assertEqual(batch.total_count, 1)
-
-        batch_job = BatchJob.objects.get(batch=batch, job__job_type=self.job_type_1)
-        self.assertEqual(batch_job.job.priority, 1111)
 
     def test_schedule_trigger_rule_true(self):
         """Tests calling BatchManager.schedule_recipes() using the default trigger rule of a recipe type."""
@@ -564,7 +484,7 @@ class TestBatchManager(TransactionTestCase):
             'trigger_rule': True,
         }
 
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -572,11 +492,11 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.status, 'CREATED')
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].batch, batch)
-        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
-        self.assertIsNone(batch_recipes[0].superseded_recipe)
+        self.assertEqual(batch.created_count, 1)
+        recipe = Recipe.objects.get(batch_id=batch.id)
+        self.assertEqual(recipe.batch, batch)
+        self.assertEqual(recipe.recipe_type, self.recipe_type)
+        self.assertIsNone(recipe.superseded_recipe)
 
     def test_schedule_trigger_rule_custom(self):
         """Tests calling BatchManager.schedule_recipes() using a custom trigger rule."""
@@ -596,7 +516,7 @@ class TestBatchManager(TransactionTestCase):
             },
         }
 
-        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+        batch = batch_test_utils.create_batch_old(recipe_type=self.recipe_type, definition=definition)
 
         Batch.objects.schedule_recipes(batch.id)
 
@@ -604,9 +524,9 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.status, 'CREATED')
         self.assertEqual(batch.total_count, 1)
 
-        batch_recipes = BatchRecipe.objects.all()
-        self.assertEqual(len(batch_recipes), 1)
-        self.assertEqual(batch_recipes[0].batch, batch)
-        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
-        self.assertIsNone(batch_recipes[0].superseded_recipe)
-        self.assertEqual(batch_recipes[0].recipe.input['input_data'][0]['file_id'], file1.id)
+        self.assertEqual(batch.created_count, 1)
+        recipe = Recipe.objects.get(batch_id=batch.id)
+        self.assertEqual(recipe.batch, batch)
+        self.assertEqual(recipe.recipe_type, self.recipe_type)
+        self.assertIsNone(recipe.superseded_recipe)
+        self.assertEqual(recipe.input['input_data'][0]['file_id'], file1.id)

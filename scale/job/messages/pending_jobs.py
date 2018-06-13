@@ -116,4 +116,8 @@ class PendingJobs(CommandMessage):
                 job_ids = Job.objects.update_jobs_to_pending(jobs_to_pending, self.status_change)
                 logger.info('Set %d job(s) to PENDING status', len(job_ids))
 
+        # Send messages to update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(self._pending_job_ids))
+
         return True

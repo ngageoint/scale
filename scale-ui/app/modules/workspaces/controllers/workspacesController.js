@@ -96,6 +96,10 @@
             });
         };
 
+        vm.toggleShowActive = function (value) {
+            vm.showActive = value;
+        };
+
         $scope.$watch('vm.activeWorkspace.json_config.broker.type', function (newValue) {
             if (newValue === 'nfs') {
                 vm.brokerDescription = scaleConfig.nfsBrokerDescription;

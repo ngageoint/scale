@@ -52,6 +52,21 @@
                 <strong>{{ vm.statusError }}</strong>
             </div>
         </div>
+        <div ng-if="vm.schedulerResourceLevel && vm.user.is_admin">
+            <h3>Resource Level</h3>
+            <div class="switch-toggle alert alert-light">
+                <input id="low" name="scheduler" type="radio" ng-checked="vm.schedulerResourceLevel === 'LOW'">
+                <label for="low" ng-click="vm.toggleSchedulerResourceLevel('LOW')" ng-style="{color:vm.schedulerResourceLevel === 'LOW' ? '#fff' : '#000'}">Too Low</label>
+
+                <input id="good" name="scheduler" type="radio" ng-checked="vm.schedulerResourceLevel === 'GOOD'">
+                <label for="good" ng-click="vm.toggleSchedulerResourceLevel('GOOD')" ng-style="{color:vm.schedulerResourceLevel === 'GOOD' ? '#fff' : '#000'}">Optimal</label>
+
+                <input id="high" name="scheduler" type="radio" ng-checked="vm.schedulerResourceLevel === 'HIGH'">
+                <label for="high" ng-click="vm.toggleSchedulerResourceLevel('HIGH')" ng-style="{color:vm.schedulerResourceLevel === 'HIGH' ? '#fff' : '#000'}">Too High</label>
+
+                <a class="btn" ng-class="vm.toggleBtnClass"></a>
+            </div>
+        </div>
     </div>
     <div id="ov-health" class="col-xs-12 col-md-6">
         <h2>Health</h2>

@@ -215,6 +215,15 @@ class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
 
+    def cancel_queued_jobs(self, job_ids):
+        """Marks the queued job executions for the given jobs as canceled
+
+        :param job_ids: The list of job IDs being canceled
+        :type job_ids: list
+        """
+
+        self.filter(job_id__in=job_ids).update(is_canceled=True)
+
     def get_queue(self, order_mode, ignore_job_type_ids=None):
         """Returns the list of queue models sorted according to their priority first, and then according to the provided
         mode
@@ -261,13 +270,15 @@ class QueueManager(models.Manager):
             results.append(status)
         return results
 
-    def queue_jobs(self, jobs, priority=None):
+    def queue_jobs(self, jobs, requeue=False, priority=None):
         """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
         Any jobs that are not in a valid status for being queued, are without job input, or are superseded will be
         ignored.
 
         :param jobs: The job models to put on the queue
         :type jobs: list
+        :param requeue: Whether this is a re-queue (True) or a first queue (False)
+        :type requeue: bool
         :param priority: An optional argument to reset the jobs' priority when they are queued
         :type priority: int
         :returns: The list of job IDs that were successfully QUEUED
@@ -277,7 +288,7 @@ class QueueManager(models.Manager):
         when_queued = timezone.now()
 
         # Set job models to QUEUED
-        queued_job_ids = Job.objects.update_jobs_to_queued(jobs, when_queued)
+        queued_job_ids = Job.objects.update_jobs_to_queued(jobs, when_queued, requeue=requeue)
         if not queued_job_ids:
             return queued_job_ids  # Done if nothing was queued
 
@@ -320,6 +331,7 @@ class QueueManager(models.Manager):
 
         return queued_job_ids
 
+    # TODO: remove once REST API v5 is removed
     @transaction.atomic
     def handle_job_cancellation(self, job_id, when):
         """Handles the cancellation of a job. All database changes occur in an atomic transaction.
@@ -330,9 +342,9 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        Job.objects.update_jobs_to_canceled([job_id], when)
+        Job.objects.update_jobs_to_canceled_old([job_id], when)
 
-        self._cancel_queued_jobs([job_id])
+        self.cancel_queued_jobs([job_id])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
         handler = Recipe.objects.get_recipe_handler_for_job(job_id)
@@ -357,7 +369,7 @@ class QueueManager(models.Manager):
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
-        job = Job.objects.create_job(job_type, event)
+        job = Job.objects.create_job(job_type, event.id)
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
@@ -426,8 +438,8 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, data, event, batch_id, superseded_recipe, delta,
-                                               superseded_jobs, priority)
+        handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, superseded_recipe, delta,
+                                                   superseded_jobs, priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -498,7 +510,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries_old(jobs_to_queue)
-            self.queue_jobs(jobs_to_queue, priority=priority)
+            self.queue_jobs(jobs_to_queue, requeue=True, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -508,15 +520,6 @@ class QueueManager(models.Manager):
             jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
-
-    def _cancel_queued_jobs(self, job_ids):
-        """Marks the queued job executions for the given jobs as canceled
-
-        :param job_ids: The list of job IDs being canceled
-        :type job_ids: list
-        """
-
-        self.filter(job_id__in=job_ids).update(is_canceled=True)
 
 
 class Queue(models.Model):

@@ -161,4 +161,8 @@ class RunningJobs(CommandMessage):
                 running_job_ids = Job.objects.update_jobs_to_running(jobs_to_running, self._started)
                 logger.info('Set %d job(s) to RUNNING status', len(running_job_ids))
 
+        # Send messages to update recipe metrics
+        from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
+        self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(job_ids))
+
         return True

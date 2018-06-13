@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 
+from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import JobExecutionEnd
 from messaging.messages.message import CommandMessage
 from util.parse import datetime_to_string, parse_datetime
@@ -101,6 +102,8 @@ class CreateJobExecutionEnd(CommandMessage):
 
         for job_exe_end_dict in json_dict['job_exe_end_models']:
             job_exe_end = JobExecutionEnd()
+            task_results = TaskResults(job_exe_end_dict['task_results'], do_validate=False)
+
             job_exe_end.job_exe_id = job_exe_end_dict['id']
             job_exe_end.job_id = job_exe_end_dict['job_id']
             job_exe_end.job_type_id = job_exe_end_dict['job_type_id']
@@ -108,6 +111,8 @@ class CreateJobExecutionEnd(CommandMessage):
             job_exe_end.task_results = job_exe_end_dict['task_results']
             job_exe_end.status = job_exe_end_dict['status']
             job_exe_end.queued = parse_datetime(job_exe_end_dict['queued'])
+            job_exe_end.seed_started = task_results.get_task_started('main')
+            job_exe_end.seed_ended = task_results.get_task_ended('main')
             job_exe_end.ended = parse_datetime(job_exe_end_dict['ended'])
             if 'error_id' in job_exe_end_dict:
                 job_exe_end.error_id = job_exe_end_dict['error_id']

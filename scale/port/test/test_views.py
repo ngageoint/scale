@@ -19,7 +19,50 @@ from recipe.models import RecipeType
 from vault.secrets_handler import SecretsHandler
 
 
-class TestConfigurationViewExport(TransactionTestCase):
+class TestPortViewsV6(TransactionTestCase):
+    """Tests related to the configuration export endpoint"""
+
+    def setUp(self):
+        django.setup()
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.job_type1 = job_test_utils.create_job_type()
+        self.error1 = error_test_utils.create_error(category='DATA')
+
+    def test_all(self):
+        """Tests all export/import endpoints for 404s."""
+        url = '/v6/configuration/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        json_data = {
+            'import': {
+                'errors': [{
+                    'name': 'test-name',
+                    'title': 'test-title',
+                    'description': 'test-description',
+                    'category': 'DATA',
+                }],
+            },
+        }
+
+        url = '/v6/configuration/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        url = '/v6/configuration/download/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        url = '/v6/configuration/upload/'
+        response = self.client.generic('POST', url, '', 'multipart/form-data')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        url = '/v6/configuration/validation/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+class TestConfigurationViewExportV5(TransactionTestCase):
     """Tests related to the configuration export endpoint"""
 
     def setUp(self):
@@ -31,7 +74,7 @@ class TestConfigurationViewExport(TransactionTestCase):
 
     def test_errors(self):
         """Tests exporting only errors."""
-        url = rest_util.get_url('/configuration/?include=errors')
+        url = '/v5/configuration/?include=errors'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -46,7 +89,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         """Tests exporting errors without any system-level entries."""
         error_test_utils.create_error(category='SYSTEM')
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -58,7 +101,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
-        url = rest_util.get_url('/configuration/?error_id=%s&error_id=%s' % (error2.id, error3.id))
+        url = '/v5/configuration/?error_id=%s&error_id=%s' % (error2.id, error3.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -70,7 +113,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
-        url = rest_util.get_url('/configuration/?error_name=%s&error_name=%s' % (error2.name, error3.name))
+        url = '/v5/configuration/?error_name=%s&error_name=%s' % (error2.name, error3.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -79,7 +122,7 @@ class TestConfigurationViewExport(TransactionTestCase):
 
     def test_job_types(self):
         """Tests exporting only job types."""
-        url = rest_util.get_url('/configuration/?include=job_types')
+        url = '/v5/configuration/?include=job_types'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -94,7 +137,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         """Tests exporting job types without any system-level entries."""
         job_test_utils.create_job_type(category='system')
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -106,7 +149,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         job_type2 = job_test_utils.create_job_type()
         job_type3 = job_test_utils.create_job_type()
 
-        url = rest_util.get_url('/configuration/?job_type_id=%s&job_type_id=%s' % (job_type2.id, job_type3.id))
+        url = '/v5/configuration/?job_type_id=%s&job_type_id=%s' % (job_type2.id, job_type3.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -118,7 +161,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         job_test_utils.create_job_type(name='job-name')
         job_test_utils.create_job_type(name='job-name')
 
-        url = rest_util.get_url('/configuration/?job_type_name=job-name')
+        url = '/v5/configuration/?job_type_name=job-name'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -130,7 +173,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         job_test_utils.create_job_type(category='job-category')
         job_test_utils.create_job_type(category='job-category')
 
-        url = rest_util.get_url('/configuration/?job_type_category=job-category')
+        url = '/v5/configuration/?job_type_category=job-category'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -139,7 +182,7 @@ class TestConfigurationViewExport(TransactionTestCase):
 
     def test_recipe_types(self):
         """Tests exporting only recipe types."""
-        url = rest_util.get_url('/configuration/?include=recipe_types')
+        url = '/v5/configuration/?include=recipe_types'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -155,8 +198,8 @@ class TestConfigurationViewExport(TransactionTestCase):
         recipe_type2 = recipe_test_utils.create_recipe_type()
         recipe_type3 = recipe_test_utils.create_recipe_type()
 
-        url = rest_util.get_url('/configuration/?recipe_type_id=%s&recipe_type_id=%s' % (recipe_type2.id,
-                                                                                         recipe_type3.id))
+        url = '/v5/configuration/?recipe_type_id=%s&recipe_type_id=%s' % (recipe_type2.id,
+                                                                          recipe_type3.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -168,7 +211,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         recipe_test_utils.create_recipe_type(name='recipe-name')
         recipe_test_utils.create_recipe_type(name='recipe-name')
 
-        url = rest_util.get_url('/configuration/?recipe_type_name=recipe-name')
+        url = '/v5/configuration/?recipe_type_name=recipe-name'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -177,7 +220,7 @@ class TestConfigurationViewExport(TransactionTestCase):
 
     def test_all(self):
         """Tests exporting all the relevant models."""
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -212,7 +255,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         }
         recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
 
-        url = rest_util.get_url('/configuration/?recipe_type_name=%s' % recipe_type2.name)
+        url = '/v5/configuration/?recipe_type_name=%s' % recipe_type2.name
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -261,8 +304,8 @@ class TestConfigurationViewExport(TransactionTestCase):
         }
         recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
 
-        url = rest_util.get_url('/configuration/?recipe_type_name=%s&job_type_name=%s&error_name=%s' % (
-            recipe_type2.name, job_type2.name, error2.name))
+        url = '/v5/configuration/?recipe_type_name=%s&job_type_name=%s&error_name=%s' % (
+            recipe_type2.name, job_type2.name, error2.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -328,7 +371,7 @@ class TestConfigurationViewExport(TransactionTestCase):
 
         job_type2 = job_test_utils.create_job_type(interface=interface, configuration=configuration)
 
-        url = rest_util.get_url('/configuration/?&job_type_name=%s' % (job_type2.name))
+        url = '/v5/configuration/?&job_type_name=%s' % (job_type2.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -338,7 +381,7 @@ class TestConfigurationViewExport(TransactionTestCase):
         self.assertTrue('SECRET_SETTING' not in result['job_types'][0]['configuration']['settings'])
         self.assertTrue('UNUSED_MOUNT' not in result['job_types'][0]['configuration']['mounts'])
 
-class TestConfigurationViewImport(TestCase):
+class TestConfigurationViewImportV5(TestCase):
     """Tests related to the configuration import endpoint"""
 
     def setUp(self):
@@ -357,7 +400,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -382,7 +425,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -409,7 +452,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -431,7 +474,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -452,7 +495,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -477,7 +520,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -505,7 +548,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -628,7 +671,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url= '/v5/configuration/'
 
         with patch.object(SecretsHandler, '__init__', return_value=None), \
           patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
@@ -693,7 +736,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -733,7 +776,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -768,7 +811,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -815,7 +858,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -847,7 +890,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -873,7 +916,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -897,7 +940,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -924,7 +967,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -956,7 +999,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -987,7 +1030,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1015,7 +1058,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1048,7 +1091,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1084,7 +1127,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1121,7 +1164,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1194,7 +1237,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1227,7 +1270,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1280,7 +1323,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1327,7 +1370,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1359,7 +1402,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1384,7 +1427,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1414,7 +1457,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1442,7 +1485,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1492,7 +1535,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1525,7 +1568,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1558,7 +1601,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1683,7 +1726,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1734,7 +1777,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1866,7 +1909,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1975,7 +2018,7 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/')
+        url = '/v5/configuration/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1991,7 +2034,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(len(recipe_types), 1)
 
 
-class TestConfigurationDownloadView(TransactionTestCase):
+class TestConfigurationDownloadViewV5(TransactionTestCase):
     """Tests related to the configuration export download endpoint"""
 
     def setUp(self):
@@ -2003,7 +2046,7 @@ class TestConfigurationDownloadView(TransactionTestCase):
 
     def test_download(self):
         """Tests exporting as a separate download file."""
-        url = rest_util.get_url('/configuration/download/')
+        url = '/v5/configuration/download/'
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
 
@@ -2014,7 +2057,7 @@ class TestConfigurationDownloadView(TransactionTestCase):
         self.assertEqual(len(results['errors']), 1)
 
 
-class TestConfigurationUploadView(TestCase):
+class TestConfigurationUploadViewV5(TestCase):
     """Tests related to the configuration import upload endpoint"""
 
     def setUp(self):
@@ -2023,7 +2066,7 @@ class TestConfigurationUploadView(TestCase):
     def test_upload_missing_file(self):
         """Tests importing as a separate upload file without any provided content."""
 
-        url = rest_util.get_url('/configuration/upload/')
+        url = '/v5/configuration/upload/'
         response = self.client.generic('POST', url, '', 'multipart/form-data')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -2031,7 +2074,7 @@ class TestConfigurationUploadView(TestCase):
     # TODO: Figure out to write a unit test for the success case
 
 
-class TestConfigurationValidationView(TestCase):
+class TestConfigurationValidationViewV5(TestCase):
     """Tests related to the configuration import endpoint"""
 
     def setUp(self):
@@ -2063,7 +2106,7 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/validation/')
+        url = '/v5/configuration/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2138,7 +2181,7 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/validation/')
+        url = '/v5/configuration/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2172,7 +2215,7 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/validation/')
+        url = '/v5/configuration/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -2217,7 +2260,7 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/configuration/validation/')
+        url = '/v5/configuration/validation/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

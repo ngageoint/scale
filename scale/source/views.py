@@ -28,6 +28,22 @@ class SourcesView(ListAPIView):
     serializer_class = SourceFileSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the source files for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -62,7 +78,8 @@ class SourceDetailsView(RetrieveAPIView):
         """Override the serializer for legacy API calls."""
         if self.request.version == 'v4':
             return SourceFileDetailsSerializerV4
-        return SourceFileDetailsSerializer
+        elif self.request.version == 'v5':
+            return SourceFileDetailsSerializer
 
     def retrieve(self, request, source_id=None, file_name=None):
         """Retrieves the details for a source file and return them in JSON form
@@ -79,14 +96,16 @@ class SourceDetailsView(RetrieveAPIView):
 
         if request.version == 'v4':
             return self.retrieve_v4(request, source_id, file_name)
-
-        try:
-            source = SourceFile.objects.get_details(source_id)
-        except ScaleFile.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(source)
-        return Response(serializer.data)
+        elif request.version == 'v5':
+            try:
+                source = SourceFile.objects.get_details(source_id)
+            except ScaleFile.DoesNotExist:
+                raise Http404
+    
+            serializer = self.get_serializer(source)
+            return Response(serializer.data)
+        
+        raise Http404()
 
     # TODO: remove when REST API v4 is removed
     def retrieve_v4(self, request, source_id=None, file_name=None):
@@ -126,6 +145,24 @@ class SourceIngestsView(ListAPIView):
     serializer_class = IngestSerializer
 
     def list(self, request, source_id=None):
+        """Determine api version and call specific method
+        
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param source_id: The id of the source
+        :type source_id: int encoded as a string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v4':
+            return self.list_impl(request, source_id)
+        elif request.version == 'v5':
+            return self.list_impl(request, source_id)
+
+        raise Http404()
+
+    def list_impl(self, request, source_id=None):
         """Retrieves the ingests for a given source file ID and returns them in JSON form
 
         :param request: the HTTP GET request
@@ -162,15 +199,27 @@ class SourceIngestsView(ListAPIView):
 class SourceJobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all jobs related to a source file."""
     queryset = Job.objects.all()
-
-    # TODO: remove when REST API v5 is removed
-    def get_serializer_class(self):
-        """Override the serializer for legacy API calls."""
-        if self.request.version == 'v6':
-            return JobSerializer
-        return JobSerializerV5
-
+    serializer_class = JobSerializer
+    
     def list(self, request, source_id=None):
+        """Determine api version and call specific method
+        
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param source_id: The id of the source
+        :type source_id: int encoded as a string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v4':
+            return self.list_impl(request, source_id)
+        elif request.version == 'v5':
+            return self.list_impl(request, source_id)
+
+        raise Http404()
+        
+    def list_impl(self, request, source_id=None):
         """Retrieves the jobs for a given source file ID and returns them in JSON form
 
         :param request: the HTTP GET request
@@ -225,6 +274,24 @@ class SourceProductsView(ListAPIView):
         return ProductFileSerializerV5
 
     def list(self, request, source_id=None):
+        """Determine api version and call specific method
+        
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param source_id: The id of the source
+        :type source_id: int encoded as a string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v4':
+            return self.list_impl(request, source_id)
+        elif request.version == 'v5':
+            return self.list_impl(request, source_id)
+
+        raise Http404()
+        
+    def list_impl(self, request, source_id=None):
         """Retrieves the products for a given source file ID and returns them in JSON form
 
         :param request: the HTTP GET request
@@ -281,6 +348,22 @@ class SourceUpdatesView(ListAPIView):
     serializer_class = SourceFileUpdateSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+        
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the source file updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request

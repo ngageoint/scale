@@ -28,7 +28,6 @@ from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
-    fixtures = ['batch_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -215,16 +214,16 @@ class TestProductFileManager(TestCase):
         product_1_b = prod_test_utils.create_product(job_exe=job_exe_1, has_been_published=True, is_published=True)
         job_type = job_test_utils.create_job_type()
         event = trigger_test_utils.create_trigger_event()
-        job_2 = Job.objects.create_job(job_type=job_type, event=event, superseded_job=job_exe_1.job)
+        job_2 = Job.objects.create_job(job_type=job_type, event_id=event.id, superseded_job=job_exe_1.job)
         job_2.save()
         job_exe_2 = job_test_utils.create_job_exe(job=job_2)
-        Job.objects.supersede_jobs([job_exe_1.job], now())
+        Job.objects.supersede_jobs_old([job_exe_1.job], now())
         product_2_a = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
         product_2_b = prod_test_utils.create_product(job_exe=job_exe_2, has_been_published=True, is_published=True)
-        job_3 = Job.objects.create_job(job_type=job_type, event=event, superseded_job=job_exe_2.job)
+        job_3 = Job.objects.create_job(job_type=job_type, event_id=event.id, superseded_job=job_exe_2.job)
         job_3.save()
         job_exe_3 = job_test_utils.create_job_exe(job=job_3)
-        Job.objects.supersede_jobs([job_2], now())
+        Job.objects.supersede_jobs_old([job_2], now())
         product_3_a = prod_test_utils.create_product(job_exe=job_exe_3)
         product_3_b = prod_test_utils.create_product(job_exe=job_exe_3)
 
@@ -537,7 +536,7 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                     self.job_exe, self.workspace)
 
         self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
-        self.assertEqual(recipe_job.job_name, products[0].recipe_job)
+        self.assertEqual(recipe_job.node_name, products[0].recipe_job)
 
         self.assertEqual(self.files[0].output_name, products[0].job_output)
 

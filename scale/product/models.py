@@ -333,7 +333,7 @@ class ProductFileManager(models.GeoManager):
 
         return self.filter_products(started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
-                                    job_ids=None, is_operational=is_operational, is_published=is_published,
+                                    job_ids=job_ids, is_operational=is_operational, is_published=is_published,
                                     is_superseded=False, file_name=file_name, job_output=job_output,
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job,
                                     batch_ids=batch_ids, order=order)
@@ -463,7 +463,7 @@ class ProductFileManager(models.GeoManager):
 
         # Unpublish any products created by jobs that are superseded by this job
         if job.root_superseded_job_id:
-            self.unpublish_products(job.root_superseded_job_id, when)
+            self.unpublish_products_old(job.root_superseded_job_id, when)
 
         # Grab UUIDs from new products to be published
         uuids = []
@@ -479,9 +479,22 @@ class ProductFileManager(models.GeoManager):
         self.filter(job_exe_id=job_exe_id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
 
-    def unpublish_products(self, root_job_id, when):
-        """Unpublishes all of the published products created by the superseded jobs with the given root ID
+    def unpublish_products(self, job_ids, when):
+        """Unpublishes all of the published products created by the given job IDs
 
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :param when: When the products were unpublished
+        :type when: :class:`datetime.datetime`
+        """
+
+        last_modified = timezone.now()
+        query = self.filter(job_id__in=job_ids, is_published=True)
+        query.update(is_published=False, unpublished=when, last_modified=last_modified)
+
+    # TODO: remove this when no longer used
+    def unpublish_products_old(self, root_job_id, when):
+        """Unpublishes all of the published products created by the superseded jobs with the given root ID
         :param root_job_id: The root superseded job ID
         :type root_job_id: int
         :param when: When the products were unpublished
@@ -574,7 +587,7 @@ class ProductFileManager(models.GeoManager):
             if job_recipe:
                 product.recipe_id = job_recipe.recipe.id
                 product.recipe_type = job_recipe.recipe.recipe_type
-                product.recipe_job = job_recipe.job_name
+                product.recipe_job = job_recipe.node_name
 
                 # Add batch info to product if available.
                 try:

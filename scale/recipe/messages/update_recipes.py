@@ -3,13 +3,15 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.db import transaction
 from django.utils.timezone import now
 
 from job.messages.blocked_jobs import create_blocked_jobs_messages
 from job.messages.pending_jobs import create_pending_jobs_messages
 from job.messages.process_job_inputs import create_process_job_inputs_messages
+from job.models import Job
 from messaging.messages.message import CommandMessage
-from recipe.models import Recipe
+from recipe.models import Recipe, RecipeNode
 
 # This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
 # this type is less than 25 KiB long and that each message can be processed quickly.
@@ -116,35 +118,74 @@ class UpdateRecipes(CommandMessage):
         when = now()
         blocked_job_ids = set()
         pending_job_ids = set()
+        completed_recipe_ids = []
+        updated_batch_ids = []
         num_jobs_with_input = 0
         job_ids_ready_for_first_queue = []
 
-        # Process all recipe handlers
-        recipes = list(Recipe.objects.get_recipes_with_definitions(self._recipe_ids))
-        while len(recipes) > 0:
-            # Gather up a list of recipes that doesn't exceed the job number limit
-            recipe_list = [recipes.pop()]
-            # TODO: eventually use job count per recipe, right now assume 10
-            num_jobs = 10
-            while len(recipes) > 0 and num_jobs + 10 < MAX_JOBS_AT_A_TIME:
-                num_jobs += 10
-                recipe_list.append(recipes.pop())
+        with transaction.atomic():
+            # Lock recipes
+            Recipe.objects.get_locked_recipes(self._recipe_ids)
 
-            # Process handlers for the list of recipes
-            for handler in Recipe.objects.get_recipe_handlers(recipe_list):
-                for blocked_job in handler.get_blocked_jobs():
-                    blocked_job_ids.add(blocked_job.id)
-                for pending_job in handler.get_pending_jobs():
-                    pending_job_ids.add(pending_job.id)
-                jobs_with_input = handler.get_jobs_ready_for_input()
-                num_jobs_with_input += len(jobs_with_input)
-                for job in jobs_with_input:
-                    job.update_database_with_input(when)
-                for job in handler.get_jobs_ready_for_first_queue():
-                    job_ids_ready_for_first_queue.append(job.id)
-                # TODO: handle this in a new message where recipe models lock themselves and then update
-                if handler.is_completed():
-                    Recipe.objects.complete_recipe(handler.recipe.id, when)
+            # Process all recipe handlers
+            recipes = list(Recipe.objects.get_recipes_with_definitions(self._recipe_ids))
+            while len(recipes) > 0:
+                # Gather up a list of recipes that doesn't exceed the job number limit
+                recipe_list = [recipes.pop()]
+                # TODO: eventually use job count per recipe, right now assume 10
+                num_jobs = 10
+                while len(recipes) > 0 and num_jobs + 10 < MAX_JOBS_AT_A_TIME:
+                    num_jobs += 10
+                    recipe_list.append(recipes.pop())
+
+                # Process handlers for the list of recipes
+                handlers = Recipe.objects.get_recipe_handlers(recipe_list)
+
+                # Create any jobs needed
+                jobs_to_create = []
+                recipe_handler_dicts = {}
+                for handler in handlers:
+                    handler_dict = handler.get_jobs_to_create()
+                    recipe_handler_dicts[handler.recipe.id] = handler_dict
+                    for job_list in handler_dict.values():
+                        for job in job_list:
+                            jobs_to_create.append(job)
+                if jobs_to_create:
+                    Job.objects.bulk_create(jobs_to_create)
+                recipe_jobs_to_create = []
+                for handler in handlers:
+                    recipe_id = handler.recipe.id
+                    handler_dict = recipe_handler_dicts[recipe_id]
+                    recipe_jobs = []
+                    for job_name, job_list in handler_dict.iteritems():
+                        for job in job_list:
+                            recipe_job = RecipeNode()
+                            recipe_job.job = job
+                            recipe_job.node_name = job_name
+                            recipe_job.recipe_id = recipe_id
+                            recipe_jobs.append(recipe_job)
+                    recipe_jobs_to_create.extend(recipe_jobs)
+                    handler.add_jobs(recipe_jobs)
+                if recipe_jobs_to_create:
+                    RecipeNode.objects.bulk_create(recipe_jobs_to_create)
+
+                for handler in handlers:
+                    for blocked_job in handler.get_blocked_jobs():
+                        blocked_job_ids.add(blocked_job.id)
+                    for pending_job in handler.get_pending_jobs():
+                        pending_job_ids.add(pending_job.id)
+                    jobs_with_input = handler.get_jobs_ready_for_input()
+                    num_jobs_with_input += len(jobs_with_input)
+                    for job in jobs_with_input:
+                        job.update_database_with_input(when)
+                    for job in handler.get_jobs_ready_for_first_queue():
+                        job_ids_ready_for_first_queue.append(job.id)
+                    if handler.is_completed() and not handler.recipe.is_completed:
+                        completed_recipe_ids.append(handler.recipe.id)
+                        if handler.recipe.batch_id:
+                            updated_batch_ids.append(handler.recipe.batch_id)
+
+            Recipe.objects.complete_recipes(completed_recipe_ids, when)
 
         # Create new messages
         self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))

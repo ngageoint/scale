@@ -101,7 +101,7 @@ class NodeManager(models.Manager):
         node.job_exes_running = running_exes
         return node
 
-    def get_nodes(self, started=None, ended=None, order=None, include_inactive=True):
+    def get_nodes(self, started=None, ended=None, order=None, is_active=None):
         """Returns a list of nodes within the given time range.
 
         :param started: Query nodes updated after this amount of time.
@@ -110,17 +110,17 @@ class NodeManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param order: A list of fields to control the sort order.
         :type order: list[str]
-        :param include_inactive: Should nodes marked as inactive be included?
-        :type include_inactive: boolean
+        :param is_active: Include only active nodes, only inactive nodes or both?
+        :type is_active: boolean
         :returns: The list of nodes that match the time range.
         :rtype: list[:class:`node.models.Node`]
         """
 
         # Fetch a list of nodes
-        if include_inactive:
+        if is_active is None:
             nodes = Node.objects.all()
         else:
-            nodes = Node.objects.filter(is_active=True)
+            nodes = Node.objects.filter(is_active=is_active)
 
         # Apply time range filtering
         if started:

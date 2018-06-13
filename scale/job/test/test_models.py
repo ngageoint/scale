@@ -329,9 +329,10 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, input={}, started=timezone.now(), ended=timezone.now())
+        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input={}, started=timezone.now(),
+                                        ended=timezone.now())
 
-        Job.objects.update_jobs_to_queued([job], timezone.now())
+        Job.objects.update_jobs_to_queued([job], timezone.now(), requeue=True)
         job = Job.objects.get(pk=job.id)
 
         self.assertEqual(job.status, 'QUEUED')
@@ -343,7 +344,7 @@ class TestJobManager(TransactionTestCase):
         """Tests that JobManager.update_jobs_to_queued() does not queue superseded jobs"""
 
         job = job_test_utils.create_job(status='FAILED')
-        Job.objects.supersede_jobs([job], timezone.now())
+        Job.objects.supersede_jobs_old([job], timezone.now())
 
         job_ids = Job.objects.update_jobs_to_queued([job], timezone.now())
         job = Job.objects.get(pk=job.id)
@@ -352,44 +353,16 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(job.status, 'FAILED')
         self.assertTrue(job.is_superseded)
 
-    def test_supersede_jobs(self):
-        """Tests calling JobManager.supersede_jobs()"""
-
-        job_1 = job_test_utils.create_job(status='PENDING')
-        job_2 = job_test_utils.create_job(status='BLOCKED')
-        job_3 = job_test_utils.create_job(status='RUNNING')
-        job_4 = job_test_utils.create_job(status='COMPLETED')
-        when = timezone.now()
-
-        Job.objects.supersede_jobs([job_1, job_2, job_3, job_4], when)
-
-        job_1 = Job.objects.get(pk=job_1.id)
-        self.assertTrue(job_1.is_superseded)
-        self.assertEqual(job_1.superseded, when)
-        self.assertEqual(job_1.status, 'CANCELED')  # PENDING job should be CANCELED when superseded
-        job_2 = Job.objects.get(pk=job_2.id)
-        self.assertTrue(job_2.is_superseded)
-        self.assertEqual(job_2.superseded, when)
-        self.assertEqual(job_2.status, 'CANCELED')  # BLOCKED job should be CANCELED when superseded
-        job_3 = Job.objects.get(pk=job_3.id)
-        self.assertTrue(job_3.is_superseded)
-        self.assertEqual(job_3.superseded, when)
-        self.assertEqual(job_3.status, 'RUNNING')
-        job_4 = Job.objects.get(pk=job_4.id)
-        self.assertTrue(job_4.is_superseded)
-        self.assertEqual(job_4.superseded, when)
-        self.assertEqual(job_4.status, 'COMPLETED')
-
     def test_superseded_job(self):
         """Tests creating a job that supersedes another job"""
 
         old_job = job_test_utils.create_job()
 
         event = trigger_test_utils.create_trigger_event()
-        new_job = Job.objects.create_job(old_job.job_type, event, superseded_job=old_job, delete_superseded=False)
+        new_job = Job.objects.create_job(old_job.job_type, event.id, superseded_job=old_job, delete_superseded=False)
         new_job.save()
         when = timezone.now()
-        Job.objects.supersede_jobs([old_job], when)
+        Job.objects.supersede_jobs_old([old_job], when)
 
         new_job = Job.objects.get(pk=new_job.id)
         self.assertEqual(new_job.status, 'PENDING')

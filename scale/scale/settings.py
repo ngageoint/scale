@@ -45,6 +45,8 @@ LOGGING_HEALTH_ADDRESS = None
 ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
+# placeholder for elasticsearch version. needed to properly form ES log query.
+ELASTICSERACH_VERSION = None
 
 # Broker URL for connection to messaging backend
 BROKER_URL = 'amqp://guest:guest@localhost:5672//'
@@ -94,6 +96,7 @@ INSTALLED_APPS = (
     # Scale apps
     'batch',
     'cli',
+    'data',
     'diagnostic',
     'error',
     'ingest',

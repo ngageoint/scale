@@ -37,6 +37,7 @@ class TestProcessJobInputs(TransactionTestCase):
         jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         self.assertEqual(len(new_message.new_messages), 1)
         self.assertEqual(new_message.new_messages[0].type, 'queued_jobs')
+        self.assertFalse(new_message.new_messages[0].requeue)
         # Jobs should have input_file_size set to 0 (no input files)
         self.assertEqual(jobs[0].input_file_size, 0.0)
         self.assertEqual(jobs[1].input_file_size, 0.0)
@@ -116,6 +117,7 @@ class TestProcessJobInputs(TransactionTestCase):
         # Check for queued jobs message
         self.assertEqual(len(message.new_messages), 1)
         self.assertEqual(message.new_messages[0].type, 'queued_jobs')
+        self.assertFalse(message.new_messages[0].requeue)
 
         # Check jobs for expected input_file_size
         self.assertEqual(jobs[0].input_file_size, 110.0)
@@ -147,10 +149,10 @@ class TestProcessJobInputs(TransactionTestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        jobs = Job.objects.filter(id__in=job_ids).order_by('id')
         # Still should have queued jobs message
         self.assertEqual(len(message.new_messages), 1)
         self.assertEqual(message.new_messages[0].type, 'queued_jobs')
+        self.assertFalse(message.new_messages[0].requeue)
 
         # Make sure job input file models are unchanged
         job_input_files = JobInputFile.objects.filter(job_id=job_1.id)

@@ -20,7 +20,7 @@ class RecipeNode(object):
         :type job_type_version: str
         """
 
-        self.job_name = job_name
+        self.node_name = job_name
         self.job_type_name = job_type_name
         self.job_type_version = job_type_version
         self.parents = []
