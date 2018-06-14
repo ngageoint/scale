@@ -56,9 +56,9 @@ Response: 200 OK
                 "job_type": { 
                     "id": 8, 
                     "name": "kml-footprint", 
-                    "version": "1.0.0", 
                     "title": "KML Footprint", 
-                    "description": "Creates a KML file.", 
+                    "description": "Creates a KML file.",
+                    "revision_num": 1, 
                     "icon_code": "f0ac" 
                 }, 
                 "recipe": { 
