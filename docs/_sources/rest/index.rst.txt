@@ -74,4 +74,5 @@ Future v6 Services
    v6/node
    v6/recipe
    v6/scheduler
+   v6/scale_file
    v6/system

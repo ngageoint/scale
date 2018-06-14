@@ -277,6 +277,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0007_auto_20170412_1225">storage.migrations.0007_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0008_auto_20170609_1443">storage.migrations.0008_auto_20170609_1443 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0009_auto_20171002_1542">storage.migrations.0009_auto_20171002_1542 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0010_auto_20180613_1947">storage.migrations.0010_auto_20180613_1947 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -842,7 +843,8 @@ record will result in the same UUID, which can then be used as a stable permanen
 <li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of the job that created this product</li>
 <li><strong>job_output</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The output name from the job interface</li>
 <li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The identifier of a recipe this file is associated with</li>
-<li><strong>recipe_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the job within the recipe</li>
+<li><strong>recipe_node</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the node within the recipe</li>
+<li><strong>recipe_node</strong> &#8211; The name of the job within the recipe</li>
 <li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of recipe that the file is associated with</li>
 <li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The identifier of the batch this file is associated with</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The earliest start time from all source files</li>
@@ -1289,8 +1291,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="storage.models.ScaleFile.recipe_job">
-<code class="descname">recipe_job</code><a class="headerlink" href="#storage.models.ScaleFile.recipe_job" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.models.ScaleFile.recipe_node">
+<code class="descname">recipe_node</code><a class="headerlink" href="#storage.models.ScaleFile.recipe_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1498,7 +1500,46 @@ workspace field populated.</p>
 
 <dl class="method">
 <dt id="storage.models.ScaleFileManager.filter_files">
-<code class="descname">filter_files</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_files</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_ids=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_names=None</em>, <em>job_outputs=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_nodes=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for product models that filters on the given fields. The returned query includes the related
+workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
+to be pre-fetched as part of the query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files updated before this amount of time.</li>
+<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type name.</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given job id</li>
+<li><strong>is_published</strong> (<em>bool</em>) &#8211; Query files flagged as currently exposed for publication.</li>
+<li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query files that have/have not been superseded.</li>
+<li><strong>file_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given file names.</li>
+<li><strong>job_outputs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given job outputs</li>
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given recipe id</li>
+<li><strong>recipe_nodes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given recipe nodes</li>
+<li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given recipe types</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with batches with the given identifiers.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The product file query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.filter_files_v5">
+<code class="descname">filter_files_v5</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>file_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for Scale files that is filtered on the given fields.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1517,6 +1558,25 @@ workspace field populated.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.ScaleFileManager.get_details">
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the file for the given ID with all detail fields included.</p>
+<p>There are currently no additional fields included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_id</strong> (<em>int</em>) &#8211; The unique identifier of the workspace.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The file with all detail fields included.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -2146,17 +2206,59 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.ScaleFileBaseSerializer">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.serializers.ScaleFileBaseSerializerV5">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.ScaleFileSerializer">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dt id="storage.serializers.ScaleFileBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileSerializerV6" title="storage.serializers.ScaleFileSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializerV6</span></code></a></p>
+<p>Converts file model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializerV5">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
+<p>Converts Scale file model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializerV6">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">ScaleFileSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.ScaleFileBaseSerializerV6" title="storage.serializers.ScaleFileBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV6</span></code></a></p>
+<p>Converts Scale file model fields to REST output</p>
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializerV6.BatchBaseSerializerV6">
+<em class="property">class </em><code class="descname">BatchBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV6.BatchBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Base serializer for batches</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializerV6.JobTypeBaseSerializerV6">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV6.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6">
+<em class="property">class </em><code class="descname">RecipeTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Base serializer for recipe types</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -2228,13 +2330,103 @@ transaction. An argument of None for a field indicates that the field should not
 <span id="storage-views-module"></span><h2>storage.views module<a class="headerlink" href="#module-storage.views" title="Permalink to this headline">¶</a></h2>
 <p>Defines the views for the RESTful storage services</p>
 <dl class="class">
+<dt id="storage.views.FileDetailsView">
+<em class="property">class </em><code class="descclassname">storage.views.</code><code class="descname">FileDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FileDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
+<p>This view is the endpoint for retrieving details of a scale file.</p>
+<dl class="attribute">
+<dt id="storage.views.FileDetailsView.queryset">
+<code class="descname">queryset</code><a class="headerlink" href="#storage.views.FileDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.views.FileDetailsView.retrieve">
+<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FileDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</li>
+<li><strong>file_id</strong> (<em>int encoded as a string</em>) &#8211; The id of the file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.views.FileDetailsView.retrieve_impl">
+<code class="descname">retrieve_impl</code><span class="sig-paren">(</span><em>request</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FileDetailsView.retrieve_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a file and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>file_id</strong> (<em>int encoded as a string</em>) &#8211; The id of the file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.views.FileDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#storage.views.FileDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileDetailsSerializerV6</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="storage.views.FilesView">
 <em class="property">class </em><code class="descclassname">storage.views.</code><code class="descname">FilesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
-<p>This view is the endpoint for retrieving detailed information about files</p>
+<p>This view is the endpoint for retrieving source/product files</p>
 <dl class="method">
-<dt id="storage.views.FilesView.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.get" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.views.FilesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.views.FilesView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the batches and returns them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.views.FilesView.list_v5">
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.list_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves a list of files based of filters and returns it in JSON form</p>
 <p>-<em>-</em>-
 parameters:</p>
@@ -2292,16 +2484,28 @@ example: some_file_i_need_to_find.zip</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="storage.views.FilesView.list_v6">
+<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.list_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a list of files based on filters and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="storage.views.FilesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#storage.views.FilesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.views.FilesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#storage.views.FilesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

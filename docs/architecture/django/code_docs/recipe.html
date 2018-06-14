@@ -2776,13 +2776,13 @@ given new revision ID. Each revision model will have its related recipe type mod
 <dd><dl class="attribute">
 <dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta.FILE_SERIALIZER">
 <code class="descname">FILE_SERIALIZER</code><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.FILE_SERIALIZER" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializer" title="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializer</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV5</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializer">
-<em class="property">class </em><code class="descname">ScaleFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5">
+<em class="property">class </em><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
@@ -3081,7 +3081,7 @@ example: input_1</p>
 <dl class="attribute">
 <dt id="recipe.views.RecipeInputFilesView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeInputFilesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV5</span></code></p>
 </dd></dl>
 
 </dd></dl>

@@ -382,12 +382,12 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.add_message_type">add_message_type() (in module messaging.messages.factory)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetricsManager.add_metrics_to_batch">add_metrics_to_batch() (batch.models.BatchMetricsManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.add_monitor_type">add_monitor_type() (in module ingest.strike.monitors.factory)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.configuration.JobConfiguration.add_mount">add_mount() (job.configuration.configuration.JobConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.add_new_offer_count">add_new_offer_count() (scheduler.manager.SchedulerManager method)</a>
@@ -550,6 +550,12 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceUpdatesViewV5.api">(source.test.test_views.TestSourceUpdatesViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.api">(source.test.test_views.TestSourcesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6.api">(storage.test.test_views.TestFileDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.api">(storage.test.test_views.TestFilesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.api">(storage.test.test_views.TestFilesViewV6 attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRuleManager.archive_trigger_rule">archive_trigger_rule() (trigger.models.TriggerRuleManager method)</a>
@@ -2081,6 +2087,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0009_auto_20171002_1542.Migration.dependencies">(storage.migrations.0009_auto_20171002_1542.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0010_auto_20180613_1947.Migration.dependencies">(storage.migrations.0010_auto_20180613_1947.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.dependencies">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration.dependencies">(trigger.migrations.0002_auto_20151125_1438.Migration attribute)</a>
@@ -2632,6 +2640,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails">FileDetails (class in storage.brokers.broker)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.views.FileDetailsView">FileDetailsView (class in storage.views)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.exceptions.FileDoesNotExist">FileDoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload">FileDownload (class in storage.brokers.broker)</a>
@@ -2655,6 +2665,8 @@
       <li><a href="architecture/django/code_docs/data.data.html#data.data.value.FileValue">FileValue (class in data.data.value)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.filter_files">filter_files() (storage.models.ScaleFileManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.filter_files_v5">filter_files_v5() (storage.models.ScaleFileManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.filter_ingests">filter_ingests() (ingest.models.IngestManager method)</a>
 </li>
@@ -2941,8 +2953,6 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.VersionView.get">(scheduler.views.VersionView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.get">(storage.views.FilesView method)</a>
-</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.get">(storage.views.WorkspaceDetailsView method)</a>
 </li>
       </ul></li>
@@ -3102,6 +3112,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_details">(recipe.models.RecipeTypeManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.models.SourceFileManager.get_details">(source.models.SourceFileManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager.get_details">(storage.models.ScaleFileManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.WorkspaceManager.get_details">(storage.models.WorkspaceManager method)</a>
 </li>
@@ -4014,6 +4026,8 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_serializer_class">(scheduler.views.SchedulerView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceDetailsView.get_serializer_class">(source.views.SourceDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.get_serializer_class">(storage.views.FilesView method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration.get_setting_value">get_setting_value() (job.configuration.json.job.job_config.JobConfiguration method)</a>
@@ -5484,14 +5498,14 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_exe_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask.job_exes">job_exes (job.execution.tasks.cleanup_task.CleanupTask attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exit_code">job_exit_code (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.job_file_links">job_file_links (job.models.Job attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_job_interface">job_get_job_interface() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_resources">job_get_resources() (in module queue.migrations.0015_auto_20170731_1527)</a>
@@ -5632,7 +5646,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.Meta">JobDetailsInputSerializer.Meta (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializer">JobDetailsInputSerializer.Meta.ScaleFileSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5">JobDetailsInputSerializer.Meta.ScaleFileSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer">JobDetailsOutputSerializer (class in job.serializers)</a>
 </li>
@@ -5884,11 +5898,19 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializer">JobTypeBaseSerializer (class in job.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializerV6">JobTypeBaseSerializerV6 (class in job.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer">JobTypeDetailsSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer.ErrorSerializer">JobTypeDetailsSerializer.ErrorSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer.TriggerRuleDetailsSerializer">JobTypeDetailsSerializer.TriggerRuleDetailsSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV6">JobTypeDetailsSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV6.ErrorSerializer">JobTypeDetailsSerializerV6.ErrorSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV6.TriggerRuleDetailsSerializer">JobTypeDetailsSerializerV6.TriggerRuleDetailsSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeDetailsView">JobTypeDetailsView (class in job.views)</a>
 </li>
@@ -5928,6 +5950,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializer">JobTypeSerializer (class in job.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializerV6">JobTypeSerializerV6 (class in job.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView">JobTypesPendingView (class in job.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesRunningView">JobTypesRunningView (class in job.views)</a>
@@ -5950,7 +5974,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializer">JobUpdateSerializer (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializer.ScaleFileSerializer">JobUpdateSerializer.ScaleFileSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializer.ScaleFileSerializerV5">JobUpdateSerializer.ScaleFileSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView">JobUpdatesView (class in job.views)</a>
 </li>
@@ -6133,6 +6157,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourcesView.list">(source.views.SourcesView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.list">(storage.views.FilesView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.list">(storage.views.WorkspacesView method)</a>
 </li>
       </ul></li>
@@ -6195,11 +6221,15 @@
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_v5">(metrics.views.MetricsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.list_v5">(storage.views.FilesView method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricPlotView.list_v6">list_v6() (metrics.views.MetricPlotView method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_v6">(metrics.views.MetricsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.list_v6">(storage.views.FilesView method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner.load_configuration">load_configuration() (ingest.scan.scanners.dir_scanner.DirScanner method)</a>
@@ -6860,6 +6890,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0008_auto_20170609_1443.Migration">(class in storage.migrations.0008_auto_20170609_1443)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0009_auto_20171002_1542.Migration">(class in storage.migrations.0009_auto_20171002_1542)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0010_auto_20180613_1947.Migration">(class in storage.migrations.0010_auto_20180613_1947)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration">(class in trigger.migrations.0001_initial)</a>
 </li>
@@ -7691,6 +7723,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0009_auto_20171002_1542.Migration.operations">(storage.migrations.0009_auto_20171002_1542.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0010_auto_20180613_1947.Migration.operations">(storage.migrations.0010_auto_20180613_1947.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.operations">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration.operations">(trigger.migrations.0002_auto_20151125_1438.Migration attribute)</a>
@@ -8353,6 +8387,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourcesView.queryset">(source.views.SourcesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FileDetailsView.queryset">(storage.views.FileDetailsView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.queryset">(storage.views.FilesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.queryset">(storage.views.WorkspaceDetailsView attribute)</a>
@@ -8374,10 +8410,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.queued_jobs">queue.messages.queued_jobs (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages.requeue_jobs">queue.messages.requeue_jobs (module)</a>
@@ -8860,7 +8896,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.recipe_input">recipe_input (recipe.models.RecipeInputFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_job">recipe_job (storage.models.ScaleFile attribute)</a>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_node">recipe_node (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.recipe_set">recipe_set (recipe.models.RecipeType attribute)</a>
 
@@ -8920,15 +8956,15 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v1.RecipeDefinitionV1">RecipeDefinitionV1 (class in recipe.definition.json.definition_v1)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6">RecipeDefinitionV6 (class in recipe.definition.json.definition_v6)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer">RecipeDetailsInputSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta">RecipeDetailsInputSerializer.Meta (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializer">RecipeDetailsInputSerializer.Meta.ScaleFileSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5">RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializer">RecipeDetailsSerializer (class in recipe.serializers)</a>
 </li>
@@ -9211,9 +9247,15 @@
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceDetailsView.retrieve">(source.views.SourceDetailsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FileDetailsView.retrieve">(storage.views.FileDetailsView method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricDetailsView.retrieve_impl">retrieve_impl() (metrics.views.MetricDetailsView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FileDetailsView.retrieve_impl">(storage.views.FileDetailsView method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.retrieve_input_data_files">retrieve_input_data_files() (job.configuration.data.job_data.JobData method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.vault.html#scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets">retrieve_job_type_secrets() (scheduler.vault.manager.SecretsManager method)</a>
@@ -9378,13 +9420,25 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.scalefile_set">(storage.models.Workspace attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileBaseSerializer">ScaleFileBaseSerializer (class in storage.serializers)</a>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileBaseSerializerV5">ScaleFileBaseSerializerV5 (class in storage.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileBaseSerializerV6">ScaleFileBaseSerializerV6 (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription">ScaleFileDescription (class in job.configuration.interface.scale_file)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileDetailsSerializerV6">ScaleFileDetailsSerializerV6 (class in storage.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFileManager">ScaleFileManager (class in storage.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializer">ScaleFileSerializer (class in storage.serializers)</a>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializerV5">ScaleFileSerializerV5 (class in storage.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializerV6">ScaleFileSerializerV6 (class in storage.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializerV6.BatchBaseSerializerV6">ScaleFileSerializerV6.BatchBaseSerializerV6 (class in storage.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializerV6.JobTypeBaseSerializerV6">ScaleFileSerializerV6.JobTypeBaseSerializerV6 (class in storage.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.serializers.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6">ScaleFileSerializerV6.RecipeTypeBaseSerializerV6 (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleIOError">ScaleIOError</a>
 </li>
@@ -9795,7 +9849,7 @@
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourcesView.serializer_class">(source.views.SourcesView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.html#storage.views.FilesView.serializer_class">(storage.views.FilesView attribute)</a>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.FileDetailsView.serializer_class">(storage.views.FileDetailsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.serializer_class">(storage.views.WorkspaceDetailsView attribute)</a>
 </li>
@@ -10475,7 +10529,11 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.setUp">(storage.test.test_models.TestWorkspaceManager method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesView.setUp">(storage.test.test_views.TestFilesView method)</a>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6.setUp">(storage.test.test_views.TestFileDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.setUp">(storage.test.test_views.TestFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.setUp">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateView.setUp">(storage.test.test_views.TestWorkspaceCreateView method)</a>
 </li>
@@ -10855,6 +10913,8 @@
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0008_auto_20170609_1443">storage.migrations.0008_auto_20170609_1443 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0009_auto_20171002_1542">storage.migrations.0009_auto_20171002_1542 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0010_auto_20180613_1947">storage.migrations.0010_auto_20180613_1947 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
@@ -11265,7 +11325,7 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_bad_file_name">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesView.test_bad_file_name">(storage.test.test_views.TestFilesView method)</a>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_bad_file_name">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_host_config">test_bad_host_config() (storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
@@ -12115,13 +12175,15 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_file_name">(source.test.test_views.TestSourcesViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_file_name">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_file_name_successful">test_file_name_successful() (job.test.test_views.TestJobInputFilesView method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_file_name_successful">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesView.test_file_name_successful">(storage.test.test_views.TestFilesView method)</a>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_file_name_successful">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_files_in_command">test_files_in_command() (job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps method)</a>
@@ -12457,6 +12519,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceDetailsViewV5.test_id">(source.test.test_views.TestSourceDetailsViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6.test_id">(storage.test.test_views.TestFileDetailsViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerDeleteFiles.test_inactive_workspace">test_inactive_workspace() (storage.test.test_models.TestScaleFileManagerDeleteFiles method)</a>
 
@@ -12663,6 +12727,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_invalid_ended">(source.test.test_views.TestSourcesViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_invalid_ended">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping">test_invalid_error_mapping() (job.test.test_models.TestJobTypeManagerCreateJobType method)</a>
 
@@ -12712,6 +12778,8 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceUpdatesViewV5.test_invalid_started">(source.test.test_views.TestSourceUpdatesViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_invalid_started">(source.test.test_views.TestSourcesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_invalid_started">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductSourcesView.test_invalid_time_field">test_invalid_time_field() (product.test.test_views.TestProductSourcesView method)</a>
@@ -12792,6 +12860,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_job_names">test_job_names() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_job_output">test_job_output() (storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_job_task_launch_error">test_job_task_launch_error() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_type_categories">test_job_type_categories() (queue.test.test_views.TestRequeueJobsView method)</a>
@@ -12833,6 +12903,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsViewV5.test_job_type_id">(source.test.test_views.TestSourceProductsViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_job_type_id">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_type_ids">test_job_type_ids() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
@@ -12852,6 +12924,8 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsViewV5.test_job_type_name">(source.test.test_views.TestSourceJobsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsViewV5.test_job_type_name">(source.test.test_views.TestSourceProductsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_job_type_name">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_type_names">test_job_type_names() (queue.test.test_views.TestRequeueJobsView method)</a>
@@ -13057,6 +13131,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceDetailsViewV5.test_missing">(source.test.test_views.TestSourceDetailsViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6.test_missing">(storage.test.test_views.TestFileDetailsViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.management.commands.html#batch.test.management.commands.test_scale_batch_creator.TestBatchCreator.test_missing_batch">test_missing_batch() (batch.test.management.commands.test_scale_batch_creator.TestBatchCreator method)</a>
 </li>
@@ -13131,6 +13207,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_missing_tz_ended">(source.test.test_views.TestSourcesViewV5 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_missing_tz_ended">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductSourcesView.test_missing_tz_started">test_missing_tz_started() (product.test.test_views.TestProductSourcesView method)</a>
 
@@ -13144,6 +13222,8 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceUpdatesViewV5.test_missing_tz_started">(source.test.test_views.TestSourceUpdatesViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_missing_tz_started">(source.test.test_views.TestSourcesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_missing_tz_started">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_missing_value">test_missing_value() (job.test.configuration.data.test_job_data.TestJobDataValidateProperties method)</a>
@@ -13234,6 +13314,8 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceUpdatesViewV5.test_negative_time_range">(source.test.test_views.TestSourceUpdatesViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourcesViewV5.test_negative_time_range">(source.test.test_views.TestSourcesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_negative_time_range">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_any_data_types">test_no_any_data_types() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
@@ -13464,14 +13546,14 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
@@ -13641,6 +13723,8 @@
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_successful">test_recipe_input_conn_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_recipe_link">test_recipe_link() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_recipe_node">test_recipe_node() (storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_recipe_type_id">test_recipe_type_id() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
@@ -14123,6 +14207,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.test_successful">(storage.test.test_models.TestWorkspaceManager method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_successful">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateView.test_successful">(storage.test.test_views.TestWorkspaceCreateView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_successful">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
@@ -14381,7 +14467,7 @@
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_time_successful">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesView.test_time_successful">(storage.test.test_views.TestFilesView method)</a>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_time_successful">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_job_task">test_timed_out_job_task() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
@@ -14906,9 +14992,13 @@
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks">TestFileAncestryLinkManagerCreateFileAncestryLinks (class in product.test.test_models)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFileDetailsViewV6">TestFileDetailsViewV6 (class in storage.test.test_views)</a>
+</li>
       <li><a href="architecture/django/code_docs/data.test.interface.html#data.test.interface.test_parameter.TestFileParameter">TestFileParameter (class in data.test.interface.test_parameter)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesView">TestFilesView (class in storage.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5">TestFilesViewV5 (class in storage.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6">TestFilesViewV6 (class in storage.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/data.test.data.html#data.test.data.test_value.TestFileValue">TestFileValue (class in data.test.data.test_value)</a>
 </li>

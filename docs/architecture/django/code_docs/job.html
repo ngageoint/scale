@@ -5386,13 +5386,13 @@ object the first time, the query is executed.</p>
 <dd><dl class="attribute">
 <dt id="job.serializers.JobDetailsInputSerializer.Meta.FILE_SERIALIZER">
 <code class="descname">FILE_SERIALIZER</code><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta.FILE_SERIALIZER" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializer" title="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializer</span></code></a></p>
+<dd><p>alias of <a class="reference internal" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV5</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializer">
-<em class="property">class </em><code class="descname">ScaleFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dt id="job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5">
+<em class="property">class </em><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsInputSerializer.Meta.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
@@ -5422,7 +5422,7 @@ object the first time, the query is executed.</p>
 <dl class="class">
 <dt id="job.serializers.JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer">
 <em class="property">class </em><code class="descname">ProductFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileSerializer" title="storage.serializers.ScaleFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileSerializerV5" title="storage.serializers.ScaleFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializerV5</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 </dd></dl>
 
@@ -5536,6 +5536,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="job.serializers.JobTypeBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="job.serializers.JobTypeDetailsSerializer">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.serializers.JobTypeSerializer" title="job.serializers.JobTypeSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeSerializer</span></code></a></p>
@@ -5550,6 +5557,27 @@ object the first time, the query is executed.</p>
 <dl class="class">
 <dt id="job.serializers.JobTypeDetailsSerializer.TriggerRuleDetailsSerializer">
 <em class="property">class </em><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeDetailsSerializer.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
+<p>Converts trigger rule model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.JobTypeDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobTypeSerializerV6" title="job.serializers.JobTypeSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeSerializerV6</span></code></a></p>
+<p>Converts job type model fields to REST output.</p>
+<dl class="class">
+<dt id="job.serializers.JobTypeDetailsSerializerV6.ErrorSerializer">
+<em class="property">class </em><code class="descname">ErrorSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeDetailsSerializerV6.ErrorSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.serializers.ErrorBaseSerializer" title="error.serializers.ErrorBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializer</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.serializers.JobTypeDetailsSerializerV6.TriggerRuleDetailsSerializer">
+<em class="property">class </em><code class="descname">TriggerRuleDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeDetailsSerializerV6.TriggerRuleDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerRuleBaseSerializer" title="trigger.serializers.TriggerRuleBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerRuleBaseSerializer</span></code></a></p>
 <p>Converts trigger rule model fields to REST output.</p>
 </dd></dl>
@@ -5606,6 +5634,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="job.serializers.JobTypeSerializerV6">
+<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobTypeBaseSerializerV6" title="job.serializers.JobTypeBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobTypeBaseSerializerV6</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="job.serializers.JobTypeStatusCountsSerializer">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobTypeStatusCountsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobTypeStatusCountsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
@@ -5625,9 +5660,9 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <a class="reference internal" href="#job.serializers.JobSerializer" title="job.serializers.JobSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobSerializer</span></code></a></p>
 <p>Converts job updates to REST output</p>
 <dl class="class">
-<dt id="job.serializers.JobUpdateSerializer.ScaleFileSerializer">
-<em class="property">class </em><code class="descname">ScaleFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobUpdateSerializer.ScaleFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
+<dt id="job.serializers.JobUpdateSerializer.ScaleFileSerializerV5">
+<em class="property">class </em><code class="descname">ScaleFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobUpdateSerializer.ScaleFileSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializerV5" title="storage.serializers.ScaleFileBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializerV5</span></code></a></p>
 <p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
@@ -6127,7 +6162,7 @@ example: input_1</p>
 <dl class="attribute">
 <dt id="job.views.JobInputFilesView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobInputFilesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScaleFileSerializerV5</span></code></p>
 </dd></dl>
 
 </dd></dl>

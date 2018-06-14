@@ -651,30 +651,145 @@
 <div class="section" id="module-storage.test.test_views">
 <span id="storage-test-test-views-module"></span><h2>storage.test.test_views module<a class="headerlink" href="#module-storage.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="storage.test.test_views.TestFilesView">
-<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_views.TestFileDetailsViewV6">
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFileDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFileDetailsViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="storage.test.test_views.TestFilesView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="storage.test.test_views.TestFileDetailsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#storage.test.test_views.TestFileDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.test_views.TestFilesView.test_bad_file_name">
-<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_views.TestFileDetailsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFileDetailsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFileDetailsViewV6.test_id">
+<code class="descname">test_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFileDetailsViewV6.test_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files detail view by id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFileDetailsViewV6.test_missing">
+<code class="descname">test_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFileDetailsViewV6.test_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the file details view with an invalid id</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.test_views.TestFilesViewV5">
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="storage.test.test_views.TestFilesViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV5.test_bad_file_name">
+<code class="descname">test_bad_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_bad_file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests unsuccessfully calling the get files by name view</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="storage.test.test_views.TestFilesView.test_file_name_successful">
-<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_views.TestFilesViewV5.test_file_name_successful">
+<code class="descname">test_file_name_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_file_name_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get files by name view</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="storage.test.test_views.TestFilesView.test_time_successful">
-<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesView.test_time_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.test_views.TestFilesViewV5.test_time_successful">
+<code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_time_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests unsuccessfully calling the get files by name view</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.test_views.TestFilesViewV6">
+<em class="property">class </em><code class="descclassname">storage.test.test_views.</code><code class="descname">TestFilesViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="storage.test.test_views.TestFilesViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_invalid_ended">
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the files view when the ended parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_invalid_started">
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the files view when the started parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_job_output">
+<code class="descname">test_job_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_job_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by job output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_missing_tz_ended">
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the files view when the ended parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_missing_tz_started">
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the files view when the started parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_negative_time_range">
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the files view with a negative time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_recipe_node">
+<code class="descname">test_recipe_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_recipe_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by recipe job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view.</p>
 </dd></dl>
 
 </dd></dl>
@@ -854,7 +969,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>countries=None</em>, <em>is_deleted=False</em>, <em>data_type=u''</em>, <em>last_modified=None</em>, <em>source_started=None</em>, <em>source_ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data=u''</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
