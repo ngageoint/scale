@@ -39,7 +39,7 @@ class TestJobDataAddFileInput(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file_1 = storage_utils.create_file('my_json_file.json', 'application/json')
+        self.file_1 = storage_utils.create_file(file_name='my_json_file.json', media_type='application/json')
 
     def test_successful(self):
         """Tests calling JobData.add_file_input() successfully."""
@@ -63,7 +63,7 @@ class TestJobDataAddFileListInput(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file_1 = storage_utils.create_file('my_json_file.json', 'application/json')
+        self.file_1 = storage_utils.create_file(file_name='my_json_file.json', media_type='application/json')
 
     def test_successful(self):
         """Tests calling JobData.add_file_list_input() successfully."""
@@ -269,9 +269,9 @@ class TestJobDataRetrieveInputDataFiles(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file_1 = storage_utils.create_file('my_json_file.json', 'application/json')
-        self.file_2 = storage_utils.create_file('my_text_file_1.txt', 'text/plain')
-        self.file_3 = storage_utils.create_file('my_text_file_2.txt', 'text/plain')
+        self.file_1 = storage_utils.create_file(file_name='my_json_file.json', media_type='application/json')
+        self.file_2 = storage_utils.create_file(file_name='my_text_file_1.txt', media_type='text/plain')
+        self.file_3 = storage_utils.create_file(file_name='my_text_file_2.txt', media_type='text/plain')
 
     @patch('job.configuration.data.job_data.ScaleFile.objects.download_files')
     def test_bad_file_id(self, mock_download_files):
@@ -344,10 +344,9 @@ class TestJobDataValidateInputFiles(TestCase):
 
     def setUp(self):
         django.setup()
-
-        self.file_1 = storage_utils.create_file('my_json_file.json', 'application/json')
-        self.file_2 = storage_utils.create_file('my_text_file_1.txt', 'text/plain')
-        self.file_3 = storage_utils.create_file('my_text_file_2.txt', 'text/plain')
+        self.file_1 = storage_utils.create_file(file_name='my_json_file.json', media_type='application/json')
+        self.file_2 = storage_utils.create_file(file_name='my_text_file_1.txt', media_type='text/plain')
+        self.file_3 = storage_utils.create_file(file_name='my_text_file_2.txt', media_type='text/plain')
 
     def test_missing_required(self):
         """Tests calling JobData.validate_input_files() when a file is required, but missing"""

@@ -1202,6 +1202,7 @@ These services provide access to information about "all", "currently running" an
 .. _rest_job_execution_list_v6:
 
 .. TODO: un-version this rST table link and remove the note when API REST v5 is removed
+
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Executions List**                                                                                                   |
 +===========================================================================================================================+
@@ -1337,6 +1338,7 @@ These services provide access to information about "all", "currently running" an
 .. _rest_job_execution_details_v6:
 
 .. TODO: un-version this rst table link and remove the note when API REST v5 is removed
+
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution Details**                                                                                                 |
 +===========================================================================================================================+
@@ -1398,7 +1400,7 @@ These services provide access to information about "all", "currently running" an
 | resources            | JSON Object       | JSON description describing the resources allocated to this execution.         |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | configuration        | JSON Object       | JSON description of the configuration for running the job                      |
-|                      |                   | (See :ref:`Job Execution Configuration <architecture_jobs_exe_configuration`)  |
+|                      |                   | (See :ref:`Job Execution Configuration <architecture_jobs_exe_configuration>`) |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | output               | JSON Object       | JSON description of the job output.                                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+

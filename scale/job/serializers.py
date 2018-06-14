@@ -23,9 +23,41 @@ class JobTypeBaseSerializer(ModelIdSerializer):
     is_paused = serializers.BooleanField()
 
     icon_code = serializers.CharField()
-
+    
+class JobTypeBaseSerializerV6(ModelIdSerializer):
+    """Converts job type model fields to REST output"""
+    name = serializers.CharField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    revision_num = serializers.IntegerField()
+    
+    icon_code = serializers.CharField()
 
 class JobTypeSerializer(JobTypeBaseSerializer):
+    """Converts job type model fields to REST output"""
+    uses_docker = serializers.BooleanField()
+    docker_privileged = serializers.BooleanField()
+    docker_image = serializers.CharField()
+    revision_num = serializers.IntegerField()
+
+    priority = serializers.IntegerField()
+    max_scheduled = serializers.IntegerField()
+    timeout = serializers.IntegerField()
+    max_tries = serializers.IntegerField()
+    cpus_required = serializers.FloatField()
+    mem_required = serializers.FloatField(source='mem_const_required')
+    mem_const_required = serializers.FloatField()
+    mem_mult_required = serializers.FloatField()
+    shared_mem_required = serializers.FloatField()
+    disk_out_const_required = serializers.FloatField()
+    disk_out_mult_required = serializers.FloatField()
+
+    created = serializers.DateTimeField()
+    archived = serializers.DateTimeField()
+    paused = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
     uses_docker = serializers.BooleanField()
     docker_privileged = serializers.BooleanField()
@@ -59,6 +91,22 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
 
 
 class JobTypeDetailsSerializer(JobTypeSerializer):
+    """Converts job type model fields to REST output."""
+    from error.serializers import ErrorSerializer
+    from trigger.serializers import TriggerRuleDetailsSerializer
+
+    interface = serializers.JSONField(default=dict)
+    configuration = serializers.JSONField(default=dict)
+    custom_resources = serializers.JSONField(source='convert_custom_resources')
+    error_mapping = serializers.JSONField(default=dict)
+    errors = ErrorSerializer(many=True)
+    trigger_rule = TriggerRuleDetailsSerializer()
+
+    job_counts_6h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_12h = JobTypeStatusCountsSerializer(many=True)
+    job_counts_24h = JobTypeStatusCountsSerializer(many=True)
+    
+class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
@@ -267,8 +315,8 @@ class JobDetailsInputSerializer(serializers.Serializer):
         return result
 
     class Meta:
-        from storage.serializers import ScaleFileSerializer
-        FILE_SERIALIZER = ScaleFileSerializer
+        from storage.serializers import ScaleFileSerializerV5
+        FILE_SERIALIZER = ScaleFileSerializerV5
 
 
 class JobDetailsOutputSerializer(JobDetailsInputSerializer):
@@ -339,9 +387,9 @@ class JobDetailsSerializer(JobSerializer):
 
 class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
-    from storage.serializers import ScaleFileSerializer
+    from storage.serializers import ScaleFileSerializerV5
 
-    input_files = ScaleFileSerializer(many=True)
+    input_files = ScaleFileSerializerV5(many=True)
 
 
 # TODO: remove this function when REST API v5 is removed

@@ -535,7 +535,7 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                     self.job_exe, self.workspace)
 
         self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
-        self.assertEqual(recipe_job.node_name, products[0].recipe_job)
+        self.assertEqual(recipe_job.node_name, products[0].recipe_node)
 
         self.assertEqual(self.files[0][3], products[0].job_output)
 

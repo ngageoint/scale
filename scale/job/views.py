@@ -35,7 +35,7 @@ from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializer
+from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -715,7 +715,7 @@ class JobDetailsView(GenericAPIView):
 class JobInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a job."""
     queryset = JobInputFile.objects.all()
-    serializer_class = ScaleFileSerializer
+    serializer_class = ScaleFileSerializerV5
 
     def get(self, request, job_id):
         """Retrieve detailed information about the input files for a job
