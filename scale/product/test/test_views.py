@@ -15,6 +15,8 @@ import util.rest as rest_util
 # TODO: remove when REST API v5 is removed
 class TestProductsViewV5(TransactionTestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -82,7 +84,7 @@ class TestProductsViewV5(TransactionTestCase):
     def test_job_type_id(self):
         """Tests successfully calling the product files view filtered by job type identifier."""
 
-        url = '/%s/products/?job_type_id=%s' % self.job_type1.id)
+        url = '/%s/products/?job_type_id=%s' % (self.api, self.job_type1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -93,7 +95,7 @@ class TestProductsViewV5(TransactionTestCase):
     def test_job_type_name(self):
         """Tests successfully calling the product files view filtered by job type name."""
 
-        url = '/%s/products/?job_type_name=%s' % self.job_type1.name)
+        url = '/%s/products/?job_type_name=%s' % (self.api, self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -104,7 +106,7 @@ class TestProductsViewV5(TransactionTestCase):
     def test_job_type_category(self):
         """Tests successfully calling the product files view filtered by job type category."""
 
-        url = '/%s/products/?job_type_category=%s' % self.job_type1.category)
+        url = '/%s/products/?job_type_category=%s' % (self.api, self.job_type1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -239,6 +241,8 @@ class TestProductDetailsViewV5(TestCase):
 
 class TestProductsUpdatesViewV5(TransactionTestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -304,7 +308,7 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
     def test_job_type_id(self):
         """Tests successfully calling the product file updates view filtered by job type identifier."""
 
-        url = '/%s/products/updates/?job_type_id=%s' % self.job_type1.id)
+        url = '/%s/products/updates/?job_type_id=%s' % (self.api, self.job_type1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -315,7 +319,7 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
     def test_job_type_name(self):
         """Tests successfully calling the product file updates view filtered by job type name."""
 
-        url = '/%s/products/updates/?job_type_name=%s' % self.job_type1.name)
+        url = '/%s/products/updates/?job_type_name=%s' % (self.api, self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -326,7 +330,7 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
     def test_job_type_category(self):
         """Tests successfully calling the product file updates view filtered by job type category."""
 
-        url = '/%s/products/updates/?job_type_category=%s' % self.job_type1.category)
+        url = '/%s/products/updates/?job_type_category=%s' % (self.api, self.job_type1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -378,6 +382,8 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
 
 class TestProductSourcesViewV5(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -407,7 +413,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_invalid_started(self):
         """Tests calling the product file source files view when the started parameter is invalid."""
 
-        url = '/%s/products/%d/sources/?started=hello' % self.product1.id)
+        url = '/%s/products/%d/sources/?started=hello' %  (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -415,7 +421,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_missing_tz_started(self):
         """Tests calling the product file source files view when the started parameter is missing timezone."""
 
-        url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00' % self.product1.id)
+        url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00' % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -423,7 +429,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_invalid_ended(self):
         """Tests calling the product file source files view when the ended parameter is invalid."""
 
-        url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00Z&ended=hello' % self.product1.id)
+        url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00Z&ended=hello' % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -432,7 +438,7 @@ class TestProductSourcesViewV5(TestCase):
         """Tests calling the product file source files view when the ended parameter is missing timezone."""
 
         url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00' \
-                                % self.product1.id)
+                                % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -441,7 +447,7 @@ class TestProductSourcesViewV5(TestCase):
         """Tests calling the product file source files view with a negative time range."""
 
         url = '/%s/products/%d/sources/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00' \
-                                % self.product1.id)
+                                % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -450,7 +456,7 @@ class TestProductSourcesViewV5(TestCase):
         """Tests calling the product file source files view when the time_field parameter is invalid."""
 
         url = '/%s/products/%d/sources/?started=1970-01-01T00:00:00Z&time_field=hello' \
-                                % self.product1.id)
+                                % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -459,7 +465,7 @@ class TestProductSourcesViewV5(TestCase):
         """Tests successfully calling the product file source files view using the time_field parameter"""
 
         url = '/%s/products/%d/sources/?started=%s&time_field=data' \
-                                % (self.product1.id, self.src_file.data_started))
+                                % (self.api, self.product1.id, self.src_file.data_started)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -469,7 +475,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_is_parsed(self):
         """Tests successfully calling the product file source files view filtered by is_parsed flag."""
 
-        url = '/%s/products/%d/sources/?is_parsed=true' % self.product1.id)
+        url = '/%s/products/%d/sources/?is_parsed=true' % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -480,7 +486,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_file_name(self):
         """Tests successfully calling the product file source files view filtered by file name."""
 
-        url = '/%s/products/%d/sources/?file_name=%s' % (self.product1.id, self.src_file.file_name))
+        url = '/%s/products/%d/sources/?file_name=%s' % (self.api, self.product1.id, self.src_file.file_name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -491,7 +497,7 @@ class TestProductSourcesViewV5(TestCase):
     def test_successful(self):
         """Tests successfully calling the product file source files view."""
 
-        url = '/%s/products/%d/sources/' % self.product1.id)
+        url = '/%s/products/%d/sources/' % (self.api, self.product1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -508,7 +514,7 @@ class TestProductsViewsV6(TestCase):
     def test_v6_products(self):
         """Tests that product apis are removed in v6"""
         
-        url = '/v6/products/%i/' % self.product.id
+        url = '/v6/products/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
         url = '/v6/products/12345/'
