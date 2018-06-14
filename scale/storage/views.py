@@ -122,7 +122,7 @@ class FilesView(ListAPIView):
         job_outputs = rest_util.parse_string_list(request, 'job_output', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
         recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_id', required=False)
-        recipe_jobs = rest_util.parse_string_list(request, 'recipe_job', required=False)
+        recipe_nodes = rest_util.parse_string_list(request, 'recipe_node', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
@@ -131,7 +131,7 @@ class FilesView(ListAPIView):
             started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
             job_type_names=job_type_names, job_ids=job_ids, 
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
-            recipe_type_ids=recipe_type_ids, recipe_jobs=recipe_jobs, batch_ids=batch_ids, order=order,
+            recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids, order=order,
         )
 
         page = self.paginate_queryset(files)

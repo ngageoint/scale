@@ -78,10 +78,10 @@ paths:
           description: Return only files associated with a given recipe identifier. |
             Duplicate it to filter by multiple values.
         -in: query
-          name: recipe_job
+          name: recipe_node
           schema:
             type: string
-          description: Return only files produced by the given recipe job. |
+          description: Return only files produced by the given recipe node. |
             Duplicate it to filter by multiple values.
         -in: query
           name: recipe_type_id
@@ -259,9 +259,9 @@ components:
           $ref: '#/components/schemas/job_type'
         recipe:
           $ref: '#/components/schemas/recipe'
-        recipe_job:
+        recipe_node:
           type: string
-          description: The recipe job that produced this file. 
+          description: The recipe node that produced this file. 
           example: kml-footprint
         recipe_type:
           $ref: '#/components/schemas/recipe_type'
@@ -302,6 +302,115 @@ components:
       - id
       
     job_type:
+      title: Job Type
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The name of the job type.
+          example: kml-footprint
+        title:
+          type: string
+          description: Human readable display name of the Job Type
+          example: KML Footprint
+        description:
+          type: string
+          description: Extended description of the Job Type
+          example: Creates a KML file
+        revision_num:
+          type: integer
+          description: The current revision number of the job type, incremented for each edit. 
+          example: 1
+        icon_code:
+          type: string
+          description: A font-awesome icon code to use when representing this job type.
+          example: f0ac
+      required:
+      - id
+
+    recipe:
+      title: Recipe
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+      required:
+      - id
+      
+    recipe_type:
+      title: Recipe Type
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The name of the Recipe type.
+          example: my-recipe
+        title:
+          type: string
+          description: Human readable display name of the Recipe Type
+          example: My Recipe
+        description:
+          type: string
+          description: Extended description of the Recipe Type
+          example: Processes some data
+        revision_num:
+          type: integer
+          description: The current revision number of the recipe type, incremented for each edit. 
+          example: 1
+          
+    batch:
+      title: Batch
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        title:
+          type: string
+          description: Human readable display name of the Batch
+          example: My Batch
+        description:
+          type: string
+          description: Extended description of the Batch
+          example: My batch of recipes
+        status:
+          type: string
+          description: The current status of the batch. Choices: [SUBMITTED, CREATED].
+          example: SUBMITTED
+        recipe_type:
+          type: integer
+          description: The recipe type that is associated with the batch.
+          example: 6
+        event:
+          type: integer
+          description: The trigger event that is associated with the batch
+          example: 19
+        creator_job:
+          type: integer
+          description: The job that is executed to create all the recipes defined by the batch. 
+          example: 62
+
+    file_details:
+      allof:
+        - ref: '#/components/schemas/file'
+        - title: File Details
+        - type: object
+        properties:      
+          meta_data:
+            $ref: '#/components/schemas/metadata'
+            
+    job_type_details:
       title: Job Type
       type: object
       properties:
@@ -365,81 +474,3 @@ components:
           example: f0ac
       required:
       - id
-
-    recipe:
-      title: Recipe
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
-      required:
-      - id
-      
-    recipe_type:
-      title: Recipe Type
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
-        name:
-          type: string
-          description: The name of the Recipe type.
-          example: my-recipe
-        version:
-          type: string
-          description: Version of the Recipe Type
-          example: 1.0.0
-        title:
-          type: string
-          description: Human readable display name of the Recipe Type
-          example: My Recipe
-        description:
-          type: string
-          description: Extended description of the Recipe Type
-          example: Processes some data
-          
-    batch:
-      title: Batch
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
-        title:
-          type: string
-          description: Human readable display name of the Batch
-          example: My Batch
-        description:
-          type: string
-          description: Extended description of the Batch
-          example: My batch of recipes
-        status:
-          type: string
-          description: The current status of the batch. Choices: [SUBMITTED, CREATED].
-          example: SUBMITTED
-        recipe_type:
-          type: integer
-          description: The recipe type that is associated with the batch.
-          example: 6
-        event:
-          type: integer
-          description: The trigger event that is associated with the batch
-          example: 19
-        creator_job:
-          type: integer
-          description: The job that is executed to create all the recipes defined by the batch. 
-          example: 62
-
-    file_details:
-      allof:
-        - ref: '#/components/schemas/file'
-        - title: File Details
-        - type: object
-        properties:      
-          meta_data:
-            $ref: '#/components/schemas/metadata'

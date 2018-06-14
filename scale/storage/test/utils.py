@@ -37,7 +37,7 @@ def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='te
                 data_type='', file_path=None, workspace=None, is_deleted=False, uuid='', last_modified=None,
                 data_started=None, data_ended=None, source_started=None, source_ended=None, geometry=None, 
                 center_point=None, meta_data='', countries=None,job_exe=None,job_output=None, recipe=None,
-                recipe_job=None, batch=None, is_superseded=False, superseded=None):
+                recipe_node=None, batch=None, is_superseded=False, superseded=None):
     """Creates a Scale file model for unit testing
 
     :returns: The file model
@@ -67,7 +67,7 @@ def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='te
                                           data_started=data_started, data_ended=data_ended, source_started=source_started, 
                                           source_ended=source_ended, geometry=geometry, center_point=center_point, meta_data=meta_data,
                                           job_exe=job_exe, job=job, job_type=job_type, job_output=job_output,
-                                          recipe=recipe, recipe_job=recipe_job, recipe_type=recipe_type, batch=batch,
+                                          recipe=recipe, recipe_node=recipe_node, recipe_type=recipe_type, batch=batch,
                                           is_superseded=is_superseded, superseded=superseded)
     if countries:
         scale_file.countries = countries

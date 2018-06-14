@@ -20,7 +20,7 @@ Response: 200 OK
  .. code-block:: javascript  
  
     { 
-        "count": 55, 
+        "count": 1, 
         "next": null, 
         "previous": null, 
         "results": [ 
@@ -59,39 +59,28 @@ Response: 200 OK
                     "version": "1.0.0", 
                     "title": "KML Footprint", 
                     "description": "Creates a KML file.", 
-                    "category": "footprint", 
-                    "author_name": null, 
-                    "author_url": null, 
-                    "is_system": false, 
-                    "is_long_running": false, 
-                    "is_active": true, 
-                    "is_paused": false, 
                     "icon_code": "f0ac" 
                 }, 
                 "recipe": { 
                     "id": 60 
                 }, 
-                "recipe_job": "kml-footprint",
+                "recipe_node": "kml-footprint",
                 "recipe_type": { 
                     "id": 6, 
                     "name": "my-recipe", 
-                    "version": "1.0.0", 
                     "title": "My Recipe", 
                     "description": "Processes some data", 
+                    "revision_num": 1
                 }, 
                 "batch": { 
                     "id": 15, 
                     "title": "My Batch", 
                     "description": "My batch of recipes", 
-                    "status": "SUBMITTED", 
-                    "recipe_type": 6, 
-                    "event": 19, 
-                    "creator_job": 62, 
+                    "created": "1970-01-01T00:00:00Z" 
                 }, 
                 "is_superseded": true, 
                 "superseded": "1970-01-01T00:00:00Z"
-            }, 
-            ... 
+            } 
         ] 
     } 
 
@@ -147,7 +136,7 @@ Response: 200 OK
 | recipe_id          | Integer           | Optional | Return only files produced by the given recipe identifier.          |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| recipe_job         | String            | Optional | Return only files produced by the given recipe job.                 |
+| recipe_node        | String            | Optional | Return only files produced by the given recipe node.                |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_type_id     | Integer           | Optional | Return only files produced by the given recipe type identifier.     |
@@ -227,7 +216,7 @@ Response: 200 OK
 | .recipe            | JSON Object       | The recipe instance that generated the file.                                   |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe_job        | String            | The recipe job that produced this file.                                        |
+| .recipe_node       | String            | The recipe node that produced this file.                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .recipe_type       | JSON Object       | The type of recipe that generated the file.                                    |
 |                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
@@ -286,37 +275,27 @@ Response: 200 OK
         "job_type": { 
             "id": 4, 
             "name": "png-filter", 
-            "version": "1.0.0", 
             "title": "PNG Filter", 
             "description": "Filters PNG images into a new PNG image", 
-            "category": null, 
-            "author_name": null, 
-            "author_url": null, 
-            "is_system": false, 
-            "is_long_running": false, 
-            "is_active": true, 
-            "is_paused": false, 
-            "icon_code": null 
+            "revision_num": 1, 
+            "icon_code": "f0ac" 
         }, 
         "recipe": { 
             "id": 60 
         }, 
-        "recipe_job": "kml-footprint",
+        "recipe_node": "kml-footprint",
         "recipe_type": { 
             "id": 6, 
             "name": "my-recipe", 
-            "version": "1.0.0", 
             "title": "My Recipe", 
             "description": "Processes some data", 
+            "revision_num": 1
         }, 
         "batch": { 
             "id": 15, 
             "title": "My Batch", 
             "description": "My batch of recipes", 
-            "status": "SUBMITTED", 
-            "recipe_type": 6, 
-            "event": 19, 
-            "creator_job": 62, 
+            "created": "1970-01-01T00:00:00Z" 
         },
         "is_superseded": true, 
         "superseded": "1970-01-01T00:00:00Z"
@@ -392,7 +371,7 @@ Response: 200 OK
 | recipe             | JSON Object       | The recipe instance that generated the file.                                   |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipe_job         | String            | The recipe job that produced this file.                                        |
+| recipe_node        | String            | The recipe node that produced this file.                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | recipe_type        | JSON Object       | The type of recipe that generated the file.                                    |
 |                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |

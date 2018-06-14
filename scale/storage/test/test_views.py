@@ -94,7 +94,7 @@ class TestFilesViewV6(TestCase):
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         self.file1 = storage_test_utils.create_file(job_exe=self.job_exe1, job_output='out_name',
                                                           file_name='test.txt', countries=[self.country],
-                                                          recipe_job='test-recipe-job')
+                                                          recipe_node='test-recipe-node')
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
@@ -186,16 +186,16 @@ class TestFilesViewV6(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_output'], self.file1.job_output)
         
-    def test_recipe_job(self):
+    def test_recipe_node(self):
         """Tests successfully calling the files view filtered by recipe job."""
 
-        url = '/%s/files/?recipe_job=test-recipe-job' % self.api
+        url = '/%s/files/?recipe_node=test-recipe-node' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['recipe_job'], self.file1.recipe_job)
+        self.assertEqual(result['results'][0]['recipe_node'], self.file1.recipe_node)
 
     def test_successful(self):
         """Tests successfully calling the files view."""
@@ -232,7 +232,7 @@ class TestFileDetailsViewV6(TestCase):
                                                     source_started='2017-01-01T00:00:00Z', source_ended='2017-01-01T00:00:00Z', 
                                                     geometry='', center_point='', meta_data='', countries=[self.country], 
                                                     job_exe=self.job_exe1, job_output='output_name_1', recipe=self.recipe1, 
-                                                    recipe_job='my-recipe', batch=self.batch1, 
+                                                    recipe_node='my-recipe', batch=self.batch1, 
                                                     is_superseded=True, superseded='2017-01-01T00:00:00Z')
 
     def test_id(self):
@@ -263,7 +263,7 @@ class TestFileDetailsViewV6(TestCase):
         self.assertEqual(result['job_exe']['id'], self.job_exe1.id)
         self.assertEqual(result['job_output'], self.file.job_output)
         self.assertEqual(result['recipe']['id'], self.recipe1.id)
-        self.assertEqual(result['recipe_job'], self.file.recipe_job)
+        self.assertEqual(result['recipe_node'], self.file.recipe_node)
         self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
         self.assertEqual(result['batch']['title'], self.batch1.title)
         self.assertTrue(result['is_superseded'])

@@ -131,8 +131,8 @@ class ScaleFileSerializerV5(ScaleFileBaseSerializerV5):
 class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
     from batch.serializers import BatchBaseSerializerV6
-    from job.serializers import JobTypeBaseSerializer
-    from recipe.serializers import RecipeTypeBaseSerializer
+    from job.serializers import JobTypeBaseSerializerV6
+    from recipe.serializers import RecipeTypeBaseSerializerV6
 
     workspace = WorkspaceBaseSerializer()
     media_type = serializers.CharField()
@@ -154,14 +154,14 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     center_point = WktField()
     countries = serializers.StringRelatedField(many=True, read_only=True)
     
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV6()
     job = ModelIdSerializer()
     job_exe = ModelIdSerializer()
     job_output = serializers.CharField()
 
-    recipe_type = RecipeTypeBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializerV6()
     recipe = ModelIdSerializer()
-    recipe_job = serializers.CharField()
+    recipe_node = serializers.CharField()
     batch = BatchBaseSerializerV6()
     
     is_superseded = serializers.BooleanField()
