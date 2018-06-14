@@ -20,7 +20,7 @@ from job.configuration.data.job_data import JobData
 from job.models import JobType
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.deprecation import RecipeDataSunset
 from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
@@ -28,7 +28,6 @@ from trigger.models import TriggerEvent
 from util import parse as parse_utils
 from util import rest as rest_utils
 from util.exceptions import ValidationException
-from util.validation import ValidationError
 
 
 logger = logging.getLogger(__name__)

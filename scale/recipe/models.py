@@ -9,9 +9,8 @@ from django.db import connection, models, transaction
 from django.utils.timezone import now
 
 from job.models import Job, JobType
-from recipe.configuration.data.recipe_data import RecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+from recipe.deprecation import RecipeDefinitionSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
@@ -1605,6 +1604,7 @@ class RecipeTypeRevision(models.Model):
 
     objects = RecipeTypeRevisionManager()
 
+    # TODO: Resolve this prior to 971 merge
     def get_definition(self):
         """Returns the definition for this recipe type revision
 
