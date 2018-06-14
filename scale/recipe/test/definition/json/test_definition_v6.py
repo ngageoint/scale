@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
+from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
@@ -18,7 +19,6 @@ class TestRecipeDefinitionV6(TestCase):
     def test_convert_recipe_definition_to_v6_json_empty(self):
         """Tests calling convert_recipe_definition_to_v6_json() with an empty definition"""
 
-        # Try diff with empty recipe definitions
         interface = Interface()
         definition = RecipeDefinition(interface)
         json = convert_recipe_definition_to_v6_json(definition)
@@ -124,3 +124,55 @@ class TestRecipeDefinitionV6(TestCase):
         # Invalid version
         definition = {'version': 'BAD'}
         self.assertRaises(InvalidDefinition, RecipeDefinitionV6, definition, True)
+
+        # Valid v6 definition
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'foo', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-1',
+                                                          'job_type_version': '1.0', 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [{'name': 'node_a'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_a',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-2',
+                                                          'job_type_version': '2.0', 'job_type_revision': 1}},
+                                 'node_c': {'dependencies': [{'name': 'node_b'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'bar'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_b',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'recipe', 'recipe_type_name': 'recipe-type-1',
+                                                          'recipe_type_revision': 5}}}}
+        RecipeDefinitionV6(definition=def_v6_dict, do_validate=True)
+
+        # Conversion from v1 definition
+        job_test_utils.create_job_type(name='job-type-1', version='1.0')
+        job_test_utils.create_job_type(name='job-type-2', version='2.0')
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'foo', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-1',
+                                                          'job_type_version': '1.0', 'job_type_revision': 1}},
+                                 'node_b': {'dependencies': [{'name': 'node_a'}],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'foo'},
+                                                      'input_b': {'type': 'dependency', 'node': 'node_a',
+                                                                  'output': 'output_a'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': 'job-type-2',
+                                                          'job_type_version': '2.0', 'job_type_revision': 1}}}}
+        def_v1_dict = {'version': '1.0',
+                       'input_data': [{'name': 'foo', 'media_types': ['image/tiff'], 'type': 'files'},
+                                      {'name': 'bar', 'type': 'property', 'required': False}],
+                       'jobs': [{'name': 'node_a', 'job_type': {'name': 'job-type-1', 'version': '1.0'},
+                                 'recipe_inputs': [{'recipe_input': 'foo', 'job_input': 'input_a'}]},
+                                {'name': 'node_b', 'job_type': {'name': 'job-type-2', 'version': '2.0'},
+                                 'recipe_inputs': [{'recipe_input': 'foo', 'job_input': 'input_a'}],
+                                 'dependencies': [{'name': 'node_a',
+                                                   'connections': [{'output': 'output_a', 'input': 'input_b'}]}]}]}
+        def_v6_json = RecipeDefinitionV6(definition=def_v1_dict, do_validate=True)
+        self.assertDictEqual(def_v6_json.get_dict(), def_v6_dict)

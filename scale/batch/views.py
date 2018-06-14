@@ -285,6 +285,11 @@ class BatchDetailsView(RetrieveUpdateAPIView):
         except Batch.DoesNotExist:
             raise Http404()
 
+        # Populate old count fields from new count field
+        if batch.recipes_total:
+            batch.created_count = batch.recipes_total
+            batch.total_count = batch.recipes_total
+
         serializer = self.get_serializer(batch)
         return Response(serializer.data)
 

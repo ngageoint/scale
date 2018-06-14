@@ -3,9 +3,13 @@ from __future__ import unicode_literals
 
 from job.configuration.docker_param import DockerParameter
 
+# TODO: This class should be moved to the storage app and merged with the workspace brokers
 MODE_RO = 'ro'
 MODE_RW = 'rw'
 
+# TODO: This class could be split into two subclasses, one for host volumes and one for regular volumes
+HOST_TYPE = 'host'
+VOLUME_TYPE = 'volume'
 
 class Volume(object):
     """Defines a Docker volume that will be mounted into a container
