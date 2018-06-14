@@ -345,6 +345,7 @@ Response: 200 OK
 | center_point       | WKT String        | The central geospatial location of the file.                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | meta_data          | JSON Object       | A dictionary of key/value pairs that describe product-specific attributes.     |
+|                    |                   | When provided, meta_data is GeoJSON compliant.                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | countries          | Array             | A list of zero or more strings with the ISO3 country codes for countries       |
 |                    |                   | contained in the geographic boundary of this file.                             |
