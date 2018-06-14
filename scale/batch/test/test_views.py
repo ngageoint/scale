@@ -17,7 +17,7 @@ from batch.configuration.configuration import BatchConfiguration
 from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
 from recipe.models import RecipeType
 from util.parse import datetime_to_string, duration_to_string
 
@@ -745,7 +745,8 @@ class TestBatchesComparisonViewV6(TestCase):
         batch_1.superseded_batch = None
         batch_1.save()
         # Change recipe type to new revision
-        RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(rt_definition_2), None, None)
+        RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, LegacyRecipeDefinition(rt_definition_2),
+                                            None, None)
         recipe_type = RecipeType.objects.get(id=recipe_type.id)
         definition_2 = BatchDefinition()
         definition_2.root_batch_id = batch_1.root_batch_id

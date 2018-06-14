@@ -10,7 +10,7 @@ from django.utils.timezone import now
 
 from job.models import Job, JobType
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
-from recipe.deprecation import RecipeDefinitionSunset
+from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler

@@ -7,7 +7,7 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from job.models import JobType
 from job.test import utils as job_test_utils
-from recipe.configuration.definition.recipe_definition import RecipeDefinition as OldRecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as OldRecipeDefinition
 from recipe.definition.definition import RecipeDefinition
 from recipe.diff.diff import RecipeDiff
 from recipe.diff.exceptions import InvalidDiff
