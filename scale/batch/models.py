@@ -10,7 +10,6 @@ from django.db.models import F, Q
 from django.utils.timezone import now
 
 from batch.configuration.configuration import BatchConfiguration
-from batch.configuration.exceptions import InvalidConfiguration
 from batch.configuration.json.configuration_v6 import convert_configuration_to_v6, BatchConfigurationV6
 from batch.definition.exceptions import InvalidDefinition
 from batch.definition.json.definition_v6 import convert_definition_to_v6, BatchDefinitionV6
@@ -20,7 +19,7 @@ from job.configuration.data.job_data import JobData
 from job.models import JobType
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
-from recipe.deprecation import RecipeDataSunset
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
 from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
@@ -703,7 +702,7 @@ class BatchManager(models.Manager):
                 return
 
         # Build recipe data to pass input file parameters to new recipes
-        recipe_data = RecipeDataSunset.create(batch.recipe_type.get_recipe_definition(), {})
+        recipe_data = LegacyRecipeData({})
         if hasattr(trigger_config, 'get_input_data_name'):
             recipe_data.add_file_input(trigger_config.get_input_data_name(), input_file.id)
         if hasattr(trigger_config, 'get_workspace_name'):

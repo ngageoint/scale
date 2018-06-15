@@ -199,7 +199,7 @@ class SourceIngestsView(ListAPIView):
 class SourceJobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all jobs related to a source file."""
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerV5
     
     def list(self, request, source_id=None):
         """Determine api version and call specific method
