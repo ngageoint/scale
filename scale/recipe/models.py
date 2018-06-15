@@ -1242,6 +1242,9 @@ class RecipeTypeManager(models.Manager):
         recipe_type.version = version
         recipe_type.title = title
         recipe_type.description = description
+        if definition.get_dict()['version'] == '2.0':
+            from recipe.configuration.definition.exceptions import InvalidDefinition
+            raise InvalidDefinition('This version of the recipe definition is invalid to save')
         recipe_type.definition = definition.get_dict()
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
@@ -1295,6 +1298,9 @@ class RecipeTypeManager(models.Manager):
             # Must lock job type interfaces so the new recipe type definition can be validated
             _ = definition.get_job_types(lock=True)
             definition.validate_job_interfaces()
+            if definition.get_dict()['version'] == '2.0':
+                from recipe.configuration.definition.exceptions import InvalidDefinition
+                raise InvalidDefinition('This version of the recipe definition is invalid to save')
             recipe_type.definition = definition.get_dict()
             recipe_type.revision_num = recipe_type.revision_num + 1
 
