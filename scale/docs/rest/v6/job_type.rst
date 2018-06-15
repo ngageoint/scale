@@ -1,10 +1,80 @@
 
-.. _rest_job_type:
+.. _rest_v6_job_type:
 
-Job Type Services
-=================
+v6 Job Type Services
+====================
 
-These services provide access to information about job types.
+These services allow for the management of job types within Scale.
+
+.. _rest_v6_job_type_configuration:
+
+Job Configuration JSON
+----------------------
+
+A job configuration JSON describes a set of configuration settings that affect how a job executes.
+
+**Example interface:**
+
+.. code-block:: javascript
+
+   {
+      "mounts": {
+         "mount_1": {"type": "host", "host_path": "/the/host/path"},
+         "mount_2": {"type": "volume", "driver": "docker-driver", "driver_opts": {"opt_1": "foo"}}
+      },
+      "output_workspaces": {
+         "default": "workspace_1",
+         "outputs": {"output_1": "workspace_2"}
+      },
+      "priority": 100,
+      "settings": {"setting_1": "foo", "setting_2": "bar"}
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Job Configuration**                                                                                                       |
++============================+================+==========+====================================================================+
+| mounts                     | JSON Object    | Optional | A JSON object representing the configuration for each mount to     |
+|                            |                |          | provide to the job. Each key is the name of a mount defined in the |
+|                            |                |          | job's Seed manifest and each value is the configuration for that   |
+|                            |                |          | mount.                                                             |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| type                       | String         | Required | The type of the mount configuration. Must be either 'host' or      |
+|                            |                |          | 'volume'.                                                          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| host_path                  | String         | Required | (host mount) The absolute file-system path on the host to mount    |
+|                            |                |          | into the job's container.                                          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| driver                     | String         | Optional | (volume mount) The Docker driver to use for creating the Docker    |
+|                            |                |          | volume that will be mounted into the job's container.              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| driver_opts                | JSON Object    | Optional | (volume mount) An object of key-value strings specifying the name  |
+|                            |                |          | and value of the Docker driver options to use for creating the     |
+|                            |                |          | Docker volume that will be mounted into the job's container.       |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| output_workspaces          | JSON Object    | Optional | A JSON object representing the workspaces to use for storing the   |
+|                            |                |          | job's output files for each defined file output in the job's Seed  |
+|                            |                |          | manifest.                                                          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| default                    | String         | Optional | The unique name of the default workspace to use for storing any    |
+|                            |                |          | output files that don't belong to an output configured in          |
+|                            |                |          | *outputs*.                                                         |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| outputs                    | JSON Object    | Optional | A JSON object representing the workspaces to use for storing the   |
+|                            |                |          | job's output files for specific job file outputs. Each key is the  |
+|                            |                |          | name of a file output defined in the job's Seed manifest and each  |
+|                            |                |          | value is the unique name of the workspace to use.                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| priority                   | Integer        | Optional | The priority to use for scheduling the job off of the queue.       |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| settings                   | JSON Object    | Optional | A JSON object representing the configuration for each setting to   |
+|                            |                |          | provide to the job. Each key is the name of a setting defined in   |
+|                            |                |          | the job's Seed manifest and each value is the value to provide for |
+|                            |                |          | that setting.                                                      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+
+
+The services will be replaced as the new v6 job type services are created:
 
 .. _rest_job_type_list:
 
