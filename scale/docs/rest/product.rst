@@ -6,10 +6,17 @@ Product Services
 
 These services provide access to information about products that Scale has produced.
 
+**DEPRECATED**
+This documentation describes the API **v5** version of Product services. These services will be removed in API **v6**.
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Product List**                                                                                                        |
 +=========================================================================================================================+
 | Returns a list of all products, excluding superseded results                                                            |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Product List response.  Starting with API     |
+|                **v6** this endpoint will be removed.                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/                                                                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -255,10 +262,8 @@ These services provide access to information about products that Scale has produ
 | Returns a specific product file and all its related model information including sources and derived products.           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **DEPRECATED**                                                                                                          |
-|                This table describes the current v5 version of the product file details API, which is now deprecated.    |
-|                The new v6 version of this API does not include the *sources*, *ancestors*, and *descendants* arrays     |
-|                in the response. The new v6 version also does not support the use of *file_name* in the URL (only        |
-|                product ID supported).                                                                                   |
+|                This documentation describes the API **v5** version of the Product Details response.  Starting with API  |
+|                **v6** this endpoint will be removed.                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/{id}/                                                                                                 |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -571,6 +576,10 @@ These services provide access to information about products that Scale has produ
 | Returns the product updates (published, unpublished, and deleted products) that have occurred in the given time range.  |
 | Note that superseded results are excluded.                                                                              |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Product Updates response.  Starting with API  |
+|                **v6** this endpoint will be removed.                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/updates/                                                                                              |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
@@ -790,6 +799,10 @@ These services provide access to information about products that Scale has produ
 | **Product File Source List**                                                                                            |
 +=========================================================================================================================+
 | Returns a list of all source files that produced the given product ID                                                   |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Product File Source List response.  Starting  |
+|                with API **v6** this endpoint will be removed.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/{id}/sources/                                                                                         |
 |         Where {id} is the unique identifier of an existing product file.                                                |
