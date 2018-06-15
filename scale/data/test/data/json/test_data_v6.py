@@ -56,6 +56,11 @@ class TestDataV6(TestCase):
                 'output_data': [{'name': 'geo_image', 'workspace_id': 12}]}
         DataV6(data=data, do_validate=True)
 
+        # Conversion from v1 job results
+        data = {'version': '1.0', 'output_data': [{'name': 'input_a', 'file_id': 1234},
+                                                  {'name': 'input_b', 'file_ids': [1235, 1236]}]}
+        DataV6(data=data, do_validate=True)
+
         # Conversion from v1 recipe data
         data = {'version': '1.0', 'input_data': [{'name': 'input_a', 'file_id': 1234},
                                                  {'name': 'input_b', 'file_ids': [1235, 1236]},
