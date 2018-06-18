@@ -47,7 +47,7 @@ class TestJobConfigurationV6(TestCase):
         config_dict = {'version': 'BAD'}
         with self.assertRaises(InvalidJobConfiguration) as context:
             JobConfigurationV6(config_dict, do_validate=True)
-        #self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
+            self.assertEqual(context.exception.error.name, 'INVALID_VERSION')
 
         # Valid v6 configuration
         config_dict = {'version': '6', 'mounts': {'mount_1': {'type': 'host', 'host_path': '/the/host/path'},
