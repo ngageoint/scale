@@ -6,7 +6,7 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration import DEFAULT_PRIORITY, JobConfiguration
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job.job_config import JobConfiguration as JobConfigurationV2
+from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
 from job.configuration.mount import HostMountConfig, VolumeMountConfig
 from job.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
@@ -209,7 +209,7 @@ class JobConfigurationV6(object):
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
 
-        v2_json_dict = JobConfigurationV2(self._config).get_dict()
+        v2_json_dict = JobConfigurationV2(self._config, do_validate=do_validate).get_dict()
 
         # Only the version needs changed when going from v2 to v6
         if 'version' in v2_json_dict:

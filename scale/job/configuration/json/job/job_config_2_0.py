@@ -83,14 +83,16 @@ class ValidationWarning(object):
         self.details = details
 
 
-class JobConfiguration(object):
+class JobConfigurationV2(object):
     """Represents the schema for a job configuration"""
 
-    def __init__(self, configuration=None):
+    def __init__(self, configuration=None, do_validate=True):
         """Creates a job configuration from the given dict
 
         :param configuration: The configuration dict
         :type configuration: dict
+        :param do_validate: Whether to perform validation on the JSON schema
+        :type do_validate: bool
 
         :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
@@ -106,7 +108,8 @@ class JobConfiguration(object):
             self._convert_configuration()
 
         try:
-            validate(configuration, JOB_CONFIG_SCHEMA)
+            if do_validate:
+                validate(configuration, JOB_CONFIG_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidJobConfiguration('INVALID_CONFIGURATION', validation_error)
 
@@ -283,7 +286,7 @@ class JobConfiguration(object):
         """
 
         # Validate/process the dict according to the previous version
-        self._configuration = previous_interface.JobConfiguration(self._configuration).get_dict()
+        self._configuration = previous_interface.JobConfigurationV1(self._configuration).get_dict()
 
         self._configuration['version'] = SCHEMA_VERSION
         self._configuration['settings'] = self._configuration['default_settings']

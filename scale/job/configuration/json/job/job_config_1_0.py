@@ -29,7 +29,7 @@ JOB_CONFIG_SCHEMA = {
 }
 
 
-class JobConfiguration(object):
+class JobConfigurationV1(object):
     """Represents the schema for a job configuration"""
 
     def __init__(self, definition=None):

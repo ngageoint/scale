@@ -19,7 +19,7 @@ from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.json.job.job_config import JobConfiguration
+from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
@@ -2263,7 +2263,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type. Deprecated - remove with v5.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
         :returns: The new job type
@@ -2354,7 +2354,7 @@ class JobTypeManager(models.Manager):
 
         secrets = None
         if configuration_dict:
-            configuration = JobConfiguration(configuration_dict)
+            configuration = JobConfigurationV2(configuration_dict)
             secrets = configuration.get_seed_secret_settings(manifest.get_settings())
             configuration.validate(manifest_dict)
 
@@ -2464,7 +2464,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
 
@@ -2621,7 +2621,7 @@ class JobTypeManager(models.Manager):
 
         secrets = None
         if configuration_dict:
-            configuration = JobConfiguration(configuration_dict)
+            configuration = JobConfigurationV2(configuration_dict)
             secrets = configuration.get_seed_secret_settings(manifest.get_settings())
             configuration.validate(manifest.get_dict())
             job_type.configuration = configuration_dict
@@ -2739,7 +2739,7 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = JobConfiguration(job_type.configuration)
+            configuration = JobConfigurationV2(job_type.configuration)
             interface = JobInterfaceSunset.create(job_type.interface)
             configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
@@ -2943,7 +2943,7 @@ class JobTypeManager(models.Manager):
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -3227,10 +3227,10 @@ class JobType(models.Model):
         """Returns default job configuration for this job type
 
         :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :rtype: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return JobConfigurationV2(self.configuration)
 
     def get_resources(self):
         """Returns the resources required for jobs of this type

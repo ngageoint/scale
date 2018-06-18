@@ -20,7 +20,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config import JobConfiguration
+from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
@@ -175,7 +175,7 @@ class JobTypesView(ListCreateAPIView):
         secrets = None
         try:
             if configuration_dict:
-                configuration = JobConfiguration(configuration_dict)
+                configuration = JobConfigurationV2(configuration_dict)
                 secrets = configuration.get_secret_settings(interface.get_dict())
                 configuration.validate(interface.get_dict())
         except InvalidJobConfiguration as ex:
@@ -401,7 +401,7 @@ class JobTypeDetailsView(GenericAPIView):
         secrets = None
         try:
             if configuration_dict:
-                configuration = JobConfiguration(configuration_dict)
+                configuration = JobConfigurationV2(configuration_dict)
                 if interface:
                     secrets = configuration.get_secret_settings(interface.get_dict())
                     configuration.validate(interface.get_dict())
@@ -620,7 +620,7 @@ class JobTypesValidationView(APIView):
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
         try:
-            configuration = JobConfiguration(configuration_dict)
+            configuration = JobConfigurationV2(configuration_dict)
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 

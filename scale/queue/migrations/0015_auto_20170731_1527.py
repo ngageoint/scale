@@ -10,7 +10,7 @@ from django.utils.timezone import now
 from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config import JobConfiguration
+from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -67,10 +67,10 @@ def get_job_configuration(self):
     """Returns default job configuration for this job type
 
     :returns: The default job configuration for this job type
-    :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+    :rtype: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
     """
 
-    return JobConfiguration(self.configuration)
+    return JobConfigurationV2(self.configuration)
 
 def job_type_get_job_interface(self):
     """Returns the interface for running jobs of this type

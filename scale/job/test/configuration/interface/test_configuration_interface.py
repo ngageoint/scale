@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job.job_config import JobConfiguration
+from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
 
 
 class TestJobConfiguration(TestCase):
@@ -16,7 +16,7 @@ class TestJobConfiguration(TestCase):
         """Tests the validation done in __init__"""
 
         # Try minimal acceptable configuration
-        JobConfiguration()
+        JobConfigurationV2()
 
         # Missing name
         config = {'version': '1.0',
@@ -25,7 +25,7 @@ class TestJobConfiguration(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidJobConfiguration, JobConfigurationV2, config)
 
         # Missing value
         config = {'version': '1.0',
@@ -34,7 +34,7 @@ class TestJobConfiguration(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidJobConfiguration, JobConfigurationV2, config)
 
         # Wrong version
         config = {'version': '0.9',
@@ -42,11 +42,11 @@ class TestJobConfiguration(TestCase):
                       'name1': 'val1',
                       'name2': 'val2'
                   }}
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidJobConfiguration, JobConfigurationV2, config)
 
         # Invalid value (int)
         config = {'version': '1.0',
                   'default_settings': {
                       'name1': 1234
                   }}
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidJobConfiguration, JobConfigurationV2, config)
