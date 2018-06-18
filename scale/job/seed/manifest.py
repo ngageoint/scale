@@ -9,7 +9,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.data.exceptions import InvalidData, InvalidConnection
-from job.configuration.exceptions import MissingMount, MissingSetting
+from job.execution.configuration.exceptions import MissingMount, MissingSetting
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.types import SeedInputFiles, SeedInputJson, SeedOutputJson, SeedOutputFiles
 from scheduler.vault.manager import secrets_mgr

@@ -9,7 +9,7 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.interface import job_interface_1_1 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
-from job.configuration.exceptions import MissingSetting
+from job.execution.configuration.exceptions import MissingSetting
 
 
 logger = logging.getLogger(__name__)

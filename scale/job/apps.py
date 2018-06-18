@@ -17,8 +17,8 @@ class JobConfig(AppConfig):
 
         # Register job errors
         from error.exceptions import register_error
-        from job.configuration.exceptions import MissingMount, MissingSetting
         from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
+        from job.execution.configuration.exceptions import MissingMount, MissingSetting
 
         register_error(InvalidResultsManifest(''))
         register_error(MissingMount(''))

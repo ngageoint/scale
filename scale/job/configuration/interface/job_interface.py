@@ -13,7 +13,7 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface import job_interface_1_3 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.exceptions import MissingMount, MissingSetting
+from job.execution.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH

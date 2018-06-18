@@ -6,7 +6,7 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.execution.configuration.exceptions import InvalidExecutionConfiguration
 from job.execution.configuration.json import exe_config_1_0 as previous_version
 from job.execution.configuration.volume import MODE_RO, MODE_RW
 
@@ -108,7 +108,7 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
+        :raises :class:`job.execution.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
 
         if not configuration:
@@ -213,8 +213,8 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
     def _validate_setting_names(self):
         """Ensures that no tasks have duplicate setting names
 
-        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate setting
-            name
+        :raises :class:`job.execution.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
+            setting name
         """
 
         for setting_dict in self._configuration['pre_task']['settings']:

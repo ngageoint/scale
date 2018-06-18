@@ -8,7 +8,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.execution.configuration.docker_param import DockerParameter
-from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.execution.configuration.exceptions import InvalidExecutionConfiguration
 from job.execution.configuration.json import exe_config_1_1 as previous_version
 from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.execution.configuration.workspace import TaskWorkspace
@@ -229,7 +229,7 @@ class ExecutionConfiguration(object):
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
 
-        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
+        :raises :class:`job.execution.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
 
         if not configuration:

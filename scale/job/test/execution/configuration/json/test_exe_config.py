@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.execution.configuration.exceptions import InvalidExecutionConfiguration
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 
 

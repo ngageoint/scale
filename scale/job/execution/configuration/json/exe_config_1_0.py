@@ -6,7 +6,7 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.execution.configuration.exceptions import InvalidExecutionConfiguration
 
 
 logger = logging.getLogger(__name__)
@@ -106,7 +106,7 @@ class ExecutionConfiguration(object):
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
+        :raises :class:`job.execution.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
 
         if not configuration:
@@ -296,7 +296,7 @@ class ExecutionConfiguration(object):
     def _validate_workspace_names(self):
         """Ensures that no tasks have duplicate workspace names
 
-        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
+        :raises :class:`job.execution.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
             workspace name
         """
 
