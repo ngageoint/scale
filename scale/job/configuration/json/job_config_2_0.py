@@ -10,7 +10,7 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.json import job_config_1_0 as previous_interface
-from job.execution.configuration.volume import Volume
+from job.execution.configuration.volume import Volume, HOST_TYPE, VOLUME_TYPE
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +66,30 @@ JOB_CONFIG_SCHEMA = {
         },
     },
 }
+
+
+def convert_config_to_v2_json(config):
+    """Returns the v2 job configuration JSON for the given configuration
+
+    :param config: The job configuration
+    :type config: :class:`job.configuration.configuration.JobConfiguration`
+    :returns: The v2 job configuration JSON
+    :rtype: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
+    """
+
+    mounts_dict = {}
+    for mount_config in config.mounts.values():
+        if mount_config.mount_type == HOST_TYPE:
+            mounts_dict[mount_config.name] = {'type': 'host', 'host_path': mount_config.host_path}
+        elif mount_config.mount_type == VOLUME_TYPE:
+            vol_dict = {'type': 'volume', 'driver_opts': mount_config.driver_opts}
+            if mount_config.driver:
+                vol_dict['driver'] = mount_config.driver
+            mounts_dict[mount_config.name] = vol_dict
+
+    config_dict = {'version': SCHEMA_VERSION, 'mounts': mounts_dict, 'settings': config.settings}
+
+    return JobConfigurationV2(configuration=config_dict, do_validate=False)
 
 
 class ValidationWarning(object):

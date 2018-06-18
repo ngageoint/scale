@@ -103,7 +103,7 @@ JOB_CONFIG_SCHEMA = {
 
 
 def convert_config_to_v6_json(config):
-    """Returns the v6 job configuration JSON for the given data
+    """Returns the v6 job configuration JSON for the given configuration
 
     :param config: The job configuration
     :type config: :class:`job.configuration.configuration.JobConfiguration`
