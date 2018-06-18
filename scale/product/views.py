@@ -30,6 +30,22 @@ class ProductsView(ListAPIView):
         return ProductFileSerializerV5
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the product for a given file name and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -82,8 +98,24 @@ class ProductDetailsView(RetrieveAPIView):
             return ProductFileDetailsSerializerV5
         return ProductFileDetailsSerializer
 
-    # TODO: remove the `file_name` arg when REST API v5 is removed
     def retrieve(self, request, product_id=None, file_name=None):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.retrieve_v4(request, product_id, file_name)
+        elif request.version == 'v5':
+            return self.retrieve_v5(request, product_id, file_name)
+
+        raise Http404()
+        
+    # TODO: remove the `file_name` arg when REST API v5 is removed
+    def retrieve_v4(self, request, product_id=None, file_name=None):
         """Retrieves the details for a product file and return them in JSON form
 
         :param request: the HTTP GET request
@@ -96,13 +128,10 @@ class ProductDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version != 'v6':
-            return self.retrieve_v5(request, product_id, file_name)
-        else:
-            try:
-                product = ProductFile.objects.get_details(product_id)
-            except ScaleFile.DoesNotExist:
-                raise Http404
+        try:
+            product = ProductFile.objects.get_details(product_id)
+        except ScaleFile.DoesNotExist:
+            raise Http404
 
         serializer = self.get_serializer(product)
         return Response(serializer.data)
@@ -144,6 +173,22 @@ class ProductSourcesView(ListAPIView):
     serializer_class = SourceFileSerializer
 
     def list(self, request, product_id=None):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request, product_id)
+        elif request.version == 'v5':
+            return self.list_impl(request, product_id)
+
+        raise Http404()
+            
+    def list_impl(self, request, product_id=None):
         """Retrieves the source files for a given product id and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -189,6 +234,22 @@ class ProductUpdatesView(ListAPIView):
 
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the product updates for a given time range and returns it in JSON form
 
         :param request: the HTTP GET request

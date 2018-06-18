@@ -33,9 +33,11 @@ def create_country(name=None, fips='TT', gmi='TT', iso2='TT', iso3='TST', iso_nu
                                       border=border, effective=effective)
 
 
-def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size=100, file_path=None, workspace=None,
-                countries=None, is_deleted=False, data_type='', last_modified=None, source_started=None,
-                source_ended=None):
+def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='text/plain', file_size=100, 
+                data_type='', file_path=None, workspace=None, is_deleted=False, uuid='', last_modified=None,
+                data_started=None, data_ended=None, source_started=None, source_ended=None, geometry=None, 
+                center_point=None, meta_data='', countries=None,job_exe=None,job_output=None, recipe=None,
+                recipe_node=None, batch=None, is_superseded=False, superseded=None):
     """Creates a Scale file model for unit testing
 
     :returns: The file model
@@ -45,15 +47,28 @@ def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size
     if not workspace:
         workspace = create_workspace()
 
+    job = None
+    job_type = None
+    if job_exe:
+        job = job_exe.job
+        job_type=job_exe.job.job_type
+        
+    recipe_type = None
+    if recipe:
+        recipe_type = recipe.recipe_type
+        
     deleted = None
     if is_deleted:
         deleted = timezone.now()
 
-    scale_file = ScaleFile.objects.create(file_name=file_name, media_type=media_type, file_size=file_size,
-                                          file_path=file_path or 'file/path/' + file_name, workspace=workspace,
-                                          is_deleted=is_deleted, deleted=deleted, data_type=data_type,
-                                          last_modified=last_modified, source_started=source_started,
-                                          source_ended=source_ended)
+    scale_file = ScaleFile.objects.create(file_name=file_name, file_type=file_type, media_type=media_type, file_size=file_size,
+                                          data_type=data_type, file_path=file_path or 'file/path/' + file_name, workspace=workspace,
+                                          is_deleted=is_deleted, deleted=deleted, uuid=uuid, last_modified=last_modified, 
+                                          data_started=data_started, data_ended=data_ended, source_started=source_started, 
+                                          source_ended=source_ended, geometry=geometry, center_point=center_point, meta_data=meta_data,
+                                          job_exe=job_exe, job=job, job_type=job_type, job_output=job_output,
+                                          recipe=recipe, recipe_node=recipe_node, recipe_type=recipe_type, batch=batch,
+                                          is_superseded=is_superseded, superseded=superseded)
     if countries:
         scale_file.countries = countries
         scale_file.save()

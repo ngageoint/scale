@@ -9,6 +9,7 @@ These services provide access to information about "all", "currently running" an
 .. _rest_job_execution_list:
 
 .. TODO: remove this rST table when REST API v5 is removed
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution List**                                                                                                  |
 +=========================================================================================================================+
@@ -193,6 +194,7 @@ These services provide access to information about "all", "currently running" an
 .. _rest_job_execution_details:
 
 .. TODO: remove this rST table when REST API v5 is removed
+
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution Details**                                                                                                 |
 +===========================================================================================================================+

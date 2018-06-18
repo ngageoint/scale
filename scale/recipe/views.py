@@ -20,7 +20,7 @@ from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
                                 RecipeTypeSerializer, OldRecipeDetailsSerializer)
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializer
+from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
 
@@ -334,7 +334,7 @@ class RecipeDetailsView(RetrieveAPIView):
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
     queryset = RecipeInputFile.objects.all()
-    serializer_class = ScaleFileSerializer
+    serializer_class = ScaleFileSerializerV5
 
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe

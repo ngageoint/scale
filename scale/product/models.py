@@ -275,7 +275,7 @@ class ProductFileManager(models.GeoManager):
         if recipe_ids:
             products = products.filter(recipe_id__in=recipe_ids)
         if recipe_job:
-            products = products.filter(recipe_job=recipe_job)
+            products = products.filter(recipe_node=recipe_job)
         if recipe_type_ids:
             products = products.filter(recipe_type__in=recipe_type_ids)
         if batch_ids:
@@ -587,7 +587,7 @@ class ProductFileManager(models.GeoManager):
             if job_recipe:
                 product.recipe_id = job_recipe.recipe.id
                 product.recipe_type = job_recipe.recipe.recipe_type
-                product.recipe_job = job_recipe.node_name
+                product.recipe_node = job_recipe.node_name
 
                 # Add batch info to product if available.
                 try:

@@ -2101,7 +2101,7 @@ class JobInputFileManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+        files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
                                                file_name=file_name)
 
         files = files.filter(jobinputfile__job=job_id).order_by('last_modified')
@@ -2119,7 +2119,7 @@ class JobInputFileManager(models.Manager):
             else:
                 job_input_file_ids = [f_id for f_id, name in job_input_files]
 
-            files = ScaleFile.objects.filter_files(started=started, ended=ended, time_field=time_field,
+            files = ScaleFile.objects.filter_files_v5(started=started, ended=ended, time_field=time_field,
                                                    file_name=file_name)
 
             files = files.filter(id__in=job_input_file_ids).order_by('last_modified')

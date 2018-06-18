@@ -91,6 +91,6 @@ class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):
 
 class MetricsJobTypeDetailsSerializer(MetricsTypeDetailsSerializer):
     """Converts job type metrics details model fields to REST output"""
-    from job.serializers import JobTypeBaseSerializer
+    from job.serializers import JobTypeBaseSerializerV5
 
-    choices = JobTypeBaseSerializer(many=True)
+    choices = JobTypeBaseSerializerV5(many=True)

@@ -120,9 +120,9 @@ class TestRecipeDataValidateInputFiles(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file_1 = storage_utils.create_file('my_json_file.json', 'application/json')
-        self.file_2 = storage_utils.create_file('my_text_file_1.txt', 'text/plain')
-        self.file_3 = storage_utils.create_file('my_text_file_2.txt', 'text/plain')
+        self.file_1 = storage_utils.create_file(file_name='my_json_file.json', media_type='application/json')
+        self.file_2 = storage_utils.create_file(file_name='my_text_file_1.txt', media_type='text/plain')
+        self.file_3 = storage_utils.create_file(file_name='my_text_file_2.txt', media_type='text/plain')
 
     def test_missing_required(self):
         """Tests calling RecipeData.validate_input_files() when a file is required, but missing"""

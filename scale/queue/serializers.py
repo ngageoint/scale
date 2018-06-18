@@ -13,9 +13,9 @@ class JobLoadGroupSerializer(serializers.Serializer):
 
 class QueueStatusSerializer(serializers.Serializer):
     """Converts queue status model fields to REST output"""
-    from job.serializers import JobTypeBaseSerializer
+    from job.serializers import JobTypeBaseSerializerV5
 
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     count = serializers.IntegerField()
     longest_queued = serializers.DateTimeField()
     highest_priority = serializers.IntegerField()

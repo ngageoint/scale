@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from error.exceptions import ScaleError
+from util.exceptions import ValidationException
 
 
 class InvalidExecutionConfiguration(Exception):

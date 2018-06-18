@@ -50,10 +50,10 @@ class RecipeTypeSerializer(RecipeTypeBaseSerializer):
 
 class RecipeTypeDetailsSerializer(RecipeTypeSerializer):
     """Converts recipe type model fields to REST output."""
-    from job.serializers import JobTypeBaseSerializer
+    from job.serializers import JobTypeBaseSerializerV5
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializer):
+    class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV5):
         interface = serializers.JSONField(default=dict)
 
     trigger_rule = TriggerRuleDetailsSerializer()
@@ -99,9 +99,9 @@ class RecipeSerializer(RecipeBaseSerializer):
 
 class RecipeJobsSerializer(serializers.Serializer):
     """Converts recipe model fields to REST output."""
-    from job.serializers import JobSerializer
+    from job.serializers import JobSerializerV5
 
-    job = JobSerializer()
+    job = JobSerializerV5()
     job_name = serializers.CharField(source='node_name')
     is_original = serializers.BooleanField()
     recipe = ModelIdSerializer()
@@ -135,8 +135,8 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
         return result
 
     class Meta:
-        from storage.serializers import ScaleFileSerializer
-        FILE_SERIALIZER = ScaleFileSerializer
+        from storage.serializers import ScaleFileSerializerV5
+        FILE_SERIALIZER = ScaleFileSerializerV5
 
 
 class RecipeDetailsSerializer(RecipeSerializer):
