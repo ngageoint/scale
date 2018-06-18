@@ -9,8 +9,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job import job_config_1_0 as previous_interface
-from job.configuration.volume import Volume
+from job.configuration.json import job_config_1_0 as previous_interface
+from job.execution.configuration.volume import Volume
 
 logger = logging.getLogger(__name__)
 
@@ -139,7 +139,7 @@ class JobConfigurationV2(object):
         :param mode: Either 'ro' for read-only or 'rw' for read-write
         :type mode: string
         :returns: The volume that should be mounted into the job container, possibly None
-        :rtype: :class:`job.configuration.volume.Volume`
+        :rtype: :class:`job.execution.configuration.volume.Volume`
         """
 
         if mount_name not in self._configuration['mounts']:

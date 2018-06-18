@@ -329,7 +329,7 @@ class JobData(object):
         TODO: Remove with v6 when old style Job Types are removed
 
         :param input_files: Mapping of input names to InputFiles
-        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
         :return: Mapping of all input keys to their true file / property values
         :rtype: {str, str}
         """
@@ -411,7 +411,7 @@ class JobData(object):
         """Inject all execution time values to job data mappings
 
         :param input_files: Mapping of input names to InputFiles
-        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
         :return: Mapping of all input keys to their true file / property values
         :rtype: {str, str}
         """

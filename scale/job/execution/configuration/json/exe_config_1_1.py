@@ -7,8 +7,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.json.execution import exe_config_1_0 as previous_version
-from job.configuration.volume import MODE_RO, MODE_RW
+from job.execution.configuration.json import exe_config_1_0 as previous_version
+from job.execution.configuration.volume import MODE_RO, MODE_RW
 
 logger = logging.getLogger(__name__)
 

@@ -247,7 +247,7 @@ class RecipeData(object):
         TODO: Remove with v6 when old style Job Types are removed
 
         :param input_files: Mapping of input names to InputFiles
-        :type input_files: {str, :class:`job.configuration.input_file.InputFile`}
+        :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
         :return: Mapping of all input keys to their true file / property values
         :rtype: {str, str}
         """

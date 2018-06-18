@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from job.configuration.configuration import JobConfiguration
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.mount import HostMountConfig, VolumeMountConfig
 
 

@@ -7,9 +7,9 @@ import django.utils.timezone as timezone
 
 import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
-from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults

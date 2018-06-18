@@ -469,7 +469,7 @@ class JobInterface(object):
         :param command_arguments: The command_arguments that you want to perform the replacement on
         :type command_arguments: string
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition 
         :type job_type: :class:`job.models.JobType`
         :return: command arguments with the settings populated
@@ -490,7 +490,7 @@ class JobInterface(object):
         """Populates the environment variables with the requested values.
 
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition 
         :type job_type: :class:`job.models.JobType`
 
@@ -549,7 +549,7 @@ class JobInterface(object):
         """Ensures that all required settings are defined in the job_configuration
 
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         interface_settings = self.definition['settings']
@@ -702,7 +702,7 @@ class JobInterface(object):
         :param settings: The job configuration
         :type settings: JSON
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :return: settings name and the value to replace it with
         :rtype: dict
         """

@@ -8,7 +8,7 @@ from django.db.models import Q
 import port.serializers as serializers
 from error.models import Error
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.models import JobType
 from port.schema import Configuration
 from recipe.models import RecipeType

@@ -8,10 +8,10 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.configurators import QueuedExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData as JobData_1_0
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.models import Job, JobType
@@ -582,7 +582,7 @@ class Queue(models.Model):
         """Returns the execution configuration for this queued job
 
         :returns: The execution configuration for this queued job
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         return ExecutionConfiguration(self.configuration, do_validate=False)

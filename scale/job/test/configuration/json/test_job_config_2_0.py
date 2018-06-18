@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 
 
 class TestJobConfiguration(TestCase):

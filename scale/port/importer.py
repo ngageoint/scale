@@ -14,7 +14,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.exceptions import InvalidJobField
 from job.models import JobType
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration

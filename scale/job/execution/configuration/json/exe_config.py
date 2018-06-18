@@ -7,11 +7,11 @@ from copy import deepcopy
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.docker_param import DockerParameter
+from job.execution.configuration.docker_param import DockerParameter
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.json.execution import exe_config_1_1 as previous_version
-from job.configuration.volume import Volume, MODE_RO, MODE_RW
-from job.configuration.workspace import TaskWorkspace
+from job.execution.configuration.json import exe_config_1_1 as previous_version
+from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
+from job.execution.configuration.workspace import TaskWorkspace
 from node.resources.node_resources import NodeResources
 from node.resources.resource import ScalarResource
 
@@ -298,7 +298,7 @@ class ExecutionConfiguration(object):
         """Creates and returns a copy of this configuration
 
         :returns: The copied configuration
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         return ExecutionConfiguration(deepcopy(self._configuration), do_validate=False)
@@ -527,7 +527,7 @@ class ExecutionConfiguration(object):
         :param task_type: The task type
         :type task_type: string
         :returns: The list of workspaces
-        :rtype: [:class:`job.configuration.workspace.TaskWorkspace`]
+        :rtype: [:class:`job.execution.configuration.workspace.TaskWorkspace`]
         """
 
         workspaces = []

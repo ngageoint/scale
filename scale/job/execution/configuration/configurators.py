@@ -6,12 +6,12 @@ import math
 
 from django.conf import settings
 
-from job.configuration.docker_param import DockerParameter
-from job.configuration.input_file import InputFile
+from job.execution.configuration.docker_param import DockerParameter
+from job.execution.configuration.input_file import InputFile
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.volume import Volume, MODE_RO, MODE_RW
-from job.configuration.workspace import TaskWorkspace
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
+from job.execution.configuration.volume import Volume, MODE_RO, MODE_RW
+from job.execution.configuration.workspace import TaskWorkspace
 from job.deprecation import JobInterfaceSunset
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -51,7 +51,7 @@ class QueuedExecutionConfigurator(object):
         :param job: The queued job model
         :type job: :class:`job.models.Job`
         :returns: The execution configuration for the queued job
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         config = ExecutionConfiguration()
@@ -222,7 +222,7 @@ class ScheduledExecutionConfigurator(object):
         :param interface: The job interface
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :returns: A copy of the configuration containing secret values
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         config = job_exe.get_execution_configuration()
@@ -249,7 +249,7 @@ class ScheduledExecutionConfigurator(object):
         """Configures the given execution with items that apply to all tasks
 
         :param config: The execution configuration
-        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
@@ -325,7 +325,7 @@ class ScheduledExecutionConfigurator(object):
         """Configures the main task for the given execution with items specific to the main task
 
         :param config: The execution configuration
-        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
@@ -367,7 +367,7 @@ class ScheduledExecutionConfigurator(object):
         input/output mounts, etc
 
         :param config: The execution configuration
-        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
@@ -439,7 +439,7 @@ class ScheduledExecutionConfigurator(object):
         configuration
 
         :param config: The execution configuration, where the secrets will be masked out
-        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
@@ -447,7 +447,7 @@ class ScheduledExecutionConfigurator(object):
         :param interface: The job interface
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :returns: The copy of the execution configuration that contains the secrets
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         # Copy the configuration
@@ -528,7 +528,7 @@ class ScheduledExecutionConfigurator(object):
         """Configures the given execution as a system job
 
         :param config: The execution configuration
-        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
         """

@@ -7,10 +7,10 @@ import math
 from django.db import migrations
 from django.utils.timezone import now
 
-from job.configuration.configurators import QueuedExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -67,7 +67,7 @@ def get_job_configuration(self):
     """Returns default job configuration for this job type
 
     :returns: The default job configuration for this job type
-    :rtype: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
+    :rtype: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
     """
 
     return JobConfigurationV2(self.configuration)
@@ -117,7 +117,7 @@ class Migration(migrations.Migration):
     ]
 
     def populate_queue(apps, schema_editor):
-        from job.configuration.json.execution.exe_config import ExecutionConfiguration
+        from job.execution.configuration.json.exe_config import ExecutionConfiguration
 
         # Go through all of the queued job models and re-populate the queue table
         when_queued = now()

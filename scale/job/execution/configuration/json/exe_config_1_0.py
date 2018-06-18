@@ -232,7 +232,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the job task
 
         :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
+        :rtype: [:class:`job.execution.configuration.json.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['job_task']['workspaces']
@@ -242,7 +242,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the post task
 
         :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
+        :rtype: [:class:`job.execution.configuration.json.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['post_task']['workspaces']
@@ -252,7 +252,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the pre task
 
         :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
+        :rtype: [:class:`job.execution.configuration.json.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['pre_task']['workspaces']

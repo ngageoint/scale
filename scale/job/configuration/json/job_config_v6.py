@@ -6,9 +6,9 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration import DEFAULT_PRIORITY, JobConfiguration
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.configuration.mount import HostMountConfig, VolumeMountConfig
-from job.configuration.volume import HOST_TYPE, VOLUME_TYPE
+from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
 SCHEMA_VERSION = '6'
@@ -108,7 +108,7 @@ def convert_config_to_v6_json(config):
     :param config: The job configuration
     :type config: :class:`job.configuration.configuration.JobConfiguration`
     :returns: The v6 job configuration JSON
-    :rtype: :class:`job.configuration.json.job.job_config_v6.JobConfigurationV6`
+    :rtype: :class:`job.configuration.json.job_config_v6.JobConfigurationV6`
     """
 
     mounts_dict = {}

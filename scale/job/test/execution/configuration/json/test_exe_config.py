@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 
 
 class TestExecutionConfiguration(TestCase):

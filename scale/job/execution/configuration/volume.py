@@ -1,7 +1,7 @@
 """Defines a Docker volume that will be mounted into a container"""
 from __future__ import unicode_literals
 
-from job.configuration.docker_param import DockerParameter
+from job.execution.configuration.docker_param import DockerParameter
 
 # TODO: This class should be moved to the storage app and merged with the workspace brokers
 MODE_RO = 'ro'
@@ -48,7 +48,7 @@ class Volume(object):
         :param is_created: Whether this volume has already been created
         :type is_created: bool
         :returns: The Docker parameter that will mount this volume
-        :rtype: :class:`job.configuration.docker_param.DockerParameter`
+        :rtype: :class:`job.execution.configuration.docker_param.DockerParameter`
         """
 
         if self.is_host:

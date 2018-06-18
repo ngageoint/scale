@@ -359,7 +359,7 @@ class SeedManifest(object):
         """Ensures that all required mounts are defined in the execution configuration
 
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         for name, mount_volume in exe_configuration.get_mounts('main').items():
@@ -370,7 +370,7 @@ class SeedManifest(object):
         """Ensures that all required settings are defined in the execution configuration
 
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         for name, value in exe_configuration.get_settings('main').items():
@@ -445,7 +445,7 @@ class SeedManifest(object):
         :param settings: The settings
         :type settings: dict
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
         :param censor: Whether to censor secrets

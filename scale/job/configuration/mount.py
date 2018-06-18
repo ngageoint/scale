@@ -5,7 +5,7 @@ import os
 from abc import ABCMeta
 
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.volume import HOST_TYPE, VOLUME_TYPE
+from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
 class MountConfig(object):

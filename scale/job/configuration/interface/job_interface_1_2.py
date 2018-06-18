@@ -251,7 +251,7 @@ class JobInterface(previous_interface.JobInterface):
         :param command_arguments: The command_arguments that you want to perform the replacement on
         :type command_arguments: string
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :return: command arguments with the settings populated
         :rtype: str
         """
@@ -270,7 +270,7 @@ class JobInterface(previous_interface.JobInterface):
         """Populates the environment variables with the requested values.
 
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
 
         :return: env_vars populated with values
         :rtype: dict
@@ -291,7 +291,7 @@ class JobInterface(previous_interface.JobInterface):
         :param settings: The job configuration
         :type settings: JSON
         :param config_settings: The job configuration
-        :type config_settings: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type config_settings: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :return: settings name and the value to replace it with
         :rtype: dict
         """
@@ -372,7 +372,7 @@ class JobInterface(previous_interface.JobInterface):
         :param job_exe: The job execution model with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
         :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type job_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         interface_settings = self.definition['settings']

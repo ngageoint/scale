@@ -8,9 +8,9 @@ from django.utils.timezone import now
 from mock import patch, MagicMock
 
 from batch.test import utils as batch_test_utils
-from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.job_data import JobData
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
@@ -261,7 +261,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        with patch('job.configuration.configurators.settings') as mock_settings:
+        with patch('job.execution.configuration.configurators.settings') as mock_settings:
             mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings
             mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                    'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
@@ -359,8 +359,8 @@ class TestScheduledExecutionConfigurator(TestCase):
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        with patch('job.configuration.configurators.settings') as mock_settings:
-            with patch('job.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
+        with patch('job.execution.configuration.configurators.settings') as mock_settings:
+            with patch('job.execution.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
                 mock_settings.LOGGING_ADDRESS = 'test-logging-address'
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
@@ -460,8 +460,8 @@ class TestScheduledExecutionConfigurator(TestCase):
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        with patch('job.configuration.configurators.settings') as mock_settings:
-            with patch('job.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
+        with patch('job.execution.configuration.configurators.settings') as mock_settings:
+            with patch('job.execution.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
                 mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings, there's enough in this unit test
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
@@ -697,8 +697,8 @@ class TestScheduledExecutionConfigurator(TestCase):
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        with patch('job.configuration.configurators.settings') as mock_settings:
-            with patch('job.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
+        with patch('job.execution.configuration.configurators.settings') as mock_settings:
+            with patch('job.execution.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
                 mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings
                 mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
                                                        'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',

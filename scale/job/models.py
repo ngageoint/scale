@@ -18,12 +18,12 @@ import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.json.job.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.seed.manifest import SeedManifest
@@ -1793,7 +1793,7 @@ class JobExecution(models.Model):
         """Returns the configuration for this job execution
 
         :returns: The configuration for this job execution
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         if isinstance(self.configuration, basestring):
@@ -2263,7 +2263,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type. Deprecated - remove with v5.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
         :returns: The new job type
@@ -2464,7 +2464,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
 
@@ -2943,7 +2943,7 @@ class JobTypeManager(models.Manager):
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -3227,7 +3227,7 @@ class JobType(models.Model):
         """Returns default job configuration for this job type
 
         :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.json.job.job_config_2_0.JobConfiguration`
+        :rtype: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
         """
 
         return JobConfigurationV2(self.configuration)
