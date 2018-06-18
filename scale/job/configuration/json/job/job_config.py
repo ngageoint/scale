@@ -108,7 +108,7 @@ class JobConfiguration(object):
         try:
             validate(configuration, JOB_CONFIG_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidJobConfiguration(validation_error)
+            raise InvalidJobConfiguration('INVALID_CONFIGURATION', validation_error)
 
         self._populate_default_values()
         self._validate_mounts()
@@ -310,18 +310,22 @@ class JobConfiguration(object):
         for name, mount in self._configuration['mounts'].iteritems():
             if mount['type'] == 'host':
                 if 'host_path' not in mount:
-                    raise InvalidJobConfiguration('Host mount %s requires host_path' % name)
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Host mount %s requires host_path' % name)
                 if not os.path.isabs(mount['host_path']):
-                    raise InvalidJobConfiguration('Host mount %s must use an absolute host_path' % name)
+                    msg = 'Host mount %s must use an absolute host_path'
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % name)
                 if 'driver' in mount:
-                    raise InvalidJobConfiguration('Host mount %s does not support driver' % name)
+                    msg = 'Host mount %s does not support driver'
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % name)
                 if 'driver_opts' in mount:
-                    raise InvalidJobConfiguration('Host mount %s does not support driver_opts' % name)
+                    msg = 'Host mount %s does not support driver_opts'
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % name)
             elif mount['type'] == 'volume':
                 if 'driver' not in mount:
-                    raise InvalidJobConfiguration('Volume mount %s requires driver' % name)
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Volume mount %s requires driver' % name)
                 if 'host_path' in mount:
-                    raise InvalidJobConfiguration('Volume mount %s does not support host_path' % name)
+                    msg = 'Volume mount %s does not support host_path'
+                    raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % name)
 
     def _validate_settings(self):
         """Ensures that the settings are valid
@@ -331,4 +335,4 @@ class JobConfiguration(object):
 
         for setting_name, setting_value in self._configuration['settings'].iteritems():
             if not setting_value:
-                raise InvalidJobConfiguration('Setting %s has blank value' % setting_name)
+                raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Setting %s has blank value' % setting_name)

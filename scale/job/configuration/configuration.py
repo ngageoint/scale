@@ -34,7 +34,7 @@ class JobConfiguration(object):
         """
 
         if mount_config.name in self.mounts:
-            raise InvalidJobConfiguration('Duplicate mount \'%s\'' % mount_config.name)
+            raise InvalidJobConfiguration('DUPLICATE_MOUNT', 'Duplicate mount \'%s\'' % mount_config.name)
 
         self.mounts[mount_config.name] = mount_config
 
@@ -50,7 +50,7 @@ class JobConfiguration(object):
         """
 
         if output in self.output_workspaces:
-            raise InvalidJobConfiguration('Duplicate output workspace \'%s\'' % output)
+            raise InvalidJobConfiguration('DUPLICATE_WORKSPACE', 'Duplicate output workspace \'%s\'' % output)
 
         self.output_workspaces[output] = workspace
 
@@ -66,9 +66,10 @@ class JobConfiguration(object):
         """
 
         if setting_name in self.settings:
-            raise InvalidJobConfiguration('Duplicate setting \'%s\'' % setting_name)
+            raise InvalidJobConfiguration('DUPLICATE_SETTING', 'Duplicate setting \'%s\'' % setting_name)
         if not setting_value:
-            raise InvalidJobConfiguration('The value for setting \'%s\' must be a non-empty string' % setting_name)
+            msg = 'The value for setting \'%s\' must be a non-empty string'
+            raise InvalidJobConfiguration('INVALID_SETTING', msg % setting_name)
 
         self.settings[setting_name] = setting_value
 

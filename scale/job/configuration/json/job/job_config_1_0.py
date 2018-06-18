@@ -51,13 +51,14 @@ class JobConfiguration(object):
         try:
             validate(definition, JOB_CONFIG_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidJobConfiguration(validation_error)
+            raise InvalidJobConfiguration('INVALID_CONFIGURATION', validation_error)
 
         self._populate_default_values()
         self._validate_default_settings()
 
         if self.definition['version'] != '1.0':
-            raise InvalidJobConfiguration('%s is an unsupported version number' % self.definition['version'])
+            msg = '%s is an unsupported version number'
+            raise InvalidJobConfiguration('INVALID_VERSION', msg % self.definition['version'])
 
     def get_dict(self):
         """Returns the internal dictionary that represents this error mapping
@@ -72,22 +73,26 @@ class JobConfiguration(object):
         """Ensures that no settings have duplicate names or blank values
 
         :raises :class:`job.configuration.interface.exceptions.InvalidInterface`: If there is a duplicate name or blank
-            value/name. 
+            value/name.
         """
 
         for setting_name, setting_value in self.definition['default_settings'].iteritems():
             if setting_name in self._default_setting_names:
-                raise InvalidJobConfiguration('Duplicate setting name %s in default_settings' % setting_name)
+                msg = 'Duplicate setting name %s in default_settings'
+                raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
             self._default_setting_names.add(setting_name)
 
             if not setting_name:
-                raise InvalidJobConfiguration('Blank setting name (value = %s) in default_settings' % setting_value)
+                msg = 'Blank setting name (value = %s) in default_settings'
+                raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_value)
 
             if not setting_value:
-                raise InvalidJobConfiguration('Blank setting value (name = %s) in default_settings' % setting_name)
+                msg = 'Blank setting value (name = %s) in default_settings'
+                raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
 
             if not isinstance(setting_value, basestring):
-                raise InvalidJobConfiguration('Setting value (name = %s) is not a string' % setting_name)
+                msg = 'Setting value (name = %s) is not a string'
+                raise InvalidJobConfiguration('INVALID_CONFIGURATION', msg % setting_name)
 
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""

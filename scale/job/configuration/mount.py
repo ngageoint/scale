@@ -62,7 +62,8 @@ class HostMountConfig(MountConfig):
         warnings = super(HostMountConfig, self).validate()
 
         if not os.path.isabs(self.host_path):
-            raise InvalidJobConfiguration('Host mount %s must use an absolute host path' % self.name)
+            msg = 'Host mount %s must use an absolute host path'
+            raise InvalidJobConfiguration('HOST_ABSOLUTE_PATH', msg % self.name)
 
         return warnings
 

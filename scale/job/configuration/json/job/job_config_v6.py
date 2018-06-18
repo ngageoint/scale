@@ -161,7 +161,7 @@ class JobConfigurationV6(object):
             if do_validate:
                 validate(self._config, JOB_CONFIG_SCHEMA)
         except ValidationError as ex:
-            raise InvalidJobConfiguration('Invalid configuration: %s' % unicode(ex))
+            raise InvalidJobConfiguration('INVALID_CONFIGURATION', 'Invalid configuration: %s' % unicode(ex))
 
     def get_configuration(self):
         """Returns the job configuration represented by this JSON
