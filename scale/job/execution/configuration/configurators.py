@@ -347,7 +347,7 @@ class ScheduledExecutionConfigurator(object):
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
                                env_vars=env_vars)
 
-        job_config = job_type.get_job_configuration()
+        job_config = job_type.get_legacy_job_configuration()
         mount_volumes = {}
         for mount in interface.get_mounts():
             name = mount['name']
@@ -462,7 +462,7 @@ class ScheduledExecutionConfigurator(object):
             config_with_secrets.add_to_task('pre', settings=self._system_settings)
             config.add_to_task('post', settings=self._system_settings_hidden)
             config_with_secrets.add_to_task('post', settings=self._system_settings)
-            job_config = job_type.get_job_configuration()
+            job_config = job_type.get_legacy_job_configuration()
             secret_settings = secrets_mgr.retrieve_job_type_secrets(job_type.get_secrets_key())
             for _config, secrets_hidden in [(config, True), (config_with_secrets, False)]:
                 task_settings = {}

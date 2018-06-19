@@ -431,10 +431,10 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
     # Edit or create the associated job type model
     if job_type:
         try:
-            JobType.objects.edit_legacy_job_type(job_type.id, interface=interface, trigger_rule=trigger_rule,
-                                                 remove_trigger_rule=remove_trigger_rule,
-                                                 error_mapping=error_mapping,
-                                                 configuration=configuration, secrets=secrets, **extra_fields)
+            JobType.objects.edit_job_type_v5(job_type.id, interface=interface, trigger_rule=trigger_rule,
+                                             remove_trigger_rule=remove_trigger_rule,
+                                             error_mapping=error_mapping,
+                                             configuration=configuration, secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration) as ex:
             logger.exception('Job type edit failed')
@@ -442,11 +442,10 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
                 'Unable to edit existing job type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
         try:
-            JobType.objects.create_legacy_job_type(name=result.get('name'), version=result.get('version'),
-                                                   interface=interface, trigger_rule=trigger_rule,
-                                                   error_mapping=error_mapping, configuration=configuration,
-                                                   secrets=secrets,
-                                                   **extra_fields)
+            JobType.objects.create_job_type_v5(name=result.get('name'), version=result.get('version'),
+                                               interface=interface, trigger_rule=trigger_rule,
+                                               error_mapping=error_mapping, configuration=configuration,
+                                               secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration) as ex:
             logger.exception('Job type create failed')

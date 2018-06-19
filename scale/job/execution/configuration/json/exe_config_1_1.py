@@ -232,19 +232,3 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
             if name in self._post_task_setting_names:
                 raise InvalidExecutionConfiguration('Duplicate setting %s in post task' % name)
             self._post_task_setting_names.add(name)
-
-    def populate_default_job_settings(self, job_exe):
-        """Gathers the job settings defined in the job_type and populates the execution configuration with them
-
-        :param job_exe: The job execution model with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        interface = job_exe.get_job_interface()
-        job_config = job_exe.get_job_configuration()
-        for setting in interface.get_dict()['settings']:
-            if not setting['secret']:
-                setting_name = setting['name']
-                setting_value = job_config.get_setting_value(setting_name)
-                if setting_value:
-                    self.add_job_task_setting(setting_name, setting_value)

@@ -46,7 +46,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_legacy_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',
@@ -103,11 +103,11 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        """Tests calling JobTypeManager.edit_legacy_job_type() where the job type is in a recipe and a valid interface change
+        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and a valid interface change
         is made"""
 
         # Call test
-        JobType.objects.edit_legacy_job_type(self.job_type.id, self.new_valid_job_interface)
+        JobType.objects.edit_job_type_v5(self.job_type.id, self.new_valid_job_interface)
 
         # Check results
         job_type = JobType.objects.get(pk=self.job_type.id)
@@ -118,11 +118,11 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_invalid_interface(self):
-        """Tests calling JobTypeManager.edit_legacy_job_type() where the job type is in a recipe and an invalid interface
+        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and an invalid interface
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.edit_legacy_job_type, self.job_type.id,
+        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type_v5, self.job_type.id,
                           self.new_invalid_job_interface)
 
         # Check results
@@ -155,7 +155,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_legacy_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',

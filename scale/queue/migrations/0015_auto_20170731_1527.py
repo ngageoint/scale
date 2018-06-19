@@ -63,7 +63,7 @@ def job_get_resources(self):
     resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
     return resources
 
-def get_job_configuration(self):
+def get_legacy_job_configuration(self):
     """Returns default job configuration for this job type
 
     :returns: The default job configuration for this job type
@@ -135,7 +135,7 @@ class Migration(migrations.Migration):
         Job.get_resources = job_get_resources
 
         # Attach needed methods to JobType model
-        JobType.get_job_configuration = get_job_configuration
+        JobType.get_legacy_job_configuration = get_legacy_job_configuration
         JobType.get_job_interface = job_type_get_job_interface
         JobType.get_resources = job_type_get_resources
         JobType.get_secrets_key = get_secrets_key

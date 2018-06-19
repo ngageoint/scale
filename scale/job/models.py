@@ -18,7 +18,8 @@ import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.interface.error_interface import ErrorInterface
-from job.configuration.json.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
@@ -35,6 +36,7 @@ from storage.models import ScaleFile
 from seed.results.job_results import JobResults
 from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
 from trigger.models import TriggerRule
+from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
 from vault.secrets_handler import SecretsHandler
 
@@ -2243,7 +2245,7 @@ class JobTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_legacy_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None,
+    def create_job_type_v5(self, name, version, interface, trigger_rule=None, error_mapping=None,
                                custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
@@ -2263,7 +2265,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type. Deprecated - remove with v5.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
         :returns: The new job type
@@ -2320,7 +2322,7 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def create_seed_job_type(self, manifest_dict, trigger_rule_dict=None, configuration_dict=None, **kwargs):
+    def create_job_type_v6(self, manifest_dict, trigger_rule_dict=None, configuration_dict=None, **kwargs):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -2354,9 +2356,9 @@ class JobTypeManager(models.Manager):
 
         secrets = None
         if configuration_dict:
-            configuration = JobConfigurationV2(configuration_dict)
-            secrets = configuration.get_seed_secret_settings(manifest.get_settings())
-            configuration.validate(manifest_dict)
+            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            configuration.validate(manifest)
+            secrets = configuration.remove_secret_settings(manifest)
 
         # Create any errors defined in manifest
         error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
@@ -2443,8 +2445,8 @@ class JobTypeManager(models.Manager):
         return trigger_rule
 
     @transaction.atomic
-    def edit_legacy_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                             error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
+    def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
+                         error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -2464,7 +2466,7 @@ class JobTypeManager(models.Manager):
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
 
@@ -2547,8 +2549,8 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
     @transaction.atomic
-    def edit_seed_job_type(self, job_type_id, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
-                           remove_trigger_rule=False, **kwargs):
+    def edit_job_type_v6(self, job_type_id, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
+                         remove_trigger_rule=False, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. If trigger_rule_dict is set to None it is assumed trigger
@@ -2621,10 +2623,10 @@ class JobTypeManager(models.Manager):
 
         secrets = None
         if configuration_dict:
-            configuration = JobConfigurationV2(configuration_dict)
-            secrets = configuration.get_seed_secret_settings(manifest.get_settings())
-            configuration.validate(manifest.get_dict())
-            job_type.configuration = configuration_dict
+            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            configuration.validate(manifest)
+            secrets = configuration.remove_secret_settings(manifest)
+            job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
 
         if trigger_rule_dict or remove_trigger_rule:
             if job_type.trigger_rule:
@@ -2719,7 +2721,7 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by('last_modified')
         return job_types
 
-    def get_details(self, job_type_id):
+    def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
@@ -2739,10 +2741,16 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = JobConfigurationV2(job_type.configuration)
-            interface = JobInterfaceSunset.create(job_type.interface)
-            configuration.validate(interface.get_dict())
-            job_type.configuration = configuration.get_dict()
+            if JobInterfaceSunset.is_seed_dict(job_type.interface):
+                configuration = self.get_job_configuration()
+                manifest = SeedManifest(job_type.interface, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            else:
+                configuration = JobConfigurationV2(job_type.configuration)
+                interface = JobInterfaceSunset.create(job_type.interface)
+                configuration.validate(interface.get_dict())
+                job_type.configuration = configuration.get_dict()
 
         # Add recent performance statistics
         started = timezone.now()
@@ -3223,7 +3231,7 @@ class JobType(models.Model):
 
         return ErrorInterface(self.error_mapping)
 
-    def get_job_configuration(self):
+    def get_legacy_job_configuration(self):
         """Returns default job configuration for this job type
 
         :returns: The default job configuration for this job type
@@ -3231,6 +3239,15 @@ class JobType(models.Model):
         """
 
         return JobConfigurationV2(self.configuration)
+
+    def get_job_configuration(self):
+        """Returns the job configuration for this job type
+
+        :returns: The job configuration for this job type
+        :rtype: :class:`job.configuration.configuration.JobConfiguration`
+        """
+
+        return JobConfigurationV6(config=self.configuration, do_validate=False).get_configuration()
 
     def get_resources(self):
         """Returns the resources required for jobs of this type
@@ -3273,6 +3290,24 @@ class JobType(models.Model):
         """
 
         return '-'.join([self.name, self.version]).replace('.', '_')
+
+    def get_v2_configuration_json(self):
+        """Returns the job configuration in v2 of the JSON schema
+
+        :returns: The job configuration in v2 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v2_json(self.get_configuration()).get_dict())
+
+    def get_v6_configuration_json(self):
+        """Returns the job configuration in v6 of the JSON schema
+
+        :returns: The job configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

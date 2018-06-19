@@ -240,11 +240,11 @@ class JobTypesView(ListCreateAPIView):
                     trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name,
                                                                     is_active)
                 # Create the job type
-                job_type = JobType.objects.create_legacy_job_type(name=name, version=version, interface=interface,
-                                                                  trigger_rule=trigger_rule, error_mapping=error_mapping,
-                                                                  custom_resources=custom_resources,
-                                                                  configuration=configuration, secrets=secrets,
-                                                                  **extra_fields)
+                job_type = JobType.objects.create_job_type_v5(name=name, version=version, interface=interface,
+                                                              trigger_rule=trigger_rule, error_mapping=error_mapping,
+                                                              custom_resources=custom_resources,
+                                                              configuration=configuration, secrets=secrets,
+                                                              **extra_fields)
 
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection,
                 InvalidSecretsConfiguration, ValueError) as ex:
@@ -253,7 +253,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Fetch the full job type with details
         try:
-            job_type = JobType.objects.get_details(job_type.id)
+            job_type = JobType.objects.get_details_v5(job_type.id)
         except JobType.DoesNotExist:
             raise Http404
 
@@ -292,10 +292,10 @@ class JobTypesView(ListCreateAPIView):
             with transaction.atomic():
 
                 # Create the job type
-                job_type = JobType.objects.create_seed_job_type(manifest_dict=manifest_dict,
-                                                                trigger_rule_dict=trigger_rule_dict,
-                                                                configuration_dict=configuration_dict,
-                                                                **extra_fields)
+                job_type = JobType.objects.create_job_type_v6(manifest_dict=manifest_dict,
+                                                              trigger_rule_dict=trigger_rule_dict,
+                                                              configuration_dict=configuration_dict,
+                                                              **extra_fields)
 
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
                 InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
@@ -317,7 +317,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Fetch the full job type with details
         try:
-            job_type = JobType.objects.get_details(job_type.id)
+            job_type = JobType.objects.get_details_v5(job_type.id)
         except JobType.DoesNotExist:
             raise Http404
 
@@ -352,7 +352,7 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
         try:
-            job_type = JobType.objects.get_details(job_type_id)
+            job_type = JobType.objects.get_details_v5(job_type_id)
         except JobType.DoesNotExist:
             raise Http404
 
@@ -488,10 +488,10 @@ class JobTypeDetailsView(GenericAPIView):
                     job_type.trigger_rule.save()
 
                 # Edit the job type
-                JobType.objects.edit_legacy_job_type(job_type_id=job_type_id, interface=interface,
-                                                     trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
-                                                     error_mapping=error_mapping, custom_resources=custom_resources,
-                                                     configuration=configuration, secrets=secrets, **extra_fields)
+                JobType.objects.edit_job_type_v5(job_type_id=job_type_id, interface=interface,
+                                                 trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
+                                                 error_mapping=error_mapping, custom_resources=custom_resources,
+                                                 configuration=configuration, secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
@@ -499,7 +499,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Fetch the full job type with details
         try:
-            job_type = JobType.objects.get_details(job_type.id)
+            job_type = JobType.objects.get_details_v5(job_type.id)
         except JobType.DoesNotExist:
             raise Http404
 
@@ -544,12 +544,12 @@ class JobTypeDetailsView(GenericAPIView):
             with transaction.atomic():
 
                 # Create the job type
-                job_type = JobType.objects.edit_seed_job_type(job_type_id=job_type_id,
-                                                              manifest_dict=manifest_dict,
-                                                              trigger_rule_dict=trigger_rule_dict,
-                                                              configuration_dict=configuration_dict,
-                                                              remove_trigger_rule=remove_trigger_rule,
-                                                              **extra_fields)
+                job_type = JobType.objects.edit_job_type_v6(job_type_id=job_type_id,
+                                                            manifest_dict=manifest_dict,
+                                                            trigger_rule_dict=trigger_rule_dict,
+                                                            configuration_dict=configuration_dict,
+                                                            remove_trigger_rule=remove_trigger_rule,
+                                                            **extra_fields)
 
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
                 InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
@@ -571,7 +571,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Fetch the full job type with details
         try:
-            job_type = JobType.objects.get_details(job_type_id)
+            job_type = JobType.objects.get_details_v5(job_type_id)
         except JobType.DoesNotExist:
             raise Http404
 
