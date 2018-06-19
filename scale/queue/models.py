@@ -293,7 +293,7 @@ class QueueManager(models.Manager):
         if not queued_job_ids:
             return queued_job_ids  # Done if nothing was queued
 
-        # Retrieve the related job_type and job_type_rev models for the queued jobs
+        # Retrieve the related job_type, job_type_rev, and batch models for the queued jobs
         queued_jobs = Job.objects.get_jobs_with_related(queued_job_ids)
 
         # Query for all input files of the queued jobs

@@ -46,7 +46,7 @@ class QueuedExecutionConfigurator(object):
 
     def configure_queued_job(self, job):
         """Creates and returns an execution configuration for the given queued job. The given job model should have its
-        related job_type and job_type_rev models populated.
+        related job_type, job_type_rev, and batch models populated.
 
         :param job: The queued job model
         :type job: :class:`job.models.Job`
@@ -71,13 +71,23 @@ class QueuedExecutionConfigurator(object):
             task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
         else:
             # Set any output workspaces needed
-            # TODO: In the future, output workspaces can be moved from job data to configuration, moving this step to
-            # the ScheduledExecutionConfigurator
-            self._cache_workspace_names(data.get_output_workspace_ids())
-            output_workspaces = {}
-            for output, workspace_id in data.get_output_workspaces().items():
-                output_workspaces[output] = self._cached_workspace_names[workspace_id]
-            config.set_output_workspaces(output_workspaces)
+            if 'version' in job.input and job.input['version'] == '1.0':
+                # Set output workspaces using legacy job data
+                self._cache_workspace_names(data.get_output_workspace_ids())
+                output_workspaces = {}
+                for output, workspace_id in data.get_output_workspaces().items():
+                    output_workspaces[output] = self._cached_workspace_names[workspace_id]
+                config.set_output_workspaces(output_workspaces)
+            else:
+                # Set output workspaces from job configuration
+                output_workspaces = {}
+                job_config = job.job_type.get_job_configuration()
+                interface = JobInterfaceSunset.create(job.job_type.interface, do_validate=False)
+                for output_name in interface.get_file_output_names():
+                    if output_name in job_config.output_workspaces:
+                        output_workspaces[output_name] = job_config.output_workspaces[output_name]
+                    elif job_config.default_output_workspace:
+                        output_workspaces[output_name] = job_config.default_output_workspace
 
         # Create main task with fields populated from input data
         args = job.get_job_interface().get_injected_command_args(input_values, env_vars)
