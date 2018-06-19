@@ -69,7 +69,7 @@ class JobConfiguration(object):
 
         if setting_name in self.settings:
             raise InvalidJobConfiguration('DUPLICATE_SETTING', 'Duplicate setting \'%s\'' % setting_name)
-        if not setting_value:
+        if setting_value is None:
             msg = 'The value for setting \'%s\' must be a non-empty string'
             raise InvalidJobConfiguration('INVALID_SETTING', msg % setting_name)
 
