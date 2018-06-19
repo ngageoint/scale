@@ -104,8 +104,11 @@ class JobManager(models.Manager):
         job.batch_id = batch_id
         job.max_tries = job_type.max_tries
 
-        job.priority = job_type.priority
-        job.timeout = job_type.timeout
+        if JobInterfaceSunset.is_seed_dict(job_type.interface):
+            job.timeout = SeedManifest(job_type.interface).get_timeout()
+        else:
+            job.priority = job_type.priority
+            job.timeout = job_type.timeout
 
         if superseded_job:
             root_id = superseded_job.root_superseded_job_id
@@ -426,7 +429,7 @@ class JobManager(models.Manager):
                              include_superseded=include_superseded, order=order)
 
     def get_jobs_with_related(self, job_ids):
-        """Gets the job models for the given IDs with related job_type and job_type_rev models
+        """Gets the job models for the given IDs with related job_type, job_type_rev, and batch models
 
         :param job_ids: The job IDs
         :type job_ids: list
@@ -434,7 +437,7 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        return self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids)
+        return self.select_related('job_type', 'job_type_rev', 'batch').filter(id__in=job_ids)
 
     def get_locked_job(self, job_id):
         """Locks and returns the job model for the given ID with no related fields. Caller must be within an atomic
@@ -1104,8 +1107,10 @@ class Job(models.Model):
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
 
+    # TODO: priority and timeout can be removed when legacy job types are removed
     priority = models.IntegerField()
     timeout = models.IntegerField()
+
     input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     input_file_size = models.FloatField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(blank=True, null=True)

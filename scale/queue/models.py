@@ -14,6 +14,7 @@ from job.configuration.data.job_data import JobData as JobData_1_0
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
+from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
@@ -310,6 +311,19 @@ class QueueManager(models.Manager):
         for job in queued_jobs:
             config = configurator.configure_queued_job(job)
 
+            manifest = None
+            if JobInterfaceSunset.is_seed_dict(job.job_type.interface):
+                manifest = SeedManifest(job.job_type.interface)
+
+            if priority:
+                queued_priority = priority
+            elif job.priority:
+                queued_priority = job.priority
+            elif job.batch and self.batch.get_configuration().priority:
+                queued_priority = self.batch.get_configuration().priority
+            else:
+                queued_priority = job.job_type.get_job_configuration().priority
+
             queue = Queue()
             queue.job_type_id = job.job_type_id
             queue.job_id = job.id
@@ -318,8 +332,8 @@ class QueueManager(models.Manager):
             queue.exe_num = job.num_exes
             queue.input_file_size = job.input_file_size if job.input_file_size else 0.0
             queue.is_canceled = False
-            queue.priority = priority if priority is not None else job.priority
-            queue.timeout = job.timeout
+            queue.priority = queued_priority
+            queue.timeout = manifest.get_timeout() if manifest else job.timeout
             queue.interface = job.get_job_interface().get_dict()
             queue.configuration = config.get_dict()
             queue.resources = job.get_resources().get_json().get_dict()
