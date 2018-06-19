@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 from job.configuration.exceptions import InvalidJobConfiguration
+from storage.models import Workspace
+from util.validation import ValidationWarning
 
 
 DEFAULT_PRIORITY = 100
@@ -73,12 +75,51 @@ class JobConfiguration(object):
 
         self.settings[setting_name] = setting_value
 
-    # TODO: implement validating against a Seed manifest
-    def validate(self, interface):
-        """Validates the configuration against the given Seed manifest
+    def remove_secret_settings(self, manifest):
+        """Removes and returns the secret setting values from this job configuration
 
-        :param interface: The interface dict for the job type
-        :type interface: dict
+        :param manifest: The Seed manifest
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :returns: A dict of secret settings where the key is the setting name and the value is the secret setting value
+        :rtype: dict
+        """
+
+        secret_settings = {}
+
+        for setting_dict in manifest.get_settings():
+            if 'secret' in setting_dict and setting_dict['secret']:
+                name = setting_dict['name']
+                if name in self.settings:
+                    secret_settings[name] = self.settings[name]
+                    del self.settings[name]
+
+        return secret_settings
+
+    def validate(self, manifest):
+        """Validates the configuration against the given Seed manifest. This will perform database queries.
+
+        :param manifest: The Seed manifest
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :returns: A list of warnings discovered during validation
+        :rtype: list
+
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
+        """
+
+        if self.priority < 1:
+            raise InvalidJobConfiguration('INVALID_PRIORITY', 'Priority must be a positive integer')
+
+        warnings = self._validate_mounts(manifest)
+        warnings.extend(self._validate_output_workspaces(manifest))
+        warnings.extend(self._validate_settings(manifest))
+
+        return warnings
+
+    def _validate_mounts(self, manifest):
+        """Validates the mount configuration against the given Seed manifest
+
+        :param manifest: The Seed manifest
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
         :returns: A list of warnings discovered during validation
         :rtype: list
 
@@ -86,15 +127,71 @@ class JobConfiguration(object):
         """
 
         warnings = []
+        seed_mounts = {mount_dict['name'] for mount_dict in manifest.get_mounts()}
 
         for mount_config in self.mounts.values():
             warnings.extend(mount_config.validate())
+            if mount_config.name not in seed_mounts:
+                warnings.append(ValidationWarning('UNKNOWN_MOUNT', 'Unknown mount \'%s\' ignored' % mount_config.name))
+        for name in seed_mounts:
+            if name not in self.mounts:
+                warnings.append(ValidationWarning('MISSING_MOUNT', 'Missing configuration for mount \'%s\'' % name))
 
-        # TODO: ensure output workspaces are valid (exist)
-        # TODO: ensure priority is positive
-        # TODO: do warnings for ignored mounts and settings not defined in Seed
-        # TODO: do warnings for mounts, settings, and output workspaces in Seed, but not defined here
-        # TODO: do warnings for ro output workspaces
-        # TODO: strip out secret settings? how does this work now?
+        return warnings
+
+    def _validate_output_workspaces(self, manifest):
+        """Validates the workspace configuration against the given Seed manifest. This will perform database queries.
+
+        :param manifest: The Seed manifest
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :returns: A list of warnings discovered during validation
+        :rtype: list
+
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
+        """
+
+        warnings = []
+        seed_outputs = {output_dict['name'] for output_dict in manifest.get_outputs()['files']}
+        seed_outputs.update({output_dict['name'] for output_dict in manifest.get_outputs()['files']})
+
+        workspace_names = set(self.output_workspaces.values())
+        if self.default_output_workspace:
+            workspace_names.add(self.default_output_workspace)
+        workspace_models = {w.name: w for w in Workspace.objects.get_workspaces(names=workspace_names)}
+        for name in workspace_names:
+            if name not in workspace_models:
+                raise InvalidJobConfiguration('INVALID_WORKSPACE', 'No workspace named \'%s\'' % name)
+            if not workspace_models[name].is_active:
+                warnings.append(ValidationWarning('DEPRECATED_WORKSPACE', 'Workspace \'%s\' is deprecated' % name))
+            # TODO: add RO/RW mode to workspaces and add warning if using a RO workspace for output
+
+        if not self.default_output_workspace:
+            for name in seed_outputs:
+                if name not in self.output_workspaces:
+                    msg = 'Missing workspace for output \'%s\''
+                    warnings.append(ValidationWarning('MISSING_WORKSPACE', msg % name))
+
+        return warnings
+
+    def _validate_settings(self, manifest):
+        """Validates the setting configuration against the given Seed manifest
+
+        :param manifest: The Seed manifest
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :returns: A list of warnings discovered during validation
+        :rtype: list
+
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the configuration is invalid
+        """
+
+        warnings = []
+        seed_settings = {setting_dict['name'] for setting_dict in manifest.get_settings()}
+
+        for name in self.settings:
+            if name not in seed_settings:
+                warnings.append(ValidationWarning('UNKNOWN_SETTING', 'Unknown setting \'%s\' ignored' % name))
+        for name in seed_settings:
+            if name not in self.settings:
+                warnings.append(ValidationWarning('MISSING_SETTING', 'Missing configuration for setting \'%s\'' % name))
 
         return warnings
