@@ -2942,7 +2942,7 @@ class JobTypeManager(models.Manager):
         secrets_handler = SecretsHandler()
         secrets_handler.set_job_type_secrets(secrets_key, secrets)
 
-    def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
+    def validate_job_type_v5(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
         """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
@@ -2956,7 +2956,7 @@ class JobTypeManager(models.Manager):
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 

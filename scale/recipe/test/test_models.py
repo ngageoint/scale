@@ -212,11 +212,11 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
+        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and a valid interface
         change is made"""
 
         # Call test
-        warnings = JobType.objects.validate_job_type(self.job_type.name, self.job_type.version,
+        warnings = JobType.objects.validate_job_type_v5(self.job_type.name, self.job_type.version,
                                                      self.new_valid_job_interface)
 
         # Check results
@@ -228,11 +228,11 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         self.assertEqual(len(warnings), 1)
 
     def test_invalid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
+        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and an invalid interface
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type, self.job_type.name,
+        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type_v5, self.job_type.name,
                           self.job_type.version, self.new_invalid_job_interface)
 
         # Check results

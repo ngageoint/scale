@@ -1304,18 +1304,18 @@ class TestJobTypeManagerValidateJobType(TestCase):
                                                                    configuration=self.trigger_config.get_dict())
 
     def test_successful(self):
-        """Tests calling JobTypeManager.validate_job_type() successfully"""
+        """Tests calling JobTypeManager.validate_job_type_v5() successfully"""
 
-        warnings = JobType.objects.validate_job_type('name', '1.0', self.interface, self.error_mapping,
+        warnings = JobType.objects.validate_job_type_v5('name', '1.0', self.interface, self.error_mapping,
                                                      self.trigger_config)
 
         # Check results
         self.assertListEqual(warnings, [])
 
     def test_invalid(self):
-        """Tests calling JobTypeManager.validate_job_type() with an invalid trigger rule"""
+        """Tests calling JobTypeManager.validate_job_type_v5() with an invalid trigger rule"""
 
-        self.assertRaises(InvalidConnection, JobType.objects.validate_job_type, 'name', '1.0', self.interface,
+        self.assertRaises(InvalidConnection, JobType.objects.validate_job_type_v5, 'name', '1.0', self.interface,
                           self.error_mapping, self.invalid_trigger_config)
 
 

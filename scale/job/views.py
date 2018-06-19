@@ -673,9 +673,9 @@ class JobTypesValidationView(APIView):
 
         # Validate the job type
         try:
-            warnings = JobType.objects.validate_job_type(name=name, version=version, interface=interface,
-                                                         error_mapping=error_mapping, trigger_config=trigger_config,
-                                                         configuration=configuration)
+            warnings = JobType.objects.validate_job_type_v5(name=name, version=version, interface=interface,
+                                                            error_mapping=error_mapping, trigger_config=trigger_config,
+                                                            configuration=configuration)
         except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
