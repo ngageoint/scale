@@ -6,36 +6,16 @@ import logging
 from copy import deepcopy
 
 import os
+
+from data.data.value import FileValue, JsonValue
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.configuration.data.data_file import DATA_FILE_STORE
 from job.configuration.data.job_data import JobData
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
-from jsonschema import validate, ValidationError
 from product.types import ProductFileMetadata
 
 logger = logging.getLogger(__name__)
-
-
-SCHEMA_VERSION = '2.0'
-JOB_RESULTS_SCHEMA = {
-    'type': 'object',
-    'required': ['files', 'json'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'Version of the job_results schema',
-            "default": SCHEMA_VERSION,
-            "type": "string"
-        },
-        'files': {
-            'description': 'Output files captured from job execution',
-            'type': 'object',
-        },
-        'json': {
-            'description': 'Output JSON metadata from job execution',
-            'type': 'object',
-        }
-    }}
 
 
 class JobResults(object):
@@ -49,51 +29,20 @@ class JobResults(object):
         :type results_dict: dict
         """
 
-        if results_dict:
-            if 'version' in results_dict and '1.0' == results_dict['version']:
-                results_dict = self.convert_results(results_dict)
+        if not results_dict:
+            results_dict = {}
 
-            self._results_dict = results_dict
-        else:
-            self._results_dict = {'version': '2.0', 'files': {}, 'json': {}}
-
-        try:
-            if do_validate:
-                validate(self._results_dict, JOB_RESULTS_SCHEMA)
-        except ValidationError:
-            raise
-
-
-    @staticmethod
-    def convert_results(legacy):
-        """Convert a previous JobResults object to the 2.0 schema
-
-        :param legacy: The previous object
-        :type legacy: dict
-        :return: converted object
-        :rtype: dict
-        """
-        result = {'version': '2.0', 'files': {}, 'json': {}}
-        for i in legacy['output_data']:
-            if i['file_ids']:
-                result['files'][i['name']] = i['file_ids']
-            elif i['file_id']:
-                result['files'][i['name']] = [i['file_id']]
-            else:
-                result['json'][i['name']] = i['value']
-
-        return result
+        self._results_data = DataV6(results_dict, do_validate=True).get_data()
 
     @property
     def files(self):
         """Accessor for files in results"""
-        return self._results_dict['files']
-
+        return convert_data_to_v6_json(self._results_data).get_dict()['files']
 
     @property
     def json(self):
         """Accessor for json in results"""
-        return self._results_dict['json']
+        return convert_data_to_v6_json(self._results_data).get_dict()['json']
 
     def add_file_list_parameter(self, name, file_ids):
         """Adds a list of files to the job results
@@ -104,7 +53,7 @@ class JobResults(object):
         :type file_ids: [long]
         """
 
-        self.files[name] = file_ids
+        self._results_data.add_value(FileValue(name, file_ids))
 
     def add_file_parameter(self, name, file_id):
         """Adds a file to the job results
@@ -115,7 +64,7 @@ class JobResults(object):
         :type file_id: long
         """
 
-        self.files[name] = [file_id]
+        self._results_data.add_value(FileValue(name, [file_id]))
 
     def add_output_to_data(self, output_name, job_data, input_name):
         """Adds the given output from the results as a new input in the given job data
@@ -149,7 +98,7 @@ class JobResults(object):
         :rtype: dict
         """
 
-        return self._results_dict
+        return convert_data_to_v6_json(self._results_data).get_dict()
 
     def extend_interface_with_outputs_v5(self, interface, job_files):
         """Create an output_data like object for legacy v5 API
