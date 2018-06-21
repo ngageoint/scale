@@ -340,6 +340,15 @@ class JobData(object):
 
         return input_values
 
+    def has_workspaces(self):
+        """Whether this job data contains output wrkspaces
+
+        :returns: Whether this job data contains output wrkspaces
+        :rtype: bool
+        """
+
+        return False
+
     # TODO: Remove with v5 API
     def extend_interface_with_inputs_v5(self, interface, job_files):
         """Create an input_data like object for legacy v5 API

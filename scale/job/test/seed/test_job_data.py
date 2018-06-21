@@ -5,11 +5,13 @@ from django.test import TransactionTestCase
 from job.seed.results.job_results import JobResults
 from mock import patch, Mock
 
+from job.configuration.configuration import JobConfiguration
 from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.results.exceptions import OutputCaptureError
 from job.data.job_data import JobData
 from job.seed.types import SeedInputFiles, SeedOutputFiles
 from product.types import ProductFileMetadata
+from storage.test import utils as storage_test_utils
 
 
 class DummyDataFileStore(AbstractDataFileStore):
@@ -83,14 +85,21 @@ class TestJobData(TransactionTestCase):
            new_callable=lambda: {'DATA_FILE_STORE': DummyDataFileStore()})
     def test_store_output_files(self, dummy_store, isfile):
 
+        workspace = storage_test_utils.create_workspace()
+
         data = {'output_data':
                         {'files':
                          [{'name':'OUTPUT_TIFFS',
-                           'workspace_id': 1}]}}
+                           'workspace_id': workspace.id}]}}
         files = {'OUTPUT_TIFFS': [ProductFileMetadata('OUTPUT_TIFFS', 'outfile0.tif', media_type='image/tiff')]}
         job_data = JobData(data)
 
-        results = JobResults()._store_output_data_files(files, job_data, Mock())
+        job_config = JobConfiguration()
+        job_config.add_output_workspace('OUTPUT_TIFFS', workspace.name)
+        job_exe = Mock()
+        job_exe.job_type.get_job_configuration.return_value = job_config
+
+        results = JobResults()._store_output_data_files(files, job_data, job_exe)
         self.assertEqual({'OUTPUT_TIFFS': [1]}, results.files)
 
     @patch('os.path.join', return_value='/scale/input')

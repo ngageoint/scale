@@ -7,6 +7,7 @@ from copy import deepcopy
 
 import os
 from job.configuration.data.data_file import DATA_FILE_STORE
+from job.configuration.data.job_data import JobData
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
 from jsonschema import validate, ValidationError
@@ -297,9 +298,9 @@ class JobResults(object):
         # Organize the data files
         workspace_files = {}  # Workspace ID -> [`ProductFileMetadata`]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
+        output_workspaces = JobData.create_output_workspace_dict(data_files.keys(), job_data, job_exe)
         for name in data_files:
-            file_output = job_data.get_output_file_by_id(name)
-            workspace_id = file_output.workspace_id
+            workspace_id = output_workspaces[name]
             if workspace_id in workspace_files:
                 workspace_file_list = workspace_files[workspace_id]
             else:

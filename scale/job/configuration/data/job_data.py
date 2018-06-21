@@ -324,6 +324,15 @@ class JobData(object):
                 env_vars[normalize_env_var_name(input_name)] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
         return env_vars
 
+    def has_workspaces(self):
+        """Whether this job data contains output wrkspaces
+
+        :returns: Whether this job data contains output wrkspaces
+        :rtype: bool
+        """
+
+        return True
+
     def retrieve_input_data_files(self, data_files):
         """Retrieves the given data input files and writes them to the given local directories. Any given file
         parameters that do not appear in the data will not be returned in the results.
@@ -431,9 +440,9 @@ class JobData(object):
         # Organize the data files
         workspace_files = {}  # Workspace ID -> [(absolute local file path, media type)]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
+        output_workspaces = JobData.create_output_workspace_dict(data_files.keys(), self, job_exe)
         for name in data_files:
-            file_output = self.data_outputs_by_name[name]
-            workspace_id = file_output['workspace_id']
+            workspace_id = output_workspaces[name]
             if workspace_id in workspace_files:
                 workspace_file_list = workspace_files[workspace_id]
             else:
@@ -717,3 +726,44 @@ class JobData(object):
             if file_id not in found_ids:
                 raise InvalidData('Invalid job data: Data file for ID %i does not exist' % file_id)
         return warnings
+
+    @staticmethod
+    def create_output_workspace_dict(output_params, job_data, job_exe):
+        """Creates the mapping from output to workspace both ways: the old way from job data and the new way from job
+        configuration
+
+        :param output_params: The list of output parameter names
+        :type output_params: list
+        :param job_data: The job data
+        :type job_data: 1.0? 2.0? WHO KNOWZ?
+        :param job_exe: The job execution model (with related job and job_type fields)
+        :type job_exe: :class:`job.models.JobExecution`
+        :return: Dict where output param name maps to workspace ID
+        :rtype: dict
+        """
+
+        workspace_dict = {}  # {Output name: workspace ID}
+
+        if job_data.has_workspaces():
+            # Do the old way of getting output workspaces from job data
+            for name, output_dict in job_data.data_outputs_by_name.items():
+                workspace_id = output_dict['workspace_id']
+                workspace_dict[name] = workspace_id
+        else:
+            workspace_names_dict = {}  # {Output name: workspace name}
+            # Do the new way, grabbing output workspaces from job configuration
+            config = job_exe.job_type.get_job_configuration()
+            for name in output_params:
+                if name in config.output_workspaces:
+                    workspace_names_dict[name] = config.output_workspaces[name]
+                elif config.default_output_workspace:
+                    workspace_names_dict[name] = config.default_output_workspace
+                else:
+                    raise Exception('No output workspace configured for output \'%s\'' % name)
+
+            from storage.models import Workspace
+            workspace_mapping = {w.name: w.id for w in Workspace.objects.filter(name__in=workspace_names_dict.values())}
+            for output_name, workspace_name in workspace_names_dict.items():
+                workspace_dict[output_name] = workspace_mapping[workspace_name]
+
+        return workspace_dict
