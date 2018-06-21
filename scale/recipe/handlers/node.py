@@ -82,6 +82,8 @@ class RecipeNode(object):
 
         # Add workspace for file outputs if needed
         if job_interface.get_file_output_names():
-            job_interface.add_workspace_to_data(job_data, recipe_data.get_workspace_id())
+            workspace_id = recipe_data.get_workspace_id()
+            if workspace_id:
+                job_interface.add_workspace_to_data(job_data, workspace_id)
 
         return job_data
