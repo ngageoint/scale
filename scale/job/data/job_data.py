@@ -7,10 +7,10 @@ from copy import deepcopy
 import os
 from numbers import Integral
 
-from job.configuration.data.data_file import DATA_FILE_STORE
+from data.data.value import FileValue, JsonValue
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.data.types import JobDataInputFiles, JobDataInputJson, JobDataOutputFiles
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 from job.seed.types import SeedInputFiles
 from storage.brokers.broker import FileDownload
@@ -18,8 +18,6 @@ from storage.models import ScaleFile
 from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
-
-DEFAULT_VERSION = '2.0'
 
 
 class ValidationWarning(object):
@@ -54,35 +52,7 @@ class JobData(object):
         if not data:
             data = {}
 
-        self._data = data
-        self._data_names = {}  # str -> `JobDataFields`
-        self._output_files = {}  # str -> `JobDataOutputFiles`
-        self._input_json = {}  # str -> `JobDataInputJson`
-        self._input_files = {}  # str -> `JobDataInputFiles`
-
-        if 'version' not in self._data:
-            self._data['version'] = DEFAULT_VERSION
-        if not self._data['version'] == '2.0':
-            raise InvalidData('Invalid job data: %s is an unsupported version number' % self._data['version'])
-
-        # Add structure placeholders
-        if 'input_data' not in self._data:
-            self._data['input_data'] = {}
-        if 'files' not in self._data['input_data']:
-            self._data['input_data']['files'] = []
-        if 'json' not in self._data['input_data']:
-            self._data['input_data']['json'] = []
-        if 'output_data' not in self._data:
-            self._data['output_data'] = {}
-        if 'files' not in self._data['output_data']:
-            self._data['output_data']['files'] = []
-
-        for data_input in self._data['input_data']['files']:
-            self._add_file_input(data_input, False)
-        for data_input in self._data['input_data']['json']:
-            self.add_json_input(data_input, False)
-        for data_output in self._data['output_data']['files']:
-            self.add_file_output(data_output, False)
+        self._new_data = DataV6(data, do_validate=True).get_data()
 
     def add_file_input(self, name, file_id):
         """Adds a new file parameter to this job data.
@@ -91,7 +61,7 @@ class JobData(object):
         :type data: dict
         """
 
-        self._add_file_input({'name':name, 'file_ids': [file_id]})
+        self._new_data.add_value(FileValue(name, [file_id]))
 
     def add_file_list_input(self, name, file_ids):
         """Adds a new files parameter to this job data.
@@ -102,7 +72,7 @@ class JobData(object):
         :type file_ids: [long]
         """
 
-        self._add_file_input({'name': name, 'file_ids': file_ids})
+        self._new_data.add_value(FileValue(name, file_ids))
 
     def add_json_input(self, data, add_to_internal=True):
         """Adds a new json parameter to this job data.
@@ -113,12 +83,7 @@ class JobData(object):
         :type add_to_internal: bool
         """
 
-        self._validate_job_data_field(data, 'value')
-        input = JobDataInputJson(data)
-        if add_to_internal:
-            self._data['input_data']['json'].append(data)
-        self._data_names[input.name] = input
-        self._input_json[input.name] = input
+        self._new_data.add_value(JsonValue(data['name'], data['value']))
 
     def add_file_output(self, data, add_to_internal=True):
         """Adds a new output files to this job data with a workspace ID.
@@ -129,28 +94,8 @@ class JobData(object):
         :type add_to_internal: bool
         """
 
-        self._validate_job_data_field(data, 'workspace_id')
-        output = JobDataOutputFiles(data)
-        if add_to_internal:
-            self._data['output_data']['files'].append(data)
-        self._data_names[output.name] = output
-        self._output_files[output.name] = output
-
-    def _add_file_input(self, data, add_to_internal=True):
-        """Adds a new file parameter to this job data.
-
-        :param data: The files parameter dict
-        :type data: dict
-        :param add_to_internal: Whether we should add to private data dict. Unneeded when used from __init__
-        :type add_to_internal: bool
-        """
-
-        self._validate_job_data_field(data, 'file_ids')
-        input = JobDataInputFiles(data)
-        if add_to_internal:
-            self._data['input_data']['files'].append(data)
-        self._data_names[input.name] = input
-        self._input_files[input.name] = input
+        # No longer holding output workspaces in data
+        pass
 
     def get_all_properties(self):
         """Retrieves all properties from this job data and returns them in ascending order of their names
@@ -161,9 +106,13 @@ class JobData(object):
 
         properties = []
 
-        names = sorted(self._input_json.keys())
+        names = []
+        for input_value in self._new_data.values.values():
+            if isinstance(input_value, JsonValue):
+                names.append(input_value.name)
+        names = sorted(names)
         for name in names:
-            properties.append(name + '=' + self._input_json[name].value)
+            properties.append(name + '=' + self._new_data.values[name].value)
 
         return properties
 
@@ -174,7 +123,7 @@ class JobData(object):
         :rtype: dict
         """
 
-        return self._data
+        return convert_data_to_v6_json(self._new_data).get_dict()
 
     def get_input_file_ids(self):
         """Returns a set of scale file identifiers for each file in the job input data.
@@ -184,9 +133,10 @@ class JobData(object):
         """
 
         file_ids = set()
-        for data_input in self._input_files.itervalues():
-            for id in data_input.file_ids:
-                file_ids.add(id)
+        for input_value in self._new_data.values.values():
+            if isinstance(input_value, FileValue):
+                for file_id in input_value.file_ids:
+                    file_ids.add(file_id)
         return file_ids
 
     def get_input_file_ids_by_input(self):
@@ -197,9 +147,9 @@ class JobData(object):
         """
 
         file_ids = {}
-        for data_input in self._input_files.itervalues():
-            if data_input.file_ids:
-                file_ids[data_input.name] = data_input.file_ids
+        for input_value in self._new_data.values.values():
+            if isinstance(input_value, FileValue):
+                file_ids[input_value.name] = input_value.file_ids
         return file_ids
 
     def get_input_file_info(self):
@@ -211,23 +161,12 @@ class JobData(object):
 
         file_info = set()
 
-        for data_input in self._input_files.itervalues():
-            if data_input.file_ids:
-                for file_id in data_input.file_ids:
-                    file_info.add((file_id, data_input.name))
+        for input_value in self._new_data.values.values():
+            if isinstance(input_value, FileValue):
+                for file_id in input_value.file_ids:
+                    file_info.add((file_id, input_value.name))
 
         return file_info
-
-    def get_output_file_by_id(self, key):
-        """Attempt to return an output_file by id
-
-        :param id: key for an output file
-        :type id: str
-        :returns: value for output_files key
-        :rtype: str
-        """
-
-        return self._output_files[key]
 
     def get_output_workspace_ids(self):
         """Returns a list of the IDs for every workspace used to store the output files for this data
@@ -236,11 +175,7 @@ class JobData(object):
         :rtype: [int]
         """
 
-        workspace_ids = set()
-        for output in self._output_files.itervalues():
-            workspace_ids.add(output.workspace_id)
-
-        return list(workspace_ids)
+        return []
 
     def get_output_workspaces(self):
         """Returns a dict of the output parameter names mapped to their output workspace ID
@@ -249,11 +184,7 @@ class JobData(object):
         :rtype: dict
         """
 
-        workspaces = {}
-        for output in self._output_files.itervalues():
-            workspaces[output.name] = output.workspace_id
-
-        return workspaces
+        return {}
 
     def get_property_values(self, property_names):
         """Retrieves the values contained in this job data for the given property names. If no value is available for a
@@ -268,8 +199,8 @@ class JobData(object):
         property_values = {}
 
         for name in property_names:
-            if name in self._input_json:
-                property_values[name] = self._input_json[name].value
+            if name in self._new_data.values:
+                property_values[name] = self._new_data.values[name].value
 
         return property_values
 
@@ -292,9 +223,9 @@ class JobData(object):
             multiple = data_file.multiple
             dir_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
             partial = data_file.partial
-            if data_file.name not in self._data_names:
+            if data_file.name not in self._new_data.values:
                 continue
-            file_input = self._data_names[data_file.name]
+            file_input = self._new_data.values[data_file.name]
             file_ids = []
             if not multiple and len(file_input.file_ids) > 1:
                 raise Exception(
@@ -370,7 +301,7 @@ class JobData(object):
             # Use internal JobInputFiles data structure to get Scale File IDs
             # Follow that up with a list comprehension over potentially multiple IDs to get
             # final list of ScaleFile objects
-            in_file['value'] = [file_map[x] for x in self._input_files[in_file['name']].file_ids]
+            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
 
             if len(in_file['value']) >= 2:
                 in_file['type'] = 'files'
@@ -379,7 +310,7 @@ class JobData(object):
                 in_file['type'] = 'file'
             inputs.append(in_file)
         for x in input_json:
-            x['value'] = self._input_json[x['name']].value
+            x['value'] = self._new_data.values[x['name']].value
             x['type'] = 'property'
             inputs.append(x)
         return inputs
@@ -407,10 +338,10 @@ class JobData(object):
             # Follow that up with a list comprehension over potentially multiple IDs to get 
             # final list of ScaleFile objects
 
-            in_file['value'] = [file_map[x] for x in self._input_files[in_file['name']].file_ids]
+            in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
             files.append(in_file)
         for x in input_json:
-            x['value'] = self._input_json[x['name']].value
+            x['value'] = self._new_data.values[x['name']].value
             json.append(x)
         inputs['files'] = files
         inputs['json'] = json
@@ -425,19 +356,21 @@ class JobData(object):
         :rtype: {str, str}
         """
         env_vars = {}
-        for file_input in self._input_files.itervalues():
-            env_var_name = normalize_env_var_name(file_input.name)
-            if len(file_input.file_ids) > 1:
-                # When we have input for multiple files, map in the entire directory
-                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
-            else:
-                input_file = input_files[file_input.name][0]
-                file_name = os.path.basename(input_file.workspace_path)
-                if input_file.local_file_name:
-                    file_name = input_file.local_file_name
-                env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
-        for json_input in self._input_json.itervalues():
-            env_vars[normalize_env_var_name(json_input.name)] = json_input.value
+        for file_input in self._new_data.values.values():
+            if isinstance(file_input, FileValue):
+                env_var_name = normalize_env_var_name(file_input.name)
+                if len(file_input.file_ids) > 1:
+                    # When we have input for multiple files, map in the entire directory
+                    env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name)
+                else:
+                    input_file = input_files[file_input.name][0]
+                    file_name = os.path.basename(input_file.workspace_path)
+                    if input_file.local_file_name:
+                        file_name = input_file.local_file_name
+                    env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, file_input.name, file_name)
+        for json_input in self._new_data.values.values():
+            if isinstance(file_input, JsonValue):
+                env_vars[normalize_env_var_name(json_input.name)] = json_input.value
 
         return env_vars
 
@@ -473,35 +406,29 @@ class JobData(object):
             required = input_file.required
             file_desc = ScaleFileDescription()
 
-            if name in self._input_files:
-                # Have this input, make sure it is valid
-                file_input = self._input_files[name]
-                file_ids = []
+            if name in self._new_data.values:
+                if isinstance(self._new_data.values[name], FileValue):
+                    # Have this input, make sure it is valid
+                    file_input = self._new_data.values[name]
+                    file_ids = []
 
-                for media_type in input_file.media_types:
-                    file_desc.add_allowed_media_type(media_type)
+                    for media_type in input_file.media_types:
+                        file_desc.add_allowed_media_type(media_type)
 
-                for file_id in file_input.file_ids:
-                    if not isinstance(file_id, Integral):
-                        msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
-                               'field')
-                        raise InvalidData(msg % name)
-                    file_ids.append(long(file_id))
+                    for file_id in file_input.file_ids:
+                        if not isinstance(file_id, Integral):
+                            msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
+                                   'field')
+                            raise InvalidData(msg % name)
+                        file_ids.append(long(file_id))
 
-                warnings.extend(self._validate_file_ids(file_ids, file_desc))
+                    warnings.extend(self._validate_file_ids(file_ids, file_desc))
             else:
                 # Don't have this input, check if it is required
                 if required:
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
 
-        # Handle extra inputs in the data that are not defined in the interface
-        for name in deepcopy(self._input_files):
-            if name not in [x.name for x in files]:
-                warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
-                warnings.append(warn)
-                self._delete_input(name)
-
-        return warnings
+        return []
 
     def validate_input_json(self, input_json):
         """Validates the given property names to ensure they are all populated correctly and exist if they are required.
@@ -517,24 +444,18 @@ class JobData(object):
         warnings = []
         for in_js in input_json:
             name = in_js.name
-            if name in self._input_json:
-                # Have this input, make sure it is a valid property
-                property_input = self._input_json[name]
-                value = property_input.value
-                if not isinstance(value, in_js.python_type):
-                    raise InvalidData('Invalid job data: Data input %s must have a json type %s in its "value" field' %
-                                      (name, in_js.type))
+            if name in self._new_data.values:
+                if isinstance(self._new_data.values[name], JsonValue):
+                    # Have this input, make sure it is a valid property
+                    property_input = self._new_data.values[name]
+                    value = property_input.value
+                    if not isinstance(value, in_js.python_type):
+                        msg = 'Invalid job data: Data input %s must have a json type %s in its "value" field'
+                        raise InvalidData(msg % (name, in_js.type))
             else:
                 # Don't have this input, check if it is required
                 if in_js.required:
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
-
-        # Handle extra inputs in the data that are not defined in the interface
-        for name in list(self._input_json.keys()):
-            if name not in [x.name for x in input_json]:
-                warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
-                warnings.append(warn)
-                self._delete_input(name)
 
         return warnings
 
@@ -549,72 +470,7 @@ class JobData(object):
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
         """
 
-        warnings = []
-        workspace_ids = set()
-        for name in files:
-            if name not in self._output_files:
-                raise InvalidData('Invalid job data: Data output %s was not provided' % name)
-            file_output = self._output_files[name]
-            workspace_id = file_output.workspace_id
-            if not isinstance(workspace_id, Integral):
-                msg = 'Invalid job data: Data output %s must have an integer in its "workspace_id" field' % name
-                raise InvalidData(msg)
-            workspace_ids.add(workspace_id)
-
-        data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
-        if not data_file_store:
-            raise Exception('No data file store found')
-        workspaces = data_file_store.get_workspaces(workspace_ids)
-
-        for workspace_id in workspaces:
-            active = workspaces[workspace_id]
-            if not active:
-                raise InvalidData('Invalid job data: Workspace for ID %i is not active' % workspace_id)
-            workspace_ids.remove(workspace_id)
-
-        # Check if there were any workspace IDs that weren't found
-        if workspace_ids:
-            raise InvalidData('Invalid job data: Workspace for ID(s): %s do not exist' % str(workspace_ids))
-        return warnings
-
-    def _delete_input(self, name):
-        """Deletes the input with the given name
-
-        :param name: The name of the input to delete
-        :type name: string
-        """
-
-        if name in self._input_files:
-            self._data['input_data']['files'] = self._delete_by_name(self._data['input_data']['files'], name)
-            del self._input_files[name]
-            del self._data_names[name]
-        elif name in self._input_json:
-            self._data['input_data']['json'] = self._delete_by_name(self._data['input_data']['json'], name)
-            del self._input_json[name]
-            del self._data_names[name]
-
-    def _delete_by_name(self, collection, name):
-        """Traverse a list of dicts and return list that omits the dict with a 'name' value match
-
-        :param collection: Original list to removal dict from
-        :type collection: [dict]
-        :param name: Value for name key that should be omitted
-        :type name: str
-        :return: List without dict matching on 'name' key value
-        :rtype: [dict]
-        """
-        return [d for d in collection if d.get('name') != name]
-
-    def _get_name_mapped_dict(self, collection, type):
-        """Get a dictionary from a given collection
-
-        :param collection:
-        :param type:
-        :return:
-        """
-
-        return {k: collection[k] for k in collection if isinstance(collection[k], type)}
-
+        return []
 
     def _retrieve_files(self, data_files):
         """Retrieves the given data files and writes them to the given local directories. If no file with a given ID
@@ -683,21 +539,3 @@ class JobData(object):
             if file_id not in found_ids:
                 raise InvalidData('Invalid job data: Data file for ID %i does not exist' % file_id)
         return warnings
-
-    def _validate_job_data_field(self, data, field_name):
-        """Validate a JobData input or output field for required fields
-
-        :param data: Input or output data field
-        :type data: dict
-        :param field_name: Name of field that describes additional input / output metadata
-        :type field_name: basestring
-        :return:
-        """
-        if 'name' not in data:
-            raise InvalidData('Every JobData input / output must have a "name" field.')
-        name = data['name']
-        if name in self._data_names:
-            raise InvalidData('%s cannot be defined more than once.' % name)
-
-        if field_name not in data:
-            raise InvalidData('Expected field %s was missing.' % field_name)
