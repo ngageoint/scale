@@ -1223,7 +1223,7 @@ class Job(models.Model):
         """
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in self.input and '2.0' == self.input['version']:
+        if 'version' in self.input and '6' == self.input['version']:
             job_data = JobData(self.input)
         else:
             job_data = JobData_1_0(self.input)
@@ -2728,7 +2728,7 @@ class JobTypeManager(models.Manager):
         # Scrub configuration for secrets
         if job_type.configuration:
             if JobInterfaceSunset.is_seed_dict(job_type.interface):
-                configuration = self.get_job_configuration()
+                configuration = job_type.get_job_configuration()
                 manifest = SeedManifest(job_type.interface, do_validate=False)
                 configuration.remove_secret_settings(manifest)
                 job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
@@ -3218,15 +3218,6 @@ class JobType(models.Model):
             return create_legacy_error_mapping(self.error_mapping)
 
         return SeedManifest(self.interface).get_error_mapping()
-
-    def get_legacy_job_configuration(self):
-        """Returns default job configuration for this job type
-
-        :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.json.job_config_2_0.JobConfiguration`
-        """
-
-        return JobConfigurationV2(self.configuration)
 
     def get_job_configuration(self):
         """Returns the job configuration for this job type

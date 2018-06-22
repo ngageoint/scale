@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from job.configuration.exceptions import InvalidJobConfiguration
+from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE, Volume
 from storage.models import Workspace
 from util.validation import ValidationWarning
 
@@ -74,6 +75,52 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('INVALID_SETTING', msg % setting_name)
 
         self.settings[setting_name] = setting_value
+
+    def get_mount_volume(self, mount_name, volume_name, container_path, mode):
+        """Returns the volume that has been configured for the given mount name. If the given mount is not defined in
+        this configuration, None is returned.
+
+        :param mount_name: The name of the mount defined in the job type
+        :type mount_name: string
+        :param volume_name: The name of the volume
+        :type volume_name: string
+        :param container_path: The path within the container onto which the volume will be mounted
+        :type container_path: string
+        :param mode: Either 'ro' for read-only or 'rw' for read-write
+        :type mode: string
+        :returns: The volume that should be mounted into the job container, possibly None
+        :rtype: :class:`job.execution.configuration.volume.Volume`
+        """
+
+        if mount_name not in self.mounts:
+            return None
+
+        volume = None
+        mount_config = self.mounts[mount_name]
+        mount_type = mount_config.mount_type
+        if mount_type == HOST_TYPE:
+            host_path = mount_config.host_path
+            volume = Volume(volume_name, container_path, mode, is_host=True, host_path=host_path)
+        elif mount_type == VOLUME_TYPE:
+            driver = mount_config.driver
+            driver_opts = mount_config.driver_opts
+            volume = Volume(volume_name, container_path, mode, is_host=False, driver=driver, driver_opts=driver_opts)
+
+        return volume
+
+    def get_setting_value(self, name):
+        """Returns the value of the given setting if defined in this configuration, otherwise returns None
+
+        :param name: The name of the setting
+        :type name: string
+        :returns: The value of the setting, possibly None
+        :rtype: string
+        """
+
+        if name in self.settings:
+            return self.settings[name]
+
+        return None
 
     def remove_secret_settings(self, manifest):
         """Removes and returns the secret setting values from this job configuration
