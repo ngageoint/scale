@@ -54,7 +54,7 @@ class MainTask(JobExecutionTask):
             self.timeout_error_name = 'system-timeout' if self._is_system else 'timeout'
 
         # Private fields for this class
-        self._error_mapping = job_type.get_error_interface()
+        self._error_mapping = job_type.get_error_mapping()
         self._resources = configuration.get_resources('main')
 
     def determine_error(self, task_update):

@@ -106,7 +106,7 @@ def get_errors(job_types=None, error_ids=None, error_names=None):
     error_names = set(error_names) if error_names else set()
     if job_types and not (error_ids or error_names):
         for job_type in job_types:
-            error_names.update(job_type.get_error_interface().get_error_names())
+            error_names.update(job_type.get_error_mapping().get_error_names_legacy())
         if not error_names:
             return []
 

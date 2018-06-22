@@ -11,10 +11,10 @@ import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job_config_2_0 import JobConfigurationV2
+from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.models import JobType
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -383,8 +383,8 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
             error_mapping_dict = result.get('error_mapping')
         elif job_type:
             error_mapping_dict = job_type.error_mapping
-        error_mapping = ErrorInterface(error_mapping_dict)
-        warnings.extend(error_mapping.validate())
+        error_mapping = create_legacy_error_mapping(error_mapping_dict)
+        error_mapping.validate_legacy()
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type error mapping invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 

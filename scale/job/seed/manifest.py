@@ -1,4 +1,5 @@
 """Defines the interface for executing a job"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import json
@@ -288,6 +289,27 @@ class SeedManifest(object):
         """
 
         return self.get_job()['maintainer']
+
+    def get_error_mapping(self):
+        """Returns the error mapping for this manifest
+
+        :return: The error mapping
+        :rtype: :class:`job.error.mapping.JobErrorMapping`
+        """
+
+        job_type_name = self.get_name()
+        mapping = JobErrorMapping(job_type_name)
+
+        for error_dict in self.get_errors():
+            exit_code = error_dict['code']
+            error_name = error_dict['title']  # TODO: change this to name when Seed spec is updated
+            title = error_dict['title'] if 'title' in error_dict else None
+            description = error_dict['description'] if 'description' in error_dict else None
+            category = 'DATA' if 'category' in error_dict and error_dict['category'] == 'data' else 'ALGORITHM'
+            error = JobError(job_type_name, error_name, title=title, description=description, category=category)
+            mapping.add_mapping(exit_code, error)
+
+        return mapping
 
     def get_errors(self):
         """Get the error mapping defined for the Seed job

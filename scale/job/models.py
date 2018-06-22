@@ -1,4 +1,5 @@
 """Defines the database models for jobs and job types"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import copy
@@ -17,7 +18,6 @@ import util.parse
 import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
-from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
@@ -28,12 +28,12 @@ from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.seed.manifest import SeedManifest
+from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
-from seed.results.job_results import JobResults
 from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
 from trigger.models import TriggerRule
 from util import rest as rest_utils
@@ -2265,8 +2265,8 @@ class JobTypeManager(models.Manager):
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
         :type trigger_rule: :class:`trigger.models.TriggerRule`
-        :param error_mapping: Mapping for translating an exit code to an error type. Deprecated - remove with v5.
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param error_mapping: Mapping for translating an exit code to an error type
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
         :param custom_resources: Custom resources required by this job type. Deprecated - remove with v5.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
@@ -2307,8 +2307,8 @@ class JobTypeManager(models.Manager):
             configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
         if error_mapping:
-            error_mapping.validate()
-            job_type.error_mapping = error_mapping.get_dict()
+            error_mapping.validate_legacy()
+            job_type.error_mapping = error_mapping.error_dict
         if custom_resources:
             job_type.custom_resources = custom_resources.get_dict()
         if 'is_active' in kwargs:
@@ -2365,17 +2365,9 @@ class JobTypeManager(models.Manager):
             configuration.validate(manifest)
             secrets = configuration.remove_secret_settings(manifest)
 
-        # Create any errors defined in manifest
-        error_mapping_dict = { 'version': '1.0', 'exit_codes': {} }
-        for error in manifest.get_errors():
-            error_obj = Error.objects.update_or_create_seed_error(manifest.get_name(),
-                                                                  manifest.get_job_version(),
-                                                                  error)
-
-            # Create error mapping from code to constructed Error object
-            error_mapping_dict['exit_codes'][error['code']] = error_obj.name
-
-        error_mapping = ErrorInterface(error_mapping_dict)
+        # Create/update any errors defined in manifest
+        error_mapping = manifest.get_error_mapping()
+        error_mapping.save_models()
 
         # Create the new job type
         job_type = JobType(**kwargs)
@@ -2388,9 +2380,6 @@ class JobTypeManager(models.Manager):
         job_type.trigger_rule = trigger_rule
         if configuration_dict:
             job_type.configuration = configuration_dict
-        if error_mapping:
-            error_mapping.validate()
-            job_type.error_mapping = error_mapping_dict
         if 'is_active' in kwargs:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs:
@@ -2467,7 +2456,7 @@ class JobTypeManager(models.Manager):
             when trigger_rule is None
         :type remove_trigger_rule: bool
         :param error_mapping: Mapping for translating an exit code to an error type
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
@@ -2531,8 +2520,8 @@ class JobTypeManager(models.Manager):
             trigger_config.validate_trigger_for_job(job_type.get_job_interface())
 
         if error_mapping:
-            error_mapping.validate()
-            job_type.error_mapping = error_mapping.get_dict()
+            error_mapping.validate_legacy()
+            job_type.error_mapping = error_mapping.error_dict
 
         if custom_resources:
             job_type.custom_resources = custom_resources.get_dict()
@@ -2604,18 +2593,10 @@ class JobTypeManager(models.Manager):
             job_type.interface = manifest_dict
             job_type.revision_num += 1
 
-            # Create any errors defined in manifest
-            error_mapping_dict = {'version': '1.0', 'exit_codes': {}}
-            for error in manifest.get_errors():
-                error_obj = Error.objects.update_or_create_seed_error(manifest.get_name(),
-                                                                      manifest.get_job_version(),
-                                                                      error)
+            # Create/update any errors defined in manifest
+            error_mapping = manifest.get_error_mapping()
+            error_mapping.save_models()
 
-                # Create error mapping from code to constructed Error object
-                error_mapping_dict['exit_codes'][error['code']] = error_obj.name
-
-            ErrorInterface(error_mapping_dict).validate()
-            job_type.error_mapping = error_mapping_dict
             job_type.title = manifest.get_title()
             job_type.description = manifest.get_description()
             job_type.save()
@@ -2741,7 +2722,7 @@ class JobTypeManager(models.Manager):
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
 
         # Add associated error information
-        error_names = job_type.get_error_interface().get_error_names()
+        error_names = job_type.get_error_mapping().get_error_names_legacy()
         job_type.errors = Error.objects.filter(name__in=error_names) if error_names else []
 
         # Scrub configuration for secrets
@@ -2951,8 +2932,8 @@ class JobTypeManager(models.Manager):
         :type version: string
         :param interface: The interface for running a job of this type
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
-        :param error_mapping: The interface for mapping error exit codes
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param error_mapping: Mapping for translating an exit code to an error type
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :param configuration: The configuration for running a job of this type, possibly None
@@ -2983,7 +2964,7 @@ class JobTypeManager(models.Manager):
             warnings.extend(configuration.validate(interface.get_dict()))
 
         if error_mapping:
-            warnings.extend(error_mapping.validate())
+            error_mapping.validate_legacy()
 
         try:
             # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
@@ -3025,26 +3006,14 @@ class JobType(models.Model):
     """Represents a type of job that can be run on the cluster. Any updates to a job type model requires obtaining a
     lock on the model using select_for_update().
 
-    TODO: A large number of fields from the following structure are being removed in Scale 6.0.0. These are being
-    replaced with the Seed Manifest that Job Type relies on to describe its maintainer, resources, interface and errors.
-
     :keyword name: The identifying name of the job type used by clients for queries
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
-
     :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of the job type. Deprecated - remove with v5.
     :type description: :class:`django.db.models.TextField`
-    :keyword category: An optional overall category of the job type. Deprecated - remove with v5.
-    :type category: :class:`django.db.models.CharField`
-    :keyword author_name: The name of the person or organization that created the associated algorithm. Deprecated -
-        remove with v5.
-    :type author_name: :class:`django.db.models.CharField`
-    :keyword author_url: The address to a home page about the author or associated algorithm. Deprecated - removed in
-        v6.
-    :type author_url: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -3053,43 +3022,62 @@ class JobType(models.Model):
     :type is_long_running: :class:`django.db.models.BooleanField`
     :keyword is_active: Whether the job type is active (false once job type is archived)
     :type is_active: :class:`django.db.models.BooleanField`
-    :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
-        phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
     :keyword is_paused: Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
 
-    :keyword uses_docker: Whether the job type uses Docker. Deprecated - remove with v5.
-    :type uses_docker: :class:`django.db.models.BooleanField`
-    :keyword docker_privileged: Whether the job type uses Docker in privileged mode. Deprecated - remove with v5.
-    :type docker_privileged: :class:`django.db.models.BooleanField`
+    :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
+    :type max_scheduled: :class:`django.db.models.IntegerField`
+    :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
+    :type max_tries: :class:`django.db.models.IntegerField`
+    :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
+    :type icon_code: string of a FontAwesome icon code
+
+    :keyword revision_num: The current revision number of the interface, starts at one. Deprecated - remove with v5.
+    :type revision_num: :class:`django.db.models.IntegerField`
     :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
     :type docker_image: :class:`django.db.models.CharField`
     :keyword interface: JSON description defining the interface for running a job of this type. Deprecated - removed in
         v6.
     :type interface: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON describing the default job configuration for jobs of this type
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
+
+    :keyword created: When the job type was created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword archived: When the job type was archived (no longer active)
+    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword paused: When the job type was paused
+    :type paused: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When the job type was last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+
+    :keyword category: An optional overall category of the job type. Deprecated - remove with v5.
+    :type category: :class:`django.db.models.CharField`
+    :keyword author_name: The name of the person or organization that created the associated algorithm. Deprecated -
+        remove with v5.
+    :type author_name: :class:`django.db.models.CharField`
+    :keyword author_url: The address to a home page about the author or associated algorithm. Deprecated - removed in
+        v6.
+    :type author_url: :class:`django.db.models.TextField`
+    :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
+        phase (False)
+    :type is_operational: :class:`django.db.models.BooleanField`
+    :keyword uses_docker: Whether the job type uses Docker. Deprecated - remove with v5.
+    :type uses_docker: :class:`django.db.models.BooleanField`
+    :keyword docker_privileged: Whether the job type uses Docker in privileged mode. Deprecated - remove with v5.
+    :type docker_privileged: :class:`django.db.models.BooleanField`
     :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker. See the mesos
         prototype file for further information. Deprecated - remove with v5.
-
     :type docker_params: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword revision_num: The current revision number of the interface, starts at one. Deprecated - remove with v5.
-    :type revision_num: :class:`django.db.models.IntegerField`
     :keyword error_mapping: Mapping for translating an exit code to an error type. Deprecated - remove with v5.
     :type error_mapping: :class:`django.contrib.postgres.fields.JSONField`
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
-    :keyword configuration: JSON describing the default job configuration for jobs of this type
-    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
-
     :keyword priority: The priority of the job type (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
-    :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
-    :type max_scheduled: :class:`django.db.models.IntegerField`
     :keyword timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
     :type timeout: :class:`django.db.models.IntegerField`
-    :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
-    :type max_tries: :class:`django.db.models.IntegerField`
     :keyword cpus_required: The number of CPUs required for a job of this type. Deprecated - remove with v5.
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type. Deprecated - removed
@@ -3111,18 +3099,6 @@ class JobType(models.Model):
     :keyword custom_resources: JSON describing the custom resources required for jobs of this type. Deprecated -
         remove with v5.
     :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
-
-    :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
-    :type icon_code: string of a FontAwesome icon code
-
-    :keyword created: When the job type was created
-    :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the job type was archived (no longer active)
-    :type archived: :class:`django.db.models.DateTimeField`
-    :keyword paused: When the job type was paused
-    :type paused: :class:`django.db.models.DateTimeField`
-    :keyword last_modified: When the job type was last modified
-    :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
@@ -3138,48 +3114,47 @@ class JobType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    title = models.CharField(blank=True, max_length=50, null=True) # TODO: remove with v5 API
-    description = models.TextField(blank=True, null=True) # TODO: remove with v5 API
-    category = models.CharField(db_index=True, blank=True, max_length=50, null=True) # TODO: remove with v5 API
-    author_name = models.CharField(blank=True, max_length=50, null=True) # TODO: remove with v5 API
-    author_url = models.TextField(blank=True, null=True) # TODO: remove with v5 API
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
-    is_long_running = models.BooleanField(default=False) # TODO: remove with v5 API - manifest handles via timeout 0
+    is_long_running = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
 
-    uses_docker = models.NullBooleanField(default=True) # TODO: remove with v5 API
-    docker_privileged = models.NullBooleanField(default=False) # TODO: remove with v5 API
-    docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(default=dict) # TODO: rename to manifest for v6
-    configuration = django.contrib.postgres.fields.JSONField(default=dict)
-    docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove with v5 API
-    revision_num = models.IntegerField(default=1, null=True) # TODO: remove with v5 API
-    error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove with v5 API
-
-    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-
-    priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
-    timeout = models.IntegerField(default=1800, null=True) # TODO: remove with v5 API
     max_tries = models.IntegerField(default=3)
-
-    cpus_required = models.FloatField(default=1.0, null=True) # TODO: remove with v5 API
-    mem_const_required = models.FloatField(default=64.0, null=True) # TODO: remove with v5 API
-    mem_mult_required = models.FloatField(default=0.0, null=True) # TODO: remove with v5 API
-    shared_mem_required = models.FloatField(default=0.0, null=True) # TODO: remove with v5 API
-    disk_out_const_required = models.FloatField(default=64.0, null=True) # TODO: remove with v5 API
-    disk_out_mult_required = models.FloatField(default=0.0, null=True) # TODO: remove with v5 API
-    custom_resources = django.contrib.postgres.fields.JSONField(default=dict, null=True) # TODO: remove with v5 API
-
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
+    revision_num = models.IntegerField(default=1, null=True)
+    docker_image = models.CharField(blank=True, null=True, max_length=500)
+    interface = django.contrib.postgres.fields.JSONField(default=dict)  # TODO: rename to manifest for v6
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    archived = models.DateTimeField(blank=True, null=True)  # TODO: rename to deprecated for v6
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    # TODO: remove with v5 API and/or legacy job types
+    category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
+    author_name = models.CharField(blank=True, max_length=50, null=True)
+    author_url = models.TextField(blank=True, null=True)
+    is_operational = models.BooleanField(default=True)
+    uses_docker = models.NullBooleanField(default=True)
+    docker_privileged = models.NullBooleanField(default=False)
+    docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True)
+    error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True)
+    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
+    priority = models.IntegerField(default=100)
+    timeout = models.IntegerField(default=1800, null=True)
+    cpus_required = models.FloatField(default=1.0, null=True)
+    mem_const_required = models.FloatField(default=64.0, null=True)
+    mem_mult_required = models.FloatField(default=0.0, null=True)
+    shared_mem_required = models.FloatField(default=0.0, null=True)
+    disk_out_const_required = models.FloatField(default=64.0, null=True)
+    disk_out_mult_required = models.FloatField(default=0.0, null=True)
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict, null=True)
 
     objects = JobTypeManager()
 
@@ -3230,11 +3205,19 @@ class JobType(models.Model):
 
         return self.category
 
-    def get_error_interface(self):
-        """Returns the interface for mapping a job's exit code or
-        stderr/stdout expression to an error type"""
+    def get_error_mapping(self):
+        """Returns the error mapping for this job type
 
-        return ErrorInterface(self.error_mapping)
+        :returns: The error mapping
+        :rtype: :class:`job.error.mapping.JobErrorMapping`
+        """
+
+        # TODO: remove when legacy job types go away
+        if not JobInterfaceSunset.is_seed_dict(self.interface):
+            from job.error.mapping import create_legacy_error_mapping
+            return create_legacy_error_mapping(self.error_mapping)
+
+        return SeedManifest(self.interface).get_error_mapping()
 
     def get_legacy_job_configuration(self):
         """Returns default job configuration for this job type

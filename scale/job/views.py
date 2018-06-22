@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import logging
@@ -17,11 +18,11 @@ from rest_framework.views import APIView
 import trigger.handler as trigger_handler
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.deprecation import JobInterfaceSunset
+from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
@@ -31,7 +32,7 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobDetailsSerializerV5, JobExecutionSerializerV5, JobExecutionDetailsSerializerV5,
                              JobSerializerV5, JobTypeDetailsSerializerV5, JobTypeSerializerV5, JobUpdateSerializerV5)
 from messaging.manager import CommandMessageManager
-from models import Job, JobExecution, JobInputFile, JobType
+from job.models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
@@ -186,8 +187,8 @@ class JobTypesView(ListCreateAPIView):
         error_mapping = None
         try:
             if error_dict:
-                error_mapping = ErrorInterface(error_dict)
-                error_mapping.validate()
+                error_mapping = create_legacy_error_mapping(error_dict)
+                error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
 
@@ -417,8 +418,8 @@ class JobTypeDetailsView(GenericAPIView):
         error_mapping = None
         try:
             if error_dict:
-                error_mapping = ErrorInterface(error_dict)
-                error_mapping.validate()
+                error_mapping = create_legacy_error_mapping(error_dict)
+                error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
 
@@ -629,7 +630,8 @@ class JobTypesValidationView(APIView):
         error_mapping = None
         try:
             if error_dict:
-                error_mapping = ErrorInterface(error_dict)
+                error_mapping = create_legacy_error_mapping(error_dict)
+                error_mapping.validate_legacy()
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
 

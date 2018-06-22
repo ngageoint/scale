@@ -16,9 +16,9 @@ import trigger.test.utils as trigger_test_utils
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
-from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
+from job.error.mapping import create_legacy_error_mapping
 from job.seed.results.job_results import JobResults as SeedJobResults
 from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision
 from node.resources.json.resources import Resources
@@ -792,7 +792,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         }
         self.trigger_config = job_test_utils.MockTriggerRuleConfiguration(job_test_utils.MOCK_TYPE, self.configuration)
 
-        self.error_mapping = ErrorInterface({
+        self.error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '-15': self.error.name,
@@ -813,7 +813,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
         self.assertEqual(job_type.revision_num, 1)
         self.assertIsNone(job_type.trigger_rule_id)
-        self.assertDictEqual(job_type.get_error_interface().get_dict(), ErrorInterface(None).get_dict())
+        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
 
     def test_successful_with_trigger_rule(self):
         """Tests calling JobTypeManager.create_job_type_v5() successfully with a trigger rule and error mapping"""
@@ -833,7 +833,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertEqual(job_type.trigger_rule_id, trigger_rule.id)
         trigger_rule = TriggerRule.objects.get(pk=trigger_rule.id)
         self.assertTrue(trigger_rule.is_active)
-        self.assertDictEqual(job_type.get_error_interface().get_dict(), self.error_mapping.get_dict())
+        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), {-15})
 
     def test_invalid_trigger_rule(self):
         """Tests calling JobTypeManager.create_job_type_v5() with an invalid trigger rule"""
@@ -860,15 +860,15 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
         # Call test
         job_type = JobType.objects.create_job_type_v5(name, version, self.job_interface, title=title,
-                                                          description=description, priority=priority,
-                                                          docker_params=docker_params, custom_resources=custom_resources)
+                                                      description=description, priority=priority,
+                                                      docker_params=docker_params, custom_resources=custom_resources)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
         self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
         self.assertEqual(job_type.revision_num, 1)
         self.assertIsNone(job_type.trigger_rule_id)
-        self.assertDictEqual(job_type.get_error_interface().get_dict(), ErrorInterface(None).get_dict())
+        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
         self.assertDictEqual(job_type.get_custom_resources().get_dict(), custom_resources.get_dict())
         self.assertEqual(job_type.description, description)
         self.assertEqual(job_type.priority, priority)
@@ -895,7 +895,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
         self.assertEqual(job_type.revision_num, 1)
         self.assertIsNone(job_type.trigger_rule_id)
-        self.assertDictEqual(job_type.get_error_interface().get_dict(), ErrorInterface(None).get_dict())
+        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), set())
         self.assertEqual(job_type.description, description)
         self.assertEqual(job_type.priority, priority)
         self.assertEqual(job_type.is_paused, is_paused)
@@ -924,7 +924,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         description = 'my-description'
         priority = 13
         is_system = True
-        error_mapping = ErrorInterface({
+        error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '1': 'test-invalid-error',
@@ -1008,7 +1008,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         version = '1.0'
         title = 'my title'
         priority = 12
-        error_mapping = ErrorInterface({
+        error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '-15': self.error.name,
@@ -1017,7 +1017,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         custom_resources = Resources({'resources': {'foo': 10.0}})
         new_title = 'my new title'
         new_priority = 13
-        new_error_mapping = ErrorInterface({
+        new_error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '-16': self.error.name,
@@ -1038,14 +1038,13 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
-        self.assertDictEqual(job_type.get_job_interface().get_dict(), self.job_interface.get_dict())
         self.assertEqual(job_type.revision_num, 1)
         self.assertEqual(job_type.trigger_rule_id, trigger_rule.id)
         trigger_rule = TriggerRule.objects.get(pk=trigger_rule.id)
         self.assertTrue(trigger_rule.is_active)
         self.assertEqual(job_type.title, new_title)
         self.assertEqual(job_type.priority, new_priority)
-        self.assertDictEqual(job_type.get_error_interface().get_dict(), new_error_mapping.get_dict())
+        self.assertSetEqual(set(job_type.get_error_mapping()._mapping.keys()), {-16})
         self.assertDictEqual(job_type.get_custom_resources().get_dict(), new_custom_resources.get_dict())
         self.assertEqual(job_type.is_paused, new_is_paused)
         self.assertIsNotNone(job_type.paused)
@@ -1241,7 +1240,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         description = 'my-description'
         priority = 13
         is_system = True
-        error_mapping = ErrorInterface({
+        error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '1': 'test-invalid-error',
@@ -1278,7 +1277,7 @@ class TestJobTypeManagerValidateJobType(TestCase):
             }]}
         self.job_interface = JobInterface(self.interface)
 
-        self.error_mapping = ErrorInterface({
+        self.error_mapping = create_legacy_error_mapping({
             'version': '1.0',
             'exit_codes': {
                 '1': self.error.name,
