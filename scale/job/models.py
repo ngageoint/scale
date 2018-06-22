@@ -3146,7 +3146,7 @@ class JobType(models.Model):
     docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True)
     error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-    priority = models.IntegerField(default=100)
+    priority = models.IntegerField(default=100, null=True)
     timeout = models.IntegerField(default=1800, null=True)
     cpus_required = models.FloatField(default=1.0, null=True)
     mem_const_required = models.FloatField(default=64.0, null=True)

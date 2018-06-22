@@ -10,6 +10,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.data.exceptions import InvalidData, InvalidConnection
+from job.error.error import JobError
+from job.error.mapping import JobErrorMapping
 from job.execution.configuration.exceptions import MissingMount, MissingSetting
 from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.types import SeedInputFiles, SeedInputJson, SeedOutputJson, SeedOutputFiles
