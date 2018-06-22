@@ -3126,7 +3126,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
-    revision_num = models.IntegerField(default=1, null=True)
+    revision_num = models.IntegerField(default=1)
     docker_image = models.CharField(blank=True, null=True, max_length=500)
     interface = django.contrib.postgres.fields.JSONField(default=dict)  # TODO: rename to manifest for v6
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
