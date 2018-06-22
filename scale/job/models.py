@@ -1108,8 +1108,8 @@ class Job(models.Model):
     num_exes = models.IntegerField(default=0)
 
     # TODO: priority and timeout can be removed when legacy job types are removed
-    priority = models.IntegerField()
-    timeout = models.IntegerField()
+    priority = models.IntegerField(null=True)
+    timeout = models.IntegerField(null=True)
 
     input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     input_file_size = models.FloatField(blank=True, null=True)
@@ -3146,7 +3146,7 @@ class JobType(models.Model):
     docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True)
     error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-    priority = models.IntegerField(default=100, null=True)
+    priority = models.IntegerField(default=100)
     timeout = models.IntegerField(default=1800, null=True)
     cpus_required = models.FloatField(default=1.0, null=True)
     mem_const_required = models.FloatField(default=64.0, null=True)

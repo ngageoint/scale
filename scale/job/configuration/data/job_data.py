@@ -120,6 +120,18 @@ class JobData(object):
         self.data_dict['input_data'].append(files_input)
         self.data_inputs_by_name[input_name] = files_input
 
+    def add_file_output(self, data, add_to_internal=True):
+        """Adds a new output files to this job data with a workspace ID.
+
+        :param data: The output parameter dict
+        :type data: dict
+        :param add_to_internal: Whether we should add to private data dict. Unneeded when used from __init__
+        :type add_to_internal: bool
+        """
+
+        # Call to legacy method
+        self.add_output(data['name'], data['workspace_id'])
+
     def add_output(self, output_name, workspace_id):
         """Adds a new output parameter to this job data with a workspace ID. This method does not perform validation on
         the job data.
