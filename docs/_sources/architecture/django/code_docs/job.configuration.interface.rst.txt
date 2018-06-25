@@ -4,14 +4,6 @@ job\.configuration\.interface package
 Submodules
 ----------
 
-job\.configuration\.interface\.error\_interface module
-------------------------------------------------------
-
-.. automodule:: job.configuration.interface.error_interface
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job\.configuration\.interface\.exceptions module
 ------------------------------------------------
 

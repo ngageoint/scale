@@ -122,6 +122,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -244,14 +245,14 @@
 <span id="recipe-configuration-data-recipe-connection-module"></span><h2>recipe.configuration.data.recipe_connection module<a class="headerlink" href="#module-recipe.configuration.data.recipe_connection" title="Permalink to this headline">¶</a></h2>
 <p>Defines connections that will provide data to execute recipes</p>
 <dl class="class">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection">
-<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_connection.</code><code class="descname">RecipeConnection</code><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection">
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_connection.</code><code class="descname">LegacyRecipeConnection</code><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a connection that will provide data to execute recipes. This class contains the necessary description
 needed to ensure the data provided by the connection will be sufficient to execute the given recipe.</p>
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_input_file">
-<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_input_file">
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new file parameter to this connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -270,8 +271,8 @@ needed to ensure the data provided by the connection will be sufficient to execu
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_property">
-<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_property">
+<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new property parameter to this connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -284,14 +285,14 @@ needed to ensure the data provided by the connection will be sufficient to execu
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.add_workspace">
-<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_workspace">
+<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates that this connection provides a workspace for storing output files</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.has_workspace">
-<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.has_workspace">
+<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this connection provides a workspace for storing output files</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -306,8 +307,8 @@ needed to ensure the data provided by the connection will be sufficient to execu
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.validate_input_files">
-<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the recipe definition.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -330,8 +331,8 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_connection.RecipeConnection.validate_properties">
-<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.RecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_connection.LegacyRecipeConnection.validate_properties">
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.LegacyRecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -353,19 +354,122 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
 
 </dd></dl>
 
+<dl class="class">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection">
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_connection.</code><code class="descname">SeedRecipeConnection</code><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a connection that will provide data to execute jobs. This class contains the necessary description
+needed to ensure the data provided by the connection will be sufficient to execute the given job.</p>
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_input_file">
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em>, <em>partial</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<em>str</em>) &#8211; The file parameter name</li>
+<li><strong>multiple</strong> (<em>bool</em>) &#8211; Whether the file parameter provides multiple files (True)</li>
+<li><strong>media_types</strong> (<em>list of str</em>) &#8211; The possible media types of the file parameter (unknown if None or [])</li>
+<li><strong>optional</strong> (<em>bool</em>) &#8211; Whether the file parameter is optional and may not be provided (True)</li>
+<li><strong>partial</strong> (<em>bool</em>) &#8211; Flag indicating if the parameter only requires a small portion of the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_property">
+<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new property parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_name</strong> (<em>str</em>) &#8211; The property parameter name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_workspace">
+<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that this connection provides a workspace for storing output files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.has_workspace">
+<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this connection provides a workspace for storing output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this connection provides a workspace, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> ([<a class="reference internal" href="job.seed.html#job.seed.types.SeedInputFiles" title="job.seed.types.SeedInputFiles"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedInputFiles</span></code></a>]) &#8211; List of file inputs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.configuration.data.recipe_connection.SeedRecipeConnection.validate_properties">
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_connection.SeedRecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-recipe.configuration.data.recipe_data">
 <span id="recipe-configuration-data-recipe-data-module"></span><h2>recipe.configuration.data.recipe_data module<a class="headerlink" href="#module-recipe.configuration.data.recipe_data" title="Permalink to this headline">¶</a></h2>
 <p>Defines the data needed for executing a recipe</p>
 <dl class="class">
-<dt id="recipe.configuration.data.recipe_data.RecipeData">
-<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_data.</code><code class="descname">RecipeData</code><span class="sig-paren">(</span><em>data={}</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData">
+<em class="property">class </em><code class="descclassname">recipe.configuration.data.recipe_data.</code><code class="descname">LegacyRecipeData</code><span class="sig-paren">(</span><em>data={}</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
 connect shared resources to resource instances in Scale, and details needed to store all resulting output.</p>
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.add_file_input">
-<code class="descname">add_file_input</code><span class="sig-paren">(</span><em>input_name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_file_input" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.add_file_input">
+<code class="descname">add_file_input</code><span class="sig-paren">(</span><em>input_name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.add_file_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new file parameter to this recipe data.
 This method does not perform validation on the recipe data.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -383,8 +487,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.add_input_to_data">
-<code class="descname">add_input_to_data</code><span class="sig-paren">(</span><em>recipe_input_name</em>, <em>job_data</em>, <em>job_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.add_input_to_data" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.add_input_to_data">
+<code class="descname">add_input_to_data</code><span class="sig-paren">(</span><em>recipe_input_name</em>, <em>job_data</em>, <em>job_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.add_input_to_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given input from the recipe data as a new input to the given job data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -402,8 +506,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this recipe data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -418,8 +522,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids">
-<code class="descname">get_input_file_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.get_input_file_ids">
+<code class="descname">get_input_file_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of scale file identifiers for each file in the recipe input data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -434,8 +538,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.get_input_file_info">
-<code class="descname">get_input_file_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_input_file_info" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.get_input_file_info">
+<code class="descname">get_input_file_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.get_input_file_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of file_id and name for each file in recipe input data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -450,8 +554,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.get_workspace_id">
-<code class="descname">get_workspace_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.get_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.get_workspace_id">
+<code class="descname">get_workspace_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.get_workspace_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the workspace ID in the recipe data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -466,8 +570,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.set_workspace_id">
-<code class="descname">set_workspace_id</code><span class="sig-paren">(</span><em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.set_workspace_id">
+<code class="descname">set_workspace_id</code><span class="sig-paren">(</span><em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.set_workspace_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the workspace ID in the recipe data.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -481,8 +585,8 @@ This method does not perform validation on the recipe data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.validate_input_files">
-<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.validate_input_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -502,8 +606,8 @@ tuple(bool, bool, <a class="reference internal" href="job.configuration.interfac
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.validate_properties">
-<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.validate_properties">
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.validate_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given property names to make sure all properties are populated correctly and exist if they are
 required</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -522,8 +626,8 @@ required</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.data.recipe_data.RecipeData.validate_workspace">
-<code class="descname">validate_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.RecipeData.validate_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.data.recipe_data.LegacyRecipeData.validate_workspace">
+<code class="descname">validate_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.data.recipe_data.LegacyRecipeData.validate_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

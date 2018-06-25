@@ -31,7 +31,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="job.configuration.results.results_manifest package" href="job.configuration.results.results_manifest.html" />
-    <link rel="prev" title="job.configuration.json.job package" href="job.configuration.json.job.html" />
+    <link rel="prev" title="job.configuration.json package" href="job.configuration.json.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -267,6 +268,19 @@
 
 </dd></dl>
 
+<dl class="exception">
+<dt id="job.configuration.results.exceptions.OutputCaptureError">
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">OutputCaptureError</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.OutputCaptureError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating that an error was encountered processing the output of Seed job</p>
+<dl class="method">
+<dt id="job.configuration.results.exceptions.OutputCaptureError.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.OutputCaptureError.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.configuration.results.job_results">
 <span id="job-configuration-results-job-results-module"></span><h2>job.configuration.results.job_results module<a class="headerlink" href="#module-job.configuration.results.job_results" title="Permalink to this headline">¶</a></h2>
@@ -366,7 +380,7 @@
         <a href="job.configuration.results.results_manifest.html" class="btn btn-neutral float-right" title="job.configuration.results.results_manifest package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.configuration.json.job.html" class="btn btn-neutral" title="job.configuration.json.job package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.configuration.json.html" class="btn btn-neutral" title="job.configuration.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,0 +1,30 @@
+job\.error package
+==================
+
+Submodules
+----------
+
+job\.error\.error module
+------------------------
+
+.. automodule:: job.error.error
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.error\.mapping module
+--------------------------
+
+.. automodule:: job.error.mapping
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.error
+    :members:
+    :undoc-members:
+    :show-inheritance:

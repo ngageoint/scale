@@ -12,14 +12,6 @@ job\.test\.configuration\.interface\.test\_configuration\_interface module
     :undoc-members:
     :show-inheritance:
 
-job\.test\.configuration\.interface\.test\_error\_interface module
-------------------------------------------------------------------
-
-.. automodule:: job.test.configuration.interface.test_error_interface
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job\.test\.configuration\.interface\.test\_job\_interface module
 ----------------------------------------------------------------
 

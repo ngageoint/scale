@@ -122,6 +122,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-product.apps">product.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.models">product.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.serializers">product.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-product.types">product.types module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.urls">product.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.views">product.views module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product">Module contents</a></li>
@@ -868,8 +869,7 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
-storing the file, media_type, output_name)</li>
+<li><strong>file_entries</strong> (list[<a class="reference internal" href="#product.types.ProductFileMetadata" title="product.types.ProductFileMetadata"><code class="xref py py-class docutils literal"><span class="pre">product.types.ProductFileMetadata</span></code></a>]) &#8211; List of files to upload</li>
 <li><strong>input_file_ids</strong> (<em>list of int</em>) &#8211; List of identifiers for files used to produce the given file entries</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job_exe model with the related job and job_type fields</li>
 <li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>) &#8211; The workspace to use for storing the product files</li>
@@ -909,7 +909,7 @@ storing the file, media_type, output_name)</li>
 <dl class="class">
 <dt id="product.serializers.ProductFileDetailsSerializerV5">
 <em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileSerializer" title="product.serializers.ProductFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileSerializerV5" title="product.serializers.ProductFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializerV5</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 <dl class="class">
 <dt id="product.serializers.ProductFileDetailsSerializerV5.SourceFileSerializer">
@@ -926,8 +926,22 @@ storing the file, media_type, output_name)</li>
 <dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileBaseSerializer" title="product.serializers.ProductFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileBaseSerializer</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 <dl class="class">
-<dt id="product.serializers.ProductFileSerializer.JobTypeBaseSerializer">
-<em class="property">class </em><code class="descname">JobTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="product.serializers.ProductFileSerializer.JobTypeBaseSerializerV5">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileSerializer.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job type model fields to REST output</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="product.serializers.ProductFileSerializerV5">
+<em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileBaseSerializer" title="product.serializers.ProductFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileBaseSerializer</span></code></a></p>
+<p>Converts product file model fields to REST output</p>
+<dl class="class">
+<dt id="product.serializers.ProductFileSerializerV5.JobTypeBaseSerializerV5">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileSerializerV5.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
@@ -981,6 +995,29 @@ storing the file, media_type, output_name)</li>
 <p>Converts source file model fields to REST output</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="product.serializers.ProductFileUpdateSerializerV5">
+<em class="property">class </em><code class="descclassname">product.serializers.</code><code class="descname">ProductFileUpdateSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileUpdateSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#product.serializers.ProductFileSerializerV5" title="product.serializers.ProductFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializerV5</span></code></a></p>
+<p>Converts product file updates to REST output</p>
+<dl class="class">
+<dt id="product.serializers.ProductFileUpdateSerializerV5.SourceFileBaseSerializer">
+<em class="property">class </em><code class="descname">SourceFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.serializers.ProductFileUpdateSerializerV5.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileSerializerV5" title="storage.serializers.ScaleFileSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileSerializerV5</span></code></a></p>
+<p>Converts source file model fields to REST output</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-product.types">
+<span id="product-types-module"></span><h2>product.types module<a class="headerlink" href="#module-product.types" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.types.ProductFileMetadata">
+<em class="property">class </em><code class="descclassname">product.types.</code><code class="descname">ProductFileMetadata</code><span class="sig-paren">(</span><em>output_name</em>, <em>local_path</em>, <em>media_type=None</em>, <em>remote_path=None</em>, <em>data_start=None</em>, <em>data_end=None</em>, <em>geojson=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.types.ProductFileMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 </dd></dl>
 
 </div>
@@ -1137,6 +1174,12 @@ storing the file, media_type, output_name)</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving product updates over a given time range.</p>
 <dl class="method">
+<dt id="product.views.ProductUpdatesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductUpdatesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="product.views.ProductUpdatesView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductUpdatesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine api version and call specific method</p>
@@ -1177,12 +1220,6 @@ storing the file, media_type, output_name)</li>
 <code class="descname">queryset</code><a class="headerlink" href="#product.views.ProductUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="product.views.ProductUpdatesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#product.views.ProductUpdatesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ProductFileUpdateSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1190,6 +1227,12 @@ storing the file, media_type, output_name)</li>
 <em class="property">class </em><code class="descclassname">product.views.</code><code class="descname">ProductsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving a product by filename</p>
+<dl class="method">
+<dt id="product.views.ProductsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="product.views.ProductsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#product.views.ProductsView.list" title="Permalink to this definition">¶</a></dt>
@@ -1230,12 +1273,6 @@ storing the file, media_type, output_name)</li>
 <dt id="product.views.ProductsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#product.views.ProductsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="product.views.ProductsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#product.views.ProductsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ProductFileSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

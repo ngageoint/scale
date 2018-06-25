@@ -1,0 +1,892 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>recipe.seed package &mdash; Scale 5.5.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="recipe.test package" href="recipe.test.html" />
+    <link rel="prev" title="recipe.migrations package" href="recipe.migrations.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+        
+      <li>recipe.seed package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/recipe.seed.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="recipe-seed-package">
+<h1>recipe.seed package<a class="headerlink" href="#recipe-seed-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-recipe.seed.recipe_connection">
+<span id="recipe-seed-recipe-connection-module"></span><h2>recipe.seed.recipe_connection module<a class="headerlink" href="#module-recipe.seed.recipe_connection" title="Permalink to this headline">¶</a></h2>
+<p>Defines connections that will provide data to execute recipes</p>
+<dl class="class">
+<dt id="recipe.seed.recipe_connection.RecipeConnection">
+<em class="property">class </em><code class="descclassname">recipe.seed.recipe_connection.</code><code class="descname">RecipeConnection</code><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a connection that will provide data to execute recipes. This class contains the necessary description
+needed to ensure the data provided by the connection will be sufficient to execute the given recipe.</p>
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.add_input_file">
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<em>str</em>) &#8211; The file parameter name</li>
+<li><strong>multiple</strong> (<em>bool</em>) &#8211; Whether the file parameter provides multiple files (True)</li>
+<li><strong>media_types</strong> (<em>list of str</em>) &#8211; The possible media types of the file parameter (unknown if None or [])</li>
+<li><strong>optional</strong> (<em>bool</em>) &#8211; Whether the file parameter is optional and may not be provided (True)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.add_property">
+<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new property parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_name</strong> (<em>str</em>) &#8211; The property parameter name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.add_workspace">
+<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that this connection provides a workspace for storing output files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.has_workspace">
+<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this connection provides a workspace for storing output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this connection provides a workspace, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the recipe definition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></code></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+(True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
+<dd>problem</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.RecipeConnection.validate_input_json">
+<code class="descname">validate_input_json</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.RecipeConnection.validate_input_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
+<dd>problem</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection">
+<em class="property">class </em><code class="descclassname">recipe.seed.recipe_connection.</code><code class="descname">SeedRecipeConnection</code><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a connection that will provide data to execute jobs. This class contains the necessary description
+needed to ensure the data provided by the connection will be sufficient to execute the given job.</p>
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.add_input_file">
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em>, <em>partial</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<em>str</em>) &#8211; The file parameter name</li>
+<li><strong>multiple</strong> (<em>bool</em>) &#8211; Whether the file parameter provides multiple files (True)</li>
+<li><strong>media_types</strong> (<em>list of str</em>) &#8211; The possible media types of the file parameter (unknown if None or [])</li>
+<li><strong>optional</strong> (<em>bool</em>) &#8211; Whether the file parameter is optional and may not be provided (True)</li>
+<li><strong>partial</strong> (<em>bool</em>) &#8211; Flag indicating if the parameter only requires a small portion of the file</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.add_property">
+<code class="descname">add_property</code><span class="sig-paren">(</span><em>property_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.add_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new property parameter to this connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_name</strong> (<em>str</em>) &#8211; The property parameter name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.add_workspace">
+<code class="descname">add_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.add_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that this connection provides a workspace for storing output files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.has_workspace">
+<code class="descname">has_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.has_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this connection provides a workspace for storing output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this connection provides a workspace, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> ([<a class="reference internal" href="job.seed.html#job.seed.types.SeedInputFiles" title="job.seed.types.SeedInputFiles"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedInputFiles</span></code></a>]) &#8211; List of file inputs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_connection.SeedRecipeConnection.validate_properties">
+<code class="descname">validate_properties</code><span class="sig-paren">(</span><em>property_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_connection.SeedRecipeConnection.validate_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to make sure all properties exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>dict of str -&gt; bool</em>) &#8211; Dict of property names mapped to a bool indicating if they are required</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.seed.recipe_data">
+<span id="recipe-seed-recipe-data-module"></span><h2>recipe.seed.recipe_data module<a class="headerlink" href="#module-recipe.seed.recipe_data" title="Permalink to this headline">¶</a></h2>
+<p>Defines the data needed for executing a recipe</p>
+<dl class="class">
+<dt id="recipe.seed.recipe_data.RecipeData">
+<em class="property">class </em><code class="descclassname">recipe.seed.recipe_data.</code><code class="descname">RecipeData</code><span class="sig-paren">(</span><em>data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
+connect shared resources to resource instances in Scale, and details needed to store all resulting output.</p>
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.add_file_input">
+<code class="descname">add_file_input</code><span class="sig-paren">(</span><em>name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.add_file_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new file parameter to this job data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>dict</em>) &#8211; The files parameter dict</li>
+<li><strong>add_to_internal</strong> (<em>bool</em>) &#8211; Whether we should add to private data dict. Unneeded when used from __init__</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.add_input_to_data">
+<code class="descname">add_input_to_data</code><span class="sig-paren">(</span><em>recipe_input_name</em>, <em>job_data</em>, <em>job_input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.add_input_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given input from the recipe data as a new input to the given job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_input_name</strong> (<em>str</em>) &#8211; The name of the recipe data input to add to the job data</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.data.html#job.data.job_data.JobData" title="job.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
+<li><strong>job_input_name</strong> (<em>str</em>) &#8211; The name of the job data input to add</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.get_input_file_ids">
+<code class="descname">get_input_file_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.get_input_file_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of scale file identifiers for each file in the job input data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of scale file identifiers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{int}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.get_input_file_ids_by_input">
+<code class="descname">get_input_file_ids_by_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.get_input_file_ids_by_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of file IDs for each input that holds files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where each file input name maps to its list of file IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.get_input_file_info">
+<code class="descname">get_input_file_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.get_input_file_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of scale file identifiers and input names for each file in the job input data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of scale file identifiers and names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[tuple]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.get_workspace_id">
+<code class="descname">get_workspace_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.get_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace ID in the recipe data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.set_workspace_id">
+<code class="descname">set_workspace_id</code><span class="sig-paren">(</span><em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.set_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the workspace ID in the recipe data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>workspace_id</strong> (<em>int</em>) &#8211; The new workspace ID</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the workspace ID is an invalid type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.validate_input_files">
+<code class="descname">validate_input_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.validate_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (dict of str -&gt;
+tuple(bool, bool, <a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription" title="job.configuration.interface.scale_file.ScaleFileDescription"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.scale_file.ScaleFileDescription</span></code></a>)) &#8211; Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
+(True), if the parameter is for multiple files (True), and the description of the expected file meta-data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidRecipeData</span></code>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.validate_input_json">
+<code class="descname">validate_input_json</code><span class="sig-paren">(</span><em>input_json</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.validate_input_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given property names to ensure they are all populated correctly and exist if they are required.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_json</strong> ([<a class="reference internal" href="job.seed.html#job.seed.types.SeedInputJson" title="job.seed.types.SeedInputJson"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedInputJson</span></code></a>]) &#8211; List of Seed input json fields</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidRecipeData</span></code>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_data.RecipeData.validate_workspace">
+<code class="descname">validate_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.RecipeData.validate_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given file parameters to make sure they are valid with respect to the job interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the workspace is missing or invalid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.seed.recipe_data.ValidationWarning">
+<em class="property">class </em><code class="descclassname">recipe.seed.recipe_data.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_data.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks job data configuration warnings during validation that may not prevent the job from working.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.seed.recipe_definition">
+<span id="recipe-seed-recipe-definition-module"></span><h2>recipe.seed.recipe_definition module<a class="headerlink" href="#module-recipe.seed.recipe_definition" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for managing a recipe definition</p>
+<dl class="class">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.seed.recipe_definition.</code><code class="descname">RecipeDefinition</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
+recipe, and how the inputs and outputs of those jobs are connected together.</p>
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_graph">
+<code class="descname">get_graph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recipe graph for this definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The recipe graph</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.graph.RecipeGraph" title="recipe.handlers.graph.RecipeGraph"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.graph.RecipeGraph</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_job_type_keys">
+<code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of tuples that represent keys for each job in the recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of referenced job types as a tuple of (name, version)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set[(str, str)]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_job_type_map">
+<code class="descname">get_job_type_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_job_type_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mapping of job name to job type for each job in the recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dictionary with the recipe job name of each job mapping to its job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict of str -&gt; <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_job_types">
+<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>lock=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a set of job types for each job in the recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>lock</strong> (<em>bool</em>) &#8211; Whether to obtain select_for_update() locks on the job type models</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Set of referenced job types</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">set[<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.get_jobs_to_create">
+<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of job names and types to create for the recipe, in the order that they should be created</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of tuples with each job&#8217;s name and type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[(str, <a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>)]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>recipe_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
+recipe with this definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_conn</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_connection.LegacyRecipeConnection" title="recipe.configuration.data.recipe_connection.LegacyRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_connection.LegacyRecipeConnection</span></code></a>) &#8211; The recipe definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection" title="recipe.configuration.data.exceptions.InvalidRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeConnection</span></code></a>: If there is a configuration</dt>
+<dd>problem</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.validate_data">
+<code class="descname">validate_data</code><span class="sig-paren">(</span><em>recipe_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.validate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given data against the recipe definition</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_data</strong> (<a class="reference internal" href="#recipe.seed.recipe_data.RecipeData" title="recipe.seed.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.seed.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.ValidationWarning" title="recipe.configuration.data.recipe_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If there is a configuration problem</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.seed.recipe_definition.RecipeDefinition.validate_job_interfaces">
+<code class="descname">validate_job_interfaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.seed.recipe_definition.RecipeDefinition.validate_job_interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
+connections are valid</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>:</dt>
+<dd>If there are any invalid job connections in the definition</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.seed">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.seed" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="recipe.test.html" class="btn btn-neutral float-right" title="recipe.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="recipe.migrations.html" class="btn btn-neutral" title="recipe.migrations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.5.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

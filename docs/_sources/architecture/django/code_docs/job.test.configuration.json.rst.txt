@@ -1,13 +1,25 @@
 job\.test\.configuration\.json package
 ======================================
 
-Subpackages
------------
+Submodules
+----------
 
-.. toctree::
+job\.test\.configuration\.json\.test\_job\_config\_2\_0 module
+--------------------------------------------------------------
 
-    job.test.configuration.json.execution
-    job.test.configuration.json.job
+.. automodule:: job.test.configuration.json.test_job_config_2_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.configuration\.json\.test\_job\_config\_v6 module
+------------------------------------------------------------
+
+.. automodule:: job.test.configuration.json.test_job_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="job.test.configuration.json.execution package" href="job.test.configuration.json.execution.html" />
+    <link rel="next" title="job.test.configuration.results package" href="job.test.configuration.results.html" />
     <link rel="prev" title="job.test.configuration.interface package" href="job.test.configuration.interface.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -223,25 +224,78 @@
             
   <div class="section" id="job-test-configuration-json-package">
 <h1>job.test.configuration.json package<a class="headerlink" href="#job-test-configuration-json-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="job.test.configuration.json.execution.html">job.test.configuration.json.execution package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution.test_exe_config">job.test.configuration.json.execution.test_exe_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="job.test.configuration.json.job.html">job.test.configuration.json.job package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job.test_job_config">job.test.configuration.json.job.test_job_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job.test_job_config_v6">job.test.configuration.json.job.test_job_config_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job">Module contents</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-job.test.configuration.json.test_job_config_2_0">
+<span id="job-test-configuration-json-test-job-config-2-0-module"></span><h2>job.test.configuration.json.test_job_config_2_0 module<a class="headerlink" href="#module-job.test.configuration.json.test_job_config_2_0" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2">
+<em class="property">class </em><code class="descclassname">job.test.configuration.json.test_job_config_2_0.</code><code class="descname">TestJobConfigurationV2</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_convert_config_to_v2_json">
+<code class="descname">test_convert_config_to_v2_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_convert_config_to_v2_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling convert_config_to_v2_json()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_convert_from_1_0">
+<code class="descname">test_convert_from_1_0</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_convert_from_1_0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the conversion from version 1.0 of the schema</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_invalid_mounts">
+<code class="descname">test_invalid_mounts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_invalid_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validation done in __init__ where the mounts are invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_invalid_settings">
+<code class="descname">test_invalid_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_invalid_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validation done in __init__ where the settings are invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_successful_validation">
+<code class="descname">test_successful_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_successful_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successful validation done in __init__</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.configuration.json.test_job_config_v6">
+<span id="job-test-configuration-json-test-job-config-v6-module"></span><h2>job.test.configuration.json.test_job_config_v6 module<a class="headerlink" href="#module-job.test.configuration.json.test_job_config_v6" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6">
+<em class="property">class </em><code class="descclassname">job.test.configuration.json.test_job_config_v6.</code><code class="descname">TestJobConfigurationV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.test_convert_config_to_v6_json">
+<code class="descname">test_convert_config_to_v6_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.test_convert_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling convert_config_to_v6_json()</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.test_init_validation">
+<code class="descname">test_init_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.json.test_job_config_v6.TestJobConfigurationV6.test_init_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the validation done in __init__</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.test.configuration.json">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.configuration.json" title="Permalink to this headline">¶</a></h2>
@@ -256,7 +310,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.test.configuration.json.execution.html" class="btn btn-neutral float-right" title="job.test.configuration.json.execution package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.configuration.results.html" class="btn btn-neutral float-right" title="job.test.configuration.results package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.test.configuration.interface.html" class="btn btn-neutral" title="job.test.configuration.interface package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

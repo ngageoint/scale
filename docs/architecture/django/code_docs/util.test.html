@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.broker">util.broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.deprecation">util.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.environment">util.environment module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.exceptions">util.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.file_size">util.file_size module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.host">util.host module</a></li>
@@ -389,6 +390,55 @@
 <code class="descname">test_valid_sqs_broker_url_no_credentials</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_valid_sqs_broker_url_no_credentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests instantiating broker from URL for SQS without keys.</p>
 </dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.test.test_command">
+<span id="util-test-test-command-module"></span><h2>util.test.test_command module<a class="headerlink" href="#module-util.test.test_command" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.test.test_command.TestEnvironmentExpansion">
+<em class="property">class </em><code class="descclassname">util.test.test_command.</code><code class="descname">TestEnvironmentExpansion</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_missing_var_expansion">
+<code class="descname">test_missing_var_expansion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_missing_var_expansion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_multi_instances_var_expansion_success">
+<code class="descname">test_multi_instances_var_expansion_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_multi_instances_var_expansion_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_naked_var_expansion_numeral_success">
+<code class="descname">test_naked_var_expansion_numeral_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_naked_var_expansion_numeral_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_naked_var_expansion_success">
+<code class="descname">test_naked_var_expansion_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_naked_var_expansion_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_prefixed_var_expansion_success">
+<code class="descname">test_prefixed_var_expansion_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_prefixed_var_expansion_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_unmatched_curly_var_expansion_ignored">
+<code class="descname">test_unmatched_curly_var_expansion_ignored</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_unmatched_curly_var_expansion_ignored" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_command.TestEnvironmentExpansion.test_wrapped_var_expansion_success">
+<code class="descname">test_wrapped_var_expansion_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_command.TestEnvironmentExpansion.test_wrapped_var_expansion_success" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

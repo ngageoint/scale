@@ -1,0 +1,7 @@
+timeit module
+=============
+
+.. automodule:: timeit
+    :members:
+    :undoc-members:
+    :show-inheritance:

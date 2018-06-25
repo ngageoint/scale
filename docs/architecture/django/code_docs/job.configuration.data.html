@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -290,8 +291,8 @@ configuration and store output data files.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em>) &#8211; Dict with workspace ID mapping to a list of tuples with absolute local file paths and media
-type (media type is optionally None)</li>
+<li><strong>data_files</strong> (dict[int, <a class="reference internal" href="product.html#product.types.ProductFileMetadata" title="product.types.ProductFileMetadata"><code class="xref py py-class docutils literal"><span class="pre">product.types.ProductFileMetadata</span></code></a>]) &#8211; Dict with workspace ID mapping to a list of ProductFileMetadata elements with absolute local
+file paths and media type (media type is optionally None)</li>
 <li><strong>input_file_ids</strong> (<em>set of long</em>) &#8211; Set of input file IDs</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the files</li>
 </ul>
@@ -490,6 +491,24 @@ connect shared resources to resource instances in Scale, and details needed to s
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.data.job_data.JobData.add_file_output">
+<code class="descname">add_file_output</code><span class="sig-paren">(</span><em>data</em>, <em>add_to_internal=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_file_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new output files to this job data with a workspace ID.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>dict</em>) &#8211; The output parameter dict</li>
+<li><strong>add_to_internal</strong> (<em>bool</em>) &#8211; Whether we should add to private data dict. Unneeded when used from __init__</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.data.job_data.JobData.add_output">
 <code class="descname">add_output</code><span class="sig-paren">(</span><em>output_name</em>, <em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.add_output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new output parameter to this job data with a workspace ID. This method does not perform validation on
@@ -526,6 +545,32 @@ the job data.</p>
 </table>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="job.configuration.data.job_data.JobData.create_output_workspace_dict">
+<em class="property">static </em><code class="descname">create_output_workspace_dict</code><span class="sig-paren">(</span><em>output_params</em>, <em>job_data</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.create_output_workspace_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the mapping from output to workspace both ways: the old way from job data and the new way from job
+configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>output_params</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of output parameter names</li>
+<li><strong>job_data</strong> (<em>1.0? 2.0? WHO KNOWZ?</em>) &#8211; The job data</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Dict where output param name maps to workspace ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.configuration.data.job_data.JobData.get_all_properties">
 <code class="descname">get_all_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_all_properties" title="Permalink to this definition">¶</a></dt>
@@ -553,6 +598,42 @@ the job data.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_injected_env_vars">
+<code class="descname">get_injected_env_vars</code><span class="sig-paren">(</span><em>input_files_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_injected_env_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply all execution time values to job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_files</strong> ({str, <a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.input_file.InputFile" title="job.execution.configuration.input_file.InputFile"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.input_file.InputFile</span></code></a>}) &#8211; Mapping of input names to InputFiles</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mapping of all input keys to their true file / property values</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str, str}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_injected_input_values">
+<code class="descname">get_injected_input_values</code><span class="sig-paren">(</span><em>input_files_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_injected_input_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply all execution time values to job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_files</strong> ({str, <a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.input_file.InputFile" title="job.execution.configuration.input_file.InputFile"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.input_file.InputFile</span></code></a>}) &#8211; Mapping of input names to InputFiles</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Mapping of all input keys to their true file / property values</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">{str, str}</td>
 </tr>
 </tbody>
 </table>
@@ -658,6 +739,22 @@ property name, it will not be included in the returned dict.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.data.job_data.JobData.has_workspaces">
+<code class="descname">has_workspaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.has_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether this job data contains output wrkspaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this job data contains output wrkspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.data.job_data.JobData.retrieve_input_data_files">
 <code class="descname">retrieve_input_data_files</code><span class="sig-paren">(</span><em>data_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.retrieve_input_data_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the given data input files and writes them to the given local directories. Any given file
@@ -724,9 +821,7 @@ multiple files (True) and an absolute directory path</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_files</strong> (<em>{string: tuple</em><em>(</em><em>string</em><em>, </em><em>string</em><em>)</em><em>}</em><em> or </em><em>[</em><em>tuple</em><em>(</em><em>string</em><em>, </em><em>string</em><em>)</em><em>]</em>) &#8211; Dict with each file parameter name mapping to a tuple of absolute local file path and media
-type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
-parameter</li>
+<li><strong>data_files</strong> ({string: [<cite>ProductFileMetadata</cite>]}) &#8211; Dict with each file parameter name mapping to a list of ProductFileMetadata classes</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the output data
 files</li>
 </ul>

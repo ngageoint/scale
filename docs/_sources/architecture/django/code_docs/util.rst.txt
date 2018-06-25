@@ -51,6 +51,14 @@ util\.deprecation module
     :undoc-members:
     :show-inheritance:
 
+util\.environment module
+------------------------
+
+.. automodule:: util.environment
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.exceptions module
 -----------------------
 

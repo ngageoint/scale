@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -241,91 +242,6 @@
 <dt id="job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation">
 <code class="descname">test_init_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the validation done in __init__</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.test.configuration.interface.test_error_interface">
-<span id="job-test-configuration-interface-test-error-interface-module"></span><h2>job.test.configuration.interface.test_error_interface module<a class="headerlink" href="#module-job.test.configuration.interface.test_error_interface" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate">
-<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_error_interface.</code><code class="descname">TestErrorInterfaceValidate</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="attribute">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'basic_job_errors.json']</em><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_found">
-<code class="descname">test_get_error_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that an error model is returned given an exit_code other than 0</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing">
-<code class="descname">test_get_error_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that general algorithm error is returned when a non-registered name is found in the mapping</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing_default">
-<code class="descname">test_get_error_missing_default</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_missing_default" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that custom error is returned when a non-registered name is found in the mapping</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names">
-<code class="descname">test_get_error_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting error names from the mapping.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_empty">
-<code class="descname">test_get_error_names_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_empty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting error names when there are no exit codes defined.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_none">
-<code class="descname">test_get_error_names_none</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_none" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting error names when there is no error interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_unique">
-<code class="descname">test_get_error_names_unique</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_names_unique" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests getting error names without duplicates.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_zero">
-<code class="descname">test_get_error_zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_get_error_zero" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests that no error is returned when the exit_code is 0</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty">
-<code class="descname">test_validate_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_empty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating no error names.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing">
-<code class="descname">test_validate_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_missing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating when some error names are missing.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success">
-<code class="descname">test_validate_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests validating all error names.</p>
 </dd></dl>
 
 </dd></dl>

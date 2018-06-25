@@ -1,0 +1,1028 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.seed package &mdash; Scale 5.5.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="job.seed.results package" href="job.seed.results.html" />
+    <link rel="prev" title="job.migrations package" href="job.migrations.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="job.html">job package</a> &raquo;</li>
+        
+      <li>job.seed package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/job.seed.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-seed-package">
+<h1>job.seed package<a class="headerlink" href="#job-seed-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.seed.results.html">job.seed.results package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.seed.results.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.seed.results.html#module-job.seed.results.job_results">job.seed.results.job_results module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.seed.results.html#module-job.seed.results.outputs_json">job.seed.results.outputs_json module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.seed.results.html#module-job.seed.results">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.seed.exceptions">
+<span id="job-seed-exceptions-module"></span><h2>job.seed.exceptions module<a class="headerlink" href="#module-job.seed.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with a Seed job interface</p>
+<dl class="exception">
+<dt id="job.seed.exceptions.InvalidSeedManifestDefinition">
+<em class="property">exception </em><code class="descclassname">job.seed.exceptions.</code><code class="descname">InvalidSeedManifestDefinition</code><a class="headerlink" href="#job.seed.exceptions.InvalidSeedManifestDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided definition of a Seed Manifest was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.seed.exceptions.InvalidSeedMetadataDefinition">
+<em class="property">exception </em><code class="descclassname">job.seed.exceptions.</code><code class="descname">InvalidSeedMetadataDefinition</code><a class="headerlink" href="#job.seed.exceptions.InvalidSeedMetadataDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided definition of a Seed Metadata was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed.manifest">
+<span id="job-seed-manifest-module"></span><h2>job.seed.manifest module<a class="headerlink" href="#module-job.seed.manifest" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for executing a job</p>
+<dl class="class">
+<dt id="job.seed.manifest.SeedManifest">
+<em class="property">class </em><code class="descclassname">job.seed.manifest.</code><code class="descname">SeedManifest</code><span class="sig-paren">(</span><em>definition</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the interface defined by an algorithm developer to a Seed job</p>
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.add_output_to_connection">
+<code class="descname">add_output_to_connection</code><span class="sig-paren">(</span><em>output_name</em>, <em>job_conn</em>, <em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.add_output_to_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output from the interface as a new input to the given job connection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>str</em>) &#8211; The name of the output to add to the connection</li>
+<li><strong>job_conn</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.data.job_connection.JobConnection</span></code>) &#8211; The job connection</li>
+<li><strong>input_name</strong> (<em>str</em>) &#8211; The name of the connection input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.add_workspace_to_data">
+<code class="descname">add_workspace_to_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.add_workspace_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given workspace ID to the given job data for every output in this job interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_data</strong> (<a class="reference internal" href="job.data.html#job.data.job_data.JobData" title="job.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
+<li><strong>workspace_id</strong> (<em>int</em>) &#8211; The workspace ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_command">
+<code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the command
+:return: the command
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_description">
+<code class="descname">get_description</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job description
+:return: the description
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_error_mapping">
+<code class="descname">get_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_error_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error mapping for this manifest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error mapping</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.error.html#job.error.mapping.JobErrorMapping" title="job.error.mapping.JobErrorMapping"><code class="xref py py-class docutils literal"><span class="pre">job.error.mapping.JobErrorMapping</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_errors">
+<code class="descname">get_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the error mapping defined for the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the error codes mapped for job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_file_output_names">
+<code class="descname">get_file_output_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_file_output_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output parameter names for all file outputs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The file output parameter names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_injected_command_args">
+<code class="descname">get_injected_command_args</code><span class="sig-paren">(</span><em>values</em>, <em>env_vars</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_injected_command_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the command, injecting env_vars and input variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>values</strong> (<em>{str</em><em>, </em><em>str}</em>) &#8211; Input values to replace named placeholders in command value</li>
+<li><strong>env_vars</strong> (<em>dict</em>) &#8211; Incoming environment variables</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the command</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_input_files">
+<code class="descname">get_input_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of input files defined in the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the input file definitions for job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_input_json">
+<code class="descname">get_input_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_input_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of json defined in the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the input json definitions for job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_inputs">
+<code class="descname">get_inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the inputs defined in the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the inputs defined for the job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_interface">
+<code class="descname">get_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the interface for the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the interface object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_job">
+<code class="descname">get_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job object within the Seed manifest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the Job object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_job_version">
+<code class="descname">get_job_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_job_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job version
+:return: the version
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_maintainer">
+<code class="descname">get_maintainer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_maintainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the maintainer details for the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the maintainer details of job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_mounts">
+<code class="descname">get_mounts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the mounts defined the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the mounts for a job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job name
+:return: the name
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_output_files">
+<code class="descname">get_output_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_output_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of output files defined in the interface</p>
+<p>Commonly used when matching globs to capture output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the output file definitions for job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_output_json">
+<code class="descname">get_output_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_output_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of output json defined in the interface</p>
+<p>Commonly used when matching globs to capture output files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the output file definitions for job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_outputs">
+<code class="descname">get_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the outputs defined in the interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the outputs defined for the job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_scalar_resources">
+<code class="descname">get_scalar_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_scalar_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the scalar resources defined the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the scalar resources required by job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_seed_output_files">
+<code class="descname">get_seed_output_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_seed_output_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of SeedOutputFiles typed results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of output files elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<cite>job.seed.types.SeedOutputFiles</cite>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_seed_output_json">
+<code class="descname">get_seed_output_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_seed_output_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of SeedOutputJson typed results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of output json elements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<cite>job.seed.types.SeedOutputJson</cite>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_settings">
+<code class="descname">get_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the settings for the Seed job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the settings object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_tags">
+<code class="descname">get_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job tags
+:return: the tags
+:rtype: [str]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_timeout">
+<code class="descname">get_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job timeout</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the version</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">integer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.get_title">
+<code class="descname">get_title</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.get_title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job title
+:return: the title
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.perform_pre_steps">
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
+This returns the command that should be executed for these parameters.
+:param job_data: The job data
+:type job_data: <a class="reference internal" href="job.data.html#job.data.job_data.JobData" title="job.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.JobData</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>job_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given job connection to ensure that the connection will provide sufficient data to run a job
+with this interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_conn</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.seed.data.job_connection.JobConnection</span></code>) &#8211; The job data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.data.html#job.data.job_data.ValidationWarning" title="job.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.data.html#job.data.exceptions.InvalidConnection" title="job.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.data.exceptions.InvalidConnection</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.validate_data">
+<code class="descname">validate_data</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.validate_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that the job_data matches the job_interface description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_data</strong> (<a class="reference internal" href="job.data.html#job.data.job_data.JobData" title="job.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.JobData</span></code></a>) &#8211; The job data</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.data.html#job.data.job_data.ValidationWarning" title="job.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="job.data.html#job.data.exceptions.InvalidData" title="job.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.data.exceptions.InvalidData</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.validate_populated_mounts">
+<code class="descname">validate_populated_mounts</code><span class="sig-paren">(</span><em>exe_configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.validate_populated_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that all required mounts are defined in the execution configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.manifest.SeedManifest.validate_populated_settings">
+<code class="descname">validate_populated_settings</code><span class="sig-paren">(</span><em>exe_configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.manifest.SeedManifest.validate_populated_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that all required settings are defined in the execution configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed.metadata">
+<span id="job-seed-metadata-module"></span><h2>job.seed.metadata module<a class="headerlink" href="#module-job.seed.metadata" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for executing a job</p>
+<dl class="class">
+<dt id="job.seed.metadata.SeedMetadata">
+<em class="property">class </em><code class="descclassname">job.seed.metadata.</code><code class="descname">SeedMetadata</code><span class="sig-paren">(</span><em>definition</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the extended metadata for a single file captured from a Seed job</p>
+<dl class="method">
+<dt id="job.seed.metadata.SeedMetadata.get_geometry">
+<code class="descname">get_geometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.get_geometry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves GeoJSON geometry if it is available in metadata object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Geometry as defined by GeoJSON specification, possibly None if unset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.metadata.SeedMetadata.get_time">
+<code class="descname">get_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.get_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves Timestamp of data if it is available in metadata object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Timestamp as defined in ISO8601 string format, possibly None if unset</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed.types">
+<span id="job-seed-types-module"></span><h2>job.seed.types module<a class="headerlink" href="#module-job.seed.types" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.seed.types.SeedFiles">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedFiles</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="job.seed.types.SeedFiles.multiple">
+<code class="descname">multiple</code><a class="headerlink" href="#job.seed.types.SeedFiles.multiple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedFiles.name">
+<code class="descname">name</code><a class="headerlink" href="#job.seed.types.SeedFiles.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedFiles.required">
+<code class="descname">required</code><a class="headerlink" href="#job.seed.types.SeedFiles.required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.seed.types.SeedInputFiles">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedInputFiles</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedInputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.seed.types.SeedFiles" title="job.seed.types.SeedFiles"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedFiles</span></code></a></p>
+<p>Concrete class for Seed input files elements</p>
+<dl class="method">
+<dt id="job.seed.types.SeedInputFiles.is_media_type_allowed">
+<code class="descname">is_media_type_allowed</code><span class="sig-paren">(</span><em>media_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedInputFiles.is_media_type_allowed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the given media type is allowed by this file description</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>media_type</strong> (<em>str</em>) &#8211; The media type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the media type is allowed, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedInputFiles.media_types">
+<code class="descname">media_types</code><a class="headerlink" href="#job.seed.types.SeedInputFiles.media_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedInputFiles.partial">
+<code class="descname">partial</code><a class="headerlink" href="#job.seed.types.SeedInputFiles.partial" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.seed.types.SeedInputJson">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedInputJson</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedInputJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.seed.types.SeedJson" title="job.seed.types.SeedJson"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedJson</span></code></a></p>
+<p>Concrete class for Seed input JSON elements</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.seed.types.SeedJson">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedJson</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="job.seed.types.SeedJson.name">
+<code class="descname">name</code><a class="headerlink" href="#job.seed.types.SeedJson.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedJson.python_type">
+<code class="descname">python_type</code><a class="headerlink" href="#job.seed.types.SeedJson.python_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides an explicit python type to validate against incoming json types</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedJson.required">
+<code class="descname">required</code><a class="headerlink" href="#job.seed.types.SeedJson.required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedJson.type">
+<code class="descname">type</code><a class="headerlink" href="#job.seed.types.SeedJson.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.seed.types.SeedOutputFiles">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedOutputFiles</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedOutputFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.seed.types.SeedFiles" title="job.seed.types.SeedFiles"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedFiles</span></code></a></p>
+<p>Concrete class for Seed output files elements</p>
+<dl class="method">
+<dt id="job.seed.types.SeedOutputFiles.get_files">
+<code class="descname">get_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedOutputFiles.get_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of absolute paths to files following job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">files matched by pattern defined for object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[str]</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">OutputCaptureError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedOutputFiles.media_type">
+<code class="descname">media_type</code><a class="headerlink" href="#job.seed.types.SeedOutputFiles.media_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedOutputFiles.pattern">
+<code class="descname">pattern</code><a class="headerlink" href="#job.seed.types.SeedOutputFiles.pattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.seed.types.SeedOutputJson">
+<em class="property">class </em><code class="descclassname">job.seed.types.</code><code class="descname">SeedOutputJson</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.types.SeedOutputJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.seed.types.SeedJson" title="job.seed.types.SeedJson"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedJson</span></code></a></p>
+<p>Concrete class for Seed output JSON elements</p>
+<dl class="attribute">
+<dt id="job.seed.types.SeedOutputJson.json_key">
+<code class="descname">json_key</code><a class="headerlink" href="#job.seed.types.SeedOutputJson.json_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the preferred key to match in seed.outputs.json for this JSON output</p>
+<p>The <cite>key</cite> member supercedes the <cite>name</cite> member when specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Key used to capture output JSON</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.types.SeedOutputJson.key">
+<code class="descname">key</code><a class="headerlink" href="#job.seed.types.SeedOutputJson.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.seed" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.seed.results.html" class="btn btn-neutral float-right" title="job.seed.results package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.migrations.html" class="btn btn-neutral" title="job.migrations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.5.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

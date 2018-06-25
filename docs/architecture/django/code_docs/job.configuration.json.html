@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="job.configuration.json.execution package" href="job.configuration.json.execution.html" />
+    <link rel="next" title="job.configuration.results package" href="job.configuration.results.html" />
     <link rel="prev" title="job.configuration.interface package" href="job.configuration.interface.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -221,28 +222,250 @@
             
   <div class="section" id="job-configuration-json-package">
 <h1>job.configuration.json package<a class="headerlink" href="#job-configuration-json-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="job.configuration.json.execution.html">job.configuration.json.execution package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config">job.configuration.json.execution.exe_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config_1_0">job.configuration.json.execution.exe_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config_1_1">job.configuration.json.execution.exe_config_1_1 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="job.configuration.json.job.html">job.configuration.json.job package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config">job.configuration.json.job.job_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_1_0">job.configuration.json.job.job_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_v6">job.configuration.json.job.job_config_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job">Module contents</a></li>
-</ul>
-</li>
-</ul>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-job.configuration.json.job_config_1_0">
+<span id="job-configuration-json-job-config-1-0-module"></span><h2>job.configuration.json.job_config_1_0 module<a class="headerlink" href="#module-job.configuration.json.job_config_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for a job configuration</p>
+<dl class="class">
+<dt id="job.configuration.json.job_config_1_0.JobConfigurationV1">
+<em class="property">class </em><code class="descclassname">job.configuration.json.job_config_1_0.</code><code class="descname">JobConfigurationV1</code><span class="sig-paren">(</span><em>definition=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_1_0.JobConfigurationV1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the schema for a job configuration</p>
+<dl class="method">
+<dt id="job.configuration.json.job_config_1_0.JobConfigurationV1.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_1_0.JobConfigurationV1.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this error mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.json.job_config_2_0">
+<span id="job-configuration-json-job-config-2-0-module"></span><h2>job.configuration.json.job_config_2_0 module<a class="headerlink" href="#module-job.configuration.json.job_config_2_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for a job configuration</p>
+<dl class="class">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2">
+<em class="property">class </em><code class="descclassname">job.configuration.json.job_config_2_0.</code><code class="descname">JobConfigurationV2</code><span class="sig-paren">(</span><em>configuration=None</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the schema for a job configuration</p>
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary representing this configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.get_mount_volume">
+<code class="descname">get_mount_volume</code><span class="sig-paren">(</span><em>mount_name</em>, <em>volume_name</em>, <em>container_path</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.get_mount_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the volume that has been configured for the given mount name. If the given mount is not defined in
+this configuration, None is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mount_name</strong> (<em>string</em>) &#8211; The name of the mount defined in the job type</li>
+<li><strong>volume_name</strong> (<em>string</em>) &#8211; The name of the volume</li>
+<li><strong>container_path</strong> (<em>string</em>) &#8211; The path within the container onto which the volume will be mounted</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; Either &#8216;ro&#8217; for read-only or &#8216;rw&#8217; for read-write</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The volume that should be mounted into the job container, possibly None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.volume.Volume" title="job.execution.configuration.volume.Volume"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.volume.Volume</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.get_secret_settings">
+<code class="descname">get_secret_settings</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.get_secret_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of configuration settings that are secret based off the job interface
+setting designations.</p>
+<p># TODO: Remove when legacy JobType are deprecated in v6</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The interface dict for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name:value pairs of secret settings, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.get_seed_secret_settings">
+<code class="descname">get_seed_secret_settings</code><span class="sig-paren">(</span><em>settings</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.get_seed_secret_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of configuration settings that are secret based off the Seed Manifest
+setting designations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>settings</strong> (<em>[</em><em>dict</em><em>]</em>) &#8211; The settings associated with a Job Type defined with Seed Manifest</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name:value pairs of secret settings, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.get_setting_value">
+<code class="descname">get_setting_value</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.get_setting_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the given setting if defined in this configuration, otherwise returns None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the setting</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the setting, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_2_0.JobConfigurationV2.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>interface_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.JobConfigurationV2.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the configuration against the interface to find setting and mount usages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface_dict</strong> (<em>dict</em>) &#8211; The interface for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.json.job_config_2_0.ValidationWarning">
+<em class="property">class </em><code class="descclassname">job.configuration.json.job_config_2_0.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks job configuration warnings during validation that may not prevent the job from working.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.configuration.json.job_config_2_0.convert_config_to_v2_json">
+<code class="descclassname">job.configuration.json.job_config_2_0.</code><code class="descname">convert_config_to_v2_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_2_0.convert_config_to_v2_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v2 job configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The job configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v2 job configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.configuration.json.job_config_2_0.JobConfigurationV2" title="job.configuration.json.job_config_2_0.JobConfigurationV2"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job_config_2_0.JobConfigurationV2</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.json.job_config_v6">
+<span id="job-configuration-json-job-config-v6-module"></span><h2>job.configuration.json.job_config_v6 module<a class="headerlink" href="#module-job.configuration.json.job_config_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 job configuration schema</p>
+<dl class="class">
+<dt id="job.configuration.json.job_config_v6.JobConfigurationV6">
+<em class="property">class </em><code class="descclassname">job.configuration.json.job_config_v6.</code><code class="descname">JobConfigurationV6</code><span class="sig-paren">(</span><em>config=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_v6.JobConfigurationV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a v6 job configuration JSON</p>
+<dl class="method">
+<dt id="job.configuration.json.job_config_v6.JobConfigurationV6.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_v6.JobConfigurationV6.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job configuration represented by this JSON</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>:</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.json.job_config_v6.JobConfigurationV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_v6.JobConfigurationV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.configuration.json.job_config_v6.convert_config_to_v6_json">
+<code class="descclassname">job.configuration.json.job_config_v6.</code><code class="descname">convert_config_to_v6_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job_config_v6.convert_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 job configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The job configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 job configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.configuration.json.job_config_v6.JobConfigurationV6" title="job.configuration.json.job_config_v6.JobConfigurationV6"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job_config_v6.JobConfigurationV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.configuration.json">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.configuration.json" title="Permalink to this headline">¶</a></h2>
@@ -257,7 +480,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.configuration.json.execution.html" class="btn btn-neutral float-right" title="job.configuration.json.execution package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.configuration.results.html" class="btn btn-neutral float-right" title="job.configuration.results package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.configuration.interface.html" class="btn btn-neutral" title="job.configuration.interface package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

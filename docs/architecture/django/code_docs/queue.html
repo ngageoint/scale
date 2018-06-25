@@ -668,7 +668,7 @@ object the first time, the query is executed.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The execution configuration for this queued job</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1132,8 +1132,8 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts queue status model fields to REST output</p>
 <dl class="class">
-<dt id="queue.serializers.QueueStatusSerializer.JobTypeBaseSerializer">
-<em class="property">class </em><code class="descname">JobTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV5">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.QueueStatusSerializer.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
@@ -1343,7 +1343,7 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">OldJobSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV5</span></code></p>
 </dd></dl>
 
 </dd></dl>

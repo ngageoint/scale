@@ -14,10 +14,10 @@ Subpackages
 Submodules
 ----------
 
-job\.test\.configuration\.test\_configurators module
+job\.test\.configuration\.test\_configuration module
 ----------------------------------------------------
 
-.. automodule:: job.test.configuration.test_configurators
+.. automodule:: job.test.configuration.test_configuration
     :members:
     :undoc-members:
     :show-inheritance:

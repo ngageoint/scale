@@ -20,6 +20,14 @@ util\.test\.test\_broker module
     :undoc-members:
     :show-inheritance:
 
+util\.test\.test\_command module
+--------------------------------
+
+.. automodule:: util.test.test_command
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.test\.test\_parse module
 ------------------------------
 

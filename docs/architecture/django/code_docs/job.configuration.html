@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -234,7 +235,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.configuration.interface.html">job.configuration.interface package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.interface.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.interface.html#module-job.configuration.interface.error_interface">job.configuration.interface.error_interface module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.interface.html#module-job.configuration.interface.exceptions">job.configuration.interface.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.interface.html#module-job.configuration.interface.job_interface">job.configuration.interface.job_interface module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.interface.html#module-job.configuration.interface.job_interface_1_0">job.configuration.interface.job_interface_1_0 module</a></li>
@@ -246,25 +246,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.configuration.json.html">job.configuration.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="job.configuration.json.execution.html">job.configuration.json.execution package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.execution.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config">job.configuration.json.execution.exe_config module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config_1_0">job.configuration.json.execution.exe_config_1_0 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config_1_1">job.configuration.json.execution.exe_config_1_1 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="job.configuration.json.job.html">job.configuration.json.job package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config">job.configuration.json.job.job_config module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_1_0">job.configuration.json.job.job_config_1_0 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_v6">job.configuration.json.job.job_config_v6 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_1_0">job.configuration.json.job_config_1_0 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_2_0">job.configuration.json.job_config_2_0 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json.job_config_v6">job.configuration.json.job_config_v6 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.configuration.json.html#module-job.configuration.json">Module contents</a></li>
 </ul>
 </li>
@@ -353,14 +338,77 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.configuration.JobConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the configuration against the given Seed manifest</p>
+<dt id="job.configuration.configuration.JobConfiguration.get_mount_volume">
+<code class="descname">get_mount_volume</code><span class="sig-paren">(</span><em>mount_name</em>, <em>volume_name</em>, <em>container_path</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.get_mount_volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the volume that has been configured for the given mount name. If the given mount is not defined in
+this configuration, None is returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The interface dict for the job type</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>mount_name</strong> (<em>string</em>) &#8211; The name of the mount defined in the job type</li>
+<li><strong>volume_name</strong> (<em>string</em>) &#8211; The name of the volume</li>
+<li><strong>container_path</strong> (<em>string</em>) &#8211; The path within the container onto which the volume will be mounted</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; Either &#8216;ro&#8217; for read-only or &#8216;rw&#8217; for read-write</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The volume that should be mounted into the job container, possibly None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.volume.Volume" title="job.execution.configuration.volume.Volume"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.volume.Volume</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.get_setting_value">
+<code class="descname">get_setting_value</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.get_setting_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value of the given setting if defined in this configuration, otherwise returns None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the setting</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the setting, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.remove_secret_settings">
+<code class="descname">remove_secret_settings</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.remove_secret_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes and returns the secret setting values from this job configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed manifest</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dict of secret settings where the key is the setting name and the value is the secret setting value</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.configuration.JobConfiguration.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configuration.JobConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the configuration against the given Seed manifest. This will perform database queries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed manifest</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
 </tr>
@@ -374,153 +422,14 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.configuration.configurators">
-<span id="job-configuration-configurators-module"></span><h2>job.configuration.configurators module<a class="headerlink" href="#module-job.configuration.configurators" title="Permalink to this headline">¶</a></h2>
-<p>Defines the classes that handle processing job and execution configuration</p>
-<dl class="class">
-<dt id="job.configuration.configurators.QueuedExecutionConfigurator">
-<em class="property">class </em><code class="descclassname">job.configuration.configurators.</code><code class="descname">QueuedExecutionConfigurator</code><span class="sig-paren">(</span><em>input_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.QueuedExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Configurator that creates execution configurations when a job execution is queued</p>
-<dl class="method">
-<dt id="job.configuration.configurators.QueuedExecutionConfigurator.configure_queued_job">
-<code class="descname">configure_queued_job</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.QueuedExecutionConfigurator.configure_queued_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates and returns an execution configuration for the given queued job. The given job model should have its
-related job_type and job_type_rev models populated.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job</strong> (<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The queued job model</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The execution configuration for the queued job</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.configuration.configurators.ScheduledExecutionConfigurator">
-<em class="property">class </em><code class="descclassname">job.configuration.configurators.</code><code class="descname">ScheduledExecutionConfigurator</code><span class="sig-paren">(</span><em>workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.ScheduledExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Configurator that handles execution configurations when a job execution is scheduled</p>
-<dl class="method">
-<dt id="job.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job">
-<code class="descname">configure_scheduled_job</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type</em>, <em>interface</em>, <em>system_logging_level</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
-models will not have any related fields populated. The execution configuration in the job_exe model will have
-all secret values replaced with &#8216;<strong>*</strong>&#8216; so that it is safe to be stored in the database. Another copy of this
-configuration will be returned that has the actual secret values populated and can be used for actual
-scheduling.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model being scheduled</li>
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type model</li>
-<li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The job interface</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the configuration containing secret values</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="function">
-<dt id="job.configuration.configurators.normalize_env_var_name">
-<code class="descclassname">job.configuration.configurators.</code><code class="descname">normalize_env_var_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.configurators.normalize_env_var_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a normalized version of the given string name so it can be used as the name of an environment variable</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The string name to normalize</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The normalized environment variable name</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.configuration.docker_param">
-<span id="job-configuration-docker-param-module"></span><h2>job.configuration.docker_param module<a class="headerlink" href="#module-job.configuration.docker_param" title="Permalink to this headline">¶</a></h2>
-<p>Defines a Docker parameter that is set for a task</p>
-<dl class="class">
-<dt id="job.configuration.docker_param.DockerParameter">
-<em class="property">class </em><code class="descclassname">job.configuration.docker_param.</code><code class="descname">DockerParameter</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.docker_param.DockerParameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents a Docker parameter set for a task</p>
-</dd></dl>
-
-</div>
 <div class="section" id="module-job.configuration.exceptions">
 <span id="job-configuration-exceptions-module"></span><h2>job.configuration.exceptions module<a class="headerlink" href="#module-job.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
-<p>Defines exceptions that can occur when interacting with configuration</p>
-<dl class="exception">
-<dt id="job.configuration.exceptions.InvalidExecutionConfiguration">
-<em class="property">exception </em><code class="descclassname">job.configuration.exceptions.</code><code class="descname">InvalidExecutionConfiguration</code><a class="headerlink" href="#job.configuration.exceptions.InvalidExecutionConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating that the provided execution configuration JSON was invalid</p>
-</dd></dl>
-
+<p>Defines exceptions that can occur when interacting with job configuration</p>
 <dl class="exception">
 <dt id="job.configuration.exceptions.InvalidJobConfiguration">
-<em class="property">exception </em><code class="descclassname">job.configuration.exceptions.</code><code class="descname">InvalidJobConfiguration</code><a class="headerlink" href="#job.configuration.exceptions.InvalidJobConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<em class="property">exception </em><code class="descclassname">job.configuration.exceptions.</code><code class="descname">InvalidJobConfiguration</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.exceptions.InvalidJobConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
 <p>Exception indicating that the provided job configuration was invalid</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="job.configuration.exceptions.MissingMount">
-<em class="property">exception </em><code class="descclassname">job.configuration.exceptions.</code><code class="descname">MissingMount</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.exceptions.MissingMount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
-<p>Error class indicating that a required mount volume is missing</p>
-<dl class="method">
-<dt id="job.configuration.exceptions.MissingMount.get_log_message">
-<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.exceptions.MissingMount.get_log_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="exception">
-<dt id="job.configuration.exceptions.MissingSetting">
-<em class="property">exception </em><code class="descclassname">job.configuration.exceptions.</code><code class="descname">MissingSetting</code><span class="sig-paren">(</span><em>setting</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.exceptions.MissingSetting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
-<p>Error class indicating that a required setting value is missing</p>
-<dl class="method">
-<dt id="job.configuration.exceptions.MissingSetting.get_log_message">
-<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.exceptions.MissingSetting.get_log_message" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.configuration.input_file">
-<span id="job-configuration-input-file-module"></span><h2>job.configuration.input_file module<a class="headerlink" href="#module-job.configuration.input_file" title="Permalink to this headline">¶</a></h2>
-<p>Defines an input file and its meta-data in an execution configuration</p>
-<dl class="class">
-<dt id="job.configuration.input_file.InputFile">
-<em class="property">class </em><code class="descclassname">job.configuration.input_file.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>scale_file</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.input_file.InputFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Defines an input file and its meta-data</p>
 </dd></dl>
 
 </div>
@@ -569,46 +478,6 @@ scheduling.</p>
 <em class="property">class </em><code class="descclassname">job.configuration.mount.</code><code class="descname">VolumeMountConfig</code><span class="sig-paren">(</span><em>name</em>, <em>driver=None</em>, <em>driver_opts=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.mount.VolumeMountConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.configuration.mount.MountConfig" title="job.configuration.mount.MountConfig"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.mount.MountConfig</span></code></a></p>
 <p>Defines the configuration for a volume mount</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.configuration.volume">
-<span id="job-configuration-volume-module"></span><h2>job.configuration.volume module<a class="headerlink" href="#module-job.configuration.volume" title="Permalink to this headline">¶</a></h2>
-<p>Defines a Docker volume that will be mounted into a container</p>
-<dl class="class">
-<dt id="job.configuration.volume.Volume">
-<em class="property">class </em><code class="descclassname">job.configuration.volume.</code><code class="descname">Volume</code><span class="sig-paren">(</span><em>name</em>, <em>container_path</em>, <em>mode</em>, <em>is_host=True</em>, <em>host_path=None</em>, <em>driver=None</em>, <em>driver_opts=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.volume.Volume" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Defines a Docker volume that will be mounted into a container</p>
-<dl class="method">
-<dt id="job.configuration.volume.Volume.to_docker_param">
-<code class="descname">to_docker_param</code><span class="sig-paren">(</span><em>is_created</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.volume.Volume.to_docker_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a Docker parameter that will perform the mount of this volume</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>is_created</strong> (<em>bool</em>) &#8211; Whether this volume has already been created</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Docker parameter that will mount this volume</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.configuration.docker_param.DockerParameter" title="job.configuration.docker_param.DockerParameter"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.docker_param.DockerParameter</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.configuration.workspace">
-<span id="job-configuration-workspace-module"></span><h2>job.configuration.workspace module<a class="headerlink" href="#module-job.configuration.workspace" title="Permalink to this headline">¶</a></h2>
-<p>Defines a workspace that is needed by a task</p>
-<dl class="class">
-<dt id="job.configuration.workspace.TaskWorkspace">
-<em class="property">class </em><code class="descclassname">job.configuration.workspace.</code><code class="descname">TaskWorkspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em>, <em>volume_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.workspace.TaskWorkspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents a workspace needed by a task</p>
 </dd></dl>
 
 </div>

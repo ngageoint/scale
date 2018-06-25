@@ -36,6 +36,14 @@ error\.migrations\.0004\_error\_should\_be\_retried module
     :undoc-members:
     :show-inheritance:
 
+error\.migrations\.0005\_auto\_20180621\_2110 module
+----------------------------------------------------
+
+.. automodule:: error.migrations.0005_auto_20180621_2110
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

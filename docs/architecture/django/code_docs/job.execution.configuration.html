@@ -1,0 +1,478 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.execution.configuration package &mdash; Scale 5.5.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="job.execution.configuration.json package" href="job.execution.configuration.json.html" />
+    <link rel="prev" title="job.execution package" href="job.execution.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="job.html">job package</a> &raquo;</li>
+        
+          <li><a href="job.execution.html">job.execution package</a> &raquo;</li>
+        
+      <li>job.execution.configuration package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/job.execution.configuration.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-execution-configuration-package">
+<h1>job.execution.configuration package<a class="headerlink" href="#job-execution-configuration-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.execution.configuration.json.html">job.execution.configuration.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.configuration.json.html#module-job.execution.configuration.json.exe_config">job.execution.configuration.json.exe_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.configuration.json.html#module-job.execution.configuration.json.exe_config_1_0">job.execution.configuration.json.exe_config_1_0 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.configuration.json.html#module-job.execution.configuration.json.exe_config_1_1">job.execution.configuration.json.exe_config_1_1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.configuration.json.html#module-job.execution.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.execution.configuration.configurators">
+<span id="job-execution-configuration-configurators-module"></span><h2>job.execution.configuration.configurators module<a class="headerlink" href="#module-job.execution.configuration.configurators" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes that handle processing job and execution configuration</p>
+<dl class="class">
+<dt id="job.execution.configuration.configurators.QueuedExecutionConfigurator">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.configurators.</code><code class="descname">QueuedExecutionConfigurator</code><span class="sig-paren">(</span><em>input_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.configurators.QueuedExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Configurator that creates execution configurations when a job execution is queued</p>
+<dl class="method">
+<dt id="job.execution.configuration.configurators.QueuedExecutionConfigurator.configure_queued_job">
+<code class="descname">configure_queued_job</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.configurators.QueuedExecutionConfigurator.configure_queued_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns an execution configuration for the given queued job. The given job model should have its
+related job_type, job_type_rev, and batch models populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job</strong> (<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The queued job model</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The execution configuration for the queued job</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.configuration.configurators.ScheduledExecutionConfigurator">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.configurators.</code><code class="descname">ScheduledExecutionConfigurator</code><span class="sig-paren">(</span><em>workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.configurators.ScheduledExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Configurator that handles execution configurations when a job execution is scheduled</p>
+<dl class="method">
+<dt id="job.execution.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job">
+<code class="descname">configure_scheduled_job</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type</em>, <em>interface</em>, <em>system_logging_level</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.configurators.ScheduledExecutionConfigurator.configure_scheduled_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
+models will not have any related fields populated. The execution configuration in the job_exe model will have
+all secret values replaced with &#8216;<strong>*</strong>&#8216; so that it is safe to be stored in the database. Another copy of this
+configuration will be returned that has the actual secret values populated and can be used for actual
+scheduling.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model being scheduled</li>
+<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type model</li>
+<li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The job interface</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A copy of the configuration containing secret values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.docker_param">
+<span id="job-execution-configuration-docker-param-module"></span><h2>job.execution.configuration.docker_param module<a class="headerlink" href="#module-job.execution.configuration.docker_param" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Docker parameter that is set for a task</p>
+<dl class="class">
+<dt id="job.execution.configuration.docker_param.DockerParameter">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.docker_param.</code><code class="descname">DockerParameter</code><span class="sig-paren">(</span><em>flag</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.docker_param.DockerParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a Docker parameter set for a task</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.exceptions">
+<span id="job-execution-configuration-exceptions-module"></span><h2>job.execution.configuration.exceptions module<a class="headerlink" href="#module-job.execution.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with job executions</p>
+<dl class="exception">
+<dt id="job.execution.configuration.exceptions.InvalidExecutionConfiguration">
+<em class="property">exception </em><code class="descclassname">job.execution.configuration.exceptions.</code><code class="descname">InvalidExecutionConfiguration</code><a class="headerlink" href="#job.execution.configuration.exceptions.InvalidExecutionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided execution configuration JSON was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.execution.configuration.exceptions.MissingMount">
+<em class="property">exception </em><code class="descclassname">job.execution.configuration.exceptions.</code><code class="descname">MissingMount</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.exceptions.MissingMount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating that a required mount volume is missing</p>
+<dl class="method">
+<dt id="job.execution.configuration.exceptions.MissingMount.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.exceptions.MissingMount.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.execution.configuration.exceptions.MissingSetting">
+<em class="property">exception </em><code class="descclassname">job.execution.configuration.exceptions.</code><code class="descname">MissingSetting</code><span class="sig-paren">(</span><em>setting</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.exceptions.MissingSetting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating that a required setting value is missing</p>
+<dl class="method">
+<dt id="job.execution.configuration.exceptions.MissingSetting.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.exceptions.MissingSetting.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.input_file">
+<span id="job-execution-configuration-input-file-module"></span><h2>job.execution.configuration.input_file module<a class="headerlink" href="#module-job.execution.configuration.input_file" title="Permalink to this headline">¶</a></h2>
+<p>Defines an input file and its meta-data in an execution configuration</p>
+<dl class="class">
+<dt id="job.execution.configuration.input_file.InputFile">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.input_file.</code><code class="descname">InputFile</code><span class="sig-paren">(</span><em>scale_file</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.input_file.InputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Defines an input file and its meta-data</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.volume">
+<span id="job-execution-configuration-volume-module"></span><h2>job.execution.configuration.volume module<a class="headerlink" href="#module-job.execution.configuration.volume" title="Permalink to this headline">¶</a></h2>
+<p>Defines a Docker volume that will be mounted into a container</p>
+<dl class="class">
+<dt id="job.execution.configuration.volume.Volume">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.volume.</code><code class="descname">Volume</code><span class="sig-paren">(</span><em>name</em>, <em>container_path</em>, <em>mode</em>, <em>is_host=True</em>, <em>host_path=None</em>, <em>driver=None</em>, <em>driver_opts=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.volume.Volume" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Defines a Docker volume that will be mounted into a container</p>
+<dl class="method">
+<dt id="job.execution.configuration.volume.Volume.to_docker_param">
+<code class="descname">to_docker_param</code><span class="sig-paren">(</span><em>is_created</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.volume.Volume.to_docker_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a Docker parameter that will perform the mount of this volume</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>is_created</strong> (<em>bool</em>) &#8211; Whether this volume has already been created</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Docker parameter that will mount this volume</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.execution.configuration.docker_param.DockerParameter" title="job.execution.configuration.docker_param.DockerParameter"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.docker_param.DockerParameter</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.workspace">
+<span id="job-execution-configuration-workspace-module"></span><h2>job.execution.configuration.workspace module<a class="headerlink" href="#module-job.execution.configuration.workspace" title="Permalink to this headline">¶</a></h2>
+<p>Defines a workspace that is needed by a task</p>
+<dl class="class">
+<dt id="job.execution.configuration.workspace.TaskWorkspace">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.workspace.</code><code class="descname">TaskWorkspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em>, <em>volume_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.workspace.TaskWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a workspace needed by a task</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.execution.configuration" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.execution.configuration.json.html" class="btn btn-neutral float-right" title="job.execution.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.execution.html" class="btn btn-neutral" title="job.execution package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.5.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

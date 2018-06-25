@@ -7,11 +7,14 @@ Subpackages
 .. toctree::
 
     job.configuration
+    job.data
+    job.error
     job.execution
     job.handlers
     job.management
     job.messages
     job.migrations
+    job.seed
     job.tasks
     job.test
     job.triggers
@@ -31,6 +34,14 @@ job\.clock module
 -----------------
 
 .. automodule:: job.clock
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.deprecation module
+-----------------------
+
+.. automodule:: job.deprecation
     :members:
     :undoc-members:
     :show-inheritance:

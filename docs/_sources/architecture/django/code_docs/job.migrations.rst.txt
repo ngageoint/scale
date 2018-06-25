@@ -300,6 +300,22 @@ job\.migrations\.0037\_auto\_20180314\_1827 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0038\_auto\_20180622\_1510 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0038_auto_20180622_1510
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0039\_auto\_20180622\_1827 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0039_auto_20180622_1827
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

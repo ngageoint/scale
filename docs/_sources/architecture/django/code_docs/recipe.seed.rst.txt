@@ -1,0 +1,38 @@
+recipe\.seed package
+====================
+
+Submodules
+----------
+
+recipe\.seed\.recipe\_connection module
+---------------------------------------
+
+.. automodule:: recipe.seed.recipe_connection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.seed\.recipe\_data module
+---------------------------------
+
+.. automodule:: recipe.seed.recipe_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.seed\.recipe\_definition module
+---------------------------------------
+
+.. automodule:: recipe.seed.recipe_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.seed
+    :members:
+    :undoc-members:
+    :show-inheritance:

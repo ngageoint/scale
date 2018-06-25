@@ -1,13 +1,33 @@
 job\.configuration\.json package
 ================================
 
-Subpackages
------------
+Submodules
+----------
 
-.. toctree::
+job\.configuration\.json\.job\_config\_1\_0 module
+--------------------------------------------------
 
-    job.configuration.json.execution
-    job.configuration.json.job
+.. automodule:: job.configuration.json.job_config_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.json\.job\_config\_2\_0 module
+--------------------------------------------------
+
+.. automodule:: job.configuration.json.job_config_2_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.json\.job\_config\_v6 module
+------------------------------------------------
+
+.. automodule:: job.configuration.json.job_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

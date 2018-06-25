@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="job.test.execution.tasks package" href="job.test.execution.tasks.html" />
+    <link rel="next" title="job.test.execution.configuration package" href="job.test.execution.configuration.html" />
     <link rel="prev" title="job.test.configuration.results package" href="job.test.configuration.results.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -225,6 +226,21 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="job.test.execution.configuration.html">job.test.execution.configuration package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.test.execution.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="job.test.execution.configuration.json.html">job.test.execution.configuration.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.json.html#module-job.test.execution.configuration.json.test_exe_config">job.test.execution.configuration.json.test_exe_config module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.json.html#module-job.test.execution.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.execution.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.execution.configuration.html#module-job.test.execution.configuration.test_configurators">job.test.execution.configuration.test_configurators module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.execution.configuration.html#module-job.test.execution.configuration">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="job.test.execution.tasks.html">job.test.execution.tasks package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.test.execution.tasks.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="job.test.execution.tasks.json.html">job.test.execution.tasks.json package</a><ul>
@@ -259,7 +275,7 @@
 <dl class="class">
 <dt id="job.test.execution.test_job_exe.TestRunningJobExecution">
 <em class="property">class </em><code class="descclassname">job.test.execution.test_job_exe.</code><code class="descname">TestRunningJobExecution</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_job_exe.TestRunningJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests the RunningJobExecution class</p>
 <dl class="attribute">
 <dt id="job.test.execution.test_job_exe.TestRunningJobExecution.fixtures">
@@ -490,7 +506,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.test.execution.tasks.html" class="btn btn-neutral float-right" title="job.test.execution.tasks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.execution.configuration.html" class="btn btn-neutral float-right" title="job.test.execution.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.test.configuration.results.html" class="btn btn-neutral" title="job.test.configuration.results package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

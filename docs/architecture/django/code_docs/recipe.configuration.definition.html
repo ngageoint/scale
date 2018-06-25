@@ -122,6 +122,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -237,14 +238,14 @@
 <span id="recipe-configuration-definition-recipe-definition-module"></span><h2>recipe.configuration.definition.recipe_definition module<a class="headerlink" href="#module-recipe.configuration.definition.recipe_definition" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class for managing a recipe definition</p>
 <dl class="class">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition">
-<em class="property">class </em><code class="descclassname">recipe.configuration.definition.recipe_definition.</code><code class="descname">RecipeDefinition</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.configuration.definition.recipe_definition.</code><code class="descname">LegacyRecipeDefinition</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
 recipe, and how the inputs and outputs of those jobs are connected together.</p>
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this recipe definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -259,8 +260,8 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_graph">
-<code class="descname">get_graph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_graph" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_graph">
+<code class="descname">get_graph</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe graph for this definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -275,8 +276,8 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys">
-<code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_type_keys">
+<code class="descname">get_job_type_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_type_keys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of tuples that represent keys for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -291,8 +292,8 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map">
-<code class="descname">get_job_type_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_type_map">
+<code class="descname">get_job_type_map</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_type_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a mapping of job name to job type for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -307,8 +308,8 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_types">
-<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>lock=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_types" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_types">
+<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>lock=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of job types for each job in the recipe</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -325,8 +326,8 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create">
-<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_jobs_to_create">
+<code class="descname">get_jobs_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.get_jobs_to_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the list of job names and types to create for the recipe, in the order that they should be created</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -341,15 +342,15 @@ recipe, and how the inputs and outputs of those jobs are connected together.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_connection">
-<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>recipe_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>recipe_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given recipe connection to ensure that the connection will provide sufficient data to run a
 recipe with this definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_conn</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_connection.RecipeConnection" title="recipe.configuration.data.recipe_connection.RecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_connection.RecipeConnection</span></code></a>) &#8211; The recipe definition</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_conn</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_connection.LegacyRecipeConnection" title="recipe.configuration.data.recipe_connection.LegacyRecipeConnection"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_connection.LegacyRecipeConnection</span></code></a>) &#8211; The recipe definition</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
 </tr>
@@ -364,14 +365,14 @@ recipe with this definition</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_data">
-<code class="descname">validate_data</code><span class="sig-paren">(</span><em>recipe_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_data" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_data">
+<code class="descname">validate_data</code><span class="sig-paren">(</span><em>recipe_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given data against the recipe definition</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData" title="recipe.configuration.data.recipe_data.RecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.RecipeData</span></code></a>) &#8211; The recipe data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_data</strong> (<a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.recipe_data.LegacyRecipeData" title="recipe.configuration.data.recipe_data.LegacyRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.recipe_data.LegacyRecipeData</span></code></a>) &#8211; The recipe data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
@@ -383,8 +384,8 @@ recipe with this definition</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_job_interfaces">
-<code class="descname">validate_job_interfaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.RecipeDefinition.validate_job_interfaces" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_job_interfaces">
+<code class="descname">validate_job_interfaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.configuration.definition.recipe_definition.LegacyRecipeDefinition.validate_job_interfaces" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
 connections are valid</p>
 <table class="docutils field-list" frame="void" rules="none">

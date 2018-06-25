@@ -722,8 +722,8 @@ None, the source file should not be moved.</li>
 <dd><p>Bases: <a class="reference internal" href="product.html#product.serializers.ProductFileBaseSerializer" title="product.serializers.ProductFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileBaseSerializer</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 <dl class="class">
-<dt id="source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializer">
-<em class="property">class </em><code class="descname">JobTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV5">
+<em class="property">class </em><code class="descname">JobTypeBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
@@ -941,7 +941,7 @@ None, the source file should not be moved.</li>
 <dl class="attribute">
 <dt id="source.views.SourceJobsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializerV5</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -951,6 +951,12 @@ None, the source file should not be moved.</li>
 <em class="property">class </em><code class="descclassname">source.views.</code><code class="descname">SourceProductsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceProductsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving products produced from a source file</p>
+<dl class="method">
+<dt id="source.views.SourceProductsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceProductsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="source.views.SourceProductsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>source_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceProductsView.list" title="Permalink to this definition">¶</a></dt>
@@ -1003,12 +1009,6 @@ None, the source file should not be moved.</li>
 <dt id="source.views.SourceProductsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#source.views.SourceProductsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="source.views.SourceProductsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceProductsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ProductFileSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

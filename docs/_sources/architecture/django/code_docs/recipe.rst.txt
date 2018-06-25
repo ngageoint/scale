@@ -13,6 +13,7 @@ Subpackages
     recipe.instance
     recipe.messages
     recipe.migrations
+    recipe.seed
     recipe.test
     recipe.triggers
 
@@ -23,6 +24,14 @@ recipe\.apps module
 -------------------
 
 .. automodule:: recipe.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.deprecation module
+--------------------------
+
+.. automodule:: recipe.deprecation
     :members:
     :undoc-members:
     :show-inheritance:

@@ -37,6 +37,14 @@ product\.serializers module
     :undoc-members:
     :show-inheritance:
 
+product\.types module
+---------------------
+
+.. automodule:: product.types
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 product\.urls module
 --------------------
 

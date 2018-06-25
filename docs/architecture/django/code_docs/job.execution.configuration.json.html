@@ -1,0 +1,895 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.execution.configuration.json package &mdash; Scale 5.5.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="job.execution.tasks package" href="job.execution.tasks.html" />
+    <link rel="prev" title="job.execution.configuration package" href="job.execution.configuration.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="job.html">job package</a> &raquo;</li>
+        
+          <li><a href="job.execution.html">job.execution package</a> &raquo;</li>
+        
+          <li><a href="job.execution.configuration.html">job.execution.configuration package</a> &raquo;</li>
+        
+      <li>job.execution.configuration.json package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/job.execution.configuration.json.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-execution-configuration-json-package">
+<h1>job.execution.configuration.json package<a class="headerlink" href="#job-execution-configuration-json-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.execution.configuration.json.exe_config">
+<span id="job-execution-configuration-json-exe-config-module"></span><h2>job.execution.configuration.json.exe_config module<a class="headerlink" href="#module-job.execution.configuration.json.exe_config" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for describing the execution configuration</p>
+<dl class="class">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.json.exe_config.</code><code class="descname">ExecutionConfiguration</code><span class="sig-paren">(</span><em>configuration=None</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a job execution configuration</p>
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.add_to_task">
+<code class="descname">add_to_task</code><span class="sig-paren">(</span><em>task_type</em>, <em>args=None</em>, <em>docker_params=None</em>, <em>env_vars=None</em>, <em>mount_volumes=None</em>, <em>resources=None</em>, <em>settings=None</em>, <em>wksp_volumes=None</em>, <em>workspaces=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.add_to_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given parameters to the task with the given type. The task with the given type must already exist. A
+mount volume of None indicates a required mount that is missing. A setting value of None indicates a required
+setting that is missing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task_type</strong> (<em>string</em>) &#8211; The task type to add the parameters to</li>
+<li><strong>args</strong> (<em>string</em>) &#8211; The command arguments for the task</li>
+<li><strong>docker_params</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The Docker parameters</li>
+<li><strong>env_vars</strong> (<em>dict</em>) &#8211; A dict of env var names and values to add to the task</li>
+<li><strong>mount_volumes</strong> (<em>dict</em>) &#8211; The mount volumes stored by mount name (a volume may be None)</li>
+<li><strong>resources</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The resources</li>
+<li><strong>settings</strong> (<em>dict</em>) &#8211; The setting names and values (a value may be None)</li>
+<li><strong>wksp_volumes</strong> (<em>dict</em>) &#8211; The workspace volumes stored by workspace name</li>
+<li><strong>workspaces</strong> (<em>dict</em>) &#8211; The workspaces stored by name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.create_copy">
+<code class="descname">create_copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.create_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a copy of this configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The copied configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.create_tasks">
+<code class="descname">create_tasks</code><span class="sig-paren">(</span><em>task_types</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.create_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes sure that tasks with the given types are created and in the given order. If an already existing task
+type is not included in the given list, it will be removed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_types</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of task types</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_args">
+<code class="descname">get_args</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the command arguments for the given task type, None if the task type doesn&#8217;t exist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The command arguments, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this execution configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_docker_params">
+<code class="descname">get_docker_params</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_docker_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Docker parameters for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of Docker parameters</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_env_vars">
+<code class="descname">get_env_vars</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_env_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the environment variables for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The dict of environment variables</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_input_workspace_names">
+<code class="descname">get_input_workspace_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_input_workspace_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the names of all input workspaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of the names of all input workspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_mounts">
+<code class="descname">get_mounts</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mounts for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The dict of mount names mapping to volume names</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_named_docker_volumes">
+<code class="descname">get_named_docker_volumes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_named_docker_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of all (non-host) Docker volumes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all named Docker volumes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_output_workspace_names">
+<code class="descname">get_output_workspace_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_output_workspace_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the names of all output workspaces</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of the names of all output workspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources for the given task type, None if the task type doesn&#8217;t exist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task resources, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_settings">
+<code class="descname">get_settings</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the settings for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The dict of settings</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_task_id">
+<code class="descname">get_task_id</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_task_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the task ID for the given task type, None if the task type doesn&#8217;t exist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task ID, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_task_types">
+<code class="descname">get_task_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_task_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all task types in the configuration in order</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ordered list of task types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_volumes">
+<code class="descname">get_volumes</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Docker volumes for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The dict of Docker volumes stored by volume name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.get_workspaces">
+<code class="descname">get_workspaces</code><span class="sig-paren">(</span><em>task_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.get_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspaces for the given task type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_type</strong> (<em>string</em>) &#8211; The task type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of workspaces</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.execution.configuration.html#job.execution.configuration.workspace.TaskWorkspace" title="job.execution.configuration.workspace.TaskWorkspace"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.workspace.TaskWorkspace</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.set_input_files">
+<code class="descname">set_input_files</code><span class="sig-paren">(</span><em>input_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.set_input_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given input files in the configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_files</strong> (<em>dict</em>) &#8211; A dict where data input name maps to a list of input files</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.set_output_workspaces">
+<code class="descname">set_output_workspaces</code><span class="sig-paren">(</span><em>output_workspaces</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.set_output_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given output workspaces in the configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>output_workspaces</strong> (<em>dict</em>) &#8211; A dict where job output parameters map to output workspace name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config.ExecutionConfiguration.set_task_ids">
+<code class="descname">set_task_ids</code><span class="sig-paren">(</span><em>cluster_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config.ExecutionConfiguration.set_task_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the IDs for all of the tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>cluster_id</strong> (<em>string</em>) &#8211; The cluster ID for the job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.json.exe_config_1_0">
+<span id="job-execution-configuration-json-exe-config-1-0-module"></span><h2>job.execution.configuration.json.exe_config_1_0 module<a class="headerlink" href="#module-job.execution.configuration.json.exe_config_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for describing the job configuration</p>
+<dl class="class">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.json.exe_config_1_0.</code><code class="descname">ExecutionConfiguration</code><span class="sig-paren">(</span><em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a job configuration</p>
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_job_task_workspace">
+<code class="descname">add_job_task_workspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_job_task_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a needed workspace to this job&#8217;s job task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the workspace</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; The mode of the workspace, either MODE_RO or MODE_RW</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_post_task_workspace">
+<code class="descname">add_post_task_workspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_post_task_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a needed workspace to this job&#8217;s post task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the workspace</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; The mode of the workspace, either MODE_RO or MODE_RW</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_pre_task_workspace">
+<code class="descname">add_pre_task_workspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.add_pre_task_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a needed workspace to this job&#8217;s pre task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the workspace</li>
+<li><strong>mode</strong> (<em>string</em>) &#8211; The mode of the workspace, either MODE_RO or MODE_RW</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.configure_workspace_docker_params">
+<code class="descname">configure_workspace_docker_params</code><span class="sig-paren">(</span><em>job_exe</em>, <em>workspaces</em>, <em>docker_volumes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.configure_workspace_docker_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the Docker parameters needed for each workspace in the job execution tasks. The given job
+execution must have been set to RUNNING status.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (must not be queued) with related job and job_type fields</li>
+<li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
+<li><strong>docker_volumes</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list to add Docker volume names to</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>Exception</strong> &#8211; If the job execution is still queued</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this job configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_job_task_workspaces">
+<code class="descname">get_job_task_workspaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_job_task_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspaces needed for the job task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job task workspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.configuration.json.exe_config_1_0.TaskWorkspace" title="job.execution.configuration.json.exe_config_1_0.TaskWorkspace"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config_1_0.TaskWorkspace</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_post_task_workspaces">
+<code class="descname">get_post_task_workspaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_post_task_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspaces needed for the post task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The post task workspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.configuration.json.exe_config_1_0.TaskWorkspace" title="job.execution.configuration.json.exe_config_1_0.TaskWorkspace"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config_1_0.TaskWorkspace</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_pre_task_workspaces">
+<code class="descname">get_pre_task_workspaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration.get_pre_task_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspaces needed for the pre task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The pre task workspaces</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.configuration.json.exe_config_1_0.TaskWorkspace" title="job.execution.configuration.json.exe_config_1_0.TaskWorkspace"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config_1_0.TaskWorkspace</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.configuration.json.exe_config_1_0.TaskWorkspace">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.json.exe_config_1_0.</code><code class="descname">TaskWorkspace</code><span class="sig-paren">(</span><em>name</em>, <em>mode</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_0.TaskWorkspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a workspace needed by a job task</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.json.exe_config_1_1">
+<span id="job-execution-configuration-json-exe-config-1-1-module"></span><h2>job.execution.configuration.json.exe_config_1_1 module<a class="headerlink" href="#module-job.execution.configuration.json.exe_config_1_1" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for describing the job configuration</p>
+<dl class="class">
+<dt id="job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration">
+<em class="property">class </em><code class="descclassname">job.execution.configuration.json.exe_config_1_1.</code><code class="descname">ExecutionConfiguration</code><span class="sig-paren">(</span><em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration" title="job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config_1_0.ExecutionConfiguration</span></code></a></p>
+<p>Represents a job configuration</p>
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_job_task_setting">
+<code class="descname">add_job_task_setting</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_job_task_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a setting name/value to this job&#8217;s job task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The setting name to add</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The setting value to add</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_post_task_setting">
+<code class="descname">add_post_task_setting</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_post_task_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a setting name/value to this job&#8217;s post task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The setting name to add</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The setting value to add</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_pre_task_setting">
+<code class="descname">add_pre_task_setting</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.add_pre_task_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a setting name/value to this job&#8217;s pre task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The setting name to add</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The setting value to add</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.convert_configuration">
+<em class="property">static </em><code class="descname">convert_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.configuration.json.exe_config_1_1.ExecutionConfiguration.convert_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the previous Job configuration schema to the 1.1 schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The previous configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted configuration</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.execution.configuration.json" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.execution.tasks.html" class="btn btn-neutral float-right" title="job.execution.tasks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.execution.configuration.html" class="btn btn-neutral" title="job.execution.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.5.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

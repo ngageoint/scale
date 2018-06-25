@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -235,29 +236,15 @@
 <li class="toctree-l3"><a class="reference internal" href="job.test.configuration.interface.html">job.test.configuration.interface package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#module-job.test.configuration.interface.test_configuration_interface">job.test.configuration.interface.test_configuration_interface module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#module-job.test.configuration.interface.test_error_interface">job.test.configuration.interface.test_error_interface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#module-job.test.configuration.interface.test_job_interface">job.test.configuration.interface.test_job_interface module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#module-job.test.configuration.interface.test_scale_file">job.test.configuration.interface.test_scale_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.interface.html#module-job.test.configuration.interface">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job.test.configuration.json.html">job.test.configuration.json package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.json.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="job.test.configuration.json.execution.html">job.test.configuration.json.execution package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.execution.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution.test_exe_config">job.test.configuration.json.execution.test_exe_config module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l5"><a class="reference internal" href="job.test.configuration.json.job.html">job.test.configuration.json.job package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.job.html#submodules">Submodules</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job.test_job_config">job.test.configuration.json.job.test_job_config module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job.test_job_config_v6">job.test.configuration.json.job.test_job_config_v6 module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json.test_job_config_2_0">job.test.configuration.json.test_job_config_2_0 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json.test_job_config_v6">job.test.configuration.json.test_job_config_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.configuration.json.html#module-job.test.configuration.json">Module contents</a></li>
 </ul>
 </li>
@@ -271,12 +258,27 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#module-job.test.configuration.test_configurators">job.test.configuration.test_configurators module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#module-job.test.configuration.test_configuration">job.test.configuration.test_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#module-job.test.configuration">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.test.execution.html">job.test.execution package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.test.execution.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="job.test.execution.configuration.html">job.test.execution.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="job.test.execution.configuration.json.html">job.test.execution.configuration.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.configuration.json.html#module-job.test.execution.configuration.json.test_exe_config">job.test.execution.configuration.json.test_exe_config module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.configuration.json.html#module-job.test.execution.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.html#module-job.test.execution.configuration.test_configurators">job.test.execution.configuration.test_configurators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.configuration.html#module-job.test.execution.configuration">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="job.test.execution.tasks.html">job.test.execution.tasks package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.tasks.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="job.test.execution.tasks.json.html">job.test.execution.tasks.json package</a><ul>
@@ -338,6 +340,14 @@
 <li class="toctree-l2"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_uncancel_jobs">job.test.messages.test_uncancel_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_unpublish_jobs">job.test.messages.test_unpublish_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.test.messages.html#module-job.test.messages">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="job.test.seed.html">job.test.seed package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_job_data">job.test.seed.test_job_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_manifest">job.test.seed.test_manifest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_types">job.test.seed.test_types module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.html#module-job.test.seed">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.test.tasks.html">job.test.tasks package</a><ul>
@@ -530,6 +540,12 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_models.TestJob.test_get_seed_job_results">
+<code class="descname">test_get_seed_job_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_get_seed_job_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test retrieving job results from a Seed job type</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_models.TestJob.test_is_ready_to_requeue">
 <code class="descname">test_is_ready_to_requeue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJob.test_is_ready_to_requeue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests checking the job status for requeue eligibility.</p>
@@ -666,6 +682,87 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="job.test.test_models.TestJobType">
+<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobType</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_cpu_resource_from_legacy_interface">
+<code class="descname">test_get_legacy_cpu_resource_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_cpu_resource_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_cpu_resource_from_seed_interface">
+<code class="descname">test_get_legacy_cpu_resource_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_cpu_resource_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_cpu_resource_multiplier_from_seed_interface">
+<code class="descname">test_get_legacy_cpu_resource_multiplier_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_cpu_resource_multiplier_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_disk_resource_from_legacy_interface">
+<code class="descname">test_get_legacy_disk_resource_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_disk_resource_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_disk_resource_from_seed_interface">
+<code class="descname">test_get_legacy_disk_resource_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_disk_resource_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_disk_resource_multiplier_from_legacy_interface">
+<code class="descname">test_get_legacy_disk_resource_multiplier_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_disk_resource_multiplier_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_disk_resource_multiplier_from_seed_interface">
+<code class="descname">test_get_legacy_disk_resource_multiplier_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_disk_resource_multiplier_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_mem_resource_from_legacy_interface">
+<code class="descname">test_get_legacy_mem_resource_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_mem_resource_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_mem_resource_from_seed_interface">
+<code class="descname">test_get_legacy_mem_resource_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_mem_resource_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_mem_resource_multiplier_from_legacy_interface">
+<code class="descname">test_get_legacy_mem_resource_multiplier_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_mem_resource_multiplier_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_mem_resource_multiplier_from_seed_interface">
+<code class="descname">test_get_legacy_mem_resource_multiplier_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_mem_resource_multiplier_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_from_legacy_interface">
+<code class="descname">test_get_legacy_sharedmem_resource_from_legacy_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_from_legacy_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_from_seed_interface">
+<code class="descname">test_get_legacy_sharedmem_resource_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_multiplier_from_seed_interface">
+<code class="descname">test_get_legacy_sharedmem_resource_multiplier_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_multiplier_from_seed_interface" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.test.test_models.TestJobTypeFailedStatus">
 <em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobTypeFailedStatus</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeFailedStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -694,43 +791,43 @@
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping">
 <code class="descname">test_invalid_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() with an invalid error mapping</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() with an invalid error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_trigger_rule">
 <code class="descname">test_invalid_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() with an invalid trigger rule</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() with an invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule">
 <code class="descname">test_successful_no_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() successfully with no trigger rule or error mapping</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() successfully with no trigger rule or error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields">
 <code class="descname">test_successful_other_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() successfully with additional fields</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() successfully with additional fields</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused">
 <code class="descname">test_successful_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() and pausing it</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() and pausing it</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_with_trigger_rule">
 <code class="descname">test_successful_with_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_with_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() successfully with a trigger rule and error mapping</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() successfully with a trigger rule and error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field">
 <code class="descname">test_uneditable_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerCreateJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.create_job_type() with an uneditable field</p>
+<dd><p>Tests calling JobTypeManager.create_job_type_v5() with an uneditable field</p>
 </dd></dl>
 
 </dd></dl>
@@ -747,61 +844,61 @@
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_general_fields">
 <code class="descname">test_change_general_fields</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_general_fields" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with a change to some general fields</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with a change to some general fields</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_both">
 <code class="descname">test_change_to_both</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_both" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with a change to both the definition and the trigger rule</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with a change to both the definition and the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_interface">
 <code class="descname">test_change_to_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with a change to the interface</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with a change to the interface</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_trigger_rule">
 <code class="descname">test_change_to_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_change_to_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with a change to the trigger rule</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with a change to the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_error_mapping">
 <code class="descname">test_invalid_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_error_mapping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with an invalid error mapping</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with an invalid error mapping</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_trigger_rule">
 <code class="descname">test_invalid_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_invalid_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() with a new invalid trigger rule</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() with a new invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_pause_system_job_type">
 <code class="descname">test_pause_system_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_pause_system_job_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() and pausing a system job type</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() and pausing a system job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule">
 <code class="descname">test_remove_trigger_rule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() that removes the trigger rule</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() that removes the trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_system_job_type">
 <code class="descname">test_system_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_system_job_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() for a system job type</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() for a system job type</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerEditJobType.test_uneditable_field">
 <code class="descname">test_uneditable_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerEditJobType.test_uneditable_field" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() to change an uneditable field</p>
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() to change an uneditable field</p>
 </dd></dl>
 
 </dd></dl>
@@ -818,13 +915,13 @@
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType.test_invalid">
 <code class="descname">test_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_invalid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type() with an invalid trigger rule</p>
+<dd><p>Tests calling JobTypeManager.validate_job_type_v5() with an invalid trigger rule</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_models.TestJobTypeManagerValidateJobType.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobTypeManagerValidateJobType.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type() successfully</p>
+<dd><p>Tests calling JobTypeManager.validate_job_type_v5() successfully</p>
 </dd></dl>
 
 </dd></dl>
@@ -1451,12 +1548,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesView.test_category">
-<code class="descname">test_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the job types view filtered by job type category.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create">
 <code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type.</p>
@@ -1553,6 +1644,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_legacy_category">
+<code class="descname">test_legacy_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_legacy_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the job types view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_name">
 <code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the job types view filtered by job type name.</p>
@@ -1588,15 +1685,15 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsUpdateView.test_job_type_category">
-<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.test.test_views.TestJobsUpdateView.test_job_type_id">
 <code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsUpdateView.test_job_type_legacy_category">
+<code class="descname">test_job_type_legacy_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_job_type_legacy_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1653,15 +1750,15 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_job_type_category">
-<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.test.test_views.TestJobsView.test_job_type_id">
 <code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsView.test_job_type_legacy_category">
+<code class="descname">test_job_type_legacy_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_legacy_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1990,6 +2087,11 @@ status</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="job.test.utils.create_seed_job_type">
+<code class="descclassname">job.test.utils.</code><code class="descname">create_seed_job_type</code><span class="sig-paren">(</span><em>manifest=None</em>, <em>priority=50</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>is_active=True</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_seed_job_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="job.test.utils.create_task_status_update">

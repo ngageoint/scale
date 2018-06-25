@@ -132,6 +132,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-util.broker">util.broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.deprecation">util.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.environment">util.environment module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.file_size">util.file_size module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.host">util.host module</a></li>
@@ -231,6 +232,7 @@
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_aws">util.test.test_aws module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_broker">util.test.test_broker module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_command">util.test.test_command module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse">util.test.test_parse module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest">util.test.test_rest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry">util.test.test_retry module</a></li>
@@ -613,6 +615,41 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 </dd></dl>
 
 <dl class="function">
+<dt id="util.command.environment_expansion">
+<code class="descclassname">util.command.</code><code class="descname">environment_expansion</code><span class="sig-paren">(</span><em>env_map</em>, <em>cmd_string</em><span class="sig-paren">)</span><a class="headerlink" href="#util.command.environment_expansion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs environment variable expansion into command string</p>
+<p>The original preference was to use bash directly, eliminating the need for us to maintain
+regular expressions to mimic bash expansion logic. Unfortunately, the overhead of instantiating
+a sub-shell was prohibitively high on a large scale.</p>
+<p>We are instead handling merely a subset of expansion options:
+$VAR
+${VAR}
+${VAR/#/PREFIX}</p>
+<p>NOTE: All variables not matched remain unchanged</p>
+<p>WARNING: Resulting string should be treated as sensitive, due to the possibility
+of secrets being injected.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>env_map</strong> (<em>dict</em>) &#8211; map of environment variables to their values</li>
+<li><strong>cmd_string</strong> (<em>str</em>) &#8211; string to inject environment variables into</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">string with parameters expanded</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.exceptions.UnbalancedBrackets" title="util.exceptions.UnbalancedBrackets"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.UnbalancedBrackets</span></code></a>: if brackets are not balanced in cmd_string</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="util.command.execute_command_line">
 <code class="descclassname">util.command.</code><code class="descname">execute_command_line</code><span class="sig-paren">(</span><em>cmd_list</em><span class="sig-paren">)</span><a class="headerlink" href="#util.command.execute_command_line" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes the given command list on the command line</p>
@@ -638,6 +675,27 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 <code class="descname">db_type</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#util.deprecation.JSONStringField.db_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.environment">
+<span id="util-environment-module"></span><h2>util.environment module<a class="headerlink" href="#module-util.environment" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="util.environment.normalize_env_var_name">
+<code class="descclassname">util.environment.</code><code class="descname">normalize_env_var_name</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#util.environment.normalize_env_var_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a normalized version of the given string name so it can be used as the name of an environment variable</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The string name to normalize</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The normalized environment variable name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -684,6 +742,13 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 <em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">TerminatedCommand</code><a class="headerlink" href="#util.exceptions.TerminatedCommand" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception that can be thrown to indicate that a Scale command recieved a SIGTERM signal</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="util.exceptions.UnbalancedBrackets">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">UnbalancedBrackets</code><a class="headerlink" href="#util.exceptions.UnbalancedBrackets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception thrown when a string is provided that contains unbalanced curly brackets</p>
 </dd></dl>
 
 <dl class="exception">

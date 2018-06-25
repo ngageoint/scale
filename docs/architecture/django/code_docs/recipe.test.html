@@ -31,7 +31,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="recipe.test.configuration package" href="recipe.test.configuration.html" />
-    <link rel="prev" title="recipe.migrations package" href="recipe.migrations.html" />
+    <link rel="prev" title="recipe.seed package" href="recipe.seed.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -122,6 +122,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
@@ -323,14 +324,14 @@
 <dl class="method">
 <dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface">
 <code class="descname">test_invalid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and an invalid interface
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and an invalid interface
 change is made</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface">
 <code class="descname">test_valid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerEditJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and a valid interface change
+<dd><p>Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and a valid interface change
 is made</p>
 </dd></dl>
 
@@ -348,14 +349,14 @@ is made</p>
 <dl class="method">
 <dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface">
 <code class="descname">test_invalid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_invalid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
+<dd><p>Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and an invalid interface
 change is made</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface">
 <code class="descname">test_valid_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestJobTypeManagerValidateJobType.test_valid_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
+<dd><p>Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and a valid interface
 change is made</p>
 </dd></dl>
 
@@ -1140,7 +1141,7 @@ has one identical node, and deletes another node to replace it with a new one.</
         <a href="recipe.test.configuration.html" class="btn btn-neutral float-right" title="recipe.test.configuration package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.migrations.html" class="btn btn-neutral" title="recipe.migrations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="recipe.seed.html" class="btn btn-neutral" title="recipe.seed package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

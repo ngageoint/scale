@@ -115,7 +115,8 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
@@ -223,91 +224,6 @@
 <h1>job.configuration.interface package<a class="headerlink" href="#job-configuration-interface-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-job.configuration.interface.error_interface">
-<span id="job-configuration-interface-error-interface-module"></span><h2>job.configuration.interface.error_interface module<a class="headerlink" href="#module-job.configuration.interface.error_interface" title="Permalink to this headline">¶</a></h2>
-<p>Defines the interface for translating a job&#8217;s exit codes to error types</p>
-<dl class="class">
-<dt id="job.configuration.interface.error_interface.ErrorInterface">
-<em class="property">class </em><code class="descclassname">job.configuration.interface.error_interface.</code><code class="descname">ErrorInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the interface for translating a job&#8217;s exit code to an error type</p>
-<dl class="method">
-<dt id="job.configuration.interface.error_interface.ErrorInterface.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary that represents this error mapping</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.configuration.interface.error_interface.ErrorInterface.get_error">
-<code class="descname">get_error</code><span class="sig-paren">(</span><em>exit_code=None</em>, <em>default_error_name=u'algorithm-unknown'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method retrieves the error that maps to the given exit code. If the exit code is zero (success) None is
-returned. For a failure exit code with no mapping, the given default error is returned.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>exit_code</strong> (<em>int</em>) &#8211; The exit code from a task</li>
-<li><strong>default_error_name</strong> (<em>string</em>) &#8211; The name of the error to use if no mapping exists for the exit code.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The error model mapped to the given exit code, possibly None</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.configuration.interface.error_interface.ErrorInterface.get_error_names">
-<code class="descname">get_error_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.get_error_names" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a set of all error names for this interface</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Set of error names</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">{string}</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.configuration.interface.error_interface.ErrorInterface.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.error_interface.ErrorInterface.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the error mappings to ensure that all referenced errors actually exist.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="#job.configuration.interface.exceptions.InvalidInterfaceDefinition" title="job.configuration.interface.exceptions.InvalidInterfaceDefinition"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.exceptions.InvalidInterfaceDefinition</span></code></a>: If there is a missing error.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-job.configuration.interface.exceptions">
 <span id="job-configuration-interface-exceptions-module"></span><h2>job.configuration.interface.exceptions module<a class="headerlink" href="#module-job.configuration.interface.exceptions" title="Permalink to this headline">¶</a></h2>
@@ -464,6 +380,62 @@ pre-steps have not been performed</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_injected_command_args">
+<code class="descname">get_injected_command_args</code><span class="sig-paren">(</span><em>values</em>, <em>env_vars</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_injected_command_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the command arguments with values injected</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>values</strong> (<em>{str</em><em>, </em><em>str}</em>) &#8211; Input values to replace named placeholders in command value</li>
+<li><strong>env_vars</strong> (<em>{}</em>) &#8211; Incoming environment variables</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the command args</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_mounts">
+<code class="descname">get_mounts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_mounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the mounts defined for the job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the mounts for a job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_settings">
+<code class="descname">get_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the settings for the job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the settings object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.interface.job_interface.JobInterface.perform_post_steps">
 <code class="descname">perform_post_steps</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_data</em>, <em>stdoutAndStderr</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_post_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the files and deletes any working directories</p>
@@ -491,7 +463,7 @@ pre-steps have not been performed</p>
 
 <dl class="method">
 <dt id="job.configuration.interface.job_interface.JobInterface.perform_pre_steps">
-<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
 This returns the command that should be executed for these parameters.
 :param job_data: The job data
@@ -530,7 +502,7 @@ populated with the settings from the exe_configuration.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>command_arguments</strong> (<em>string</em>) &#8211; The command_arguments that you want to perform the replacement on</li>
-<li><strong>exe_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</li>
+<li><strong>exe_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</li>
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type definition</li>
 </ul>
 </td>
@@ -558,6 +530,34 @@ populated with the settings from the exe_configuration.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">env_vars populated with values</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.configuration.interface.job_interface.JobInterface.replace_command_parameters">
+<em class="property">static </em><code class="descname">replace_command_parameters</code><span class="sig-paren">(</span><em>command_arguments</em>, <em>param_replacements</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.replace_command_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>find all occurrences of a parameter with a given name in the command_arguments string and
+replace it with the param value. If the parameter replacement string in the command uses a
+custom output ( ${-f :foo}).
+The parameter will be replaced with the string preceding the colon and the given param value
+will be appended.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command_arguments</strong> (<em>string</em>) &#8211; The command_arguments that you want to perform the replacement on</li>
+<li><strong>param_replacements</strong> (<em>dict</em>) &#8211; The parameters you are searching for</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The string with all replacements made</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -610,7 +610,7 @@ with this interface</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
 </tr>
 </tbody>
 </table>
@@ -624,7 +624,7 @@ with this interface</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exe_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</td>
 </tr>
 </tbody>
 </table>
@@ -789,7 +789,7 @@ pre-steps have not been performed</p>
 
 <dl class="method">
 <dt id="job.configuration.interface.job_interface_1_0.JobInterface.perform_pre_steps">
-<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
 This returns the command that should be executed for these parameters.
 :param job_data: The job data
@@ -925,7 +925,7 @@ populated with the settings from the job_configuration.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>command_arguments</strong> (<em>string</em>) &#8211; The command_arguments that you want to perform the replacement on</li>
-<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
 </ul>
 </td>
 </tr>
@@ -947,7 +947,7 @@ populated with the settings from the job_configuration.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">env_vars populated with values</td>
 </tr>
@@ -967,7 +967,7 @@ populated with the settings from the job_configuration.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model with related job and job_type fields</li>
-<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
 </ul>
 </td>
 </tr>
@@ -1134,7 +1134,7 @@ pre-steps have not been performed</p>
 
 <dl class="method">
 <dt id="job.configuration.interface.job_interface_1_3.JobInterface.perform_pre_steps">
-<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_3.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_3.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
 This returns the command that should be executed for these parameters.
 :param job_data: The job data
@@ -1173,7 +1173,7 @@ populated with the settings from the job_configuration.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>command_arguments</strong> (<em>string</em>) &#8211; The command_arguments that you want to perform the replacement on</li>
-<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type definition</li>
 </ul>
 </td>
@@ -1197,7 +1197,7 @@ populated with the settings from the job_configuration.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</li>
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type definition</li>
 </ul>
 </td>
@@ -1259,7 +1259,7 @@ with this interface</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_configuration</strong> (<a class="reference internal" href="job.execution.configuration.json.html#job.execution.configuration.json.exe_config.ExecutionConfiguration" title="job.execution.configuration.json.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.execution.configuration.json.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The job configuration</td>
 </tr>
 </tbody>
 </table>

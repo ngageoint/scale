@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.seed.results package &mdash; Scale 5.5.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="job.tasks package" href="job.tasks.html" />
+    <link rel="prev" title="job.seed package" href="job.seed.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.5
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#job-errors-module">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="job.html">job package</a> &raquo;</li>
+        
+          <li><a href="job.seed.html">job.seed package</a> &raquo;</li>
+        
+      <li>job.seed.results package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/job.seed.results.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-seed-results-package">
+<h1>job.seed.results package<a class="headerlink" href="#job-seed-results-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.seed.results.job_results">
+<span id="job-seed-results-job-results-module"></span><h2>job.seed.results.job_results module<a class="headerlink" href="#module-job.seed.results.job_results" title="Permalink to this headline">¶</a></h2>
+<p>Defines the results obtained after executing a job</p>
+<dl class="class">
+<dt id="job.seed.results.job_results.JobResults">
+<em class="property">class </em><code class="descclassname">job.seed.results.job_results.</code><code class="descname">JobResults</code><span class="sig-paren">(</span><em>results_dict=None</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the results obtained after executing a job</p>
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.add_file_list_parameter">
+<code class="descname">add_file_list_parameter</code><span class="sig-paren">(</span><em>name</em>, <em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.add_file_list_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a list of files to the job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The output parameter name</li>
+<li><strong>file_ids</strong> (<em>[</em><em>long</em><em>]</em>) &#8211; The file IDs</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.add_file_parameter">
+<code class="descname">add_file_parameter</code><span class="sig-paren">(</span><em>name</em>, <em>file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.add_file_parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a file to the job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The output parameter name</li>
+<li><strong>file_id</strong> (<em>long</em>) &#8211; The file ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.add_output_json">
+<code class="descname">add_output_json</code><span class="sig-paren">(</span><em>output_name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.add_output_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output json from the seed.outputs.json file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>str</em>) &#8211; Output JSON key used to capture from output file</li>
+<li><strong>value</strong> (<em>float</em><em> or </em><em>str</em><em> or </em><em>dict</em><em> or </em><em>array</em>) &#8211; Raw value provided by job</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.add_output_to_data">
+<code class="descname">add_output_to_data</code><span class="sig-paren">(</span><em>output_name</em>, <em>job_data</em>, <em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.add_output_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given output from the results as a new input in the given job data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>output_name</strong> (<em>string</em>) &#8211; The name of the results output to add to the data</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
+<li><strong>input_name</strong> (<em>string</em>) &#8211; The name of the data input</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.extend_interface_with_outputs_v5">
+<code class="descname">extend_interface_with_outputs_v5</code><span class="sig-paren">(</span><em>interface</em>, <em>job_files</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.extend_interface_with_outputs_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an output_data like object for legacy v5 API</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>interface</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; Seed manifest which should have concrete outputs injected</li>
+<li><strong>job_files</strong> ([<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]) &#8211; A list of files that are referenced by the job data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A dictionary of Seed Manifest outputs key mapped to the corresponding data value.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.results.job_results.JobResults.files">
+<code class="descname">files</code><a class="headerlink" href="#job.seed.results.job_results.JobResults.files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor for files in results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents these job results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dictionary representing the results</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.results.job_results.JobResults.json">
+<code class="descname">json</code><a class="headerlink" href="#job.seed.results.job_results.JobResults.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor for json in results</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.job_results.JobResults.perform_post_steps">
+<code class="descname">perform_post_steps</code><span class="sig-paren">(</span><em>job_interface</em>, <em>job_data</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.job_results.JobResults.perform_post_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stores the files or JSON output of job and deletes any working directories</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_interface</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The job interface</li>
+<li><strong>job_data</strong> (<a class="reference internal" href="job.data.html#job.data.job_data.JobData" title="job.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.data.job_data.JobData</span></code></a>) &#8211; The job data</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model with related job and job_type fields</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Job results generated by job execution</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.seed.results.job_results.JobResults" title="job.seed.results.job_results.JobResults"><code class="xref py py-class docutils literal"><span class="pre">job.seed.results.job_results.JobResults</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed.results.outputs_json">
+<span id="job-seed-results-outputs-json-module"></span><h2>job.seed.results.outputs_json module<a class="headerlink" href="#module-job.seed.results.outputs_json" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.seed.results.outputs_json.SeedOutputsJson">
+<em class="property">class </em><code class="descclassname">job.seed.results.outputs_json.</code><code class="descname">SeedOutputsJson</code><span class="sig-paren">(</span><em>data</em>, <em>schema=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.outputs_json.SeedOutputsJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="job.seed.results.outputs_json.SeedOutputsJson.construct_schema">
+<em class="property">static </em><code class="descname">construct_schema</code><span class="sig-paren">(</span><em>interface_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.outputs_json.SeedOutputsJson.construct_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dynamically build a schema to validate seed.outputs.json</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface_outputs</strong> ([<a class="reference internal" href="job.seed.html#job.seed.types.SeedOutputJson" title="job.seed.types.SeedOutputJson"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedOutputJson</span></code></a>]) &#8211; Seed Interface definition for types of JSON outputs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Schema for validation of seed.outputs.json</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.seed.results.outputs_json.SeedOutputsJson.get_values">
+<code class="descname">get_values</code><span class="sig-paren">(</span><em>interface_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.outputs_json.SeedOutputsJson.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all data needed in the interface. Any keys not indicated in the interface are ignored.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface_outputs</strong> (<a class="reference internal" href="job.seed.html#job.seed.types.SeedOutputJson" title="job.seed.types.SeedOutputJson"><code class="xref py py-class docutils literal"><span class="pre">job.seed.types.SeedOutputJson</span></code></a>) &#8211; Seed Interface definition for types of JSON outputs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">All outputs captured from seed.outputs.json in { key: value } format</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">{ string: typed_value }</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.seed.results.outputs_json.SeedOutputsJson.read_outputs">
+<em class="property">static </em><code class="descname">read_outputs</code><span class="sig-paren">(</span><em>schema</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.results.outputs_json.SeedOutputsJson.read_outputs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.seed.results">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.seed.results" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.tasks.html" class="btn btn-neutral float-right" title="job.tasks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.seed.html" class="btn btn-neutral" title="job.seed package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.5.0-snapshot',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

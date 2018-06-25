@@ -226,6 +226,7 @@
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0002_auto_20151217_1319">error.migrations.0002_auto_20151217_1319 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0003_error_is_builtin">error.migrations.0003_error_is_builtin module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0004_error_should_be_retried">error.migrations.0004_error_should_be_retried module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0005_auto_20180621_2110">error.migrations.0005_auto_20180621_2110 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -471,12 +472,13 @@ support for logging messages to a database table.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the error used by clients for queries</li>
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the error</li>
+<li><strong>job_type_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the job type that relates to this error</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the error</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; A longer description of the error</li>
 <li><strong>category</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The category of the error</li>
-<li><strong>is_builtin</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Where the error was loaded during system installation.</li>
-<li><strong>should_be_retried</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the error should be automatically retried</li>
+<li><strong>is_builtin</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Where the error is a builtin Scale error that does not relate to a particular job type</li>
+<li><strong>should_be_retried</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether a job failure with this error should be automatically retried</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the error model was created</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the error model was last modified</li>
 </ul>
@@ -577,6 +579,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="error.models.Error.job_type_name">
+<code class="descname">job_type_name</code><a class="headerlink" href="#error.models.Error.job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="error.models.Error.jobexecution_set">
 <code class="descname">jobexecution_set</code><a class="headerlink" href="#error.models.Error.jobexecution_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
@@ -645,7 +654,7 @@ object the first time, the query is executed.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A tuple representing the natural key</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple(str,)</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
 </tr>
 </tbody>
 </table>
@@ -684,8 +693,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.models.ErrorManager.create_error">
-<code class="descname">create_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.create_error" title="Permalink to this definition">¶</a></dt>
+<dt id="error.models.ErrorManager.create_legacy_error">
+<code class="descname">create_legacy_error</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em>, <em>category</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.create_legacy_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new error in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -708,17 +717,23 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="error.models.ErrorManager.get_by_natural_key">
-<code class="descname">get_by_natural_key</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_by_natural_key</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>error_name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to retrieve an error for the given natural key</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the error</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the error</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error defined by the natural key</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The error defined by the natural key</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -743,6 +758,24 @@ object the first time, the query is executed.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.save_job_error_models">
+<code class="descname">save_job_error_models</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>error_models</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.save_job_error_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the given job error models to the database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The job type name</li>
+<li><strong>error_models</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The error models</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -880,17 +913,23 @@ object the first time, the query is executed.</p>
 
 <dl class="function">
 <dt id="error.models.get_job_error">
-<code class="descclassname">error.models.</code><code class="descname">get_job_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_job_error" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">error.models.</code><code class="descname">get_job_error</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>error_name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.get_job_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job error with the given name, might require database access if the error is not currently cached</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>error_name</strong> (<em>string</em>) &#8211; The name of the error</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The error with the given name</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>

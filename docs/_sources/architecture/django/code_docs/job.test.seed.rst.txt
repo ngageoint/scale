@@ -1,0 +1,38 @@
+job\.test\.seed package
+=======================
+
+Submodules
+----------
+
+job\.test\.seed\.test\_job\_data module
+---------------------------------------
+
+.. automodule:: job.test.seed.test_job_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.seed\.test\_manifest module
+--------------------------------------
+
+.. automodule:: job.test.seed.test_manifest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.seed\.test\_types module
+-----------------------------------
+
+.. automodule:: job.test.seed.test_types
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.test.seed
+    :members:
+    :undoc-members:
+    :show-inheritance:
