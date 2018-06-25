@@ -305,6 +305,7 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
             'errors': [
               {
                 'code': 1,
+                'name': 'image-corrupt',
                 'title': 'Image Corrupt',
                 'description': 'Image input is not recognized as a valid PNG.',
                 'category': 'data'

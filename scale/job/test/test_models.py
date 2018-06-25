@@ -466,7 +466,7 @@ class TestJob(TestCase):
         job_type = job_test_utils.create_seed_job_type()
 
         input = {
-            "version": "2.0",
+            "version": "1.0",
             "input_data": {},
             "output_data": {}
         }
@@ -636,24 +636,28 @@ class TestJobType(TransactionTestCase):
                 "errors": [
                   {
                     "code": 1,
+                    "name": "data-issue",
                     "title": "Data Issue discovered",
                     "description": "There was a problem with input data",
                     "category": "data"
                   },
                   {
                     "code": 2,
+                    "name": "missing-mount",
                     "title": "Missing mount",
                     "description": "Expected mount point not available at run time",
                     "category": "job"
                   },
                   {
                     "code": 3,
+                    "name": "missing-setting",
                     "title": "Missing setting",
                     "description": "Expected setting not defined in environment variable",
                     "category": "job"
                   },
                   {
                     "code": 4,
+                    "name": "missing-env",
                     "title": "Missing environment",
                     "description": "Expected environment not provided",
                     "category": "job"
