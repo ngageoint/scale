@@ -1247,7 +1247,7 @@ class Job(models.Model):
         """
 
         # TODO: Remove old JobResults in v6 when we transition to only Seed job types
-        if self.output and 'version' in self.output and '2.0' == self.output['version']:
+        if self.output and 'version' in self.output and '6' == self.output['version']:
             job_results = JobResults(self.output)
         else:
             # Handle self.output being none on Seed type jobs
