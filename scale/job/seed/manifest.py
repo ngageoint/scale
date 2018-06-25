@@ -304,7 +304,7 @@ class SeedManifest(object):
 
         for error_dict in self.get_errors():
             exit_code = error_dict['code']
-            error_name = error_dict['title']  # TODO: change this to name when Seed spec is updated
+            error_name = error_dict['name']
             title = error_dict['title'] if 'title' in error_dict else None
             description = error_dict['description'] if 'description' in error_dict else None
             category = 'DATA' if 'category' in error_dict and error_dict['category'] == 'data' else 'ALGORITHM'
@@ -529,6 +529,7 @@ class SeedManifest(object):
         self._populate_outputs_defaults()
         self._populate_mounts_defaults()
         self._populate_settings_defaults()
+        self._populate_errors_defaults()
 
     def _populate_mounts_defaults(self):
         """Populates the default values for any missing mounts values"""
@@ -586,8 +587,8 @@ class SeedManifest(object):
         for error in self.get_errors():
             if 'category' not in error:
                 error['category'] = 'job'
-            if 'description' not in error:
-                error['description'] = error['title']
+            if 'title' not in error:
+                error['title'] = error['name']
 
     def _validate_mount_paths(self):
         """Ensures that all mount paths are valid
