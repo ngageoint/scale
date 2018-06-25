@@ -7,10 +7,9 @@ import math
 from django.db import migrations
 from django.utils.timezone import now
 
-from job.configuration.configurators import QueuedExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config import JobConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -63,15 +62,6 @@ def job_get_resources(self):
     resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
     return resources
 
-def get_job_configuration(self):
-    """Returns default job configuration for this job type
-
-    :returns: The default job configuration for this job type
-    :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
-    """
-
-    return JobConfiguration(self.configuration)
-
 def job_type_get_job_interface(self):
     """Returns the interface for running jobs of this type
 
@@ -117,7 +107,7 @@ class Migration(migrations.Migration):
     ]
 
     def populate_queue(apps, schema_editor):
-        from job.configuration.json.execution.exe_config import ExecutionConfiguration
+        from job.execution.configuration.json.exe_config import ExecutionConfiguration
 
         # Go through all of the queued job models and re-populate the queue table
         when_queued = now()
@@ -135,7 +125,6 @@ class Migration(migrations.Migration):
         Job.get_resources = job_get_resources
 
         # Attach needed methods to JobType model
-        JobType.get_job_configuration = get_job_configuration
         JobType.get_job_interface = job_type_get_job_interface
         JobType.get_resources = job_type_get_resources
         JobType.get_secrets_key = get_secrets_key

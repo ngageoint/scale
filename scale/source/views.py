@@ -11,9 +11,9 @@ import util.rest as rest_util
 from ingest.models import Ingest
 from ingest.serializers import IngestSerializer
 from job.models import Job
-from job.serializers import JobSerializer
+from job.serializers import JobSerializer, JobSerializerV5
 from product.models import ProductFile
-from product.serializers import ProductFileSerializer
+from product.serializers import ProductFileSerializer, ProductFileSerializerV5
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer, SourceFileDetailsSerializer
 from source.serializers_extra import SourceFileDetailsSerializerV4
@@ -199,7 +199,7 @@ class SourceIngestsView(ListAPIView):
 class SourceJobsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all jobs related to a source file."""
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerV5
     
     def list(self, request, source_id=None):
         """Determine api version and call specific method
@@ -265,7 +265,13 @@ class SourceJobsView(ListAPIView):
 class SourceProductsView(ListAPIView):
     """This view is the endpoint for retrieving products produced from a source file"""
     queryset = ScaleFile.objects.all()
-    serializer_class = ProductFileSerializer
+
+    # TODO: remove when REST API v5 is removed
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v6':
+            return ProductFileSerializer
+        return ProductFileSerializerV5
 
     def list(self, request, source_id=None):
         """Determine api version and call specific method

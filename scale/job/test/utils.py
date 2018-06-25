@@ -7,9 +7,9 @@ import django.utils.timezone as timezone
 
 import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
-from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults
@@ -127,6 +127,9 @@ def create_clock_event(rule=None, occurred=None):
         event_type = rule.configuration['event_type']
 
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
+
+
+#def create_seed_job()
 
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
@@ -257,6 +260,76 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_output.save()
 
     return job_exe
+
+
+def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
+                         is_operational=True, trigger_rule=None, configuration=None):
+    if not manifest:
+        manifest = {
+          'seedVersion': '1.0.0',
+          'job': {
+            'name': 'image-watermark',
+            'jobVersion': '0.1.0',
+            'packageVersion': '0.1.0',
+            'title': 'Image Watermarker',
+            'description': 'Processes an input PNG and outputs watermarked PNG.',
+            'maintainer': {
+              'name': 'John Doe',
+              'email': 'jdoe@example.com'
+            },
+            'timeout': 30,
+            'interface': {
+              'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
+              'inputs': {
+                'files': [
+                  {
+                    'name': 'INPUT_IMAGE'
+                  }
+                ]
+              },
+              'outputs': {
+                'files': [
+                  {
+                    'name': 'OUTPUT_IMAGE',
+                    'pattern': '*_watermark.png'
+                  }
+                ]
+              }
+            },
+            'resources': {
+              'scalar': [
+                { 'name': 'cpus', 'value': 1.0 },
+                { 'name': 'mem', 'value': 64.0 }
+              ]
+            },
+            'errors': [
+              {
+                'code': 1,
+                'title': 'Image Corrupt',
+                'description': 'Image input is not recognized as a valid PNG.',
+                'category': 'data'
+              }
+            ]
+          }
+        }
+
+        if not trigger_rule:
+            trigger_rule = trigger_test_utils.create_trigger_rule()
+
+        if not configuration:
+            configuration = {
+                'version': '1.0',
+                'default_settings': {}
+            }
+
+        job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
+                                          interface=manifest, priority=priority, timeout=manifest['job']['timeout'],
+                                          max_tries=max_tries, max_scheduled=max_scheduled,is_active=is_active,
+                                          is_operational=is_operational, trigger_rule=trigger_rule,
+                                          configuration=configuration)
+        JobTypeRevision.objects.create_job_type_revision(job_type)
+        return job_type
+
 
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,

@@ -70,6 +70,7 @@ Future v6 Services
    v6/data
    v6/diagnostic
    v6/ingest
+   v6/job_type
    v6/metrics
    v6/node
    v6/recipe

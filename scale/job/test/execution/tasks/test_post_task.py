@@ -7,7 +7,7 @@ from django.utils.timezone import now
 import job.test.utils as job_test_utils
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
 from error.models import reset_error_cache
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.execution.tasks.post_task import PostTask
 from job.tasks.update import TaskStatusUpdate

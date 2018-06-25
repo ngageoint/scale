@@ -1,4 +1,5 @@
 """Defines the database models for jobs and job types"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import copy
@@ -14,23 +15,28 @@ from django.db.models import F, Q
 from django.utils import dateparse, timezone
 
 import util.parse
+import trigger.handler as trigger_handler
 from error.models import Error
-from job.configuration.data.job_data import JobData
-from job.configuration.interface.error_interface import ErrorInterface
-from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.json.job.job_config import JobConfiguration
-from job.configuration.results.job_results import JobResults
+from job.configuration.data.job_data import JobData as JobData_1_0
+from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
+from job.configuration.results.job_results import JobResults as JobResults_1_0
+from job.data.job_data import JobData
+from job.deprecation import JobInterfaceSunset
 from job.exceptions import InvalidJobField
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
+from job.seed.manifest import SeedManifest
+from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem, ScalarResource
 from storage.models import ScaleFile
-from trigger.configuration.exceptions import InvalidTriggerType
+from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerMissingConfiguration
 from trigger.models import TriggerRule
+from util import rest as rest_utils
 from util.exceptions import RollbackTransaction
 from vault.secrets_handler import SecretsHandler
 
@@ -39,9 +45,17 @@ logger = logging.getLogger(__name__)
 
 
 # Required resource minimums for jobs (e.g. resources required for pre and post tasks)
+# TODO: We can roll-up these specific minimums in deference to MIN_RESOURCE dict in v6
 MIN_CPUS = 0.25
 MIN_MEM = 128.0
 MIN_DISK = 0.0
+
+MIN_RESOURCE = {
+    'cpus': MIN_CPUS,
+    'mem': MIN_MEM,
+    'disk': MIN_DISK,
+    'sharedmem': 0.0
+}
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile models
 
@@ -90,8 +104,11 @@ class JobManager(models.Manager):
         job.batch_id = batch_id
         job.max_tries = job_type.max_tries
 
-        job.priority = job_type.priority
-        job.timeout = job_type.timeout
+        if JobInterfaceSunset.is_seed_dict(job_type.interface):
+            job.timeout = SeedManifest(job_type.interface).get_timeout()
+        else:
+            job.priority = job_type.priority
+            job.timeout = job_type.timeout
 
         if superseded_job:
             root_id = superseded_job.root_superseded_job_id
@@ -364,12 +381,21 @@ class JobManager(models.Manager):
         output_files = output_files.order_by('id').distinct('id')
 
         # Merge job interface definitions with mapped values
-        job_interface_dict = job.get_job_interface().get_dict()
-        job_data_dict = job.get_job_data().get_dict()
-        job_results_dict = job.get_job_results().get_dict()
-        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
-        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+        job_interface = job.get_job_interface()
+        job_interface_dict = job_interface.get_dict()
+        job_data = job.get_job_data()
+        job_data_dict = job_data.get_dict()
+        job_results = job.get_job_results()
+        job_results_dict = job_results.get_dict()
+
+        if JobInterfaceSunset.is_seed_dict(job_interface_dict):
+            job.inputs = job_data.extend_interface_with_inputs_v5(job_interface, input_files)
+            job.outputs = job_results.extend_interface_with_outputs_v5(job_interface, output_files)
+        else:
+            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+            job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
                                            output_files)
+
 
         return job
 
@@ -403,7 +429,7 @@ class JobManager(models.Manager):
                              include_superseded=include_superseded, order=order)
 
     def get_jobs_with_related(self, job_ids):
-        """Gets the job models for the given IDs with related job_type and job_type_rev models
+        """Gets the job models for the given IDs with related job_type, job_type_rev, and batch models
 
         :param job_ids: The job IDs
         :type job_ids: list
@@ -411,7 +437,7 @@ class JobManager(models.Manager):
         :rtype: list
         """
 
-        return self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids)
+        return self.select_related('job_type', 'job_type_rev', 'batch').filter(id__in=job_ids)
 
     def get_locked_job(self, job_id):
         """Locks and returns the job model for the given ID with no related fields. Caller must be within an atomic
@@ -936,7 +962,7 @@ class JobManager(models.Manager):
             self.filter(id__in=job_ids).update(status=status, last_status_change=when, ended=ended, error=error,
                                                last_modified=modified)
 
-    # TODO: remove this function when API REST v5 is removed 
+    # TODO: remove this function when API REST v5 is removed
     def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
         """Merges data for a single job instance with its job interface to produce a mapping of key/values.
 
@@ -1081,8 +1107,10 @@ class Job(models.Model):
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
 
-    priority = models.IntegerField()
-    timeout = models.IntegerField()
+    # TODO: priority and timeout can be removed when legacy job types are removed
+    priority = models.IntegerField(null=True)
+    timeout = models.IntegerField(null=True)
+
     input = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     input_file_size = models.FloatField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
@@ -1191,28 +1219,43 @@ class Job(models.Model):
         """Returns the data for this job
 
         :returns: The data for this job
-        :rtype: :class:`job.configuration.data.job_data.JobData`
+        :rtype: :class:`job.configuration.data.job_data.JobData` or :class:`job.data.job_data.JobData`
         """
 
-        return JobData(self.input)
+        # TODO: Remove old JobData in v6 when we transition to only Seed job types
+        if 'version' in self.input and '6' == self.input['version']:
+            job_data = JobData(self.input)
+        else:
+            job_data = JobData_1_0(self.input)
+        return job_data
 
     def get_job_interface(self):
         """Returns the interface for this job
 
         :returns: The interface for this job
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterface(self.job_type_rev.interface)
+        return JobInterfaceSunset.create(self.job_type_rev.interface)
 
     def get_job_results(self):
         """Returns the results for this job
 
         :returns: The results for this job
-        :rtype: :class:`job.configuration.results.job_results.JobResults`
+        :rtype: :class:`job.configuration.results.job_results.JobResults` or
+                :class:`job.seed.results.job_results.JobResults`
         """
 
-        return JobResults(self.output)
+        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
+        if self.output and 'version' in self.output and '6' == self.output['version']:
+            job_results = JobResults(self.output)
+        else:
+            # Handle self.output being none on Seed type jobs
+            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
+                job_results = JobResults()
+            else:
+                job_results = JobResults_1_0(self.output)
+        return job_results
 
     def get_resources(self):
         """Returns the resources required for this job
@@ -1223,22 +1266,49 @@ class Job(models.Model):
 
         resources = self.job_type.get_resources()
 
-        # Calculate memory required in MiB rounded up to the nearest whole MiB
-        multiplier = self.job_type.mem_mult_required
-        const = self.job_type.mem_const_required
+        # Input File Size in MiB
         input_file_size = self.input_file_size
         if not input_file_size:
             input_file_size = 0.0
-        memory_mb = long(math.ceil(multiplier * input_file_size + const))
-        memory_required = max(memory_mb, MIN_MEM)
 
-        # Calculate output space required in MiB rounded up to the nearest whole MiB
-        multiplier = self.job_type.disk_out_mult_required
-        const = self.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * input_file_size + const))
-        disk_out_required = max(output_size_mb, MIN_DISK)
+        interface = self.job_type.get_job_interface()
 
-        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
+        # TODO: remove legacy code branch in v6
+        if not isinstance(interface, SeedManifest):
+            # Calculate memory required in MiB rounded up to the nearest whole MiB
+            multiplier = self.job_type.mem_mult_required
+            const = self.job_type.mem_const_required
+
+            memory_mb = long(math.ceil(multiplier * input_file_size + const))
+            memory_required = max(memory_mb, MIN_MEM)
+
+            # Calculate output space required in MiB rounded up to the nearest whole MiB
+            multiplier = self.job_type.disk_out_mult_required
+            const = self.job_type.disk_out_const_required
+            output_size_mb = long(math.ceil(multiplier * input_file_size + const))
+            disk_out_required = max(output_size_mb, MIN_DISK)
+
+            resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + input_file_size)]))
+        # TODO: Seed logic block to keep in v6
+        else:
+            scalar_resources = []
+            # Iterate over all scalar resources and
+            for resource in interface.get_scalar_resources():
+                if 'inputMultiplier' in resource:
+                    multiplier = resource['inputMultiplier']
+                    initial_value = long(math.ceil(multiplier * input_file_size + resource['value']))
+                    value_required = max(initial_value, MIN_RESOURCE.get(resource['name'], 0.0))
+                    scalar_resources.append(ScalarResource(resource['name'], value_required))
+
+            if scalar_resources:
+                resources.increase_up_to(NodeResources(scalar_resources))
+
+            # We have to ensure shared memory is not a required NodeResource, otherwise scheduling cannot occur
+            resources.remove_resource('sharedmem')
+
+            # If no inputMultiplier for Disk we need to at least ensure it exceeds input_file_size
+            resources.increase_up_to(NodeResources([Disk(input_file_size)]))
+
         return resources
 
     def get_resources_dict(self):
@@ -1247,7 +1317,7 @@ class Job(models.Model):
         :returns: The job resources dict
         :rtype: dict
         """
-        
+
         return self.get_resources().get_json().get_dict()
 
     def has_been_queued(self):
@@ -1730,7 +1800,7 @@ class JobExecution(models.Model):
         """Returns the configuration for this job execution
 
         :returns: The configuration for this job execution
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         if isinstance(self.configuration, basestring):
@@ -1823,6 +1893,10 @@ class JobExecution(models.Model):
 
         if isinstance(self.resources, basestring):
             self.resources = {}
+
+        logger.debug('Job execution for job id %d using resources: %s' % (self.job.id,
+                                                                          self.resources))
+
         return Resources(self.resources, do_validate=False).get_node_resources()
 
     def get_status(self):
@@ -1999,7 +2073,12 @@ class JobExecutionOutput(models.Model):
         :rtype: :class:`job.configuration.results.job_results.JobResults`
         """
 
-        return JobResults(self.output)
+        # TODO: Remove old JobResults in v6 when we transition to only Seed job types
+        if self.output and 'version' in self.output and '2.0' == self.output['version']:
+            job_results = JobResults(self.output)
+        else:
+            job_results = JobResults_1_0(self.output)
+        return job_results
 
     class Meta(object):
         """Meta information for the database"""
@@ -2171,10 +2250,12 @@ class JobTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, custom_resources=None,
-                        configuration=None, secrets=None, **kwargs):
+    def create_job_type_v5(self, name, version, interface, trigger_rule=None, error_mapping=None,
+                               custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
+
+        # TODO remove with v5
 
         :param name: The identifying name of the job type used by clients for queries
         :type name: string
@@ -2185,11 +2266,11 @@ class JobTypeManager(models.Manager):
         :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
         :type trigger_rule: :class:`trigger.models.TriggerRule`
         :param error_mapping: Mapping for translating an exit code to an error type
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
-        :param custom_resources: Custom resources required by this job type
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
+        :param custom_resources: Custom resources required by this job type. Deprecated - remove with v5.
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
         :returns: The new job type
@@ -2226,8 +2307,8 @@ class JobTypeManager(models.Manager):
             configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
         if error_mapping:
-            error_mapping.validate()
-            job_type.error_mapping = error_mapping.get_dict()
+            error_mapping.validate_legacy()
+            job_type.error_mapping = error_mapping.error_dict
         if custom_resources:
             job_type.custom_resources = custom_resources.get_dict()
         if 'is_active' in kwargs:
@@ -2246,8 +2327,120 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
+    def create_job_type_v6(self, manifest_dict, trigger_rule_dict=None, configuration_dict=None, **kwargs):
+        """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
+        transaction.
+
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param trigger_rule_dict: The trigger rule that creates jobs of this type, possibly None
+        :type trigger_rule_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
+        :returns: The new job type
+        :rtype: :class:`job.models.JobType`
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
+        """
+
+        # Create manifest and validate
+        manifest = SeedManifest(manifest_dict)
+
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS_V6:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
+
+        trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
+
+        secrets = None
+        if configuration_dict:
+            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            configuration.validate(manifest)
+            secrets = configuration.remove_secret_settings(manifest)
+
+        # Create/update any errors defined in manifest
+        error_mapping = manifest.get_error_mapping()
+        error_mapping.save_models()
+
+        # Create the new job type
+        job_type = JobType(**kwargs)
+
+        job_type.name = manifest.get_name()
+        job_type.version = manifest.get_job_version()
+        job_type.title = manifest.get_title()
+        job_type.description = manifest.get_description()
+        job_type.interface = manifest_dict
+        job_type.trigger_rule = trigger_rule
+        if configuration_dict:
+            job_type.configuration = configuration_dict
+        if 'is_active' in kwargs:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        job_type.save()
+
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
+
+        # Create first revision of the job type
+        JobTypeRevision.objects.create_job_type_revision(job_type)
+
+        return job_type
+
+    @staticmethod
+    def _create_seed_job_trigger_rule(manifest, trigger_rule_dict):
+        """Creates a trigger rule to be attached to a Seed job type.
+
+        Must be called from within an existing transaction. This is intended for use with create and edit job type
+        methods.
+
+        :param manifest: Instantiated Manifest to pass to trigger validation
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :param trigger_rule_dict: Trigger rule definition to be used for data models
+        :type trigger_rule_dict: dict
+        :returns: The new trigger rule
+        :rtype: :class:`trigger.models.TriggerRule`
+
+        :raises trigger.configuration.exceptions.InvalidTriggerMissingConfiguration:
+            If both rule and configuration do not exist
+        :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
+        :raises trigger.configuration.exceptions.InvalidTriggerType: If the trigger is invalid
+        """
+        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
+                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
+            raise InvalidTriggerMissingConfiguration('Trigger type and configuration are required together.')
+
+        # Attempt to look up the trigger handler for the type
+        rule_handler = None
+        if trigger_rule_dict and 'type' in trigger_rule_dict:
+            rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
+
+        # Attempt to create the trigger rule
+        is_active = trigger_rule_dict.get('is_active', True)
+        trigger_rule = None
+        if rule_handler and 'configuration' in trigger_rule_dict:
+            trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], manifest.get_name(),
+                                                            is_active)
+
+        # Validate the trigger rule
+        if trigger_rule:
+            trigger_config = trigger_rule.get_configuration()
+            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
+                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
+            trigger_config.validate_trigger_for_job(manifest)
+        return trigger_rule
+
+    @transaction.atomic
+    def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
+                         error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -2263,11 +2456,11 @@ class JobTypeManager(models.Manager):
             when trigger_rule is None
         :type remove_trigger_rule: bool
         :param error_mapping: Mapping for translating an exit code to an error type
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :param secrets: Secret settings required by this job type
         :type secrets: dict
 
@@ -2327,8 +2520,8 @@ class JobTypeManager(models.Manager):
             trigger_config.validate_trigger_for_job(job_type.get_job_interface())
 
         if error_mapping:
-            error_mapping.validate()
-            job_type.error_mapping = error_mapping.get_dict()
+            error_mapping.validate_legacy()
+            job_type.error_mapping = error_mapping.error_dict
 
         if custom_resources:
             job_type.custom_resources = custom_resources.get_dict()
@@ -2346,6 +2539,102 @@ class JobTypeManager(models.Manager):
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
         if interface:
+            # Create new revision of the job type for new interface
+            JobTypeRevision.objects.create_job_type_revision(job_type)
+
+    @transaction.atomic
+    def edit_job_type_v6(self, job_type_id, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
+                         remove_trigger_rule=False, **kwargs):
+        """Edits the given job type and saves the changes in the database. The caller must provide the related
+        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
+        indicates that the field should not change. If trigger_rule_dict is set to None it is assumed trigger
+        is being removed.
+
+        :param job_type_id: The unique identifier of the job type to edit
+        :type job_type_id: int
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param trigger_rule_dict: The trigger rule that creates jobs of this type, None results in removal
+        :type trigger_rule_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
+        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
+            when trigger_rule is None
+        :type remove_trigger_rule: bool
+
+        :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
+        type for creating jobs
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
+        invalid
+        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
+        type interface is invalid
+        """
+
+        for field_name in kwargs:
+            if field_name in JobType.UNEDITABLE_FIELDS:
+                raise Exception('%s is not an editable field' % field_name)
+        self._validate_job_type_fields(**kwargs)
+
+        recipe_types = []
+        if manifest_dict:
+            # Lock all recipe types so they can be validated after changing job type interface
+            from recipe.models import RecipeType
+            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
+
+        # Acquire model lock for job type
+        job_type = JobType.objects.select_for_update().get(pk=job_type_id)
+        if job_type.is_system:
+            if len(kwargs) > 1 or 'is_paused' not in kwargs:
+                raise InvalidJobField('You can only modify the is_paused field for a System Job')
+
+        if manifest_dict:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+            job_type.interface = manifest_dict
+            job_type.revision_num += 1
+
+            # Create/update any errors defined in manifest
+            error_mapping = manifest.get_error_mapping()
+            error_mapping.save_models()
+
+            job_type.title = manifest.get_title()
+            job_type.description = manifest.get_description()
+            job_type.save()
+
+            # New job interface, validate all existing recipes
+            for recipe_type in recipe_types:
+                recipe_type.get_recipe_definition().validate_job_interfaces()
+        else:
+            manifest = SeedManifest(job_type.interface)
+
+        secrets = None
+        if configuration_dict:
+            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            configuration.validate(manifest)
+            secrets = configuration.remove_secret_settings(manifest)
+            job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+
+        if trigger_rule_dict or remove_trigger_rule:
+            if job_type.trigger_rule:
+                # Archive old trigger rule since we are changing to a new one
+                TriggerRule.objects.archive_trigger_rule(job_type.trigger_rule_id)
+
+            if not remove_trigger_rule:
+                job_type.trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
+
+        if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
+            job_type.archived = None if kwargs['is_active'] else timezone.now()
+        if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
+            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        for field_name in kwargs:
+            setattr(job_type, field_name, kwargs[field_name])
+        job_type.save()
+
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
+
+        if manifest_dict:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
@@ -2418,7 +2707,7 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by('last_modified')
         return job_types
 
-    def get_details(self, job_type_id):
+    def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
 
         The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
@@ -2433,15 +2722,21 @@ class JobTypeManager(models.Manager):
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
 
         # Add associated error information
-        error_names = job_type.get_error_interface().get_error_names()
+        error_names = job_type.get_error_mapping().get_error_names_legacy()
         job_type.errors = Error.objects.filter(name__in=error_names) if error_names else []
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            configuration = JobConfiguration(job_type.configuration)
-            interface = JobInterface(job_type.interface)
-            configuration.validate(interface.get_dict())
-            job_type.configuration = configuration.get_dict()
+            if JobInterfaceSunset.is_seed_dict(job_type.interface):
+                configuration = job_type.get_job_configuration()
+                manifest = SeedManifest(job_type.interface, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            else:
+                configuration = JobConfigurationV2(job_type.configuration)
+                interface = JobInterfaceSunset.create(job_type.interface)
+                configuration.validate(interface.get_dict())
+                job_type.configuration = configuration.get_dict()
 
         # Add recent performance statistics
         started = timezone.now()
@@ -2628,7 +2923,7 @@ class JobTypeManager(models.Manager):
         secrets_handler = SecretsHandler()
         secrets_handler.set_job_type_secrets(secrets_key, secrets)
 
-    def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
+    def validate_job_type_v5(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
         """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
@@ -2637,12 +2932,12 @@ class JobTypeManager(models.Manager):
         :type version: string
         :param interface: The interface for running a job of this type
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
-        :param error_mapping: The interface for mapping error exit codes
-        :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param error_mapping: Mapping for translating an exit code to an error type
+        :type error_mapping: :class:`job.error.mapping.JobErrorMapping`
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
         :param configuration: The configuration for running a job of this type, possibly None
-        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :type configuration: :class:`job.configuration.json.job_config_2_0.JobConfigurationV2`
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -2669,7 +2964,7 @@ class JobTypeManager(models.Manager):
             warnings.extend(configuration.validate(interface.get_dict()))
 
         if error_mapping:
-            warnings.extend(error_mapping.validate())
+            error_mapping.validate_legacy()
 
         try:
             # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
@@ -2715,16 +3010,10 @@ class JobType(models.Model):
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
-    :keyword title: The human-readable name of the job type
+    :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
     :type title: :class:`django.db.models.CharField`
-    :keyword description: An optional description of the job type
+    :keyword description: An optional description of the job type. Deprecated - remove with v5.
     :type description: :class:`django.db.models.TextField`
-    :keyword category: An optional overall category of the job type
-    :type category: :class:`django.db.models.CharField`
-    :keyword author_name: The name of the person or organization that created the associated algorithm
-    :type author_name: :class:`django.db.models.CharField`
-    :keyword author_url: The address to a home page about the author or associated algorithm
-    :type author_url: :class:`django.db.models.TextField`
 
     :keyword is_system: Whether this is a system type
     :type is_system: :class:`django.db.models.BooleanField`
@@ -2733,61 +3022,26 @@ class JobType(models.Model):
     :type is_long_running: :class:`django.db.models.BooleanField`
     :keyword is_active: Whether the job type is active (false once job type is archived)
     :type is_active: :class:`django.db.models.BooleanField`
-    :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
-        phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
     :keyword is_paused: Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
 
-    :keyword uses_docker: Whether the job type uses Docker
-    :type uses_docker: :class:`django.db.models.BooleanField`
-    :keyword docker_privileged: Whether the job type uses Docker in privileged mode
-    :type docker_privileged: :class:`django.db.models.BooleanField`
-    :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
-    :type docker_image: :class:`django.db.models.CharField`
-    :keyword interface: JSON description defining the interface for running a job of this type
-    :type interface: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker.
-        See the mesos prototype file for further information.
-    :type docker_params: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword revision_num: The current revision number of the interface, starts at one
-    :type revision_num: :class:`django.db.models.IntegerField`
-    :keyword error_mapping: Mapping for translating an exit code to an error type
-    :type error_mapping: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword trigger_rule: The rule to trigger new jobs of this type
-    :type trigger_rule: :class:`django.db.models.ForeignKey`
-    :keyword configuration: JSON describing the default job configuration for jobs of this type
-    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
-
-    :keyword priority: The priority of the job type (lower number is higher priority)
-    :type priority: :class:`django.db.models.IntegerField`
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
     :type max_scheduled: :class:`django.db.models.IntegerField`
-    :keyword timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
-    :type timeout: :class:`django.db.models.IntegerField`
     :keyword max_tries: The maximum number of times to try executing a job in case of errors (minimum one)
     :type max_tries: :class:`django.db.models.IntegerField`
-    :keyword cpus_required: The number of CPUs required for a job of this type
-    :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type
-    :type mem_const_required: :class:`django.db.models.FloatField`
-    :keyword mem_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine additional
-        RAM in MiB required for a job of this type
-    :type mem_mult_required: :class:`django.db.models.FloatField`
-    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type
-    :type shared_mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
-        products) for a job of this type
-    :type disk_out_const_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
-        additional disk space in MiB required for job output (temp work and products) for a job of this type
-    :type disk_out_mult_required: :class:`django.db.models.FloatField`
-    :keyword custom_resources: JSON describing the custom resources required for jobs of this type
-    :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
-
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
     :type icon_code: string of a FontAwesome icon code
+
+    :keyword revision_num: The current revision number of the interface, starts at one. Deprecated - remove with v5.
+    :type revision_num: :class:`django.db.models.IntegerField`
+    :keyword docker_image: The Docker image containing the code to run for this job (if uses_docker is True)
+    :type docker_image: :class:`django.db.models.CharField`
+    :keyword interface: JSON description defining the interface for running a job of this type. Deprecated - removed in
+        v6.
+    :type interface: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON describing the default job configuration for jobs of this type
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the job type was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -2797,6 +3051,54 @@ class JobType(models.Model):
     :type paused: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job type was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
+
+    :keyword category: An optional overall category of the job type. Deprecated - remove with v5.
+    :type category: :class:`django.db.models.CharField`
+    :keyword author_name: The name of the person or organization that created the associated algorithm. Deprecated -
+        remove with v5.
+    :type author_name: :class:`django.db.models.CharField`
+    :keyword author_url: The address to a home page about the author or associated algorithm. Deprecated - removed in
+        v6.
+    :type author_url: :class:`django.db.models.TextField`
+    :keyword is_operational: Whether this job type is operational (True) or is still in a research & development (R&D)
+        phase (False)
+    :type is_operational: :class:`django.db.models.BooleanField`
+    :keyword uses_docker: Whether the job type uses Docker. Deprecated - remove with v5.
+    :type uses_docker: :class:`django.db.models.BooleanField`
+    :keyword docker_privileged: Whether the job type uses Docker in privileged mode. Deprecated - remove with v5.
+    :type docker_privileged: :class:`django.db.models.BooleanField`
+    :keyword docker_params: JSON array of 2-tuples (key-value) which will be passed as-is to docker. See the mesos
+        prototype file for further information. Deprecated - remove with v5.
+    :type docker_params: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword error_mapping: Mapping for translating an exit code to an error type. Deprecated - remove with v5.
+    :type error_mapping: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword trigger_rule: The rule to trigger new jobs of this type
+    :type trigger_rule: :class:`django.db.models.ForeignKey`
+    :keyword priority: The priority of the job type (lower number is higher priority)
+    :type priority: :class:`django.db.models.IntegerField`
+    :keyword timeout: The maximum amount of time to allow a job of this type to run before being killed (in seconds)
+    :type timeout: :class:`django.db.models.IntegerField`
+    :keyword cpus_required: The number of CPUs required for a job of this type. Deprecated - remove with v5.
+    :type cpus_required: :class:`django.db.models.FloatField`
+    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type. Deprecated - removed
+        in v6.
+    :type mem_const_required: :class:`django.db.models.FloatField`
+    :keyword mem_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine additional
+        RAM in MiB required for a job of this type. Deprecated - remove with v5.
+    :type mem_mult_required: :class:`django.db.models.FloatField`
+    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type.
+        Deprecated - remove with v5.
+    :type shared_mem_required: :class:`django.db.models.FloatField`
+    :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
+        products) for a job of this type. Deprecated - remove with v5.
+    :type disk_out_const_required: :class:`django.db.models.FloatField`
+    :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
+        additional disk space in MiB required for job output (temp work and products) for a job of this type.
+        Deprecated - remove with v5.
+    :type disk_out_mult_required: :class:`django.db.models.FloatField`
+    :keyword custom_resources: JSON describing the custom resources required for jobs of this type. Deprecated -
+        remove with v5.
+    :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
     """
 
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
@@ -2805,49 +3107,54 @@ class JobType(models.Model):
     UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
                          'created', 'archived', 'paused', 'last_modified')
 
+    BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+                      'configuration')
+
+    UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'archived', 'last_modified')
+
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
-    category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
-    author_name = models.CharField(blank=True, max_length=50, null=True)
-    author_url = models.TextField(blank=True, null=True)
 
     is_system = models.BooleanField(default=False)
     is_long_running = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
 
-    uses_docker = models.BooleanField(default=True)
-    docker_privileged = models.BooleanField(default=False)
-    docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(default=dict)
-    docker_params = django.contrib.postgres.fields.JSONField(default=dict)
-    revision_num = models.IntegerField(default=1)
-    error_mapping = django.contrib.postgres.fields.JSONField(default=dict)
-    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-
-    configuration = django.contrib.postgres.fields.JSONField(default=dict)
-
-    priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
-    timeout = models.IntegerField(default=1800)
     max_tries = models.IntegerField(default=3)
-    cpus_required = models.FloatField(default=1.0)
-    mem_const_required = models.FloatField(default=64.0)
-    mem_mult_required = models.FloatField(default=0.0)
-    shared_mem_required = models.FloatField(default=0.0)
-    disk_out_const_required = models.FloatField(default=64.0)
-    disk_out_mult_required = models.FloatField(default=0.0)
-    custom_resources = django.contrib.postgres.fields.JSONField(default=dict)
-
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
+    revision_num = models.IntegerField(default=1)
+    docker_image = models.CharField(blank=True, null=True, max_length=500)
+    interface = django.contrib.postgres.fields.JSONField(default=dict)  # TODO: rename to manifest for v6
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    archived = models.DateTimeField(blank=True, null=True)  # TODO: rename to deprecated for v6
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    # TODO: remove with v5 API and/or legacy job types
+    category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
+    author_name = models.CharField(blank=True, max_length=50, null=True)
+    author_url = models.TextField(blank=True, null=True)
+    is_operational = models.BooleanField(default=True)
+    uses_docker = models.NullBooleanField(default=True)
+    docker_privileged = models.NullBooleanField(default=False)
+    docker_params = django.contrib.postgres.fields.JSONField(default=dict, null=True)
+    error_mapping = django.contrib.postgres.fields.JSONField(default=dict, null=True)
+    trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
+    priority = models.IntegerField(default=100)
+    timeout = models.IntegerField(default=1800, null=True)
+    cpus_required = models.FloatField(default=1.0, null=True)
+    mem_const_required = models.FloatField(default=64.0, null=True)
+    mem_mult_required = models.FloatField(default=0.0, null=True)
+    shared_mem_required = models.FloatField(default=0.0, null=True)
+    disk_out_const_required = models.FloatField(default=64.0, null=True)
+    disk_out_mult_required = models.FloatField(default=0.0, null=True)
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict, null=True)
 
     objects = JobTypeManager()
 
@@ -2874,25 +3181,52 @@ class JobType(models.Model):
         """Returns the interface for running jobs of this type
 
         :returns: The job interface for this type
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or
+                :class:`job.seed.manifest.SeedManifest`
         """
 
-        return JobInterface(self.interface)
+        return JobInterfaceSunset.create(self.interface)
 
-    def get_error_interface(self):
-        """Returns the interface for mapping a job's exit code or
-        stderr/stdout expression to an error type"""
+    def get_category(self):
+        """Returns the category for this job type
 
-        return ErrorInterface(self.error_mapping)
+        # TODO: Remove in v6 in deference to tag access within the manifest
+        This is merely a placeholder for the short term to minimize changes associate with Seed migration
+
+
+        :returns: The category of job type (or first tag in SeedManifest as of v6)
+        :rtype: str
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.interface):
+            tags = self.get_job_interface().get_tags()
+            if tags:
+                return tags[0]
+
+        return self.category
+
+    def get_error_mapping(self):
+        """Returns the error mapping for this job type
+
+        :returns: The error mapping
+        :rtype: :class:`job.error.mapping.JobErrorMapping`
+        """
+
+        # TODO: remove when legacy job types go away
+        if not JobInterfaceSunset.is_seed_dict(self.interface):
+            from job.error.mapping import create_legacy_error_mapping
+            return create_legacy_error_mapping(self.error_mapping)
+
+        return SeedManifest(self.interface).get_error_mapping()
 
     def get_job_configuration(self):
-        """Returns default job configuration for this job type
+        """Returns the job configuration for this job type
 
-        :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :returns: The job configuration for this job type
+        :rtype: :class:`job.configuration.configuration.JobConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return JobConfigurationV6(config=self.configuration, do_validate=False).get_configuration()
 
     def get_resources(self):
         """Returns the resources required for jobs of this type
@@ -2901,12 +3235,30 @@ class JobType(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        resources = Resources(self.custom_resources).get_node_resources()
-        resources.remove_resource('cpus')
-        resources.remove_resource('mem')
-        resources.remove_resource('disk')
-        cpus = max(self.cpus_required, MIN_CPUS)
-        resources.add(NodeResources([Cpus(cpus)]))
+        # TODO: Remove first block of conditional come v6
+        if not JobInterfaceSunset.is_seed_dict(self.interface):
+            resources = Resources(self.custom_resources).get_node_resources()
+            resources.remove_resource('cpus')
+            resources.remove_resource('mem')
+            resources.remove_resource('disk')
+            cpus = max(self.cpus_required, MIN_CPUS)
+            resources.add(NodeResources([Cpus(cpus)]))
+        else:
+            interface = self.get_job_interface()
+            seed_resources = {}
+            # Check all specified resources
+            for x in interface.get_scalar_resources():
+                name = x['name'].lower()
+                # Ensure resource meets minimums set
+                seed_resources[name] = max(x['value'], MIN_RESOURCE.get(name, 0.0))
+
+            # Ensure all standard resource minimums are satisfied
+            for resource in MIN_RESOURCE:
+                if resource not in seed_resources:
+                    seed_resources[resource] = MIN_RESOURCE[resource]
+
+            resources = Resources({'resources': seed_resources}).get_node_resources()
+
         return resources
 
     def get_secrets_key(self):
@@ -2918,6 +3270,24 @@ class JobType(models.Model):
 
         return '-'.join([self.name, self.version]).replace('.', '_')
 
+    def get_v2_configuration_json(self):
+        """Returns the job configuration in v2 of the JSON schema
+
+        :returns: The job configuration in v2 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v2_json(self.get_configuration()).get_dict())
+
+    def get_v6_configuration_json(self):
+        """Returns the job configuration in v6 of the JSON schema
+
+        :returns: The job configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
+
     def natural_key(self):
         """Django method to define the natural key for a job type as the
         combination of name and version
@@ -2926,6 +3296,94 @@ class JobType(models.Model):
         :rtype: tuple(string, string)
         """
         return self.name, self.version
+
+    def get_cpus_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: cpus required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('cpus', self.cpus_required, True)
+
+    def get_mem_const_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: memory constant required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('mem', self.mem_const_required, True)
+
+    def get_mem_mult_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: memory multiplier required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('mem', self.mem_mult_required, False)
+
+    def get_shared_mem_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: shared memory required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('sharedmem', self.shared_mem_required, True)
+
+    def get_disk_out_const_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: disk constant required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('disk', self.disk_out_const_required, True)
+
+    def get_disk_out_mult_required(self):
+        """Either returns field value or pulls from Seed resources
+
+        # TODO remove in v6 in deference to direct exposure of Seed Manifest
+
+        :return: disk multiplier required by job
+        :rtype: float
+        """
+
+        return self._get_legacy_resource('disk', self.disk_out_mult_required, False)
+
+    def _get_legacy_resource(self, key, legacy_field, is_value):
+        """Helper function to support bridging v5 / v6 storage of resources
+
+        # TODO: remove in v6 in deference to direct exposure of Seed Manifest
+
+        :param key: the lower-case key name for the resource
+        :param legacy_field: the legacy field value to use
+        :param is_value: if True lookup `value` key otherwise `inputMultiplier` key
+        :return:
+        """
+        value = 0.0
+
+        if JobInterfaceSunset.is_seed_dict(self.interface):
+            for resource in JobInterfaceSunset.create(self.interface).get_scalar_resources():
+                if key in resource['name'].lower():
+                    value = resource.get('value' if is_value else 'inputMultiplier', 0.0)
+                    break
+        else:
+            value = legacy_field
+
+        return value
 
     class Meta(object):
         """meta information for the db"""
@@ -3004,10 +3462,27 @@ class JobTypeRevision(models.Model):
         """Returns the job type interface for this revision
 
         :returns: The job type interface for this revision
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface` or `job.seed.manifest.SeedManifest`
         """
 
-        return JobInterface(self.interface)
+        return JobInterfaceSunset.create(self.interface)
+
+    @property
+    def docker_image(self):
+        """Constructs a complete Docker image and tag with the correct packageVersion value
+
+        :return: The complete Docker image and tag
+        :rtype: str
+        """
+        interface = self.get_job_interface()
+        if isinstance(interface, SeedManifest):
+            docker_image = self.job_type.docker_image
+            if ':' in docker_image:
+                docker_image = docker_image.split(':', 1)[0]
+            return '%s:%s' % (docker_image, interface['job']['packageVersion'])
+
+        raise NotImplementedError
+
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision

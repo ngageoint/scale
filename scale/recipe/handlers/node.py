@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from job.configuration.data.job_data import JobData
+from job.deprecation import JobDataSunset
 
 
 class RecipeNode(object):
@@ -62,22 +63,27 @@ class RecipeNode(object):
         parent node that this node depends upon.
 
         :param job_interface: The job's interface
-        :type job_interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :type job_interface: :class:`job.configuration.interface.job_interface.JobInterface` or
+                             :class:`job.seed.manifest.SeedManifest`
         :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData` or
+                           :class:`recipe.seed.recipe_data.RecipeData`
         :param parent_results: The results of each parent job stored by job name
         :type parent_results: {str: :class:`job.configuration.results.job_results.JobResults`}
         :returns: The created job data
-        :rtype: :class:`job.configuration.data.job_data.JobData`
+        :rtype: :class:`job.configuration.data.job_data.JobData` or
+                :class:`job.data.job_data.JobData`
         """
 
-        job_data = JobData({})
+        job_data = JobDataSunset.create(job_interface, {})
 
         for input_connection in self.inputs.values():
             input_connection.add_input_to_job_data(job_data, recipe_data, parent_results)
 
         # Add workspace for file outputs if needed
         if job_interface.get_file_output_names():
-            job_interface.add_workspace_to_data(job_data, recipe_data.get_workspace_id())
+            workspace_id = recipe_data.get_workspace_id()
+            if workspace_id:
+                job_interface.add_workspace_to_data(job_data, workspace_id)
 
         return job_data

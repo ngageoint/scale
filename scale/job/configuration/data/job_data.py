@@ -8,10 +8,11 @@ from numbers import Integral
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.results.job_results import JobResults
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
-
+from util.environment import normalize_env_var_name
 
 logger = logging.getLogger(__name__)
 
@@ -118,6 +119,18 @@ class JobData(object):
         files_input = {'name': input_name, 'file_ids': file_ids}
         self.data_dict['input_data'].append(files_input)
         self.data_inputs_by_name[input_name] = files_input
+
+    def add_file_output(self, data, add_to_internal=True):
+        """Adds a new output files to this job data with a workspace ID.
+
+        :param data: The output parameter dict
+        :type data: dict
+        :param add_to_internal: Whether we should add to private data dict. Unneeded when used from __init__
+        :type add_to_internal: bool
+        """
+
+        # Call to legacy method
+        self.add_output(data['name'], data['workspace_id'])
 
     def add_output(self, output_name, workspace_id):
         """Adds a new output parameter to this job data with a workspace ID. This method does not perform validation on
@@ -277,6 +290,61 @@ class JobData(object):
 
         return property_values
 
+    def get_injected_input_values(self, input_files_dict):
+        """Apply all execution time values to job data
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        input_values = {}
+        for data_input in self.get_dict()['input_data']:
+            input_name = data_input['name']
+            if 'value' in data_input:
+                input_values[input_name] = data_input['value']
+            if 'file_id' in data_input:
+                input_file = input_files_dict[input_name][0]
+                file_name = os.path.basename(input_file.workspace_path)
+                if input_file.local_file_name:
+                    file_name = input_file.local_file_name
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+            elif 'file_ids' in data_input:
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        return input_values
+
+    def get_injected_env_vars(self, input_files_dict):
+        """Apply all execution time values to job data
+
+        :param input_files: Mapping of input names to InputFiles
+        :type input_files: {str, :class:`job.execution.configuration.input_file.InputFile`}
+        :return: Mapping of all input keys to their true file / property values
+        :rtype: {str, str}
+        """
+        env_vars = {}
+        for data_input in self.get_dict()['input_data']:
+            input_name = data_input['name']
+            if 'value' in data_input:
+                env_vars[normalize_env_var_name(input_name)] = data_input['value']
+            if 'file_id' in data_input:
+                input_file = input_files_dict[input_name][0]
+                file_name = os.path.basename(input_file.workspace_path)
+                if input_file.local_file_name:
+                    file_name = input_file.local_file_name
+                env_vars[normalize_env_var_name(input_name)] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+            elif 'file_ids' in data_input:
+                env_vars[normalize_env_var_name(input_name)] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        return env_vars
+
+    def has_workspaces(self):
+        """Whether this job data contains output wrkspaces
+
+        :returns: Whether this job data contains output wrkspaces
+        :rtype: bool
+        """
+
+        return True
+
     def retrieve_input_data_files(self, data_files):
         """Retrieves the given data input files and writes them to the given local directories. Any given file
         parameters that do not appear in the data will not be returned in the results.
@@ -372,10 +440,8 @@ class JobData(object):
     def store_output_data_files(self, data_files, job_exe):
         """Stores the given data output files
 
-        :param data_files: Dict with each file parameter name mapping to a tuple of absolute local file path and media
-            type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
-            parameter
-        :type data_files: {string: tuple(string, string)} or [tuple(string, string)]
+        :param data_files: Dict with each file parameter name mapping to a list of ProductFileMetadata classes
+        :type data_files: {string: [`ProductFileMetadata`]}
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
         :type job_exe: :class:`job.models.JobExecution`
@@ -386,9 +452,9 @@ class JobData(object):
         # Organize the data files
         workspace_files = {}  # Workspace ID -> [(absolute local file path, media type)]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
+        output_workspaces = JobData.create_output_workspace_dict(data_files.keys(), self, job_exe)
         for name in data_files:
-            file_output = self.data_outputs_by_name[name]
-            workspace_id = file_output['workspace_id']
+            workspace_id = output_workspaces[name]
             if workspace_id in workspace_files:
                 workspace_file_list = workspace_files[workspace_id]
             else:
@@ -396,28 +462,19 @@ class JobData(object):
                 workspace_files[workspace_id] = workspace_file_list
             data_file_entry = data_files[name]
             if isinstance(data_file_entry, list):
-                for file_tuple in data_file_entry:
-                    file_path = os.path.normpath(file_tuple[0])
+                for file_entry in data_file_entry:
+                    file_path = os.path.normpath(file_entry.local_path)
                     if not os.path.isfile(file_path):
                         raise Exception('%s is not a valid file' % file_path)
                     params_by_file_path[file_path] = name
-                    # Adjust file path to be relative to upload_dir
-                    if len(file_tuple) == 2:
-                        new_tuple = (file_path, file_tuple[1], name)
-                    else:
-                        new_tuple = (file_path, file_tuple[1], name, file_tuple[2])
-                    workspace_file_list.append(new_tuple)
+                    workspace_file_list.append(file_entry)
             else:
-                file_path = os.path.normpath(data_file_entry[0])
+                file_path = os.path.normpath(data_file_entry.local_path)
                 if not os.path.isfile(file_path):
                     raise Exception('%s is not a valid file' % file_path)
                 params_by_file_path[file_path] = name
-                # Adjust file path to be relative to upload_dir
-                if len(data_file_entry) == 2:
-                    new_tuple = (file_path, data_file_entry[1], name)
-                else:
-                    new_tuple = (file_path, data_file_entry[1], name, data_file_entry[2])
-                workspace_file_list.append(new_tuple)
+                data_file_entry.local_path = file_path
+                workspace_file_list.append(data_file_entry)
 
         data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
         if not data_file_store:
@@ -681,3 +738,44 @@ class JobData(object):
             if file_id not in found_ids:
                 raise InvalidData('Invalid job data: Data file for ID %i does not exist' % file_id)
         return warnings
+
+    @staticmethod
+    def create_output_workspace_dict(output_params, job_data, job_exe):
+        """Creates the mapping from output to workspace both ways: the old way from job data and the new way from job
+        configuration
+
+        :param output_params: The list of output parameter names
+        :type output_params: list
+        :param job_data: The job data
+        :type job_data: 1.0? 2.0? WHO KNOWZ?
+        :param job_exe: The job execution model (with related job and job_type fields)
+        :type job_exe: :class:`job.models.JobExecution`
+        :return: Dict where output param name maps to workspace ID
+        :rtype: dict
+        """
+
+        workspace_dict = {}  # {Output name: workspace ID}
+
+        if job_data.has_workspaces():
+            # Do the old way of getting output workspaces from job data
+            for name, output_dict in job_data.data_outputs_by_name.items():
+                workspace_id = output_dict['workspace_id']
+                workspace_dict[name] = workspace_id
+        else:
+            workspace_names_dict = {}  # {Output name: workspace name}
+            # Do the new way, grabbing output workspaces from job configuration
+            config = job_exe.job_type.get_job_configuration()
+            for name in output_params:
+                if name in config.output_workspaces:
+                    workspace_names_dict[name] = config.output_workspaces[name]
+                elif config.default_output_workspace:
+                    workspace_names_dict[name] = config.default_output_workspace
+                else:
+                    raise Exception('No output workspace configured for output \'%s\'' % name)
+
+            from storage.models import Workspace
+            workspace_mapping = {w.name: w.id for w in Workspace.objects.filter(name__in=workspace_names_dict.values())}
+            for output_name, workspace_name in workspace_names_dict.items():
+                workspace_dict[output_name] = workspace_mapping[workspace_name]
+
+        return workspace_dict

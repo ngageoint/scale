@@ -1,7 +1,6 @@
 """Defines the database model for a queue entry"""
 from __future__ import unicode_literals
 
-import abc
 import logging
 
 import django.utils.timezone as timezone
@@ -9,11 +8,13 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.configurators import QueuedExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
-from job.configuration.data.job_data import JobData
-from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.configuration.data.job_data import JobData as JobData_1_0
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
+from job.data.job_data import JobData
+from job.deprecation import JobInterfaceSunset
+from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
@@ -292,7 +293,7 @@ class QueueManager(models.Manager):
         if not queued_job_ids:
             return queued_job_ids  # Done if nothing was queued
 
-        # Retrieve the related job_type and job_type_rev models for the queued jobs
+        # Retrieve the related job_type, job_type_rev, and batch models for the queued jobs
         queued_jobs = Job.objects.get_jobs_with_related(queued_job_ids)
 
         # Query for all input files of the queued jobs
@@ -310,6 +311,19 @@ class QueueManager(models.Manager):
         for job in queued_jobs:
             config = configurator.configure_queued_job(job)
 
+            manifest = None
+            if JobInterfaceSunset.is_seed_dict(job.job_type.interface):
+                manifest = SeedManifest(job.job_type.interface)
+
+            if priority:
+                queued_priority = priority
+            elif job.priority:
+                queued_priority = job.priority
+            elif job.batch and self.batch.get_configuration().priority:
+                queued_priority = self.batch.get_configuration().priority
+            else:
+                queued_priority = job.job_type.get_job_configuration().priority
+
             queue = Queue()
             queue.job_type_id = job.job_type_id
             queue.job_id = job.id
@@ -318,8 +332,8 @@ class QueueManager(models.Manager):
             queue.exe_num = job.num_exes
             queue.input_file_size = job.input_file_size if job.input_file_size else 0.0
             queue.is_canceled = False
-            queue.priority = priority if priority is not None else job.priority
-            queue.timeout = job.timeout
+            queue.priority = queued_priority
+            queue.timeout = manifest.get_timeout() if manifest else job.timeout
             queue.interface = job.get_job_interface().get_dict()
             queue.configuration = config.get_dict()
             queue.resources = job.get_resources().get_json().get_dict()
@@ -398,7 +412,13 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        job_id = self.queue_new_job(job_type, JobData(data), event).id
+        # TODO: Remove old JobData in v6 when we transition to only Seed job types
+        if 'version' in data and '6' == data['version']:
+            job_data = JobData(data)
+        else:
+            job_data = JobData_1_0(data)
+
+        job_id = self.queue_new_job(job_type, job_data, event).id
         return job_id
 
     @transaction.atomic
@@ -576,7 +596,7 @@ class Queue(models.Model):
         """Returns the execution configuration for this queued job
 
         :returns: The execution configuration for this queued job
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         return ExecutionConfiguration(self.configuration, do_validate=False)
@@ -588,7 +608,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
-        return JobInterface(self.interface, do_validate=False)
+        return JobInterfaceSunset.create(self.interface, do_validate=False)
 
     def get_resources(self):
         """Returns the resources required by this queued job

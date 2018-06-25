@@ -9,9 +9,8 @@ from django.db import connection, models, transaction
 from django.utils.timezone import now
 
 from job.models import Job, JobType
-from recipe.configuration.data.recipe_data import RecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
@@ -974,19 +973,20 @@ class Recipe(models.Model):
         """Returns the data for this recipe
 
         :returns: The input for this recipe
-        :rtype: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :rtype: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData`
         """
 
-        return RecipeData(self.input)
+        return RecipeDataSunset.create(self.get_recipe_definition(), self.input)
 
     def get_recipe_definition(self):
         """Returns the definition for this recipe
 
         :returns: The definition for this recipe
-        :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
+        :rtype: :class:`recipe.configuration.definition.recipe_definition_1_0.RecipeDefinition` or
+                :class:`recipe.seed.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.recipe_type_rev.definition)
+        return RecipeDefinitionSunset.create(self.recipe_type_rev.definition)
 
     class Meta(object):
         """meta information for the db"""
@@ -1242,6 +1242,9 @@ class RecipeTypeManager(models.Manager):
         recipe_type.version = version
         recipe_type.title = title
         recipe_type.description = description
+        if definition.get_dict()['version'] == '2.0':
+            from recipe.configuration.definition.exceptions import InvalidDefinition
+            raise InvalidDefinition('This version of the recipe definition is invalid to save')
         recipe_type.definition = definition.get_dict()
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
@@ -1295,6 +1298,9 @@ class RecipeTypeManager(models.Manager):
             # Must lock job type interfaces so the new recipe type definition can be validated
             _ = definition.get_job_types(lock=True)
             definition.validate_job_interfaces()
+            if definition.get_dict()['version'] == '2.0':
+                from recipe.configuration.definition.exceptions import InvalidDefinition
+                raise InvalidDefinition('This version of the recipe definition is invalid to save')
             recipe_type.definition = definition.get_dict()
             recipe_type.revision_num = recipe_type.revision_num + 1
 
@@ -1499,7 +1505,7 @@ class RecipeType(models.Model):
         :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.definition)
+        return RecipeDefinitionSunset.create(self.definition)
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type as the combination of name and version
@@ -1604,6 +1610,7 @@ class RecipeTypeRevision(models.Model):
 
     objects = RecipeTypeRevisionManager()
 
+    # TODO: Resolve this prior to 971 merge
     def get_definition(self):
         """Returns the definition for this recipe type revision
 
@@ -1620,7 +1627,7 @@ class RecipeTypeRevision(models.Model):
         :rtype: :class:`recipe.configuration.definition.recipe_definition.RecipeDefinition`
         """
 
-        return RecipeDefinition(self.definition)
+        return RecipeDefinitionSunset.create(self.definition)
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type revision as the combination of job type and

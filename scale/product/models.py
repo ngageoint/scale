@@ -14,7 +14,6 @@ from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -511,9 +510,8 @@ class ProductFileManager(models.GeoManager):
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.
 
-        :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
-            storing the file, media_type, output_name)
-        :type file_entries: list of tuple(str, str, str, str)
+        :param file_entries: List of files to upload
+        :type file_entries: list[:class:`product.types.ProductFileMetadata`]
         :param input_file_ids: List of identifiers for files used to produce the given file entries
         :type input_file_ids: list of int
         :param job_exe: The job_exe model with the related job and job_type fields
@@ -556,45 +554,33 @@ class ProductFileManager(models.GeoManager):
 
         products_to_save = []
         for entry in file_entries:
-            local_path = entry[0]
-            remote_path = entry[1]
-            media_type = entry[2]
-            output_name = entry[3]
-
             product = ProductFile.create()
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
             product.is_operational = input_products_operational and job_exe.job.job_type.is_operational
-            file_name = os.path.basename(local_path)
-            file_size = os.path.getsize(local_path)
-            product.set_basic_fields(file_name, file_size, media_type)
-            product.file_path = remote_path
-            product.job_output = output_name
+            file_name = os.path.basename(entry.local_path)
+            file_size = os.path.getsize(entry.local_path)
+            product.set_basic_fields(file_name, file_size, entry.media_type)
+            product.file_path = entry.remote_path
+            product.job_output = entry.output_name
 
             # Add a stable identifier based on the job type, input files, input properties, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
             product.update_uuid(job_exe.job.job_type.id, file_name, *input_strings)
 
-            # Add geospatial info to product if available
-            if len(entry) > 4:
-                geo_metadata = entry[4]
-                target_date = None
-                if 'data_started' in geo_metadata:
-                    product.data_started = parse_datetime(geo_metadata['data_started'])
-                    target_date = product.data_started
-                if 'data_ended' in geo_metadata:
-                    product.data_ended = parse_datetime(geo_metadata['data_ended'])
-                    if target_date is None:
-                        target_date = product.data_ended
-                if target_date is None:
-                    target_date = product.created
-                if 'geo_json' in geo_metadata:
-                    geom, props = geo_utils.parse_geo_json(geo_metadata['geo_json'])
-                    product.geometry = geom
-                    if props:
-                        product.meta_data = props
-                    product.center_point = geo_utils.get_center_point(geom)
+            # Add temporal info to product if available
+            if entry.data_start:
+                product.data_started = parse_datetime(entry.data_start)
+            if entry.data_end:
+                product.data_ended = parse_datetime(entry.data_end)
+
+            if entry.geojson:
+                geom, props = geo_utils.parse_geo_json(entry.geojson)
+                product.geometry = geom
+                if props:
+                    product.meta_data = props
+                product.center_point = geo_utils.get_center_point(geom)
 
             # Add recipe info to product if available.
             job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
@@ -613,7 +599,7 @@ class ProductFileManager(models.GeoManager):
             product.source_started = source_started
             product.source_ended = source_ended
 
-            products_to_save.append(FileUpload(product, local_path))
+            products_to_save.append(FileUpload(product, entry.local_path))
 
         return ScaleFile.objects.upload_files(workspace, products_to_save)
 

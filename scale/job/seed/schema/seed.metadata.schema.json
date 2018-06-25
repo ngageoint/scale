@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://json-schema.org/geojson/geometry.json#",
+  "title": "geometry",
+  "description": "One geometry as defined by GeoJSON",
+  "type": "object",
+  "properties": {
+    "seedVersion": {
+      "type": "string",
+      "pattern": "^1.0.0$"
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "oneOf": [
+        {
+          "title": "Point",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "Point"
+              ]
+            },
+            "coordinates": {
+              "$ref": "#/definitions/position"
+            }
+          }
+        },
+        {
+          "title": "MultiPoint",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "MultiPoint"
+              ]
+            },
+            "coordinates": {
+              "$ref": "#/definitions/positionArray"
+            }
+          }
+        },
+        {
+          "title": "LineString",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "LineString"
+              ]
+            },
+            "coordinates": {
+              "$ref": "#/definitions/lineString"
+            }
+          }
+        },
+        {
+          "title": "MultiLineString",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "MultiLineString"
+              ]
+            },
+            "coordinates": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/lineString"
+              }
+            }
+          }
+        },
+        {
+          "title": "Polygon",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "Polygon"
+              ]
+            },
+            "coordinates": {
+              "$ref": "#/definitions/polygon"
+            }
+          }
+        },
+        {
+          "title": "MultiPolygon",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "MultiPolygon"
+              ]
+            },
+            "coordinates": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/polygon"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "time": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(([+-][0-9]{2}:[0-9]{2})|Z)?$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?(([+-][0-9]{2}:[0-9]{2})|Z)?$"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ]
+    }
+  },
+  "required": [
+    "seedVersion"
+  ],
+  "definitions": {
+    "position": {
+      "description": "A single position",
+      "type": "array",
+      "minItems": 2,
+      "items": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "additionalItems": false
+    },
+    "positionArray": {
+      "description": "An array of positions",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/position"
+      }
+    },
+    "lineString": {
+      "description": "An array of two or more positions",
+      "allOf": [
+        {
+          "$ref": "#/definitions/positionArray"
+        },
+        {
+          "minItems": 2
+        }
+      ]
+    },
+    "linearRing": {
+      "description": "An array of four positions where the first equals the last",
+      "allOf": [
+        {
+          "$ref": "#/definitions/positionArray"
+        },
+        {
+          "minItems": 4
+        }
+      ]
+    },
+    "polygon": {
+      "description": "An array of linear rings",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/linearRing"
+      }
+    }
+  }
+}

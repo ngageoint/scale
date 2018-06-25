@@ -14,11 +14,11 @@ from rest_framework.reverse import reverse
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobSerializer, OldJobSerializer, OldJobDetailsSerializer
+from job.serializers import JobDetailsSerializer, JobSerializer, JobSerializerV5, JobDetailsSerializerV5
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import Recipe, RecipeType
 from recipe.serializers import RecipeDetailsSerializer, OldRecipeDetailsSerializer
 
@@ -69,7 +69,7 @@ class QueueNewJobView(GenericAPIView):
         if self.request.version == 'v6':
             return JobDetailsSerializer
         else:
-            return OldJobDetailsSerializer
+            return JobDetailsSerializerV5
     
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
@@ -91,6 +91,7 @@ class QueueNewJobView(GenericAPIView):
         try:
             job_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
         except InvalidData as err:
+            logger.exception('Invalid job data.')
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
@@ -141,7 +142,7 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         try:
-            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData(recipe_data))
+            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData(recipe_data))
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
@@ -184,7 +185,7 @@ class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = OldJobSerializer
+    serializer_class = JobSerializerV5
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -225,6 +226,6 @@ class RequeueJobsView(GenericAPIView):
             jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
         page = self.paginate_queryset(jobs)
-        serializer = OldJobSerializer(page, many=True)
+        serializer = JobSerializerV5(page, many=True)
 
         return self.get_paginated_response(serializer.data)

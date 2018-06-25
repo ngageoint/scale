@@ -21,7 +21,7 @@ class PullTask(JobExecutionTask):
         :param job_type: The job type model
         :type job_type: :class:`job.models.JobType`
         :param configuration: The job execution configuration, including secret values
-        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         super(PullTask, self).__init__(configuration.get_task_id('pull'), agent_id, job_exe, job_type)

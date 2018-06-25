@@ -19,8 +19,8 @@ from job.configuration.data.job_data import JobData
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
-from recipe.configuration.data.recipe_data import RecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.data.recipe_data import LegacyRecipeData
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode
 
@@ -344,7 +344,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }],
             'workspace_id': workspace.id,
         }
-        self.data = RecipeData(data)
+        self.data = LegacyRecipeData(data)
 
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""

@@ -39,6 +39,12 @@ class TerminatedCommand(Exception):
     pass
 
 
+class UnbalancedBrackets(Exception):
+    """Exception thrown when a string is provided that contains unbalanced curly brackets"""
+
+    pass
+
+
 class ValidationException(Exception):
     """Exception indicating there was a validation error
     """

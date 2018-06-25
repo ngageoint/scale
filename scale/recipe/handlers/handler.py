@@ -6,7 +6,6 @@ import logging
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job
 
-
 logger = logging.getLogger(__name__)
 
 

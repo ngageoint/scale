@@ -5,7 +5,7 @@ import os
 from abc import ABCMeta
 
 from job.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.volume import HOST_TYPE, VOLUME_TYPE
+from job.execution.configuration.volume import HOST_TYPE, VOLUME_TYPE
 
 
 class MountConfig(object):
@@ -62,7 +62,8 @@ class HostMountConfig(MountConfig):
         warnings = super(HostMountConfig, self).validate()
 
         if not os.path.isabs(self.host_path):
-            raise InvalidJobConfiguration('Host mount %s must use an absolute host path' % self.name)
+            msg = 'Host mount %s must use an absolute host path'
+            raise InvalidJobConfiguration('HOST_ABSOLUTE_PATH', msg % self.name)
 
         return warnings
 

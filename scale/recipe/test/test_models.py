@@ -14,9 +14,9 @@ from error.models import Error, get_unknown_error, reset_error_cache
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
@@ -46,7 +46,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',
@@ -103,11 +103,11 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        """Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and a valid interface change
+        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and a valid interface change
         is made"""
 
         # Call test
-        JobType.objects.edit_job_type(self.job_type.id, self.new_valid_job_interface)
+        JobType.objects.edit_job_type_v5(self.job_type.id, self.new_valid_job_interface)
 
         # Check results
         job_type = JobType.objects.get(pk=self.job_type.id)
@@ -118,11 +118,11 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(num_of_revs, 2)
 
     def test_invalid_interface(self):
-        """Tests calling JobTypeManager.edit_job_type() where the job type is in a recipe and an invalid interface
+        """Tests calling JobTypeManager.edit_job_type_v5() where the job type is in a recipe and an invalid interface
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type, self.job_type.id,
+        self.assertRaises(InvalidDefinition, JobType.objects.edit_job_type_v5, self.job_type.id,
                           self.new_invalid_job_interface)
 
         # Check results
@@ -155,7 +155,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                 'media_type': 'image/png',
             }]}
         self.job_interface = JobInterface(interface)
-        self.job_type = JobType.objects.create_job_type('name', '1.0', self.job_interface)
+        self.job_type = JobType.objects.create_job_type_v5('name', '1.0', self.job_interface)
 
         new_valid_interface = {
             'version': '1.0',
@@ -212,11 +212,11 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                                                             None)
 
     def test_valid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and a valid interface
+        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and a valid interface
         change is made"""
 
         # Call test
-        warnings = JobType.objects.validate_job_type(self.job_type.name, self.job_type.version,
+        warnings = JobType.objects.validate_job_type_v5(self.job_type.name, self.job_type.version,
                                                      self.new_valid_job_interface)
 
         # Check results
@@ -228,11 +228,11 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
         self.assertEqual(len(warnings), 1)
 
     def test_invalid_interface(self):
-        """Tests calling JobTypeManager.validate_job_type() where the job type is in a recipe and an invalid interface
+        """Tests calling JobTypeManager.validate_job_type_v5() where the job type is in a recipe and an invalid interface
         change is made"""
 
         # Call test
-        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type, self.job_type.name,
+        self.assertRaises(InvalidDefinition, JobType.objects.validate_job_type_v5, self.job_type.name,
                           self.job_type.version, self.new_invalid_job_interface)
 
         # Check results
@@ -436,7 +436,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=event)
 
         # Make sure the recipe jobs get created with the correct job types
@@ -456,7 +456,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 1')
@@ -551,7 +551,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 1')
@@ -712,7 +712,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         # Clear error cache so test works correctly
         reset_error_cache()
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
         for recipe_job in handler.recipe_jobs:
             if recipe_job.node_name == 'Job 1':
@@ -731,7 +731,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_forced_all_job(self):
         """Tests reprocessing a recipe without any changes by forcing all jobs."""
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True)
@@ -747,7 +747,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_forced_specific_job(self):
         """Tests reprocessing a recipe without any changes by forcing a single job."""
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, job_names=['Job 1'])
@@ -760,7 +760,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_priority(self):
         """Tests reprocessing a recipe with a job priority override."""
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True, priority=1111)
@@ -774,7 +774,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
 
         self.assertRaises(ReprocessError, Recipe.objects.reprocess_recipe, handler.recipe.id)
@@ -829,7 +829,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
             }]
         }
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_test_utils.edit_recipe_type(self.recipe_type, new_definition)
@@ -847,7 +847,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_reprocess_superseded_recipe(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
 
-        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=RecipeData(self.data),
+        handler = Recipe.objects.create_recipe_old(recipe_type=self.recipe_type, input=LegacyRecipeData(self.data),
                                                    event=self.event)
 
         handler.recipe.is_superseded = True

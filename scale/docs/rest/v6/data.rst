@@ -25,12 +25,12 @@ A data JSON describes a set of data values that can be passed to an interface.
 +-----------------------------------------------------------------------------------------------------------------------------+
 | **Data**                                                                                                                    |
 +============================+================+==========+====================================================================+
-| files                      | Object         | Optional | A JSON object representing every file-based value in the data.     |
+| files                      | JSON Object    | Optional | A JSON object representing every file-based value in the data.     |
 |                            |                |          | Each key in the object is the unique name of the data value        |
 |                            |                |          | (corresponding to a parameter name) and each value is an array of  |
 |                            |                |          | one or more file IDs (integers). Defaults to {}.                   |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| json                       | Object         | Optional | A JSON object representing every JSON value in the data. Each key  |
+| json                       | JSON Object    | Optional | A JSON object representing every JSON value in the data. Each key  |
 |                            |                |          | in the object is the unique name of the data value (corresponding  |
 |                            |                |          | to a parameter name) and each value is the appropriate JSON        |
 |                            |                |          | type/object that matches the parameter. Defaults to {}.            |

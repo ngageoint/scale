@@ -397,7 +397,8 @@ class TestSourceJobsViewV5(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the source jobs view filtered by job type category."""
 
         url = '/%s/sources/%d/jobs/?job_type_category=%s'
@@ -596,7 +597,8 @@ class TestSourceProductsViewV5(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the source products view filtered by job type category."""
 
         url = '/%s/sources/%d/products/?job_type_category=%s' % (self.api, self.src_file.id, self.job_type1.category)

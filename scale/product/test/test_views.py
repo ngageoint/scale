@@ -103,7 +103,8 @@ class TestProductsViewV5(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the product files view filtered by job type category."""
 
         url = '/%s/products/?job_type_category=%s' % (self.api, self.job_type1.category)
@@ -327,7 +328,8 @@ class TestProductsUpdatesViewV5(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the product file updates view filtered by job type category."""
 
         url = '/%s/products/updates/?job_type_category=%s' % (self.api, self.job_type1.category)

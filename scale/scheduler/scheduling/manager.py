@@ -10,7 +10,7 @@ from django.db.utils import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.configuration.configurators import ScheduledExecutionConfigurator
+from job.execution.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
 from job.messages.running_jobs import create_running_job_messages

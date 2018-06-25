@@ -5,8 +5,8 @@ import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -263,8 +263,8 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
         recipe_type = create_recipe_type()
     if not data:
         data = {}
-    if not isinstance(data, RecipeData):
-        data = RecipeData(data)
+    if not isinstance(data, LegacyRecipeData):
+        data = LegacyRecipeData(data)
     if not event:
         event = trigger_test_utils.create_trigger_event()
     if superseded_recipe and not delta:

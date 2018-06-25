@@ -18,15 +18,15 @@ class ValidationWarning(object):
         """Constructor sets basic attributes.
 
         :param key: A unique identifier clients can use to recognize the warning.
-        :type key: str
+        :type key: string
         :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: str
+        :type details: string
         """
         self.key = key
         self.details = details
 
 
-class RecipeData(object):
+class LegacyRecipeData(object):
     """Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
     connect shared resources to resource instances in Scale, and details needed to store all resulting output.
     """

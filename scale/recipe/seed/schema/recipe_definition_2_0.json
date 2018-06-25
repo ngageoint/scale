@@ -1,0 +1,206 @@
+{
+    "type": "object",
+    "required": [
+        "jobs",
+        "version"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "version": {
+            "description": "Version of the recipe definition schema",
+            "type": "string",
+            "pattern": "^2\\.0$"
+        },
+        "inputs": {
+            "type": "object",
+            "items": {
+                "$ref": "#/definitions/input_items"
+            }
+        },
+        "jobs": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/job_item"
+            }
+        }
+    },
+    "definitions": {
+        "input_items": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "files": {
+                    "type": "array",
+                    "additionalProperties": false,
+                    "items": {
+                        "$ref": "#/definitions/input_file_item"
+                    }
+                },
+                "json": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/input_json_item"
+                    }
+                }
+            }
+        },
+        "input_file_item": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z_-]+$"
+                },
+                "required": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "mediaTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "multiple": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "partial": {
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "input_json_item": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "pattern": "^[a-zA-Z_-]+$"
+                    },
+                    "required": {
+                        "type": "boolean",
+                        "default": true
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "array",
+                            "boolean",
+                            "integer",
+                            "number",
+                            "object",
+                            "string"
+                        ]
+                    }
+                },
+                "required": [
+                    "name",
+                    "type"
+                ]
+
+        },
+        "job_item": {
+            "type": "object",
+            "required": [
+                "name",
+                "job_type"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9\\-_ ]{1,255}$"
+                },
+                "job_type": {
+                    "type": "object",
+                    "required": [
+                        "name",
+                        "version"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9\\-_ ]{1,255}$"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "recipe_inputs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/recipe_input_item"
+                    }
+                },
+                "dependencies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dependency_item"
+                    }
+                }
+            }
+        },
+        "recipe_input_item": {
+            "type": "object",
+            "required": [
+                "recipe_input",
+                "job_input"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "recipe_input": {
+                    "type": "string"
+                },
+                "job_input": {
+                    "type": "string"
+                }
+            }
+        },
+        "dependency_item": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "connections": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/connection_item"
+                    }
+                }
+            }
+        },
+        "connection_item": {
+            "type": "object",
+            "required": [
+                "output",
+                "input"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "output": {
+                    "type": "string"
+                },
+                "input": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

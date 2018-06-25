@@ -9,6 +9,7 @@ from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.scale_file import ScaleFileDescription
+from product.types import ProductFileMetadata
 from storage.test import utils as storage_utils
 
 
@@ -27,8 +28,8 @@ class DummyDataFileStore(AbstractDataFileStore):
 
         results = {}
         for workspace_id in files:
-            for file_tuple in files[workspace_id]:
-                file_path = file_tuple[0]
+            for file_metadata in files[workspace_id]:
+                file_path = file_metadata.local_path
                 results[file_path] = sequence
                 sequence += 1
         return results
@@ -332,7 +333,13 @@ class TestJobDataStoreOutputDataFiles(TestCase):
         file_path_1 = os.path.join('/path', '1', 'my_file.txt')
         file_path_2 = os.path.join('/path', '2', 'my_file_2.txt')
         file_path_3 = os.path.join('/path', '3', 'my_file_3.txt')
-        data_files = {'Param1': (file_path_1, None), 'Param2': [(file_path_2, 'text/plain'), (file_path_3, None)]}
+        data_files = {'Param1': ProductFileMetadata(output_name='Param1', local_path=file_path_1),
+                      'Param2': [ProductFileMetadata(output_name='Param2',
+                                                     local_path=file_path_2,
+                                                     media_type='text/plain'),
+                                 ProductFileMetadata(output_name='Param2',
+                                                     local_path=file_path_3)]
+                      }
 
         JobData(data).store_output_data_files(data_files, job_exe)
         mock_file_call.assert_called_once_with('Param1', long(1))

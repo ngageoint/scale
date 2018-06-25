@@ -2,7 +2,7 @@
 import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from queue.models import JobLoad, Queue
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem

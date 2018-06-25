@@ -59,7 +59,7 @@ class ErrorsView(GenericAPIView):
         if category == 'SYSTEM':
             raise BadParameter('System level errors cannot be created.')
 
-        error = Error.objects.create_error(name, title, description, category)
+        error = Error.objects.create_legacy_error(name, title, description, category)
 
         serializer = ErrorDetailsSerializer(error)
         error_url = reverse('error_details_view', args=[error.id], request=request)

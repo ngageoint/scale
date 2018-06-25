@@ -14,7 +14,6 @@ from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from job.configuration.data.job_data import JobData
-from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RW
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -304,6 +303,7 @@ class IngestManager(models.Manager):
             else:
                 raise Exception('One of scan_id or strike_id must be set')
 
+            # TODO: What is our way forward with ingest jobs? Move to system task or Seed Job Type?
             data = JobData()
             data.add_property_input('ingest_id', str(ingest_id))
             data.add_property_input('workspace', ingest.workspace.name)

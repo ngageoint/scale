@@ -2,16 +2,18 @@
 from __future__ import unicode_literals
 
 from django.db.models import Q
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
-
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.data.job_connection import SeedJobConnection
+from job.deprecation import JobConnectionSunset
 from job.handlers.inputs.file import FileInput
 from job.handlers.inputs.files import FilesInput
 from job.handlers.inputs.property import PropertyInput
 from job.models import JobType
+from job.seed.manifest import SeedManifest
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.handlers.graph import RecipeGraph
@@ -169,7 +171,7 @@ RECIPE_DEFINITION_SCHEMA = {
 }
 
 
-class RecipeDefinition(object):
+class LegacyRecipeDefinition(object):
     """Represents the definition for a recipe. The definition includes the recipe inputs, the jobs that make up the
     recipe, and how the inputs and outputs of those jobs are connected together.
     """
@@ -342,7 +344,7 @@ class RecipeDefinition(object):
         recipe with this definition
 
         :param recipe_conn: The recipe definition
-        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.RecipeConnection`
+        :type recipe_conn: :class:`recipe.configuration.data.recipe_connection.LegacyRecipeConnection`
         :returns: A list of warnings discovered during validation
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
@@ -370,7 +372,7 @@ class RecipeDefinition(object):
         """Validates the given data against the recipe definition
 
         :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :type recipe_data: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData`
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
@@ -502,8 +504,10 @@ class RecipeDefinition(object):
             If there are any invalid job connections in the definition
         """
 
+        job_type = job_types_by_name[job_dict['name']]
+
         # Job connection will represent data to be passed to the job to validate
-        job_conn = JobConnection()
+        job_conn = JobConnectionSunset.create(job_type.get_job_interface())
         # Assume a workspace is provided, this will be verified when validating the recipe data
         job_conn.add_workspace()
 

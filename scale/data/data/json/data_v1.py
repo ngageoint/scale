@@ -55,6 +55,12 @@ class DataV1(object):
             msg = 'Invalid data: %s is an unsupported version number'
             raise InvalidData('INVALID_VERSION', msg % self.data_dict['version'])
 
+        # Be able to handle v1 job results (convert it into v1 job data)
+        if 'output_data' in self.data_dict:
+            the_data_dict = self.data_dict['output_data']
+            self.data_dict['input_data'] = the_data_dict
+            del self.data_dict['output_data']
+
         if 'input_data' not in self.data_dict:
             self.data_dict['input_data'] = []
         for data_input in self.data_dict['input_data']:

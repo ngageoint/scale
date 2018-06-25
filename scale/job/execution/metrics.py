@@ -5,7 +5,7 @@ import datetime
 import logging
 from collections import namedtuple
 
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecutionEnd
 from util.retry import retry_database_query

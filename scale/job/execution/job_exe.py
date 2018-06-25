@@ -36,7 +36,7 @@ class RunningJobExecution(object):
         :param job_type: The job type model
         :type job_type: :class:`job.models.JobType`
         :param configuration: The job execution configuration, including secret values
-        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param priority: The priority of the job execution
         :type priority: int
         """

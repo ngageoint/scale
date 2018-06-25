@@ -10,9 +10,9 @@ from job.configuration.data.data_file import AbstractDataFileStore
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from recipe.configuration.data.exceptions import InvalidRecipeData
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 
 
 class DummyDataFileStore(AbstractDataFileStore):
@@ -791,7 +791,7 @@ class TestRecipeDefinitionValidateData(TestCase):
                 'file_id': self.file_1.id,
             }],
         }
-        recipe_data = RecipeData(data)
+        recipe_data = LegacyRecipeData(data)
 
         self.assertRaises(InvalidRecipeData, recipe.validate_data, recipe_data)
 
@@ -843,7 +843,7 @@ class TestRecipeDefinitionValidateData(TestCase):
             }],
             'workspace_id': 1,
         }
-        recipe_data = RecipeData(data)
+        recipe_data = LegacyRecipeData(data)
 
         # No exception is success
         recipe.validate_data(recipe_data)
@@ -882,7 +882,7 @@ class TestRecipeDefinitionValidateData(TestCase):
                 'file_id': self.file_1.id,
             }],
         }
-        recipe_data = RecipeData(data)
+        recipe_data = LegacyRecipeData(data)
 
         # No exception is success
         recipe.validate_data(recipe_data)

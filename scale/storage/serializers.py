@@ -153,7 +153,7 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     geometry = WktField()
     center_point = WktField()
     countries = serializers.StringRelatedField(many=True, read_only=True)
-    
+
     job_type = JobTypeBaseSerializerV6()
     job = ModelIdSerializer()
     job_exe = ModelIdSerializer()
@@ -163,7 +163,7 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     recipe = ModelIdSerializer()
     recipe_node = serializers.CharField()
     batch = BatchBaseSerializerV6()
-    
+
     is_superseded = serializers.BooleanField()
     superseded = serializers.DateTimeField()
 

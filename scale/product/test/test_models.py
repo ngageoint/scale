@@ -22,6 +22,7 @@ from batch.test import utils as batch_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobManager
 from product.models import FileAncestryLink, ProductFile
+from product.types import ProductFileMetadata
 from recipe.models import RecipeManager
 from storage.models import ScaleFile
 
@@ -437,11 +438,11 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
 
         self.files = [
-            (self.local_path_1, 'remote/1/file.txt', None, 'output_name_1'),
-            (self.local_path_2, 'remote/2/file.json', 'application/x-custom-json', 'output_name_2'),
+            ProductFileMetadata('output_name_1', self.local_path_1, remote_path='remote/1/file.txt'),
+            ProductFileMetadata('output_name_2', self.local_path_2, 'application/x-custom-json', 'remote/2/file.json'),
         ]
         self.files_no = [
-            (self.local_path_3, 'remote/3/file.h5', 'image/x-hdf5-image', 'output_name_3'),
+            ProductFileMetadata('output_name_3', self.local_path_3, 'image/x-hdf5-image', 'remote/3/file.h5')
         ]
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
@@ -480,18 +481,18 @@ class TestProductFileManagerUploadFiles(TestCase):
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_geo_metadata(self):
         """Tests calling ProductFileManager.upload_files() successfully with extra geometry meta data"""
-        geo_metadata = {
-            'data_started': '2015-05-15T10:34:12Z',
-            'data_ended': '2015-05-15T10:36:12Z',
-            'geo_json': {
-                'type': 'Polygon',
-                'coordinates': [
-                    [[1.0, 10.0], [2.0, 10.0], [2.0, 20.0], [1.0, 20.0], [1.0, 10.0]],
-                ]
-            }
+        data_start = '2015-05-15T10:34:12Z'
+        data_end = '2015-05-15T10:36:12Z'
+
+        geojson = {
+            'type': 'Polygon',
+            'coordinates': [
+                [[1.0, 10.0], [2.0, 10.0], [2.0, 20.0], [1.0, 20.0], [1.0, 10.0]],
+            ]
         }
-        files = [(os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt'), 'remote/1/file.txt', 'text/plain',
-                  'output_1', geo_metadata)]
+
+        files = [ProductFileMetadata('output_1', os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt'),
+                                     'text/plain', 'remote/1/file.txt', data_start, data_end, geojson)]
 
         products = ProductFile.objects.upload_files(files, [self.source_file.id], self.job_exe, self.workspace)
 
@@ -537,7 +538,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
         self.assertEqual(recipe_job.node_name, products[0].recipe_node)
 
-        self.assertEqual(self.files[0][3], products[0].job_output)
+        self.assertEqual(self.files[0].output_name, products[0].job_output)
 
         recipe_manager = RecipeManager()
         self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type, products[0].recipe_type)

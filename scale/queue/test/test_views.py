@@ -497,6 +497,7 @@ class TestRequeueJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_3.job_type.name)
 
+    # TODO: Remove when v5 deprecated
     def test_job_type_categories(self):
         """Tests successfully calling the requeue view filtered by job type category."""
 
@@ -504,7 +505,7 @@ class TestRequeueJobsView(TestCase):
             'job_type_categories': [self.job_3.job_type.category],
         }
 
-        url = rest_util.get_url('/queue/requeue-jobs/')
+        url = '/v5/queue/requeue-jobs/'
         response = self.client.post(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

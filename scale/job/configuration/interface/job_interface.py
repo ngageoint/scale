@@ -13,10 +13,11 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface import job_interface_1_3 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.exceptions import MissingMount, MissingSetting
+from job.execution.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from product.types import ProductFileMetadata
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
@@ -347,7 +348,7 @@ class JobInterface(object):
 
         param_replacements['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         # Remove extra whitespace
         command_arguments = ' '.join(command_arguments.split())
@@ -370,6 +371,26 @@ class JobInterface(object):
 
         return self.definition['command_arguments']
 
+    def get_injected_command_args(self, values, env_vars):
+        """Gets the command arguments with values injected
+
+        :param values: Input values to replace named placeholders in command value
+        :type values: {str, str}
+        :param env_vars: Incoming environment variables
+        :type env_vars: {}
+        :return: the command args
+        :rtype: str
+        """
+
+        # env_vars are ignored for old job types
+
+        # ensure no optional inputs are empty
+        for input in self.get_dict()['input_data']:
+            if input['name'] not in values and not input['required']:
+                values[input['name']] = ''
+
+        return self.replace_command_parameters(self.get_command_args(), values)
+
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
 
@@ -391,6 +412,24 @@ class JobInterface(object):
             if output_data['type'] in ['file', 'files']:
                 names.append(output_data['name'])
         return names
+
+    def get_mounts(self):
+        """Gets the mounts defined for the job
+
+        :return: the mounts for a job
+        :rtype: list
+        """
+
+        return self.get_dict().get('mounts', [])
+
+    def get_settings(self):
+        """Gets the settings for the job
+
+        :return: the settings object
+        :rtype: dict
+        """
+
+        return self.get_dict().get('settings', [])
 
     def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
         """Stores the files and deletes any working directories
@@ -438,18 +477,28 @@ class JobInterface(object):
                 if not os.path.isfile(file_entry['path']):
                     raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                 if 'geo_metadata' in file_entry:
-                    files_to_store[param_name] = (file_entry['path'], media_type, file_entry['geo_metadata'])
+                    files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
+                                                                     local_path=file_entry['path'],
+                                                                     media_type=media_type,
+                                                                     geojson=file_entry['geo_metadata'])
                 else:
-                    files_to_store[param_name] = (file_entry['path'], media_type)
+                    files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
+                                                                     local_path=file_entry['path'],
+                                                                     media_type=media_type)
             elif 'files' in manifest_file_entry:
                 file_tuples = []
                 for file_entry in manifest_file_entry['files']:
                     if not os.path.isfile(file_entry['path']):
                         raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                     if 'geo_metadata' in file_entry:
-                        file_tuples.append((file_entry['path'], media_type, file_entry['geo_metadata']))
+                        file_tuples.append(ProductFileMetadata(output_name=param_name,
+                                                               local_path=file_entry['path'],
+                                                               media_type=media_type,
+                                                               geojson=file_entry['geo_metadata']))
                     else:
-                        file_tuples.append((file_entry['path'], media_type))
+                        file_tuples.append(ProductFileMetadata(output_name=param_name,
+                                                               local_path=file_entry['path'],
+                                                               media_type=media_type))
                 files_to_store[param_name] = file_tuples
 
         job_data_parse_results = {}  # parse results formatted for job_data
@@ -469,7 +518,7 @@ class JobInterface(object):
         job_data.save_parse_results(job_data_parse_results)
         return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
 
-    def perform_pre_steps(self, job_data, job_environment):
+    def perform_pre_steps(self, job_data):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
         This returns the command that should be executed for these parameters.
         :param job_data: The job data
@@ -499,7 +548,7 @@ class JobInterface(object):
                 property_val = job_data.data_inputs_by_name[input_name]['value']
                 param_replacements[input_name] = property_val
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
@@ -510,7 +559,7 @@ class JobInterface(object):
         :param command_arguments: The command_arguments that you want to perform the replacement on
         :type command_arguments: string
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
         :return: command arguments with the settings populated
@@ -523,7 +572,7 @@ class JobInterface(object):
                                                        exe_configuration,
                                                        job_type, True)
 
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
+        command_arguments = self.replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
@@ -583,7 +632,7 @@ class JobInterface(object):
         """Ensures that all required mounts are defined in the execution configuration
 
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         for name, mount_volume in exe_configuration.get_mounts('main').items():
@@ -594,7 +643,7 @@ class JobInterface(object):
         """Ensures that all required settings are defined in the execution configuration
 
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         for name, value in exe_configuration.get_settings('main').items():
@@ -750,7 +799,7 @@ class JobInterface(object):
         :param settings: The settings
         :type settings: dict
         :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
         :param censor: Whether to censor secrets
@@ -873,7 +922,7 @@ class JobInterface(object):
                 shared_resource['required'] = True
 
     @staticmethod
-    def _replace_command_parameters(command_arguments, param_replacements):
+    def replace_command_parameters(command_arguments, param_replacements):
         """find all occurrences of a parameter with a given name in the command_arguments string and
         replace it with the param value. If the parameter replacement string in the command uses a
         custom output ( ${-f :foo}).
@@ -991,3 +1040,5 @@ class JobInterface(object):
             path = mount['path']
             if not os.path.isabs(path):
                 raise InvalidInterfaceDefinition('%s mount must have an absolute path' % name)
+
+

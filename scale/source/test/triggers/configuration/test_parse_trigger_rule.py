@@ -8,7 +8,7 @@ from django.test import TestCase
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.interface.job_interface import JobInterface
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from source.triggers.configuration.parse_trigger_rule import ParseTriggerRuleConfiguration
 from source.triggers.parse_trigger_handler import PARSE_TYPE
 from storage.test import utils as storage_utils
