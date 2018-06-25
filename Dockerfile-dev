@@ -9,56 +9,13 @@ LABEL \
 
 EXPOSE 80
 
-# recognized environment variables
-# CONFIG_URI
-# DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
-# DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
-# DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
-# DCOS_SERVICE_ACCOUNT a DCOS account name with read/update/create/delete access to the secrets store
-# DCOS_USER authentication for Marathon deployments when using DCOS enterprise
-# DEPLOY_WEBSERVER to start the web server container
-# ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
-# ENABLE_WEBSERVER true to start the RESTful API server, should only be set on webserver app
-# LOGSTASH_DOCKER_IMAGE the name of the Docker image for logstash
-# MARATHON_APP_DOCKER_IMAGE used in Marathon to autodetect Scale docker image
-# MESOS_MASTER_URL
-# NPM_URL
-# PYPI_URL
-# SCALE_DB_HOST
-# SCALE_DB_NAME
-# SCALE_DB_PASS
-# SCALE_DB_PORT
-# SCALE_DB_USER
-# DJANGO_DEBUG
-# SCALE_DOCKER_IMAGE used for explicit override of docker image used, not needed in Marathon
-# SCALE_ELASTICSEARCH_URLS
-# SCALE_LOGGING_ADDRESS
-# SCALE_WEBSERVER_CPU
-# SCALE_WEBSERVER_MEMORY
-# SCALE_ZK_URL
-# SECRETS_SSL_WARNINGS false to silence SSL warnings from secrets transactions, true (defualt) to raise them.
-# SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
-# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
-# SYSTEM_LOGGING_LEVEL used to set logging level for system processes. use DEBUG, INFO, WARNING, ERROR, and CRITICAL. 
-
-# build arg to set the version qualifier. This should be blank for a
-# release build. Otherwise it is typically a build number or git hash.
-# if present, the qualifier will be '.${BUILDNUM}
 ARG BUILDNUM=''
-
-# Default location for the GOSU binary to be retrieved from.
-# This should be changed on disconnected networks to point to the directory with the tarballs.
 ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
-
-## By default install epel-release, if our base image already includes this we can set to 0
 ARG EPEL_INSTALL=1
-
-## By default build the docs
 ARG BUILD_DOCS=1
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
-#COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
