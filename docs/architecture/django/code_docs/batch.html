@@ -449,9 +449,10 @@ first batch in the chain.</li>
 <li><strong>jobs_failed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all FAILED jobs within the batch</li>
 <li><strong>jobs_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all COMPLETED jobs within the batch</li>
 <li><strong>jobs_canceled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all CANCELED jobs within the batch</li>
-<li><strong>recipes_estimated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The estimated count for all recipes that will be created for the batch</li>
-<li><strong>recipes_total</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The total count for all recipes within the batch</li>
-<li><strong>recipes_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count for all completed recipes within the batch</li>
+<li><strong>recipes_estimated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The estimated count for all recipes (including sub-recipes) that will be created for the
+batch</li>
+<li><strong>recipes_total</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The total count for all recipes (including sub-recipes) within the batch</li>
+<li><strong>recipes_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count for all completed recipes (including sub-recipes) within the batch</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch was created</li>
 <li><strong>superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this batch was superseded</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch was last modified</li>

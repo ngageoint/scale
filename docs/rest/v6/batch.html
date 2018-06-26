@@ -435,15 +435,16 @@ Prefix fields with a dash to reverse the sort, (ex: order=-title).</td>
 </tr>
 <tr class="row-even"><td>recipes_estimated</td>
 <td>Integer</td>
-<td colspan="2">The estimated count of recipes that will be created for this batch</td>
+<td colspan="2">The estimated count of recipes (including sub-recipes) that will be created
+for this batch</td>
 </tr>
 <tr class="row-odd"><td>recipes_total</td>
 <td>Integer</td>
-<td colspan="2">The total count of recipes within this batch</td>
+<td colspan="2">The total count of recipes (including sub-recipes) within this batch</td>
 </tr>
 <tr class="row-even"><td>recipes_completed</td>
 <td>Integer</td>
-<td colspan="2">The count of completed recipes within this batch</td>
+<td colspan="2">The count of completed recipes (including sub-recipes) within this batch</td>
 </tr>
 <tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -1075,15 +1076,16 @@ reprocessed by the new batch. See <a class="reference internal" href="recipe.htm
 </tr>
 <tr class="row-even"><td>recipes_estimated</td>
 <td>Integer</td>
-<td>The estimated count of recipes that will be created for this batch</td>
+<td>The estimated count of recipes (including sub-recipes) that will be created
+for this batch</td>
 </tr>
 <tr class="row-odd"><td>recipes_total</td>
 <td>Integer</td>
-<td>The total count of recipes within this batch</td>
+<td>The total count of recipes (including sub-recipes) within this batch</td>
 </tr>
 <tr class="row-even"><td>recipes_completed</td>
 <td>Integer</td>
-<td>The count of completed recipes within this batch</td>
+<td>The count of completed recipes (including sub-recipes) within this batch</td>
 </tr>
 <tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -1109,12 +1111,12 @@ See <a class="reference internal" href="#rest-v6-batch-json-configuration"><span
 </tr>
 <tr class="row-even"><td>job_metrics</td>
 <td>JSON Object</td>
-<td>The metrics for each recipe job in the batch. Each recipe job name maps to
-the metrics for that job. The job count metrics (e.g. jobs_total) are similar
-to the top level batch metrics. The duration metrics (e.g. min_seed_duration)
-detail the minimum, average, and maximum durations for completing the Seed
-run and completing the overall Scale job. The durations are provided in the
-ISO-8601 duration format.</td>
+<td>The metrics for each top level recipe job (not in a sub-recipe) in the batch.
+Each recipe job name maps to the metrics for that job. The job count metrics
+(e.g. jobs_total) are similar to the top level batch metrics. The duration
+metrics (e.g. min_seed_duration) detail the minimum, average, and maximum
+durations for completing the Seed run and completing the overall Scale job.
+The durations are provided in the ISO-8601 duration format.</td>
 </tr>
 </tbody>
 </table>
