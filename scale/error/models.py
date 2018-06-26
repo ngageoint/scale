@@ -63,7 +63,7 @@ def get_job_error(job_type_name, error_name):
     if job_type_name is None:
         # Legacy style job type
         if error_name not in CACHED_LEGACY_JOB_ERROR_NAMES:
-            error = Error.objects.get(job_type_name__is_null=True, name=error_name)
+            error = Error.objects.get(job_type_name__isnull=True, name=error_name)
             _cache_error(error)
         error_id = CACHED_LEGACY_JOB_ERROR_NAMES[error_name]
         return CACHED_ERRORS[error_id]
