@@ -1223,7 +1223,7 @@ class Job(models.Model):
         """
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in self.input and '6' == self.input['version']:
+        if self.input and 'version' in self.input and '6' == self.input['version']:
             job_data = JobData(self.input)
         else:
             job_data = JobData_1_0(self.input)
