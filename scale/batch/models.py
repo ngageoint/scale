@@ -623,24 +623,6 @@ class BatchManager(models.Manager):
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
 
-        # Update job metrics for batch
-        # qry = 'UPDATE batch b SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
-        # qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
-        # qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
-        # qry += 'last_modified = %s FROM (SELECT r.batch_id, COUNT(j.id) AS jobs_total, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
-        # qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
-        # qry += 'FROM recipe_node rn JOIN job j ON rn.job_id = j.id JOIN recipe r ON rn.recipe_id = r.id '
-        # qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
-        # qry += 'WHERE b.id = s.batch_id'
-        # with connection.cursor() as cursor:
-        #     cursor.execute(qry, [now(), tuple(batch_ids)])
-
         BatchMetrics.objects.update_batch_metrics_per_job(batch_ids)
 
     def validate_batch_v6(self, recipe_type, definition, configuration=None):
