@@ -477,10 +477,15 @@ class JobInterface(object):
                 if not os.path.isfile(file_entry['path']):
                     raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                 if 'geo_metadata' in file_entry:
+                    geometadata = file_entry['geo_metadata']
+                    geojson = geometadata['geojson'] if 'geojson' in geometadata else None
+                    started = geometadata['data_started'] if 'data_started' in geometadata else None
+                    ended = geometadata['data_ended'] if 'data_ended' in geometadata else None
                     files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
                                                                      local_path=file_entry['path'],
                                                                      media_type=media_type,
-                                                                     geojson=file_entry['geo_metadata'])
+                                                                     geojson=geojson, data_start=started,
+                                                                     data_end=ended)
                 else:
                     files_to_store[param_name] = ProductFileMetadata(output_name=param_name,
                                                                      local_path=file_entry['path'],
@@ -491,10 +496,14 @@ class JobInterface(object):
                     if not os.path.isfile(file_entry['path']):
                         raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                     if 'geo_metadata' in file_entry:
+                        geometadata = file_entry['geo_metadata']
+                        geojson = geometadata['geojson'] if 'geojson' in geometadata else None
+                        started = geometadata['data_started'] if 'data_started' in geometadata else None
+                        ended = geometadata['data_ended'] if 'data_ended' in geometadata else None
                         file_tuples.append(ProductFileMetadata(output_name=param_name,
                                                                local_path=file_entry['path'],
                                                                media_type=media_type,
-                                                               geojson=file_entry['geo_metadata']))
+                                                               geojson=geojson, data_start=started, data_end=ended))
                     else:
                         file_tuples.append(ProductFileMetadata(output_name=param_name,
                                                                local_path=file_entry['path'],
