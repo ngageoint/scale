@@ -52,8 +52,14 @@ class JobTypeBaseSerializer(ModelIdSerializer):
     """Converts job type model fields to REST output"""
     name = serializers.CharField()
     version = serializers.CharField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    category = serializers.CharField()
+    author_name = serializers.CharField()
+    author_url = serializers.CharField()
 
     is_system = serializers.BooleanField()
+    is_long_running = serializers.BooleanField()
     is_active = serializers.BooleanField()
     is_operational = serializers.BooleanField()
     is_paused = serializers.BooleanField()
