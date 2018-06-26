@@ -108,6 +108,25 @@ class JobConfiguration(object):
 
         return volume
 
+    def get_output_workspace(self, output):
+        """Returns the name of the output workspace that is configured to store the products for the given output name,
+        possibly None
+
+        :param output: The name of the output
+        :type output: string
+        :returns: The name of the workspace for storing the output products, possibly None
+        :rtype: string
+        """
+
+        workspace = None
+
+        if output in self.output_workspaces:
+            workspace = self.output_workspaces[output]
+        elif self.default_output_workspace:
+            workspace = self.default_output_workspace
+
+        return workspace
+
     def get_setting_value(self, name):
         """Returns the value of the given setting if defined in this configuration, otherwise returns None
 

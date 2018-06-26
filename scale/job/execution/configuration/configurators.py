@@ -26,6 +26,7 @@ from storage.models import Workspace
 from util.environment import normalize_env_var_name
 from util.command import environment_expansion
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -84,10 +85,9 @@ class QueuedExecutionConfigurator(object):
                 job_config = job.job_type.get_job_configuration()
                 interface = JobInterfaceSunset.create(job.job_type.interface, do_validate=False)
                 for output_name in interface.get_file_output_names():
-                    if output_name in job_config.output_workspaces:
-                        output_workspaces[output_name] = job_config.output_workspaces[output_name]
-                    elif job_config.default_output_workspace:
-                        output_workspaces[output_name] = job_config.default_output_workspace
+                    output_workspace = job_config.get_output_workspace(output_name)
+                    if output_workspace:
+                        output_workspaces[output_name] = output_workspace
                 config.set_output_workspaces(output_workspaces)
 
         # Create main task with fields populated from input data
