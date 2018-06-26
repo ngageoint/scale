@@ -608,32 +608,38 @@ class BatchManager(models.Manager):
         if not batch_ids:
             return
 
-        # Update recipe metrics for batch
-        qry = 'UPDATE batch b SET recipes_total = s.recipes_total, recipes_completed = s.recipes_completed '
-        qry += 'FROM (SELECT r.batch_id, COUNT(r.id) AS recipes_total, '
-        qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) AS recipes_completed '
-        qry += 'FROM recipe r WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
-        qry += 'WHERE b.id = s.batch_id'
-        with connection.cursor() as cursor:
-            cursor.execute(qry, [tuple(batch_ids)])
-
-        # Update job metrics for batch
-        qry = 'UPDATE batch b SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
-        qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
-        qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
-        qry += 'last_modified = %s FROM (SELECT r.batch_id, COUNT(j.id) AS jobs_total, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
-        qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
-        qry += 'FROM recipe_node rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
-        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
+        qry = 'UPDATE batch b SET recipes_total = s.recipes_total, recipes_completed = s.recipes_completed, '
+        qry += 'jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, jobs_blocked = s.jobs_blocked, '
+        qry += 'jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, jobs_failed = s.jobs_failed, '
+        qry += 'jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, last_modified = %s '
+        qry += 'FROM (SELECT r.batch_id, COUNT(r.id) + SUM(r.sub_recipes_total) AS recipes_total, '
+        qry += 'COUNT(r.id) FILTER(WHERE r.is_completed) + SUM(r.sub_recipes_completed) AS recipes_completed, '
+        qry += 'SUM(r.jobs_total) AS jobs_total, SUM(r.jobs_pending) AS jobs_pending, '
+        qry += 'SUM(r.jobs_blocked) AS jobs_blocked, SUM(r.jobs_queued) AS jobs_queued, '
+        qry += 'SUM(r.jobs_running) AS jobs_running, SUM(r.jobs_failed) AS jobs_failed, '
+        qry += 'SUM(r.jobs_completed) AS jobs_completed, SUM(r.jobs_canceled) AS jobs_canceled '
+        qry += 'FROM recipe r WHERE r.batch_id IN %s AND r.recipe_id IS NULL GROUP BY r.batch_id) s '
         qry += 'WHERE b.id = s.batch_id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
+
+        # Update job metrics for batch
+        # qry = 'UPDATE batch b SET jobs_total = s.jobs_total, jobs_pending = s.jobs_pending, '
+        # qry += 'jobs_blocked = s.jobs_blocked, jobs_queued = s.jobs_queued, jobs_running = s.jobs_running, '
+        # qry += 'jobs_failed = s.jobs_failed, jobs_completed = s.jobs_completed, jobs_canceled = s.jobs_canceled, '
+        # qry += 'last_modified = %s FROM (SELECT r.batch_id, COUNT(j.id) AS jobs_total, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'PENDING\') AS jobs_pending, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'BLOCKED\') AS jobs_blocked, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'QUEUED\') AS jobs_queued, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'RUNNING\') AS jobs_running, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'FAILED\') AS jobs_failed, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'COMPLETED\') AS jobs_completed, '
+        # qry += 'COUNT(j.id) FILTER(WHERE status = \'CANCELED\') AS jobs_canceled '
+        # qry += 'FROM recipe_node rn JOIN job j ON rn.job_id = j.id JOIN recipe r ON rn.recipe_id = r.id '
+        # qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id) s '
+        # qry += 'WHERE b.id = s.batch_id'
+        # with connection.cursor() as cursor:
+        #     cursor.execute(qry, [now(), tuple(batch_ids)])
 
         BatchMetrics.objects.update_batch_metrics_per_job(batch_ids)
 
@@ -778,11 +784,12 @@ class Batch(models.Model):
     :type jobs_completed: :class:`django.db.models.IntegerField`
     :keyword jobs_canceled: The count of all CANCELED jobs within the batch
     :type jobs_canceled: :class:`django.db.models.IntegerField`
-    :keyword recipes_estimated: The estimated count for all recipes that will be created for the batch
+    :keyword recipes_estimated: The estimated count for all recipes (including sub-recipes) that will be created for the
+        batch
     :type recipes_estimated: :class:`django.db.models.IntegerField`
-    :keyword recipes_total: The total count for all recipes within the batch
+    :keyword recipes_total: The total count for all recipes (including sub-recipes) within the batch
     :type recipes_total: :class:`django.db.models.IntegerField`
-    :keyword recipes_completed: The count for all completed recipes within the batch
+    :keyword recipes_completed: The count for all completed recipes (including sub-recipes) within the batch
     :type recipes_completed: :class:`django.db.models.IntegerField`
 
     :keyword created: When the batch was created
@@ -964,7 +971,7 @@ class BatchMetricsManager(models.Manager):
         qry += 'min_job_duration = s.min_job_duration, avg_job_duration = s.avg_job_duration, '
         qry += 'max_job_duration = s.max_job_duration, min_seed_duration = s.min_seed_duration, '
         qry += 'avg_seed_duration = s.avg_seed_duration, max_seed_duration = s.max_seed_duration, last_modified = %s '
-        qry += 'FROM (SELECT r.batch_id, rj.node_name, COUNT(j.id) AS jobs_total, '
+        qry += 'FROM (SELECT r.batch_id, rn.node_name, COUNT(j.id) AS jobs_total, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'PENDING\') AS jobs_pending, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'BLOCKED\') AS jobs_blocked, '
         qry += 'COUNT(j.id) FILTER(WHERE j.status = \'QUEUED\') AS jobs_queued, '
@@ -978,9 +985,9 @@ class BatchMetricsManager(models.Manager):
         qry += 'MIN(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS min_seed_duration, '
         qry += 'AVG(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS avg_seed_duration, '
         qry += 'MAX(je.seed_ended - je.seed_started) FILTER(WHERE j.status = \'COMPLETED\') AS max_seed_duration '
-        qry += 'FROM recipe_node rj JOIN job j ON rj.job_id = j.id JOIN recipe r ON rj.recipe_id = r.id '
+        qry += 'FROM recipe_node rn JOIN job j ON rn.job_id = j.id JOIN recipe r ON rn.recipe_id = r.id '
         qry += 'LEFT OUTER JOIN job_exe_end je ON je.job_id = j.id AND je.exe_num = j.num_exes '
-        qry += 'WHERE r.batch_id IN %s GROUP BY r.batch_id, rj.node_name) s '
+        qry += 'WHERE r.batch_id IN %s AND r.recipe_id IS NULL GROUP BY r.batch_id, rn.node_name) s '
         qry += 'WHERE bm.batch_id = s.batch_id AND bm.job_name = s.node_name'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), tuple(batch_ids)])
