@@ -20,6 +20,7 @@ from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, Inges
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from util.rest import BadParameter
+from util.rest import title_to_name
 
 logger = logging.getLogger(__name__)
 
@@ -362,6 +363,24 @@ class StrikesView(ListCreateAPIView):
     serializer_class = StrikeSerializer
 
     def list(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.list_impl(request)
+        elif request.version == 'v5':
+            return self.list_impl(request)
+        elif request.version == 'v6':
+            return self.list_impl(request)
+
+        raise Http404()
+        
+    def list_impl(self, request):
         """Retrieves the list of all Strike process and returns it in JSON form
 
         :param request: the HTTP GET request
@@ -384,6 +403,24 @@ class StrikesView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.create_impl(request)
+        elif request.version == 'v5':
+            return self.create_impl(request)
+        elif request.version == 'v6':
+            return self.create_impl_v6(request)
+
+        raise Http404()
+        
+    def create_impl(self, request):
         """Creates a new Strike process and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -411,6 +448,35 @@ class StrikesView(ListCreateAPIView):
         serializer = StrikeDetailsSerializer(strike)
         strike_url = reverse('strike_details_view', args=[strike.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
+        
+    def create_impl_v6(self, request):
+        """Creates a new Strike process and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=True)
+        name = title_to_name(self.queryset, title)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        try:
+            strike = Strike.objects.create_strike(name, title, description, configuration)
+        except InvalidStrikeConfiguration as ex:
+            raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
+
+        # Fetch the full strike process with details
+        try:
+            strike = Strike.objects.get_details(strike.id)
+        except Strike.DoesNotExist:
+            raise Http404
+
+        serializer = StrikeDetailsSerializer(strike)
+        strike_url = reverse('strike_details_view', args=[strike.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
 
 
 class StrikeDetailsView(GenericAPIView):
@@ -419,6 +485,26 @@ class StrikeDetailsView(GenericAPIView):
     serializer_class = StrikeDetailsSerializer
 
     def get(self, request, strike_id):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The ID of the Strike process
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.get_impl(request, strike_id)
+        elif request.version == 'v5':
+            return self.get_impl(request, strike_id)
+        elif request.version == 'v6':
+            return self.get_impl(request, strike_id)
+
+        raise Http404()
+        
+    def get_impl(self, request, strike_id):
         """Retrieves the details for a Strike process and return them in JSON form
 
         :param request: the HTTP GET request
@@ -437,6 +523,26 @@ class StrikeDetailsView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request, strike_id):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The ID of the Strike process
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.patch_impl(request, strike_id)
+        elif request.version == 'v5':
+            return self.patch_impl(request, strike_id)
+        elif request.version == 'v6':
+            return self.patch_impl(request, strike_id)
+
+        raise Http404()
+        
+    def patch_impl(self, request, strike_id):
         """Edits an existing Strike process and returns the updated details
 
         :param request: the HTTP GET request
@@ -470,6 +576,24 @@ class StrikesValidationView(APIView):
     queryset = Strike.objects.all()
 
     def post(self, request):
+        """Determine api version and call specific method
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.post_impl(request)
+        elif request.version == 'v5':
+            return self.post_impl(request)
+        elif request.version == 'v6':
+            return self.post_impl_v6(request)
+
+        raise Http404()
+        
+    def post_impl(self, request):
         """Validates a new Strike process and returns any warnings discovered
 
         :param request: the HTTP POST request
@@ -479,6 +603,32 @@ class StrikesValidationView(APIView):
         """
 
         name = rest_util.parse_string(request, 'name')
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        rest_util.parse_string(request, 'title', required=False)
+        rest_util.parse_string(request, 'description', required=False)
+
+        # Validate the Strike configuration
+        try:
+            config = StrikeConfiguration(configuration)
+            warnings = config.validate()
+        except InvalidStrikeConfiguration as ex:
+            logger.exception('Unable to validate new Strike process: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})
+        
+    def post_impl_v6(self, request):
+        """Validates a new Strike process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
 
         rest_util.parse_string(request, 'title', required=False)
