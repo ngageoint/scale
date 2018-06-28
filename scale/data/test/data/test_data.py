@@ -37,6 +37,26 @@ class TestData(TestCase):
             data.add_value(dup_value)
         self.assertEqual(context.exception.error.name, 'DUPLICATE_VALUE')
 
+    def test_add_value_from_output_data(self):
+        """Tests calling Data.add_value_from_output_data()"""
+
+        data = Data()
+        output_data = Data()
+
+        file_value = FileValue('output_1', [1, 2, 3])
+        output_data.add_value(file_value)
+        json_value = JsonValue('output_2', 'hello')
+        output_data.add_value(json_value)
+
+        data.add_value_from_output_data('input_1', 'output_1', output_data)
+        self.assertSetEqual(set(data.values.keys()), {'input_1'})
+        self.assertListEqual(data.values['input_1'].file_ids, [1, 2, 3])
+
+        # Duplicate parameter
+        with self.assertRaises(InvalidData) as context:
+            data.add_value_from_output_data('input_1', 'output_1', output_data)
+        self.assertEqual(context.exception.error.name, 'DUPLICATE_VALUE')
+
     def test_validate(self):
         """Tests calling Data.validate()"""
 

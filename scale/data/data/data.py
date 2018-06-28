@@ -29,6 +29,24 @@ class Data(object):
 
         self.values[value.name] = value
 
+    def add_value_from_output_data(self, input_name, output_name, output_data):
+        """Adds an output value from the given output data to this data with the given input name. This is used to pass
+        output data from a recipe node to the input data of another recipe node.
+
+        :param input_name: The name of the input value to add
+        :type input_name: string
+        :param output_name: The name of the output value in the output data
+        :type output_name: string
+        :param output_data: The output data
+        :type output_data: :class:`data.data.data.Data`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the value is a duplicate
+        """
+
+        new_value = output_data.values[output_name].copy()
+        new_value.name = input_name
+        self.add_value(new_value)
+
     def validate(self, interface):
         """Validates this data against the given interface. Extra data values that cannot be passed to the interface
         will be removed.

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta
 
+from data.data.data import Data
 from data.interface.exceptions import InvalidInterfaceConnection
 from data.interface.interface import Interface
 from recipe.definition.exceptions import InvalidDefinition
@@ -57,6 +58,26 @@ class NodeDefinition(object):
 
         self.parents[node.name] = node
         node.children[self.name] = self
+
+    def generate_input_data(self, recipe_input_data, node_outputs):
+        """Generates the input data for this node
+
+        :param recipe_input_data: The input data for the recipe
+        :type recipe_input_data: :class:`data.data.data.Data`
+        :param node_outputs: The RecipeNodeOutput tuples stored in a dict by node name
+        :type node_outputs: dict
+        :returns: The input data for this node
+        :rtype: :class:`data.data.data.Data`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
+        """
+
+        input_data = Data()
+
+        for connection in self.connections.values():
+            connection.add_value_to_data(input_data, recipe_input_data, node_outputs)
+
+        return input_data
 
     def validate(self, recipe_input_interface, node_input_interfaces, node_output_interfaces):
         """Validates this recipe node

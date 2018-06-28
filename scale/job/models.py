@@ -16,6 +16,7 @@ from django.utils import dateparse, timezone
 
 import util.parse
 import trigger.handler as trigger_handler
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
@@ -427,6 +428,17 @@ class JobManager(models.Manager):
         return self.get_jobs(started=started, ended=ended, statuses=statuses, job_type_ids=job_type_ids,
                              job_type_names=job_type_names, job_type_categories=job_type_categories,
                              include_superseded=include_superseded, order=order)
+
+    def get_job_with_interfaces(self, job_id):
+        """Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models
+
+        :param job_id: The job ID
+        :type job_id: list
+        :returns: The job model with related job_type_rev and recipe__recipe_type_rev models
+        :rtype: list
+        """
+
+        return self.select_related('job_type_rev', 'recipe__recipe_type_rev').gte(id=job_id)
 
     def get_jobs_with_related(self, job_ids):
         """Gets the job models for the given IDs with related job_type, job_type_rev, and batch models
@@ -1215,6 +1227,16 @@ class Job(models.Model):
 
         return self.status == 'CANCELED' and not self.has_been_queued()
 
+    def get_input_data(self):
+        """Returns the input data for this job
+
+        :returns: The input data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.input, do_validate=False).get_data()
+
+    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
         """Returns the data for this job
 
@@ -1256,6 +1278,15 @@ class Job(models.Model):
             else:
                 job_results = JobResults_1_0(self.output)
         return job_results
+
+    def get_output_data(self):
+        """Returns the output data for this job
+
+        :returns: The output data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.output, do_validate=False).get_data()
 
     def get_resources(self):
         """Returns the resources required for this job

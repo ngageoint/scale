@@ -40,6 +40,22 @@ class InputConnection(object):
         raise NotImplementedError()
 
     @abstractmethod
+    def add_value_to_data(self, data, recipe_input_data, node_outputs):
+        """Adds the value for this connection to the data
+
+        :param data: The data to add the value to
+        :type data: :class:`data.data.data.Data`
+        :param recipe_input_data: The input data for the recipe
+        :type recipe_input_data: :class:`data.data.data.Data`
+        :param node_outputs: The RecipeNodeOutput tuples stored in a dict by node name
+        :type node_outputs: dict
+
+        :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
+        """
+
+        raise NotImplementedError()
+
+    @abstractmethod
     def is_equal_to(self, connection):
         """Returns true if and only if the given input connection is equal to this one
 
@@ -64,23 +80,6 @@ class InputConnection(object):
         """
 
         raise NotImplementedError()
-
-    # TODO: raise exception for invalid data, rename to add_value_to_data
-    # @abstractmethod
-    # def add_argument_to_data(self, data, recipe_input, node_output):
-    #     """Adds the parameter for this connection to the interface
-
-    #     :param data: The data to add the argument to
-    #     :type data: :class:`data.data.data.Data`
-    #     :param recipe_input: The recipe input data
-    #     :type recipe_input: :class:`data.data.data.Data`
-    #     :param node_output: The output data for each node stored by node name
-    #     :type node_output: dict
-    #     :returns: A list of warnings discovered during validation
-    #     :rtype: list
-    #     """
-
-    #     raise NotImplementedError()
 
 
 class DependencyInputConnection(InputConnection):
@@ -109,6 +108,13 @@ class DependencyInputConnection(InputConnection):
 
         output_interface = node_output_interfaces[self.node_name]
         return interface.add_parameter_from_output_interface(self.input_name, self.output_name, output_interface)
+
+    def add_value_to_data(self, data, recipe_input_data, node_outputs):
+        """See :meth:`recipe.handlers.connection.InputConnection.add_value_to_data`
+        """
+
+        output_data = node_outputs[self.node_name].output_data
+        data.add_value_from_output_data(self.input_name, self.output_name, output_data)
 
     def is_equal_to(self, connection):
         """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
@@ -158,6 +164,12 @@ class RecipeInputConnection(InputConnection):
 
         return interface.add_parameter_from_output_interface(self.input_name, self.recipe_input_name,
                                                              recipe_input_interface)
+
+    def add_value_to_data(self, data, recipe_input_data, node_outputs):
+        """See :meth:`recipe.handlers.connection.InputConnection.add_value_to_data`
+        """
+
+        data.add_value_from_output_data(self.input_name, self.recipe_input_name, recipe_input_data)
 
     def is_equal_to(self, connection):
         """See :meth:`recipe.handlers.connection.InputConnection.is_equal_to`
