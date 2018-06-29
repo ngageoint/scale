@@ -78,7 +78,6 @@ class IngestsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-
 class IngestDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of an ingest."""
     queryset = Ingest.objects.all()
@@ -153,7 +152,6 @@ class IngestDetailsView(RetrieveAPIView):
         serializer = self.get_serializer(ingest)
         return Response(serializer.data)
 
-
 class IngestsStatusView(ListAPIView):
     """This view is the endpoint for retrieving summarized ingest status."""
     queryset = Ingest.objects.all()
@@ -198,7 +196,6 @@ class IngestsStatusView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-
 class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
@@ -225,7 +222,6 @@ class ScansProcessView(GenericAPIView):
         serializer = self.get_serializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
-
 
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
@@ -276,7 +272,6 @@ class ScansView(ListCreateAPIView):
         serializer = ScanDetailsSerializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
-
 
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""
@@ -329,7 +324,6 @@ class ScansDetailsView(GenericAPIView):
         serializer = self.get_serializer(scan)
         return Response(serializer.data)
 
-
 class ScansValidationView(APIView):
     """This view is the endpoint for validating a new Scan process before attempting to actually create it"""
     queryset = Scan.objects.all()
@@ -355,7 +349,6 @@ class ScansValidationView(APIView):
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
-
 
 class StrikesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Strike process."""
