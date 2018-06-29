@@ -31,23 +31,21 @@ Response: 200 OK
                     "job_type": { 
                         "id": 2, 
                         "name": "scale-strike", 
-                        "version": "1.0", 
                         "title": "Scale Strike", 
                         "description": "Monitors a directory for incoming source files to ingest", 
-                        "category": "system", 
-                        "author_name": null, 
-                        "author_url": null, 
-                        "is_system": true, 
-                        "is_long_running": true, 
-                        "is_active": true, 
-                        "is_operational": true, 
-                        "is_paused": false, 
+                        "revision_num": 1,
                         "icon_code": "f0e7" 
                     }, 
                     "job_type_rev": { 
                         "id": 2 
                     }, 
                     "event": { 
+                        "id": 1 
+                    }, 
+                    "node": { 
+                        "id": 1 
+                    }, 
+                    "error": { 
                         "id": 1 
                     }, 
                     "status": "RUNNING", 
@@ -133,7 +131,6 @@ Request: POST http://.../v6/strikes/
         "title": "My Strike Process", 
         "description": "This is my Strike process for detecting my favorite files!", 
         "configuration": { 
-            "version": "2.0", 
             "workspace": "my-workspace", 
             "monitor": { 
                 "type": "dir-watcher", 
@@ -161,17 +158,9 @@ Location http://.../v6/strikes/105/
             "job_type": { 
                 "id": 2, 
                 "name": "scale-strike", 
-                "version": "1.0", 
                 "title": "Scale Strike", 
                 "description": "Monitors a directory for incoming source files to ingest", 
-                "category": "system", 
-                "author_name": null, 
-                "author_url": null, 
-                "is_system": true, 
-                "is_long_running": true, 
-                "is_active": true, 
-                "is_operational": true, 
-                "is_paused": false, 
+                "revision_num": 1,
                 "icon_code": "f0e7" 
             }, 
             "job_type_rev": { 
@@ -180,12 +169,17 @@ Location http://.../v6/strikes/105/
             "event": { 
                 "id": 1 
             }, 
+            "node": { 
+                "id": 1 
+            }, 
+            "error": { 
+                "id": 1 
+            }, 
             "status": "RUNNING", 
             "priority": 10, 
             "num_exes": 1 
         }, 
         "configuration": { 
-            "version": "2.0", 
             "workspace": "my-workspace", 
             "monitor": { 
                 "type": "dir-watcher", 
@@ -249,31 +243,28 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-strike", 
-               "version": "1.0", 
                "title": "Scale Strike", 
                "description": "Monitors a directory for incoming source files to ingest", 
-               "category": "system", 
-               "author_name": null, 
-               "author_url": null, 
-               "is_system": true, 
-               "is_long_running": true, 
-               "is_active": true, 
-               "is_operational": true, 
-               "is_paused": false, 
+               "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-           "job_type_rev": { 
-               "id": 2 
-           }, 
-           "event": { 
-               "id": 1 
-           }, 
+            "job_type_rev": { 
+                "id": 2 
+            }, 
+            "event": { 
+                "id": 1 
+            }, 
+            "node": { 
+                "id": 1 
+            }, 
+            "error": { 
+                "id": 1 
+            }, 
            "status": "RUNNING", 
            "priority": 10, 
            "num_exes": 1 
        }, 
        "configuration": { 
-           "version": "2.0", 
            "workspace": "my-workspace", 
            "monitor": { 
                "type": "dir-watcher", 
@@ -334,7 +325,6 @@ Request: POST http://.../v6/strikes/validation/
         "title": "My Strike Process", 
         "description": "This is my Strike process for detecting my favorite files!", 
         "configuration": { 
-            "version": "2.0", 
             "workspace": "my-workspace", 
             "monitor": { 
                 "type": "dir-watcher", 
@@ -408,7 +398,6 @@ Request: PATCH http://.../v6/strikes/{id}/
         "title": "My Strike Process", 
         "description": "This is my Strike process for detecting my favorite files!", 
         "configuration": { 
-            "version": "2.0", 
             "workspace": "my-workspace", 
             "monitor": { 
                 "type": "dir-watcher", 
@@ -434,17 +423,9 @@ Response: 200 OK
             "job_type": { 
                 "id": 2, 
                 "name": "scale-strike", 
-                "version": "1.0", 
                 "title": "Scale Strike", 
                 "description": "Monitors a directory for incoming source files to ingest", 
-                "category": "system", 
-                "author_name": null, 
-                "author_url": null, 
-                "is_system": true, 
-                "is_long_running": true, 
-                "is_active": true, 
-                "is_operational": true, 
-                "is_paused": false, 
+                "revision_num": 1,
                 "icon_code": "f0e7" 
             }, 
             "job_type_rev": { 
@@ -453,12 +434,17 @@ Response: 200 OK
             "event": { 
                 "id": 1 
             }, 
+            "node": { 
+                "id": 1 
+            }, 
+            "error": { 
+                "id": 1 
+            }, 
             "status": "RUNNING", 
             "priority": 10, 
             "num_exes": 1 
         }, 
-        "configuration": { 
-            "version": "2.0", 
+        "configuration": {  
             "workspace": "my-workspace", 
             "monitor": { 
                 "type": "dir-watcher", 
