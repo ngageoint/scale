@@ -102,6 +102,9 @@ class ProcessJobInput(CommandMessage):
 
         from recipe.models import RecipeNode
 
+        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+        old_recipe_input_dict = dict(job.recipe.input)
+
         # Get job input from dependencies in the recipe
         recipe_input_data = job.recipe.get_input_data()
         node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
@@ -109,6 +112,9 @@ class ProcessJobInput(CommandMessage):
             if node_output.node_type == 'job' and node_output.id == job.id:
                 node_name = node_output.node_name
                 break
+
+        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+        job.recipe.input = old_recipe_input_dict
 
         definition = job.recipe.recipe_type_rev.get_definition()
         input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)

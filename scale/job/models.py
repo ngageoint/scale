@@ -635,7 +635,7 @@ class JobManager(models.Manager):
         from product.models import FileAncestryLink
         FileAncestryLink.objects.create_file_ancestry_links(list(all_file_ids), None, job, None)
 
-        if len(all_file_ids):
+        if len(all_file_ids) == 0:
             # If there are no input files, just zero out the file size and skip input meta-data fields
             self.filter(id=job.id).update(input_file_size=0.0)
             return
