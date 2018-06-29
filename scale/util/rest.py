@@ -499,7 +499,7 @@ def title_to_name(queryset, title):
     basename = name
     
     index = 0
-    while queryset.filter(name=name).count() > 0:
+    while queryset != None and queryset.filter(name=name).count() > 0:
         name = basename + '-' + uuid.uuid4().hex[:19]
         if index > 999:
             raise Exception('Unable to find a unique name. Exiting to prevent infinite loop.')

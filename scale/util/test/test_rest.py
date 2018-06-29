@@ -704,3 +704,13 @@ class TestRest(TestCase):
         request = MagicMock(Request)
         request.query_params = QueryDict('', mutable=True)
         self.assertDictEqual(rest_util.parse_dict(request, 'test', required=False), {})
+
+    def test_title_to_name(self):
+        """Tests parsing an optional dict with no default value."""
+        title1 = 'Boring Normal Title'
+        title2 = 'Underscore_Title'
+        title3 = 'Title #1'
+        set = None
+        self.assertEqual(rest_util.title_to_name(set, title1), 'boring-normal-title')
+        self.assertEqual(rest_util.title_to_name(set, title2), 'underscore-title')
+        self.assertEqual(rest_util.title_to_name(set, title3), 'title-1')
