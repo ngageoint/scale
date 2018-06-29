@@ -16,13 +16,17 @@ from django.utils import dateparse, timezone
 
 import util.parse
 import trigger.handler as trigger_handler
+from data.data.json.data_v1 import convert_data_to_v1_json
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
+from data.interface.interface import Interface
+from data.interface.parameter import FileParameter, JsonParameter
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
 from job.data.job_data import JobData
-from job.deprecation import JobInterfaceSunset
+from job.deprecation import JobInterfaceSunset, JobDataSunset
 from job.exceptions import InvalidJobField
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
@@ -428,6 +432,17 @@ class JobManager(models.Manager):
                              job_type_names=job_type_names, job_type_categories=job_type_categories,
                              include_superseded=include_superseded, order=order)
 
+    def get_job_with_interfaces(self, job_id):
+        """Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models
+
+        :param job_id: The job ID
+        :type job_id: list
+        :returns: The job model with related job_type_rev and recipe__recipe_type_rev models
+        :rtype: list
+        """
+
+        return self.select_related('job_type_rev', 'recipe__recipe_type_rev').get(id=job_id)
+
     def get_jobs_with_related(self, job_ids):
         """Gets the job models for the given IDs with related job_type, job_type_rev, and batch models
 
@@ -550,7 +565,7 @@ class JobManager(models.Manager):
         self.filter(id=job.id).update(input=data.get_dict())
 
         # Process job inputs
-        self.process_job_input([job])
+        self.process_job_input_data(job)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -584,79 +599,58 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    def process_job_input(self, jobs):
-        """Processes the inputs for the given jobs. The caller must have obtained a model lock on the given job models.
+    def process_job_input_data(self, job):
+        """Processes the input data for the given job to populate its input file models and input meta-data fields. The
+        caller must have obtained a model lock on the given job model.
 
-        :param jobs: The locked job models
-        :type jobs: list
+        :param job: The locked job model
+        :type job: :class:`job.models.Job`
         """
 
-        when = timezone.now()
-        job_input_file_ids = {}  # {Job ID: set}
-        job_file_sizes = {}  # {Job ID: int}
-        job_source_started = {}  # {Job ID: datetime}
-        job_source_ended = {}  # {Job ID: datetime}
-        all_input_file_ids = set()
+        if job.input_file_size is not None:
+            return  # Job has already had its input data processed
+
+        # Create JobInputFile models in batches
+        all_file_ids = set()
         input_file_models = []
-
-        # Process each job to get its input file IDs and create models related to input files
-        for job in jobs:
-            if job.input_file_size is not None:
-                continue  # Ignore jobs that have already had inputs processed
-            job_input = job.get_job_data()
-            file_ids = job_input.get_input_file_ids()
-            job_input_file_ids[job.id] = set(file_ids)
-            job_file_sizes[job.id] = 0
-            job_source_started[job.id] = None
-            job_source_ended[job.id] = None
-            all_input_file_ids.update(file_ids)
-
-            # Create JobInputFile models in batches
-            for input_file in job_input.get_input_file_info():
+        for file_value in job.get_input_data().values.values():
+            if file_value.param_type != FileParameter.PARAM_TYPE:
+                continue
+            for file_id in file_value.file_ids:
+                all_file_ids.add(file_id)
                 job_input_file = JobInputFile()
                 job_input_file.job_id = job.id
-                job_input_file.input_file_id = input_file[0]
-                job_input_file.job_input = input_file[1]
+                job_input_file.input_file_id = file_id
+                job_input_file.job_input = file_value.name
                 input_file_models.append(job_input_file)
                 if len(input_file_models) >= INPUT_FILE_BATCH_SIZE:
                     JobInputFile.objects.bulk_create(input_file_models)
                     input_file_models = []
 
-            # Create file ancestry links for job
-            from product.models import FileAncestryLink
-            FileAncestryLink.objects.create_file_ancestry_links(file_ids, None, job, None)
-
         # Finish creating any remaining JobInputFile models
         if input_file_models:
             JobInputFile.objects.bulk_create(input_file_models)
 
-        # TODO: make this more efficient
-        # Calculate input file summary data for each job
-        if all_input_file_ids:
-            for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
-                for job_id, file_ids in job_input_file_ids.items():
-                    if input_file.id in file_ids:
-                        job_file_sizes[job_id] += input_file.file_size  # This is in bytes
-                        if input_file.source_started is not None:
-                            started = job_source_started[job_id]
-                            min_started = min(s for s in [started, input_file.source_started] if s is not None)
-                            job_source_started[job_id] = min_started
-                        if input_file.source_ended is not None:
-                            ended = job_source_ended[job_id]
-                            max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
-                            job_source_ended[job_id] = max_ended
+        # Create file ancestry links for job
+        from product.models import FileAncestryLink
+        FileAncestryLink.objects.create_file_ancestry_links(list(all_file_ids), None, job, None)
 
-        # Update each job with its input file summary data
-        for job_id, total_file_size in job_file_sizes.items():
-            # Calculate total input file size in MiB rounded up to the nearest whole MiB
-            input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
-            input_file_size_mb = max(input_file_size_mb, MIN_DISK)
+        if len(all_file_ids) == 0:
+            # If there are no input files, just zero out the file size and skip input meta-data fields
+            self.filter(id=job.id).update(input_file_size=0.0)
+            return
 
-            # Get source data times
-            source_started = job_source_started[job_id]
-            source_ended = job_source_ended[job_id]
-            self.filter(id=job_id).update(input_file_size=input_file_size_mb, source_started=source_started,
-                                          source_ended=source_ended, last_modified=when)
+        # Set input meta-data fields on the job
+        # Total input file size is in MiB rounded up to the nearest whole MiB
+        qry = 'UPDATE job j SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'SELECT jif.job_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'FROM scale_file f JOIN job_input_file jif ON f.id = jif.input_file_id '
+        qry += 'WHERE jif.job_id = %s GROUP BY jif.job_id) s '
+        qry += 'WHERE j.id = s.job_id'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [timezone.now(), job.id])
 
     def process_job_output(self, job_ids, when):
         """Processes the job output for the given job IDs. The caller must have obtained model locks on the job models
@@ -680,6 +674,41 @@ class JobManager(models.Manager):
 
         qry = self.filter(id__in=job_ids, status='COMPLETED', jobexecutionoutput__exe_num=F('num_exes')).only('id')
         return [job.id for job in qry]
+
+    def set_job_input_data_v6(self, job, input_data):
+        """Sets the given input data as a v6 JSON for the given job. The job model must have its related job_type_rev
+        model populated.
+
+        :param job: The job model with related job_type_rev model
+        :type job: :class:`job.models.Job`
+        :param input_data: The input data for the job
+        :type input_data: :class:`data.data.data.Data`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+        """
+
+        input_data.validate(job.job_type_rev.get_input_interface())
+
+        if JobInterfaceSunset.is_seed_dict(job.job_type_rev.interface):
+            # Normal code path for Seed job
+            input_dict = convert_data_to_v6_json(input_data).get_dict()
+        else:
+            # TODO: remove legacy code path when legacy job types are removed
+            v1_dict = convert_data_to_v1_json(input_data).get_dict()
+            sunset_job_data = JobDataSunset.create(job.job_type_rev.interface, v1_dict)
+            if job.recipe:
+                sunset_interface = JobInterfaceSunset.create(job.job_type_rev.interface, do_validate=False)
+                from recipe.deprecation import RecipeDataSunset
+                sunset_recipe_data = RecipeDataSunset.create(job.recipe.recipe_type_rev.definition,
+                                                             job.recipe.input)
+                # Add workspace for file outputs if needed
+                if sunset_interface.get_file_output_names():
+                    workspace_id = sunset_recipe_data.get_workspace_id()
+                    if workspace_id:
+                        sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
+            input_dict = sunset_job_data.get_dict()
+
+        self.filter(id=job.id).update(input=input_dict)
 
     def supersede_jobs(self, job_ids, when):
         """Updates the given job IDs to be superseded
@@ -1215,6 +1244,16 @@ class Job(models.Model):
 
         return self.status == 'CANCELED' and not self.has_been_queued()
 
+    def get_input_data(self):
+        """Returns the input data for this job
+
+        :returns: The input data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.input, do_validate=False).get_data()
+
+    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
         """Returns the data for this job
 
@@ -1256,6 +1295,15 @@ class Job(models.Model):
             else:
                 job_results = JobResults_1_0(self.output)
         return job_results
+
+    def get_output_data(self):
+        """Returns the output data for this job
+
+        :returns: The output data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.output, do_validate=False).get_data()
 
     def get_resources(self):
         """Returns the resources required for this job
@@ -3457,6 +3505,31 @@ class JobTypeRevision(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     objects = JobTypeRevisionManager()
+
+    def get_input_interface(self):
+        """Returns the input interface for this revision
+
+        :returns: The input interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.interface):
+            return SeedManifest(self.interface, do_validate=False).get_input_interface()
+
+        # TODO: This can be removed when support for legacy job types is removed
+        interface = Interface()
+        for input_dict in self.interface['input_data']:
+            media_types = input_dict['media_types'] if 'media_types' in input_dict else []
+            required = input_dict['required'] if 'required' in input_dict else True
+            if input_dict['type'] == 'file':
+                param = FileParameter(input_dict['name'], media_types, required, False)
+                interface.add_parameter(param)
+            elif input_dict['type'] == 'files':
+                param = FileParameter(input_dict['name'], media_types, required, True)
+                interface.add_parameter(param)
+            elif input_dict['type'] == 'property':
+                interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
+        return interface
 
     def get_job_interface(self):
         """Returns the job type interface for this revision

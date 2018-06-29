@@ -9,6 +9,7 @@ import os
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from data.interface.json.interface_v6 import InterfaceV6
 from job.data.exceptions import InvalidData, InvalidConnection
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
@@ -188,6 +189,19 @@ class SeedManifest(object):
         """
 
         return self.get_interface().get('settings', [])
+
+    def get_input_interface(self):
+        """Returns the input interface for this manifest
+
+        :returns: The input interface for this manifest
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        input_dict = self.get_inputs()
+        for file_dict in input_dict['files']:
+            if 'partial' in file_dict:
+                del file_dict['partial']
+        return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
     def get_inputs(self):
         """Gets the inputs defined in the interface

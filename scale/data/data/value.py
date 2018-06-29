@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from abc import ABCMeta
+from copy import copy
 from numbers import Number
 
 from data.data.exceptions import InvalidData
@@ -26,6 +27,15 @@ class DataValue(object):
 
         self.name = name
         self.param_type = param_type
+
+    def copy(self):
+        """Returns a copy of this value
+
+        :returns: A copy of this value
+        :rtype: :class:`data.data.value.DataValue`
+        """
+
+        return copy(self)
 
     def validate(self, parameter):
         """Validates this data value against its parameter

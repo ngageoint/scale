@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 
 import copy
 import math
+from collections import namedtuple
 
 import django.contrib.postgres.fields
 from django.db import connection, models, transaction
 from django.utils.timezone import now
 
+from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.models import Job, JobType
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
@@ -19,6 +21,9 @@ from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfigur
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
+
+
+RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id', 'output_data'])
 
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models
@@ -969,6 +974,16 @@ class Recipe(models.Model):
 
     objects = RecipeManager()
 
+    def get_input_data(self):
+        """Returns the input data for this recipe
+
+        :returns: The input data for this recipe
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.input, do_validate=False).get_data()
+
+    # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_recipe_data(self):
         """Returns the data for this recipe
 
@@ -1156,6 +1171,30 @@ class RecipeNodeManager(models.Manager):
         """
 
         return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
+
+    def get_recipe_node_outputs(self, recipe_id):
+        """Returns the output data for each recipe node for the given recipe ID
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: The RecipeNodeOutput tuples stored in a dict by node name
+        :rtype: dict
+        """
+
+        node_outputs = {}
+
+        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
+        for node in qry.only('node_name', 'job', 'sub_recipe', 'job__output'):
+            # If we ever add recipe output, this method could be updated to handle it
+            node_type = None
+            if node.job:
+                node_type = 'job'
+                node_id = node.job_id
+                output_data = node.job.get_output_data()
+            if node_type:
+                node_outputs[node.node_name] = RecipeNodeOutput(node.node_name, node_type, node_id, output_data)
+
+        return node_outputs
 
 
 class RecipeNode(models.Model):
