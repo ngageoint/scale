@@ -397,7 +397,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.pending_jobs">job.messages.pending_jobs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.process_job_inputs">job.messages.process_job_inputs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.process_job_input">job.messages.process_job_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.publish_job">job.messages.publish_job module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.running_jobs">job.messages.running_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.uncancel_jobs">job.messages.uncancel_jobs module</a></li>
@@ -591,7 +591,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_pending_jobs">job.test.messages.test_pending_jobs module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_process_job_inputs">job.test.messages.test_process_job_inputs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_process_job_input">job.test.messages.test_process_job_input module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_publish_job">job.test.messages.test_publish_job module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_running_jobs">job.test.messages.test_running_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_uncancel_jobs">job.test.messages.test_uncancel_jobs module</a></li>
@@ -1203,6 +1203,22 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.Job.get_input_data">
+<code class="descname">get_input_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input data for this job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data for this job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.Job.get_job_data">
 <code class="descname">get_job_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_job_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the data for this job</p>
@@ -1260,6 +1276,22 @@ object the first time, the query is executed.</p>
 <dt id="job.models.Job.get_next_by_last_modified">
 <code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.Job.get_output_data">
+<code class="descname">get_output_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_output_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output data for this job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The output data for this job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.Job.get_previous_by_created">
@@ -3549,6 +3581,24 @@ fields.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobManager.get_job_with_interfaces">
+<code class="descname">get_job_with_interfaces</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_job_with_interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job model with related job_type_rev and recipe__recipe_type_rev models</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobManager.get_jobs">
 <code class="descname">get_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of jobs within the given time range.</p>
@@ -3740,14 +3790,15 @@ on the job model. The job should have its related job_type and job_type_rev mode
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.process_job_input">
-<code class="descname">process_job_input</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.process_job_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes the inputs for the given jobs. The caller must have obtained a model lock on the given job models.</p>
+<dt id="job.models.JobManager.process_job_input_data">
+<code class="descname">process_job_input_data</code><span class="sig-paren">(</span><em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.process_job_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the input data for the given job to populate its input file models and input meta-data fields. The
+caller must have obtained a model lock on the given job model.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The locked job models</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The locked job model</td>
 </tr>
 </tbody>
 </table>
@@ -3778,6 +3829,26 @@ returned.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.set_job_input_data_v6">
+<code class="descname">set_job_input_data_v6</code><span class="sig-paren">(</span><em>job</em>, <em>input_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.set_job_input_data_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given input data as a v6 JSON for the given job. The job model must have its related job_type_rev
+model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job model with related job_type_rev model</li>
+<li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The input data for the job</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -5372,6 +5443,22 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The complete Docker image and tag</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobTypeRevision.get_input_interface">
+<code class="descname">get_input_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevision.get_input_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input interface for this revision</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input interface for this revision</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a></td>
 </tr>
 </tbody>
 </table>

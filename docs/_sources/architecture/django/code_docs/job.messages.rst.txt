@@ -60,10 +60,10 @@ job\.messages\.pending\_jobs module
     :undoc-members:
     :show-inheritance:
 
-job\.messages\.process\_job\_inputs module
-------------------------------------------
+job\.messages\.process\_job\_input module
+-----------------------------------------
 
-.. automodule:: job.messages.process_job_inputs
+.. automodule:: job.messages.process_job_input
     :members:
     :undoc-members:
     :show-inheritance:

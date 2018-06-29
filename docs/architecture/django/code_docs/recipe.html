@@ -790,6 +790,22 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.Recipe.get_input_data">
+<code class="descname">get_input_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input data for this recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data for this recipe</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.Recipe.get_next_by_created">
 <code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2095,6 +2111,24 @@ job_type_rev models for the given recipe IDs</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeNodeManager.get_recipe_node_outputs">
+<code class="descname">get_recipe_node_outputs</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_recipe_node_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the output data for each recipe node for the given recipe ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The RecipeNodeOutput tuples stored in a dict by node name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeNodeManager.get_recipe_nodes">
 <code class="descname">get_recipe_nodes</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_recipe_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe_node models with related sub_recipe and job models for the given recipe ID</p>
@@ -2110,6 +2144,36 @@ job_type_rev models for the given recipe IDs</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeNodeOutput">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeNodeOutput</code><span class="sig-paren">(</span><em>node_name</em>, <em>node_type</em>, <em>id</em>, <em>output_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeOutput.id">
+<code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeNodeOutput.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeOutput.node_name">
+<code class="descname">node_name</code><a class="headerlink" href="#recipe.models.RecipeNodeOutput.node_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeOutput.node_type">
+<code class="descname">node_type</code><a class="headerlink" href="#recipe.models.RecipeNodeOutput.node_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeOutput.output_data">
+<code class="descname">output_data</code><a class="headerlink" href="#recipe.models.RecipeNodeOutput.output_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
 </dd></dl>
 
 </dd></dl>

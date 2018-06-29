@@ -250,6 +250,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.definition.connection.DependencyInputConnection.add_value_to_data">
+<code class="descname">add_value_to_data</code><span class="sig-paren">(</span><em>data</em>, <em>recipe_input_data</em>, <em>node_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection.add_value_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.add_value_to_data()</span></code></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.definition.connection.DependencyInputConnection.is_equal_to">
 <code class="descname">is_equal_to</code><span class="sig-paren">(</span><em>connection</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.DependencyInputConnection.is_equal_to" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.is_equal_to()</span></code></p>
@@ -292,6 +298,26 @@
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="data.interface.html#data.interface.exceptions.InvalidInterfaceConnection" title="data.interface.exceptions.InvalidInterfaceConnection"><code class="xref py py-class docutils literal"><span class="pre">data.interface.exceptions.InvalidInterfaceConnection</span></code></a>: If the interface connection is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.InputConnection.add_value_to_data">
+<code class="descname">add_value_to_data</code><span class="sig-paren">(</span><em>data</em>, <em>recipe_input_data</em>, <em>node_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.InputConnection.add_value_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the value for this connection to the data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The data to add the value to</li>
+<li><strong>recipe_input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The input data for the recipe</li>
+<li><strong>node_outputs</strong> (<em>dict</em>) &#8211; The RecipeNodeOutput tuples stored in a dict by node name</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If there is a duplicate data value</p>
 </dd></dl>
 
 <dl class="method">
@@ -342,6 +368,12 @@
 <dt id="recipe.definition.connection.RecipeInputConnection.add_parameter_to_interface">
 <code class="descname">add_parameter_to_interface</code><span class="sig-paren">(</span><em>interface</em>, <em>recipe_input_interface</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection.add_parameter_to_interface" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.add_parameter_to_interface()</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.connection.RecipeInputConnection.add_value_to_data">
+<code class="descname">add_value_to_data</code><span class="sig-paren">(</span><em>data</em>, <em>recipe_input_data</em>, <em>node_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.connection.RecipeInputConnection.add_value_to_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">recipe.handlers.connection.InputConnection.add_value_to_data()</span></code></p>
 </dd></dl>
 
 <dl class="method">
@@ -475,6 +507,32 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.generate_node_input_data">
+<code class="descname">generate_node_input_data</code><span class="sig-paren">(</span><em>node_name</em>, <em>recipe_input_data</em>, <em>node_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.generate_node_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the input data for the node with the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The name of the node</li>
+<li><strong>recipe_input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The input data for the recipe</li>
+<li><strong>node_outputs</strong> (<em>dict</em>) &#8211; The RecipeNodeOutput tuples stored in a dict by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The input data for the node</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If there is a duplicate data value</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.definition.definition.RecipeDefinition.get_topological_order">
 <code class="descname">get_topological_order</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.get_topological_order" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the recipe node names in a valid topological ordering (dependency order)</p>
@@ -580,6 +638,31 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.definition.node.NodeDefinition.generate_input_data">
+<code class="descname">generate_input_data</code><span class="sig-paren">(</span><em>recipe_input_data</em>, <em>node_outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition.generate_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the input data for this node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The input data for the recipe</li>
+<li><strong>node_outputs</strong> (<em>dict</em>) &#8211; The RecipeNodeOutput tuples stored in a dict by node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The input data for this node</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If there is a duplicate data value</p>
 </dd></dl>
 
 <dl class="method">

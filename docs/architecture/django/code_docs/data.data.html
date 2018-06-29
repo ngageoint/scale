@@ -253,6 +253,27 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="data.data.data.Data.add_value_from_output_data">
+<code class="descname">add_value_from_output_data</code><span class="sig-paren">(</span><em>input_name</em>, <em>output_name</em>, <em>output_data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data.Data.add_value_from_output_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an output value from the given output data to this data with the given input name. This is used to pass
+output data from a recipe node to the input data of another recipe node.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>input_name</strong> (<em>string</em>) &#8211; The name of the input value to add</li>
+<li><strong>output_name</strong> (<em>string</em>) &#8211; The name of the output value in the output data</li>
+<li><strong>output_data</strong> (<a class="reference internal" href="#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The output data</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the value is a duplicate</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="data.data.data.Data.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.data.Data.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates this data against the given interface. Extra data values that cannot be passed to the interface
@@ -294,6 +315,22 @@ will be removed.</p>
 <em class="property">class </em><code class="descclassname">data.data.value.</code><code class="descname">DataValue</code><span class="sig-paren">(</span><em>name</em>, <em>param_type</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.DataValue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a data value for an interface parameter</p>
+<dl class="method">
+<dt id="data.data.value.DataValue.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.DataValue.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of this value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of this value</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#data.data.value.DataValue" title="data.data.value.DataValue"><code class="xref py py-class docutils literal"><span class="pre">data.data.value.DataValue</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="data.data.value.DataValue.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.data.value.DataValue.validate" title="Permalink to this definition">¶</a></dt>
