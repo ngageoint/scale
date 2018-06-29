@@ -191,7 +191,7 @@ class UpdateRecipes(CommandMessage):
         self.new_messages.extend(create_blocked_jobs_messages(blocked_job_ids, when))
         self.new_messages.extend(create_pending_jobs_messages(pending_job_ids, when))
         # Jobs ready for their first queue need to have their input processed
-        self.new_messages.extend(create_process_job_inputs_messages(job_ids_ready_for_first_queue))
+        self.new_messages.extend(create_process_job_input_messages(job_ids_ready_for_first_queue))
 
         logger.info('Found %d job(s) that should transition to BLOCKED', len(blocked_job_ids))
         logger.info('Found %d job(s) that should transition to PENDING', len(pending_job_ids))
