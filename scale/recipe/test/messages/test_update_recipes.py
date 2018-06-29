@@ -270,21 +270,26 @@ class TestUpdateRecipes(TestCase):
         result = message.execute()
         self.assertTrue(result)
 
-        self.assertEqual(len(message.new_messages), 3)
+        self.assertEqual(len(message.new_messages), 4)
         # Check message types
         blocked_jobs_msg = False
         pending_jobs_msg = False
-        process_job_inputs_msg = False
+        process_job_input_msg_job_3 = False
+        process_job_input_msg_job_6 = False
         for new_msg in message.new_messages:
             if new_msg.type == 'blocked_jobs':
                 blocked_jobs_msg = True
             elif new_msg.type == 'pending_jobs':
                 pending_jobs_msg = True
             elif new_msg.type == 'process_job_input':
-                process_job_inputs_msg = True
+                if new_msg.job_id == job_3.id:
+                    process_job_input_msg_job_3 = True
+                elif new_msg.job_id == job_6.id:
+                    process_job_input_msg_job_6 = True
         self.assertTrue(blocked_jobs_msg)
         self.assertTrue(pending_jobs_msg)
-        self.assertTrue(process_job_inputs_msg)
+        self.assertTrue(process_job_input_msg_job_3)
+        self.assertTrue(process_job_input_msg_job_6)
         # Make sure Job 3 has its input populated
         job = Job.objects.get(id=job_3.id)
         self.assertDictEqual(job.input, {
@@ -319,22 +324,26 @@ class TestUpdateRecipes(TestCase):
         self.assertTrue(result)
 
         # Make sure the same three messages are returned
-        self.assertEqual(len(message.new_messages), 3)
+        self.assertEqual(len(message.new_messages), 4)
         # Check message types
         blocked_jobs_msg = False
         pending_jobs_msg = False
-        process_job_inputs_msg = False
+        process_job_input_msg_job_3 = False
+        process_job_input_msg_job_6 = False
         for new_msg in message.new_messages:
             if new_msg.type == 'blocked_jobs':
                 blocked_jobs_msg = True
             elif new_msg.type == 'pending_jobs':
                 pending_jobs_msg = True
             elif new_msg.type == 'process_job_input':
-                process_job_inputs_msg = True
-                self.assertSetEqual(set(new_msg._job_ids), {job_3.id, job_6.id})
+                if new_msg.job_id == job_3.id:
+                    process_job_input_msg_job_3 = True
+                elif new_msg.job_id == job_6.id:
+                    process_job_input_msg_job_6 = True
         self.assertTrue(blocked_jobs_msg)
         self.assertTrue(pending_jobs_msg)
-        self.assertTrue(process_job_inputs_msg)
+        self.assertTrue(process_job_input_msg_job_3)
+        self.assertTrue(process_job_input_msg_job_6)
 
     def test_execute_create_jobs(self):
         """Tests calling UpdateRecipes.execute() successfully where recipe jobs need to be created"""
@@ -445,11 +454,12 @@ class TestUpdateRecipes(TestCase):
         jobs = Job.objects.filter(recipe_id__in=[recipe_1.id, recipe_2.id])
         self.assertEqual(len(jobs), 4)
 
-        # Should have one message for processing inputs for job_1 and job_a
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'process_job_input')
-        self.assertSetEqual(set(msg._job_ids), {recipe_jobs[0].job_id, recipe_jobs[2].job_id})
+        # Should have two messages for processing inputs for job_1 and job_a
+        self.assertEqual(len(message.new_messages), 2)
+        self.assertEqual(message.new_messages[0].type, 'process_job_input')
+        self.assertEqual(message.new_messages[1].type, 'process_job_input')
+        self.assertSetEqual({message.new_messages[0].job_id, message.new_messages[1].job_id},
+                            {recipe_jobs[0].job_id, recipe_jobs[2].job_id})
 
         # Test executing message again
         message_json_dict = message.to_json()
@@ -462,8 +472,9 @@ class TestUpdateRecipes(TestCase):
         recipe_jobs = rj_qry.order_by('recipe_id', 'node_name')
         self.assertEqual(len(recipe_jobs), 4)
 
-        # Make sure the same message is returned
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'process_job_input')
-        self.assertSetEqual(set(msg._job_ids), {recipe_jobs[0].job_id, recipe_jobs[2].job_id})
+        # Make sure the same messages are returned
+        self.assertEqual(len(message.new_messages), 2)
+        self.assertEqual(message.new_messages[0].type, 'process_job_input')
+        self.assertEqual(message.new_messages[1].type, 'process_job_input')
+        self.assertSetEqual({message.new_messages[0].job_id, message.new_messages[1].job_id},
+                            {recipe_jobs[0].job_id, recipe_jobs[2].job_id})
