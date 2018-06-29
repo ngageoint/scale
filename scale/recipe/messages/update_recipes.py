@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 from job.messages.blocked_jobs import create_blocked_jobs_messages
 from job.messages.pending_jobs import create_pending_jobs_messages
-from job.messages.process_job_inputs import create_process_job_inputs_messages
+from job.messages.process_job_input import create_process_job_input_messages
 from job.models import Job
 from messaging.messages.message import CommandMessage
 from recipe.models import Recipe, RecipeNode
