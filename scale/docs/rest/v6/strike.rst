@@ -350,12 +350,11 @@ Response: 200 OK
 
 .. code-block:: javascript 
  
-    { 
-        "warnings": [ 
-            "id": "mount_change", 
-            "details": "Changing the mount path may disrupt file monitoring." 
-        ] 
-    } 
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "EXAMPLE_WARNING", "description": "This is an example warning."}],
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Validate Strike**                                                                                                     |
@@ -382,13 +381,20 @@ Response: 200 OK
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| warnings           | Array               | A list of warnings discovered during validation.                             |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .id                | String              | An identifier for the warning.                                               |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .details           | String              | A human-readable description of the problem.                                 |
-+--------------------+---------------------+------------------------------------------------------------------------------+
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new batch. If this is  |
+|                    |                   | true, then submitting the same fields to the /batches/ API will successfully   |
+|                    |                   | create a new batch.                                                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | A list of warnings discovered during validation.                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .id                | String            | An identifier for the warning.                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .details           | String            | A human-readable description of the problem.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_strike_edit:
 

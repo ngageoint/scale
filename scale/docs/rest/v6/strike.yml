@@ -106,6 +106,10 @@ paths:
         '200':
           description: |-
             The 200 OK response indicates a valid strike configuration 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/strike_validation'
             
   /v6/strikes/{id}/:
     patch:
@@ -267,3 +271,40 @@ components:
           items:
             $ref: '#/components/schemas/ingest_file'
           description: List of ingest objects
+          
+    strike_validation:
+      title: Strike Validation
+      type: object
+      properties:
+        is_valid:
+          type: boolean
+          description: The given strike process is valid
+          example: true
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_error'
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_warning'
+            
+    validation_error:
+      title: Validation Error
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the error
+        description:
+          type: string
+          description: A description of the validation error
+          
+    validation_warning:
+      title: Validation Warning
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the warning
+        description:
+          type: string
+          description: A description of the warning
