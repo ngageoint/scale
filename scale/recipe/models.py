@@ -23,7 +23,7 @@ from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
 
 
-RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'type', 'id', 'output_data'])
+RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id', 'output_data'])
 
 
 INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating RecipeInputFile models

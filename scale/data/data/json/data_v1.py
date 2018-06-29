@@ -56,7 +56,7 @@ class DataV1(object):
             raise InvalidData('INVALID_VERSION', msg % self.data_dict['version'])
 
         # Be able to handle v1 job results (convert it into v1 job data)
-        if 'output_data' in self.data_dict:
+        if 'output_data' in self.data_dict and 'input_data' not in self.data_dict:
             the_data_dict = self.data_dict['output_data']
             self.data_dict['input_data'] = the_data_dict
             del self.data_dict['output_data']

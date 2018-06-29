@@ -5,6 +5,7 @@ import logging
 
 from django.db import transaction
 
+from data.data.exceptions import InvalidData
 from job.models import Job
 from messaging.messages.message import CommandMessage
 
@@ -64,44 +65,51 @@ class ProcessJobInput(CommandMessage):
         """
 
         from queue.messages.queued_jobs import create_queued_jobs_messages, QueuedJob
-        from recipe.models import RecipeNode
 
         job = Job.objects.get_job_with_interfaces(self.job_id)
 
-        if job.has_input():
-            input_data = job.get_input_data()
-        else:
+        if not job.has_input():
             if not job.recipe:
                 logger.error('Job %d has no input and is not in a recipe. Message will not re-run.', self.job_id)
                 return True
-            # Get job input from dependencies in the recipe
-            recipe_input_data = job.recipe.get_input_data()
-            node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
-            # TODO: create recipe definition method that takes node_name, recipe input, and job outputs and creates job input data
-            # TODO: validate job input data
 
+            try:
+                self._generate_input_data_from_recipe(job)
+            except InvalidData:
+                logger.exception('Recipe created invalid input data for job %d. Message will not re-run.', self.job_id)
+                return True
 
-        # TODO: In a transaction, lock job models and bulk create job input file models
-        # TODO: In same transaction, create file ancestry link models
-        # TODO: Update job input data and input summary fields (check for legacy vs Seed and save correct input data)
-
-
-
-        # TODO: remove old code
+        # Lock job model and process job's input data
         with transaction.atomic():
-            # Retrieve locked job models
-            job_models = Job.objects.get_locked_jobs(self._job_ids)
+            job = Job.objects.get_locked_job(self.job_id)
+            Job.objects.process_job_input_data(job)
 
-            # Process job inputs
-            Job.objects.process_job_input(job_models)
-
-        # Create messages to queue the jobs
-        jobs_to_queue = []
-        for job_model in job_models:
-            if job_model.num_exes == 0:
-                jobs_to_queue.append(QueuedJob(job_model.id, 0))
-        if jobs_to_queue:
-            logger.info('Processed job inputs, %d job(s) will be queued', len(jobs_to_queue))
-            self.new_messages.extend(create_queued_jobs_messages(jobs_to_queue, requeue=False))
+        # Create message to queue the job
+        if job.num_exes == 0:
+            logger.info('Processed inputs for job %d, sending message to queue job', self.job_id)
+            self.new_messages.extend(create_queued_jobs_messages([QueuedJob(job.id, 0)], requeue=False))
 
         return True
+
+    def _generate_input_data_from_recipe(self, job):
+        """Generates the job's input data from its recipe dependencies and validates and sets the input data on the job
+
+        :param job: The job with related job_type_rev and recipe__recipe_type_rev models
+        :type job: :class:`job.models.Job`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+        """
+
+        from recipe.models import RecipeNode
+
+        # Get job input from dependencies in the recipe
+        recipe_input_data = job.recipe.get_input_data()
+        node_outputs = RecipeNode.objects.get_recipe_node_outputs(job.recipe_id)
+        for node_output in node_outputs.values():
+            if node_output.node_type == 'job' and node_output.id == job.id:
+                node_name = node_output.node_name
+                break
+
+        definition = job.recipe.recipe_type_rev.get_definition()
+        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        Job.objects.set_job_input_data_v6(job, input_data)

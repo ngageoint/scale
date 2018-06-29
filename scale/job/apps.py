@@ -34,7 +34,7 @@ class JobConfig(AppConfig):
         from job.messages.failed_jobs import FailedJobs
         from job.messages.job_exe_end import CreateJobExecutionEnd
         from job.messages.pending_jobs import PendingJobs
-        from job.messages.process_job_inputs import ProcessJobInputs
+        from job.messages.process_job_input import ProcessJobInput
         from job.messages.publish_job import PublishJob
         from job.messages.running_jobs import RunningJobs
         from job.messages.uncancel_jobs import UncancelJobs
@@ -48,7 +48,7 @@ class JobConfig(AppConfig):
         add_message_type(FailedJobs)
         add_message_type(CreateJobExecutionEnd)
         add_message_type(PendingJobs)
-        add_message_type(ProcessJobInputs)
+        add_message_type(ProcessJobInput)
         add_message_type(PublishJob)
         add_message_type(RunningJobs)
         add_message_type(UncancelJobs)
