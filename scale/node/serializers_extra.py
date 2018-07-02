@@ -9,9 +9,9 @@ from util.rest import ModelIdSerializer
 class NodeDetailsSerializerV4(NodeSerializerV4):
     """Converts node model fields to REST output."""
     try:
-        from job.serializers import JobExecutionSerializer
+        from job.serializers import JobExecutionSerializerV5
 
-        class NodeStatusJobExecutionSerializer(JobExecutionSerializer):
+        class NodeStatusJobExecutionSerializer(JobExecutionSerializerV5):
             """Converts job execution model fields to REST output"""
             node = ModelIdSerializer()
 
@@ -45,9 +45,9 @@ class NodeStatusSerializer(serializers.Serializer):
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
     try:
-        from job.serializers import JobExecutionSerializer
+        from job.serializers import JobExecutionSerializerV5
 
-        class NodeStatusJobExecutionSerializer(JobExecutionSerializer):
+        class NodeStatusJobExecutionSerializer(JobExecutionSerializerV5):
             """Converts job execution model fields to REST output"""
             node = ModelIdSerializer()
 

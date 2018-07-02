@@ -544,7 +544,7 @@ class TestJobDetailsView(TestCase):
 
         # TODO: remove comment and replace `url` assignment when REST API v5 is removed
         # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/v5/jobs/%i/' % self.job.id
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -564,6 +564,7 @@ class TestJobDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
+        import pdb; pdb.set_trace()
 
         self.assertEqual(result['resources']['resources']['cpus'], 1.0)
         self.assertEqual(result['resources']['resources']['mem'], 128.0)

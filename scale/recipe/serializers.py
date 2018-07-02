@@ -109,9 +109,9 @@ class RecipeJobsSerializer(serializers.Serializer):
 
 class RecipeJobsDetailsSerializer(RecipeJobsSerializer):
     """Converts related recipe model fields to REST output."""
-    from job.serializers import JobRevisionSerializer
+    from job.serializers import JobRevisionSerializerV5
 
-    job = JobRevisionSerializer()
+    job = JobRevisionSerializerV5()
 
 
 class RecipeDetailsInputSerializer(serializers.Serializer):

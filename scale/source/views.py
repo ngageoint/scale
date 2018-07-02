@@ -11,7 +11,7 @@ import util.rest as rest_util
 from ingest.models import Ingest
 from ingest.serializers import IngestSerializer
 from job.models import Job
-from job.serializers import JobSerializer, JobSerializerV5
+from job.serializers import JobSerializerV5
 from product.models import ProductFile
 from product.serializers import ProductFileSerializer, ProductFileSerializerV5
 from source.models import SourceFile

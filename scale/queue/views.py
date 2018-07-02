@@ -14,7 +14,7 @@ from rest_framework.reverse import reverse
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobSerializer, JobSerializerV5, JobDetailsSerializerV5
+from job.serializers import JobDetailsSerializerV6, JobSerializerV6, JobSerializerV5, JobDetailsSerializerV5
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
@@ -67,7 +67,7 @@ class QueueNewJobView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobDetailsSerializer
+            return JobDetailsSerializerV6
         else:
             return JobDetailsSerializerV5
     

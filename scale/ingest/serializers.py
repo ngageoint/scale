@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
-from job.serializers import JobBaseSerializer
+from job.serializers import JobBaseSerializerV5
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
 from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
 from util.rest import ModelIdSerializer
@@ -21,8 +21,8 @@ class ScanBaseSerializer(ModelIdSerializer):
 class ScanSerializer(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
 
-    job = JobBaseSerializer()
-    dry_run_job = JobBaseSerializer()
+    job = JobBaseSerializerV5()
+    dry_run_job = JobBaseSerializerV5()
 
     file_count = serializers.IntegerField()
 
@@ -48,7 +48,7 @@ class StrikeBaseSerializer(ModelIdSerializer):
 class StrikeSerializer(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
 
-    job = JobBaseSerializer()
+    job = JobBaseSerializerV5()
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
