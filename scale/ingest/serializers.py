@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
-from job.serializers import JobBaseSerializerV5
+from job.serializers import JobBaseSerializerV5, JobBaseSerializerV6
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
 from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
 from util.rest import ModelIdSerializer
@@ -45,16 +45,29 @@ class StrikeBaseSerializer(ModelIdSerializer):
     job = ModelIdSerializer()
 
 
-class StrikeSerializer(StrikeBaseSerializer):
+class StrikeSerializerV5(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
 
     job = JobBaseSerializerV5()
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
+    
+class StrikeSerializerV6(StrikeBaseSerializer):
+    """Converts strike model fields to REST output"""
+
+    job = JobBaseSerializerV6()
+
+    created = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
 
 
-class StrikeDetailsSerializer(StrikeSerializer):
+class StrikeDetailsSerializerV5(StrikeSerializerV5):
+    """Converts strike model fields to REST output"""
+
+    configuration = serializers.JSONField(source='get_strike_configuration_as_dict')
+    
+class StrikeDetailsSerializerV6(StrikeSerializerV6):
     """Converts strike model fields to REST output"""
 
     configuration = serializers.JSONField(source='get_strike_configuration_as_dict')
@@ -106,11 +119,23 @@ class IngestSerializer(IngestBaseSerializer):
     source_file = SourceFileBaseSerializer()
 
 
-class IngestDetailsSerializer(IngestSerializer):
+class IngestDetailsSerializerV5(IngestSerializer):
     """Converts ingest model fields to REST output"""
 
     scan = ScanDetailsSerializer()
-    strike = StrikeDetailsSerializer()
+    strike = StrikeDetailsSerializerV5()
+
+    workspace = WorkspaceDetailsSerializer()
+    new_workspace = WorkspaceDetailsSerializer()
+
+    job = ModelIdSerializer()
+    source_file = SourceFileSerializer()
+    
+class IngestDetailsSerializerV6(IngestSerializer):
+    """Converts ingest model fields to REST output"""
+
+    scan = ScanDetailsSerializer()
+    strike = StrikeDetailsSerializerV6()
 
     workspace = WorkspaceDetailsSerializer()
     new_workspace = WorkspaceDetailsSerializer()
@@ -127,10 +152,19 @@ class IngestStatusValuesSerializer(serializers.Serializer):
     size = serializers.IntegerField()
 
 
-class IngestStatusSerializer(serializers.Serializer):
+class IngestStatusSerializerV5(serializers.Serializer):
     """Converts ingest model fields to REST output"""
 
-    strike = StrikeSerializer()
+    strike = StrikeSerializerV5()
+    most_recent = serializers.DateTimeField()
+    files = serializers.IntegerField()
+    size = serializers.IntegerField()
+    values = IngestStatusValuesSerializer(many=True)
+    
+class IngestStatusSerializerV6(serializers.Serializer):
+    """Converts ingest model fields to REST output"""
+
+    strike = StrikeSerializerV6()
     most_recent = serializers.DateTimeField()
     files = serializers.IntegerField()
     size = serializers.IntegerField()

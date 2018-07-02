@@ -129,7 +129,8 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.JSONField(default=dict)
+    manifest = serializers.JSONField(default=dict, source='interface')
+    
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
@@ -253,14 +254,12 @@ class JobSerializerV6(JobBaseSerializerV6):
     event = TriggerEventBaseSerializer()
     node = NodeBaseSerializer()
     error = ErrorBaseSerializer()
+    resources = serializers.JSONField(source='get_resources_dict')
 
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()
 
-    cpus_required = ''
-    mem_required = ''
-    disk_out_required = ''
-    disk_in_required = serializers.FloatField(source='input_file_size')
+    input_file_size = serializers.FloatField()
 
     is_superseded = serializers.BooleanField()
     root_superseded_job = ModelIdSerializer()
@@ -317,30 +316,18 @@ class JobExecutionBaseSerializerV5(ModelIdSerializer):
 class JobExecutionBaseSerializerV6(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
-    command_arguments = serializers.CharField()
-    timeout = serializers.IntegerField()
-
-    pre_started = serializers.DateTimeField()
-    pre_completed = serializers.DateTimeField()
-    pre_exit_code = serializers.IntegerField()
-
-    job_started = serializers.DateTimeField()
-    job_completed = serializers.DateTimeField()
-    job_exit_code = serializers.IntegerField()
-
-    post_started = serializers.DateTimeField()
-    post_completed = serializers.DateTimeField()
-    post_exit_code = serializers.IntegerField()
+    exe_num = serializers.IntegerField()
+    cluster_id = serializers.CharField()
 
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
     ended = serializers.DateTimeField(source='jobexecutionend.ended')
-    last_modified = serializers.DateTimeField(source='created')
 
     job = ModelIdSerializer()
     node = ModelIdSerializer()
-    error = ModelIdSerializer()
+    error = ModelIdSerializer(source='jobexecutionend.error')
+    job_type = ModelIdSerializer()
 
 class JobDetailsInputSerializer(serializers.Serializer):
     """Converts job detail model input fields to REST output"""

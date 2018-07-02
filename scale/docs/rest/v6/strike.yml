@@ -180,7 +180,7 @@ components:
           description: A longer description of the Strike process. 
           example: This is my Strike process for detecting my favorite files!
         job:
-          $ref: '#/components/schemas/job'
+          $ref: '#/components/schemas/job_base'
         created:
           type: string
           format: date-time

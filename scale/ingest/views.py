@@ -15,8 +15,8 @@ import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
-from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
-                                ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
+from ingest.serializers import (IngestDetailsSerializerV5, IngestDetailsSerializerV6, IngestSerializer, IngestStatusSerializerV5, IngestStatusSerializerV6,
+                                ScanSerializer, StrikeSerializerV5, StrikeSerializerV6, ScanDetailsSerializer, StrikeDetailsSerializerV5, StrikeDetailsSerializerV6)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from util.rest import BadParameter
@@ -81,7 +81,16 @@ class IngestsView(ListAPIView):
 class IngestDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of an ingest."""
     queryset = Ingest.objects.all()
-    serializer_class = IngestDetailsSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return IngestDetailsSerializerV6
+        elif self.request.version == 'v5':
+            return IngestDetailsSerializerV5
+        elif self.request.version == 'v4':
+            return IngestDetailsSerializerV5
 
     def retrieve(self, request, ingest_id=None, file_name=None):
         """Determine api version and call specific method
@@ -155,7 +164,16 @@ class IngestDetailsView(RetrieveAPIView):
 class IngestsStatusView(ListAPIView):
     """This view is the endpoint for retrieving summarized ingest status."""
     queryset = Ingest.objects.all()
-    serializer_class = IngestStatusSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return IngestStatusSerializerV6
+        elif self.request.version == 'v5':
+            return IngestStatusSerializerV5
+        elif self.request.version == 'v4':
+            return IngestStatusSerializerV5
 
     def list(self, request):
         """Determine api version and call specific method
@@ -353,7 +371,16 @@ class ScansValidationView(APIView):
 class StrikesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Strike process."""
     queryset = Strike.objects.all()
-    serializer_class = StrikeSerializer
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return StrikeSerializerV6
+        elif self.request.version == 'v5':
+            return StrikeSerializerV5
+        elif self.request.version == 'v4':
+            return StrikeSerializerV5
 
     def list(self, request):
         """Determine api version and call specific method
@@ -438,7 +465,7 @@ class StrikesView(ListCreateAPIView):
         except Strike.DoesNotExist:
             raise Http404
 
-        serializer = StrikeDetailsSerializer(strike)
+        serializer = StrikeDetailsSerializerV5(strike)
         strike_url = reverse('strike_details_view', args=[strike.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
         
@@ -467,7 +494,7 @@ class StrikesView(ListCreateAPIView):
         except Strike.DoesNotExist:
             raise Http404
 
-        serializer = StrikeDetailsSerializer(strike)
+        serializer = StrikeDetailsSerializerV6(strike)
         strike_url = reverse('strike_details_view', args=[strike.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
 
@@ -475,7 +502,16 @@ class StrikesView(ListCreateAPIView):
 class StrikeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Strike process."""
     queryset = Strike.objects.all()
-    serializer_class = StrikeDetailsSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return StrikeDetailsSerializerV6
+        elif self.request.version == 'v5':
+            return StrikeDetailsSerializerV5
+        elif self.request.version == 'v4':
+            return StrikeDetailsSerializerV5
 
     def get(self, request, strike_id):
         """Determine api version and call specific method
