@@ -77,21 +77,6 @@ STRIKE_CONFIGURATION_SCHEMA = {
 }
 
 
-class ValidationWarning(object):
-    """Tracks Strike configuration warnings during validation that may prevent the process from working."""
-
-    def __init__(self, key, details):
-        """Constructor sets basic attributes.
-
-        :param key: A unique identifier clients can use to recognize the warning.
-        :type key: string
-        :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: string
-        """
-        self.key = key
-        self.details = details
-
-
 class StrikeConfiguration(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
@@ -195,7 +180,7 @@ class StrikeConfiguration(object):
         """Validates the Strike configuration
 
         :returns: A list of warnings discovered during validation
-        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+        :rtype: list[:class:`util.validation.ValidationWarning`]
 
         :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
             invalid.

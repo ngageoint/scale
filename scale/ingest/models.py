@@ -5,6 +5,8 @@ import datetime
 import logging
 import os
 
+from collections import namedtuple
+
 import django.utils.timezone as timezone
 import django.contrib.postgres.fields
 from django.db import models, transaction
@@ -13,6 +15,8 @@ from django.utils.timezone import now
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
@@ -865,6 +869,7 @@ class Scan(models.Model):
         """meta information for database"""
         db_table = 'scan'
 
+StrikeValidation = namedtuple('StrikeValidation', ['is_valid', 'errors', 'warnings', 'strike_config'])
 
 class StrikeManager(models.Manager):
     """Provides additional methods for handling Strike processes
@@ -999,6 +1004,28 @@ class StrikeManager(models.Manager):
         """
 
         return Strike.objects.select_related('job', 'job__job_type').get(pk=strike_id)
+        
+    def validate_strike_v6(self, configuration):
+        """Validates the given configuration for creating a new strike process
+
+        :param configuration: The strike configuration
+        :type configuration: dict
+        :returns: The strike validation
+        :rtype: :class:`strike.models.StrikeValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+
+        try:
+            config = StrikeConfigurationV6(configuration)
+            warnings = config.validate()
+        except InvalidStrikeConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+
+        return StrikeValidation(is_valid, errors, warnings, config)
 
 
 class Strike(models.Model):

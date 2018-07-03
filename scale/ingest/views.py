@@ -19,6 +19,7 @@ from ingest.serializers import (IngestDetailsSerializerV5, IngestDetailsSerializ
                                 ScanSerializer, StrikeSerializerV5, StrikeSerializerV6, ScanDetailsSerializer, StrikeDetailsSerializerV5, StrikeDetailsSerializerV6)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from util.rest import BadParameter
 from util.rest import title_to_name
 
@@ -657,19 +658,10 @@ class StrikesValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        name = rest_util.parse_string(request, 'name', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
 
-        rest_util.parse_string(request, 'title', required=False)
-        rest_util.parse_string(request, 'description', required=False)
-
         # Validate the Strike configuration
-        try:
-            config = StrikeConfiguration(configuration)
-            warnings = config.validate()
-        except InvalidStrikeConfiguration as ex:
-            logger.exception('Unable to validate new Strike process: %s', name)
-            raise BadParameter(unicode(ex))
-
-        results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results})
+        validation = Strike.objects.validate_strike_v6(configuration=configuration)
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings]}
+        return Response(resp_dict)
