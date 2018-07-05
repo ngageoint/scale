@@ -129,9 +129,9 @@ paths:
             schema:
               $ref: '#/components/schemas/strike_post'
       responses:
-        '200':
+        '204':
           description: |-
-            The 200 OK response indicates a successful edit 
+            The 204 No content response indicates a successful edit 
 
 components:
   schemas:

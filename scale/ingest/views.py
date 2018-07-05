@@ -485,7 +485,7 @@ class StrikesView(ListCreateAPIView):
         configuration = rest_util.parse_dict(request, 'configuration')
 
         try:
-            strike = Strike.objects.create_strike(name, title, description, configuration)
+            strike = Strike.objects.create_strike_v6(name, title, description, configuration)
         except InvalidStrikeConfiguration as ex:
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
 
@@ -568,7 +568,7 @@ class StrikeDetailsView(GenericAPIView):
         elif request.version == 'v5':
             return self.patch_impl(request, strike_id)
         elif request.version == 'v6':
-            return self.patch_impl(request, strike_id)
+            return self.patch_impl_v6(request, strike_id)
 
         raise Http404()
         
@@ -599,6 +599,31 @@ class StrikeDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(strike)
         return Response(serializer.data)
+        
+    def patch_impl_v6(self, request, strike_id):
+        """Edits an existing Strike process and returns the updated details
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param strike_id: The ID of the Strike process
+        :type strike_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration', required=False)
+
+        try:
+            Strike.objects.edit_strike_v6(strike_id, title, description, configuration)
+        except Strike.DoesNotExist:
+            raise Http404
+        except InvalidStrikeConfiguration as ex:
+            logger.exception('Unable to edit Strike process: %s', strike_id)
+            raise BadParameter(unicode(ex))
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class StrikesValidationView(APIView):
@@ -664,4 +689,7 @@ class StrikesValidationView(APIView):
         validation = Strike.objects.validate_strike_v6(configuration=configuration)
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
+                     
+        if not resp_dict['is_valid']:
+            return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
         return Response(resp_dict)

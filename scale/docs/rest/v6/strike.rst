@@ -409,52 +409,7 @@ Request: PATCH http://.../v6/strikes/{id}/
         } 
     }
 
-Response: 200 OK
-
-.. code-block:: javascript 
- 
-    { 
-        "id": 1, 
-        "name": "my-strike-process", 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "job": { 
-            "id": 7, 
-            "job_type": { 
-                "id": 2, 
-                "name": "scale-strike", 
-                "title": "Scale Strike", 
-                "description": "Monitors a directory for incoming source files to ingest", 
-                "revision_num": 1,
-                "icon_code": "f0e7" 
-            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-            "status": "RUNNING", 
-            "priority": 10, 
-            "num_exes": 1 
-        }, 
-        "configuration": {  
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        } 
-    } 
+Response: 204 NO CONTENT
     
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Strike**                                                                                                         |
@@ -477,12 +432,5 @@ Response: 200 OK
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 200 OK                                                                                             |
+| **Status**         | 204 No Content                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | JSON Object       | All fields are the same as the Strike process details model.                   |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+

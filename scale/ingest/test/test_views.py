@@ -15,6 +15,7 @@ import util.rest as rest_util
 from ingest.models import Scan, Strike
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 
 
 class TestIngestsViewV5(TestCase):
@@ -1251,7 +1252,7 @@ class TestStrikeCreateViewV6(TestCase):
         self.assertEqual(len(strikes), 1)
         self.assertEqual(result['title'], strikes[0].title)
         self.assertEqual(result['description'], strikes[0].description)
-        self.assertDictEqual(result['configuration'], strikes[0].configuration)
+        self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
         
 class TestStrikeDetailsViewV5(TestCase):
 
@@ -1407,18 +1408,7 @@ class TestStrikeDetailsViewV6(TestCase):
 
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.strike.id)
-        self.assertEqual(result['title'], 'Title EDIT')
-        self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], StrikeConfiguration(self.strike.configuration).get_dict())
-
-        strike = Strike.objects.get(pk=self.strike.id)
-        self.assertEqual(strike.title, 'Title EDIT')
-        self.assertEqual(strike.description, 'Description EDIT')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_edit_config(self):
         """Tests editing the configuration of a Strike process"""
@@ -1441,16 +1431,7 @@ class TestStrikeDetailsViewV6(TestCase):
 
         url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.strike.id)
-        self.assertEqual(result['title'], self.strike.title)
-        self.assertDictEqual(result['configuration'], StrikeConfiguration(config).get_dict())
-
-        strike = Strike.objects.get(pk=self.strike.id)
-        self.assertEqual(strike.title, self.strike.title)
-        self.assertDictEqual(strike.configuration, config)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
     def test_edit_bad_config(self):
         """Tests attempting to edit a Strike process using an invalid configuration"""
@@ -1509,6 +1490,7 @@ class TestStrikesValidationViewV5(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_configuration(self):
@@ -1597,7 +1579,8 @@ class TestStrikesValidationViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict, 'JSON result was incorrect')
 
     def test_missing_configuration(self):
         """Tests validating a new Strike process with missing configuration."""

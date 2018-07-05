@@ -65,12 +65,12 @@ class StrikeSerializerV6(StrikeBaseSerializer):
 class StrikeDetailsSerializerV5(StrikeSerializerV5):
     """Converts strike model fields to REST output"""
 
-    configuration = serializers.JSONField(source='get_strike_configuration_as_dict')
+    configuration = serializers.JSONField(source='get_v5_strike_configuration_as_dict')
     
 class StrikeDetailsSerializerV6(StrikeSerializerV6):
     """Converts strike model fields to REST output"""
 
-    configuration = serializers.JSONField(source='get_strike_configuration_as_dict')
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 
 class IngestBaseSerializer(ModelIdSerializer):
