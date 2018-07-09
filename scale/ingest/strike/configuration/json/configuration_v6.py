@@ -1,4 +1,4 @@
-"""Defines the configuration for running an instance of Strike"""
+"""Manages the v6 batch configuration schema"""
 from __future__ import unicode_literals
 
 import logging
@@ -10,14 +10,15 @@ from jsonschema.exceptions import ValidationError
 
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
-from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.strike_configuration_1_0 import StrikeConfiguration as StrikeConfiguration_1_0
+from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-CURRENT_VERSION = '2.0'
+SCHEMA_VERSION = '6'
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -77,7 +78,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
 }
 
 
-class StrikeConfiguration(object):
+class StrikeConfigurationV6(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
     identify files to ingest and how to store them.
@@ -95,8 +96,11 @@ class StrikeConfiguration(object):
         self._configuration = configuration
 
         # Convert old versions
-        if 'version' in self._configuration and self._configuration['version'] != CURRENT_VERSION:
+        if 'version' in self._configuration and self._configuration['version'] == '1.0':
             self._configuration = self._convert_schema(configuration)
+            
+        if 'version' in self._configuration and self._configuration['version'] == '2.0':
+            self._configuration['version'] = '6'
 
         try:
             validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
@@ -104,7 +108,7 @@ class StrikeConfiguration(object):
             raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
 
         self._populate_default_values()
-        if self._configuration['version'] != CURRENT_VERSION:
+        if self._configuration['version'] != SCHEMA_VERSION:
             msg = 'Invalid Strike configuration: %s is an unsupported version number'
             raise InvalidStrikeConfiguration(msg % self._configuration['version'])
 
@@ -215,7 +219,7 @@ class StrikeConfiguration(object):
         return warnings
 
     def _convert_schema(self, configuration):
-        """Tries to validate the configuration as version 1.0 and convert it to version 2.0
+        """Tries to validate the configuration as version 1.0 and convert it to version 6
 
         :param configuration: The Strike configuration
         :type configuration: dict
@@ -225,7 +229,7 @@ class StrikeConfiguration(object):
 
         # Try converting from 1.0
         converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
-        converted_configuration['version'] = CURRENT_VERSION
+        converted_configuration['version'] = SCHEMA_VERSION
 
         mount = converted_configuration['mount']
         mount_path = mount.split(':')[1]
@@ -261,7 +265,7 @@ class StrikeConfiguration(object):
         """Goes through the configuration and populates any missing values with defaults."""
 
         if 'version' not in self._configuration:
-            self._configuration['version'] = CURRENT_VERSION
+            self._configuration['version'] = SCHEMA_VERSION
 
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:

@@ -70,7 +70,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         self.workspace = storage_test_utils.create_workspace()
 
     def test_successful(self):
-        """Tests calling StrikeManager.create_strike_process() successfully"""
+        """Tests calling StrikeManager.create_strike() successfully"""
 
         config = {
             'version': '1.0',
@@ -84,4 +84,21 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         }
 
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+        self.assertEqual(strike.job.status, 'QUEUED')
+        
+    def test_successful_v6(self):
+        """Tests calling StrikeManager.create_strike_v6() successfully"""
+
+        config = {
+            'version': '1.0',
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': 'foo',
+                'workspace_path': 'my/path',
+                'workspace_name': self.workspace.name,
+            }]
+        }
+
+        strike = Strike.objects.create_strike_v6('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')

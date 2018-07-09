@@ -48,24 +48,6 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
 
     icon_code = serializers.CharField()
 
-class JobTypeBaseSerializer(ModelIdSerializer):
-    """Converts job type model fields to REST output"""
-    name = serializers.CharField()
-    version = serializers.CharField()
-    title = serializers.CharField()
-    description = serializers.CharField()
-    category = serializers.CharField()
-    author_name = serializers.CharField()
-    author_url = serializers.CharField()
-
-    is_system = serializers.BooleanField()
-    is_long_running = serializers.BooleanField()
-    is_active = serializers.BooleanField()
-    is_operational = serializers.BooleanField()
-    is_paused = serializers.BooleanField()
-
-    icon_code = serializers.CharField()
-
 
 # TODO: remove this function when REST API v5 is removed
 class JobTypeSerializerV5(JobTypeBaseSerializerV5):
@@ -86,21 +68,6 @@ class JobTypeSerializerV5(JobTypeBaseSerializerV5):
     shared_mem_required = serializers.FloatField(source='get_shared_mem_required')
     disk_out_const_required = serializers.FloatField(source='get_disk_out_const_required')
     disk_out_mult_required = serializers.FloatField(source='get_disk_out_mult_required')
-
-    created = serializers.DateTimeField()
-    archived = serializers.DateTimeField()
-    paused = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
-
-
-class JobTypeSerializer(JobTypeBaseSerializer):
-    """Converts job type model fields to REST output"""
-    docker_image = serializers.CharField()
-    revision_num = serializers.IntegerField()
-
-    priority = serializers.IntegerField()
-    max_scheduled = serializers.IntegerField()
-    max_tries = serializers.IntegerField()
 
     created = serializers.DateTimeField()
     archived = serializers.DateTimeField()
@@ -140,24 +107,6 @@ class JobTypeStatusCountsSerializer(serializers.Serializer):
     category = serializers.CharField()
 
 
-class JobTypeDetailsSerializer(JobTypeSerializer):
-    """Converts job type model fields to REST output for Seed type jobs."""
-    from error.serializers import ErrorSerializer
-    from trigger.serializers import TriggerRuleDetailsSerializer
-
-    # TODO: rename interface to manifest in model once v5 is gone
-    manifest = serializers.JSONField(default=dict, source='interface')
-
-    configuration = serializers.JSONField(default=dict)
-    error_mapping = serializers.JSONField(default=dict)
-    errors = ErrorSerializer(many=True)
-    trigger_rule = TriggerRuleDetailsSerializer()
-
-    job_counts_6h = JobTypeStatusCountsSerializer(many=True)
-    job_counts_12h = JobTypeStatusCountsSerializer(many=True)
-    job_counts_24h = JobTypeStatusCountsSerializer(many=True)
-
-
 class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     """Converts job type model fields to REST output for legacy job types."""
     from error.serializers import ErrorSerializer
@@ -180,7 +129,8 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.JSONField(default=dict)
+    manifest = serializers.JSONField(default=dict, source='interface')
+    
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
@@ -194,20 +144,20 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
 
 class JobTypeStatusSerializer(serializers.Serializer):
     """Converts job type status model and extra statistic fields to REST output."""
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     job_counts = JobTypeStatusCountsSerializer(many=True)
 
 
 class JobTypePendingStatusSerializer(serializers.Serializer):
     """Converts job type pending status model and extra statistic fields to REST output."""
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     count = serializers.IntegerField()
     longest_pending = serializers.DateTimeField()
 
 
 class JobTypeRunningStatusSerializer(serializers.Serializer):
     """Converts job type running status model and extra statistic fields to REST output."""
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     count = serializers.IntegerField()
     longest_running = serializers.DateTimeField()
 
@@ -216,7 +166,7 @@ class JobTypeFailedStatusSerializer(serializers.Serializer):
     """Converts job type failed status model and extra statistic fields to REST output."""
     from error.serializers import ErrorSerializer
 
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     error = ErrorSerializer()
     count = serializers.IntegerField()
     first_error = serializers.DateTimeField()
@@ -236,9 +186,9 @@ class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
     created = serializers.DateTimeField()
 
 
-class JobBaseSerializer(ModelIdSerializer):
+class JobBaseSerializerV5(ModelIdSerializer):
     """Converts job model fields to REST output."""
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV5()
     job_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
     node = ModelIdSerializer()
@@ -249,9 +199,9 @@ class JobBaseSerializer(ModelIdSerializer):
     num_exes = serializers.IntegerField()
 
 
-class JobBaseSerializerV5(ModelIdSerializer):
+class JobBaseSerializerV6(ModelIdSerializer):
     """Converts job model fields to REST output."""
-    job_type = JobTypeBaseSerializerV5()
+    job_type = JobTypeBaseSerializerV6()
     job_type_rev = ModelIdSerializer()
     event = ModelIdSerializer()
     node = ModelIdSerializer()
@@ -294,9 +244,8 @@ class JobSerializerV5(JobBaseSerializerV5):
     last_status_change = serializers.DateTimeField()
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-
-
-class JobSerializer(JobBaseSerializer):
+    
+class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from error.serializers import ErrorBaseSerializer
     from trigger.serializers import TriggerEventBaseSerializer
@@ -327,7 +276,11 @@ class JobSerializer(JobBaseSerializer):
     last_modified = serializers.DateTimeField()
 
 
-class JobRevisionSerializer(JobSerializer):
+class JobRevisionSerializerV5(JobSerializerV5):
+    """Converts job model fields to REST output."""
+    job_type_rev = JobTypeRevisionSerializer()
+    
+class JobRevisionSerializerV6(JobSerializerV6):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializer()
 
@@ -360,8 +313,7 @@ class JobExecutionBaseSerializerV5(ModelIdSerializer):
     node = ModelIdSerializer()
     error = ModelIdSerializer()
 
-
-class JobExecutionBaseSerializer(ModelIdSerializer):
+class JobExecutionBaseSerializerV6(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
     status = serializers.CharField(source='get_status')
     exe_num = serializers.IntegerField()
@@ -376,7 +328,6 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
     node = ModelIdSerializer()
     error = ModelIdSerializer(source='jobexecutionend.error')
     job_type = ModelIdSerializer()
-
 
 class JobDetailsInputSerializer(serializers.Serializer):
     """Converts job detail model input fields to REST output"""
@@ -429,9 +380,9 @@ class JobDetailsSerializerV5(JobSerializerV5):
     data = serializers.JSONField(default=dict, source='input')
     results = serializers.JSONField(default=dict, source='output')
 
-    root_superseded_job = JobBaseSerializer()
-    superseded_job = JobBaseSerializer()
-    superseded_by_job = JobBaseSerializer()
+    root_superseded_job = JobBaseSerializerV5()
+    superseded_job = JobBaseSerializerV5()
+    superseded_by_job = JobBaseSerializerV5()
 
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
@@ -448,12 +399,12 @@ class JobDetailsSerializerV5(JobSerializerV5):
     outputs = JobDetailsOutputSerializer(many=True)
 
 
-class JobDetailsSerializer(JobSerializer):
+class JobDetailsSerializerV6(JobSerializerV6):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
 
-    job_type = JobTypeSerializer()
+    job_type = JobTypeSerializerV6()
     job_type_rev = JobTypeRevisionSerializer()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
@@ -466,18 +417,12 @@ class JobDetailsSerializer(JobSerializer):
 
     input = serializers.JSONField(default=dict)
     output = serializers.JSONField(default=dict)
-    execution = JobExecutionBaseSerializer()
+    execution = JobExecutionBaseSerializerV6()
 
-    root_superseded_job = JobBaseSerializer()
-    superseded_job = JobBaseSerializer()
-    superseded_by_job = JobBaseSerializer()
+    root_superseded_job = JobBaseSerializerV6()
+    superseded_job = JobBaseSerializerV6()
+    superseded_by_job = JobBaseSerializerV6()
 
-
-class JobUpdateSerializer(JobSerializer):
-    """Converts job updates to REST output"""
-    from storage.serializers import ScaleFileSerializerV5
-
-    input_files = ScaleFileSerializerV5(many=True)
 
 # TODO: remove this function when REST API v5 is removed
 class JobUpdateSerializerV5(JobSerializerV5):
@@ -485,6 +430,12 @@ class JobUpdateSerializerV5(JobSerializerV5):
     from storage.serializers import ScaleFileSerializerV5
 
     input_files = ScaleFileSerializerV5(many=True)
+    
+class JobUpdateSerializerV6(JobSerializerV6):
+    """Converts job updates to REST output"""
+    from storage.serializers import ScaleFileSerializerV6
+
+    input_files = ScaleFileSerializerV6(many=True)
 
 
 # TODO: remove this function when REST API v5 is removed
@@ -494,12 +445,12 @@ class JobExecutionSerializerV5(JobExecutionBaseSerializerV5):
     from error.serializers import ErrorBaseSerializer
     from node.serializers import NodeBaseSerializerV4
 
-    job = JobBaseSerializer()
+    job = JobBaseSerializerV5()
     node = NodeBaseSerializerV4()
     error = ErrorBaseSerializer(source='jobexecutionend.error')
 
 
-class JobExecutionSerializer(JobExecutionBaseSerializer):
+class JobExecutionSerializerV6(JobExecutionBaseSerializerV6):
     """Converts job execution model fields to REST output"""
 
     from error.serializers import ErrorBaseSerializer
@@ -508,7 +459,7 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
     job = ModelIdSerializer()
     node = NodeBaseSerializer()
     error = ErrorBaseSerializer(source='jobexecutionend.error')
-    job_type = JobTypeBaseSerializer()
+    job_type = JobTypeBaseSerializerV6()
 
     timeout = serializers.IntegerField()
     input_file_size = serializers.FloatField()
@@ -521,12 +472,12 @@ class JobExecutionDetailsSerializerV5(JobExecutionSerializerV5):
     from error.serializers import ErrorSerializer
     from node.serializers import NodeSerializerV4
 
-    job = JobSerializer()
+    job = JobSerializerV5()
     node = NodeSerializerV4()
     error = ErrorSerializer(source='jobexecutionend.error')
-
-
-class JobExecutionDetailsSerializer(JobExecutionSerializer):
+    
+    
+class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
 
     task_results = serializers.JSONField(default=dict, source='jobexecutionend.task_results')
@@ -535,7 +486,13 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     output = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
 
-class JobExecutionLogSerializer(JobExecutionSerializer):
+class JobExecutionLogSerializerV5(JobExecutionSerializerV5):
+    """Converts job execution model fields to REST output"""
+    is_finished = serializers.BooleanField()
+    stdout = serializers.CharField()
+    stderr = serializers.CharField()
+    
+class JobExecutionLogSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
     is_finished = serializers.BooleanField()
     stdout = serializers.CharField()
@@ -543,6 +500,6 @@ class JobExecutionLogSerializer(JobExecutionSerializer):
 
 
 # TODO: remove when REST API v5 is removed
-class JobWithExecutionSerializer(JobSerializer):
+class JobWithExecutionSerializerV5(JobSerializerV5):
     """Converts job with latest execution model fields to REST output"""
     latest_job_exe = JobExecutionBaseSerializerV5()

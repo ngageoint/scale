@@ -8,11 +8,11 @@ import os
 from botocore.exceptions import ClientError
 
 from ingest.models import Ingest
-from ingest.strike.configuration.strike_configuration import ValidationWarning
 from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3NoDataNotificationError,
                                                SQSNotificationError)
 from ingest.strike.monitors.monitor import Monitor
 from util.aws import AWSClient, SQSClient
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 

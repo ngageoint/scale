@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import datetime
+import uuid
 
+from django.template.defaultfilters import slugify
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
 import rest_framework.renderers as renderers
@@ -193,8 +195,7 @@ def get_versioned_urls(apps):
 
         urls.append(url(r'^' + version + '/', include(app_urls, namespace=version)))
     return urls
-
-
+    
 def parse_string(request, name, default_value=None, required=True, accepted_values=None):
     """Parses a string parameter from the given request.
 
@@ -479,7 +480,32 @@ def parse_dict(request, name, default_value=None, required=True):
         raise BadParameter('Parameter must be a valid JSON object: "%s"' % name)
     return value or {}
 
+def title_to_name(queryset, title):
+    """Generates an identifying name for a model from a human readable title
 
+    :param request: The context of an active HTTP request.
+    :type request: :class:`rest_framework.request.Request`
+    :param title: The title to convert
+    :type title: string
+    :returns: The generated identifying name.
+    :rtype: string
+    
+    :raises :class:`Exception`: If unable to generate a unique name.
+    """
+
+    name = slugify(title)
+    name = name.replace('_', '-')
+    name = name[:30]
+    basename = name
+    
+    index = 0
+    while queryset != None and queryset.filter(name=name).count() > 0:
+        name = basename + '-' + uuid.uuid4().hex[:19]
+        if index > 999:
+            raise Exception('Unable to find a unique name. Exiting to prevent infinite loop.')
+        
+    return name
+    
 def strip_schema_version(json_dict):
     """Returns the given JSON dict after stripping its schema version out
 

@@ -15,6 +15,7 @@ import util.rest as rest_util
 from ingest.models import Scan, Strike
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 
 
 class TestIngestsViewV5(TestCase):
@@ -220,7 +221,6 @@ class TestIngestDetailsViewV6(TestCase):
         url = '/%s/ingests/12345/' % self.version
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
 
 class TestIngestStatusViewV5(TestCase):
     version = 'v5'
@@ -472,7 +472,6 @@ class TestScansView(TestCase):
         self.assertEqual(result['results'][0]['name'], self.scan2.name)
         self.assertEqual(result['results'][1]['name'], self.scan1.name)
 
-
 class TestScanCreateView(TestCase):
     fixtures = ['ingest_job_types.json']
 
@@ -564,7 +563,6 @@ class TestScanCreateView(TestCase):
         self.assertEqual(result['title'], scans[0].title)
         self.assertEqual(result['description'], scans[0].description)
         self.assertDictEqual(result['configuration'], scans[0].configuration)
-
 
 class TestScanDetailsView(TestCase):
     def setUp(self):
@@ -704,7 +702,6 @@ class TestScanDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-
 class TestScansProcessView(TestCase):
     """Tests related to the Scan process endpoint"""
     fixtures = ['ingest_job_types.json']
@@ -770,7 +767,6 @@ class TestScansProcessView(TestCase):
         self.assertIsNotNone(updated_scan.job)
 
         self.assertIn('http', response['Location'])
-
 
 class TestScansValidationView(TestCase):
     """Tests related to the Scan process validation endpoint"""
@@ -855,7 +851,6 @@ class TestScansValidationView(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
 
 class TestScanProcessView(TestCase):
     fixtures = ['ingest_job_types.json']
@@ -944,8 +939,9 @@ class TestScanProcessView(TestCase):
         self.assertIsNotNone(result['job'])
 
 
-class TestStrikesView(TestCase):
+class TestStrikesViewV5(TestCase):
 
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -957,7 +953,7 @@ class TestStrikesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all strikes view."""
 
-        url = rest_util.get_url('/strikes/')
+        url = '/%s/strikes/' % self.version
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -977,7 +973,7 @@ class TestStrikesView(TestCase):
     def test_name(self):
         """Tests successfully calling the strikes view filtered by Strike name."""
 
-        url = rest_util.get_url('/strikes/?name=%s' % self.strike1.name)
+        url = '/%s/strikes/?name=%s' % (self.version, self.strike1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -988,7 +984,7 @@ class TestStrikesView(TestCase):
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = rest_util.get_url('/strikes/?order=description')
+        url = '/%s/strikes/?order=description' % self.version
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1000,7 +996,7 @@ class TestStrikesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_util.get_url('/strikes/?order=-description')
+        url = '/%s/strikes/?order=-description' % self.version
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1009,9 +1005,75 @@ class TestStrikesView(TestCase):
         self.assertEqual(result['results'][0]['name'], self.strike2.name)
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
 
+class TestStrikesViewV6(TestCase):
 
-class TestStrikeCreateView(TestCase):
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
 
+    def setUp(self):
+        django.setup()
+
+        self.strike1 = ingest_test_utils.create_strike(name='test-1', description='test A')
+        self.strike2 = ingest_test_utils.create_strike(name='test-2', description='test Z')
+
+    def test_successful(self):
+        """Tests successfully calling the get all strikes view."""
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.strike1.id:
+                expected = self.strike1
+            elif entry['id'] == self.strike2.id:
+                expected = self.strike2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+
+    def test_name(self):
+        """Tests successfully calling the strikes view filtered by Strike name."""
+
+        url = '/%s/strikes/?name=%s' % (self.version, self.strike1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+
+    def test_sorting(self):
+        """Tests custom sorting."""
+
+        url = '/%s/strikes/?order=description' % self.version
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike1.name)
+        self.assertEqual(result['results'][1]['name'], self.strike2.name)
+
+    def test_reverse_sorting(self):
+        """Tests custom sorting in reverse."""
+
+        url = '/%s/strikes/?order=-description' % self.version
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.strike2.name)
+        self.assertEqual(result['results'][1]['name'], self.strike1.name)
+        
+class TestStrikeCreateViewV5(TestCase):
+
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -1028,7 +1090,7 @@ class TestStrikeCreateView(TestCase):
             'description': 'Strike description',
         }
 
-        url = rest_util.get_url('/strikes/')
+        url = '/%s/strikes/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1043,7 +1105,7 @@ class TestStrikeCreateView(TestCase):
             'configuration': 123,
         }
 
-        url = rest_util.get_url('/strikes/')
+        url = '/%s/strikes/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1066,7 +1128,7 @@ class TestStrikeCreateView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/strikes/')
+        url = '/%s/strikes/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1090,7 +1152,7 @@ class TestStrikeCreateView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/strikes/')
+        url = '/%s/strikes/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -1102,9 +1164,99 @@ class TestStrikeCreateView(TestCase):
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].configuration)
 
+class TestStrikeCreateViewV6(TestCase):
 
-class TestStrikeDetailsView(TestCase):
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
 
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+
+    def test_missing_configuration(self):
+        """Tests calling the create Strike view with missing configuration."""
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests calling the create Strike view with configuration that is not a dict."""
+
+        json_data = {
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': 123,
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests calling the create Strike view with invalid configuration."""
+
+        json_data = {
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'BAD',
+                }],
+            },
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_successful(self):
+        """Tests calling the create Strike view successfully."""
+
+        json_data = {
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '1.0',
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        url = '/%s/strikes/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        strikes = Strike.objects.filter(name='strike-title')
+
+        result = json.loads(response.content)
+        self.assertEqual(len(strikes), 1)
+        self.assertEqual(result['title'], strikes[0].title)
+        self.assertEqual(result['description'], strikes[0].description)
+        self.assertDictEqual(result['configuration'], strikes[0].get_v6_configuration_json())
+        
+class TestStrikeDetailsViewV5(TestCase):
+
+    version = 'v5'
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -1116,7 +1268,7 @@ class TestStrikeDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get Strike process details view with a model id that does not exist."""
 
-        url = rest_util.get_url('/strikes/100/')
+        url = '/%s/strikes/100/' % self.version
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -1124,7 +1276,7 @@ class TestStrikeDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get Strike process details view."""
 
-        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1143,7 +1295,7 @@ class TestStrikeDetailsView(TestCase):
             'description': 'Description EDIT',
         }
 
-        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1177,7 +1329,7 @@ class TestStrikeDetailsView(TestCase):
             'configuration': config,
         }
 
-        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1208,14 +1360,106 @@ class TestStrikeDetailsView(TestCase):
             'configuration': config,
         }
 
-        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+class TestStrikeDetailsViewV6(TestCase):
 
-class TestStrikesValidationView(TestCase):
+    version = 'v6'
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+        self.strike = ingest_test_utils.create_strike()
+
+    def test_not_found(self):
+        """Tests successfully calling the get Strike process details view with a model id that does not exist."""
+
+        url = '/%s/strikes/100/' % self.version
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the get Strike process details view."""
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.strike.id)
+        self.assertEqual(result['name'], self.strike.name)
+        self.assertIsNotNone(result['job'])
+        self.assertIsNotNone(result['configuration'])
+
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a Strike process"""
+
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_config(self):
+        """Tests editing the configuration of a Strike process"""
+
+        config = {
+            'version': '1.0',
+            'mount': 'host:/my/path/EDIT',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'data_types': ['test'],
+                'filename_regex': '.*txt',
+                'workspace_path': 'my_path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        json_data = {
+            'configuration': config,
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_bad_config(self):
+        """Tests attempting to edit a Strike process using an invalid configuration"""
+
+        config = {
+            'version': 'BAD',
+            'mount': 'host:/my/path',
+            'transfer_suffix': '_tmp',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'workspace_path': 'my/path',
+                'workspace_name': 'raw',
+            }],
+        }
+
+        json_data = {
+            'configuration': config,
+        }
+
+        url = '/%s/strikes/%d/' % (self.version, self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+class TestStrikesValidationViewV5(TestCase):
     """Tests related to the Strike process validation endpoint"""
+
+    version = 'v5'
 
     def setUp(self):
         django.setup()
@@ -1241,11 +1485,12 @@ class TestStrikesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/strikes/validation/')
+        url = '/%s/strikes/validation/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_configuration(self):
@@ -1257,7 +1502,7 @@ class TestStrikesValidationView(TestCase):
             'description': 'Strike description',
         }
 
-        url = rest_util.get_url('/strikes/validation/')
+        url = '/%s/strikes/validation/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1272,7 +1517,7 @@ class TestStrikesValidationView(TestCase):
             'configuration': 123,
         }
 
-        url = rest_util.get_url('/strikes/validation/')
+        url = '/%s/strikes/validation/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1295,7 +1540,96 @@ class TestStrikesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/strikes/validation/')
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+class TestStrikesValidationViewV6(TestCase):
+    """Tests related to the Strike process validation endpoint"""
+
+    version = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+
+    def test_successful(self):
+        """Tests validating a new Strike process."""
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'version': '1.0',
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'raw',
+                }],
+            },
+        }
+
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        valid_results_dict = {'is_valid': True, 'errors': [], 'warnings': []}
+        self.assertDictEqual(results, valid_results_dict, 'JSON result was incorrect')
+
+    def test_missing_configuration(self):
+        """Tests validating a new Strike process with missing configuration."""
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+        }
+
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests validating a new Strike process with configuration that is not a dict."""
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': 123,
+        }
+
+        url = '/%s/strikes/validation/' % self.version
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests validating a new Strike process with invalid configuration."""
+
+        json_data = {
+            'name': 'strike-name',
+            'title': 'Strike Title',
+            'description': 'Strike description',
+            'configuration': {
+                'mount': 'host:/my/path',
+                'transfer_suffix': '_tmp',
+                'files_to_ingest': [{
+                    'filename_regex': '.*txt',
+                    'workspace_path': 'my/path',
+                    'workspace_name': 'BAD',
+                }],
+            },
+        }
+
+        url = '/%s/strikes/validation/' % self.version
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

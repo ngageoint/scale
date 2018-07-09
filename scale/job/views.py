@@ -25,12 +25,15 @@ from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
-                             JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
-                             JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
-                             JobWithExecutionSerializer, JobExecutionSerializer, JobExecutionDetailsSerializer,
-                             JobDetailsSerializerV5, JobExecutionSerializerV5, JobExecutionDetailsSerializerV5,
-                             JobSerializerV5, JobTypeDetailsSerializerV5, JobTypeSerializerV5, JobUpdateSerializerV5)
+from job.serializers import (JobSerializerV5, JobSerializerV6, JobTypeSerializerV5, JobTypeSerializerV6,
+                             JobDetailsSerializerV5, JobDetailsSerializerV6, 
+                             JobExecutionSerializerV5, JobExecutionSerializerV6,
+                             JobExecutionDetailsSerializerV5, JobExecutionDetailsSerializerV6,
+                             JobWithExecutionSerializerV5,
+                             JobTypeDetailsSerializerV5, JobTypeDetailsSerializerV6, 
+                             JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
+                             JobTypeFailedStatusSerializer, JobTypeStatusSerializer,
+                             JobUpdateSerializerV5, JobUpdateSerializerV6)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType
 from node.resources.exceptions import InvalidResources
@@ -58,7 +61,7 @@ class JobTypesView(ListCreateAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobTypeSerializer
+            return JobTypeSerializerV6
         else:
             return JobTypeSerializerV5
 
@@ -323,7 +326,7 @@ class JobTypesView(ListCreateAPIView):
             raise Http404
 
         url = reverse('job_type_details_view', args=[job_type.id], request=request)
-        serializer = JobTypeDetailsSerializer(job_type)
+        serializer = JobTypeDetailsSerializerV6(job_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
@@ -338,7 +341,7 @@ class JobTypeDetailsView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobTypeDetailsSerializer
+            return JobTypeDetailsSerializerV6
         else:
             return JobTypeDetailsSerializerV5
 
@@ -791,7 +794,7 @@ class JobsView(ListAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobSerializer
+            return JobSerializerV6
         else:
             return JobSerializerV5
     
@@ -835,7 +838,7 @@ class CancelJobsView(GenericAPIView):
     """This view is the endpoint for canceling jobs"""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerV5
 
     def post(self, request):
         """Submit command message to cancel jobs that fit the given filter criteria
@@ -868,7 +871,7 @@ class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for re-queuing jobs that have failed or been canceled"""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = JobSerializerV5
 
     def post(self, request):
         """Submit command message to re-queue jobs that fit the given filter criteria
@@ -908,7 +911,7 @@ class JobDetailsView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobDetailsSerializer
+            return JobDetailsSerializerV6
         else:
             return JobDetailsSerializerV5
     
@@ -1046,7 +1049,7 @@ class JobUpdatesView(ListAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobUpdateSerializer
+            return JobUpdateSerializerV6
         return JobUpdateSerializerV5
 
     def get(self, request):
@@ -1082,7 +1085,7 @@ class JobUpdatesView(ListAPIView):
 class JobsWithExecutionView(ListAPIView):
     """This view is the endpoint for viewing jobs and their associated latest execution"""
     queryset = Job.objects.all()
-    serializer_class = JobWithExecutionSerializer
+    serializer_class = JobWithExecutionSerializerV5
 
     def list(self, request):
         """Gets jobs and their associated latest execution
@@ -1144,7 +1147,7 @@ class JobExecutionsView(ListAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobExecutionSerializer
+            return JobExecutionSerializerV6
         else:
             return JobExecutionSerializerV5
     
@@ -1221,7 +1224,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobExecutionDetailsSerializer
+            return JobExecutionDetailsSerializerV6
         else:
             return JobExecutionDetailsSerializerV5
     
