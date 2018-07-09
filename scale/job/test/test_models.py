@@ -898,7 +898,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertDictEqual(job_type.get_custom_resources().get_dict(), custom_resources.get_dict())
         self.assertEqual(job_type.description, description)
         self.assertEqual(job_type.priority, priority)
-        self.assertIsNone(job_type.archived)
+        self.assertIsNone(job_type.deprecated)
         self.assertIsNone(job_type.paused)
         self.assertEqual(job_type.docker_params, docker_params)
 

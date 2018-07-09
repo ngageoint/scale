@@ -1009,7 +1009,7 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
-        self.assertDictEqual(result.interface, job_type.interface)
+        self.assertDictEqual(result.manifest, job_type.manifest)
 
     def test_job_types_bad_error_mapping(self):
         """Tests rejecting a job type with invalid error mapping JSON."""
@@ -1790,7 +1790,7 @@ class TestConfigurationViewImportV5(TestCase):
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
         self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, 'test-job-title')
-        self.assertDictEqual(job_types[0].interface, job_type.interface)
+        self.assertDictEqual(job_types[0].manifest, job_type.manifest)
         self.assertDictEqual(job_types[0].error_mapping, job_type.error_mapping)
         self.assertIsNotNone(job_types[0].trigger_rule)
 

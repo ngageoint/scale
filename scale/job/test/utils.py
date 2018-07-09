@@ -325,7 +325,7 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
             }
 
         job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
-                                          interface=manifest, priority=priority, timeout=manifest['job']['timeout'],
+                                          manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
                                           max_tries=max_tries, max_scheduled=max_scheduled,is_active=is_active,
                                           is_operational=is_operational, trigger_rule=trigger_rule,
                                           configuration=configuration)
@@ -384,7 +384,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
             'default_settings': {}
         }
 
-    job_type = JobType.objects.create(name=name, version=version, category=category, interface=interface,
+    job_type = JobType.objects.create(name=name, version=version, category=category, manifest=interface,
                                       priority=priority, timeout=timeout, max_tries=max_tries,
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,

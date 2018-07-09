@@ -82,7 +82,7 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
     for job_type in job_types:
         if job_type.configuration:
             configuration = JobConfigurationV2(job_type.configuration)
-            interface = JobInterface(job_type.interface)
+            interface = JobInterface(job_type.manifest)
             configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
 

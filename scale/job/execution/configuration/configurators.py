@@ -83,7 +83,7 @@ class QueuedExecutionConfigurator(object):
                 # Set output workspaces from job configuration
                 output_workspaces = {}
                 job_config = job.job_type.get_job_configuration()
-                interface = JobInterfaceSunset.create(job.job_type.interface, do_validate=False)
+                interface = JobInterfaceSunset.create(job.job_type.manifest, do_validate=False)
                 for output_name in interface.get_file_output_names():
                     output_workspace = job_config.get_output_workspace(output_name)
                     if output_workspace:
@@ -349,7 +349,7 @@ class ScheduledExecutionConfigurator(object):
         shared_mem = job_type.get_shared_mem_required()
         if shared_mem > 0:
             shared_mem = int(math.ceil(shared_mem))
-            if JobInterfaceSunset.is_seed_dict(job_type.interface):
+            if JobInterfaceSunset.is_seed_dict(job_type.manifest):
                 env_vars = {'ALLOCATED_SHAREDMEM': '%.1f' % float(shared_mem)}
             # Remove legacy code in v6
             else:
@@ -427,7 +427,7 @@ class ScheduledExecutionConfigurator(object):
         args = config._get_task_dict('main')['args']
 
         # TODO: Remove old-style logic for command parameters inject when with v6
-        if not JobInterfaceSunset.is_seed_dict(job_type.interface):
+        if not JobInterfaceSunset.is_seed_dict(job_type.manifest):
             args = JobInterface.replace_command_parameters(args, env_vars)
         else:
             args = environment_expansion(env_vars, args)

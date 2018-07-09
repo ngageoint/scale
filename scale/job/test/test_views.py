@@ -285,7 +285,7 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_property(self):
         """Tests successfully calling the job details view for one input property."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_field',
             'type': 'property',
         }]
@@ -306,11 +306,11 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_file(self):
         """Tests successfully calling the job details view for one input/output file."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_file',
             'type': 'file',
         }]
-        self.job.job_type_rev.interface['output_data'] = [{
+        self.job.job_type_rev.manifest['output_data'] = [{
             'name': 'output_file',
             'type': 'file',
         }]
@@ -342,11 +342,11 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_files(self):
         """Tests successfully calling the job details view for multiple input/output files."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_files',
             'type': 'files',
         }]
-        self.job.job_type_rev.interface['output_data'] = [{
+        self.job.job_type_rev.manifest['output_data'] = [{
             'name': 'output_files',
             'type': 'files',
         }]

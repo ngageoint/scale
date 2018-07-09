@@ -410,7 +410,7 @@ class JobTypeDetailsView(GenericAPIView):
                     secrets = configuration.get_secret_settings(interface.get_dict())
                     configuration.validate(interface.get_dict())
                 else:
-                    stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
+                    stored_interface = JobType.objects.values_list('manifest', flat=True).get(pk=job_type_id)
                     secrets = configuration.get_secret_settings(stored_interface)
                     configuration.validate(stored_interface)
         except InvalidJobConfiguration as ex:
@@ -460,7 +460,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
