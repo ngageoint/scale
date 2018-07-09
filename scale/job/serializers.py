@@ -70,7 +70,7 @@ class JobTypeSerializerV5(JobTypeBaseSerializerV5):
     disk_out_mult_required = serializers.FloatField(source='get_disk_out_mult_required')
 
     created = serializers.DateTimeField()
-    archived = serializers.DateTimeField()
+    archived = serializers.DateTimeField(source='deprecated')
     paused = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
@@ -94,7 +94,7 @@ class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     disk_out_mult_required = serializers.FloatField()
 
     created = serializers.DateTimeField()
-    archived = serializers.DateTimeField()
+    deprecated = serializers.DateTimeField()
     paused = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
@@ -112,7 +112,7 @@ class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.JSONField(default=dict)
+    interface = serializers.JSONField(default=dict, source='manifest')
 
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
@@ -129,7 +129,7 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    manifest = serializers.JSONField(default=dict, source='interface')
+    manifest = serializers.JSONField(default=dict)
     
     configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
@@ -179,9 +179,13 @@ class JobTypeRevisionBaseSerializer(ModelIdSerializer):
     revision_num = serializers.IntegerField()
 
 
-class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
+class JobTypeRevisionSerializerV5(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    interface = serializers.JSONField(default=dict)
+    interface = serializers.JSONField(default=dict, source='manifest')
+    created = serializers.DateTimeField()
+    
+class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
+    """Converts job type revision model fields to REST output."""
     manifest = serializers.JSONField(default=dict)
     created = serializers.DateTimeField()
 
@@ -278,11 +282,11 @@ class JobSerializerV6(JobBaseSerializerV6):
 
 class JobRevisionSerializerV5(JobSerializerV5):
     """Converts job model fields to REST output."""
-    job_type_rev = JobTypeRevisionSerializer()
+    job_type_rev = JobTypeRevisionSerializerV5()
     
 class JobRevisionSerializerV6(JobSerializerV6):
     """Converts job model fields to REST output."""
-    job_type_rev = JobTypeRevisionSerializer()
+    job_type_rev = JobTypeRevisionSerializerV6()
 
 # TODO: remove this function when REST API v5 is removed
 class JobExecutionBaseSerializerV5(ModelIdSerializer):
@@ -373,7 +377,7 @@ class JobDetailsSerializerV5(JobSerializerV5):
     from trigger.serializers import TriggerEventDetailsSerializer
 
     job_type = JobTypeSerializerV5()
-    job_type_rev = JobTypeRevisionSerializer()
+    job_type_rev = JobTypeRevisionSerializerV5()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
@@ -405,7 +409,7 @@ class JobDetailsSerializerV6(JobSerializerV6):
     from trigger.serializers import TriggerEventDetailsSerializer
 
     job_type = JobTypeSerializerV6()
-    job_type_rev = JobTypeRevisionSerializer()
+    job_type_rev = JobTypeRevisionSerializerV6()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
