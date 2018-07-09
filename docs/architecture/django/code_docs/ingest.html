@@ -287,6 +287,15 @@
 <li class="toctree-l1"><a class="reference internal" href="ingest.strike.html">ingest.strike package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ingest.strike.configuration.html">ingest.strike.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.strike.configuration.json.html">ingest.strike.configuration.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_v6">ingest.strike.configuration.json.configuration_v6 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions">ingest.strike.configuration.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
@@ -334,6 +343,15 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.html">ingest.test.strike package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ingest.test.strike.configuration.html">ingest.test.strike.configuration package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="ingest.test.strike.configuration.json.html">ingest.test.strike.configuration.json package</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json.test_configuration_v6">ingest.test.strike.configuration.json.test_configuration_v6 module</a></li>
+<li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration">ingest.test.strike.configuration.test_strike_configuration module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#module-ingest.test.strike.configuration">Module contents</a></li>
@@ -1561,14 +1579,30 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.models.Strike.get_strike_configuration_as_dict">
-<code class="descname">get_strike_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the configuration for this Strike process as a dict</p>
+<dt id="ingest.models.Strike.get_v5_strike_configuration_as_dict">
+<code class="descname">get_v5_strike_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_v5_strike_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v5 configuration for this Strike process as a dict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this Strike process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Strike.get_v6_configuration_json">
+<code class="descname">get_v6_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_v6_configuration_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the batch configuration in v6 of the JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The batch configuration in v6 of the JSON schema</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -1699,8 +1733,65 @@ the database will occur in an atomic transaction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.models.StrikeManager.create_strike_v6">
+<code class="descname">create_strike_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.create_strike_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
+will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
+the database will occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Strike process</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Strike process</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.StrikeManager.edit_strike">
 <code class="descname">edit_strike</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.edit_strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
+transaction. An argument of None for a field indicates that the field should not change.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; The unique identifier of the Strike process to edit</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.StrikeManager.edit_strike_v6">
+<code class="descname">edit_strike_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.edit_strike_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
 transaction. An argument of None for a field indicates that the field should not change.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1783,6 +1874,48 @@ transaction. An argument of None for a field indicates that the field should not
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="ingest.models.StrikeManager.validate_strike_v6">
+<code class="descname">validate_strike_v6</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.validate_strike_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given configuration for creating a new strike process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The strike configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The strike validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">strike.models.StrikeValidation</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.StrikeValidation">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">StrikeValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="ingest.models.StrikeValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#ingest.models.StrikeValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.StrikeValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#ingest.models.StrikeValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.StrikeValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#ingest.models.StrikeValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1797,8 +1930,15 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.IngestDetailsSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.IngestDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializer</span></code></a></p>
+<p>Converts ingest model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
 </dd></dl>
@@ -1811,8 +1951,15 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.IngestStatusSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestStatusSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestStatusSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.IngestStatusSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestStatusSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestStatusSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts ingest model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestStatusSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestStatusSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestStatusSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
 <p>Converts ingest model fields to REST output</p>
 </dd></dl>
@@ -1853,15 +2000,29 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.StrikeDetailsSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeSerializer" title="ingest.serializers.StrikeSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeSerializer</span></code></a></p>
+<dt id="ingest.serializers.StrikeDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeSerializerV5" title="ingest.serializers.StrikeSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeSerializerV5</span></code></a></p>
 <p>Converts strike model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.StrikeSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.StrikeDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeSerializerV6" title="ingest.serializers.StrikeSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeSerializerV6</span></code></a></p>
+<p>Converts strike model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.StrikeSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeBaseSerializer" title="ingest.serializers.StrikeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeBaseSerializer</span></code></a></p>
+<p>Converts strike model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.StrikeSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeBaseSerializer" title="ingest.serializers.StrikeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeBaseSerializer</span></code></a></p>
 <p>Converts strike model fields to REST output</p>
 </dd></dl>
@@ -1879,6 +2040,12 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">IngestDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for retrieving/updating details of an ingest.</p>
+<dl class="method">
+<dt id="ingest.views.IngestDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ingest.views.IngestDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.IngestDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -1958,12 +2125,6 @@ transaction. An argument of None for a field indicates that the field should not
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="ingest.views.IngestDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.IngestDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">IngestDetailsSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1971,6 +2132,12 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">IngestsStatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestsStatusView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving summarized ingest status.</p>
+<dl class="method">
+<dt id="ingest.views.IngestsStatusView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestsStatusView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="ingest.views.IngestsStatusView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestsStatusView.list" title="Permalink to this definition">¶</a></dt>
@@ -2011,12 +2178,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.IngestsStatusView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.IngestsStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.views.IngestsStatusView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.IngestsStatusView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">IngestStatusSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
@@ -2274,6 +2435,30 @@ transaction. An argument of None for a field indicates that the field should not
 <dl class="method">
 <dt id="ingest.views.StrikeDetailsView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</li>
+<li><strong>strike_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Strike process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikeDetailsView.get_impl">
+<code class="descname">get_impl</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.get_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the details for a Strike process and return them in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2296,8 +2481,62 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.views.StrikeDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.views.StrikeDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</li>
+<li><strong>strike_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Strike process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikeDetailsView.patch_impl">
+<code class="descname">patch_impl</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.patch_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits an existing Strike process and returns the updated details</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>strike_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Strike process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikeDetailsView.patch_impl_v6">
+<code class="descname">patch_impl_v6</code><span class="sig-paren">(</span><em>request</em>, <em>strike_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikeDetailsView.patch_impl_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing Strike process and returns the updated details</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2324,12 +2563,6 @@ transaction. An argument of None for a field indicates that the field should not
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.StrikeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="ingest.views.StrikeDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.StrikeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">StrikeDetailsSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -2340,6 +2573,42 @@ transaction. An argument of None for a field indicates that the field should not
 <dl class="method">
 <dt id="ingest.views.StrikesValidationView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesValidationView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesValidationView.post_impl">
+<code class="descname">post_impl</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesValidationView.post_impl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new Strike process and returns any warnings discovered</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesValidationView.post_impl_v6">
+<code class="descname">post_impl_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesValidationView.post_impl_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new Strike process and returns any warnings discovered</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2370,6 +2639,24 @@ transaction. An argument of None for a field indicates that the field should not
 <dl class="method">
 <dt id="ingest.views.StrikesView.create">
 <code class="descname">create</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesView.create_impl">
+<code class="descname">create_impl</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.create_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new Strike process and returns a link to the detail URL</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2386,8 +2673,50 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.views.StrikesView.create_impl_v6">
+<code class="descname">create_impl_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.create_impl_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Strike process and returns a link to the detail URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.views.StrikesView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine api version and call specific method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.StrikesView.list_impl">
+<code class="descname">list_impl</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.StrikesView.list_impl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all Strike process and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2407,12 +2736,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.StrikesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.StrikesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.views.StrikesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.StrikesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">StrikeSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

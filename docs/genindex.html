@@ -219,8 +219,6 @@
       <li><a href="architecture/django/code_docs/batch.management.commands.html#batch.management.commands.scale_batch_creator.Command.add_arguments">add_arguments() (batch.management.commands.scale_batch_creator.Command method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.add_arguments">(cli.management.commands.migratedata.Command method)</a>
-</li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_ingest.Command.add_arguments">(ingest.management.commands.scale_ingest.Command method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command.add_arguments">(ingest.management.commands.scale_scan.Command method)</a>
@@ -882,11 +880,11 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5">BatchDetailsSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer">BatchDetailsSerializerV5.JobSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5">BatchDetailsSerializerV5.JobSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer">BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer">BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer">BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer">BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializer">BatchDetailsSerializerV5.RecipeTypeSerializer (class in batch.serializers)</a>
 </li>
@@ -944,7 +942,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5">BatchSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.JobBaseSerializer">BatchSerializerV5.JobBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.JobBaseSerializerV5">BatchSerializerV5.JobBaseSerializerV5 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializer">BatchSerializerV5.RecipeTypeBaseSerializer (class in batch.serializers)</a>
 </li>
@@ -1128,8 +1126,6 @@
 </li>
       <li><a href="architecture/django/code_docs/cli.management.commands.html#module-cli.management.commands">cli.management.commands (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/cli.management.commands.html#module-cli.management.commands.migratedata">cli.management.commands.migratedata (module)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.clock.ClockEventError">ClockEventError</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.clock.ClockEventProcessor">ClockEventProcessor (class in job.clock)</a>
@@ -1139,8 +1135,6 @@
       <li><a href="architecture/django/code_docs/batch.management.commands.html#batch.management.commands.scale_batch_creator.Command">Command (class in batch.management.commands.scale_batch_creator)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command">(class in cli.management.commands.migratedata)</a>
-</li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command">(class in diagnostic.management.commands.scale_bake)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command">(class in diagnostic.management.commands.scale_hello)</a>
@@ -1352,23 +1346,25 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Cpus">Cpus (class in node.resources.resource)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.cpus">cpus (node.resources.node_resources.NodeResources attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.cpus_required">cpus_required (job.models.JobType attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">cpus_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobType.cpus_required">(job.models.JobType attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.cpus_required">(job.serializers.JobSerializerV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
@@ -1473,6 +1469,10 @@
       <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLinkManager.create_file_ancestry_links">create_file_ancestry_links() (product.models.FileAncestryLinkManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.utils.create_file_link">create_file_link() (in module product.test.utils)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.create_impl">create_impl() (ingest.views.StrikesView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.create_impl_v6">create_impl_v6() (ingest.views.StrikesView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.utils.create_ingest">create_ingest() (in module ingest.test.utils)</a>
 
@@ -1604,6 +1604,8 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.create_strike">(ingest.models.StrikeManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.create_strike_v6">create_strike_v6() (ingest.models.StrikeManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.utils.create_task_status_update">create_task_status_update() (in module job.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.create_task_update_model">create_task_update_model() (in module mesos_api.utils)</a>
@@ -2328,9 +2330,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.disk_out_mult_required">disk_out_mult_required (job.models.JobType attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.disk_out_required">disk_out_required (job.serializers.JobSerializerV5 attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.disk_out_required">disk_out_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.disk_out_required">(job.serializers.JobSerializerV5 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.disk_out_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
@@ -2427,6 +2431,8 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.edit_scan">edit_scan() (ingest.models.ScanManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.edit_strike">edit_strike() (ingest.models.StrikeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.edit_strike_v6">edit_strike_v6() (ingest.models.StrikeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.WorkspaceManager.edit_workspace">edit_workspace() (storage.models.WorkspaceManager method)</a>
 </li>
@@ -2551,6 +2557,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.errors">errors (batch.models.BatchValidation attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeValidation.errors">(ingest.models.StrikeValidation attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.errors">(port.schema.Configuration attribute)</a>
 </li>
       </ul></li>
@@ -2883,11 +2891,17 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessView.fixtures">(ingest.test.test_views.TestScansProcessView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.fixtures">(ingest.test.test_views.TestStrikeCreateView attribute)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.fixtures">(ingest.test.test_views.TestStrikeCreateViewV5 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.fixtures">(ingest.test.test_views.TestStrikeDetailsView attribute)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.fixtures">(ingest.test.test_views.TestStrikeCreateViewV6 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.fixtures">(ingest.test.test_views.TestStrikesView attribute)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.fixtures">(ingest.test.test_views.TestStrikeDetailsViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.fixtures">(ingest.test.test_views.TestStrikeDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.fixtures">(ingest.test.test_views.TestStrikesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.fixtures">(ingest.test.test_views.TestStrikesViewV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator.fixtures">(job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator attribute)</a>
 </li>
@@ -3016,8 +3030,6 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.generate_file_list">generate_file_list() (cli.management.commands.migratedata.Command static method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.node.NodeDefinition.generate_input_data">generate_input_data() (recipe.definition.node.NodeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.generate_node_input_data">generate_node_input_data() (recipe.definition.definition.RecipeDefinition method)</a>
@@ -3305,6 +3317,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_dict">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_dict">(ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_dict">(ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
@@ -3456,8 +3470,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_identical_nodes">get_identical_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_impl">get_impl() (node.views.NodeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView.get_impl">get_impl() (ingest.views.StrikeDetailsView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_impl">(node.views.NodeDetailsView method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingest_job_type">get_ingest_job_type() (ingest.models.IngestManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests">get_ingests() (ingest.models.IngestManager method)</a>
@@ -3761,6 +3779,8 @@
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.get_monitor">get_monitor() (in module ingest.strike.monitors.factory)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_monitor">(ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_monitor">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -4303,6 +4323,14 @@
       <ul>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.get_serializer_class">(batch.views.BatchesView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.get_serializer_class">(ingest.views.IngestDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsStatusView.get_serializer_class">(ingest.views.IngestsStatusView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView.get_serializer_class">(ingest.views.StrikeDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.get_serializer_class">(ingest.views.StrikesView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView.get_serializer_class">(job.views.JobDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.get_serializer_class">(job.views.JobExecutionDetailsView method)</a>
@@ -4424,8 +4452,6 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_strike_configuration">get_strike_configuration() (ingest.models.Strike method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_strike_configuration_as_dict">get_strike_configuration_as_dict() (ingest.models.Strike method)</a>
-</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strike_job_type">get_strike_job_type() (ingest.models.StrikeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strikes">get_strikes() (ingest.models.StrikeManager method)</a>
@@ -4516,6 +4542,8 @@
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.VersionView.get_v5">(scheduler.views.VersionView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_v5_strike_configuration_as_dict">get_v5_strike_configuration_as_dict() (ingest.models.Strike method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_v6">get_v6() (scheduler.views.SchedulerView method)</a>
 
       <ul>
@@ -4527,6 +4555,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_v6_configuration_json">get_v6_configuration_json() (batch.models.Batch method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_v6_configuration_json">(ingest.models.Strike method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_v6_configuration_json">(job.models.JobType method)</a>
 </li>
       </ul></li>
@@ -4543,6 +4573,8 @@
       <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_workspace">get_workspace() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_workspace">(ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -4609,8 +4641,6 @@
       <li><a href="architecture/django/code_docs/batch.management.commands.html#batch.management.commands.scale_batch_creator.Command.handle">handle() (batch.management.commands.scale_batch_creator.Command method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.handle">(cli.management.commands.migratedata.Command method)</a>
-</li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command.handle">(diagnostic.management.commands.scale_bake.Command method)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command.handle">(diagnostic.management.commands.scale_hello.Command method)</a>
@@ -4759,8 +4789,6 @@
       <li><a href="architecture/django/code_docs/batch.management.commands.html#batch.management.commands.scale_batch_creator.Command.help">help (batch.management.commands.scale_batch_creator.Command attribute)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.help">(cli.management.commands.migratedata.Command attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command.help">(diagnostic.management.commands.scale_bake.Command attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command.help">(diagnostic.management.commands.scale_hello.Command attribute)</a>
@@ -5018,6 +5046,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions">ingest.strike.configuration.exceptions (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#module-ingest.strike.configuration.json">ingest.strike.configuration.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_v6">ingest.strike.configuration.json.configuration_v6 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 (module)</a>
@@ -5051,6 +5083,10 @@
       <li><a href="architecture/django/code_docs/ingest.test.strike.html#module-ingest.test.strike">ingest.test.strike (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#module-ingest.test.strike.configuration">ingest.test.strike.configuration (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json">ingest.test.strike.configuration.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json.test_configuration_v6">ingest.test.strike.configuration.json.test_configuration_v6 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#module-ingest.test.strike.configuration.test_strike_configuration">ingest.test.strike.configuration.test_strike_configuration (module)</a>
 </li>
@@ -5128,7 +5164,9 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestCounts">IngestCounts (class in ingest.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializer">IngestDetailsSerializer (class in ingest.serializers)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializerV5">IngestDetailsSerializerV5 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestDetailsSerializerV6">IngestDetailsSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView">IngestDetailsView (class in ingest.views)</a>
 </li>
@@ -5142,7 +5180,9 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestStatus">IngestStatus (class in ingest.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestStatusSerializer">IngestStatusSerializer (class in ingest.serializers)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestStatusSerializerV5">IngestStatusSerializerV5 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestStatusSerializerV6">IngestStatusSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestStatusValuesSerializer">IngestStatusValuesSerializer (class in ingest.serializers)</a>
 </li>
@@ -5429,7 +5469,11 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.is_there_rule_match">is_there_rule_match() (ingest.models.Ingest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.is_valid">is_valid (batch.models.BatchValidation attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeValidation.is_valid">(ingest.models.StrikeValidation attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.iso2">iso2 (storage.models.CountryData attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.iso3">iso3 (storage.models.CountryData attribute)</a>
@@ -6056,9 +6100,9 @@
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.job_types">job_types (port.schema.Configuration attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobBaseSerializer">JobBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobBaseSerializerV5">JobBaseSerializerV5 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobBaseSerializerV6">JobBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.apps.JobConfig">JobConfig (class in job.apps)</a>
 </li>
@@ -6102,14 +6146,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer">JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializer">JobDetailsSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializer.ErrorSerializer">JobDetailsSerializer.ErrorSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializer.RecipeBaseSerializer">JobDetailsSerializer.RecipeBaseSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializer.TriggerEventDetailsSerializer">JobDetailsSerializer.TriggerEventDetailsSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5">JobDetailsSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.ErrorSerializer">JobDetailsSerializerV5.ErrorSerializer (class in job.serializers)</a>
@@ -6119,6 +6155,14 @@
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializer.TriggerEventBaseSerializer">JobDetailsSerializerV5.RecipeSerializer.TriggerEventBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.TriggerEventDetailsSerializer">JobDetailsSerializerV5.TriggerEventDetailsSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6">JobDetailsSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.ErrorSerializer">JobDetailsSerializerV6.ErrorSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.RecipeBaseSerializer">JobDetailsSerializerV6.RecipeBaseSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.TriggerEventDetailsSerializer">JobDetailsSerializerV6.TriggerEventDetailsSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView">JobDetailsView (class in job.views)</a>
 </li>
@@ -6146,17 +6190,17 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.jobexecution_set">(recipe.models.Recipe attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionBaseSerializer">JobExecutionBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionBaseSerializerV5">JobExecutionBaseSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializer">JobExecutionDetailsSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionBaseSerializerV6">JobExecutionBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5">JobExecutionDetailsSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5.ErrorSerializer">JobExecutionDetailsSerializerV5.ErrorSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5.NodeSerializerV4">JobExecutionDetailsSerializerV5.NodeSerializerV4 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV6">JobExecutionDetailsSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView">JobExecutionDetailsView (class in job.views)</a>
 </li>
@@ -6180,7 +6224,9 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionEndManager">JobExecutionEndManager (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionLogSerializer">JobExecutionLogSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionLogSerializerV5">JobExecutionLogSerializerV5 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionLogSerializerV6">JobExecutionLogSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager">JobExecutionManager (class in job.execution.manager)</a>
 
@@ -6202,17 +6248,17 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.jobexecutionoutput_set">(job.models.JobType attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializer">JobExecutionSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializer.ErrorBaseSerializer">JobExecutionSerializer.ErrorBaseSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializer.NodeBaseSerializer">JobExecutionSerializer.NodeBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5">JobExecutionSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5.ErrorBaseSerializer">JobExecutionSerializerV5.ErrorBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5.NodeBaseSerializerV4">JobExecutionSerializerV5.NodeBaseSerializerV4 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6">JobExecutionSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6.ErrorBaseSerializer">JobExecutionSerializerV6.ErrorBaseSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6.NodeBaseSerializer">JobExecutionSerializerV6.NodeBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobExecutionSpecificLogView">JobExecutionSpecificLogView (class in job.views)</a>
 </li>
@@ -6286,7 +6332,9 @@
         <li><a href="architecture/django/code_docs/job.seed.results.html#job.seed.results.job_results.JobResults">(class in job.seed.results.job_results)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobRevisionSerializer">JobRevisionSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobRevisionSerializerV5">JobRevisionSerializerV5 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobRevisionSerializerV6">JobRevisionSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.jobs_blocked">jobs_blocked (batch.models.Batch attribute)</a>
 
@@ -6358,17 +6406,17 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.jobs_total">(recipe.models.Recipe attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializer">JobSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializer.ErrorBaseSerializer">JobSerializer.ErrorBaseSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializer.TriggerEventBaseSerializer">JobSerializer.TriggerEventBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5">JobSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.ErrorBaseSerializer">JobSerializerV5.ErrorBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.TriggerEventBaseSerializer">JobSerializerV5.TriggerEventBaseSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6">JobSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.ErrorBaseSerializer">JobSerializerV6.ErrorBaseSerializer (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.TriggerEventBaseSerializer">JobSerializerV6.TriggerEventBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobsView">JobsView (class in job.views)</a>
 </li>
@@ -6384,17 +6432,9 @@
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.jobtype_set">jobtype_set (trigger.models.TriggerRule attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializer">JobTypeBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializerV5">JobTypeBaseSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializerV6">JobTypeBaseSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer">JobTypeDetailsSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer.ErrorSerializer">JobTypeDetailsSerializer.ErrorSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializer.TriggerRuleDetailsSerializer">JobTypeDetailsSerializer.TriggerRuleDetailsSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5">JobTypeDetailsSerializerV5 (class in job.serializers)</a>
 </li>
@@ -6444,8 +6484,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRunningStatusSerializer">JobTypeRunningStatusSerializer (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializer">JobTypeSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializerV5">JobTypeSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializerV6">JobTypeSerializerV6 (class in job.serializers)</a>
@@ -6470,17 +6508,23 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesView">JobTypesView (class in job.views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializer">JobUpdateSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializer.ScaleFileSerializerV5">JobUpdateSerializer.ScaleFileSerializerV5 (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV5">JobUpdateSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV5.ScaleFileSerializerV5">JobUpdateSerializerV5.ScaleFileSerializerV5 (class in job.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6">JobUpdateSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.BatchBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.BatchBaseSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.JobTypeBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.JobTypeBaseSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6 (class in job.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView">JobUpdatesView (class in job.views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobWithExecutionSerializer">JobWithExecutionSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobWithExecutionSerializerV5">JobWithExecutionSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.seed.results.html#job.seed.results.job_results.JobResults.json">json (job.seed.results.job_results.JobResults attribute)</a>
 </li>
@@ -6701,6 +6745,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsView.list_impl">(ingest.views.IngestsView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.list_impl">(ingest.views.StrikesView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricPlotView.list_impl">(metrics.views.MetricPlotView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricsView.list_impl">(metrics.views.MetricsView method)</a>
@@ -6780,8 +6826,12 @@
         <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.load_configuration">(storage.brokers.s3_broker.S3Broker method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration">load_monitor_configuration() (ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.load_monitor_configuration">load_monitor_configuration() (ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.load_scanner_configuration">load_scanner_configuration() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.local_path">local_path (storage.brokers.broker.FileDownload attribute)</a>
@@ -6884,9 +6934,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.mem_mult_required">mem_mult_required (job.models.JobType attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.mem_required">mem_required (job.serializers.JobSerializerV5 attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.mem_required">mem_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.mem_required">(job.serializers.JobSerializerV5 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.mem_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
@@ -7774,11 +7826,11 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4">NodeDetailsSerializerV4 (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer">NodeDetailsSerializerV4.JobExecutionSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5">NodeDetailsSerializerV4.JobExecutionSerializerV5 (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.ErrorBaseSerializer">NodeDetailsSerializerV4.JobExecutionSerializer.ErrorBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializer">NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializer (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.NodeBaseSerializer">NodeDetailsSerializerV4.JobExecutionSerializer.NodeBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5.NodeBaseSerializerV4">NodeDetailsSerializerV4.JobExecutionSerializerV5.NodeBaseSerializerV4 (class in node.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer">NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer (class in node.serializers_extra)</a>
 </li>
@@ -7816,11 +7868,11 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer">NodeStatusSerializer (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer">NodeStatusSerializer.JobExecutionSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5">NodeStatusSerializer.JobExecutionSerializerV5 (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.ErrorBaseSerializer">NodeStatusSerializer.JobExecutionSerializer.ErrorBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializer">NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializer (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer">NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5.NodeBaseSerializerV4">NodeStatusSerializer.JobExecutionSerializerV5.NodeBaseSerializerV4 (class in node.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer">NodeStatusSerializer.NodeStatusJobExecutionSerializer (class in node.serializers_extra)</a>
 </li>
@@ -8394,6 +8446,10 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.patch">(storage.views.WorkspaceDetailsView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView.patch_impl">patch_impl() (ingest.views.StrikeDetailsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView.patch_impl_v6">patch_impl_v6() (ingest.views.StrikeDetailsView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.patch_v4">patch_v4() (node.views.NodeDetailsView method)</a>
 
       <ul>
@@ -8597,6 +8653,10 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.post_completed">post_completed (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.post_exit_code">post_exit_code (job.models.JobExecution attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView.post_impl">post_impl() (ingest.views.StrikesValidationView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView.post_impl_v6">post_impl_v6() (ingest.views.StrikesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.post_started">post_started (job.models.JobExecution attribute)</a>
 </li>
@@ -9588,7 +9648,7 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer">RecipeJobsDetailsSerializer (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">RecipeJobsDetailsSerializer.JobRevisionSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializerV5">RecipeJobsDetailsSerializer.JobRevisionSerializerV5 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer">RecipeJobsSerializer (class in recipe.serializers)</a>
 </li>
@@ -10405,10 +10465,6 @@
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.serializer_class">(error.views.ErrorsView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.serializer_class">(ingest.views.IngestDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsStatusView.serializer_class">(ingest.views.IngestsStatusView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsView.serializer_class">(ingest.views.IngestsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansDetailsView.serializer_class">(ingest.views.ScansDetailsView attribute)</a>
@@ -10416,10 +10472,6 @@
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansProcessView.serializer_class">(ingest.views.ScansProcessView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansView.serializer_class">(ingest.views.ScansView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView.serializer_class">(ingest.views.StrikeDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.serializer_class">(ingest.views.StrikesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.CancelJobsView.serializer_class">(job.views.CancelJobsView attribute)</a>
 </li>
@@ -10595,6 +10647,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.setUp">(ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.setUp">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.setUp">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.setUp">(ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
@@ -10635,13 +10689,21 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.setUp">(ingest.test.test_views.TestScansView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.setUp">(ingest.test.test_views.TestStrikeCreateView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.setUp">(ingest.test.test_views.TestStrikeCreateViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.setUp">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.setUp">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView.setUp">(ingest.test.test_views.TestStrikesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.setUp">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.setUp">(ingest.test.test_views.TestStrikesView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.setUp">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.setUp">(ingest.test.test_views.TestStrikesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.setUp">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.setUp">(ingest.test.test_views.TestStrikesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.setUp">(ingest.test.test_views.TestStrikesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.setUp">(ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit method)</a>
 </li>
@@ -11644,17 +11706,25 @@
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration">(class in ingest.strike.configuration.strike_configuration_1_0)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeDetailsSerializer">StrikeDetailsSerializer (class in ingest.serializers)</a>
+      <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6">StrikeConfigurationV6 (class in ingest.strike.configuration.json.configuration_v6)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeDetailsSerializerV5">StrikeDetailsSerializerV5 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeDetailsSerializerV6">StrikeDetailsSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikeDetailsView">StrikeDetailsView (class in ingest.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager">StrikeManager (class in ingest.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializer">StrikeSerializer (class in ingest.serializers)</a>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV5">StrikeSerializerV5 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV6">StrikeSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView">StrikesValidationView (class in ingest.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView">StrikesView (class in ingest.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeValidation">StrikeValidation (class in ingest.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.string_to_TaskStatusCode">string_to_TaskStatusCode() (in module mesos_api.utils)</a>
 </li>
@@ -11845,6 +11915,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_absolute_workspace_path">test_absolute_workspace_path() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_absolute_workspace_path">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_absolute_workspace_path">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -12045,6 +12117,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bad_version">test_bad_version() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_bad_version">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bad_version">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_bad_version">(job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
@@ -12061,6 +12135,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bare_min">test_bare_min() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_bare_min">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bare_min">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bare_min">(storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
@@ -12081,6 +12157,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_blank_filename_regex">test_blank_filename_regex() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_blank_filename_regex">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_blank_filename_regex">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -12311,9 +12389,13 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansValidationView.test_configuration_bad_type">(ingest.test.test_views.TestScansValidationView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.test_configuration_bad_type">(ingest.test.test_views.TestStrikeCreateView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.test_configuration_bad_type">(ingest.test.test_views.TestStrikeCreateViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView.test_configuration_bad_type">(ingest.test.test_views.TestStrikesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.test_configuration_bad_type">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.test_configuration_bad_type">(ingest.test.test_views.TestStrikesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_configuration_bad_type">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateView.test_configuration_bad_type">(storage.test.test_views.TestWorkspaceCreateView method)</a>
 </li>
@@ -12344,8 +12426,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.seed.html#job.test.seed.test_types.TestSeedOutputsJson.test_construct_schema">test_construct_schema() (job.test.seed.test_types.TestSeedOutputsJson method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_conversion_from_1_0">test_conversion_from_1_0() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_conversion_from_1_0">test_conversion_from_1_0() (ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_conversion_from_1_0">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConversion.test_convert_1_0_to_1_1">test_convert_1_0_to_1_1() (job.test.configuration.results.test_results_manifest.TestResultsManifestConversion method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.json.html#job.test.execution.configuration.json.test_exe_config.TestExecutionConfigurationConvert.test_convert_1_0_to_current">test_convert_1_0_to_current() (job.test.execution.configuration.json.test_exe_config.TestExecutionConfigurationConvert method)</a>
@@ -12595,7 +12681,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_bad_config">test_edit_bad_config() (ingest.test.test_views.TestScanDetailsView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_edit_bad_config">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.test_edit_bad_config">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_bad_config">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_edit_bad_config">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
 </li>
@@ -12617,7 +12705,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_config">test_edit_config() (ingest.test.test_views.TestScanDetailsView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_edit_config">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.test_edit_config">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_config">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_edit_config">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
 </li>
@@ -12663,7 +12753,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_simple">test_edit_simple() (ingest.test.test_views.TestScanDetailsView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_edit_simple">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.test_edit_simple">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_edit_simple">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_simple">(job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
@@ -13377,9 +13469,13 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansValidationView.test_invalid_configuration">(ingest.test.test_views.TestScansValidationView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.test_invalid_configuration">(ingest.test.test_views.TestStrikeCreateView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.test_invalid_configuration">(ingest.test.test_views.TestStrikeCreateViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView.test_invalid_configuration">(ingest.test.test_views.TestStrikesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.test_invalid_configuration">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.test_invalid_configuration">(ingest.test.test_views.TestStrikesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_invalid_configuration">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateView.test_invalid_configuration">(storage.test.test_views.TestWorkspaceCreateView method)</a>
 </li>
@@ -13821,9 +13917,13 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansValidationView.test_missing_configuration">(ingest.test.test_views.TestScansValidationView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.test_missing_configuration">(ingest.test.test_views.TestStrikeCreateView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.test_missing_configuration">(ingest.test.test_views.TestStrikeCreateViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView.test_missing_configuration">(ingest.test.test_views.TestStrikesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.test_missing_configuration">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.test_missing_configuration">(ingest.test.test_views.TestStrikesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_missing_configuration">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateView.test_missing_configuration">(storage.test.test_views.TestWorkspaceCreateView method)</a>
 </li>
@@ -13836,8 +13936,12 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_missing_job_types">test_missing_job_types() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_monitor">test_missing_monitor() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_missing_monitor">test_missing_monitor() (ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_monitor">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_missing_mount">test_missing_mount() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_missing_nfs_path">test_missing_nfs_path() (storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration method)</a>
@@ -13915,6 +14019,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_missing_workspace">test_missing_workspace() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_missing_workspace">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_workspace">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_missing_workspace">(recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData method)</a>
@@ -13979,7 +14085,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.test_name">test_name() (ingest.test.test_views.TestScansView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.test_name">(ingest.test.test_views.TestStrikesView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.test_name">(ingest.test.test_views.TestStrikesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.test_name">(ingest.test.test_views.TestStrikesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_name">(job.test.test_views.TestJobTypesView method)</a>
 </li>
@@ -14075,7 +14183,9 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanProcessView.test_not_found">(ingest.test.test_views.TestScanProcessView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_not_found">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.test_not_found">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_not_found">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_not_found">(job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
@@ -14230,10 +14340,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
@@ -14515,7 +14625,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.test_reverse_sorting">test_reverse_sorting() (ingest.test.test_views.TestScansView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.test_reverse_sorting">(ingest.test.test_views.TestStrikesView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.test_reverse_sorting">(ingest.test.test_views.TestStrikesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.test_reverse_sorting">(ingest.test.test_views.TestStrikesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_reverse_sorting">(job.test.test_views.TestJobTypesView method)</a>
 </li>
@@ -14637,7 +14749,9 @@
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.test_sorting">test_sorting() (ingest.test.test_views.TestScansView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.test_sorting">(ingest.test.test_views.TestStrikesView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.test_sorting">(ingest.test.test_views.TestStrikesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.test_sorting">(ingest.test.test_views.TestStrikesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_sorting">(job.test.test_views.TestJobTypesView method)</a>
 </li>
@@ -14755,13 +14869,21 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.test_successful">(ingest.test.test_views.TestScansView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView.test_successful">(ingest.test.test_views.TestStrikeCreateView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.test_successful">(ingest.test.test_views.TestStrikeCreateViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_successful">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.test_successful">(ingest.test.test_views.TestStrikeCreateViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView.test_successful">(ingest.test.test_views.TestStrikesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.test_successful">(ingest.test.test_views.TestStrikeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView.test_successful">(ingest.test.test_views.TestStrikesView method)</a>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.test_successful">(ingest.test.test_views.TestStrikeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.test_successful">(ingest.test.test_views.TestStrikesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.test_successful">(ingest.test.test_views.TestStrikesValidationViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.test_successful">(ingest.test.test_views.TestStrikesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.test_successful">(ingest.test.test_views.TestStrikesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.triggers.configuration.html#ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit.test_successful">(ingest.test.triggers.configuration.test_ingest_trigger_rule.TestIngestTriggerRuleConfigurationInit method)</a>
 </li>
@@ -14927,6 +15049,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_successful_all">test_successful_all() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_successful_all">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_successful_all">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_all">(recipe.test.test_views.TestRecipesView method)</a>
@@ -15057,6 +15181,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.test_successful_update_and_create_json">test_successful_update_and_create_json() (scheduler.test.sync.test_job_type_manager.TestJobTypeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess.test_successful_v6">test_successful_v6() (ingest.test.test_models.TestStrikeManagerCreateStrikeProcess method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.html#job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2.test_successful_validation">test_successful_validation() (job.test.configuration.json.test_job_config_2_0.TestJobConfigurationV2 method)</a>
 
@@ -15192,6 +15318,8 @@
         <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_system_job_task">(job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_title_to_name">test_title_to_name() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_circular">test_topological_order_circular() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_topological_order_successful">test_topological_order_successful() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
@@ -15442,13 +15570,19 @@
         <li><a href="architecture/django/code_docs/data.test.interface.html#data.test.interface.test_parameter.TestJsonParameter.test_validate">(data.test.interface.test_parameter.TestJsonParameter method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_monitor_type">test_validate_bad_monitor_type() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_validate_bad_monitor_type">test_validate_bad_monitor_type() (ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_monitor_type">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_bad_scanner_type">test_validate_bad_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_bad_workspace">test_validate_bad_workspace() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_validate_bad_workspace">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_workspace">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -15506,8 +15640,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_invalid_input_interface">test_validate_invalid_input_interface() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type">test_validate_mismatched_monitor_type() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_validate_mismatched_monitor_type">test_validate_mismatched_monitor_type() (ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_mismatched_scanner_type">test_validate_mismatched_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_validate_missing_dependency">test_validate_missing_dependency() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
@@ -15527,12 +15665,16 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_successful_all">test_validate_successful_all() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_validate_successful_all">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_successful_all">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_workspace_not_active">test_validate_workspace_not_active() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_validate_workspace_not_active">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_workspace_not_active">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
       </ul></li>
@@ -16234,15 +16376,25 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration">TestStrikeConfiguration (class in ingest.test.strike.configuration.test_strike_configuration)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateView">TestStrikeCreateView (class in ingest.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6">TestStrikeConfigurationV6 (class in ingest.test.strike.configuration.json.test_configuration_v6)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView">TestStrikeDetailsView (class in ingest.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5">TestStrikeCreateViewV5 (class in ingest.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6">TestStrikeCreateViewV6 (class in ingest.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5">TestStrikeDetailsViewV5 (class in ingest.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6">TestStrikeDetailsViewV6 (class in ingest.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestStrikeManagerCreateStrikeProcess">TestStrikeManagerCreateStrikeProcess (class in ingest.test.test_models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationView">TestStrikesValidationView (class in ingest.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5">TestStrikesValidationViewV5 (class in ingest.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesView">TestStrikesView (class in ingest.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6">TestStrikesValidationViewV6 (class in ingest.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5">TestStrikesViewV5 (class in ingest.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6">TestStrikesViewV6 (class in ingest.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.html#scheduler.test.tasks.test_manager.TestSystemTaskManager">TestSystemTaskManager (class in scheduler.test.tasks.test_manager)</a>
 </li>
@@ -16320,6 +16472,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.title">(storage.models.Workspace attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/util.html#util.rest.title_to_name">title_to_name() (in module util.rest)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchMetrics.to_dict">to_dict() (batch.models.BatchMetrics method)</a>
 
       <ul>
@@ -16779,6 +16933,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.validate">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.strike.configuration.json.html#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.validate">(ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate">(ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
@@ -16970,6 +17126,8 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.validate_resource_level">validate_resource_level() (in module scheduler.models)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.validate_strike_v6">validate_strike_v6() (ingest.models.StrikeManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate_trigger_for_job">validate_trigger_for_job() (ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
 
       <ul>
@@ -17022,10 +17180,6 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ValidationWarning">(class in ingest.scan.configuration.scan_configuration)</a>
-</li>
-        <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.ValidationWarning">(class in ingest.strike.configuration.strike_configuration)</a>
-</li>
-        <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.ValidationWarning">(class in ingest.strike.configuration.strike_configuration_1_0)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.ValidationWarning">(class in job.configuration.data.job_data)</a>
 </li>
@@ -17121,6 +17275,22 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestsViewV6.version">(ingest.test.test_views.TestIngestsViewV6 attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV5.version">(ingest.test.test_views.TestStrikeCreateViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeCreateViewV6.version">(ingest.test.test_views.TestStrikeCreateViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV5.version">(ingest.test.test_views.TestStrikeDetailsViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsViewV6.version">(ingest.test.test_views.TestStrikeDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV5.version">(ingest.test.test_views.TestStrikesValidationViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesValidationViewV6.version">(ingest.test.test_views.TestStrikesValidationViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.version">(ingest.test.test_views.TestStrikesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.version">(ingest.test.test_views.TestStrikesViewV6 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.version">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.version">(recipe.models.RecipeType attribute)</a>
@@ -17147,7 +17317,11 @@
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.cluster_utils.wait_for_leader">wait_for_leader() (in module scheduler.cluster_utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchValidation.warnings">warnings (batch.models.BatchValidation attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeValidation.warnings">(ingest.models.StrikeValidation attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WktField">WktField (class in storage.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace">Workspace (class in storage.models)</a>

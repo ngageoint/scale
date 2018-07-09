@@ -1,0 +1,22 @@
+ingest\.test\.strike\.configuration\.json package
+=================================================
+
+Submodules
+----------
+
+ingest\.test\.strike\.configuration\.json\.test\_configuration\_v6 module
+-------------------------------------------------------------------------
+
+.. automodule:: ingest.test.strike.configuration.json.test_configuration_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.strike.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

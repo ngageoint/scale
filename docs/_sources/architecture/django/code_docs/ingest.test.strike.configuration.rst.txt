@@ -1,6 +1,13 @@
 ingest\.test\.strike\.configuration package
 ===========================================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.test.strike.configuration.json
+
 Submodules
 ----------
 

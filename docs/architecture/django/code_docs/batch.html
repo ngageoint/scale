@@ -2039,23 +2039,38 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <a class="reference internal" href="#batch.serializers.BatchSerializerV5" title="batch.serializers.BatchSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">batch.serializers.BatchSerializerV5</span></code></a></p>
 <p>Converts batch model fields to REST output.</p>
 <dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializer">
-<em class="property">class </em><code class="descname">JobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobBaseSerializer" title="job.serializers.JobBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializer</span></code></a></p>
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5">
+<em class="property">class </em><code class="descname">JobSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobBaseSerializerV5" title="job.serializers.JobBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobBaseSerializerV5</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
 <dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer">
-<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer">
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer">
-<em class="property">class </em><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer">
+<em class="property">class </em><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">
+<code class="descname">cpus_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.disk_out_required">
+<code class="descname">disk_out_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.disk_out_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.mem_required">
+<code class="descname">mem_required</code><em class="property"> = ''</em><a class="headerlink" href="#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.mem_required" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -2102,8 +2117,8 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <a class="reference internal" href="#batch.serializers.BatchBaseSerializerV5" title="batch.serializers.BatchBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">batch.serializers.BatchBaseSerializerV5</span></code></a></p>
 <p>Converts batch model fields to REST output.</p>
 <dl class="class">
-<dt id="batch.serializers.BatchSerializerV5.JobBaseSerializer">
-<em class="property">class </em><code class="descname">JobBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="batch.serializers.BatchSerializerV5.JobBaseSerializerV5">
+<em class="property">class </em><code class="descname">JobBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializerV5.JobBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts job model fields to REST output.</p>
 </dd></dl>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.strike.configuration package &mdash; Scale 5.5.0-snapshot documentation</title>
+  <title>ingest.strike.configuration.json package &mdash; Scale 5.5.0-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ingest.strike.configuration.json package" href="ingest.strike.configuration.json.html" />
-    <link rel="prev" title="ingest.strike package" href="ingest.strike.html" />
+    <link rel="next" title="ingest.strike.monitors package" href="ingest.strike.monitors.html" />
+    <link rel="prev" title="ingest.strike.configuration package" href="ingest.strike.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -198,13 +198,15 @@
         
           <li><a href="ingest.strike.html">ingest.strike package</a> &raquo;</li>
         
-      <li>ingest.strike.configuration package</li>
+          <li><a href="ingest.strike.configuration.html">ingest.strike.configuration package</a> &raquo;</li>
+        
+      <li>ingest.strike.configuration.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/ingest.strike.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.strike.configuration.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -217,48 +219,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ingest-strike-configuration-package">
-<h1>ingest.strike.configuration package<a class="headerlink" href="#ingest-strike-configuration-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ingest.strike.configuration.json.html">ingest.strike.configuration.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_v6">ingest.strike.configuration.json.configuration_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="ingest-strike-configuration-json-package">
+<h1>ingest.strike.configuration.json package<a class="headerlink" href="#ingest-strike-configuration-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ingest.strike.configuration.exceptions">
-<span id="ingest-strike-configuration-exceptions-module"></span><h2>ingest.strike.configuration.exceptions module<a class="headerlink" href="#module-ingest.strike.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
-<p>Defines exceptions that can occur when interacting with Strike configuration</p>
-<dl class="exception">
-<dt id="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration">
-<em class="property">exception </em><code class="descclassname">ingest.strike.configuration.exceptions.</code><code class="descname">InvalidStrikeConfiguration</code><span class="sig-paren">(</span><em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
-<p>Exception indicating that the provided strike configuration was invalid</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.strike.configuration.strike_configuration">
-<span id="ingest-strike-configuration-strike-configuration-module"></span><h2>ingest.strike.configuration.strike_configuration module<a class="headerlink" href="#module-ingest.strike.configuration.strike_configuration" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for running an instance of Strike</p>
+<div class="section" id="module-ingest.strike.configuration.json.configuration_v6">
+<span id="ingest-strike-configuration-json-configuration-v6-module"></span><h2>ingest.strike.configuration.json.configuration_v6 module<a class="headerlink" href="#module-ingest.strike.configuration.json.configuration_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 batch configuration schema</p>
 <dl class="class">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration">
-<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration.</code><code class="descname">StrikeConfiguration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6">
+<em class="property">class </em><code class="descclassname">ingest.strike.configuration.json.configuration_v6.</code><code class="descname">StrikeConfigurationV6</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the configuration for a running Strike instance. The configuration includes details about mounting the
 transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
 identify files to ingest and how to store them.</p>
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -273,8 +251,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_monitor">
-<code class="descname">get_monitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_monitor" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_monitor">
+<code class="descname">get_monitor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_monitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configured monitor for this Strike configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -289,8 +267,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace">
-<code class="descname">get_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_workspace">
+<code class="descname">get_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.get_workspace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the monitored workspace name for this Strike configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -305,8 +283,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration">
-<code class="descname">load_monitor_configuration</code><span class="sig-paren">(</span><em>monitor</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.load_monitor_configuration">
+<code class="descname">load_monitor_configuration</code><span class="sig-paren">(</span><em>monitor</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.load_monitor_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the configuration into the given monitor</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -319,8 +297,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.json.configuration_v6.StrikeConfigurationV6.validate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the Strike configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -333,7 +311,7 @@ identify files to ingest and how to store them.</p>
 </tbody>
 </table>
 <dl class="docutils">
-<dt>:raises <a class="reference internal" href="#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
+<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
 <dd>invalid.</dd>
 </dl>
 </dd></dl>
@@ -341,89 +319,8 @@ identify files to ingest and how to store them.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.strike.configuration.strike_configuration_1_0">
-<span id="ingest-strike-configuration-strike-configuration-1-0-module"></span><h2>ingest.strike.configuration.strike_configuration_1_0 module<a class="headerlink" href="#module-ingest.strike.configuration.strike_configuration_1_0" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for running an instance of Strike</p>
-<dl class="class">
-<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration">
-<em class="property">class </em><code class="descclassname">ingest.strike.configuration.strike_configuration_1_0.</code><code class="descname">StrikeConfiguration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the configuration for a running Strike instance. The configuration includes details about mounting the
-transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
-identify files to ingest and how to store them.</p>
-<dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount">
-<code class="descname">get_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the &#8220;mount&#8221; value</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The mount value</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_transfer_suffix">
-<code class="descname">get_transfer_suffix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_transfer_suffix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the &#8220;transfer_suffix&#8221; value</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The transfer_suffix value</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name">
-<code class="descname">match_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Attempts to match the given file name against this configuration and if a match is made, returns the details
-about how to ingest the file. If no match is found, None is returned</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> (<em>str</em>) &#8211; The name of the file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A tuple of the list of data types to add to the file, the remote path for storing the file within the
-workspace, and the workspace, or None if no file name match is found</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple(list of str, str, <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>)</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.strike.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.strike.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ingest.strike.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.strike.configuration.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -435,10 +332,10 @@ workspace, and the workspace, or None if no file name match is found</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.strike.configuration.json.html" class="btn btn-neutral float-right" title="ingest.strike.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.strike.monitors.html" class="btn btn-neutral float-right" title="ingest.strike.monitors package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.strike.html" class="btn btn-neutral" title="ingest.strike package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.strike.configuration.html" class="btn btn-neutral" title="ingest.strike.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
