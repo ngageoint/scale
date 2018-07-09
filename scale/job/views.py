@@ -460,8 +460,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        # TODO: Remove interface from base_fields in v6
-        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+        base_fields = {'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                        'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
