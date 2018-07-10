@@ -705,7 +705,7 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(result.disk_out_const_required, 1024.0)
         self.assertEqual(result.disk_out_mult_required, 1.0)
 
-        self.assertDictEqual(result.interface, interface)
+        self.assertDictEqual(result.manifest, interface)
         self.assertDictEqual(result.error_mapping, error_mapping)
 
         self.assertIsNotNone(result.trigger_rule)
@@ -787,7 +787,7 @@ class TestConfigurationViewImportV5(TestCase):
         result = job_types[0]
 
         self.assertEqual(result.title, job_type.title)
-        self.assertDictEqual(result.interface, interface)
+        self.assertDictEqual(result.manifest, interface)
 
     def test_job_types_edit_error_mapping(self):
         """Tests importing only job types that update the error mapping JSON."""
@@ -1741,7 +1741,7 @@ class TestConfigurationViewImportV5(TestCase):
         self.assertEqual(job_types[0].title, 'test-job-title')
         self.assertEqual(job_types[0].mem_const_required, 1024.0)
         self.assertEqual(job_types[0].mem_mult_required, 2.0)
-        self.assertDictEqual(job_types[0].interface, interface)
+        self.assertDictEqual(job_types[0].manifest, interface)
         self.assertIsNone(job_types[0].max_scheduled)
         self.assertDictEqual(job_types[0].error_mapping, error_mapping)
         self.assertIsNotNone(job_types[0].trigger_rule)

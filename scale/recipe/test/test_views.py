@@ -788,7 +788,7 @@ class TestRecipesView(TransactionTestCase):
         self.assertEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(results['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
-        self.assertDictEqual(results['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+        self.assertDictEqual(results['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.manifest)
 
     def test_superseded(self):
         """Tests successfully calling the recipe details view for superseded recipes."""
@@ -895,7 +895,7 @@ class TestRecipeDetailsView(TransactionTestCase):
         self.assertEqual(result['id'], self.recipe1.id)
         self.assertEqual(result['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(result['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
-        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.manifest)
         self.assertDictEqual(result['input'], self.recipe1.input)
         self.assertTrue('inputs' not in result)
         self.assertTrue('definiton' not in result['recipe_type'])
@@ -1008,7 +1008,7 @@ class OldTestRecipeDetailsView(TransactionTestCase):
         self.assertEqual(result['id'], self.recipe1.id)
         self.assertEqual(result['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(result['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
-        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.manifest)
 
         self.assertEqual(len(result['inputs']), 1)
         for data_input in result['inputs']:
