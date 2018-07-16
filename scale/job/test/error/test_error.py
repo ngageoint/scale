@@ -1,12 +1,13 @@
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import django
-from django.test import TransactionTestCase
+from django.test import TestCase
 
 from job.error.error import JobError
 
 
-class TestErrorModel(TransactionTestCase):
+class TestJobErrorModel(TestCase):
     """Tests functions in the job error module."""
 
     def setUp(self):

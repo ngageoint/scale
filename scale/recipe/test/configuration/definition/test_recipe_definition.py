@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import django
 from django.test import TestCase
@@ -7,8 +8,6 @@ from mock import patch
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 from job.configuration.data.data_file import AbstractDataFileStore
-from job.configuration.results.job_results import JobResults
-from job.models import Job
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition

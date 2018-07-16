@@ -1,5 +1,6 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import datetime
 
