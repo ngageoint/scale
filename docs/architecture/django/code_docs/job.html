@@ -4596,6 +4596,22 @@ This is merely a placeholder for the short term to minimize changes associate wi
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobType.get_tagged_docker_image">
+<code class="descname">get_tagged_docker_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_tagged_docker_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a complete Docker image and tag with the correct packageVersion value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The complete Docker image and tag</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobType.get_v2_configuration_json">
 <code class="descname">get_v2_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_v2_configuration_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job configuration in v2 of the JSON schema</p>
@@ -5436,22 +5452,6 @@ type model.</p>
 <code class="descname">created</code><a class="headerlink" href="#job.models.JobTypeRevision.created" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobTypeRevision.docker_image">
-<code class="descname">docker_image</code><a class="headerlink" href="#job.models.JobTypeRevision.docker_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a complete Docker image and tag with the correct packageVersion value</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The complete Docker image and tag</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">

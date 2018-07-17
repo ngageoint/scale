@@ -2345,8 +2345,6 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.docker_image">docker_image (job.models.JobType attribute)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.docker_image">(job.models.JobTypeRevision attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.docker_image">(job.tasks.base_task.Task attribute)</a>
 </li>
       </ul></li>
@@ -4002,6 +4000,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_outputs">get_outputs() (job.seed.manifest.SeedManifest method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_package_version">get_package_version() (job.seed.manifest.SeedManifest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.results.results_manifest.html#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_parse_results">get_parse_results() (job.configuration.results.results_manifest.results_manifest.ResultsManifest method)</a>
 
       <ul>
@@ -4455,6 +4455,8 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strike_job_type">get_strike_job_type() (ingest.models.StrikeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strikes">get_strikes() (ingest.models.StrikeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_tagged_docker_image">get_tagged_docker_image() (job.models.JobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_tags">get_tags() (job.seed.manifest.SeedManifest method)</a>
 </li>
@@ -13182,6 +13184,12 @@
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_sources_data_time">test_get_sources_data_time() (source.test.test_models.TestSourceFileManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_docker_image_legacy_job_type">test_get_tagged_docker_image_from_docker_image_legacy_job_type() (job.test.test_models.TestJobType method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_tagged_image">test_get_tagged_docker_image_from_tagged_image() (job.test.test_models.TestJobType method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_untagged_image">test_get_tagged_docker_image_from_untagged_image() (job.test.test_models.TestJobType method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_kill">test_get_tasks_to_kill() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_schedule">test_get_tasks_to_schedule() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
@@ -14348,10 +14356,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
