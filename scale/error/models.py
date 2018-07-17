@@ -114,6 +114,8 @@ def _cache_error(error):
         if error.job_type_name is None:
             CACHED_LEGACY_JOB_ERROR_NAMES[error.name] = error.id
         else:
+            if error.job_type_name not in CACHED_JOB_ERROR_NAMES:
+                CACHED_JOB_ERROR_NAMES[error.job_type_name] = {}
             CACHED_JOB_ERROR_NAMES[error.job_type_name][error.name] = error.id
 
 
