@@ -3225,6 +3225,22 @@ class JobType(models.Model):
 
         return Resources(self.custom_resources)
 
+    def get_tagged_docker_image(self):
+        """Constructs a complete Docker image and tag with the correct packageVersion value
+
+        :return: The complete Docker image and tag
+        :rtype: str
+        """
+        interface = self.get_job_interface()
+        docker_image = self.docker_image
+        if isinstance(interface, SeedManifest):
+            if ':' in docker_image:
+                docker_image = docker_image.split(':', 1)[0]
+            return '%s:%s' % (docker_image, interface.get_package_version())
+
+        else:
+            return docker_image
+
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
 
@@ -3539,23 +3555,6 @@ class JobTypeRevision(models.Model):
         """
 
         return JobInterfaceSunset.create(self.interface)
-
-    @property
-    def docker_image(self):
-        """Constructs a complete Docker image and tag with the correct packageVersion value
-
-        :return: The complete Docker image and tag
-        :rtype: str
-        """
-        interface = self.get_job_interface()
-        if isinstance(interface, SeedManifest):
-            docker_image = self.job_type.docker_image
-            if ':' in docker_image:
-                docker_image = docker_image.split(':', 1)[0]
-            return '%s:%s' % (docker_image, interface['job']['packageVersion'])
-
-        raise NotImplementedError
-
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision

@@ -386,7 +386,7 @@ class ScheduledExecutionConfigurator(object):
         """
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
-        config.add_to_task('pull', args=create_pull_command(job_type.docker_image))
+        config.add_to_task('pull', args=create_pull_command(job_type.get_tagged_docker_image()))
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS)
         config.add_to_task('post', args=POST_TASK_COMMAND_ARGS)
 

@@ -36,7 +36,7 @@ class MainTask(JobExecutionTask):
             if self._is_system:
                 self._docker_image = self._create_scale_image_name()
             else:
-                self._docker_image = job_type.docker_image
+                self._docker_image = job_type.get_tagged_docker_image()
             self._docker_params = configuration.get_docker_params('main')
             self._is_docker_privileged = job_type.docker_privileged
         self._command_arguments = configuration.get_args('main')

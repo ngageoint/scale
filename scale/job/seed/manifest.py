@@ -140,6 +140,15 @@ class SeedManifest(object):
 
         return self.get_job()['jobVersion']
 
+
+    def get_package_version(self):
+        """Gets the package version
+        :return: the version
+        :rtype: str
+        """
+
+        return self.get_job()['packageVersion']
+
     def get_timeout(self):
         """Gets the Job timeout
 
