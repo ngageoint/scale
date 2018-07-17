@@ -228,19 +228,40 @@
 <div class="section" id="module-job.test.error.test_error">
 <span id="job-test-error-test-error-module"></span><h2>job.test.error.test_error module<a class="headerlink" href="#module-job.test.error.test_error" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="job.test.error.test_error.TestJobErrorModel">
-<em class="property">class </em><code class="descclassname">job.test.error.test_error.</code><code class="descname">TestJobErrorModel</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobErrorModel" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.error.test_error.TestJobError">
+<em class="property">class </em><code class="descclassname">job.test.error.test_error.</code><code class="descname">TestJobError</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <p>Tests functions in the job error module.</p>
 <dl class="method">
-<dt id="job.test.error.test_error.TestJobErrorModel.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobErrorModel.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.error.test_error.TestJobError.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobError.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.error.test_error.TestJobErrorModel.test_create_error_model">
-<code class="descname">test_create_error_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobErrorModel.test_create_error_model" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.error.test_error.TestJobError.test_create_error_model">
+<code class="descname">test_create_error_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_error.TestJobError.test_create_error_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate that a complete Error model is created using JobError</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.error.test_mapping">
+<span id="job-test-error-test-mapping-module"></span><h2>job.test.error.test_mapping module<a class="headerlink" href="#module-job.test.error.test_mapping" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.error.test_mapping.TestJobErrorMapping">
+<em class="property">class </em><code class="descclassname">job.test.error.test_mapping.</code><code class="descname">TestJobErrorMapping</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_mapping.TestJobErrorMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests the JobErrorMapping class</p>
+<dl class="method">
+<dt id="job.test.error.test_mapping.TestJobErrorMapping.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_mapping.TestJobErrorMapping.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.error.test_mapping.TestJobErrorMapping.test_save_models">
+<code class="descname">test_save_models</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.error.test_mapping.TestJobErrorMapping.test_save_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling JobErrorMapping.save_models() successfully</p>
 </dd></dl>
 
 </dd></dl>

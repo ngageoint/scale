@@ -5852,6 +5852,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.error.html#module-job.test.error.test_error">job.test.error.test_error (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.error.html#module-job.test.error.test_mapping">job.test.error.test_mapping (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#module-job.test.execution">job.test.execution (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#module-job.test.execution.configuration">job.test.execution.configuration (module)</a>
@@ -10639,7 +10641,7 @@
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.setUp">(diagnostic.test.test_views.TestQueueScaleRouletteView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestGetDatabaseModel.setUp">(error.test.test_models.TestGetDatabaseModel method)</a>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestErrorManager.setUp">(error.test.test_models.TestErrorManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.setUp">(error.test.test_views.TestErrorDetailsView method)</a>
 </li>
@@ -10779,7 +10781,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.configuration.html#job.test.configuration.test_configuration.TestJobConfiguration.setUp">(job.test.configuration.test_configuration.TestJobConfiguration method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobErrorModel.setUp">(job.test.error.test_error.TestJobErrorModel method)</a>
+        <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobError.setUp">(job.test.error.test_error.TestJobError method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_mapping.TestJobErrorMapping.setUp">(job.test.error.test_mapping.TestJobErrorMapping method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.configuration.json.html#job.test.execution.configuration.json.test_exe_config.TestExecutionConfiguration.setUp">(job.test.execution.configuration.json.test_exe_config.TestExecutionConfiguration method)</a>
 </li>
@@ -12534,7 +12538,7 @@
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_missing">test_create_error_missing() (error.test.test_views.TestErrorsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobErrorModel.test_create_error_model">test_create_error_model() (job.test.error.test_error.TestJobErrorModel method)</a>
+      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobError.test_create_error_model">test_create_error_model() (job.test.error.test_error.TestJobError method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_success">test_create_error_success() (error.test.test_views.TestErrorsView method)</a>
 </li>
@@ -13120,8 +13124,6 @@
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsJobType.test_get_metrics_type_choices">(metrics.test.test_models.TestMetricsJobType method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestGetDatabaseModel.test_get_model">test_get_model() (error.test.test_models.TestGetDatabaseModel method)</a>
-</li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_get_node_master_disconnected">test_get_node_master_disconnected() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV5.test_get_node_not_found">test_get_node_not_found() (node.test.test_views.TestNodeDetailsViewV5 method)</a>
@@ -14356,12 +14358,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_optional">test_parse_int_list_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_post">test_parse_int_list_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
@@ -14657,6 +14659,10 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesStatusView.test_running">test_running() (job.test.test_views.TestJobTypesStatusView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_metrics.TestTotalJobExeMetrics.test_running_executions">test_running_executions() (job.test.execution.test_metrics.TestTotalJobExeMetrics method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestErrorManager.test_save_job_error_models">test_save_job_error_models() (error.test.test_models.TestErrorManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_mapping.TestJobErrorMapping.test_save_models">test_save_models() (job.test.error.test_mapping.TestJobErrorMapping method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles.test_scale_delete_files">test_scale_delete_files() (storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles method)</a>
 </li>
@@ -15850,6 +15856,8 @@
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView">TestErrorDetailsView (class in error.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestErrorManager">TestErrorManager (class in error.test.test_models)</a>
+</li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView">TestErrorsView (class in error.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.exceptions.TestException">TestException</a>
@@ -15875,8 +15883,6 @@
       <li><a href="architecture/django/code_docs/data.test.data.html#data.test.data.test_value.TestFileValue">TestFileValue (class in data.test.data.test_value)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_geospatial_utils.TestGeospatialUtils">TestGeospatialUtils (class in storage.test.test_geospatial_utils)</a>
-</li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestGetDatabaseModel">TestGetDatabaseModel (class in error.test.test_models)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerDeleteFiles">TestHostBrokerDeleteFiles (class in storage.test.brokers.test_host_broker)</a>
 </li>
@@ -15974,7 +15980,9 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsView">TestJobDetailsView (class in job.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobErrorModel">TestJobErrorModel (class in job.test.error.test_error)</a>
+      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobError">TestJobError (class in job.test.error.test_error)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_mapping.TestJobErrorMapping">TestJobErrorMapping (class in job.test.error.test_mapping)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobExecutionDetailsView">TestJobExecutionDetailsView (class in job.test.test_views)</a>
 </li>

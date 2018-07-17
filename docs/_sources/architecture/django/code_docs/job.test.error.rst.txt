@@ -12,6 +12,14 @@ job\.test\.error\.test\_error module
     :undoc-members:
     :show-inheritance:
 
+job\.test\.error\.test\_mapping module
+--------------------------------------
+
+.. automodule:: job.test.error.test_mapping
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
