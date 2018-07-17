@@ -179,11 +179,12 @@ class ErrorManager(models.Manager):
         """
 
         error_names = [error.name for error in error_models]
-        error_ids = {error.name: error.id for error in self.filter(job_type_name=job_type_name, name__in=error_names)}
+        existing_errors = {err.name: err for err in self.filter(job_type_name=job_type_name, name__in=error_names)}
         for error_model in error_models:
-            if error_model.name in error_ids:
+            if error_model.name in existing_errors:
                 # Error already exists, grab ID so save() will perform an update
-                error_model.id = error_ids[error_model.name]
+                error_model.id = existing_errors[error_model.name].id
+                error_model.created = existing_errors[error_model.name].created # Keep created value unchanged
             error_model.save()
 
     # TODO - this is for creating errors for legacy job types, remove when legacy job types are removed
