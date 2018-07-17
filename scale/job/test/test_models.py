@@ -761,6 +761,26 @@ class TestJobType(TransactionTestCase):
 
         self.assertEqual(4.0, value)
 
+    def test_get_tagged_docker_image_from_tagged_image(self):
+        job_type = self.seed_job_type
+        job_type.docker_image = 'image:tag'
+
+        # Should pull from packageVersion of Seed Manifest
+        self.assertEqual('image:1.0.0', job_type.get_tagged_docker_image())
+
+    def test_get_tagged_docker_image_from_untagged_image(self):
+        job_type = self.seed_job_type
+        job_type.docker_image = 'image'
+
+        # Should pull from packageVersion of Seed Manifest
+        self.assertEqual('image:1.0.0', job_type.get_tagged_docker_image())
+
+    def test_get_tagged_docker_image_from_docker_image_legacy_job_type(self):
+        job_type = self.legacy_job_type
+        job_type.docker_image = 'image:tag'
+
+        # Should ONLY use docker_image field with legacy job type
+        self.assertEqual('image:tag', job_type.get_tagged_docker_image())
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
