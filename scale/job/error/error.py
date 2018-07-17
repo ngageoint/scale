@@ -47,5 +47,5 @@ class JobError(object):
         error_model.title = self.title
         error_model.description = self.description
         error_model.category = self.category
-        
+
         return error_model

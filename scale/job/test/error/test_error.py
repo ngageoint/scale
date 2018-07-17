@@ -7,7 +7,7 @@ from django.test import TestCase
 from job.error.error import JobError
 
 
-class TestJobErrorModel(TestCase):
+class TestJobError(TestCase):
     """Tests functions in the job error module."""
 
     def setUp(self):
@@ -16,12 +16,13 @@ class TestJobErrorModel(TestCase):
     def test_create_error_model(self):
         """Validate that a complete Error model is created using JobError
         """
+
         job_type_name = 'test-job'
         name = 'bad-data'
         title = 'Bad Data'
         description = 'Error received when bad data is detected'
         category = 'DATA'
-        
+
         error = JobError(job_type_name, name, title, description, category)
         model = error.create_model()
         self.assertEqual(model.name, name)
