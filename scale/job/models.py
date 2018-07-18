@@ -3608,3 +3608,78 @@ class TaskUpdate(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'task_update'
+
+class JobTypeTagManager(models.Manager):
+    """Provides additional methods for handling job type tags
+    """
+
+    @transaction.atomic
+    def create_job_type_tags(self, job_type, tags):
+        """Creates a set of job type tags and saves them in the database. All database changes occur in an atomic
+        transaction.
+
+        :param job_type: The identifying name of the job type used by clients for queries
+        :type job_type: string
+        :param tag: The tags of the job type image
+        :type tag: list
+        :returns: The new job type tags
+        :rtype: [:class:`job.models.JobTypeTag`]
+        """
+        
+        job_type_tags = []
+        for tag in tags:
+            # Create the new job type tag
+            job_type_tag = JobTypeTag()
+            job_type_tag.job_type = job_type
+            job_type_tag.tag = tag
+            job_type_tags.append(job_type_tag)
+            
+        self.bulk_create(job_type_tags)
+
+        return job_type_tags
+
+    @transaction.atomic
+    def clear_job_type_tags(self, job_type):
+        """Removes all job type tag objects for the specified job type.
+        Useful when updating the revision and repopulating with new tags
+
+        :param job_type: The job type to remove tags for
+        :type job_type: string
+        """
+
+        self.get(job_type=job_type).delete()
+
+    def get_tags(self, job_type):
+        """Get the tags for a given job_type
+
+        :param job_type: The job type name
+        :type job_type: string
+        :param version: The version of the job type
+        :type version: string
+        :returns: A list of strings representing the tags for the job type
+        :rtype: [string]
+        """
+        
+        tags = []
+        
+        job_type_tags = self.get(job_type=job_type)
+        
+        for tag in job_type_tags:
+            tags.append(tag.tag)
+            
+        return tags
+
+
+class JobTypeTag(models.Model):
+    """Stores a job type and tag combination
+
+    :keyword job type: The identifying name of the job type used by clients for queries, should be equivalent to the seed image name
+    :type name: :class:`django.db.models.CharField`
+    :keyword tag: The seed image tag, aka package version
+    :type tag: :class:`django.db.models.CharField`
+    """
+
+    job_type = models.CharField(db_index=True, max_length=50)
+    tag = models.CharField(db_index=True, max_length=50)
+
+    objects = JobTypeTagManager()
