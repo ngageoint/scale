@@ -556,6 +556,7 @@ class JobManager(models.Manager):
 
         # Validate job data
         interface = job.get_job_interface()
+        data = JobDataSunset.create(interface, data=data.get_dict())
         interface.validate_data(data)
 
         # Update job model in memory

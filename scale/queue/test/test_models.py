@@ -254,6 +254,101 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(final_job.status, 'CANCELED')
 
 
+class TestQueueManagerQueueNewJob(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_successful_legacy(self):
+        """Tests calling QueueManager.queue_new_job() successfully with a legacy job type"""
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+
+        interface = {
+            'version': '1.0',
+            'command': 'test_command',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'name': 'input_a',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]
+        }
+        job_type = job_test_utils.create_job_type(interface=interface)
+
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobData(data_dict)
+
+        job = Queue.objects.queue_new_job(job_type, data, event)
+        self.assertEqual(job.status, 'QUEUED')
+
+    def test_successful(self):
+        """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'input_a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobData(data_dict)
+
+        job = Queue.objects.queue_new_job(job_type, data, event)
+        self.assertEqual(job.status, 'QUEUED')
+
+
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
     fixtures = ['basic_system_job_types.json']
