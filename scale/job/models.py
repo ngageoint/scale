@@ -696,7 +696,7 @@ class JobManager(models.Manager):
         else:
             # TODO: remove legacy code path when legacy job types are removed
             v1_dict = convert_data_to_v1_json(input_data).get_dict()
-            sunset_job_data = JobDataSunset.create(job.job_type_rev.interface, v1_dict)
+            sunset_job_data = JobDataSunset.create(job.job_type_rev.get_job_interface(), v1_dict)
             if job.recipe:
                 sunset_interface = JobInterfaceSunset.create(job.job_type_rev.interface, do_validate=False)
                 from recipe.deprecation import RecipeDataSunset
