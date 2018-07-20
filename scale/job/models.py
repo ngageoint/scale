@@ -436,9 +436,9 @@ class JobManager(models.Manager):
         """Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models
 
         :param job_id: The job ID
-        :type job_id: list
+        :type job_id: int
         :returns: The job model with related job_type_rev and recipe__recipe_type_rev models
-        :rtype: list
+        :rtype: :class:`job.models.Job`
         """
 
         return self.select_related('job_type_rev', 'recipe__recipe_type_rev').get(id=job_id)

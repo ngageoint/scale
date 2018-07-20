@@ -9,6 +9,7 @@ import django.contrib.postgres.fields
 from django.db import connection, models, transaction
 from django.utils.timezone import now
 
+from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.models import Job, JobType
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
@@ -495,6 +496,17 @@ class RecipeManager(models.Manager):
         recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe_id)
         return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe_nodes)
 
+    def get_recipe_with_interfaces(self, recipe_id):
+        """Gets the recipe model for the given ID with related recipe_type_rev and recipe__recipe_type_rev models
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: The recipe model with related recipe_type_rev and recipe__recipe_type_rev models
+        :rtype: :class:`recipe.models.Recipe`
+        """
+
+        return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
+
     def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
                     include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.
@@ -760,6 +772,36 @@ class RecipeManager(models.Manager):
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 
+    def set_recipe_input_data_v6(self, recipe, input_data):
+        """Sets the given input data as a v6 JSON for the given recipe. The recipe model must have its related
+        recipe_type_rev model populated.
+
+        :param recipe: The recipe model with related recipe_type_rev model
+        :type recipe: :class:`recipe.models.Recipe`
+        :param input_data: The input data for the recipe
+        :type input_data: :class:`data.data.data.Data`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+        """
+
+        recipe_definition = recipe.recipe_type_rev.get_definition()
+        input_data.validate(recipe_definition.input_interface)
+        input_dict = None
+
+        # TODO: this code path supports passing output workspace ID in recipe data, remove when legacy trigger system is
+        # removed
+        if recipe.recipe:
+            sunset_recipe_data = RecipeDataSunset.create(recipe.recipe.recipe_type_rev.definition, recipe.recipe.input)
+            workspace_id = sunset_recipe_data.get_workspace_id()
+            if workspace_id:
+                input_dict = convert_data_to_v1_json(input_data).get_dict()
+                input_dict['workspace_id'] = workspace_id
+
+        if not input_dict:
+            input_dict = convert_data_to_v6_json(input_data).get_dict()
+
+        self.filter(id=recipe.id).update(input=input_dict)
+
     def supersede_recipes(self, recipe_ids, when):
         """Updates the given recipes to be superseded
 
@@ -1002,6 +1044,15 @@ class Recipe(models.Model):
         """
 
         return RecipeDefinitionSunset.create(self.recipe_type_rev.definition)
+
+    def has_input(self):
+        """Indicates whether this recipe has its input
+
+        :returns: True if the recipe has its input, false otherwise.
+        :rtype: bool
+        """
+
+        return True if self.input else False
 
     class Meta(object):
         """meta information for the db"""
@@ -1649,7 +1700,6 @@ class RecipeTypeRevision(models.Model):
 
     objects = RecipeTypeRevisionManager()
 
-    # TODO: Resolve this prior to 971 merge
     def get_definition(self):
         """Returns the definition for this recipe type revision
 

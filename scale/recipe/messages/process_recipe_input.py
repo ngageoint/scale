@@ -5,6 +5,7 @@ import logging
 
 from django.db import transaction
 
+from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.messages.update_recipes import create_update_recipes_messages
 from recipe.models import Recipe, RecipeNode
@@ -63,6 +64,27 @@ class ProcessRecipeInput(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        recipe = Recipe.objects.get_recipe_with_interfaces(self.recipe_id)
+
+        if not recipe.has_input():
+            if not recipe.recipe:
+                logger.error('Recipe %d has no input and is not in a recipe. Message will not re-run.', self.recipe_id)
+                return True
+
+            try:
+                self._generate_input_data_from_recipe(recipe)
+            except InvalidData:
+                msg = 'Recipe created invalid input data for sub-recipe %d. Message will not re-run.'
+                logger.exception(msg, self.recipe_id)
+                return True
+
+        # TODO: update this section (copied from process_job_input) for process_recipe_input
+        # Lock job model and process job's input data
+        with transaction.atomic():
+            job = Job.objects.get_locked_job(self.job_id)
+            Job.objects.process_job_input_data(job)
+
+        # TODO: old code from previous message
         with transaction.atomic():
             # Retrieve locked recipe models
             recipe_models = Recipe.objects.get_locked_recipes(self._recipe_ids)
@@ -102,4 +124,4 @@ class ProcessRecipeInput(CommandMessage):
 
         definition = sub_recipe.recipe.recipe_type_rev.get_definition()
         input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
-        Job.objects.set_job_input_data_v6(job, input_data)
+        Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)
