@@ -2754,6 +2754,45 @@ class JobTypeManager(models.Manager):
         else:
             job_types = job_types.order_by('last_modified')
         return job_types
+        
+    def get_job_types_v6(self, keyword=None, is_active=True, is_system=None, order=None):
+        """Returns a list of the latest version of job types
+
+        :param started: Query job types updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query job types updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param keyword: Query jobs with name, title, description or tag matching the keyword
+        :type keyword: [string]
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
+        :param is_system: Query job types that are system job types.
+        :type is_operational: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of latest version of job types that match the given parameters.
+        :rtype: [:class:`job.models.JobType`]
+        """
+
+        # Fetch a list of job types
+        job_types = JobType.objects.all()
+
+        # Apply additional filters
+        if keyword:
+            job_types = job_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(name__in=names))
+        if categories:
+            job_types = job_types.filter(category__in=categories)
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
+        if is_operational is not None:
+            job_types = job_types.filter(is_operational=is_operational)
+
+        # Apply sorting
+        if order:
+            job_types = job_types.order_by(*order)
+        else:
+            job_types = job_types.order_by('last_modified')
+        return job_types
 
     def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
@@ -3647,27 +3686,44 @@ class JobTypeTagManager(models.Manager):
         :type job_type: string
         """
 
-        self.get(job_type=job_type).delete()
+        self.filter(job_type=job_type).delete()
 
     def get_tags(self, job_type):
         """Get the tags for a given job_type
 
         :param job_type: The job type name
         :type job_type: string
-        :param version: The version of the job type
-        :type version: string
         :returns: A list of strings representing the tags for the job type
         :rtype: [string]
         """
         
         tags = []
         
-        job_type_tags = self.get(job_type=job_type)
+        job_type_tags = self.filter(job_type=job_type)
         
         for tag in job_type_tags:
             tags.append(tag.tag)
             
         return tags
+        
+    def get_tagged_job_types(self, tags):
+        """Get the job types for the given tags
+
+        :param tags: The tags to find job types
+        :type tags: [string]
+        :returns: A list of job_type names
+        :rtype: [string]
+        """
+        
+        job_types = []
+        
+        for tag in tags:
+            qs = self.filter(tag=tag)
+            for type in qs:
+                if type.job_type not in job_types:
+                    job_types.append(type.job_type)
+            
+        return job_types
 
 
 class JobTypeTag(models.Model):

@@ -44,9 +44,9 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
     name = serializers.CharField()
     title = serializers.CharField()
     description = serializers.CharField()
-    revision_num = serializers.IntegerField()
-
     icon_code = serializers.CharField()
+    revision_num = serializers.IntegerField()
+    version = serializers.CharField()
 
 
 # TODO: remove this function when REST API v5 is removed

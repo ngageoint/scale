@@ -61,7 +61,7 @@ class JobTypesView(ListCreateAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobTypeSerializerV6
+            return JobTypeBaseSerializerV6
         else:
             return JobTypeSerializerV5
 
@@ -117,17 +117,12 @@ class JobTypesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-
-        names = rest_util.parse_string_list(request, 'name', required=False)
+        keyword = rest_util.parse_string_list(request, 'keyword', required=False)
         is_active = rest_util.parse_bool(request, 'is_active', default_value=True)
-        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
-        order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
+        is_system = rest_util.parse_bool(request, 'is_system', required=False)
+        order = ['name']
 
-        job_types = JobType.objects.get_job_types(started=started, ended=ended, names=names,
-                                                  is_active=is_active, is_operational=is_operational, order=order)
+        job_types = JobType.objects.get_job_types_v6(keyword=keyword, is_active=is_active, is_system=is_system, order=order)
 
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)

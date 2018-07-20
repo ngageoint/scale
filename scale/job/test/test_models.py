@@ -21,7 +21,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.error.mapping import create_legacy_error_mapping
 from job.seed.results.job_results import JobResults as SeedJobResults
-from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision
+from job.models import Job, JobExecution, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, JobTypeTag
 from node.resources.json.resources import Resources
 from trigger.models import TriggerRule
 
@@ -1482,3 +1482,52 @@ class TestJobTypeFailedStatus(TestCase):
         self.assertEqual(status[3].count, 1)
         self.assertEqual(status[3].first_error, self.entry_4_time)
         self.assertEqual(status[3].last_error, self.entry_4_time)
+
+class TestJobTypeTagManager(TransactionTestCase):
+    
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = "test-type1"
+        self.tag_set1 = ["tag1", "tag2"]
+        self.job_type2 = "test-type2"
+        self.tag_set2 = ["tag3", "tag4"]
+        self.job_type3 = "test-type3"
+        self.tag_set3 = ["tag5", "tag6"]
+        JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
+        JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)
+        
+    def test_create_job_type_tags(self):
+        """Tests calling JobTypeManager.create_job_type_tags()"""
+        
+        result = JobTypeTag.objects.create_job_type_tags(self.job_type2, self.tag_set2)
+        
+        self.assertEqual(len(result), 2)
+        
+    def test_clear_job_type_tags(self):
+        """Tests calling JobTypeManager.clear_job_type_tags()"""
+        
+        tags = JobTypeTag.objects.get_tags(self.job_type3)
+        
+        self.assertEqual(tags, self.tag_set3)
+        
+        JobTypeTag.objects.clear_job_type_tags(self.job_type3)
+        
+        tags = JobTypeTag.objects.get_tags(self.job_type3)
+        
+        self.assertEqual(len(tags), 0)
+        
+    def test_get_job_type_tags(self):
+        """Tests calling JobTypeManager.clear_job_type_tags()"""
+        
+        tags = JobTypeTag.objects.get_tags(self.job_type1)
+        
+        self.assertEqual(tags, self.tag_set1)
+        
+    def test_get_tagged_job_types(self):
+        """Tests calling JobTypeManager.get_tagged_job_types()"""
+        
+        job_types = JobTypeTag.objects.get_tagged_job_types(["tag1", "tag2"])
+        
+        self.assertEqual(len(job_types), 1)
+        self.assertEqual(job_types[0], self.job_type1)
