@@ -24,7 +24,6 @@ def create_process_job_input_messages(job_ids):
 
     messages = []
 
-    message = None
     for job_id in job_ids:
         message = ProcessJobInput()
         message.job_id = job_id
