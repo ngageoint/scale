@@ -2758,12 +2758,8 @@ class JobTypeManager(models.Manager):
     def get_job_types_v6(self, keyword=None, is_active=True, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
-        :param started: Query job types updated after this amount of time.
-        :type started: :class:`datetime.datetime`
-        :param ended: Query job types updated before this amount of time.
-        :type ended: :class:`datetime.datetime`
         :param keyword: Query jobs with name, title, description or tag matching the keyword
-        :type keyword: [string]
+        :type keyword: string
         :param is_active: Query job types that are actively available for use.
         :type is_active: bool
         :param is_system: Query job types that are system job types.
@@ -2778,21 +2774,28 @@ class JobTypeManager(models.Manager):
         job_types = JobType.objects.all()
 
         # Apply additional filters
-        if keyword:
+        if keyword: # TODO: Revisit passing multiple keywords
+            names = JobTypeTag.objects.get_matching_job_types(keyword)
             job_types = job_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(name__in=names))
-        if categories:
-            job_types = job_types.filter(category__in=categories)
         if is_active is not None:
             job_types = job_types.filter(is_active=is_active)
-        if is_operational is not None:
-            job_types = job_types.filter(is_operational=is_operational)
-
+        if is_system is not None:
+            job_types = job_types.filter(is_system=is_system)
+            
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)
         else:
             job_types = job_types.order_by('last_modified')
-        return job_types
+        
+        # Get the latest version of each job type    
+        names = []
+        return_job_types = []
+        for jt in job_types:
+            if jt.name not in names:
+                names.append(jt.name)
+                return_job_types.append(JobType.objects.all().filter(name=jt.name).order_by("-revision_num")[0])
+        return return_job_types
 
     def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
@@ -3718,6 +3721,24 @@ class JobTypeTagManager(models.Manager):
         job_types = []
         
         qs = self.filter(tag__in=tags)
+        for type in qs:
+            if type.job_type not in job_types:
+                job_types.append(type.job_type)
+            
+        return job_types
+        
+    def get_matching_job_types(self, keyword):
+        """Get the job types whose tags match the given keyword
+
+        :param keyword: The keyword to match tags
+        :type keyword: string
+        :returns: A list of job_type names
+        :rtype: [string]
+        """
+        
+        job_types = []
+        
+        qs = self.filter(tag__icontains=keyword)
         for type in qs:
             if type.job_type not in job_types:
                 job_types.append(type.job_type)

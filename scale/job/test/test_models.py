@@ -1489,13 +1489,16 @@ class TestJobTypeTagManager(TransactionTestCase):
         django.setup()
 
         self.job_type1 = "test-type1"
-        self.tag_set1 = ["tag1", "tag2"]
+        self.tag_set1 = ["tag1", "tag2", "oneandfour"]
         self.job_type2 = "test-type2"
         self.tag_set2 = ["tag3", "tag4"]
         self.job_type3 = "test-type3"
         self.tag_set3 = ["tag5", "tag6"]
+        self.job_type4 = "test-type4"
+        self.tag_set4 = ["tag7", "tag8", "oneandfour"]
         JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
         JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)
+        JobTypeTag.objects.create_job_type_tags(self.job_type4, self.tag_set4)
         
     def test_create_job_type_tags(self):
         """Tests calling JobTypeManager.create_job_type_tags()"""
@@ -1529,5 +1532,19 @@ class TestJobTypeTagManager(TransactionTestCase):
         
         job_types = JobTypeTag.objects.get_tagged_job_types(["tag1", "tag2"])
         
+        self.assertEqual(len(job_types), 1)
+        self.assertEqual(job_types[0], self.job_type1)
+
+    def test_get_matching_job_types(self):
+        """Tests calling JobTypeManager.get_matching_job_types()"""
+      
+        job_types = JobTypeTag.objects.get_matching_job_types("no-match")
+        self.assertEqual(len(job_types), 0)
+        
+        job_types = JobTypeTag.objects.get_matching_job_types("one")
+        self.assertEqual(len(job_types), 2)
+        self.assertEqual(job_types[0], self.job_type1)
+        
+        job_types = JobTypeTag.objects.get_matching_job_types("tag1")
         self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0], self.job_type1)
