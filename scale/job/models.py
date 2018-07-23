@@ -3717,11 +3717,10 @@ class JobTypeTagManager(models.Manager):
         
         job_types = []
         
-        for tag in tags:
-            qs = self.filter(tag=tag)
-            for type in qs:
-                if type.job_type not in job_types:
-                    job_types.append(type.job_type)
+        qs = self.filter(tag__in=tags)
+        for type in qs:
+            if type.job_type not in job_types:
+                job_types.append(type.job_type)
             
         return job_types
 
