@@ -293,6 +293,6 @@ def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name
                                                     last_modified=last_modified, source_started=source_started,
                                                     source_ended=source_ended)
 
-    RecipeInputFile.objects.create(recipe=recipe, scale_file=input_file, recipe_input=recipe_input)
+    RecipeInputFile.objects.create(recipe=recipe, input_file=input_file, recipe_input=recipe_input)
 
     return input_file

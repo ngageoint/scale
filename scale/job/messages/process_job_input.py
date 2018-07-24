@@ -81,11 +81,11 @@ class ProcessJobInput(CommandMessage):
         # Lock job model and process job's input data
         with transaction.atomic():
             job = Job.objects.get_locked_job(self.job_id)
-            Job.objects.process_job_input_data(job)
+            Job.objects.process_job_input(job)
 
         # Create message to queue the job
         if job.num_exes == 0:
-            logger.info('Processed inputs for job %d, sending message to queue job', self.job_id)
+            logger.info('Processed input for job %d, sending message to queue job', self.job_id)
             self.new_messages.extend(create_queued_jobs_messages([QueuedJob(job.id, 0)], requeue=False))
 
         return True

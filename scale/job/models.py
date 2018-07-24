@@ -565,7 +565,7 @@ class JobManager(models.Manager):
         self.filter(id=job.id).update(input=data.get_dict())
 
         # Process job inputs
-        self.process_job_input_data(job)
+        self.process_job_input(job)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -599,7 +599,7 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    def process_job_input_data(self, job):
+    def process_job_input(self, job):
         """Processes the input data for the given job to populate its input file models and input meta-data fields. The
         caller must have obtained a model lock on the given job model.
 
@@ -608,7 +608,7 @@ class JobManager(models.Manager):
         """
 
         if job.input_file_size is not None:
-            return  # Job has already had its input data processed
+            return  # Job has already had its input processed
 
         # Create JobInputFile models in batches
         all_file_ids = set()
@@ -698,13 +698,10 @@ class JobManager(models.Manager):
             sunset_job_data = JobDataSunset.create(job.job_type_rev.interface, v1_dict)
             if job.recipe:
                 sunset_interface = JobInterfaceSunset.create(job.job_type_rev.interface, do_validate=False)
-                from recipe.deprecation import RecipeDataSunset
-                sunset_recipe_data = RecipeDataSunset.create(job.recipe.recipe_type_rev.definition,
-                                                             job.recipe.input)
                 # Add workspace for file outputs if needed
                 if sunset_interface.get_file_output_names():
-                    workspace_id = sunset_recipe_data.get_workspace_id()
-                    if workspace_id:
+                    if 'workspace_id' in job.recipe.input:
+                        workspace_id = job.recipe.input['workspace_id']
                         sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
             input_dict = sunset_job_data.get_dict()
 

@@ -78,23 +78,14 @@ class ProcessRecipeInput(CommandMessage):
                 logger.exception(msg, self.recipe_id)
                 return True
 
-        # TODO: update this section (copied from process_job_input) for process_recipe_input
-        # Lock job model and process job's input data
+        # Lock recipe model and process recipe's input data
         with transaction.atomic():
-            job = Job.objects.get_locked_job(self.job_id)
-            Job.objects.process_job_input_data(job)
+            recipe = Recipe.objects.get_locked_recipe(self.recipe_id)
+            Recipe.objects.process_recipe_input(recipe)
 
-        # TODO: old code from previous message
-        with transaction.atomic():
-            # Retrieve locked recipe models
-            recipe_models = Recipe.objects.get_locked_recipes(self._recipe_ids)
-
-            # Process recipe input
-            Recipe.objects.process_recipe_input(recipe_models)
-
-        # TODO: create message to update recipe
-        logger.info('Processed recipe inputs for %d recipe(s)', len(self._recipe_ids))
-        self.new_messages.extend(create_update_recipes_messages(self._recipe_ids))
+        # Create message to update the recipe
+        logger.info('Processed input for recipe %d, sending message to update recipe', self.recipe_id)
+        self.new_messages.extend(create_update_recipes_messages([self.recipe_id]))
 
         return True
 

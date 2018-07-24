@@ -9,8 +9,10 @@ import django.contrib.postgres.fields
 from django.db import connection, models, transaction
 from django.utils.timezone import now
 
+from data.data.data import Data
 from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
+from data.interface.parameter import FileParameter
 from job.models import Job, JobType
 from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
@@ -175,7 +177,7 @@ class RecipeManager(models.Manager):
         for input_file_info in input.get_input_file_info():
             recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
-            recipe_file.scale_file_id = input_file_info[0]
+            recipe_file.input_file_id = input_file_info[0]
             recipe_file.recipe_input = input_file_info[1]
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
@@ -317,6 +319,18 @@ class RecipeManager(models.Manager):
             recipe_ids.add(recipe_job.recipe_id)
 
         return list(recipe_ids)
+
+    def get_locked_recipe(self, recipe_id):
+        """Locks and returns the recipe model for the given ID with no related fields. Caller must be within an atomic
+        transaction.
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: The recipe model
+        :rtype: :class:`recipe.models.Recipe`
+        """
+
+        return self.get_locked_recipes([recipe_id])[0]
 
     def get_locked_recipes(self, recipe_ids):
         """Locks and returns the recipe models for the given IDs with no related fields. Caller must be within an atomic
@@ -629,75 +643,54 @@ class RecipeManager(models.Manager):
         recipe.jobs = jobs
         return recipe
 
-    def process_recipe_input(self, recipes):
-        """Processes the input for the given recipes. The caller must have obtained a model lock on the given recipe
-        models.
+    def process_recipe_input(self, recipe):
+        """Processes the input data for the given recipe to populate its input file models and input meta-data fields.
+        The caller must have obtained a model lock on the given recipe model.
 
-        :param recipes: The locked recipe models
-        :type recipes: list
+        :param recipe: The locked recipe models
+        :type recipe: :class:`recipe.models.Recipe`
         """
 
-        when = now()
-        recipe_input_file_ids = {}  # {Recipe ID: set}
-        recipe_file_sizes = {}  # {Recipe ID: int}
-        recipe_source_started = {}  # {Recipe ID: datetime}
-        recipe_source_ended = {}  # {Recipe ID: datetime}
-        all_input_file_ids = set()
+        if recipe.input_file_size is not None:
+            return  # Recipe has already had its input processed
+
+        # Create RecipeInputFile models in batches
+        all_file_ids = set()
         input_file_models = []
-
-        # Process each recipe to get its input file IDs and create models related to input files
-        for recipe in recipes:
-            if recipe.input_file_size is not None:
-                continue  # Ignore recipes that have already had inputs processed
-            recipe_input = recipe.get_recipe_data()
-            file_ids = recipe_input.get_input_file_ids()
-            recipe_input_file_ids[recipe.id] = set(file_ids)
-            recipe_file_sizes[recipe.id] = 0
-            recipe_source_started[recipe.id] = None
-            recipe_source_ended[recipe.id] = None
-            all_input_file_ids.update(file_ids)
-
-            # Create RecipeInputFile models in batches
-            for input_file in recipe_input.get_input_file_info():
+        for file_value in recipe.get_input_data().values.values():
+            if file_value.param_type != FileParameter.PARAM_TYPE:
+                continue
+            for file_id in file_value.file_ids:
+                all_file_ids.add(file_id)
                 recipe_input_file = RecipeInputFile()
                 recipe_input_file.recipe_id = recipe.id
-                recipe_input_file.scale_file_id = input_file[0]
-                recipe_input_file.recipe_input = input_file[1]
+                recipe_input_file.input_file_id = file_id
+                recipe_input_file.recipe_input = file_value.name
                 input_file_models.append(recipe_input_file)
                 if len(input_file_models) >= INPUT_FILE_BATCH_SIZE:
                     RecipeInputFile.objects.bulk_create(input_file_models)
                     input_file_models = []
 
-        # Finish creating any remaining RecipeInputFile models
+        # Finish creating any remaining JobInputFile models
         if input_file_models:
             RecipeInputFile.objects.bulk_create(input_file_models)
 
-        # TODO: make this more efficient
-        # Calculate input file summary data for each recipe
-        if all_input_file_ids:
-            for input_file in ScaleFile.objects.get_files_for_job_summary(all_input_file_ids):
-                for recipe_id, file_ids in recipe_input_file_ids.items():
-                    if input_file.id in file_ids:
-                        recipe_file_sizes[recipe_id] += input_file.file_size  # This is in bytes
-                        if input_file.source_started is not None:
-                            started = recipe_source_started[recipe_id]
-                            min_started = min(s for s in [started, input_file.source_started] if s is not None)
-                            recipe_source_started[recipe_id] = min_started
-                        if input_file.source_ended is not None:
-                            ended = recipe_source_ended[recipe_id]
-                            max_ended = max(e for e in [ended, input_file.source_ended] if e is not None)
-                            recipe_source_ended[recipe_id] = max_ended
+        if len(all_file_ids) == 0:
+            # If there are no input files, just zero out the file size and skip input meta-data fields
+            self.filter(id=recipe.id).update(input_file_size=0.0)
+            return
 
-        # Update each recipe with its input file summary data
-        for recipe_id, total_file_size in recipe_file_sizes.items():
-            # Calculate total input file size in MiB rounded up to the nearest whole MiB
-            input_file_size_mb = long(math.ceil(total_file_size / (1024.0 * 1024.0)))
-
-            # Get source data times
-            source_started = recipe_source_started[recipe_id]
-            source_ended = recipe_source_ended[recipe_id]
-            self.filter(id=recipe_id).update(input_file_size=input_file_size_mb, source_started=source_started,
-                                             source_ended=source_ended, last_modified=when)
+        # Set input meta-data fields on the recipe
+        # Total input file size is in MiB rounded up to the nearest whole MiB
+        qry = 'UPDATE recipe r SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'SELECT rif.recipe_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'FROM scale_file f JOIN recipe_input_file rif ON f.id = rif.input_file_id '
+        qry += 'WHERE rif.recipe_id = %s GROUP BY rif.recipe_id) s '
+        qry += 'WHERE r.id = s.recipe_id'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [now(), recipe.id])
 
     @transaction.atomic
     def reprocess_recipe(self, recipe_id, batch_id=None, job_names=None, all_jobs=False, priority=None):
@@ -784,18 +777,19 @@ class RecipeManager(models.Manager):
         :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
         """
 
+        # TODO: remove when legacy trigger system is removed
+        definition_version = recipe.recipe_type_rev.definition['version']
+
         recipe_definition = recipe.recipe_type_rev.get_definition()
         input_data.validate(recipe_definition.input_interface)
         input_dict = None
 
         # TODO: this code path supports passing output workspace ID in recipe data, remove when legacy trigger system is
         # removed
-        if recipe.recipe:
-            sunset_recipe_data = RecipeDataSunset.create(recipe.recipe.recipe_type_rev.definition, recipe.recipe.input)
-            workspace_id = sunset_recipe_data.get_workspace_id()
-            if workspace_id:
+        if definition_version == '1.0' and recipe.recipe:
+            if 'workspace_id' in recipe.recipe.input:
                 input_dict = convert_data_to_v1_json(input_data).get_dict()
-                input_dict['workspace_id'] = workspace_id
+                input_dict['workspace_id'] = recipe.recipe.input['workspace_id']
 
         if not input_dict:
             input_dict = convert_data_to_v6_json(input_data).get_dict()
@@ -1125,7 +1119,7 @@ class RecipeInputFile(models.Model):
     """
 
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
-    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    input_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
     recipe_input = models.CharField(blank=True, null=True, max_length=250)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -1236,12 +1230,15 @@ class RecipeNodeManager(models.Manager):
 
         qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
         for node in qry.only('node_name', 'job', 'sub_recipe', 'job__output'):
-            # If we ever add recipe output, this method could be updated to handle it
             node_type = None
             if node.job:
                 node_type = 'job'
                 node_id = node.job_id
                 output_data = node.job.get_output_data()
+            if node.sub_recipe:
+                node_type = 'recipe'
+                node_id = node.sub_recipe_id
+                output_data = Data()  # Recipe output is currently not supported
             if node_type:
                 node_outputs[node.node_name] = RecipeNodeOutput(node.node_name, node_type, node_id, output_data)
 
