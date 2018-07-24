@@ -591,11 +591,11 @@ class BatchManager(models.Manager):
         elif definition.date_range_type == 'data':
             # The filters must include OR operators since the file data started/ended fields can be null
             if definition.started:
-                old_recipes = old_recipes.filter(Q(recipeinputfile__scale_file__data_started__gte=definition.started) |
-                                                 Q(recipeinputfile__scale_file__data_ended__gte=definition.started))
+                old_recipes = old_recipes.filter(Q(recipeinputfile__input_file__data_started__gte=definition.started) |
+                                                 Q(recipeinputfile__input_file__data_ended__gte=definition.started))
             if definition.ended:
-                old_recipes = old_recipes.filter(Q(recipeinputfile__scale_file__data_started__lte=definition.ended) |
-                                                 Q(recipeinputfile__scale_file__data_ended__lte=definition.ended))
+                old_recipes = old_recipes.filter(Q(recipeinputfile__input_file__data_started__lte=definition.ended) |
+                                                 Q(recipeinputfile__input_file__data_ended__lte=definition.ended))
         return old_recipes
 
     def update_batch_metrics(self, batch_ids):
