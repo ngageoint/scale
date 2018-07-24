@@ -625,7 +625,7 @@ class JobTypeVersionsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
-class JobTypeVersionDetailsView(GenericAPIView):
+class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""
     queryset = JobType.objects.all()
 
@@ -653,11 +653,14 @@ class JobTypeVersionDetailsView(GenericAPIView):
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param job_type_id: The id of the job type
-        :type job_type_id: int encoded as a str
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
         try:
             job_type = JobType.objects.get_details_v6(name, version)
         except JobType.DoesNotExist:
@@ -666,7 +669,7 @@ class JobTypeVersionDetailsView(GenericAPIView):
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
-    def patch(self, request, job_type_id):
+    def patch(self, request, name, version):
         """Edits an existing job type and returns the updated details
 
         :param request: the HTTP PATCH request
