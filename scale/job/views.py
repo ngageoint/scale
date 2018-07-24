@@ -327,21 +327,29 @@ class JobTypesView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
-class JobTypeDetailsView(GenericAPIView):
+# TODO: Remove when RESP API v5 is removed
+class JobTypeIDDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
     queryset = JobType.objects.all()
 
-    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
-    # serializer_class =     JobTypeDetailsSerializer
-    def get_serializer_class(self):
-        """Returns the appropriate serializer based off the requests version of the REST API. """
-
-        if self.request.version == 'v6':
-            return JobTypeDetailsSerializerV6
-        else:
-            return JobTypeDetailsSerializerV5
+    serializer_class =     JobTypeDetailsSerializerV5
 
     def get(self, request, job_type_id):
+        """Retrieves the details for a job type and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The id of the job type
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if self.request.version == 'v4' or self.request.version == 'v5':
+            return self.get_v5(request, job_type_id)
+        else:
+            raise Http404
+        
+    def get_v5(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
 
         :param request: the HTTP GET request
@@ -371,7 +379,7 @@ class JobTypeDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
-            return self.patch_v6(request, job_type_id)
+            raise Http404
         else:
             return self.patch_v5(request, job_type_id)
 
@@ -504,7 +512,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
-
+# TODO: Delete after cribbing from this method for v6 PATCH
     def patch_v6(self, request, job_type_id):
         """Edits an existing Seed job type and returns the updated details
 
@@ -571,6 +579,233 @@ class JobTypeDetailsView(GenericAPIView):
         # Fetch the full job type with details
         try:
             job_type = JobType.objects.get_details_v5(job_type_id)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
+
+class JobTypeVersionsView(ListAPIView):
+    """This view is the endpoint for retrieving versions of a job type."""
+    queryset = JobType.objects.all()
+
+    serializer_class =     JobTypeSerializerV6
+
+    def list(self, request, name):
+        """Determine api version and call specific method
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if self.request.version == 'v6':
+            return self.list_v6(request, name)
+        else:
+            raise Http404
+        
+    def list_v6(self, request, name):
+        """Retrieves the list of versions for a job type with the given name and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
+        order = ['-version']
+        
+        job_types = JobType.objects.get_job_type_versions_v6(name, is_active, order)
+
+        page = self.paginate_queryset(job_types)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+class JobTypeVersionDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving/updating details of a version of a job type."""
+    queryset = JobType.objects.all()
+
+    serializer_class =     JobTypeDetailsSerializerV6
+
+    def get(self, request, name, version):
+        """Retrieves the details for a job type version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if self.request.version == 'v6':
+            return self.get_v6(request, name, version)
+        else:
+            raise Http404
+        
+    def get_v6(self, request, name, version):
+        """Retrieves the details for a job type version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The id of the job type
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            job_type = JobType.objects.get_details_v6(name, version)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
+
+    def patch(self, request, job_type_id):
+        """Edits an existing job type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The ID for the job type.
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            raise Http404
+        else:
+            return self.patch_v5(request, job_type_id)
+
+    def patch_v5(self, request, job_type_id):
+        """Edits an existing legacy job type and returns the updated details
+
+        :param request: the HTTP PATCH request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_type_id: The ID for the job type.
+        :type job_type_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        # Validate the job interface
+        interface_dict = rest_util.parse_dict(request, 'interface', required=False)
+        interface = None
+        try:
+            if interface_dict:
+                interface = JobInterface(interface_dict)
+        except InvalidInterfaceDefinition as ex:
+            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
+
+        # Validate the job configuration and pull out secrets
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        secrets = None
+        try:
+            if configuration_dict:
+                configuration = JobConfigurationV2(configuration_dict)
+                if interface:
+                    secrets = configuration.get_secret_settings(interface.get_dict())
+                    configuration.validate(interface.get_dict())
+                else:
+                    stored_interface = JobType.objects.values_list('manifest', flat=True).get(pk=job_type_id)
+                    secrets = configuration.get_secret_settings(stored_interface)
+                    configuration.validate(stored_interface)
+        except InvalidJobConfiguration as ex:
+            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+
+        # Validate the error mapping
+        error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
+        error_mapping = None
+        try:
+            if error_dict:
+                error_mapping = create_legacy_error_mapping(error_dict)
+                error_mapping.validate_legacy()
+        except InvalidInterfaceDefinition as ex:
+            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+
+        # Validate the custom resources
+        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
+        custom_resources = None
+        try:
+            if resources_dict:
+                custom_resources = Resources(resources_dict)
+        except InvalidResources as ex:
+            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+
+        # Check for optional trigger rule parameters
+        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
+        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
+                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
+            raise BadParameter('Trigger type and configuration are required together.')
+        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
+        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
+
+        # Fetch the current job type model
+        try:
+            job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        # Attempt to look up the trigger handler for the type
+        rule_handler = None
+        if trigger_rule_dict and 'type' in trigger_rule_dict:
+            try:
+                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
+            except InvalidTriggerType as ex:
+                logger.exception('Invalid trigger type for job type: %i', job_type_id)
+                raise BadParameter(unicode(ex))
+
+        # Extract the fields that should be updated as keyword arguments
+        extra_fields = {}
+        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
+                       'configuration'}
+        for key, value in request.data.iteritems():
+            if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
+                extra_fields[key] = value
+        # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
+        if 'mem_required' in extra_fields:
+            extra_fields['mem_const_required'] = extra_fields['mem_required']
+            del extra_fields['mem_required']
+
+        try:
+            from recipe.configuration.definition.exceptions import InvalidDefinition
+        except:
+            logger.exception('Failed to import higher level recipe application.')
+            pass
+
+        try:
+            with transaction.atomic():
+
+                # Attempt to create the trigger rule
+                trigger_rule = None
+                if rule_handler and 'configuration' in trigger_rule_dict:
+                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
+                                                                    job_type.name, is_active)
+
+                # Update the active state separately if that is only given trigger field
+                if not trigger_rule and job_type.trigger_rule and 'is_active' in trigger_rule_dict:
+                    job_type.trigger_rule.is_active = is_active
+                    job_type.trigger_rule.save()
+
+                # Edit the job type
+                JobType.objects.edit_job_type_v5(job_type_id=job_type_id, interface=interface,
+                                                 trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
+                                                 error_mapping=error_mapping, custom_resources=custom_resources,
+                                                 configuration=configuration, secrets=secrets, **extra_fields)
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+            logger.exception('Unable to update job type: %i', job_type_id)
+            raise BadParameter(unicode(ex))
+
+        # Fetch the full job type with details
+        try:
+            job_type = JobType.objects.get_details_v5(job_type.id)
         except JobType.DoesNotExist:
             raise Http404
 

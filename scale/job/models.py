@@ -2781,7 +2781,7 @@ class JobTypeManager(models.Manager):
             job_types = job_types.filter(is_active=is_active)
         if is_system is not None:
             job_types = job_types.filter(is_system=is_system)
-            
+        
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)
@@ -2797,6 +2797,35 @@ class JobTypeManager(models.Manager):
                 return_job_types.append(JobType.objects.all().filter(name=jt.name).order_by("-revision_num")[0])
         return return_job_types
 
+    def get_job_type_versions_v6(self, name, is_active=None, order=None):
+        """Returns a list of the versions of the job type with the given name
+
+        :param name: Name of the job type
+        :type name: string
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of versions of the job type that match the given parameters.
+        :rtype: [:class:`job.models.JobType`]
+        """
+
+        # Fetch a list of job types
+        job_types = JobType.objects.all()
+        
+        job_types = job_types.filter(name=name)
+
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
+
+        # Apply sorting
+        if order:
+            job_types = job_types.order_by(*order)
+        else:
+            job_types = job_types.order_by('last_modified')
+            
+        return job_types
+        
     def get_details_v5(self, job_type_id):
         """Returns the job type for the given ID with all detail fields included.
 
@@ -2836,6 +2865,37 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
+    def get_details_v6(self, name, version):
+        """Returns the job type for the given name and version with all detail fields included.
+
+        The additional fields include: errors, job_counts_6h, job_counts_12h, and job_counts_24h.
+
+        :param name: The name of the job type.
+        :type name: string
+        :param version: The version of the job type.
+        :type version: string
+        :returns: The job type with all detail fields included.
+        :rtype: :class:`job.models.JobType`
+        """
+
+        # Attempt to get the job type
+        job_type = JobType.objects.all().get(name=name, version=version)
+
+        # Scrub configuration for secrets
+        if job_type.configuration:
+            if JobInterfaceSunset.is_seed_dict(job_type.manifest):
+                configuration = job_type.get_job_configuration()
+                manifest = SeedManifest(job_type.manifest, do_validate=False)
+                configuration.remove_secret_settings(manifest)
+                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+            else:
+                configuration = JobConfigurationV2(job_type.configuration)
+                interface = JobInterfaceSunset.create(job_type.manifest)
+                configuration.validate(interface.get_dict())
+                job_type.configuration = configuration.get_dict()
+
+        return job_type
+        
     def get_performance(self, job_type_id, started, ended=None):
         """Returns the job count statistics for a given job type and time range.
 

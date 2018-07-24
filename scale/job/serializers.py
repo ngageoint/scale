@@ -76,22 +76,17 @@ class JobTypeSerializerV5(JobTypeBaseSerializerV5):
 
 class JobTypeSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
-    uses_docker = serializers.BooleanField()
-    docker_privileged = serializers.BooleanField()
-    docker_image = serializers.CharField()
-    revision_num = serializers.IntegerField()
 
-    priority = serializers.IntegerField()
+    num_versions = None
+    latest_version = None
+    version = serializers.CharField()
+    
+    is_active = serializers.BooleanField()
+    is_paused = serializers.BooleanField()
+    is_system = serializers.BooleanField()
     max_scheduled = serializers.IntegerField()
-    timeout = serializers.IntegerField()
-    max_tries = serializers.IntegerField()
-    cpus_required = serializers.FloatField()
-    mem_required = serializers.FloatField(source='mem_const_required')
-    mem_const_required = serializers.FloatField()
-    mem_mult_required = serializers.FloatField()
-    shared_mem_required = serializers.FloatField()
-    disk_out_const_required = serializers.FloatField()
-    disk_out_mult_required = serializers.FloatField()
+    revision_num = serializers.IntegerField()
+    docker_image = serializers.CharField()
 
     created = serializers.DateTimeField()
     deprecated = serializers.DateTimeField()
@@ -126,20 +121,10 @@ class JobTypeDetailsSerializerV5(JobTypeSerializerV5):
     
 class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
     """Converts job type model fields to REST output."""
-    from error.serializers import ErrorSerializer
-    from trigger.serializers import TriggerRuleDetailsSerializer
 
     manifest = serializers.JSONField(default=dict)
     
     configuration = serializers.JSONField(default=dict)
-    custom_resources = serializers.JSONField(source='convert_custom_resources')
-    error_mapping = serializers.JSONField(default=dict)
-    errors = ErrorSerializer(many=True)
-    trigger_rule = TriggerRuleDetailsSerializer()
-
-    job_counts_6h = JobTypeStatusCountsSerializer(many=True)
-    job_counts_12h = JobTypeStatusCountsSerializer(many=True)
-    job_counts_24h = JobTypeStatusCountsSerializer(many=True)
 
 
 class JobTypeStatusSerializer(serializers.Serializer):

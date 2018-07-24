@@ -8,7 +8,9 @@ import job.views as views
 urlpatterns = [
     # Job type views
     url(r'^job-types/$', views.JobTypesView.as_view(), name='job_types_view'),
-    url(r'^job-types/(\d+)/$', views.JobTypeDetailsView.as_view(), name='job_type_details_view'),
+    url(r'^job-types/(?P<name>[\w-]+)/$', views.JobTypeVersionsView.as_view(), name='job_type_versions_view'),
+    # TODO: Remove JobTypeIDDetailsView url entry with v5
+    url(r'^job-types/(\d+)/$', views.JobTypeIDDetailsView.as_view(), name='job_type_id_details_view'),
     url(r'^job-types/validation/$', views.JobTypesValidationView.as_view(), name='job_types_validation_view'),
     url(r'^job-types/status/$', views.JobTypesStatusView.as_view(), name='job_types_status_view'),
     url(r'^job-types/pending/$', views.JobTypesPendingView.as_view(), name='job_types_pending_view'),
