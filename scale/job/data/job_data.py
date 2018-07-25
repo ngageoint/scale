@@ -301,6 +301,8 @@ class JobData(object):
             # Use internal JobInputFiles data structure to get Scale File IDs
             # Follow that up with a list comprehension over potentially multiple IDs to get
             # final list of ScaleFile objects
+            if in_file['name'] not in self._new_data.values:
+                continue
             in_file['value'] = [file_map[x] for x in self._new_data.values[in_file['name']].file_ids]
 
             if len(in_file['value']) >= 2:
