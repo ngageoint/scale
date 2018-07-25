@@ -2849,7 +2849,7 @@ class TestJobTypeDetailsViewV6(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
 
-        url = '/%s/job-types/missing-job/1.0.0' % self.api
+        url = '/%s/job-types/missing-job/1.0.0/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -2868,10 +2868,8 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.assertEqual(result['version'], self.job_type.version)
 
         self.assertIsNotNone(result['manifest'])
-        self.assertIsNotNone(result['error_mapping'])
-        self.assertIsNotNone(result['trigger_rule'])
+        self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
-        self.assertEqual(len(result['errors']), 1)
 
 class TestJobTypesValidationView(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""

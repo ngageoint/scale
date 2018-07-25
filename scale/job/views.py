@@ -643,6 +643,7 @@ class JobTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         if self.request.version == 'v6':
             return self.get_v6(request, name, version)
         else:

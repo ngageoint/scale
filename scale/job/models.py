@@ -2879,7 +2879,6 @@ class JobTypeManager(models.Manager):
         """
 
         # Attempt to get the job type
-        import pdb; pdb.set_trace()
         job_type = JobType.objects.all().get(name=name, version=version)
 
         # Scrub configuration for secrets
