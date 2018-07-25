@@ -169,8 +169,8 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(len(data_dict['input_data']), 1)
         self.assertEqual(data_dict['input_data'][0]['name'], 'Input 1')
 
-    def test_process_job_input_data(self):
-        """Tests calling JobManager.process_job_input_data()"""
+    def test_process_job_input(self):
+        """Tests calling JobManager.process_job_input()"""
 
         date_1 = timezone.now()
         min_src_started_job_1 = date_1 - datetime.timedelta(days=200)
@@ -249,8 +249,8 @@ class TestJobManager(TransactionTestCase):
                                           input=data_2)
 
         # Execute method
-        Job.objects.process_job_input_data(job_1)
-        Job.objects.process_job_input_data(job_2)
+        Job.objects.process_job_input(job_1)
+        Job.objects.process_job_input(job_2)
 
         # Retrieve updated job models
         jobs = Job.objects.filter(id__in=[job_1.id, job_2.id]).order_by('id')

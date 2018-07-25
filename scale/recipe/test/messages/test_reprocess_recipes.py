@@ -150,16 +150,20 @@ class TestReprocessRecipes(TransactionTestCase):
         # Make sure old jobs are superseded
         for job in Job.objects.filter(id__in=self.old_job_ids):
             self.assertTrue(job.is_superseded)
-        # Should be two messages, one for processing new recipe input and one for canceling superseded jobs
-        self.assertEqual(len(new_message.new_messages), 2)
-        found_process_recipe_input = False
+        # Should be three messages, two for processing new recipe input and one for canceling superseded jobs
+        self.assertEqual(len(new_message.new_messages), 3)
+        found_process_recipe_input_1 = False
+        found_process_recipe_input_2 = False
         found_cancel_jobs = False
         for msg in new_message.new_messages:
             if msg.type == 'process_recipe_input':
-                found_process_recipe_input = True
+                if found_process_recipe_input_1:
+                    found_process_recipe_input_2 = True
+                found_process_recipe_input_1 = True
             elif msg.type == 'cancel_jobs':
                 found_cancel_jobs = True
-        self.assertTrue(found_process_recipe_input)
+        self.assertTrue(found_process_recipe_input_1)
+        self.assertTrue(found_process_recipe_input_2)
         self.assertTrue(found_cancel_jobs)
 
     def test_execute(self):
@@ -202,18 +206,22 @@ class TestReprocessRecipes(TransactionTestCase):
         recipe_job_2 = RecipeNode.objects.get(recipe=new_recipe_2.id)
         self.assertEqual(recipe_job_2.node_name, 'Job 1')
         self.assertEqual(recipe_job_2.job_id, self.job_2_1.id)
-        # Should be two messages, one for processing new recipe input and one for canceling superseded jobs
-        self.assertEqual(len(message.new_messages), 2)
-        found_process_recipe_input = False
+        # Should be three messages, two for processing new recipe input and one for canceling superseded jobs
+        self.assertEqual(len(message.new_messages), 3)
+        found_process_recipe_input_1 = False
+        found_process_recipe_input_2 = False
         found_cancel_jobs = False
         for msg in message.new_messages:
             if msg.type == 'process_recipe_input':
-                found_process_recipe_input = True
-                self.assertSetEqual(set(msg._recipe_ids), {new_recipe_1.id, new_recipe_2.id})
+                if msg.recipe_id == new_recipe_1.id:
+                    found_process_recipe_input_1 = True
+                elif msg.recipe_id == new_recipe_2.id:
+                    found_process_recipe_input_2 = True
             elif msg.type == 'cancel_jobs':
                 found_cancel_jobs = True
                 self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        self.assertTrue(found_process_recipe_input)
+        self.assertTrue(found_process_recipe_input_1)
+        self.assertTrue(found_process_recipe_input_2)
         self.assertTrue(found_cancel_jobs)
 
         # Test executing message again
@@ -226,15 +234,19 @@ class TestReprocessRecipes(TransactionTestCase):
         for new_recipe in Recipe.objects.filter(id__in=[new_recipe_1.id, new_recipe_2.id]):
             self.assertFalse(new_recipe.is_superseded)
         # Should get same messages
-        self.assertEqual(len(message.new_messages), 2)
-        found_process_recipe_input = False
+        self.assertEqual(len(message.new_messages), 3)
+        found_process_recipe_input_1 = False
+        found_process_recipe_input_2 = False
         found_cancel_jobs = False
         for msg in message.new_messages:
             if msg.type == 'process_recipe_input':
-                found_process_recipe_input = True
-                self.assertSetEqual(set(msg._recipe_ids), {new_recipe_1.id, new_recipe_2.id})
+                if msg.recipe_id == new_recipe_1.id:
+                    found_process_recipe_input_1 = True
+                elif msg.recipe_id == new_recipe_2.id:
+                    found_process_recipe_input_2 = True
             elif msg.type == 'cancel_jobs':
                 found_cancel_jobs = True
                 self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        self.assertTrue(found_process_recipe_input)
+        self.assertTrue(found_process_recipe_input_1)
+        self.assertTrue(found_process_recipe_input_2)
         self.assertTrue(found_cancel_jobs)

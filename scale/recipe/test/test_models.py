@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import datetime
+
 import django
 from django.db import transaction
 from django.test import TransactionTestCase
@@ -10,13 +12,20 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import Error, get_unknown_error, reset_error_cache
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import FileValue
+from data.interface.interface import Interface
+from data.interface.parameter import FileParameter
+from error.models import get_unknown_error, reset_error_cache
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.definition.definition import RecipeDefinition
+from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
@@ -98,7 +107,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_def = RecipeDefinition(self.definition)
+        self.recipe_def = LegacyRecipeDefinition(self.definition)
         self.recipe = RecipeType.objects.create_recipe_type('name', '1.0', 'title', 'description', self.recipe_def,
                                                             None)
 
@@ -207,7 +216,7 @@ class TestJobTypeManagerValidateJobType(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_def = RecipeDefinition(self.definition)
+        self.recipe_def = LegacyRecipeDefinition(self.definition)
         self.recipe = RecipeType.objects.create_recipe_type('name', '1.0', 'title', 'description', self.recipe_def,
                                                             None)
 
@@ -247,6 +256,10 @@ class TestRecipeManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+    @patch('recipe.models.Job.objects.lock_jobs')
+    def test_get_recipe_handlers_for_jobs(self, mock_lock_jobs):
+        """Tests calling RecipeManager.get_recipe_handlers_for_jobs() successfully"""
 
         self.standalone_job = job_test_utils.create_job(status='RUNNING')
 
@@ -334,10 +347,6 @@ class TestRecipeManager(TransactionTestCase):
         self.job_ids = [self.standalone_job.id, self.job_a_1.id, self.job_b_2.id]
         self.dependent_job_ids = {self.job_a_2.id, self.job_b_3.id}
 
-    @patch('recipe.models.Job.objects.lock_jobs')
-    def test_get_recipe_handlers_for_jobs(self, mock_lock_jobs):
-        """Tests calling RecipeManager.get_recipe_handlers_for_jobs() successfully"""
-
         handlers = Recipe.objects.get_recipe_handlers_for_jobs(self.job_ids)
 
         mock_lock_jobs.assert_called_with(self.dependent_job_ids)
@@ -346,6 +355,95 @@ class TestRecipeManager(TransactionTestCase):
         for handler in handlers:
             recipe_ids.add(handler.recipe.id)
         self.assertSetEqual(recipe_ids, {self.recipe_a.id, self.recipe_b.id})
+
+    def test_process_recipe_input(self):
+        """Tests calling RecipeManager.process_recipe_input()"""
+
+        date_1 = now()
+        min_src_started_recipe_1 = date_1 - datetime.timedelta(days=200)
+        max_src_ended_recipe_1 = date_1 + datetime.timedelta(days=200)
+        date_2 = date_1 + datetime.timedelta(minutes=30)
+        date_3 = date_1 + datetime.timedelta(minutes=40)
+        date_4 = date_1 + datetime.timedelta(minutes=50)
+        min_src_started_recipe_2 = date_1 - datetime.timedelta(days=500)
+        max_src_ended_recipe_2 = date_1 + datetime.timedelta(days=500)
+        workspace = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0)
+        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0, source_started=date_2,
+                                                source_ended=date_3)
+        file_3 = storage_test_utils.create_file(workspace=workspace, file_size=987654321.0,
+                                                source_started=min_src_started_recipe_1, source_ended=date_4)
+        file_4 = storage_test_utils.create_file(workspace=workspace, file_size=46546.0,
+                                                source_ended=max_src_ended_recipe_1)
+        file_5 = storage_test_utils.create_file(workspace=workspace, file_size=83457.0, source_started=date_2)
+        file_6 = storage_test_utils.create_file(workspace=workspace, file_size=42126588636633.0, source_ended=date_4)
+        file_7 = storage_test_utils.create_file(workspace=workspace, file_size=76645464662354.0)
+        file_8 = storage_test_utils.create_file(workspace=workspace, file_size=4654.0,
+                                                source_started=min_src_started_recipe_2)
+        file_9 = storage_test_utils.create_file(workspace=workspace, file_size=545.0, source_started=date_3,
+                                                source_ended=max_src_ended_recipe_2)
+        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4)
+        recipe_interface = Interface()
+        recipe_interface.add_parameter(FileParameter('input_a', ['text/plain']))
+        recipe_interface.add_parameter(FileParameter('input_b', ['text/plain'], multiple=True))
+        definition = RecipeDefinition(recipe_interface)
+        definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+
+        data_1 = Data()
+        data_1.add_value(FileValue('input_a', [file_1.id]))
+        data_1.add_value(FileValue('input_b', [file_2.id, file_3.id, file_4.id, file_5.id]))
+        data_1_dict = convert_data_to_v6_json(data_1).get_dict()
+        data_2 = Data()
+        data_2.add_value(FileValue('input_a', [file_6.id]))
+        data_2.add_value(FileValue('input_b', [file_7.id, file_8.id, file_9.id, file_10.id]))
+        data_2_dict = convert_data_to_v6_json(data_2).get_dict()
+        data_3 = Data()
+        data_3_dict = convert_data_to_v6_json(data_3).get_dict()
+
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_1_dict)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_2_dict)
+        recipe_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=data_3_dict)
+
+        # Execute method
+        Recipe.objects.process_recipe_input(recipe_1)
+        Recipe.objects.process_recipe_input(recipe_2)
+        Recipe.objects.process_recipe_input(recipe_3)
+
+        # Retrieve updated recipe models
+        recipes = Recipe.objects.filter(id__in=[recipe_1.id, recipe_2.id, recipe_3.id]).order_by('id')
+        recipe_1 = recipes[0]
+        recipe_2 = recipes[1]
+        recipe_3 = recipes[2]
+
+        # Check recipes for expected fields
+        self.assertEqual(recipe_1.input_file_size, 1053.0)
+        self.assertEqual(recipe_1.source_started, min_src_started_recipe_1)
+        self.assertEqual(recipe_1.source_ended, max_src_ended_recipe_1)
+        self.assertEqual(recipe_2.input_file_size, 113269857.0)
+        self.assertEqual(recipe_2.source_started, min_src_started_recipe_2)
+        self.assertEqual(recipe_2.source_ended, max_src_ended_recipe_2)
+        self.assertEqual(recipe_3.input_file_size, 0.0)
+        self.assertIsNone(recipe_3.source_started)
+        self.assertIsNone(recipe_3.source_ended)
+
+        # Make sure recipe input file models are created
+        recipe_input_files = RecipeInputFile.objects.filter(recipe_id=recipe_1.id)
+        self.assertEqual(len(recipe_input_files), 5)
+        input_files_dict = {'input_a': set(), 'input_b': set()}
+        for recipe_input_file in recipe_input_files:
+            input_files_dict[recipe_input_file.recipe_input].add(recipe_input_file.input_file_id)
+        self.assertDictEqual(input_files_dict, {'input_a': {file_1.id}, 'input_b': {file_2.id, file_3.id, file_4.id,
+                                                                                    file_5.id}})
+        recipe_input_files = RecipeInputFile.objects.filter(recipe_id=recipe_2.id)
+        self.assertEqual(len(recipe_input_files), 5)
+        input_files_dict = {'input_a': set(), 'input_b': set()}
+        for recipe_input_file in recipe_input_files:
+            input_files_dict[recipe_input_file.recipe_input].add(recipe_input_file.input_file_id)
+        self.assertDictEqual(input_files_dict, {'input_a': {file_6.id}, 'input_b': {file_7.id, file_8.id, file_9.id,
+                                                                                    file_10.id}})
+
+        self.assertEqual(RecipeInputFile.objects.filter(recipe_id=recipe_3.id).count(), 0)
 
 
 class TestRecipeManagerCreateRecipe(TransactionTestCase):
@@ -420,7 +518,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
                 }]
             }]
         }
-        RecipeDefinition(definition).validate_job_interfaces()
+        LegacyRecipeDefinition(definition).validate_job_interfaces()
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
 
         self.data = {
@@ -450,7 +548,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
         recipe_files = RecipeInputFile.objects.filter(recipe=handler.recipe)
         self.assertEqual(len(recipe_files), 1)
-        self.assertEqual(recipe_files[0].scale_file_id, self.file.id)
+        self.assertEqual(recipe_files[0].input_file_id, self.file.id)
 
     def test_successful_supersede_same_recipe_type(self):
         """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
@@ -694,7 +792,7 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
                 }]
             }]
         }
-        RecipeDefinition(definition).validate_job_interfaces()
+        LegacyRecipeDefinition(definition).validate_job_interfaces()
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition, trigger_rule=self.rule)
 
         self.data = {
@@ -947,7 +1045,7 @@ class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_def = RecipeDefinition(self.definition)
+        self.recipe_def = LegacyRecipeDefinition(self.definition)
         self.recipe_def.validate_job_interfaces()
 
     def test_successful(self):
@@ -1040,7 +1138,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
                 }]
             }]
         }
-        self.recipe_def = RecipeDefinition(self.definition)
+        self.recipe_def = LegacyRecipeDefinition(self.definition)
         self.recipe_def.validate_job_interfaces()
 
         self.new_definition = {
@@ -1062,7 +1160,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
                 }]
             }]
         }
-        self.new_recipe_def = RecipeDefinition(self.new_definition)
+        self.new_recipe_def = LegacyRecipeDefinition(self.new_definition)
         self.new_recipe_def.validate_job_interfaces()
 
         self.configuration = {
