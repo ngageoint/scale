@@ -396,10 +396,10 @@ class JobManager(models.Manager):
             job.inputs = job_data.extend_interface_with_inputs_v5(job_interface, input_files)
             job.outputs = job_results.extend_interface_with_outputs_v5(job_interface, output_files)
         else:
-            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'],
+                                              input_files)
             job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
-                                           output_files)
-
+                                               output_files)
 
         return job
 
@@ -1266,7 +1266,11 @@ class Job(models.Model):
         if self.input and 'version' in self.input and '6' == self.input['version']:
             job_data = JobData(self.input)
         else:
-            job_data = JobData_1_0(self.input)
+            # Handle self.input being none on Seed type jobs
+            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
+                job_data = JobData(self.input)
+            else:
+                job_data = JobData_1_0(self.input)
         return job_data
 
     def get_job_interface(self):
