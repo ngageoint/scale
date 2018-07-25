@@ -223,42 +223,12 @@
 </div>
 <div class="section" id="module-recipe.messages.process_recipe_input">
 <span id="recipe-messages-process-recipe-input-module"></span><h2>recipe.messages.process_recipe_input module<a class="headerlink" href="#module-recipe.messages.process_recipe_input" title="Permalink to this headline">¶</a></h2>
-<p>Defines a command message that processes the input for a list of recipes</p>
+<p>Defines a command message that processes the input for a recipe</p>
 <dl class="class">
 <dt id="recipe.messages.process_recipe_input.ProcessRecipeInput">
 <em class="property">class </em><code class="descclassname">recipe.messages.process_recipe_input.</code><code class="descname">ProcessRecipeInput</code><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
-<p>Command message that processes the input for a list of recipes</p>
-<dl class="method">
-<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.add_recipe">
-<code class="descname">add_recipe</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.add_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given recipe ID to this message</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.can_fit_more">
-<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.can_fit_more" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether more jobs can fit in this message</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<p>Command message that processes the input for a recipes</p>
 <dl class="method">
 <dt id="recipe.messages.process_recipe_input.ProcessRecipeInput.execute">
 <code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.process_recipe_input.ProcessRecipeInput.execute" title="Permalink to this definition">¶</a></dt>

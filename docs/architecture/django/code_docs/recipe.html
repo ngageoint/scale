@@ -342,6 +342,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0023_auto_20180523_1247">recipe.migrations.0023_auto_20180523_1247 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0024_auto_20180523_2057">recipe.migrations.0024_auto_20180523_2057 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0025_auto_20180608_0114">recipe.migrations.0025_auto_20180608_0114 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0026_auto_20180723_1914">recipe.migrations.0026_auto_20180723_1914 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -858,6 +859,22 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.models.Recipe.has_input">
+<code class="descname">has_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.Recipe.has_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this recipe has its input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the recipe has its input, false otherwise.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="recipe.models.Recipe.id">
 <code class="descname">id</code><a class="headerlink" href="#recipe.models.Recipe.id" title="Permalink to this definition">¶</a></dt>
@@ -1352,6 +1369,26 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.RecipeInputFile.input_file">
+<code class="descname">input_file</code><a class="headerlink" href="#recipe.models.RecipeInputFile.input_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeInputFile.input_file_id">
+<code class="descname">input_file_id</code><a class="headerlink" href="#recipe.models.RecipeInputFile.input_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.RecipeInputFile.objects">
 <code class="descname">objects</code><em class="property"> = &lt;recipe.models.RecipeInputFileManager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeInputFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1379,26 +1416,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="recipe.models.RecipeInputFile.recipe_input">
 <code class="descname">recipe_input</code><a class="headerlink" href="#recipe.models.RecipeInputFile.recipe_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.models.RecipeInputFile.scale_file">
-<code class="descname">scale_file</code><a class="headerlink" href="#recipe.models.RecipeInputFile.scale_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related object on the forward side of a many-to-one or
-one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.models.RecipeInputFile.scale_file_id">
-<code class="descname">scale_file_id</code><a class="headerlink" href="#recipe.models.RecipeInputFile.scale_file_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1614,6 +1631,25 @@ actually be replaced by the new recipe definition.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeManager.get_locked_recipe">
+<code class="descname">get_locked_recipe</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locks and returns the recipe model for the given ID with no related fields. Caller must be within an atomic
+transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe model</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeManager.get_locked_recipes">
 <code class="descname">get_locked_recipes</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locks and returns the recipe models for the given IDs with no related fields. Caller must be within an atomic
@@ -1795,6 +1831,24 @@ recipes.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeManager.get_recipe_with_interfaces">
+<code class="descname">get_recipe_with_interfaces</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipe_with_interfaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the recipe model for the given ID with related recipe_type_rev and recipe__recipe_type_rev models</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe model with related recipe_type_rev and recipe__recipe_type_rev models</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes">
 <code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
@@ -1843,14 +1897,14 @@ recipes.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.process_recipe_input">
-<code class="descname">process_recipe_input</code><span class="sig-paren">(</span><em>recipes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.process_recipe_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes the input for the given recipes. The caller must have obtained a model lock on the given recipe
-models.</p>
+<code class="descname">process_recipe_input</code><span class="sig-paren">(</span><em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.process_recipe_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes the input data for the given recipe to populate its input file models and input meta-data fields.
+The caller must have obtained a model lock on the given recipe model.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The locked recipe models</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The locked recipe models</td>
 </tr>
 </tbody>
 </table>
@@ -1887,6 +1941,26 @@ parameter will override any values passed there.</li>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#recipe.exceptions.ReprocessError" title="recipe.exceptions.ReprocessError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.ReprocessError</span></code></a>: If recipe cannot be re-processed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.set_recipe_input_data_v6">
+<code class="descname">set_recipe_input_data_v6</code><span class="sig-paren">(</span><em>recipe</em>, <em>input_data</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.set_recipe_input_data_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the given input data as a v6 JSON for the given recipe. The recipe model must have its related
+recipe_type_rev model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe model with related recipe_type_rev model</li>
+<li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The input data for the recipe</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the data is invalid</p>
 </dd></dl>
 
 <dl class="method">
