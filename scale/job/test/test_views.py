@@ -2693,125 +2693,7 @@ class TestJobTypeDetailsViewV6(TestCase):
     def setUp(self):
         django.setup()
 
-        self.manifest = {
-            'seedVersion': '1.0.0',
-            'job': {
-                'name': 'my-job',
-                'jobVersion': '1.0.0',
-                'packageVersion': '1.0.0',
-                'title': 'My first job',
-                'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
-                'tags': [ 'hdf5', 'png', 'csv', 'image processing' ],
-                'maintainer': {
-                  'name': 'John Doe',
-                  'organization': 'E-corp',
-                  'email': 'jdoe@example.com',
-                  'url': 'http://www.example.com',
-                  'phone': '666-555-4321'
-                },
-                'timeout': 3600,
-                'interface': {
-                  'command': '${INPUT_FILE} ${OUTPUT_DIR} ${VERSION}',
-                  'inputs': {
-                    'files': [
-                      {
-                        'name': 'INPUT_FILE',
-                        'required': True,
-                        'mediaTypes': [
-                          'image/x-hdf5-image'
-                        ],
-                        'partial': True
-                      }
-                    ],
-                    'json': [
-                      {
-                        'name': 'INPUT_JSON',
-                        'type': 'string',
-                        'required': True
-                      }
-                    ]
-                  },
-                  'outputs': {
-                    'files': [
-                      {
-                        'name': 'output_file_pngs',
-                        'mediaType': 'image/png',
-                        'multiple': True,
-                        'pattern': 'outfile*.png'
-                      },
-                      {
-                        'name': 'output_file_csv',
-                        'mediaType': 'text/csv',
-                        'pattern': 'outfile*.csv',
-                        'required': False
-                      }
-                    ],
-                    'json': [
-                      {
-                        'name': 'cell_count',
-                        'key': 'cellCount',
-                        'type': 'integer'
-                      },
-                      {
-                        'name': 'dummy',
-                        'type': 'integer',
-                        'required': False
-                      }
-                    ]
-                  },
-                  'mounts': [
-                    {
-                      'name': 'MOUNT_PATH',
-                      'path': '/the/container/path',
-                      'mode': 'ro'
-                    },
-                    {
-                      'name': 'WRITE_PATH',
-                      'path': '/write',
-                      'mode': 'rw'
-                    }
-                  ],
-                  'settings': [
-                    {
-                      'name': 'VERSION',
-                      'secret': False
-                    },
-                    {
-                      'name': 'DB_HOST',
-                      'secret': False
-                    },
-                    {
-                      'name': 'DB_PASS',
-                      'secret': True
-                    }
-                  ]
-                },
-                'resources': {
-                  'scalar': [
-                    { 'name': 'cpus', 'value': 1.0 },
-                    { 'name': 'mem', 'value': 1024.0 },
-                    { 'name': 'sharedMem', 'value': 1024.0 },
-                    { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
-                  ]
-                },
-                'errors': [
-                  {
-                    'code': 1,
-                    'name': 'error-name-one',
-                    'title': 'Error Name',
-                    'description': 'Error Description',
-                    'category': 'data'
-                  },
-                  {
-                    'code': 2,
-                    'name': 'error-name-two',
-                    'title': 'Error Name',
-                    'description': 'Error Description',
-                    'category': 'job'
-                  }
-                ]
-              }
-            }
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
 
         self.configuration = {
             'version': '2.0',
@@ -2843,8 +2725,6 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
-        self.error1 = error_test_utils.create_error()
-        self.error2 = error_test_utils.create_error()
 
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
@@ -2870,6 +2750,105 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
+
+class TestJobTypeRevisionsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
+
+        self.configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': self.workspace.name,
+            }
+        }
+        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                                   configuration=self.trigger_config)
+
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+                                                       
+        self.manifest['job']['packageVersion'] = '1.0.1'
+        self.manifest['job']['maintainer']['name'] = 'Jane Doe'
+        self.job_type.manifest = self.manifest
+        job_test_utils.edit_job_type_v6(self.job_type)
+
+    def test_not_found(self):
+        """Tests successfully calling the get job type revisions view with a job type that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/revisions/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        # correct job type, bad version
+        url = '/%s/job-types/my-job/9.9.9/revisions/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful_list(self):
+        """Tests successfully calling the get job type revisions view."""
+
+        url = '/%s/job-types/%s/%s/revisions/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        result = result['results']
+        self.assertEqual(len(result), 2)
+        self.assertTrue(isinstance(result[0], dict), 'result  must be a dictionary')
+        self.assertEqual(result[0]['job_type']['id'], self.job_type.id)
+        self.assertEqual(result[0]['job_type']['name'], self.job_type.name)
+        self.assertEqual(result[0]['revision_num'], 2)
+        self.assertEqual(result[0]['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+
+    def test_details_not_found(self):
+        """Tests successfully calling the get job type revision details view with a job type revision that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/revisions/9/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+    def test_successful_details(self):
+        """Tests successfully calling the get job type revision details view."""
+
+        url = '/%s/job-types/%s/%s/revisions/1/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['job_type']['name'], self.job_type.name)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+        self.assertIsNotNone(result['manifest'])
+
 
 class TestJobTypesValidationView(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""

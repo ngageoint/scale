@@ -26,7 +26,7 @@ from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
 from job.serializers import (JobSerializerV5, JobSerializerV6, JobTypeSerializerV5, JobTypeSerializerV6,
-                             JobTypeBaseSerializerV6,
+                             JobTypeListSerializerV6, JobTypeRevisionSerializerV6, JobTypeRevisionDetailsSerializerV6,
                              JobDetailsSerializerV5, JobDetailsSerializerV6, 
                              JobExecutionSerializerV5, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV5, JobExecutionDetailsSerializerV6,
@@ -36,7 +36,7 @@ from job.serializers import (JobSerializerV5, JobSerializerV6, JobTypeSerializer
                              JobTypeFailedStatusSerializer, JobTypeStatusSerializer,
                              JobUpdateSerializerV5, JobUpdateSerializerV6)
 from messaging.manager import CommandMessageManager
-from job.models import Job, JobExecution, JobInputFile, JobType
+from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
@@ -62,7 +62,7 @@ class JobTypesView(ListCreateAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return JobTypeBaseSerializerV6
+            return JobTypeListSerializerV6
         else:
             return JobTypeSerializerV5
 
@@ -685,7 +685,7 @@ class JobTypeDetailsView(GenericAPIView):
             raise Http404
         else:
             return self.patch_v5(request, job_type_id)
-
+    #TODO: Update with issue 1219
     def patch_v5(self, request, job_type_id):
         """Edits an existing legacy job type and returns the updated details
 
@@ -814,6 +814,106 @@ class JobTypeDetailsView(GenericAPIView):
             raise Http404
 
         serializer = self.get_serializer(job_type)
+        return Response(serializer.data)
+
+
+class JobTypeRevisionsView(ListAPIView):
+    """This view is the endpoint for retrieving revisions of a job type."""
+    queryset = JobTypeRevision.objects.all()
+
+    serializer_class = JobTypeRevisionSerializerV6
+
+    def list(self, request, name, version):
+        """Determine api version and call specific method
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if self.request.version == 'v6':
+            return self.list_v6(request, name, version)
+        else:
+            raise Http404
+        
+    def list_v6(self, request, name, version):
+        """Retrieves the list of versions for a job type with the given name and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        order = ['-revision_num']
+        
+        try:
+            job_type_revisions = JobTypeRevision.objects.get_job_type_revisions_v6(name, version, order)
+        except JobType.DoesNotExist:
+            raise Http404
+            
+
+        page = self.paginate_queryset(job_type_revisions)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+class JobTypeRevisionDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving/updating details of a version of a job type."""
+    queryset = JobTypeRevision.objects.all()
+
+    serializer_class = JobTypeRevisionDetailsSerializerV6
+
+    def get(self, request, name, version, revision_num):
+        """Retrieves the details for a job type version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
+        :param revision_num: The revision number of the job type
+        :type revision_num: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if self.request.version == 'v6':
+            return self.get_v6(request, name, version, revision_num)
+        else:
+            raise Http404
+        
+    def get_v6(self, request, name, version, revision_num):
+        """Retrieves the details for a job type version and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param name: The name of the job type
+        :type name: string
+        :param version: The version of the job type
+        :type version: string
+        :param revision_num: The revision number of the job type
+        :type revision_num: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        try:
+            job_type_rev = JobTypeRevision.objects.get_details_v6(name, version, revision_num)
+        except JobType.DoesNotExist:
+            raise Http404
+        except JobTypeRevision.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job_type_rev)
         return Response(serializer.data)
 
 

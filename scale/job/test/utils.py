@@ -33,6 +33,126 @@ RULE_EVENT_COUNTER = 1
 MOCK_TYPE = 'MOCK_JOB_TRIGGER_RULE_TYPE'
 MOCK_ERROR_TYPE = 'MOCK_JOB_TRIGGER_RULE_ERROR_TYPE'
 
+COMPLETE_MANIFEST = {
+    'seedVersion': '1.0.0',
+    'job': {
+        'name': 'my-job',
+        'jobVersion': '1.0.0',
+        'packageVersion': '1.0.0',
+        'title': 'My first job',
+        'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
+        'tags': [ 'hdf5', 'png', 'csv', 'image processing' ],
+        'maintainer': {
+          'name': 'John Doe',
+          'organization': 'E-corp',
+          'email': 'jdoe@example.com',
+          'url': 'http://www.example.com',
+          'phone': '666-555-4321'
+        },
+        'timeout': 3600,
+        'interface': {
+          'command': '${INPUT_FILE} ${OUTPUT_DIR} ${VERSION}',
+          'inputs': {
+            'files': [
+              {
+                'name': 'INPUT_FILE',
+                'required': True,
+                'mediaTypes': [
+                  'image/x-hdf5-image'
+                ],
+                'partial': True
+              }
+            ],
+            'json': [
+              {
+                'name': 'INPUT_JSON',
+                'type': 'string',
+                'required': True
+              }
+            ]
+          },
+          'outputs': {
+            'files': [
+              {
+                'name': 'output_file_pngs',
+                'mediaType': 'image/png',
+                'multiple': True,
+                'pattern': 'outfile*.png'
+              },
+              {
+                'name': 'output_file_csv',
+                'mediaType': 'text/csv',
+                'pattern': 'outfile*.csv',
+                'required': False
+              }
+            ],
+            'json': [
+              {
+                'name': 'cell_count',
+                'key': 'cellCount',
+                'type': 'integer'
+              },
+              {
+                'name': 'dummy',
+                'type': 'integer',
+                'required': False
+              }
+            ]
+          },
+          'mounts': [
+            {
+              'name': 'MOUNT_PATH',
+              'path': '/the/container/path',
+              'mode': 'ro'
+            },
+            {
+              'name': 'WRITE_PATH',
+              'path': '/write',
+              'mode': 'rw'
+            }
+          ],
+          'settings': [
+            {
+              'name': 'VERSION',
+              'secret': False
+            },
+            {
+              'name': 'DB_HOST',
+              'secret': False
+            },
+            {
+              'name': 'DB_PASS',
+              'secret': True
+            }
+          ]
+        },
+        'resources': {
+          'scalar': [
+            { 'name': 'cpus', 'value': 1.0 },
+            { 'name': 'mem', 'value': 1024.0 },
+            { 'name': 'sharedMem', 'value': 1024.0 },
+            { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
+          ]
+        },
+        'errors': [
+          {
+            'code': 1,
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          },
+          {
+            'code': 2,
+            'name': 'error-name-two',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'job'
+          }
+        ]
+      }
+    }
+
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
     """Mock trigger rule configuration for testing
@@ -332,7 +452,10 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-
+def edit_job_type_v6(job_type):
+    """Updates the manifest of a job type, including creating a new revision for unit testing
+    """
+    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=job_type.manifest)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,

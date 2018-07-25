@@ -2620,7 +2620,7 @@ class JobTypeManager(models.Manager):
         """
 
         for field_name in kwargs:
-            if field_name in JobType.UNEDITABLE_FIELDS:
+            if field_name in JobType.UNEDITABLE_FIELDS_V6:
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
@@ -3599,7 +3599,57 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
+        
+    def get_job_type_revisions_v6(self, name, version, order=None):
+        """Returns a list of the versions of the job type with the given name
 
+        :param name: Name of the job type
+        :type name: string
+        :param version: The version of the job type.
+        :type version: string
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of job type revisions that match the given parameters.
+        :rtype: [:class:`job.models.JobTypeRevision`]
+        """
+        
+        # Attempt to get the job type
+        job_type = JobType.objects.all().get(name=name, version=version)
+
+        # Fetch a list of job types
+        job_type_revisions = JobTypeRevision.objects.all()
+        
+        job_type_revisions = job_type_revisions.filter(job_type=job_type.id)
+
+        # Apply sorting
+        if order:
+            job_type_revisions = job_type_revisions.order_by(*order)
+        else:
+            job_type_revisions = job_type_revisions.order_by('last_modified')
+            
+        return job_type_revisions
+
+    def get_details_v6(self, name, version, revision_num):
+        """Returns the job type revision for the given name, version and revision number
+        with all detail fields included.
+
+        :param name: The name of the job type.
+        :type name: string
+        :param version: The version of the job type.
+        :type version: string
+        :param revision_num: The revision number of the job type revision.
+        :type revision_num: int
+        :returns: The job type revision with all detail fields included.
+        :rtype: :class:`job.models.JobTypeRevision`
+        """
+
+        # Attempt to get the job type
+        job_type = JobType.objects.all().get(name=name, version=version)
+        
+        # Attempt to get the job type revision
+        job_type_rev = JobTypeRevision.objects.all().get(job_type=job_type.id, revision_num=revision_num)
+
+        return job_type_rev
 
 class JobTypeRevision(models.Model):
     """Represents a revision of a job type. New revisions are created when the manifest of a job type changes. Any
@@ -3656,6 +3706,19 @@ class JobTypeRevision(models.Model):
         """
 
         return JobInterfaceSunset.create(self.manifest)
+        
+    def get_tagged_docker_image(self):
+        """Constructs a complete Docker image and tag with the correct packageVersion value
+
+        :return: The complete Docker image and tag
+        :rtype: str
+        """
+        interface = self.get_job_interface()
+        docker_image = None
+        if isinstance(interface, SeedManifest):
+            return '%s-%s-seed:%s' % (interface.get_name(), interface.get_job_version(), interface.get_package_version())
+        else:
+            return docker_image
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision
