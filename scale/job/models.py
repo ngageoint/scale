@@ -1293,7 +1293,7 @@ class Job(models.Model):
         else:
             # Handle self.output being none on Seed type jobs
             if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
-                job_results = JobResults()
+                job_results = JobResults(self.output)
             else:
                 job_results = JobResults_1_0(self.output)
         return job_results
