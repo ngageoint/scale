@@ -1266,7 +1266,7 @@ class Job(models.Model):
             job_data = JobData(self.input)
         else:
             # Handle self.input being none on Seed type jobs
-            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
+            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.manifest):
                 job_data = JobData(self.input)
             else:
                 job_data = JobData_1_0(self.input)
