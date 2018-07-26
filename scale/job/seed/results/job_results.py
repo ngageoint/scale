@@ -78,7 +78,10 @@ class JobResults(object):
         """
 
         output = self.files[output_name]
-        job_data.add_file_list_input(input_name, output)
+        if len(output) == 1:
+            job_data.add_file_input(input_name, output[0])
+        else:
+            job_data.add_file_list_input(input_name, output)
 
     def add_output_json(self, output_name, value):
         """Adds the given output json from the seed.outputs.json file

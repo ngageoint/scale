@@ -68,6 +68,8 @@ def environment_expansion(env_map, cmd_string):
             # If a prefix was found, insert at beginning of returned value
             if prefix:
                 value = prefix + value
+        else:
+            value = ''
 
         # Cast to str as replacement could potentially be a non-string value
         return str(value)
@@ -75,5 +77,8 @@ def environment_expansion(env_map, cmd_string):
     if cmd_string.count('{') != cmd_string.count('}'):
         raise UnbalancedBrackets
 
-    return re.sub(r'\$(\w+|\{[^}]*\})', dict_lookup, cmd_string)
+    expanded_str = re.sub(r'\$(\w+|\{[^}]*\})', dict_lookup, cmd_string)
+    # Remove any extra whitespace in the command arguments
+    expanded_str = ' '.join(expanded_str.split())
 
+    return expanded_str

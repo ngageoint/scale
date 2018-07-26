@@ -387,52 +387,43 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                          is_operational=True, trigger_rule=None, configuration=None):
     if not manifest:
         manifest = {
-          'seedVersion': '1.0.0',
-          'job': {
-            'name': 'image-watermark',
-            'jobVersion': '0.1.0',
-            'packageVersion': '0.1.0',
-            'title': 'Image Watermarker',
-            'description': 'Processes an input PNG and outputs watermarked PNG.',
-            'maintainer': {
-              'name': 'John Doe',
-              'email': 'jdoe@example.com'
-            },
-            'timeout': 30,
-            'interface': {
-              'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
-              'inputs': {
-                'files': [
-                  {
-                    'name': 'INPUT_IMAGE'
-                  }
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'image-watermark',
+                'jobVersion': '0.1.0',
+                'packageVersion': '0.1.0',
+                'title': 'Image Watermarker',
+                'description': 'Processes an input PNG and outputs watermarked PNG.',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 30,
+                'interface': {
+                    'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
+                    'inputs': {
+                        'files': [{'name': 'INPUT_IMAGE'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png'}]
+                    }
+                },
+                'resources': {
+                    'scalar': [
+                        {'name': 'cpus', 'value': 1.0},
+                        {'name': 'mem', 'value': 64.0}
+                    ]
+                },
+                'errors': [
+                    {
+                        'code': 1,
+                        'name': 'image-corrupt',
+                        'title': 'Image Corrupt',
+                        'description': 'Image input is not recognized as a valid PNG.',
+                        'category': 'data'
+                    }
                 ]
-              },
-              'outputs': {
-                'files': [
-                  {
-                    'name': 'OUTPUT_IMAGE',
-                    'pattern': '*_watermark.png'
-                  }
-                ]
-              }
-            },
-            'resources': {
-              'scalar': [
-                { 'name': 'cpus', 'value': 1.0 },
-                { 'name': 'mem', 'value': 64.0 }
-              ]
-            },
-            'errors': [
-              {
-                'code': 1,
-                'name': 'image-corrupt',
-                'title': 'Image Corrupt',
-                'description': 'Image input is not recognized as a valid PNG.',
-                'category': 'data'
-              }
-            ]
-          }
+            }
         }
 
     if not trigger_rule:

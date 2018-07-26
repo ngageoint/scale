@@ -97,10 +97,11 @@ class TestPreJobSteps(TransactionTestCase):
         # Check results
         mock_sys_exit.assert_called_with(ScaleOperationalError().exit_code)
 
+    @patch('job.management.commands.scale_pre_steps.JobDataSunset')
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
     @patch('job.management.commands.scale_pre_steps.os.environ.get')
-    def test_scale_pre_steps_io_error(self, mock_env_vars, mock_job_exe, mock_sys_exit):
+    def test_scale_pre_steps_io_error(self, mock_env_vars, mock_job_exe, mock_sys_exit, mock_JobDataSunset):
         """Tests executing scale_pre_steps when an IO error occurs."""
 
         # Set up mocks
