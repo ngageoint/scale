@@ -257,7 +257,7 @@ class JobTypesView(ListCreateAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        url = reverse('job_type_details_view', args=[job_type.id], request=request)
+        url = reverse('job_type_id_details_view', args=[job_type.id], request=request)
 
         serializer = JobTypeDetailsSerializerV5(job_type)
 
@@ -321,7 +321,7 @@ class JobTypesView(ListCreateAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        url = reverse('job_type_details_view', args=[job_type.id], request=request)
+        url = reverse('job_type_id_details_view', args=[job_type.id], request=request)
         serializer = JobTypeDetailsSerializerV6(job_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
@@ -684,9 +684,9 @@ class JobTypeDetailsView(GenericAPIView):
         if self.request.version == 'v6':
             raise Http404
         else:
-            return self.patch_v5(request, job_type_id)
+            return self.patch_v6(request, name, version)
     #TODO: Update with issue 1219
-    def patch_v5(self, request, job_type_id):
+    def patch_v6(self, request, name, version):
         """Edits an existing legacy job type and returns the updated details
 
         :param request: the HTTP PATCH request

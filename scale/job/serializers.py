@@ -48,6 +48,7 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
 
 class JobTypeListSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
+    id = None
     num_versions = serializers.IntegerField(source='revision_num')
     latest_version = serializers.CharField(source='version')
 
@@ -177,6 +178,7 @@ class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
     
 class JobTypeRevisionDetailsSerializerV6(JobTypeRevisionSerializerV6):
     """Converts job type revision model fields to REST output."""
+    job_type = JobTypeListSerializerV6()
     manifest = serializers.JSONField(default=dict)
 
 
