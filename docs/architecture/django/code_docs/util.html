@@ -616,7 +616,7 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 
 <dl class="function">
 <dt id="util.command.environment_expansion">
-<code class="descclassname">util.command.</code><code class="descname">environment_expansion</code><span class="sig-paren">(</span><em>env_map</em>, <em>cmd_string</em><span class="sig-paren">)</span><a class="headerlink" href="#util.command.environment_expansion" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">util.command.</code><code class="descname">environment_expansion</code><span class="sig-paren">(</span><em>env_map</em>, <em>cmd_string</em>, <em>remove_extras=False</em><span class="sig-paren">)</span><a class="headerlink" href="#util.command.environment_expansion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs environment variable expansion into command string</p>
 <p>The original preference was to use bash directly, eliminating the need for us to maintain
 regular expressions to mimic bash expansion logic. Unfortunately, the overhead of instantiating
@@ -625,7 +625,6 @@ a sub-shell was prohibitively high on a large scale.</p>
 $VAR
 ${VAR}
 ${VAR/#/PREFIX}</p>
-<p>NOTE: All variables not matched remain unchanged</p>
 <p>WARNING: Resulting string should be treated as sensitive, due to the possibility
 of secrets being injected.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -635,6 +634,7 @@ of secrets being injected.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>env_map</strong> (<em>dict</em>) &#8211; map of environment variables to their values</li>
 <li><strong>cmd_string</strong> (<em>str</em>) &#8211; string to inject environment variables into</li>
+<li><strong>remove_extras</strong> (<em>bool</em>) &#8211; whether to remove extra parameters that do not have a value</li>
 </ul>
 </td>
 </tr>
