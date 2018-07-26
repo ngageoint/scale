@@ -437,7 +437,7 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
 
     job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
                                       manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
-                                      max_tries=max_tries, max_scheduled=max_scheduled,is_active=is_active,
+                                      max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)

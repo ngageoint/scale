@@ -1438,11 +1438,11 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(len(result['results']), 3)
         for entry in result['results']:
             expected = None
-            if entry['id'] == self.job_type1.id:
+            if entry['name'] == self.job_type1.name:
                 expected = self.job_type1
-            elif entry['id'] == self.job_type2.id:
+            elif entry['name'] == self.job_type2.name:
                 expected = self.job_type2
-            elif entry['id'] == self.job_type5.id:
+            elif entry['name'] == self.job_type5.name:
                 expected = self.job_type5
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
@@ -2845,7 +2845,6 @@ class TestJobTypeRevisionsViewV6(TestCase):
 
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['job_type']['id'], self.job_type.id)
         self.assertEqual(result['job_type']['name'], self.job_type.name)
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.0')

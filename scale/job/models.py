@@ -565,7 +565,7 @@ class JobManager(models.Manager):
         self.filter(id=job.id).update(input=data.get_dict())
 
         # Process job inputs
-        self.process_job_input_data(job)
+        self.process_job_input(job)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -599,7 +599,7 @@ class JobManager(models.Manager):
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
 
-    def process_job_input_data(self, job):
+    def process_job_input(self, job):
         """Processes the input data for the given job to populate its input file models and input meta-data fields. The
         caller must have obtained a model lock on the given job model.
 
