@@ -26,7 +26,7 @@ def execute_command_line(cmd_list):
     except subprocess.CalledProcessError as ex:
         raise CommandError('Exit code %i: %s' % (ex.returncode, ex.output), ex.returncode)
 
-def environment_expansion(env_map, cmd_string):
+def environment_expansion(env_map, cmd_string, remove_extras=False):
     """Performs environment variable expansion into command string
 
     The original preference was to use bash directly, eliminating the need for us to maintain
@@ -38,8 +38,6 @@ def environment_expansion(env_map, cmd_string):
     ${VAR}
     ${VAR/#/PREFIX}
 
-    NOTE: All variables not matched remain unchanged
-
     WARNING: Resulting string should be treated as sensitive, due to the possibility
     of secrets being injected.
 
@@ -47,6 +45,8 @@ def environment_expansion(env_map, cmd_string):
     :type env_map: dict
     :param cmd_string: string to inject environment variables into
     :type cmd_string: str
+    :param remove_extras: whether to remove extra parameters that do not have a value
+    :type remove_extras: bool
     :return: string with parameters expanded
     :rtype: str
     :raises :class:`util.exceptions.UnbalancedBrackets`: if brackets are not balanced in cmd_string
@@ -68,7 +68,7 @@ def environment_expansion(env_map, cmd_string):
             # If a prefix was found, insert at beginning of returned value
             if prefix:
                 value = prefix + value
-        else:
+        elif remove_extras:
             value = ''
 
         # Cast to str as replacement could potentially be a non-string value
