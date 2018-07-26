@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 
+import copy
 import datetime
 import json
 import time
@@ -2791,10 +2792,11 @@ class TestJobTypeRevisionsViewV6(TestCase):
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
                                                        
-        self.manifest['job']['packageVersion'] = '1.0.1'
-        self.manifest['job']['maintainer']['name'] = 'Jane Doe'
-        self.job_type.manifest = self.manifest
-        job_test_utils.edit_job_type_v6(self.job_type)
+        manifest2 = copy.deepcopy(self.manifest)
+        manifest2['job']['packageVersion'] = '1.0.1'
+        manifest2['job']['maintainer']['name'] = 'Jane Doe'
+        self.job_type.manifest = manifest2
+        job_test_utils.edit_job_type_v6(self.job_type, manifest2)
 
     def test_not_found(self):
         """Tests successfully calling the get job type revisions view with a job type that does not exist."""
@@ -2846,7 +2848,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertEqual(result['job_type']['id'], self.job_type.id)
         self.assertEqual(result['job_type']['name'], self.job_type.name)
         self.assertEqual(result['revision_num'], 1)
-        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.0')
         self.assertIsNotNone(result['manifest'])
 
 

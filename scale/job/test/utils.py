@@ -452,10 +452,12 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-def edit_job_type_v6(job_type):
+def edit_job_type_v6(job_type, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
+                         remove_trigger_rule=False, **kwargs):
     """Updates the manifest of a job type, including creating a new revision for unit testing
     """
-    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=job_type.manifest)
+    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=manifest_dict, trigger_rule_dict=trigger_rule_dict, 
+                         configuration_dict=configuration_dict, remove_trigger_rule=remove_trigger_rule, **kwargs)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
