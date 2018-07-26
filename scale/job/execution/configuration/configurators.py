@@ -430,7 +430,7 @@ class ScheduledExecutionConfigurator(object):
         if not JobInterfaceSunset.is_seed_dict(job_type.interface):
             args = JobInterface.replace_command_parameters(args, env_vars)
         else:
-            args = environment_expansion(env_vars, args)
+            args = environment_expansion(env_vars, args, remove_extras=True)
         config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources

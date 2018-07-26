@@ -25,12 +25,16 @@ class TestEnvironmentExpansion(TestCase):
         result = environment_expansion(self.env_dict, '${HELLO} ${THERE}')
         self.assertEquals('Hello there', result)
 
-    def test_missing_var_expansion(self):
-        result = environment_expansion(self.env_dict, '${HELLO} ${THERE} ${PEOPLE}')
+    def test_missing_var_expansion_no_remove(self):
+        result = environment_expansion(self.env_dict, '${HELLO} ${THERE} ${PEOPLE}', remove_extras=False)
+        self.assertEquals('Hello there ${PEOPLE}', result)
+
+    def test_missing_var_expansion_remove(self):
+        result = environment_expansion(self.env_dict, '${HELLO} ${THERE} ${PEOPLE}', remove_extras=True)
         self.assertEquals('Hello there', result)
 
-    def test_missing_var_expansion_2(self):
-        result = environment_expansion(self.env_dict, '${HELLO} ${THERE} ${PEOPLE} ${HELLO}')
+    def test_missing_var_expansion_remove_2(self):
+        result = environment_expansion(self.env_dict, '${HELLO} ${THERE} ${PEOPLE} ${HELLO}', remove_extras=True)
         self.assertEquals('Hello there Hello', result)
 
     def test_unmatched_curly_var_expansion_ignored(self):
