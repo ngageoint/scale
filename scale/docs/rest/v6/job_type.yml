@@ -1,0 +1,472 @@
+openapi: "3.0.0"
+info:
+  title: Job Type Services
+  version: v6
+paths:
+  /v6/job-types/:
+    get:
+      operationId: _rest_v6_job_type_list
+      summary: Job Type Names
+      description: Returns a list of all job type names
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: keyword
+          schema:
+            type: string
+          description: Keyword to perform a 'like' search on name, title, description, and tag
+        -in: query
+          name: is_active
+          schema:
+            type: boolean
+          description: if provided, only return names with a least one version that matches is_active (defaults to true)
+        -in: query
+          name: is_system
+          schema:
+            type: boolean
+          description: if provided, only return names with a least one version that matches is_system
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_list'
+  /v6/job-types/{name}/:
+    get:
+      operationId: _rest_v6_job_type_versions
+      summary: Job Type Versions
+      description: Returns a list of the versions of a job type
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: is_active
+          schema:
+            type: boolean
+          description: if provided, only return names with a least one version that matches is_active (defaults to true)
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_versions'
+ /v6/ingests/job-types/{name}/{version}/:
+    get:
+      operationId: _rest_v6_job_type_details
+      summary: Job Type Details
+      description: Returns detailed information about the job type with the specified name and version
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        -in: path
+          name: version
+          schema:
+            type: string
+          description: version of an existing job type
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_detail'
+  /v6/job-types/{name}/{version}/revisions/:
+    get:
+      operationId: _rest_v6_job_type_revisions
+      summary: Job Type Revisions
+      description: Returns a list of the revisions of a job type
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        -in: path
+          name: version
+          schema:
+            type: string
+          description: version of an existing job type
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_revisions'
+ /v6/ingests/job-types/{name}/{version}/revisions/{revision_num}/:
+    get:
+      operationId: _rest_v6_job_type_revision_details
+      summary: Job Type Revision Details
+      description: Returns detailed information about the job type revision with the specified name, version and revision number
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        -in: path
+          name: version
+          schema:
+            type: string
+          description: version of an existing job type
+        -in: path
+          name: revision_num
+          schema:
+            type: integer
+          description: revision number of the job type
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_revision_detail'
+
+components:
+  schemas:
+    job_type_list:
+      title: Job Type List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_name'
+          description: List of Job Type objects
+    job_type_name:
+      title: Job Type Name
+      type: object
+      properties:
+        name:
+          type: string
+          example: my-job
+        title:
+          type: string
+          example: My Job
+        description:
+          type: string
+          example: My Job Description 
+        icon_code:
+          type: string
+          example: f186 
+        num_versions:
+          type: integer
+          example: 1
+        latest_version:
+          type: string
+          example: 1.1.0
+    job_type_base:
+      title: Job Type Base
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-job
+        title:
+          type: string
+          example: My Job
+        description:
+          type: string
+          example: My Job Description 
+        icon_code:
+          type: string
+          example: f186 
+    job_type_versions:
+      title: Job Type Versions
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type'
+          description: List of Job Type objects
+    job_type:
+      title: Job Type
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-job
+        version:
+          type: string
+          example: 1.0
+        title:
+          type: string
+          example: My Job
+        description:
+          type: string
+          example: My Job Type Description 
+        icon_code:
+          type: string
+          example: f186 
+        is_active:
+          type: boolean
+          example: true
+        is_paused:
+          type: boolean
+          example: false
+        is_system:
+          type: boolean
+          example: false
+        max_scheduled:
+          type: integer
+          example: 1
+        revision_num:
+          type: integer
+          example: 1
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        deprecated:
+          type: string
+          format: date-time
+          description: When the job type was deprecated (previously known as archived).
+          example: 2015-09-10T15:24:53.987Z
+        paused:
+          type: string
+          format: date-time
+          description: When the job type was paused.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+    job_type_detail:
+      allof:
+        - ref: '#/components/schemas/job_type'
+        - title: Job Type Details
+        - type: object
+        properties:      
+          manifest:
+            $ref: '#/components/schemas/seed_manifest'
+          configuration:
+            $ref: '#/components/schemas/job_type_config'
+    job_type_config:
+      title: Job Type Configuration
+      type: object
+      properties:
+        version:
+          type: string
+          description: The version is an optional string value that defines the version of the |
+            configuration used. This allows updates to be made to the specification while |
+            maintaining backwards compatibility by allowing Scale to recognize an older version |
+            and convert it to the current version. The default value for version if it is not included |
+            is the latest version, which is currently 6. It is recommended, though not required, that |
+            you include the version so that future changes to the specification will still accept your configuration.
+          example: 6
+        mounts:
+          type: object
+          additionalProperties:
+            oneOf:
+            - $ref: '#/components/schemas/host_mount'
+            - $ref: '#/components/schemas/volume_mount'
+        priority:
+          type: integer
+          description: The priority to use for scheduling the job off of the queue. |
+            Jobs with a lower value will be processed before those with higher values
+          example: 100
+        output_workspaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/output_workspace'
+        settings:
+          type: object
+          description: A JSON object representing the configuration for each setting |
+            to provide to the job. Each key is the name of a setting defined in the |
+            job’s Seed manifest and each value is the value to provide for that setting.
+          additionalProperties:
+            type: string
+    host_mount:
+      title: Host Mount
+      type: object
+      properties:
+        type:
+          type: string
+        host_path:
+          type: string
+      required:
+      - type
+      - host_path
+    volume_mount:
+      title: Volume Mount
+      type: object
+      properties:
+        type:
+          type: string
+        driver:
+          type: string
+        driver_opts:
+          type: object
+          additionalPropterties:
+            type: string
+      required:
+      - type
+    output_workspace:
+      title: Output Workspace configuration
+      type: object
+      properties:
+        default:
+          type: string
+          description: The unique name of the default workspace to use for storing |
+            any output files that don’t belong to an output configured in 'outputs'.
+        outputs:
+          type: object
+          description: A JSON object representing the workspaces to use for storing |
+            the job’s output files for specific job file outputs. Each key is the |
+            name of a file output defined in the job’s Seed manifest and each value |
+            is the unique name of the workspace to use.
+          additionalPropterties:
+            type: string
+            
+    job_type_revisions:
+      title: Job Type Revision List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_type_revision'
+          description: List of Job Type Revisions
+    job_type_revision:
+      title: Job Type Revision
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        job_type:
+          $ref: '#/components/schemas/job_type_base'
+        revision_num:
+          type: integer
+          example: 1
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+    job_type_revision_detail:
+      title: Job Type Revision Details
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        job_type:
+          $ref: '#/components/schemas/job_type_name'
+        revision_num:
+          type: integer
+          example: 1
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        manifest:
+          $ref: '#/components/schemas/seed_manifest'

@@ -94,7 +94,7 @@ Response: 200 OK
         "previous": null, 
         "results": [ 
             { 
-                "name": "my-job", 
+                "name": "my-job",
                 "title": "My Job", 
                 "description": "A simple job type", 
                 "icon_code": "f013", 
@@ -121,7 +121,7 @@ Response: 200 OK
 | keyword            | String            | Optional | Performs a like search on name, title, description and tags         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_active          | Boolean           | Optional | Return only job types with one version that matches is_active flag. |
-|                    |                   |          | Defaults to all job types.                                          |
+|                    |                   |          | Defaults to True.                                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_system          | Boolean           | Optional | Return only job types that are system (True) or user (False).       |
 |                    |                   |          | Defaults to all job types.                                          |
@@ -177,7 +177,8 @@ Response: 200 OK
         "previous": null, 
         "results": [ 
             { 
-                "name": "my-job", 
+                "id": 3, 
+                "name": "my-job",
                 "version": "1.0.0" 
                 "title": "My Job", 
                 "description": "A simple job type", 
@@ -189,7 +190,7 @@ Response: 200 OK
                 "revision_num": 1, 
                 "docker_image": null, 
                 "created": "2015-03-11T00:00:00Z", 
-                "archived": null, 
+                "deprecated": null, 
                 "paused": null, 
                 "last_modified": "2015-03-11T00:00:00Z" 
             }, 
@@ -270,7 +271,7 @@ v6 Job Type Details
 
 **Example GET /v6/job-types/{name}/{version}/ API call**
 
-Request: GET http://.../v6/job-types/{name}/{version}
+Request: GET http://.../v6/job-types/{name}/{version}/
 
 Response: 200 OK
 
@@ -371,11 +372,15 @@ Response: 200 OK
         "results": [ 
             { 
         		"id": 3, 
-        		"name": "my-job", 
-        		"title": "My Job", 
-        		"description": "A simple job type", 
-        		"icon_code": "f013", 
+        		"job_type": { 
+                    "id": 1,
+                    "name": "my-job",
+                    "title": "My first job",
+                    "description": "My very first job",
+                    "icon_code": 012F
+        		},
         		"revision_num": 1, 
+        		"docker_image": "my-job-1.0.0-seed:1.0.0", 
         		"created": "2015-03-11T00:00:00Z"
 		    }
 	    }
@@ -413,15 +418,9 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .id                      | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .name                    | String            | The name of the job type.                                                |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
-| .title                   | String            | The human readable display name for this version of the job type.        |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
-| .description             | String            | A longer description of this version of the job type.                    |
+| .job_type                | JSON Object       | The job type object this is a revision of.                               |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .revision_num            | Ingeger           | The number for this revision of the job type.                            |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
-| .icon_code               | String            | A font-awesome icon code to use when representing this job type version. |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .docker_image            | String            | The Docker image containing the code to run for this job.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -442,8 +441,17 @@ Response: 200 OK
  .. code-block:: javascript  
     { 
 		"id": 3, 
+		"job_type": { 
+            "id": 1,
+            "name": "my-job",
+            "title": "My first job",
+            "description": "My very first job",
+            "icon_code": 012F,
+            "num_versions": 1,
+            "latest_version": "1.0.0"
+		},
 		"revision_num": 1, 
-		"docker_image": null, 
+		"docker_image": "my-job-1.0.0-seed:1.0.0", 
 		"manifest": { ... }, 
 		"created": "2015-03-11T00:00:00Z"
     } 
@@ -464,6 +472,8 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | id                       | Integer           | The unique identifier of the model.                                      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| job_type                 | JSON Object       | The job type object this is a revision of.                               |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | revision_num             | Ingeger           | The number for this revision of the job type.                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
