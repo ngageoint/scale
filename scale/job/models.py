@@ -396,9 +396,10 @@ class JobManager(models.Manager):
             job.inputs = job_data.extend_interface_with_inputs_v5(job_interface, input_files)
             job.outputs = job_results.extend_interface_with_outputs_v5(job_interface, output_files)
         else:
-            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+            job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'],
+                                              input_files)
             job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
-                                           output_files)
+                                               output_files)
 
 
         return job
@@ -436,9 +437,9 @@ class JobManager(models.Manager):
         """Gets the job model for the given ID with related job_type_rev and recipe__recipe_type_rev models
 
         :param job_id: The job ID
-        :type job_id: list
+        :type job_id: int
         :returns: The job model with related job_type_rev and recipe__recipe_type_rev models
-        :rtype: list
+        :rtype: :class:`job.models.Job`
         """
 
         return self.select_related('job_type_rev', 'recipe__recipe_type_rev').get(id=job_id)
@@ -556,6 +557,7 @@ class JobManager(models.Manager):
 
         # Validate job data
         interface = job.get_job_interface()
+        data = JobDataSunset.create(interface, data=data.get_dict())
         interface.validate_data(data)
 
         # Update job model in memory
@@ -608,7 +610,7 @@ class JobManager(models.Manager):
         """
 
         if job.input_file_size is not None:
-            return  # Job has already had its input data processed
+            return  # Job has already had its input processed
 
         # Create JobInputFile models in batches
         all_file_ids = set()
@@ -698,13 +700,11 @@ class JobManager(models.Manager):
             sunset_job_data = JobDataSunset.create(job.job_type_rev.manifest, v1_dict)
             if job.recipe:
                 sunset_interface = JobInterfaceSunset.create(job.job_type_rev.manifest, do_validate=False)
-                from recipe.deprecation import RecipeDataSunset
-                sunset_recipe_data = RecipeDataSunset.create(job.recipe.recipe_type_rev.definition,
-                                                             job.recipe.input)
+
                 # Add workspace for file outputs if needed
                 if sunset_interface.get_file_output_names():
-                    workspace_id = sunset_recipe_data.get_workspace_id()
-                    if workspace_id:
+                    if 'workspace_id' in job.recipe.input:
+                        workspace_id = job.recipe.input['workspace_id']
                         sunset_interface.add_workspace_to_data(sunset_job_data, workspace_id)
             input_dict = sunset_job_data.get_dict()
 
@@ -1265,7 +1265,11 @@ class Job(models.Model):
         if self.input and 'version' in self.input and '6' == self.input['version']:
             job_data = JobData(self.input)
         else:
-            job_data = JobData_1_0(self.input)
+            # Handle self.input being none on Seed type jobs
+            if JobInterfaceSunset.is_seed_dict(self.job_type_rev.interface):
+                job_data = JobData(self.input)
+            else:
+                job_data = JobData_1_0(self.input)
         return job_data
 
     def get_job_interface(self):
@@ -1291,7 +1295,7 @@ class Job(models.Model):
         else:
             # Handle self.output being none on Seed type jobs
             if JobInterfaceSunset.is_seed_dict(self.job_type_rev.manifest):
-                job_results = JobResults()
+                job_results = JobResults(self.output)
             else:
                 job_results = JobResults_1_0(self.output)
         return job_results
