@@ -505,8 +505,8 @@ and source_file.workspace.json_config fields.</p>
 <dt id="source.models.SourceFileManager.get_source_jobs">
 <code class="descname">get_source_jobs</code><span class="sig-paren">(</span><em>source_file_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_source_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for the list of jobs that have used the given source file as input. The returned query
-includes the related job_type, job_type_rev, event, and error fields, except for the job_type.interface and
-job_type_rev.interface fields.</p>
+includes the related job_type, job_type_rev, event, and error fields, except for the job_type.manifest and
+job_type_rev.manifest fields.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

@@ -969,6 +969,44 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0040_auto_20180709_1807">
+<span id="job-migrations-0040-auto-20180709-1807-module"></span><h2>job.migrations.0040_auto_20180709_1807 module<a class="headerlink" href="#module-job.migrations.0040_auto_20180709_1807" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0040_auto_20180709_1807.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0040_auto_20180709_1807.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0040_auto_20180709_1807.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0040_auto_20180709_1807.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0039_auto_20180622_1827')]</em><a class="headerlink" href="#job.migrations.0040_auto_20180709_1807.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0040_auto_20180709_1807.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RenameField  new_name=u'deprecated', model_name=u'jobtype', old_name=u'archived'&gt;, &lt;RenameField  new_name=u'manifest', model_name=u'jobtype', old_name=u'interface'&gt;, &lt;RenameField  new_name=u'manifest', model_name=u'jobtyperevision', old_name=u'interface'&gt;]</em><a class="headerlink" href="#job.migrations.0040_auto_20180709_1807.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0041_jobtypetag">
+<span id="job-migrations-0041-jobtypetag-module"></span><h2>job.migrations.0041_jobtypetag module<a class="headerlink" href="#module-job.migrations.0041_jobtypetag" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0041_jobtypetag.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0041_jobtypetag.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0041_jobtypetag.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0041_jobtypetag.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0040_auto_20180709_1807')]</em><a class="headerlink" href="#job.migrations.0041_jobtypetag.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0041_jobtypetag.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'job_type', &lt;django.db.models.fields.CharField&gt;), (u'tag', &lt;django.db.models.fields.CharField&gt;)], name=u'JobTypeTag'&gt;]</em><a class="headerlink" href="#job.migrations.0041_jobtypetag.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
