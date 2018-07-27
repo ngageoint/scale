@@ -2759,6 +2759,38 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
+        
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a job type"""
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_configuration(self):
+        """Tests editing the configuration of a job type"""
+        configuration = self.configuration.copy()
+        configuration['settings'] = {'DB_HOST': 'other_scale_db'}
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/some/new/path'
+                }
+            }
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
 
 class TestJobTypeRevisionsViewV6(TestCase):
 
