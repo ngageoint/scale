@@ -148,7 +148,9 @@ class RequeueJobsBulk(CommandMessage):
         for job in job_qry.defer('output')[:MAX_BATCH_SIZE]:
             batch_count += 1
             last_job_id = job.id
-            if job.can_be_requeued():
+            # Check that jobs can be re-queued (have been queued before)
+            # or un-canceled (not queued before, sent to PENDING)
+            if job.can_be_requeued() or job.can_be_uncanceled():
                 requeue_jobs.append(QueuedJob(job.id, job.num_exes))
         requeue_count = len(requeue_jobs)
 
