@@ -125,7 +125,7 @@ class JobTypeDetailsSerializerV6(JobTypeSerializerV6):
 
     manifest = serializers.JSONField(default=dict)
     
-    configuration = serializers.JSONField(default=dict)
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 
 class JobTypeStatusSerializer(serializers.Serializer):
@@ -172,7 +172,7 @@ class JobTypeRevisionSerializerV5(JobTypeRevisionBaseSerializer):
     
 class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    job_type = JobTypeBaseSerializerV6()
+    job_type = JobTypeListSerializerV6()
     docker_image = serializers.CharField(source='get_tagged_docker_image')
     created = serializers.DateTimeField()
     

@@ -29,7 +29,7 @@ paths:
           name: is_active
           schema:
             type: boolean
-          description: if provided, only return names with a least one version that matches is_active (defaults to true)
+          description: if provided, only return names with a least one version that matches is_active
         -in: query
           name: is_system
           schema:
@@ -69,7 +69,7 @@ paths:
           name: is_active
           schema:
             type: boolean
-          description: if provided, only return names with a least one version that matches is_active (defaults to true)
+          description: if provided, only return names with a least one version that matches is_active
       responses:
         '200':
           description: |-

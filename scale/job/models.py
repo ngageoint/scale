@@ -2759,7 +2759,7 @@ class JobTypeManager(models.Manager):
             job_types = job_types.order_by('last_modified')
         return job_types
         
-    def get_job_types_v6(self, keyword=None, is_active=True, is_system=None, order=None):
+    def get_job_types_v6(self, keyword=None, is_active=None, is_system=None, order=None):
         """Returns a list of the latest version of job types
 
         :param keyword: Query jobs with name, title, description or tag matching the keyword
@@ -2887,16 +2887,9 @@ class JobTypeManager(models.Manager):
 
         # Scrub configuration for secrets
         if job_type.configuration:
-            if JobInterfaceSunset.is_seed_dict(job_type.manifest):
-                configuration = job_type.get_job_configuration()
-                manifest = SeedManifest(job_type.manifest, do_validate=False)
-                configuration.remove_secret_settings(manifest)
-                job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
-            else:
-                configuration = JobConfigurationV2(job_type.configuration)
-                interface = JobInterfaceSunset.create(job_type.manifest)
-                configuration.validate(interface.get_dict())
-                job_type.configuration = configuration.get_dict()
+            configuration = job_type.get_job_configuration()
+            manifest = SeedManifest(job_type.manifest, do_validate=False)
+            configuration.remove_secret_settings(manifest)
 
         return job_type
         
@@ -3446,7 +3439,7 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v2_json(self.get_configuration()).get_dict())
+        return rest_utils.strip_schema_version(convert_config_to_v2_json(self.get_job_configuration()).get_dict())
 
     def get_v6_configuration_json(self):
         """Returns the job configuration in v6 of the JSON schema
@@ -3455,7 +3448,7 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the
@@ -3782,7 +3775,6 @@ class JobTypeTagManager(models.Manager):
     """Provides additional methods for handling job type tags
     """
 
-    @transaction.atomic
     def create_job_type_tags(self, job_type, tags):
         """Creates a set of job type tags and saves them in the database. All database changes occur in an atomic
         transaction.
@@ -3807,7 +3799,6 @@ class JobTypeTagManager(models.Manager):
 
         return job_type_tags
 
-    @transaction.atomic
     def clear_job_type_tags(self, job_type):
         """Removes all job type tag objects for the specified job type.
         Useful when updating the revision and repopulating with new tags

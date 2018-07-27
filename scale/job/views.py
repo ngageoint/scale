@@ -119,7 +119,7 @@ class JobTypesView(ListCreateAPIView):
         """
         # TODO: Revisit passing multiple keywords
         keyword = rest_util.parse_string(request, 'keyword', required=False)
-        is_active = rest_util.parse_bool(request, 'is_active', default_value=True)
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
         is_system = rest_util.parse_bool(request, 'is_system', required=False)
         order = ['name']
 

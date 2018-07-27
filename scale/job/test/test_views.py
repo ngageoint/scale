@@ -538,7 +538,7 @@ class TestJobDetailsViewV6(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(result['job_type']['name'], self.job.job_type.name)
-        self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
+        self.assertEqual(result['job_type_rev']['job_type']['name'], self.job.job_type.name)
 
         if self.recipe:
             self.assertEqual(result['recipe']['recipe_type']['name'], self.recipe.recipe_type.name)
@@ -1435,13 +1435,15 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(len(result['results']), 4)
         for entry in result['results']:
             expected = None
             if entry['name'] == self.job_type1.name:
                 expected = self.job_type1
             elif entry['name'] == self.job_type2.name:
                 expected = self.job_type2
+            elif entry['name'] == self.job_type3.name:
+                expected = self.job_type3
             elif entry['name'] == self.job_type5.name:
                 expected = self.job_type5
             else:
@@ -1467,7 +1469,13 @@ class TestJobTypesViewV6(TestCase):
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 3)
+        self.assertEqual(len(result['results']), 4)
+        
+        url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type-1')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
 
     def test_is_active(self):
         """Tests successfully calling the job types view filtered by inactive state."""
@@ -1487,7 +1495,7 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 3)
         
         url = '/%s/job-types/?is_system=true' % self.api
         response = self.client.generic('GET', url)
@@ -2823,7 +2831,6 @@ class TestJobTypeRevisionsViewV6(TestCase):
         result = result['results']
         self.assertEqual(len(result), 2)
         self.assertTrue(isinstance(result[0], dict), 'result  must be a dictionary')
-        self.assertEqual(result[0]['job_type']['id'], self.job_type.id)
         self.assertEqual(result[0]['job_type']['name'], self.job_type.name)
         self.assertEqual(result[0]['revision_num'], 2)
         self.assertEqual(result[0]['docker_image'], 'my-job-1.0.0-seed:1.0.1')
