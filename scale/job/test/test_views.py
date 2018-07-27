@@ -1543,27 +1543,67 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
-    def test_create(self):
-        """Tests creating a new job type."""
+class TestJobTypesPostViewV6(TestCase):
+    
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
         
-        #TODO: implement v6 create test
-        """
+    def test_add_seed(self):
+        """Tests adding a seed image."""
+        
         url = '/%s/job-types/' % self.api
-        json_data = ''
+        json_data = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        json_data['job']['name'] = 'my-new-job'
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.META['Location'], url)
 
-        job_type = JobType.objects.filter(name='job-type-post-test').first()
+        job_type = JobType.objects.filter(name='my-new-job').first()
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['priority'], 1)
-        self.assertIsNotNone(results['error_mapping'])
-        self.assertEqual(results['error_mapping']['exit_codes']['1'], self.error.name)
-        self.assertEqual(results['custom_resources']['resources']['foo'], 10.0)
-        self.assertIsNone(results['trigger_rule'])
-        self.assertIsNone(results['max_scheduled'])"""
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 1)
+        self.assertIsNone(results['max_scheduled'])
+        
+    def test_add_seed_version(self):
+        """Tests adding a new version of a seed image."""
+        
+        url = '/%s/job-types/' % self.api
+        json_data = job_test_utils.COMPLETE_MANIFEST
+        json_data2 = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        json_data2['job']['version'] = '1.1.0'
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.META['Location'], url)
+        
+        job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertIsNone(results['max_scheduled'])
+        
+        response = self.client.generic('POST', url, json.dumps(json_data2), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.META['Location'], url)
+
+        job_type = JobType.objects.filter(name='my-job', version='1.1.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertIsNone(results['max_scheduled'])
 
     def test_create_configuration(self):
         """Tests creating a new job type with a valid configuration."""
