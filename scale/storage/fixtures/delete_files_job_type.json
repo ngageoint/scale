@@ -15,7 +15,7 @@
 			"uses_docker": true,
 			"docker_privileged": false,
 			"docker_image": "scale",
-			"interface": {
+			"manifest": {
 			     "version": "1.4",
                  "command": "",
 			     "command_arguments": "scale_delete_files ${-f :file_paths} ${-j :job_id} ${-w :workspace} ${-p :purge}",

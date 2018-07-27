@@ -141,8 +141,8 @@ class SourceFileManager(models.GeoManager):
                         job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None, 
                         include_superseded=False, order=None):
         """Returns a query for the list of jobs that have used the given source file as input. The returned query
-        includes the related job_type, job_type_rev, event, and error fields, except for the job_type.interface and
-        job_type_rev.interface fields.
+        includes the related job_type, job_type_rev, event, and error fields, except for the job_type.manifest and
+        job_type_rev.manifest fields.
 
         :param source_file_id: The source file ID.
         :type source_file_id: int

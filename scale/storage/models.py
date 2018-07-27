@@ -324,7 +324,7 @@ class ScaleFileManager(models.Manager):
         files = files.defer('workspace__json_config', 'job__input', 'job__output', 'job_exe__environment',
                                   'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
                                   'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
-                                  'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                  'job_type__manifest', 'job_type__docker_params', 'job_type__configuration',
                                   'job_type__error_mapping', 'recipe__input', 'recipe_type__definition',
                                   'batch__definition')
         files = files.prefetch_related('countries')

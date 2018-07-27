@@ -312,8 +312,8 @@ class QueueManager(models.Manager):
             config = configurator.configure_queued_job(job)
 
             manifest = None
-            if JobInterfaceSunset.is_seed_dict(job.job_type.interface):
-                manifest = SeedManifest(job.job_type.interface)
+            if JobInterfaceSunset.is_seed_dict(job.job_type.manifest):
+                manifest = SeedManifest(job.job_type.manifest)
 
             if priority:
                 queued_priority = priority

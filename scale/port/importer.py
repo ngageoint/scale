@@ -355,7 +355,7 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
         if 'interface' in result:
             interface_dict = result.get('interface')
         elif job_type:
-            interface_dict = job_type.interface
+            interface_dict = job_type.manifest
         interface = JobInterface(interface_dict)
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.get('name'), unicode(ex)))

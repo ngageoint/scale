@@ -487,7 +487,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
-                                                        interface=self.job_type_2.interface)
+                                                        interface=self.job_type_2.manifest)
         new_definition = {
             'version': '1.0',
             'input_data': [{
@@ -664,7 +664,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=job_type_2.name, version='New Version',
-                                                        interface=job_type_2.interface)
+                                                        interface=job_type_2.manifest)
         new_definition = {
             'version': '1.0',
             'input_data': [{

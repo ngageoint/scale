@@ -33,6 +33,126 @@ RULE_EVENT_COUNTER = 1
 MOCK_TYPE = 'MOCK_JOB_TRIGGER_RULE_TYPE'
 MOCK_ERROR_TYPE = 'MOCK_JOB_TRIGGER_RULE_ERROR_TYPE'
 
+COMPLETE_MANIFEST = {
+    'seedVersion': '1.0.0',
+    'job': {
+        'name': 'my-job',
+        'jobVersion': '1.0.0',
+        'packageVersion': '1.0.0',
+        'title': 'My first job',
+        'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
+        'tags': [ 'hdf5', 'png', 'csv', 'image processing' ],
+        'maintainer': {
+          'name': 'John Doe',
+          'organization': 'E-corp',
+          'email': 'jdoe@example.com',
+          'url': 'http://www.example.com',
+          'phone': '666-555-4321'
+        },
+        'timeout': 3600,
+        'interface': {
+          'command': '${INPUT_FILE} ${OUTPUT_DIR} ${VERSION}',
+          'inputs': {
+            'files': [
+              {
+                'name': 'INPUT_FILE',
+                'required': True,
+                'mediaTypes': [
+                  'image/x-hdf5-image'
+                ],
+                'partial': True
+              }
+            ],
+            'json': [
+              {
+                'name': 'INPUT_JSON',
+                'type': 'string',
+                'required': True
+              }
+            ]
+          },
+          'outputs': {
+            'files': [
+              {
+                'name': 'output_file_pngs',
+                'mediaType': 'image/png',
+                'multiple': True,
+                'pattern': 'outfile*.png'
+              },
+              {
+                'name': 'output_file_csv',
+                'mediaType': 'text/csv',
+                'pattern': 'outfile*.csv',
+                'required': False
+              }
+            ],
+            'json': [
+              {
+                'name': 'cell_count',
+                'key': 'cellCount',
+                'type': 'integer'
+              },
+              {
+                'name': 'dummy',
+                'type': 'integer',
+                'required': False
+              }
+            ]
+          },
+          'mounts': [
+            {
+              'name': 'MOUNT_PATH',
+              'path': '/the/container/path',
+              'mode': 'ro'
+            },
+            {
+              'name': 'WRITE_PATH',
+              'path': '/write',
+              'mode': 'rw'
+            }
+          ],
+          'settings': [
+            {
+              'name': 'VERSION',
+              'secret': False
+            },
+            {
+              'name': 'DB_HOST',
+              'secret': False
+            },
+            {
+              'name': 'DB_PASS',
+              'secret': True
+            }
+          ]
+        },
+        'resources': {
+          'scalar': [
+            { 'name': 'cpus', 'value': 1.0 },
+            { 'name': 'mem', 'value': 1024.0 },
+            { 'name': 'sharedMem', 'value': 1024.0 },
+            { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
+          ]
+        },
+        'errors': [
+          {
+            'code': 1,
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          },
+          {
+            'code': 2,
+            'name': 'error-name-two',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'job'
+          }
+        ]
+      }
+    }
+
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
     """Mock trigger rule configuration for testing
@@ -316,17 +436,23 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
         }
 
     job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
-                                      interface=manifest, priority=priority, timeout=manifest['job']['timeout'],
+                                      manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
                                       max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
+def edit_job_type_v6(job_type, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
+                         remove_trigger_rule=False, **kwargs):
+    """Updates the manifest of a job type, including creating a new revision for unit testing
+    """
+    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=manifest_dict, trigger_rule_dict=trigger_rule_dict, 
+                         configuration_dict=configuration_dict, remove_trigger_rule=remove_trigger_rule, **kwargs)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
-                    is_operational=True, trigger_rule=None, configuration=None):
+                    is_system=False, is_operational=True, trigger_rule=None, configuration=None):
     """Creates a job type model for unit testing
 
     :returns: The job type model
@@ -374,11 +500,11 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
             'default_settings': {}
         }
 
-    job_type = JobType.objects.create(name=name, version=version, category=category, interface=interface,
+    job_type = JobType.objects.create(name=name, version=version, category=category, manifest=interface,
                                       priority=priority, timeout=timeout, max_tries=max_tries,
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
-                                      is_operational=is_operational, trigger_rule=trigger_rule,
+                                      is_system=is_system, is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
