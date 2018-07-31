@@ -73,8 +73,59 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def create_job(self, job_type, event_id, root_recipe_id=None, recipe_id=None, batch_id=None, superseded_job=None,
-                   delete_superseded=True):
+    def create_job_v6(self, job_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None, batch_id=None,
+                      superseded_job=None):
+        """Creates a new job for the given job type revision and returns the (unsaved) job model
+
+        :param job_type_rev: The job type revision (with populated job_type model) of the job to create
+        :type job_type_rev: :class:`job.models.JobTypeRevision`
+        :param event_id: The event ID that triggered the creation of this job
+        :type event_id: int
+        :param input_data: The job's input data (optional)
+        :type input_data: :class:`data.data.data.Data`
+        :param root_recipe_id: The ID of the root recipe that contains this job
+        :type root_recipe_id: int
+        :param recipe_id: The ID of the original recipe that created this job
+        :type recipe_id: int
+        :param batch_id: The ID of the batch that contains this job
+        :type batch_id: int
+        :param superseded_job: The job that the created job is superseding, possibly None
+        :type superseded_job: :class:`job.models.Job`
+        :returns: The new job model
+        :rtype: :class:`job.models.Job`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
+        """
+
+        job = Job()
+        job.job_type = job_type_rev.job_type
+        job.job_type_rev = job_type_rev
+        job.event_id = event_id
+        job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        job.recipe_id = recipe_id
+        job.batch_id = batch_id
+        job.max_tries = job_type_rev.job_type.max_tries
+
+        if input_data:
+            input_data.validate(job_type_rev.get_input_interface())
+            job.input = convert_data_to_v6_json(input_data).get_dict()
+
+        # TODO: remove this legacy job types are removed
+        if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
+            job.priority = job_type_rev.job_type.priority
+            job.timeout = job_type_rev.job_type.timeout
+
+        if superseded_job:
+            root_id = superseded_job.root_superseded_job_id
+            if not root_id:
+                root_id = superseded_job.id
+            job.root_superseded_job_id = root_id
+            job.superseded_job = superseded_job
+
+        return job
+
+    def create_job_old(self, job_type, event_id, root_recipe_id=None, recipe_id=None, batch_id=None,
+                       superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
         job is superseding. The returned job model will have not yet been saved in the database.
 
@@ -101,7 +152,7 @@ class JobManager(models.Manager):
 
         job = Job()
         job.job_type = job_type
-        job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.id, job_type.revision_num)
+        job.job_type_rev = JobTypeRevision.objects.get_revision_old(job_type.id, job_type.revision_num)
         job.event_id = event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
@@ -3584,7 +3635,23 @@ class JobTypeRevisionManager(models.Manager):
 
         return self.get(job_type_id=job_type.id, revision_num=revision_num)
 
-    def get_revision(self, job_type_id, revision_num):
+    def get_revision(self, job_type_name, job_type_version, revision_num):
+        """Returns the revision (with populated job_type model) for the given job type and revision number
+
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
+        :param job_type_version: The version of the job type
+        :type job_type_version: string
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The revision
+        :rtype: :class:`job.models.JobTypeRevision`
+        """
+
+        qry = JobTypeRevision.objects.select_related('job_type')
+        return qry.get(job_type__name=job_type_name, job_type__version=job_type_version, revision_num=revision_num)
+
+    def get_revision_old(self, job_type_id, revision_num):
         """Returns the revision for the given job type and revision number
 
         :param job_type_id: The ID of the job type

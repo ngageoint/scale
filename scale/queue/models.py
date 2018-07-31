@@ -383,7 +383,7 @@ class QueueManager(models.Manager):
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
-        job = Job.objects.create_job(job_type, event.id)
+        job = Job.objects.create_job_old(job_type, event.id)
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
