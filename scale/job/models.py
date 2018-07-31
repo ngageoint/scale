@@ -2680,6 +2680,7 @@ class JobTypeManager(models.Manager):
             job_type.paused = timezone.now() if kwargs['is_paused'] else None
         for field_name in kwargs:
             setattr(job_type, field_name, kwargs[field_name])
+        
         job_type.save()
 
         # Save any secrets to Vault
@@ -3256,7 +3257,7 @@ class JobType(models.Model):
     BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                       'configuration')
 
-    UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'deprecated', 'last_modified')
+    UNEDITABLE_FIELDS_V6 = ('is_system', 'revision_num', 'created', 'deprecated', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)

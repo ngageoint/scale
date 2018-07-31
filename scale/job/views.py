@@ -8,6 +8,7 @@ from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from django.utils import timezone
 from job.seed.exceptions import InvalidSeedManifestDefinition
+from job.seed.manifest import SeedManifest
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import StaticHTMLRenderer, JSONRenderer
@@ -21,6 +22,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job_config_2_0 import JobConfigurationV2
+from job.configuration.json.job_config_v6 import JobConfigurationV6
 from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
@@ -682,12 +684,12 @@ class JobTypeDetailsView(GenericAPIView):
         """
 
         if self.request.version == 'v6':
-            raise Http404
-        else:
             return self.patch_v6(request, name, version)
-    #TODO: Update with issue 1219
+        else:
+            raise Http404
+
     def patch_v6(self, request, name, version):
-        """Edits an existing legacy job type and returns the updated details
+        """Edits an existing seed job type and returns the updated details
 
         :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
@@ -697,85 +699,31 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # Validate the job interface
-        interface_dict = rest_util.parse_dict(request, 'interface', required=False)
-        interface = None
-        try:
-            if interface_dict:
-                interface = JobInterface(interface_dict)
-        except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type interface invalid: %s' % unicode(ex))
-
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
-        secrets = None
         try:
             if configuration_dict:
-                configuration = JobConfigurationV2(configuration_dict)
-                if interface:
-                    secrets = configuration.get_secret_settings(interface.get_dict())
-                    configuration.validate(interface.get_dict())
-                else:
-                    stored_interface = JobType.objects.values_list('manifest', flat=True).get(pk=job_type_id)
-                    secrets = configuration.get_secret_settings(stored_interface)
-                    configuration.validate(stored_interface)
+                configuration = JobConfigurationV6(configuration_dict). get_configuration()
+                stored_manifest = JobType.objects.values_list('manifest', flat=True).get(name=name, version=version)
+                configuration.validate(SeedManifest(stored_manifest))
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 
-        # Validate the error mapping
-        error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
-        error_mapping = None
-        try:
-            if error_dict:
-                error_mapping = create_legacy_error_mapping(error_dict)
-                error_mapping.validate_legacy()
-        except InvalidInterfaceDefinition as ex:
-            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
-
-        # Validate the custom resources
-        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
-        custom_resources = None
-        try:
-            if resources_dict:
-                custom_resources = Resources(resources_dict)
-        except InvalidResources as ex:
-            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
-
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise BadParameter('Trigger type and configuration are required together.')
-        is_active = trigger_rule_dict['is_active'] if 'is_active' in trigger_rule_dict else True
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
-
         # Fetch the current job type model
         try:
-            job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type_id)
+            job_type = JobType.objects.get(name=name, version=version)
         except JobType.DoesNotExist:
             raise Http404
 
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            try:
-                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-            except InvalidTriggerType as ex:
-                logger.exception('Invalid trigger type for job type: %i', job_type_id)
-                raise BadParameter(unicode(ex))
-
         # Extract the fields that should be updated as keyword arguments
-        extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
-                       'configuration'}
+        edit_fields = {}
+        valid_edit_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled','configuration'}
         for key, value in request.data.iteritems():
-            if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
-                extra_fields[key] = value
-        # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
-        if 'mem_required' in extra_fields:
-            extra_fields['mem_const_required'] = extra_fields['mem_required']
-            del extra_fields['mem_required']
+            if key in valid_edit_fields:
+                edit_fields[key] = value
+            else:
+                raise InvalidJobField
 
         try:
             from recipe.configuration.definition.exceptions import InvalidDefinition
@@ -785,36 +733,15 @@ class JobTypeDetailsView(GenericAPIView):
 
         try:
             with transaction.atomic():
-
-                # Attempt to create the trigger rule
-                trigger_rule = None
-                if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'],
-                                                                    job_type.name, is_active)
-
-                # Update the active state separately if that is only given trigger field
-                if not trigger_rule and job_type.trigger_rule and 'is_active' in trigger_rule_dict:
-                    job_type.trigger_rule.is_active = is_active
-                    job_type.trigger_rule.save()
-
                 # Edit the job type
-                JobType.objects.edit_job_type_v5(job_type_id=job_type_id, interface=interface,
-                                                 trigger_rule=trigger_rule, remove_trigger_rule=remove_trigger_rule,
-                                                 error_mapping=error_mapping, custom_resources=custom_resources,
-                                                 configuration=configuration, secrets=secrets, **extra_fields)
+                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, 
+                                                 configuration_dict=configuration_dict, **edit_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
-            logger.exception('Unable to update job type: %i', job_type_id)
+            logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
-        # Fetch the full job type with details
-        try:
-            job_type = JobType.objects.get_details_v5(job_type.id)
-        except JobType.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(job_type)
-        return Response(serializer.data)
+        return HttpResponse(status=204)
 
 
 class JobTypeRevisionsView(ListAPIView):

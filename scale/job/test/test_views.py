@@ -1593,9 +1593,9 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['name'] = 'my-new-job'
         
         json_data = {
-            icon_code = 'BEEF',
-            docker_image = 'my-new-job-1.0.0-seed:1.0.0',
-            manifest = manifest
+            'icon_code': 'BEEF',
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest
         }
         
         good_setting = {
@@ -1625,11 +1625,11 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['jobVersion'] = '1.1.0'
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 1,
-            docker_image = 'my-job-1.1.0-seed:1.0.0',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.1.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
         
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1654,11 +1654,11 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['packageversion'] = '1.0.1'
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 1,
-            docker_image = 'my-job-1.0.0-seed:1.0.1',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.1',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
         
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1698,11 +1698,11 @@ class TestJobTypesPostViewV6(TestCase):
           ]
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 1,
-            docker_image = 'my-job-1.0.0-seed:1.0.0',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
         
         with patch.object(SecretsHandler, '__init__', return_value=None), \
@@ -1733,11 +1733,11 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['interface']['mounts'] = []
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 1,
-            docker_image = 'my-job-no-mount-1.0.0-seed:1.0.0',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-mount-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1758,11 +1758,11 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['interface']['settings'] = []
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 1,
-            docker_image = 'my-job-no-setting-1.0.0-seed:1.0.0',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-setting-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1774,7 +1774,7 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['id'], job_type.id)
         self.assertEqual(results['configuration']['settings'], {})
 
-    def test_create_missing_param(self):
+    def test_create_seed_missing_param(self):
         """Tests creating a seed job type with missing fields."""
 
         url = '/%s/job-types/' % self.api
@@ -1790,7 +1790,7 @@ class TestJobTypesPostViewV6(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_create_bad_param(self):
+    def test_create_seed_bad_param(self):
         """Tests creating a job type with invalid type fields."""
 
         url = '/%s/job-types/' % self.api
@@ -1798,11 +1798,11 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['name'] = 'my-job-bad-parameter'
         
         json_data = {
-            icon_code = 'BEEF',
-            max_scheduled = 'BAD',
-            docker_image = '',
-            manifest = manifest,
-            configuration = self.configuration
+            'icon_code': 'BEEF',
+            'max_scheduled': 'BAD',
+            'docker_image': '',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -2355,7 +2355,7 @@ class TestJobTypeDetailsViewV6(TestCase):
                                                        configuration=self.configuration)
 
     def test_not_found(self):
-        """Tests successfully calling the get job type details view with a job id that does not exist."""
+        """Tests calling the get job type details view with a job name/version that does not exist."""
 
         url = '/%s/job-types/missing-job/1.0.0/' % self.api
         response = self.client.get(url)
@@ -2378,6 +2378,19 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
+
+    def test_edit_not_found(self):
+        """Tests calling the get job type details view with a job name/version that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/' % self.api
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
         
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a job type"""
@@ -2394,7 +2407,7 @@ class TestJobTypeDetailsViewV6(TestCase):
 
     def test_edit_configuration(self):
         """Tests editing the configuration of a job type"""
-        configuration = self.configuration.copy()
+        configuration = copy.deepcopy(self.configuration)
         configuration['settings'] = {'DB_HOST': 'other_scale_db'}
         configuration['mounts'] = {
             'dted': {
@@ -2410,6 +2423,17 @@ class TestJobTypeDetailsViewV6(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
+    def test_edit_bad_configuration(self):
+        """Tests passing an invalid configuration of a job type to the patch interface"""
+        configuration = copy.deepcopy(self.configuration)
+        configuration['priority'] = 0
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestJobTypeRevisionsViewV6(TestCase):
 
