@@ -43,6 +43,7 @@ from node.resources.exceptions import InvalidResources
 from node.resources.json.resources import Resources
 from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
+from recipe.configuration.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
@@ -140,8 +141,6 @@ class JobTypesView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO: remove conditional and un-comment serializer instantiation when REST API v5 is removed
-        # serializer = JobTypeDetailsSerializer(job_type)
         if self.request.version == 'v6':
             return self.create_v6(request)
         else:
@@ -279,57 +278,75 @@ class JobTypesView(ListCreateAPIView):
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
-
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
+        
+        # Require docker image value
+        docker_image = rest_util.parse_string(request, 'docker_image', required=True)
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = JobType.BASE_FIELDS_V6
+        simple_fields = {'icon_code', 'max_scheduled', 'docker_image'}
+        complex_fields = {'configuration', 'manifest'}
         for key, value in request.data.iteritems():
-            if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS_V6:
+            if key in simple_fields:
                 extra_fields[key] = value
+            elif key not in complex_fields:
+                raise InvalidJobField
 
-        try:
-            with transaction.atomic():
-
-                # Create the job type
-                job_type = JobType.objects.create_job_type_v6(manifest_dict=manifest_dict,
-                                                              trigger_rule_dict=trigger_rule_dict,
-                                                              configuration_dict=configuration_dict,
-                                                              **extra_fields)
-
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
-                InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
-            message = 'Unable to create new job type'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidSeedManifestDefinition as ex:
-            message = 'Job type interface invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidJobConfiguration as ex:
-            message = 'Job type configuration invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidResources as ex:
-            message = 'Job type custom resources invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        name = manifest_dict['job']['name']
+        version = manifest_dict['job']['jobVersion']
+        
+        existing_job_type = JobType.objects.filter(name=name, version=version)
+        if not existing_job_type:
+            try:
+                with transaction.atomic():
+    
+                    # Create the job type
+                    job_type = JobType.objects.create_job_type_v6(manifest_dict=manifest_dict,
+                                                                  trigger_rule_dict=None,
+                                                                  configuration_dict=configuration_dict,
+                                                                  **extra_fields)
+    
+            except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
+                    InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
+                message = 'Unable to create new job type'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+            except InvalidSeedManifestDefinition as ex:
+                message = 'Job type interface invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+            except InvalidResources as ex:
+                message = 'Job type custom resources invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+        else:
+            try:
+                with transaction.atomic():
+                    # Edit the job type
+                    JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest_dict=manifest_dict,
+                                                     configuration_dict=configuration_dict, **extra_fields)
+            except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                    InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+                logger.exception('Unable to update job type: %i', job_type.id)
+                raise BadParameter(unicode(ex))
 
         # Fetch the full job type with details
         try:
-            job_type = JobType.objects.get_details_v5(job_type.id)
+            job_type = JobType.objects.get_details_v6(name, version)
         except JobType.DoesNotExist:
             raise Http404
 
-        url = reverse('job_type_id_details_view', args=[job_type.id], request=request)
+        url = reverse('job_type_details_view', args=[job_type.name, job_type.version], request=request)
         serializer = JobTypeDetailsSerializerV6(job_type)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
-# TODO: Remove when RESP API v5 is removed
+# TODO: Remove when REST API v5 is removed
 class JobTypeIDDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
     queryset = JobType.objects.all()
@@ -477,12 +494,6 @@ class JobTypeIDDetailsView(GenericAPIView):
             del extra_fields['mem_required']
 
         try:
-            from recipe.configuration.definition.exceptions import InvalidDefinition
-        except:
-            logger.exception('Failed to import higher level recipe application.')
-            pass
-
-        try:
             with transaction.atomic():
 
                 # Attempt to create the trigger rule
@@ -514,78 +525,7 @@ class JobTypeIDDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
-# TODO: Delete after cribbing from this method for v6 PATCH
-    def patch_v6(self, request, job_type_id):
-        """Edits an existing Seed job type and returns the updated details
 
-        :param request: the HTTP PATCH request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_type_id: The ID for the job type.
-        :type job_type_id: int encoded as a str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        # Validate the job interface / manifest
-        manifest_dict = rest_util.parse_dict(request, 'manifest', required=False)
-
-        # Validate the job configuration and pull out secrets
-        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
-
-        # Check for optional trigger rule parameters
-        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
-        remove_trigger_rule = rest_util.has_params(request, 'trigger_rule') and not trigger_rule_dict
-
-        # Extract the fields that should be updated as keyword arguments
-        extra_fields = {}
-        restricted_fields = []
-        for key, value in request.data.iteritems():
-            if key in JobType.UNEDITABLE_FIELDS_V6:
-                restricted_fields.append(key)
-            if key not in JobType.BASE_FIELDS_V6:
-                extra_fields[key] = value
-
-        # Fail request if an attempt was made to manipulate restricted fields
-        if restricted_fields:
-            raise BadParameter("Attempt was made to edit restricted fields: %s" % ','.join(restricted_fields))
-
-        try:
-            with transaction.atomic():
-
-                # Create the job type
-                job_type = JobType.objects.edit_job_type_v6(job_type_id=job_type_id,
-                                                            manifest_dict=manifest_dict,
-                                                            trigger_rule_dict=trigger_rule_dict,
-                                                            configuration_dict=configuration_dict,
-                                                            remove_trigger_rule=remove_trigger_rule,
-                                                            **extra_fields)
-
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
-                InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
-            message = 'Unable to edit job type'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidSeedManifestDefinition as ex:
-            message = 'Job type interface invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidJobConfiguration as ex:
-            message = 'Job type configuration invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-        except InvalidResources as ex:
-            message = 'Job type resources invalid'
-            logger.exception(message)
-            raise BadParameter('%s: %s' % (message, unicode(ex)))
-
-        # Fetch the full job type with details
-        try:
-            job_type = JobType.objects.get_details_v5(job_type_id)
-        except JobType.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(job_type)
-        return Response(serializer.data)
 
 class JobTypeVersionsView(ListAPIView):
     """This view is the endpoint for retrieving versions of a job type."""
@@ -718,18 +658,13 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         edit_fields = {}
-        valid_edit_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled','configuration'}
+        simple_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled'}
+        complex_fields = {'configuration'}
         for key, value in request.data.iteritems():
-            if key in valid_edit_fields:
+            if key in simple_fields:
                 edit_fields[key] = value
-            else:
+            elif key not in complex_fields:
                 raise InvalidJobField
-
-        try:
-            from recipe.configuration.definition.exceptions import InvalidDefinition
-        except:
-            logger.exception('Failed to import higher level recipe application.')
-            pass
 
         try:
             with transaction.atomic():
@@ -930,12 +865,6 @@ class JobTypesValidationView(APIView):
             except InvalidTriggerRule as ex:
                 logger.exception('Invalid trigger rule configuration for job validation: %s', name)
                 raise BadParameter(unicode(ex))
-
-        try:
-            from recipe.configuration.definition.exceptions import InvalidDefinition
-        except:
-            logger.exception('Failed to import higher level recipe application.')
-            pass
 
         # Validate the job type
         try:

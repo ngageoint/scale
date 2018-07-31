@@ -1424,8 +1424,8 @@ class TestJobTypesViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
         self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_system=True)
         self.job_type3 = job_test_utils.create_job_type(priority=1, mem=2.0, is_active=False)
-        self.job_type4 = job_test_utils.create_job_type(name="job-type-1",version="1.0.0",is_active=False)
-        self.job_type5 = job_test_utils.create_job_type(name="job-type-1",version="1.1.0",is_active=True)
+        self.job_type4 = job_test_utils.create_job_type(name="my-job-type-1",version="1.0.0",is_active=False)
+        self.job_type5 = job_test_utils.create_job_type(name="my-job-type-1",version="1.1.0",is_active=True)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -1471,7 +1471,7 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 4)
         
-        url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type-1')
+        url = '/%s/job-types/?keyword=%s' % (self.api, 'my-job-type')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
@@ -1507,7 +1507,7 @@ class TestJobTypesViewV6(TestCase):
     def test_version_successful(self):
         """Tests successfully calling the job type versions view."""
 
-        url = '/%s/job-types/job-type-1/' % self.api
+        url = '/%s/job-types/my-job-type-1/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1536,7 +1536,7 @@ class TestJobTypesViewV6(TestCase):
     def test_version_is_active(self):
         """Tests successfully calling the job type versions view filtered by inactive state."""
 
-        url = '/%s/job-types/job-type-1/?is_active=false' % self.api
+        url = '/%s/job-types/my-job-type-1/?is_active=false' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1651,7 +1651,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         url = '/%s/job-types/' % self.api
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['job']['packageversion'] = '1.0.1'
+        manifest['job']['packageVersion'] = '1.0.1'
         
         json_data = {
             'icon_code': 'BEEF',
@@ -1682,7 +1682,8 @@ class TestJobTypesPostViewV6(TestCase):
         
         url = '/%s/job-types/' % self.api
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['interface']['settings'] = [
+        print manifest['job']['interface']
+        manifest['job']['interface']['settings'] = [
             {
               'name': 'VERSION',
               'secret': True
