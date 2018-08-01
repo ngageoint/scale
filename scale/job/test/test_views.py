@@ -1553,9 +1553,9 @@ class TestJobTypesPostViewV6(TestCase):
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
         self.configuration = {
-            'version': '2.0',
+            'version': '6',
             'mounts': {
-                'dted': {
+                'MOUNT_PATH': {
                     'type': 'host',
                     'host_path': '/path/to/dted',
                     },
@@ -2544,7 +2544,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
 
 
-class TestJobTypesValidationView(TransactionTestCase):
+class TestJobTypesValidationViewV5(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""
 
     api = 'v5'
@@ -3040,6 +3040,259 @@ class TestJobTypesValidationView(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+class TestJobTypesValidationViewV6(TransactionTestCase):
+    """Tests related to the job-types validation endpoint"""
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.configuration = {
+            'version': '6',
+            'output_workspaces': {
+              'default': 'workspace_1',
+              'outputs': {'output_file_pngs': 'workspace_2'}
+            },
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace1 = storage_test_utils.create_workspace(name='workspace_1')
+        self.workspace2 = storage_test_utils.create_workspace(name='workspace_2')
+        self.inactivews = storage_test_utils.create_workspace(name='inactive', is_active=False)
+        
+    def test_successful(self):
+        """Tests validating a new job type."""
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': {}
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_successful_configuration(self):
+        """Tests validating a new job type with a valid configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_missing_mount(self):
+        """Tests validating a new job type with a mount referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['mounts'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'mounts')
+        
+    def test_unknown_mount(self):
+        """Tests validating a new job type with a mount referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-mount'
+        manifest['job']['interface']['mounts'] = []
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'mounts')
+
+    def test_missing_setting(self):
+        """Tests validating a new job type with a setting referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
+
+    def test_unknown_setting(self):
+        """Tests validating a new job type with a setting referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {
+                'DB_HOST': 'scale',
+                'setting': 'value'
+        }
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
+
+    def test_secret_setting(self):
+        """Tests validating a new job type with a secret setting."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {
+                'DB_HOST': 'scale',
+                'DB_PASS': 'secret'
+        }
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 0)
+
+    def test_bad_param(self):
+        """Tests validating a new job type with missing fields."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['name'] = None
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_error(self):
+        """Tests validating a new job type with an invalid error relationship."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['errors'] = [
+          {
+            'code': '1',
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          }
+        ]
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_output_workspace(self):
+        """Tests validating a new job type with an invalid output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'bad_name'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'INVALID_WORKSPACE')
+        
+    def test_deprecated_output_workspace(self):
+        """Tests validating a new job type with an inactive output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'inactive'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'DEPRECATED_WORKSPACE')
+        
+    def test_deprecated_output_workspace(self):
+        """Tests validating a new job type with a missing output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'MISSING_WORKSPACE')
 
 
 class TestJobTypesStatusView(TestCase):

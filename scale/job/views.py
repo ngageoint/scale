@@ -791,6 +791,22 @@ class JobTypesValidationView(APIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def _post_v5(self, request):
+        """Validates a new job type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         name = rest_util.parse_string(request, 'name', required=False)
         version = rest_util.parse_string(request, 'version', required=False)
 
@@ -878,6 +894,101 @@ class JobTypesValidationView(APIView):
         results = [{'id': w.key, 'details': w.details} for w in warnings]
         return Response({'warnings': results})
 
+    def _post_v6(self, request):
+        """Validates a new job type and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+
+        # Validate the seed manifest and job configuration
+        manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
+        
+        try:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+            config = JobConfigurationV6(configuration_dict, do_validate=True). get_configuration()
+        except InvalidSeedManifestDefinition as ex:
+            message = 'Job type interface invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+        except InvalidJobConfiguration as ex:
+            message = 'Job type configuration invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
+
+        # Pull down top-level fields from Seed Interface
+        if manifest_dict:
+            if not name:
+                name = interface.get_name()
+
+            if not version:
+                version = interface.get_job_version()
+
+        # Validate the job configuration
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        try:
+            configuration = JobConfigurationV2(configuration_dict)
+        except InvalidJobConfiguration as ex:
+            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+
+        # Validate the error mapping
+        error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
+        error_mapping = None
+        try:
+            if error_dict:
+                error_mapping = create_legacy_error_mapping(error_dict)
+                error_mapping.validate_legacy()
+        except InvalidInterfaceDefinition as ex:
+            raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+
+        # Validate the custom resources
+        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
+        try:
+            if resources_dict:
+                Resources(resources_dict)
+        except InvalidResources as ex:
+            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+
+        # Check for optional trigger rule parameters
+        trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
+        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
+                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
+            raise BadParameter('Trigger type and configuration are required together.')
+
+        # Attempt to look up the trigger handler for the type
+        rule_handler = None
+        if trigger_rule_dict and 'type' in trigger_rule_dict:
+            try:
+                rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
+            except InvalidTriggerType as ex:
+                logger.exception('Invalid trigger type for job validation: %s', name)
+                raise BadParameter(unicode(ex))
+
+        # Attempt to look up the trigger rule configuration
+        trigger_config = None
+        if rule_handler and 'configuration' in trigger_rule_dict:
+            try:
+                trigger_config = rule_handler.create_configuration(trigger_rule_dict['configuration'])
+            except InvalidTriggerRule as ex:
+                logger.exception('Invalid trigger rule configuration for job validation: %s', name)
+                raise BadParameter(unicode(ex))
+
+        # Validate the job type
+        try:
+            warnings = JobType.objects.validate_job_type_v5(name=name, version=version, interface=interface,
+                                                            error_mapping=error_mapping, trigger_config=trigger_config,
+                                                            configuration=configuration)
+        except (InvalidInterfaceDefinition, InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
+            logger.exception('Unable to validate new job type: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})
 
 class JobTypesPendingView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently pending job types."""
