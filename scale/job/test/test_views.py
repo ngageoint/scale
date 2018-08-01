@@ -1595,7 +1595,8 @@ class TestJobTypesPostViewV6(TestCase):
         json_data = {
             'icon_code': 'BEEF',
             'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
-            'manifest': manifest
+            'manifest': manifest,
+            'configuration': self.configuration
         }
         
         good_setting = {
@@ -1604,7 +1605,7 @@ class TestJobTypesPostViewV6(TestCase):
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertEqual(response.META['Location'], url)
+        self.assertTrue('/%s/job-types/my-new-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name='my-new-job').first()
 
@@ -1634,7 +1635,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertEqual(response.META['Location'], '/%s/job-types/my-job/1.1.0/')
+        self.assertTrue('/%s/job-types/my-job/1.1.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name='my-job', version='1.1.0').first()
 
@@ -1663,7 +1664,7 @@ class TestJobTypesPostViewV6(TestCase):
         
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-        self.assertEqual(response.META['Location'], '/%s/job-types/my-job/1.1.0/')
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
 
@@ -1682,7 +1683,8 @@ class TestJobTypesPostViewV6(TestCase):
         
         url = '/%s/job-types/' % self.api
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        print manifest['job']['interface']
+        name = 'job-type-post-test-secret'
+        manifest['job']['name'] = name
         manifest['job']['interface']['settings'] = [
             {
               'name': 'VERSION',
@@ -1712,13 +1714,13 @@ class TestJobTypesPostViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
-        job_type = JobType.objects.filter(name='job-type-post-test-secret').first()
+        job_type = JobType.objects.filter(name=name).first()
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
 
         # Secrets sent to Vault
-        secrets_name = '-'.join([json_data['name'], json_data['version']]).replace('.', '_')
+        secrets_name = '-'.join([results['name'], results['version']]).replace('.', '_')
         secrets = json_data['configuration']['settings']
         mock_set_secret.assert_called_once_with(secrets_name, secrets)
 
@@ -1733,12 +1735,16 @@ class TestJobTypesPostViewV6(TestCase):
         manifest['job']['name'] = 'my-job-no-mount'
         manifest['job']['interface']['mounts'] = []
         
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether mounts in config but not manifest should be removed
+        config['mounts'] = {}
+        
         json_data = {
             'icon_code': 'BEEF',
             'max_scheduled': 1,
             'docker_image': 'my-job-no-mount-1.0.0-seed:1.0.0',
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1757,13 +1763,16 @@ class TestJobTypesPostViewV6(TestCase):
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         manifest['job']['name'] = 'my-job-no-setting'
         manifest['job']['interface']['settings'] = []
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether settings in config but not manifest should be removed
+        config['settings'] = {}
         
         json_data = {
             'icon_code': 'BEEF',
             'max_scheduled': 1,
             'docker_image': 'my-job-no-setting-1.0.0-seed:1.0.0',
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -1773,6 +1782,7 @@ class TestJobTypesPostViewV6(TestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['manifest']['job']['interface']['settings'], [])
         self.assertEqual(results['configuration']['settings'], {})
 
     def test_create_seed_missing_param(self):

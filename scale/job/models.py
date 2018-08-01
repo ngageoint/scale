@@ -2409,13 +2409,16 @@ class JobTypeManager(models.Manager):
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
-        trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
+        trigger_rule = None
+        if trigger_rule_dict:
+            trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
 
         secrets = None
         if configuration_dict:
             configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
             configuration.validate(manifest)
             secrets = configuration.remove_secret_settings(manifest)
+            configuration_dict = convert_config_to_v6_json(configuration).get_dict()
 
         # Create/update any errors defined in manifest
         error_mapping = manifest.get_error_mapping()

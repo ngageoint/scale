@@ -295,7 +295,7 @@ class JobTypesView(ListCreateAPIView):
         name = manifest_dict['job']['name']
         version = manifest_dict['job']['jobVersion']
         
-        existing_job_type = JobType.objects.filter(name=name, version=version)
+        existing_job_type = JobType.objects.filter(name=name, version=version).first()
         if not existing_job_type:
             try:
                 with transaction.atomic():
