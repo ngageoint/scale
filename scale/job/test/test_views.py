@@ -3085,6 +3085,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_successful_configuration(self):
@@ -3100,6 +3101,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_mount(self):
@@ -3118,6 +3120,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'mounts')
         
@@ -3137,6 +3140,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'mounts')
 
@@ -3155,6 +3159,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'settings')
 
@@ -3177,6 +3182,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'settings')
 
@@ -3200,6 +3206,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 0)
 
     def test_bad_param(self):
@@ -3213,7 +3220,12 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0], 'Bad Manifest')
 
     def test_bad_error(self):
         """Tests validating a new job type with an invalid error relationship."""
@@ -3234,7 +3246,12 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0], 'Bad Manifest')
 
     def test_invalid_output_workspace(self):
         """Tests validating a new job type with an invalid output workspace."""
@@ -3253,6 +3270,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'INVALID_WORKSPACE')
         
@@ -3273,6 +3291,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'DEPRECATED_WORKSPACE')
         
@@ -3291,6 +3310,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'MISSING_WORKSPACE')
 

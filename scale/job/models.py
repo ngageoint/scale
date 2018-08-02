@@ -68,6 +68,8 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # deadlocks and ensure query efficiency
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
 
+JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
+
 
 class JobManager(models.Manager):
     """Provides additional methods for handling jobs
@@ -3136,6 +3138,65 @@ class JobTypeManager(models.Manager):
             pass
 
         return warnings
+
+    def validate_job_type_v6(self, manifest_dict, configuration_dict=None):
+        """Validates a new job type prior to attempting a save
+
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
+        :returns: The job type validation.
+        :rtype: :class:`job.models.JobTypeValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+        
+        manifest = None
+        config = None
+        
+        try:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+            config = JobConfigurationV6(configuration_dict, do_validate=True). get_configuration()
+        except InvalidSeedManifestDefinition as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Job type manifest invalid'
+            logger.exception(message)
+            pass
+        except InvalidJobConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Job type configuration invalid'
+            logger.exception(message)
+            pass
+
+        if config and manifest:
+            warnings.extend(config.validate(manifest))
+
+        try:
+            # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
+            # type definitions
+            with transaction.atomic():
+                name = manifest.get_name()
+                version = manifest.get_job_version()
+                job_type = JobType.objects.get(name=name, version=version)
+                job_type.manifest = manifest.get_dict()
+                job_type.save()
+
+                from recipe.models import RecipeType
+                for recipe_type in RecipeType.objects.all():
+                    warnings.extend(recipe_type.get_recipe_definition().validate_job_interfaces())
+
+                # Explicitly roll back transaction so job type isn't changed
+                raise RollbackTransaction()
+        except (JobType.DoesNotExist, RollbackTransaction):
+            # Swallow exceptions
+            pass
+
+        return JobTypeValidation(is_valid, errors, warnings)
 
     def _validate_job_type_fields(self, **kwargs):
         """Validates the given keyword argument fields for job types
