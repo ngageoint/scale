@@ -31,6 +31,7 @@ class JobConfig(AppConfig):
         from job.messages.cancel_jobs import CancelJobs
         from job.messages.cancel_jobs_bulk import CancelJobsBulk
         from job.messages.completed_jobs import CompletedJobs
+        from job.messages.create_jobs import CreateJobs
         from job.messages.failed_jobs import FailedJobs
         from job.messages.job_exe_end import CreateJobExecutionEnd
         from job.messages.pending_jobs import PendingJobs
@@ -45,6 +46,7 @@ class JobConfig(AppConfig):
         add_message_type(CancelJobs)
         add_message_type(CancelJobsBulk)
         add_message_type(CompletedJobs)
+        add_message_type(CreateJobs)
         add_message_type(FailedJobs)
         add_message_type(CreateJobExecutionEnd)
         add_message_type(PendingJobs)
