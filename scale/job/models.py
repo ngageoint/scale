@@ -3944,3 +3944,7 @@ class JobTypeTag(models.Model):
     tag = models.CharField(db_index=True, max_length=50)
 
     objects = JobTypeTagManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'job_type_tag'
