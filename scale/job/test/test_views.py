@@ -391,7 +391,7 @@ class OldTestJobDetailsViewV5(TestCase):
             'output_data': []
         }
         new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
-                                            superseded_job=self.job, delete_superseded=False)
+                                            superseded_job=self.job)
 
         # Make sure the original job was updated
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
@@ -418,7 +418,7 @@ class OldTestJobDetailsViewV5(TestCase):
         self.assertIsNotNone(result['superseded_job'])
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
-        self.assertFalse(result['delete_superseded'])
+        self.assertTrue(result['delete_superseded'])
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
@@ -581,7 +581,7 @@ class TestJobDetailsViewV6(TestCase):
             'output_data': []
         }
         new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
-                                            superseded_job=self.job, delete_superseded=False)
+                                            superseded_job=self.job)
 
         # Make sure the original job was updated
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
@@ -608,7 +608,7 @@ class TestJobDetailsViewV6(TestCase):
         self.assertIsNotNone(result['superseded_job'])
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
-        self.assertFalse(result['delete_superseded'])
+        self.assertTrue(result['delete_superseded'])
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
@@ -1424,8 +1424,8 @@ class TestJobTypesViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
         self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_system=True)
         self.job_type3 = job_test_utils.create_job_type(priority=1, mem=2.0, is_active=False)
-        self.job_type4 = job_test_utils.create_job_type(name="my-job-type-1",version="1.0.0",is_active=False)
-        self.job_type5 = job_test_utils.create_job_type(name="my-job-type-1",version="1.1.0",is_active=True)
+        self.job_type4 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.0.0", is_active=False)
+        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.1.0", is_active=True)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -1464,14 +1464,14 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
-        
+
         url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 4)
-        
-        url = '/%s/job-types/?keyword=%s' % (self.api, 'my-job-type')
+
+        url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type-for-view-test')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
@@ -1507,7 +1507,7 @@ class TestJobTypesViewV6(TestCase):
     def test_version_successful(self):
         """Tests successfully calling the job type versions view."""
 
-        url = '/%s/job-types/my-job-type-1/' % self.api
+        url = '/%s/job-types/job-type-for-view-test/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1536,7 +1536,7 @@ class TestJobTypesViewV6(TestCase):
     def test_version_is_active(self):
         """Tests successfully calling the job type versions view filtered by inactive state."""
 
-        url = '/%s/job-types/my-job-type-1/?is_active=false' % self.api
+        url = '/%s/job-types/job-type-for-view-test/?is_active=false' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

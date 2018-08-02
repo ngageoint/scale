@@ -272,8 +272,8 @@ class RecipeManager(models.Manager):
                     superseded_job = superseded_jobs[delta.get_changed_nodes()[job_name]]
                     jobs_to_supersede.append(superseded_job)
 
-            job = Job.objects.create_job(job_type, event.id, root_recipe_id=recipe.root_superseded_recipe_id,
-                                         recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
+            job = Job.objects.create_job_old(job_type, event.id, root_recipe_id=recipe.root_superseded_recipe_id,
+                                             recipe_id=recipe.id, batch_id=batch_id, superseded_job=superseded_job)
             if priority is not None:
                 job.priority = priority
             job.save()
@@ -1134,6 +1134,30 @@ class RecipeNodeManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
+    def create_recipe_job_nodes(self, recipe_id, node_name, jobs):
+        """Creates and returns the recipe node models (unsaved) for the given recipe and jobs
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param node_name: The recipe node name
+        :type node_name: string
+        :param jobs: The list of job models
+        :type jobs: list
+        :returns: The list of recipe_node models
+        :rtype: list
+        """
+
+        node_models = []
+
+        for job in jobs:
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.job = job
+            node_models.append(recipe_node)
+
+        return node_models
+
     # TODO: remove once old reprocess_recipes is removed
     def get_recipe_job_ids(self, recipe_ids):
         """Returns a dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
@@ -1243,6 +1267,19 @@ class RecipeNodeManager(models.Manager):
                 node_outputs[node.node_name] = RecipeNodeOutput(node.node_name, node_type, node_id, output_data)
 
         return node_outputs
+
+    def get_superseded_recipe_jobs(self, recipe_id, node_name):
+        """Returns the superseded job models that belong to the given superseded recipe with the given node name
+
+        :param recipe_id: The superseded recipe ID
+        :type recipe_id: int
+        :param node_name: The node name
+        :type node_name: string
+        :returns: The superseded job models for the recipe
+        :rtype: list
+        """
+
+        return [rn.job for rn in self.filter(recipe_id=recipe_id, node_name=node_name, job__is_superseded=True)]
 
 
 class RecipeNode(models.Model):
