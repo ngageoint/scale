@@ -2128,6 +2128,31 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling jobs linked to a recipe</p>
 <dl class="method">
+<dt id="recipe.models.RecipeNodeManager.create_recipe_job_nodes">
+<code class="descname">create_recipe_job_nodes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>node_name</em>, <em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.create_recipe_job_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns the recipe node models (unsaved) for the given recipe and jobs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</li>
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The recipe node name</li>
+<li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job models</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeNodeManager.get_recipe_job_ids">
 <code class="descname">get_recipe_job_ids</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_recipe_job_ids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
@@ -2215,6 +2240,30 @@ job_type_rev models for the given recipe IDs</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe_node models for the recipe</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.get_superseded_recipe_jobs">
+<code class="descname">get_superseded_recipe_jobs</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_superseded_recipe_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the superseded job models that belong to the given superseded recipe with the given node name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The superseded recipe ID</li>
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The node name</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The superseded job models for the recipe</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
 </tr>
 </tbody>
 </table>

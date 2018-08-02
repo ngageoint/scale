@@ -36,6 +36,14 @@ job\.messages\.completed\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.create\_jobs module
+----------------------------------
+
+.. automodule:: job.messages.create_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.failed\_jobs module
 ----------------------------------
 

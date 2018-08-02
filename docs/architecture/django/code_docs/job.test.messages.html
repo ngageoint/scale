@@ -329,6 +329,44 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.test.messages.test_create_jobs">
+<span id="job-test-messages-test-create-jobs-module"></span><h2>job.test.messages.test_create_jobs module<a class="headerlink" href="#module-job.test.messages.test_create_jobs" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs">
+<em class="property">class </em><code class="descclassname">job.test.messages.test_create_jobs.</code><code class="descname">TestCreateJobs</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_invalid_data">
+<code class="descname">test_execute_invalid_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_invalid_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateJobs.execute() when the input data is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe">
+<code class="descname">test_execute_with_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateJobs.execute() successfully with a recipe that supersedes another recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_no_recipe">
+<code class="descname">test_json_no_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_no_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateJobs message (without a recipe) to and from JSON</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe">
+<code class="descname">test_json_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateJobs message (with a recipe) to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.messages.test_failed_jobs">
 <span id="job-test-messages-test-failed-jobs-module"></span><h2>job.test.messages.test_failed_jobs module<a class="headerlink" href="#module-job.test.messages.test_failed_jobs" title="Permalink to this headline">¶</a></h2>
 <dl class="class">

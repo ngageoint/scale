@@ -394,6 +394,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.cancel_jobs">job.messages.cancel_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.cancel_jobs_bulk">job.messages.cancel_jobs_bulk module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.completed_jobs">job.messages.completed_jobs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.create_jobs">job.messages.create_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.failed_jobs">job.messages.failed_jobs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.messages.html#module-job.messages.pending_jobs">job.messages.pending_jobs module</a></li>
@@ -448,6 +449,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0039_auto_20180622_1827">job.migrations.0039_auto_20180622_1827 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0040_auto_20180709_1807">job.migrations.0040_auto_20180709_1807 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0041_jobtypetag">job.migrations.0041_jobtypetag module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0042_auto_20180802_1830">job.migrations.0042_auto_20180802_1830 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -597,6 +599,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_cancel_jobs">job.test.messages.test_cancel_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_cancel_jobs_bulk">job.test.messages.test_cancel_jobs_bulk module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_completed_jobs">job.test.messages.test_completed_jobs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_create_jobs">job.test.messages.test_create_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_failed_jobs">job.test.messages.test_failed_jobs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.messages.html#module-job.test.messages.test_pending_jobs">job.test.messages.test_pending_jobs module</a></li>
@@ -3405,8 +3408,8 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling jobs</p>
 <dl class="method">
-<dt id="job.models.JobManager.create_job">
-<code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type</em>, <em>event_id</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.JobManager.create_job_old">
+<code class="descname">create_job_old</code><span class="sig-paren">(</span><em>job_type</em>, <em>event_id</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
 job is superseding. The returned job model will have not yet been saved in the database.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -3432,6 +3435,36 @@ job is superseding. The returned job model will have not yet been saved in the d
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.create_job_v6">
+<code class="descname">create_job_v6</code><span class="sig-paren">(</span><em>job_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.create_job_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new job for the given job type revision and returns the (unsaved) job model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_rev</strong> (<a class="reference internal" href="#job.models.JobTypeRevision" title="job.models.JobTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRevision</span></code></a>) &#8211; The job type revision (with populated job_type model) of the job to create</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this job</li>
+<li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The job&#8217;s input data (optional)</li>
+<li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this job</li>
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this job</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this job</li>
+<li><strong>superseded_job</strong> (<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job that the created job is superseding, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the input data is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -5767,7 +5800,32 @@ with all detail fields included.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeRevisionManager.get_revision">
-<code class="descname">get_revision</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_revision</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the revision (with populated job_type model) for the given job type and revision number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revision</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.JobTypeRevision" title="job.models.JobTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRevision</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobTypeRevisionManager.get_revision_old">
+<code class="descname">get_revision_old</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevisionManager.get_revision_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the revision for the given job type and revision number</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -575,6 +575,91 @@ model locks on the given jobs.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.messages.create_jobs">
+<span id="job-messages-create-jobs-module"></span><h2>job.messages.create_jobs module<a class="headerlink" href="#module-job.messages.create_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that creates job models</p>
+<dl class="class">
+<dt id="job.messages.create_jobs.CreateJobs">
+<em class="property">class </em><code class="descclassname">job.messages.create_jobs.</code><code class="descname">CreateJobs</code><a class="headerlink" href="#job.messages.create_jobs.CreateJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that creates job models</p>
+<dl class="method">
+<dt id="job.messages.create_jobs.CreateJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.create_jobs.CreateJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.create_jobs.CreateJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.create_jobs.CreateJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.create_jobs.CreateJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.create_jobs.CreateJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.create_jobs.create_jobs_message">
+<code class="descclassname">job.messages.create_jobs.</code><code class="descname">create_jobs_message</code><span class="sig-paren">(</span><em>job_type_name</em>, <em>job_type_version</em>, <em>job_type_rev_num</em>, <em>event_id</em>, <em>count=1</em>, <em>input_data_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.create_jobs.create_jobs_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to create job(s) of the given type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The job type name</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The job type version</li>
+<li><strong>job_type_rev_num</strong> (<em>string</em>) &#8211; The job type revision number</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of jobs to create</li>
+<li><strong>input_data_dict</strong> (<em>dict</em>) &#8211; The optional JSON dict of the input data for the job(s)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message for creating the job(s)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.messages.create_jobs.CreateJobs" title="job.messages.create_jobs.CreateJobs"><code class="xref py py-class docutils literal"><span class="pre">job.messages.create_jobs.CreateJobs</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.create_jobs.create_jobs_message_for_recipe">
+<code class="descclassname">job.messages.create_jobs.</code><code class="descname">create_jobs_message_for_recipe</code><span class="sig-paren">(</span><em>recipe</em>, <em>node_name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>job_type_rev_num</em>, <em>count=1</em>, <em>process_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.create_jobs.create_jobs_message_for_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a message to create job(s) of the given type for the given recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe</strong> (<a class="reference internal" href="recipe.html#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe</li>
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The node name for the job(s) within the recipe</li>
+<li><strong>job_type_name</strong> (<em>string</em>) &#8211; The job type name</li>
+<li><strong>job_type_version</strong> (<em>string</em>) &#8211; The job type version</li>
+<li><strong>job_type_rev_num</strong> (<em>string</em>) &#8211; The job type revision number</li>
+<li><strong>count</strong> (<em>int</em>) &#8211; The number of jobs to create</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message for creating the job(s)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.messages.create_jobs.CreateJobs" title="job.messages.create_jobs.CreateJobs"><code class="xref py py-class docutils literal"><span class="pre">job.messages.create_jobs.CreateJobs</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.messages.failed_jobs">
 <span id="job-messages-failed-jobs-module"></span><h2>job.messages.failed_jobs module<a class="headerlink" href="#module-job.messages.failed_jobs" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that sets FAILED status for job models</p>

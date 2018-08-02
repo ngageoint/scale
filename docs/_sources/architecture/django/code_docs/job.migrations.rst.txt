@@ -332,6 +332,14 @@ job\.migrations\.0041\_jobtypetag module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0042\_auto\_20180802\_1830 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0042_auto_20180802_1830
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
