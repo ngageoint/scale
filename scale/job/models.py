@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+from collections import namedtuple
 
 import django.contrib.postgres.fields
 import django.utils.html
@@ -22,6 +23,7 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
+from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
@@ -32,6 +34,7 @@ from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.seed.manifest import SeedManifest
+from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
@@ -3174,27 +3177,35 @@ class JobTypeManager(models.Manager):
             pass
 
         if config and manifest:
-            warnings.extend(config.validate(manifest))
+            try:
+                warnings.extend(config.validate(manifest))
+            except InvalidJobConfiguration as ex:
+                is_valid = False
+                errors.append(ex.error)
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                pass
 
-        try:
-            # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
-            # type definitions
-            with transaction.atomic():
-                name = manifest.get_name()
-                version = manifest.get_job_version()
-                job_type = JobType.objects.get(name=name, version=version)
-                job_type.manifest = manifest.get_dict()
-                job_type.save()
-
-                from recipe.models import RecipeType
-                for recipe_type in RecipeType.objects.all():
-                    warnings.extend(recipe_type.get_recipe_definition().validate_job_interfaces())
-
-                # Explicitly roll back transaction so job type isn't changed
-                raise RollbackTransaction()
-        except (JobType.DoesNotExist, RollbackTransaction):
-            # Swallow exceptions
-            pass
+        if manifest:
+            try:
+                # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
+                # type definitions
+                with transaction.atomic():
+                    name = manifest.get_name()
+                    version = manifest.get_job_version()
+                    job_type = JobType.objects.get(name=name, version=version)
+                    job_type.manifest = manifest.get_dict()
+                    job_type.save()
+    
+                    from recipe.models import RecipeType
+                    for recipe_type in RecipeType.objects.all():
+                        warnings.extend(recipe_type.get_recipe_definition().validate_job_interfaces())
+    
+                    # Explicitly roll back transaction so job type isn't changed
+                    raise RollbackTransaction()
+            except (JobType.DoesNotExist, RollbackTransaction):
+                # Swallow exceptions
+                pass
 
         return JobTypeValidation(is_valid, errors, warnings)
 

@@ -909,8 +909,8 @@ class JobTypesValidationView(APIView):
 
 
         # Validate the job type
-        validation = JobType.objects.validate_job_type_v6(manifest=manifest,
-                                                            configuration=configuration)
+        validation = JobType.objects.validate_job_type_v6(manifest_dict=manifest_dict,
+                                                            configuration_dict=configuration_dict)
 
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}

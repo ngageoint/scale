@@ -3060,9 +3060,15 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
                     'type': 'host',
                     'host_path': '/path/to/mount',
                     },
+                'WRITE_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
             },
             'settings': {
+                'VERSION': '1.0.0',
                 'DB_HOST': 'scale',
+                'DB_PASS': 'password',
             },
         }
 
@@ -3077,7 +3083,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         
         json_data = {
             'manifest': manifest,
-            'configuration': {}
+            'configuration': self.configuration
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3086,7 +3092,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
 
     def test_successful_configuration(self):
         """Tests validating a new job type with a valid configuration."""
@@ -3102,7 +3108,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
 
     def test_missing_mount(self):
         """Tests validating a new job type with a mount referenced in manifest but not configuration."""
@@ -3112,7 +3118,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         config['mounts'] = {}
         json_data = {
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
 
@@ -3121,8 +3127,9 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'mounts')
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_MOUNT')
         
     def test_unknown_mount(self):
         """Tests validating a new job type with a mount referenced in configuration but not manifest."""
@@ -3141,8 +3148,9 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'mounts')
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'UNKNOWN_MOUNT')
 
     def test_missing_setting(self):
         """Tests validating a new job type with a setting referenced in manifest but not configuration."""
@@ -3160,8 +3168,8 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'settings')
+        self.assertEqual(len(results['warnings']), 3)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_SETTING')
 
     def test_unknown_setting(self):
         """Tests validating a new job type with a setting referenced in configuration but not manifest."""
@@ -3169,8 +3177,10 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         config = copy.deepcopy(self.configuration)
         config['settings'] = {
+                'VERSION': '1.0.0',
                 'DB_HOST': 'scale',
-                'setting': 'value'
+                'DB_PASS': 'password',
+                'setting': 'extra'
         }
         
         json_data = {
@@ -3184,17 +3194,13 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'settings')
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_SETTING')
 
     def test_secret_setting(self):
         """Tests validating a new job type with a secret setting."""
         url = '/%s/job-types/validation/' % self.api
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         config = copy.deepcopy(self.configuration)
-        config['settings'] = {
-                'DB_HOST': 'scale',
-                'DB_PASS': 'secret'
-        }
         
         json_data = {
             'manifest': manifest,
@@ -3216,7 +3222,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         manifest['name'] = None
         json_data = {
             'manifest': manifest,
-            'configuration': config
+            'configuration': self.configuration
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -3225,7 +3231,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
         self.assertEqual(len(results['errors']), 1)
-        self.assertEqual(results['errors'][0], 'Bad Manifest')
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
 
     def test_bad_error(self):
         """Tests validating a new job type with an invalid error relationship."""
@@ -3241,7 +3247,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         ]
         json_data = {
             'manifest': manifest,
-            'configuration': config
+            'configuration': self.configuration
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3251,7 +3257,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertFalse(results['is_valid'])
         self.assertEqual(len(results['errors']), 1)
-        self.assertEqual(results['errors'][0], 'Bad Manifest')
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
 
     def test_invalid_output_workspace(self):
         """Tests validating a new job type with an invalid output workspace."""
@@ -3262,7 +3268,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         }
         json_data = {
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3270,9 +3276,9 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'INVALID_WORKSPACE')
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'INVALID_WORKSPACE')
         
     def test_deprecated_output_workspace(self):
         """Tests validating a new job type with an inactive output workspace."""
@@ -3283,7 +3289,7 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         }
         json_data = {
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3293,16 +3299,16 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
         self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'DEPRECATED_WORKSPACE')
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_WORKSPACE')
         
-    def test_deprecated_output_workspace(self):
+    def test_missing_output_workspace(self):
         """Tests validating a new job type with a missing output workspace."""
         manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
         config = copy.deepcopy(self.configuration)
         config['output_workspaces'] = {}
         json_data = {
             'manifest': manifest,
-            'configuration': self.configuration
+            'configuration': config
         }
 
         url = '/%s/job-types/validation/' % self.api
@@ -3311,8 +3317,9 @@ class TestJobTypesValidationViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertTrue(results['is_valid'])
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'MISSING_WORKSPACE')
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_WORKSPACE')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_WORKSPACE')
 
 
 class TestJobTypesStatusView(TestCase):
