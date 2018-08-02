@@ -180,12 +180,13 @@ class CreateJobs(CommandMessage):
         :rtype: list
         """
 
+        from recipe.models import RecipeNode
+
         jobs = []
 
         # If this job is in a recipe that supersedes another recipe, find the corresponding superseded job
         superseded_job = None
         if self.superseded_recipe_id:
-            from recipe.models import RecipeNode
             superseded_jobs = RecipeNode.objects.get_superseded_recipe_jobs(self.superseded_recipe_id,
                                                                             self.recipe_node_name)
             if len(superseded_jobs) == 1:
@@ -228,7 +229,8 @@ class CreateJobs(CommandMessage):
         if self.recipe_id:
             qry = RecipeNode.objects.filter(recipe_id=self.recipe_id, node_name=self.recipe_node_name)
             qry = qry.filter(job__job_type_rev_id=job_type_rev.id, job__event_id=self.event_id)
+            jobs = [recipe_node.job for recipe_node in qry]
         else:
-            qry = Job.objects.filter(job_type_rev_id=job_type_rev.id, event_id=self.event_id)
+            jobs = list(Job.objects.filter(job_type_rev_id=job_type_rev.id, event_id=self.event_id))
 
-        return qry
+        return jobs
