@@ -118,7 +118,7 @@ Response: 200 OK
                 "icon_code": "f013", 
                 "is_active": true, 
                 "is_paused": false, 
-                "is_system": true, 
+                "is_system": false, 
                 "max_scheduled": 1, 
                 "revision_num": 1, 
                 "docker_image": "my-job-1.0.0-seed:1.0.0", 
@@ -219,7 +219,7 @@ Response: 200 OK
 		"icon_code": "f013", 
 		"is_active": true, 
 		"is_paused": false, 
-		"is_system": true, 
+		"is_system": false, 
 		"max_scheduled": 1, 
 		"revision_num": 1, 
 		"docker_image": "my-job-1.0.0-seed:1.0.0", 
@@ -437,7 +437,7 @@ Request: POST http://.../v6/job-types/
       "max_scheduled": 1,
       "docker_image": "test-1.0.0-seed:1.0.0",
       "configuration": {
-        "version": "2.0",
+        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",
@@ -575,7 +575,7 @@ Location http://.../v6/job-types/test/1.0.0/
 		"icon_code": "f1c5", 
 		"is_active": true, 
 		"is_paused": false, 
-		"is_system": true, 
+		"is_system": false, 
 		"max_scheduled": 1, 
 		"revision_num": 1, 
 		"docker_image": "test-1.0.0-seed:1.0.0", 
@@ -627,14 +627,14 @@ Location http://.../v6/job-types/test/1.0.0/
 v6 Validate Job Type
 --------------------
 
-**Example POST /v6/job-types/ API call**
+**Example POST /v6/job-types/validation/ API call**
 
-Request: POST http://.../v6/job-types/
+Request: POST http://.../v6/job-types/validation/
 
  .. code-block:: javascript
      {
       "configuration": {
-        "version": "2.0",
+        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",
@@ -820,7 +820,7 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
       "is_paused": false,
       "max_scheduled": 1,
       "configuration": {
-        "version": "2.0",
+        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",

@@ -272,24 +272,26 @@ class JobTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        # Require docker image value
+        icon_code = rest_util.parse_string(request, 'icon_code', required=False)
 
+        # Require docker image value
+        max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
+        
+        # Require docker image value
+        docker_image = rest_util.parse_string(request, 'docker_image', required=True)
+        
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         
-        # Require docker image value
-        docker_image = rest_util.parse_string(request, 'docker_image', required=True)
-
-        # Extract the fields that should be updated as keyword arguments
-        extra_fields = {}
-        simple_fields = {'icon_code', 'max_scheduled', 'docker_image'}
-        complex_fields = {'configuration', 'manifest'}
+        # Check for invalid fields
+        fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
         for key, value in request.data.iteritems():
-            if key in simple_fields:
-                extra_fields[key] = value
-            elif key not in complex_fields:
+            if key not in fields:
                 raise InvalidJobField
 
         name = manifest_dict['job']['name']
@@ -298,16 +300,14 @@ class JobTypesView(ListCreateAPIView):
         existing_job_type = JobType.objects.filter(name=name, version=version).first()
         if not existing_job_type:
             try:
-                with transaction.atomic():
+                # Create the job type
+                job_type = JobType.objects.create_job_type_v6(icon_code=icon_code,
+                                                              max_scheduled=max_scheduled,
+                                                              docker_image=docker_image,
+                                                              manifest_dict=manifest_dict,
+                                                              configuration_dict=configuration_dict)
     
-                    # Create the job type
-                    job_type = JobType.objects.create_job_type_v6(manifest_dict=manifest_dict,
-                                                                  trigger_rule_dict=None,
-                                                                  configuration_dict=configuration_dict,
-                                                                  **extra_fields)
-    
-            except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidTriggerMissingConfiguration,
-                    InvalidConnection, InvalidSecretsConfiguration, ValueError) as ex:
+            except (InvalidJobField, InvalidSecretsConfiguration, ValueError) as ex:
                 message = 'Unable to create new job type'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
@@ -319,18 +319,13 @@ class JobTypesView(ListCreateAPIView):
                 message = 'Job type configuration invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
-            except InvalidResources as ex:
-                message = 'Job type custom resources invalid'
-                logger.exception(message)
-                raise BadParameter('%s: %s' % (message, unicode(ex)))
         else:
             try:
-                with transaction.atomic():
-                    # Edit the job type
-                    JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest_dict=manifest_dict,
-                                                     configuration_dict=configuration_dict, **extra_fields)
-            except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                    InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+                JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest_dict=manifest_dict,
+                                                 docker_image=docker_image,  icon_code=icon_code, is_active=None,
+                                                 is_paused=None, max_scheduled=max_scheduled,
+                                                 configuration_dict=configuration_dict)
+            except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', job_type.id)
                 raise BadParameter(unicode(ex))
 
@@ -639,6 +634,10 @@ class JobTypeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        icon_code = rest_util.parse_string(request, 'icon_code', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', required=False)
+        is_paused = rest_util.parse_bool(request, 'is_paused', required=False)
+        max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
@@ -656,23 +655,20 @@ class JobTypeDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        # Extract the fields that should be updated as keyword arguments
-        edit_fields = {}
-        simple_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled'}
-        complex_fields = {'configuration'}
+        # Check for invalid fields
+        fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
         for key, value in request.data.iteritems():
-            if key in simple_fields:
-                edit_fields[key] = value
-            elif key not in complex_fields:
+            if key not in fields:
                 raise InvalidJobField
 
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, 
-                                                 configuration_dict=configuration_dict, **edit_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest_dict=None,
+                                                 docker_image=None,  icon_code=icon_code, is_active=is_active,
+                                                 is_paused=is_paused, max_scheduled=max_scheduled,
+                                                 configuration_dict=configuration_dict)        
+        except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
