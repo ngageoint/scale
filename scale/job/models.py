@@ -2459,19 +2459,20 @@ class JobTypeManager(models.Manager):
         # Create manifest and validate
         manifest = SeedManifest(manifest_dict)
 
-        secrets = None
-        if configuration_dict:
-            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            configuration.validate(manifest)
-            secrets = configuration.remove_secret_settings(manifest)
-            configuration_dict = convert_config_to_v6_json(configuration).get_dict()
-
         # Create/update any errors defined in manifest
         error_mapping = manifest.get_error_mapping()
         error_mapping.save_models()
 
         # Create the new job type
         job_type = JobType()
+        
+        secrets = None
+        if configuration_dict:
+            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+            configuration.validate(manifest)
+            secrets = configuration.remove_secret_settings(manifest)
+            configuration_dict = convert_config_to_v6_json(configuration).get_dict()
+            job_type.configuration = configuration_dict
 
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
@@ -3166,27 +3167,6 @@ class JobTypeManager(models.Manager):
                 errors.append(ex.error)
                 message = 'Job type configuration invalid'
                 logger.exception(message)
-                pass
-
-        if manifest:
-            try:
-                # If this is an existing job type, try changing the interface temporarily and validate all existing recipe
-                # type definitions
-                with transaction.atomic():
-                    name = manifest.get_name()
-                    version = manifest.get_job_version()
-                    job_type = JobType.objects.get(name=name, version=version)
-                    job_type.manifest = manifest.get_dict()
-                    job_type.save()
-    
-                    from recipe.models import RecipeType
-                    for recipe_type in RecipeType.objects.all():
-                        warnings.extend(recipe_type.get_recipe_definition().validate_job_interfaces())
-    
-                    # Explicitly roll back transaction so job type isn't changed
-                    raise RollbackTransaction()
-            except (JobType.DoesNotExist, RollbackTransaction):
-                # Swallow exceptions
                 pass
 
         return JobTypeValidation(is_valid, errors, warnings)
