@@ -437,7 +437,6 @@ Request: POST http://.../v6/job-types/
       "max_scheduled": 1,
       "docker_image": "test-1.0.0-seed:1.0.0",
       "configuration": {
-        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",
@@ -634,7 +633,6 @@ Request: POST http://.../v6/job-types/validation/
  .. code-block:: javascript
      {
       "configuration": {
-        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",
@@ -820,7 +818,6 @@ Request: PATCH http://.../v6/job-types/test/1.0.0/
       "is_paused": false,
       "max_scheduled": 1,
       "configuration": {
-        "version": "6",
         "mounts": {
           "MOUNT_PATH": {
             "type": "host",

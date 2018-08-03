@@ -22,7 +22,7 @@ from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.job_config_2_0 import JobConfigurationV2
-from job.configuration.json.job_config_v6 import JobConfigurationV6
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
@@ -284,9 +284,30 @@ class JobTypesView(ListCreateAPIView):
         
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
+        
+        manifest = None
+        try:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+        except InvalidSeedManifestDefinition as ex:
+            message = 'Seed Manifest invalid'
+            logger.exception(message)
+            raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        
+        configuration = None
+        secrets = None
+        if configuration_dict:
+            try:
+                configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+                configuration.validate(manifest)
+                secrets = configuration.remove_secret_settings(manifest)
+                configuration = convert_config_to_v6_json(configuration)
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
         
         # Check for invalid fields
         fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
@@ -304,8 +325,9 @@ class JobTypesView(ListCreateAPIView):
                 job_type = JobType.objects.create_job_type_v6(icon_code=icon_code,
                                                               max_scheduled=max_scheduled,
                                                               docker_image=docker_image,
-                                                              manifest_dict=manifest_dict,
-                                                              configuration_dict=configuration_dict)
+                                                              manifest=manifest,
+                                                              configuration=configuration,
+                                                              secrets=secrets)
     
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError) as ex:
                 message = 'Unable to create new job type'
@@ -321,10 +343,10 @@ class JobTypesView(ListCreateAPIView):
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
         else:
             try:
-                JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest_dict=manifest_dict,
+                JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image,  icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration_dict=configuration_dict)
+                                                 configuration=configuration, secrets=secrets)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', job_type.id)
                 raise BadParameter(unicode(ex))
@@ -641,11 +663,14 @@ class JobTypeDetailsView(GenericAPIView):
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
+        secrets = None
         try:
             if configuration_dict:
-                configuration = JobConfigurationV6(configuration_dict). get_configuration()
+                configuration = JobConfigurationV6(configuration_dict).get_configuration()
                 stored_manifest = JobType.objects.values_list('manifest', flat=True).get(name=name, version=version)
+                secrets = configuration.remove_secret_settings(SeedManifest(stored_manifest))
                 configuration.validate(SeedManifest(stored_manifest))
+                configuration = convert_config_to_v6_json(configuration)
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 
@@ -664,10 +689,10 @@ class JobTypeDetailsView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Edit the job type
-                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest_dict=None,
+                JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
                                                  docker_image=None,  icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
-                                                 configuration_dict=configuration_dict)        
+                                                 configuration=configuration, secrets=secrets)        
         except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
@@ -902,7 +927,6 @@ class JobTypesValidationView(APIView):
         # Validate the seed manifest and job configuration
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=True)
-
 
         # Validate the job type
         validation = JobType.objects.validate_job_type_v6(manifest_dict=manifest_dict,

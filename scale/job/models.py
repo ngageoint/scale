@@ -2435,29 +2435,28 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def create_job_type_v6(self, docker_image, manifest_dict, icon_code=None, max_scheduled=None,  
-                            configuration_dict=None):
+    def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,  
+                            configuration=None, secrets=None):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
         :param docker_image: The docker image containing the code to run for this job.  
         :type docker_image: string
-        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
-        :type manifest_dict: dict
+        :param manifest: The Seed Manifest defining the interface for running a job of this type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
         :param icon_code: A font-awesome icon code to use when representing this job type.
         :type icon_code: string
         :param max_scheduled: Maximum  number of jobs of this type that may be scheduled to run at the same time.
         :type max_scheduled: integer
-        :param configuration_dict: The configuration for running a job of this type, possibly None
-        :type configuration_dict: dict
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param secrets: Secret settings required by this job type
+        :type secrets: dict
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
-
-        # Create manifest and validate
-        manifest = SeedManifest(manifest_dict)
 
         # Create/update any errors defined in manifest
         error_mapping = manifest.get_error_mapping()
@@ -2465,14 +2464,6 @@ class JobTypeManager(models.Manager):
 
         # Create the new job type
         job_type = JobType()
-        
-        secrets = None
-        if configuration_dict:
-            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            configuration.validate(manifest)
-            secrets = configuration.remove_secret_settings(manifest)
-            configuration_dict = convert_config_to_v6_json(configuration).get_dict()
-            job_type.configuration = configuration_dict
 
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
@@ -2480,8 +2471,9 @@ class JobTypeManager(models.Manager):
         job_type.description = manifest.get_description()
         job_type.author_name = manifest.get_maintainer()['name']
         job_type.author_url = manifest.get_maintainer()['url']
-        job_type.manifest = manifest_dict
+        job_type.manifest = manifest.get_dict()
         job_type.docker_image = docker_image
+        job_type.configuration = configuration.get_dict()
         if icon_code:
             job_type.icon_code = icon_code
         if max_scheduled:
@@ -2603,16 +2595,16 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
     @transaction.atomic
-    def edit_job_type_v6(self, job_type_id, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
-                            is_paused=None, max_scheduled=None, configuration_dict=None):
+    def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None, 
+                            is_paused=None, max_scheduled=None, configuration=None, secrets=None):
         """Edits the given job type and saves the changes in the database. 
         All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. 
 
         :param job_type_id: The unique identifier of the job type to edit
         :type job_type_id: int
-        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
-        :type manifest_dict: dict
+        :param manifest: The Seed Manifest defining the interface for running a job of this type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
         :param docker_image: The docker image containing the code to run for this job.  
         :type docker_image: string
         :param icon_code: A font-awesome icon code to use when representing this job type.
@@ -2623,8 +2615,10 @@ class JobTypeManager(models.Manager):
         :type is_paused: bool
         :param max_scheduled: Maximum  number of jobs of this type that may be scheduled to run at the same time.
         :type max_scheduled: integer
-        :param configuration_dict: The configuration for running a job of this type, possibly None
-        :type configuration_dict: dict
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
+        :param secrets: Secret settings required by this job type
+        :type secrets: dict
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
@@ -2632,12 +2626,11 @@ class JobTypeManager(models.Manager):
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
-            if manifest_dict or icon_code or is_active or max_scheduled or configuration_dict:
+            if manifest or icon_code or is_active or max_scheduled or configuration:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
-        if manifest_dict:
-            manifest = SeedManifest(manifest_dict, do_validate=True)
-            job_type.manifest = manifest_dict
+        if manifest:
+            job_type.manifest = manifest.get_dict()
             job_type.revision_num += 1
 
             # Create/update any errors defined in manifest
@@ -2649,15 +2642,7 @@ class JobTypeManager(models.Manager):
             job_type.author_name = manifest.get_maintainer()['name']
             job_type.author_url = manifest.get_maintainer()['url']
             job_type.save()
-        else:
-            manifest = SeedManifest(job_type.manifest)
 
-        secrets = None
-        if configuration_dict:
-            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            configuration.validate(manifest)
-            secrets = configuration.remove_secret_settings(manifest)
-            job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
 
         if docker_image:
             job_type.docker_image = docker_image
@@ -2671,6 +2656,8 @@ class JobTypeManager(models.Manager):
             job_type.is_paused = is_paused
         if max_scheduled:
             job_type.max_scheduled = max_scheduled
+        if configuration:
+            job_type.configuration = configuration.get_dict()
         
         job_type.save()
 
@@ -2678,7 +2665,7 @@ class JobTypeManager(models.Manager):
         if secrets:
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
-        if manifest_dict:
+        if manifest:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
