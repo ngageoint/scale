@@ -24,6 +24,7 @@ from data.interface.parameter import FileParameter, JsonParameter
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
 from job.configuration.exceptions import InvalidJobConfiguration
+from job.configuration.configuration import JobConfiguration
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
@@ -2436,7 +2437,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,  
-                            configuration=None, secrets=None):
+                            configuration=None):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -2450,8 +2451,6 @@ class JobTypeManager(models.Manager):
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.configuration.JobConfiguration`
-        :param secrets: Secret settings required by this job type
-        :type secrets: dict
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -2473,7 +2472,13 @@ class JobTypeManager(models.Manager):
         job_type.author_url = manifest.get_maintainer()['url']
         job_type.manifest = manifest.get_dict()
         job_type.docker_image = docker_image
-        job_type.configuration = configuration.get_dict()
+
+        if not configuration:
+            configuration = JobConfiguration()
+        configuration.validate(manifest)
+        secrets = configuration.remove_secret_settings(manifest)
+        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+        
         if icon_code:
             job_type.icon_code = icon_code
         if max_scheduled:
@@ -2596,7 +2601,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None, 
-                            is_paused=None, max_scheduled=None, configuration=None, secrets=None):
+                            is_paused=None, max_scheduled=None, configuration=None):
         """Edits the given job type and saves the changes in the database. 
         All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. 
@@ -2617,8 +2622,6 @@ class JobTypeManager(models.Manager):
         :type max_scheduled: integer
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.configuration.JobConfiguration`
-        :param secrets: Secret settings required by this job type
-        :type secrets: dict
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         """
@@ -2629,7 +2632,9 @@ class JobTypeManager(models.Manager):
             if manifest or icon_code or is_active or max_scheduled or configuration:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
+        currentManifest = SeedManifest(job_type.manifest)
         if manifest:
+            currentManifest = manifest
             job_type.manifest = manifest.get_dict()
             job_type.revision_num += 1
 
@@ -2643,6 +2648,11 @@ class JobTypeManager(models.Manager):
             job_type.author_url = manifest.get_maintainer()['url']
             job_type.save()
 
+        if not configuration:
+            configuration = JobConfiguration()
+        configuration.validate(currentManifest)
+        secrets = configuration.remove_secret_settings(currentManifest)
+        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
 
         if docker_image:
             job_type.docker_image = docker_image
@@ -2656,8 +2666,6 @@ class JobTypeManager(models.Manager):
             job_type.is_paused = is_paused
         if max_scheduled:
             job_type.max_scheduled = max_scheduled
-        if configuration:
-            job_type.configuration = configuration.get_dict()
         
         job_type.save()
 

@@ -446,23 +446,19 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     return job_type
 
 def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
-                            is_paused=None, max_scheduled=None, configuration_dict=None, secrets=None):
+                            is_paused=None, max_scheduled=None, configuration_dict=None):
     """Updates a job type, including creating a new revision for unit testing
     """
     
     manifest = SeedManifest(manifest_dict, do_validate=True)
         
     configuration = None
-    secrets = None
     if configuration_dict:
         configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-        configuration.validate(manifest)
-        secrets = configuration.remove_secret_settings(manifest)
 
     JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image, 
                          icon_code=icon_code, is_active=is_active, is_paused=is_paused, 
-                         max_scheduled=max_scheduled, configuration=configuration,
-                         secrets=secrets)
+                         max_scheduled=max_scheduled, configuration=configuration)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,

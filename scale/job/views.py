@@ -297,13 +297,9 @@ class JobTypesView(ListCreateAPIView):
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         
         configuration = None
-        secrets = None
         if configuration_dict:
             try:
                 configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-                configuration.validate(manifest)
-                secrets = configuration.remove_secret_settings(manifest)
-                configuration = convert_config_to_v6_json(configuration)
             except InvalidJobConfiguration as ex:
                 message = 'Job type configuration invalid'
                 logger.exception(message)
@@ -326,8 +322,7 @@ class JobTypesView(ListCreateAPIView):
                                                               max_scheduled=max_scheduled,
                                                               docker_image=docker_image,
                                                               manifest=manifest,
-                                                              configuration=configuration,
-                                                              secrets=secrets)
+                                                              configuration=configuration)
     
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError) as ex:
                 message = 'Unable to create new job type'
@@ -346,7 +341,7 @@ class JobTypesView(ListCreateAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
                                                  docker_image=docker_image,  icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
-                                                 configuration=configuration, secrets=secrets)
+                                                 configuration=configuration)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', job_type.id)
                 raise BadParameter(unicode(ex))
@@ -663,14 +658,9 @@ class JobTypeDetailsView(GenericAPIView):
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
-        secrets = None
         try:
             if configuration_dict:
                 configuration = JobConfigurationV6(configuration_dict).get_configuration()
-                stored_manifest = JobType.objects.values_list('manifest', flat=True).get(name=name, version=version)
-                secrets = configuration.remove_secret_settings(SeedManifest(stored_manifest))
-                configuration.validate(SeedManifest(stored_manifest))
-                configuration = convert_config_to_v6_json(configuration)
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 
@@ -692,8 +682,9 @@ class JobTypeDetailsView(GenericAPIView):
                 JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
                                                  docker_image=None,  icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
-                                                 configuration=configuration, secrets=secrets)        
-        except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
+                                                 configuration=configuration)        
+        except (InvalidJobField, InvalidSecretsConfiguration, ValueError, 
+                InvalidJobConfiguration,InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
