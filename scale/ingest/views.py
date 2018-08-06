@@ -404,8 +404,8 @@ class ScansView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        name = rest_util.parse_string(request, 'name')
         title = rest_util.parse_string(request, 'title', required=False)
+        name = title_to_name(self.queryset, title)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
 
@@ -572,11 +572,11 @@ class ScansValidationView(APIView):
 
         #TODO: Remove with v4 API
         if request.version == 'v4':
-            return self._post_v5(request, scan_id)
+            return self._post_v5(request)
         elif request.version == 'v5':
-            return self._post_v5(request, scan_id)
+            return self._post_v5(request)
         elif request.version == 'v6':
-            return self._post_v6(request, scan_id)
+            return self._post_v6(request)
 
         raise Http404()
         
@@ -611,18 +611,14 @@ class ScansValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        configuration = rest_util.parse_dict(request, 'configuration')
-
         # Validate the Scan configuration
-        try:
-            config = ScanConfiguration(configuration)
-            warnings = config.validate()
-        except InvalidScanConfiguration as ex:
-            logger.exception('Unable to validate Scan configuration.')
-            raise BadParameter(unicode(ex))
-
-        results = [{'id': w.key, 'details': w.details} for w in warnings]
-        return Response({'warnings': results})
+        validation = Strike.objects.validate_scan_v6(configuration=configuration)
+        resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
+                     'warnings': [w.to_dict() for w in validation.warnings]}
+                     
+        if not resp_dict['is_valid']:
+            return Response(resp_dict, status=status.HTTP_400_BAD_REQUEST)
+        return Response(resp_dict)
 
 class StrikesView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Strike process."""
