@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+from collections import namedtuple
 
 import django.contrib.postgres.fields
 import django.utils.html
@@ -22,6 +23,8 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from error.models import Error
 from job.configuration.data.job_data import JobData as JobData_1_0
+from job.configuration.exceptions import InvalidJobConfiguration
+from job.configuration.configuration import JobConfiguration
 from job.configuration.json.job_config_2_0 import convert_config_to_v2_json, JobConfigurationV2
 from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.configuration.results.job_results import JobResults as JobResults_1_0
@@ -32,6 +35,7 @@ from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.seed.manifest import SeedManifest
+from job.seed.exceptions import InvalidSeedManifestDefinition
 from job.seed.results.job_results import JobResults
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
@@ -67,6 +71,8 @@ INPUT_FILE_BATCH_SIZE = 500  # Maximum batch size for creating JobInputFile mode
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
 # deadlocks and ensure query efficiency
 # When editing a job/recipe type: RecipeType, JobType, TriggerRule
+
+JobTypeValidation = namedtuple('JobTypeValidation', ['is_valid', 'errors', 'warnings'])
 
 
 class JobManager(models.Manager):
@@ -2430,63 +2436,53 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def create_job_type_v6(self, manifest_dict, trigger_rule_dict=None, configuration_dict=None, **kwargs):
+    def create_job_type_v6(self, docker_image, manifest, icon_code=None, max_scheduled=None,  
+                            configuration=None):
         """Creates a new Seed job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
-        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
-        :type manifest_dict: dict
-        :param trigger_rule_dict: The trigger rule that creates jobs of this type, possibly None
-        :type trigger_rule_dict: dict
-        :param configuration_dict: The configuration for running a job of this type, possibly None
-        :type configuration_dict: dict
+        :param docker_image: The docker image containing the code to run for this job.  
+        :type docker_image: string
+        :param manifest: The Seed Manifest defining the interface for running a job of this type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :param icon_code: A font-awesome icon code to use when representing this job type.
+        :type icon_code: string
+        :param max_scheduled: Maximum  number of jobs of this type that may be scheduled to run at the same time.
+        :type max_scheduled: integer
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
-        type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
-        invalid
-        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
-        type interface is invalid
         """
-
-        # Create manifest and validate
-        manifest = SeedManifest(manifest_dict)
-
-        for field_name in kwargs:
-            if field_name in JobType.UNEDITABLE_FIELDS_V6:
-                raise Exception('%s is not an editable field' % field_name)
-        self._validate_job_type_fields(**kwargs)
-
-        trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
-
-        secrets = None
-        if configuration_dict:
-            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            configuration.validate(manifest)
-            secrets = configuration.remove_secret_settings(manifest)
 
         # Create/update any errors defined in manifest
         error_mapping = manifest.get_error_mapping()
         error_mapping.save_models()
 
         # Create the new job type
-        job_type = JobType(**kwargs)
+        job_type = JobType()
 
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
         job_type.title = manifest.get_title()
         job_type.description = manifest.get_description()
-        job_type.manifest = manifest_dict
-        job_type.trigger_rule = trigger_rule
-        if configuration_dict:
-            job_type.configuration = configuration_dict
-        if 'is_active' in kwargs:
-            job_type.deprecated = None if kwargs['is_active'] else timezone.now()
-        if 'is_paused' in kwargs:
-            job_type.paused = timezone.now() if kwargs['is_paused'] else None
+        job_type.author_name = manifest.get_maintainer()['name']
+        job_type.author_url = manifest.get_maintainer()['url']
+        job_type.manifest = manifest.get_dict()
+        job_type.docker_image = docker_image
+
+        if not configuration:
+            configuration = JobConfiguration()
+        configuration.validate(manifest)
+        secrets = configuration.remove_secret_settings(manifest)
+        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
+        
+        if icon_code:
+            job_type.icon_code = icon_code
+        if max_scheduled:
+            job_type.max_scheduled = max_scheduled
         job_type.save()
 
         # Save any secrets to Vault
@@ -2498,48 +2494,6 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
-    @staticmethod
-    def _create_seed_job_trigger_rule(manifest, trigger_rule_dict):
-        """Creates a trigger rule to be attached to a Seed job type.
-
-        Must be called from within an existing transaction. This is intended for use with create and edit job type
-        methods.
-
-        :param manifest: Instantiated Manifest to pass to trigger validation
-        :type manifest: :class:`job.seed.manifest.SeedManifest`
-        :param trigger_rule_dict: Trigger rule definition to be used for data models
-        :type trigger_rule_dict: dict
-        :returns: The new trigger rule
-        :rtype: :class:`trigger.models.TriggerRule`
-
-        :raises trigger.configuration.exceptions.InvalidTriggerMissingConfiguration:
-            If both rule and configuration do not exist
-        :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
-        :raises trigger.configuration.exceptions.InvalidTriggerType: If the trigger is invalid
-        """
-        if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
-                ('type' not in trigger_rule_dict and 'configuration' in trigger_rule_dict)):
-            raise InvalidTriggerMissingConfiguration('Trigger type and configuration are required together.')
-
-        # Attempt to look up the trigger handler for the type
-        rule_handler = None
-        if trigger_rule_dict and 'type' in trigger_rule_dict:
-            rule_handler = trigger_handler.get_trigger_rule_handler(trigger_rule_dict['type'])
-
-        # Attempt to create the trigger rule
-        is_active = trigger_rule_dict.get('is_active', True)
-        trigger_rule = None
-        if rule_handler and 'configuration' in trigger_rule_dict:
-            trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], manifest.get_name(),
-                                                            is_active)
-
-        # Validate the trigger rule
-        if trigger_rule:
-            trigger_config = trigger_rule.get_configuration()
-            if not isinstance(trigger_config, JobTriggerRuleConfiguration):
-                raise InvalidTriggerType('%s is an invalid trigger rule type for creating jobs' % trigger_rule.type)
-            trigger_config.validate_trigger_for_job(manifest)
-        return trigger_rule
 
     @transaction.atomic
     def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
@@ -2646,54 +2600,42 @@ class JobTypeManager(models.Manager):
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
     @transaction.atomic
-    def edit_job_type_v6(self, job_type_id, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
-                         remove_trigger_rule=False, **kwargs):
-        """Edits the given job type and saves the changes in the database. The caller must provide the related
-        trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
-        indicates that the field should not change. If trigger_rule_dict is set to None it is assumed trigger
-        is being removed.
+    def edit_job_type_v6(self, job_type_id, manifest=None, docker_image=None, icon_code=None, is_active=None, 
+                            is_paused=None, max_scheduled=None, configuration=None):
+        """Edits the given job type and saves the changes in the database. 
+        All database changes occur in an atomic transaction. An argument of None for a field
+        indicates that the field should not change. 
 
         :param job_type_id: The unique identifier of the job type to edit
         :type job_type_id: int
-        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
-        :type manifest_dict: dict
-        :param trigger_rule_dict: The trigger rule that creates jobs of this type, None results in removal
-        :type trigger_rule_dict: dict
-        :param configuration_dict: The configuration for running a job of this type, possibly None
-        :type configuration_dict: dict
-        :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
-            when trigger_rule is None
-        :type remove_trigger_rule: bool
+        :param manifest: The Seed Manifest defining the interface for running a job of this type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        :param docker_image: The docker image containing the code to run for this job.  
+        :type docker_image: string
+        :param icon_code: A font-awesome icon code to use when representing this job type.
+        :type icon_code: string
+        :param is_active: Whether this job type is active or deprecated.
+        :type is_active: bool
+        :param is_paused: Whether this job type is paused and should not have jobs scheduled or not
+        :type is_paused: bool
+        :param max_scheduled: Maximum  number of jobs of this type that may be scheduled to run at the same time.
+        :type max_scheduled: integer
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.configuration.JobConfiguration`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
-        type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
-        invalid
-        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
-        type interface is invalid
         """
-
-        for field_name in kwargs:
-            if field_name in JobType.UNEDITABLE_FIELDS_V6:
-                raise Exception('%s is not an editable field' % field_name)
-        self._validate_job_type_fields(**kwargs)
-
-        recipe_types = []
-        if manifest_dict:
-            # Lock all recipe types so they can be validated after changing job type manifest
-            from recipe.models import RecipeType
-            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
 
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
-            if len(kwargs) > 1 or 'is_paused' not in kwargs:
+            if manifest or icon_code or is_active or max_scheduled or configuration:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
-        if manifest_dict:
-            manifest = SeedManifest(manifest_dict, do_validate=True)
-            job_type.manifest = manifest_dict
+        currentManifest = SeedManifest(job_type.manifest)
+        if manifest:
+            currentManifest = manifest
+            job_type.manifest = manifest.get_dict()
             job_type.revision_num += 1
 
             # Create/update any errors defined in manifest
@@ -2702,42 +2644,36 @@ class JobTypeManager(models.Manager):
 
             job_type.title = manifest.get_title()
             job_type.description = manifest.get_description()
+            job_type.author_name = manifest.get_maintainer()['name']
+            job_type.author_url = manifest.get_maintainer()['url']
             job_type.save()
 
-            # New job interface, validate all existing recipes
-            for recipe_type in recipe_types:
-                recipe_type.get_recipe_definition().validate_job_interfaces()
-        else:
-            manifest = SeedManifest(job_type.manifest)
+        if not configuration:
+            configuration = JobConfiguration()
+        configuration.validate(currentManifest)
+        secrets = configuration.remove_secret_settings(currentManifest)
+        job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
 
-        secrets = None
-        if configuration_dict:
-            configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
-            configuration.validate(manifest)
-            secrets = configuration.remove_secret_settings(manifest)
-            job_type.configuration = convert_config_to_v6_json(configuration).get_dict()
-
-        if trigger_rule_dict or remove_trigger_rule:
-            if job_type.trigger_rule:
-                # Archive old trigger rule since we are changing to a new one
-                TriggerRule.objects.archive_trigger_rule(job_type.trigger_rule_id)
-
-            if not remove_trigger_rule:
-                job_type.trigger_rule = self._create_seed_job_trigger_rule(manifest, trigger_rule_dict)
-
-        if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
-            job_type.deprecated = None if kwargs['is_active'] else timezone.now()
-        if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
-            job_type.paused = timezone.now() if kwargs['is_paused'] else None
-        for field_name in kwargs:
-            setattr(job_type, field_name, kwargs[field_name])
+        if docker_image:
+            job_type.docker_image = docker_image
+        if icon_code:
+            job_type.icon_code = icon_code
+        if is_active and job_type.is_active != is_active:
+            job_type.deprecated = None if is_active else timezone.now()
+            job_type.is_active = is_active
+        if is_paused and job_type.is_paused != is_paused:
+            job_type.paused = timezone.now() if is_paused else None
+            job_type.is_paused = is_paused
+        if max_scheduled:
+            job_type.max_scheduled = max_scheduled
+        
         job_type.save()
 
         # Save any secrets to Vault
         if secrets:
             self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
-        if manifest_dict:
+        if manifest:
             # Create new revision of the job type for new interface
             JobTypeRevision.objects.create_job_type_revision(job_type)
 
@@ -3184,6 +3120,52 @@ class JobTypeManager(models.Manager):
 
         return warnings
 
+    def validate_job_type_v6(self, manifest_dict, configuration_dict=None):
+        """Validates a new job type prior to attempting a save
+
+        :param manifest_dict: The Seed Manifest defining the interface for running a job of this type
+        :type manifest_dict: dict
+        :param configuration_dict: The configuration for running a job of this type, possibly None
+        :type configuration_dict: dict
+        :returns: The job type validation.
+        :rtype: :class:`job.models.JobTypeValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+        
+        manifest = None
+        config = None
+        
+        try:
+            manifest = SeedManifest(manifest_dict, do_validate=True)
+            config = JobConfigurationV6(configuration_dict, do_validate=True). get_configuration()
+        except InvalidSeedManifestDefinition as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Job type manifest invalid'
+            logger.exception(message)
+            pass
+        except InvalidJobConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Job type configuration invalid'
+            logger.exception(message)
+            pass
+
+        if config and manifest:
+            try:
+                warnings.extend(config.validate(manifest))
+            except InvalidJobConfiguration as ex:
+                is_valid = False
+                errors.append(ex.error)
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                pass
+
+        return JobTypeValidation(is_valid, errors, warnings)
+
     def _validate_job_type_fields(self, **kwargs):
         """Validates the given keyword argument fields for job types
 
@@ -3307,7 +3289,7 @@ class JobType(models.Model):
     BASE_FIELDS_V6 = ('id', 'name', 'version', 'manifest', 'trigger_rule', 'error_mapping', 'custom_resources',
                       'configuration')
 
-    UNEDITABLE_FIELDS_V6 = ('is_system', 'is_active', 'revision_num', 'created', 'deprecated', 'last_modified')
+    UNEDITABLE_FIELDS_V6 = ('is_system', 'revision_num', 'created', 'deprecated', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)

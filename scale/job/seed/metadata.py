@@ -37,7 +37,7 @@ class SeedMetadata(object):
             if do_validate:
                 validate(definition, METADATA_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidSeedMetadataDefinition(validation_error)
+            raise InvalidSeedMetadataDefinition('JSON_VALIDATION_ERROR', 'Error validating againsg schema: %s' % validation_error)
 
         self._populate_default_values()
 

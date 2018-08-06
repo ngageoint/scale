@@ -1543,657 +1543,283 @@ class TestJobTypesViewV6(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
-    def test_create(self):
-        """Tests creating a new job type."""
+class TestJobTypesPostViewV6(TestCase):
+    
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
         
-        #TODO: implement v6 create test
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = ''
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
 
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['priority'], 1)
-        self.assertIsNotNone(results['error_mapping'])
-        self.assertEqual(results['error_mapping']['exit_codes']['1'], self.error.name)
-        self.assertEqual(results['custom_resources']['resources']['foo'], 10.0)
-        self.assertIsNone(results['trigger_rule'])
-        self.assertIsNone(results['max_scheduled'])"""
-
-    def test_create_configuration(self):
-        """Tests creating a new job type with a valid configuration."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = { 'manifest': {
-            'seedVersion': '1.0.0',
-            'job': {
-                'name': 'my-job',
-                'jobVersion': '1.0.0',
-                'packageVersion': '1.0.0',
-                'title': 'My first job',
-                'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
-                'tags': [ 'hdf5', 'png', 'csv', 'image processing' ],
-                'maintainer': {
-                  'name': 'John Doe',
-                  'organization': 'E-corp',
-                  'email': 'jdoe@example.com',
-                  'url': 'http://www.example.com',
-                  'phone': '666-555-4321'
-                },
-                'timeout': 3600,
-                'interface': {
-                  'command': '${INPUT_FILE} ${OUTPUT_DIR} ${VERSION}',
-                  'inputs': {
-                    'files': [
-                      {
-                        'name': 'INPUT_FILE',
-                        'required': True,
-                        'mediaTypes': [
-                          'image/x-hdf5-image'
-                        ],
-                        'partial': True
-                      }
-                    ],
-                    'json': [
-                      {
-                        'name': 'INPUT_JSON',
-                        'type': 'string',
-                        'required': True
-                      }
-                    ]
-                  },
-                  'outputs': {
-                    'files': [
-                      {
-                        'name': 'output_file_pngs',
-                        'mediaType': 'image/png',
-                        'multiple': True,
-                        'pattern': 'outfile*.png'
-                      },
-                      {
-                        'name': 'output_file_csv',
-                        'mediaType': 'text/csv',
-                        'pattern': 'outfile*.csv',
-                        'required': False
-                      }
-                    ],
-                    'json': [
-                      {
-                        'name': 'cell_count',
-                        'key': 'cellCount',
-                        'type': 'integer'
-                      },
-                      {
-                        'name': 'dummy',
-                        'type': 'integer',
-                        'required': False
-                      }
-                    ]
-                  },
-                  'mounts': [
-                    {
-                      'name': 'MOUNT_PATH',
-                      'path': '/the/container/path',
-                      'mode': 'ro'
+        self.configuration = {
+            'version': '6',
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
                     },
-                    {
-                      'name': 'WRITE_PATH',
-                      'path': '/write',
-                      'mode': 'rw'
-                    }
-                  ],
-                  'settings': [
-                    {
-                      'name': 'VERSION',
-                      'secret': False
-                    },
-                    {
-                      'name': 'DB_HOST',
-                      'secret': False
-                    },
-                    {
-                      'name': 'DB_PASS',
-                      'secret': True
-                    }
-                  ]
-                },
-                'resources': {
-                  'scalar': [
-                    { 'name': 'cpus', 'value': 1.0 },
-                    { 'name': 'mem', 'value': 1024.0 },
-                    { 'name': 'sharedMem', 'value': 1024.0 },
-                    { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
-                  ]
-                },
-                'errors': [
-                  {
-                    'code': 1,
-                    'name': 'error-name-one',
-                    'title': 'Error Name',
-                    'description': 'Error Description',
-                    'category': 'data'
-                  },
-                  {
-                    'code': 2,
-                    'name': 'error-name-two',
-                    'title': 'Error Name',
-                    'description': 'Error Description',
-                    'category': 'job'
-                  }
-                ]
-              }
             },
-            'configuration': {
-                'version': '2.0',
-                'mounts': {
-                    'dted': {'type': 'host',
-                             'host_path': '/path/to/dted'}
-                },
-                'settings': {
-                    'DB_HOST': 'scale'
-                }
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': self.workspace.name,
             }
         }
+        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                                   configuration=self.trigger_config)
 
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test-config').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertIsNotNone(results['configuration']['mounts'])
-        self.assertIsNotNone(results['configuration']['settings'])"""
-
-    def test_create_secrets(self):
-        """Tests creating a new job type with secrets."""
-        #TODO: implement v6 create tests
-        """
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+        
+        
+        
+    def test_add_seed_job_type(self):
+        """Tests adding a seed image."""
+        
         url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-new-job'
+        
         json_data = {
-            'name': 'job-type-post-test-secret',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'priority': '1',
-            'interface': {
-                'version': '1.4',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg ${DB_HOST}',
-                'mounts': [{
-                    'name': 'dted',
-                    'path': '/some/path',
-                    }],
-                'settings': [{
-                    'name': 'DB_HOST',
-                    'required': True,
-                    'secret': True,
-                }],
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'configuration': {
-                'version': '2.0',
-                'mounts': {
-                    'dted': {'type': 'host',
-                             'host_path': '/path/to/dted'}
-                },
-                'settings': {
-                    'DB_HOST': 'scale'
-                }
-            },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': self.error.name,
-                },
-            },
-            'custom_resources': {
-                'version': '1.0',
-                'resources': {
-                    'foo': 10.0
-                }
-            }
+            'icon_code': 'BEEF',
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
-
-        with patch.object(SecretsHandler, '__init__', return_value=None), \
-          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
-            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test-secret').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-
-        # Secrets sent to Vault
-        secrets_name = '-'.join([json_data['name'], json_data['version']]).replace('.', '_')
-        secrets = json_data['configuration']['settings']
-        mock_set_secret.assert_called_once_with(secrets_name, secrets)
-
-        #Secrets scrubbed from configuration on return
-        self.assertEqual(results['configuration']['settings'], {})"""
-
-    def test_create_max_scheduled(self):
-        """Tests creating a new job type."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-max_scheduled-test',
-            'version': '1.0.0',
-            'title': 'Job Type max_scheduled Test',
-            'description': 'This is a test.',
-            'priority': '1',
-            'max_scheduled': '42',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': self.error.name,
-                },
-            },
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-max_scheduled-test').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['max_scheduled'], 42)"""
-
-    def test_create_trigger(self):
-        """Tests creating a new job type with a trigger rule."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [{
-                    'media_types': ['image/png'],
-                    'type': 'file',
-                    'name': 'input_file',
-                }],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'is_active': True,
-                'configuration': {
-                    'version': '1.0',
-                    'condition': {
-                        'media_type': 'image/png',
-                        'data_types': [],
-                    },
-                    'data': {
-                        'input_data_name': 'input_file',
-                        'workspace_name': self.workspace.name,
-                    }
-                }
-            }
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertIsNotNone(results['interface'])
-        self.assertDictEqual(results['error_mapping']['exit_codes'], {})
-        self.assertEqual(results['trigger_rule']['type'], 'PARSE')"""
-
-    def test_create_missing_mount(self):
-        """Tests creating a new job type with a mount referenced in configuration but not interface."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test-no-mount',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'priority': '1',
-            'interface': {
-                'version': '1.4',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg ${DB_HOST}',
-                'mounts': [],
-                'settings': [{
-                    'name': 'DB_HOST',
-                    'required': True,
-                }],
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'configuration': {
-                'version': '2.0',
-                'mounts': {
-                    'dted': {'type': 'host',
-                             'host_path': '/path/to/dted'}
-                },
-                'settings': {
-                    'DB_HOST': 'scale'
-                }
-            },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': self.error.name,
-                },
-            },
-            'custom_resources': {
-                'version': '1.0',
-                'resources': {
-                    'foo': 10.0
-                }
-            }
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test-no-mount').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['configuration']['mounts'], {})"""
-
-    def test_create_missing_setting(self):
-        """Tests creating a new job type with a setting referenced in configuration but not interface."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test-no-setting',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'priority': '1',
-            'interface': {
-                'version': '1.4',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'mounts': [{
-                    'name': 'dted',
-                    'path': '/some/path',
-                }],
-                'settings': [],
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'configuration': {
-                'version': '2.0',
-                'mounts': {
-                    'dted': {'type': 'host',
-                             'host_path': '/path/to/dted'}
-                },
-                'settings': {
-                    'DB_HOST': 'scale'
-                }
-            },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': self.error.name,
-                },
-            },
-            'custom_resources': {
-                'version': '1.0',
-                'resources': {
-                    'foo': 10.0
-                }
-            }
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
-
-        job_type = JobType.objects.filter(name='job-type-post-test-no-setting').first()
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['configuration']['settings'], {})"""
-
-    def test_create_missing_other_setting(self):
-        """Tests creating a new job type with a setting referenced in configuration but not interface."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test-no-other-setting',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'priority': '1',
-            'interface': {
-                'version': '1.4',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'mounts': [{
-                    'name': 'dted',
-                    'path': '/some/path',
-                }],
-                'settings': [{
-                    'name': 'DB_HOST',
-                    'required': True,
-                }],
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'configuration': {
-                'version': '2.0',
-                'mounts': {
-                    'dted': {'type': 'host',
-                             'host_path': '/path/to/dted'}
-                },
-                'settings': {
-                    'DB_HOST': 'scale',
-                    'setting': 'value'
-                }
-            },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': self.error.name,
-                },
-            },
-            'custom_resources': {
-                'version': '1.0',
-                'resources': {
-                    'foo': 10.0
-                }
-            }
-        }
-
+        
         good_setting = {
             'DB_HOST': 'scale'
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-new-job/1.0.0/' % self.api in response['location'])
 
-        job_type = JobType.objects.filter(name='job-type-post-test-no-other-setting').first()
+        job_type = JobType.objects.filter(name='my-new-job').first()
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
-        self.assertEqual(results['configuration']['settings'], good_setting)"""
-
-    def test_create_missing_param(self):
-        """Tests creating a job type with missing fields."""
-                #TODO: implement v6 create tests
-        """
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 1)
+        self.assertIsNone(results['max_scheduled'])
+        self.assertEqual(results['configuration']['settings'], good_setting)
+        
+    def test_add_seed_version_job_type(self):
+        """Tests adding a new version of a seed image."""
+        
         url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['jobVersion'] = '1.1.0'
+        
         json_data = {
-            'name': 'job-type-post-test',
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.1.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
-
+        
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.1.0/' % self.api in response['location'])
 
-    def test_create_bad_param(self):
-        """Tests creating a job type with invalid type fields."""
-        #TODO: implement v6 create tests
-        """
+        job_type = JobType.objects.filter(name='my-job', version='1.1.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+        
+    def test_edit_seed_job_type(self):
+        """Tests editing an existing seed job type."""
+        
         url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['packageVersion'] = '1.0.1'
+        
         json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'title': 'Job Type Post Test',
-            'description': 'This is a test.',
-            'priority': 'BAD',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.1',
+            'manifest': manifest,
+            'configuration': self.configuration
         }
-
+        
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
-    def test_create_bad_error(self):
-        """Tests creating a new job type with an invalid error relationship."""
-                #TODO: implement v6 create tests
-        """
+        job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 2)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+
+    def test_create_seed_secrets(self):
+        """Tests creating a new seed job type with secrets."""
+        
         url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        name = 'job-type-post-test-secret'
+        manifest['job']['name'] = name
+        manifest['job']['interface']['settings'] = [
+            {
+              'name': 'VERSION',
+              'secret': True
             },
-            'error_mapping': {
-                'version': '1.0',
-                'exit_codes': {
-                    '1': 'BAD',
-                },
+            {
+              'name': 'DB_HOST',
+              'secret': True
             },
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
-
-    def test_create_bad_custom_resources(self):
-        """Tests creating a new job type with an invalid custom resources"""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'custom_resources': {
-                'version': '1.0',
-                'resources': {
-                    'foo': 'BAD',
-                },
-            },
-        }
-
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
-
-    def test_create_bad_trigger_type(self):
-        """Tests creating a new job type with an invalid trigger type."""
-        #TODO: implement v6 create tests
-        """
-        url = '/%s/job-types/' % self.api
-        json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'trigger_rule': {
-                'type': 'BAD',
+            {
+              'name': 'DB_PASS',
+              'secret': True
             }
+          ]
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name=name).first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+
+        # Secrets sent to Vault
+        secrets_name = '-'.join([results['name'], results['version']]).replace('.', '_')
+        secrets = json_data['configuration']['settings']
+        mock_set_secret.assert_called_once_with(secrets_name, secrets)
+
+        #Secrets scrubbed from configuration on return
+        self.assertEqual(results['configuration']['settings'], {})
+
+    def test_create_seed_missing_mount(self):
+        """Tests creating a new seed job type with a mount referenced in configuration but not interface."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-mount'
+        manifest['job']['interface']['mounts'] = []
+        
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether mounts in config but not manifest should be removed
+        config['mounts'] = {}
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-mount-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': config
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+        job_type = JobType.objects.filter(name='my-job-no-mount').first()
 
-    def test_create_bad_trigger_config(self):
-        """Tests creating a new job type with an invalid trigger rule configuration."""
-        #TODO: implement v6 create tests
-        """
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['configuration']['mounts'], {})
+
+    def test_create_seed_missing_setting(self):
+        """Tests creating a new seed job type with a setting referenced in configuration but not interface."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-setting'
+        manifest['job']['interface']['settings'] = []
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether settings in config but not manifest should be removed
+        config['settings'] = {}
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-setting-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='my-job-no-setting').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['manifest']['job']['interface']['settings'], [])
+        self.assertEqual(results['configuration']['settings'], {})
+
+    def test_create_seed_missing_param(self):
+        """Tests creating a seed job type with missing fields."""
+
         url = '/%s/job-types/' % self.api
         json_data = {
-            'name': 'job-type-post-test',
-            'version': '1.0.0',
-            'description': 'This is a test.',
-            'interface': {
-                'version': '1.0',
-                'command': 'test_cmd',
-                'command_arguments': 'test_arg',
-                'input_data': [],
-                'output_data': [],
-                'shared_resources': [],
-            },
-            'trigger_rule': {
-                'type': 'PARSE',
-                'configuration': {
-                    'BAD': '1.0',
+            'manifest': {
+                'seedVersion': '1.0.0',
+                'job': {
+                    'name': 'my-job'
                 }
             }
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)"""
+    def test_create_seed_bad_param(self):
+        """Tests creating a job type with invalid type fields."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-bad-parameter'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 'BAD',
+            'docker_image': '',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
 
 class TestJobTypeDetailsViewV5(TestCase):
 
@@ -2705,9 +2331,13 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.manifest = job_test_utils.COMPLETE_MANIFEST
 
         self.configuration = {
-            'version': '2.0',
+            'version': '6',
             'mounts': {
-                'dted': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+                'WRITE_PATH': {
                     'type': 'host',
                     'host_path': '/path/to/dted',
                     },
@@ -2736,7 +2366,7 @@ class TestJobTypeDetailsViewV6(TestCase):
                                                        configuration=self.configuration)
 
     def test_not_found(self):
-        """Tests successfully calling the get job type details view with a job id that does not exist."""
+        """Tests calling the get job type details view with a job name/version that does not exist."""
 
         url = '/%s/job-types/missing-job/1.0.0/' % self.api
         response = self.client.get(url)
@@ -2759,6 +2389,62 @@ class TestJobTypeDetailsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
         self.assertIsNotNone(result['configuration'])
         self.assertEqual(result['max_scheduled'], 2)
+
+    def test_edit_not_found(self):
+        """Tests calling the get job type details view with a job name/version that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/' % self.api
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a job type"""
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_configuration(self):
+        """Tests editing the configuration of a job type"""
+        configuration = copy.deepcopy(self.configuration)
+        configuration['settings'] = {'DB_HOST': 'other_scale_db'}
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/some/new/path'
+                }
+            }
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_bad_configuration(self):
+        """Tests passing an invalid configuration of a job type to the patch interface"""
+        configuration = copy.deepcopy(self.configuration)
+        configuration['priority'] = 0
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 class TestJobTypeRevisionsViewV6(TestCase):
 
@@ -2858,7 +2544,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertIsNotNone(result['manifest'])
 
 
-class TestJobTypesValidationView(TransactionTestCase):
+class TestJobTypesValidationViewV5(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""
 
     api = 'v5'
@@ -3354,6 +3040,286 @@ class TestJobTypesValidationView(TransactionTestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+class TestJobTypesValidationViewV6(TransactionTestCase):
+    """Tests related to the job-types validation endpoint"""
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.configuration = {
+            'version': '6',
+            'output_workspaces': {
+              'default': 'workspace_1',
+              'outputs': {'output_file_pngs': 'workspace_2'}
+            },
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
+                'WRITE_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
+            },
+            'settings': {
+                'VERSION': '1.0.0',
+                'DB_HOST': 'scale',
+                'DB_PASS': 'password',
+            },
+        }
+
+        self.workspace1 = storage_test_utils.create_workspace(name='workspace_1')
+        self.workspace2 = storage_test_utils.create_workspace(name='workspace_2')
+        self.inactivews = storage_test_utils.create_workspace(name='inactive', is_active=False)
+        
+    def test_successful(self):
+        """Tests validating a new job type."""
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_successful_configuration(self):
+        """Tests validating a new job type with a valid configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_missing_mount(self):
+        """Tests validating a new job type with a mount referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['mounts'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_MOUNT')
+        
+    def test_unknown_mount(self):
+        """Tests validating a new job type with a mount referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-mount'
+        manifest['job']['interface']['mounts'] = []
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'UNKNOWN_MOUNT')
+
+    def test_missing_setting(self):
+        """Tests validating a new job type with a setting referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 3)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_SETTING')
+
+    def test_unknown_setting(self):
+        """Tests validating a new job type with a setting referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {
+                'VERSION': '1.0.0',
+                'DB_HOST': 'scale',
+                'DB_PASS': 'password',
+                'setting': 'extra'
+        }
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_SETTING')
+
+    def test_secret_setting(self):
+        """Tests validating a new job type with a secret setting."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 0)
+
+    def test_bad_param(self):
+        """Tests validating a new job type with missing fields."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['name'] = None
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_bad_error(self):
+        """Tests validating a new job type with an invalid error relationship."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['errors'] = [
+          {
+            'code': '1',
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          }
+        ]
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_invalid_output_workspace(self):
+        """Tests validating a new job type with an invalid output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'bad_name'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'INVALID_WORKSPACE')
+        
+    def test_deprecated_output_workspace(self):
+        """Tests validating a new job type with an inactive output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'inactive'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_WORKSPACE')
+        
+    def test_missing_output_workspace(self):
+        """Tests validating a new job type with a missing output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_WORKSPACE')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_WORKSPACE')
 
 
 class TestJobTypesStatusView(TestCase):

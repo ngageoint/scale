@@ -49,7 +49,7 @@ class SeedManifest(object):
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidSeedManifestDefinition(validation_error)
+            raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating againsg schema: %s' % validation_error)
 
         self._populate_default_values()
 
@@ -451,7 +451,7 @@ class SeedManifest(object):
                      self.get_scalar_resources()]
 
         if len(env_vars) != len(set(env_vars)):
-            raise InvalidSeedManifestDefinition('Collisions are not allowed between reserved keywords, resources, settings'
+            raise InvalidSeedManifestDefinition('NAME_COLLISION_ERROR','Collisions are not allowed between reserved keywords, resources, settings'
                                                 'and input names.')
 
     def _check_mount_name_uniqueness(self):
@@ -464,7 +464,7 @@ class SeedManifest(object):
             mounts.append(mount['name'])
 
         if len(mounts) != len(set(mounts)):
-            raise InvalidSeedManifestDefinition('Mount names must be unique.')
+            raise InvalidSeedManifestDefinition('DUPLICATE_MOUNT_NAMES','Mount names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
@@ -623,4 +623,4 @@ class SeedManifest(object):
             name = mount['name']
             path = mount['path']
             if not os.path.isabs(path):
-                raise InvalidSeedManifestDefinition('%s mount must have an absolute path' % name)
+                raise InvalidSeedManifestDefinition('INVALID_MOUNT_PATH','%s mount must have an absolute path' % name)

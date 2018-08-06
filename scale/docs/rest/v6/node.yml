@@ -88,13 +88,9 @@ paths:
             type: integer
           description: id of an existing node
       responses:
-        '200':
+        '204':
           description: |-
-            200 response
-          content:
-            application/json: 
-              schema:
-                $ref: '#/components/schemas/node_details'
+            204 no content
 
 components:
   schemas:

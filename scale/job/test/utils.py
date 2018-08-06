@@ -10,11 +10,13 @@ import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
 from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
+from job.seed.manifest import SeedManifest
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
@@ -443,12 +445,20 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-def edit_job_type_v6(job_type, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
-                         remove_trigger_rule=False, **kwargs):
-    """Updates the manifest of a job type, including creating a new revision for unit testing
+def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
+                            is_paused=None, max_scheduled=None, configuration_dict=None):
+    """Updates a job type, including creating a new revision for unit testing
     """
-    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=manifest_dict, trigger_rule_dict=trigger_rule_dict, 
-                         configuration_dict=configuration_dict, remove_trigger_rule=remove_trigger_rule, **kwargs)
+    
+    manifest = SeedManifest(manifest_dict, do_validate=True)
+        
+    configuration = None
+    if configuration_dict:
+        configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+
+    JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image, 
+                         icon_code=icon_code, is_active=is_active, is_paused=is_paused, 
+                         max_scheduled=max_scheduled, configuration=configuration)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
