@@ -4268,7 +4268,7 @@ remove with v5.</li>
 
 <dl class="attribute">
 <dt id="job.models.JobType.UNEDITABLE_FIELDS_V6">
-<code class="descname">UNEDITABLE_FIELDS_V6</code><em class="property"> = (u'is_system', u'is_active', u'revision_num', u'created', u'deprecated', u'last_modified')</em><a class="headerlink" href="#job.models.JobType.UNEDITABLE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
+<code class="descname">UNEDITABLE_FIELDS_V6</code><em class="property"> = (u'is_system', u'revision_num', u'created', u'deprecated', u'last_modified')</em><a class="headerlink" href="#job.models.JobType.UNEDITABLE_FIELDS_V6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -5086,9 +5086,11 @@ transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>manifest_dict</strong> (<em>dict</em>) &#8211; The Seed Manifest defining the interface for running a job of this type</li>
-<li><strong>trigger_rule_dict</strong> (<em>dict</em>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
-<li><strong>configuration_dict</strong> (<em>dict</em>) &#8211; The configuration for running a job of this type, possibly None</li>
+<li><strong>docker_image</strong> (<em>string</em>) &#8211; The docker image containing the code to run for this job.</li>
+<li><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed Manifest defining the interface for running a job of this type</li>
+<li><strong>icon_code</strong> (<em>string</em>) &#8211; A font-awesome icon code to use when representing this job type.</li>
+<li><strong>max_scheduled</strong> (<em>integer</em>) &#8211; Maximum  number of jobs of this type that may be scheduled to run at the same time.</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
 </ul>
 </td>
 </tr>
@@ -5100,13 +5102,7 @@ transaction.</p>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid
-type for creating jobs
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is
-invalid
-:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
-type interface is invalid</p>
+<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value</p>
 </dd></dl>
 
 <dl class="method">
@@ -5149,33 +5145,28 @@ invalidates any existing recipe type definitions</p>
 <dl class="method">
 <dt id="job.models.JobTypeManager.edit_job_type_v6">
 <code class="descname">edit_job_type_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.edit_job_type_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits the given job type and saves the changes in the database. The caller must provide the related
-trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
-indicates that the field should not change. If trigger_rule_dict is set to None it is assumed trigger
-is being removed.</p>
+<dd><p>Edits the given job type and saves the changes in the database. 
+All database changes occur in an atomic transaction. An argument of None for a field
+indicates that the field should not change.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_type_id</strong> (<em>int</em>) &#8211; The unique identifier of the job type to edit</li>
-<li><strong>manifest_dict</strong> (<em>dict</em>) &#8211; The Seed Manifest defining the interface for running a job of this type</li>
-<li><strong>trigger_rule_dict</strong> (<em>dict</em>) &#8211; The trigger rule that creates jobs of this type, None results in removal</li>
-<li><strong>configuration_dict</strong> (<em>dict</em>) &#8211; The configuration for running a job of this type, possibly None</li>
-<li><strong>remove_trigger_rule</strong> (<em>bool</em>) &#8211; Indicates whether the trigger rule should be unchanged (False) or removed (True)
-when trigger_rule is None</li>
+<li><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed Manifest defining the interface for running a job of this type</li>
+<li><strong>docker_image</strong> (<em>string</em>) &#8211; The docker image containing the code to run for this job.</li>
+<li><strong>icon_code</strong> (<em>string</em>) &#8211; A font-awesome icon code to use when representing this job type.</li>
+<li><strong>is_active</strong> (<em>bool</em>) &#8211; Whether this job type is active or deprecated.</li>
+<li><strong>is_paused</strong> (<em>bool</em>) &#8211; Whether this job type is paused and should not have jobs scheduled or not</li>
+<li><strong>max_scheduled</strong> (<em>integer</em>) &#8211; Maximum  number of jobs of this type that may be scheduled to run at the same time.</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.html#job.configuration.configuration.JobConfiguration" title="job.configuration.configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid
-type for creating jobs
-:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is
-invalid
-:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job
-type interface is invalid</p>
+<p>:raises <a class="reference internal" href="#job.exceptions.InvalidJobField" title="job.exceptions.InvalidJobField"><code class="xref py py-class docutils literal"><span class="pre">job.exceptions.InvalidJobField</span></code></a>: If a given job type field has an invalid value</p>
 </dd></dl>
 
 <dl class="method">
@@ -5501,6 +5492,30 @@ count of associated jobs and the longest running job.</p>
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface invalidates any</dt>
 <dd>existing recipe type definitions</dd>
 </dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobTypeManager.validate_job_type_v6">
+<code class="descname">validate_job_type_v6</code><span class="sig-paren">(</span><em>manifest_dict</em>, <em>configuration_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.validate_job_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new job type prior to attempting a save</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>manifest_dict</strong> (<em>dict</em>) &#8211; The Seed Manifest defining the interface for running a job of this type</li>
+<li><strong>configuration_dict</strong> (<em>dict</em>) &#8211; The configuration for running a job of this type, possibly None</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The job type validation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.JobTypeValidation" title="job.models.JobTypeValidation"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeValidation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -6064,6 +6079,30 @@ transaction.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.models.JobTypeValidation">
+<em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">JobTypeValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="job.models.JobTypeValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#job.models.JobTypeValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobTypeValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#job.models.JobTypeValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobTypeValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#job.models.JobTypeValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 </dd></dl>
@@ -7157,7 +7196,7 @@ example: input_1</p>
 <dl class="method">
 <dt id="job.views.JobTypeDetailsView.patch_v6">
 <code class="descname">patch_v6</code><span class="sig-paren">(</span><em>request</em>, <em>name</em>, <em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeDetailsView.patch_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing legacy job type and returns the updated details</p>
+<dd><p>Edits an existing seed job type and returns the updated details</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7272,30 +7311,6 @@ example: input_1</p>
 <dt id="job.views.JobTypeIDDetailsView.patch_v5">
 <code class="descname">patch_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.patch_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing legacy job type and returns the updated details</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
-<li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job type.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobTypeIDDetailsView.patch_v6">
-<code class="descname">patch_v6</code><span class="sig-paren">(</span><em>request</em>, <em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypeIDDetailsView.patch_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits an existing Seed job type and returns the updated details</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -7751,7 +7766,7 @@ example: input_1</p>
 <dl class="method">
 <dt id="job.views.JobTypesView.create_v6">
 <code class="descname">create_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobTypesView.create_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Seed job type and returns a link to the detail URL</p>
+<dd><p>Creates or edits a Seed job type and returns a link to the detail URL</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

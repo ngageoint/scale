@@ -1487,9 +1487,33 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsViewV6.test_edit_bad_configuration">
+<code class="descname">test_edit_bad_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_bad_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests passing an invalid configuration of a job type to the patch interface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsViewV6.test_edit_configuration">
+<code class="descname">test_edit_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a job type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsViewV6.test_edit_not_found">
+<code class="descname">test_edit_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the get job type details view with a job name/version that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsViewV6.test_edit_simple">
+<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing only the basic attributes of a job type</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsViewV6.test_not_found">
 <code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsViewV6.test_not_found" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests successfully calling the get job type details view with a job id that does not exist.</p>
+<dd><p>Tests calling the get job type details view with a job name/version that does not exist.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1558,6 +1582,70 @@
 <dt id="job.test.test_views.TestJobTypesPendingView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPendingView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the pending status view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.test_views.TestJobTypesPostViewV6">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesPostViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_add_seed_job_type">
+<code class="descname">test_add_seed_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_add_seed_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests adding a seed image.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_add_seed_version_job_type">
+<code class="descname">test_add_seed_version_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_add_seed_version_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests adding a new version of a seed image.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_create_seed_bad_param">
+<code class="descname">test_create_seed_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a job type with invalid type fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_mount">
+<code class="descname">test_create_seed_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new seed job type with a mount referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_param">
+<code class="descname">test_create_seed_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a seed job type with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_setting">
+<code class="descname">test_create_seed_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_missing_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new seed job type with a setting referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_create_seed_secrets">
+<code class="descname">test_create_seed_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_create_seed_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new seed job type with secrets.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesPostViewV6.test_edit_seed_job_type">
+<code class="descname">test_edit_seed_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesPostViewV6.test_edit_seed_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing an existing seed job type.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1641,96 +1729,185 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="job.test.test_views.TestJobTypesValidationView">
-<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesValidationViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests related to the job-types validation endpoint</p>
 <dl class="attribute">
-<dt id="job.test.test_views.TestJobTypesValidationView.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.api" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources">
-<code class="descname">test_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_bad_custom_resources">
+<code class="descname">test_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with invalid custom resources.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_error">
-<code class="descname">test_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_error" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_bad_error">
+<code class="descname">test_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_bad_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid error relationship.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_param">
-<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_param" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_bad_param">
+<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_bad_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with missing fields.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_trigger_config">
-<code class="descname">test_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_config">
+<code class="descname">test_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid trigger rule configuration.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_trigger_type">
-<code class="descname">test_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_type">
+<code class="descname">test_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid trigger type.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_mount">
-<code class="descname">test_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_mount" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_missing_mount">
+<code class="descname">test_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_missing_mount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a mount referenced in configuration but not interface.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_other_setting">
-<code class="descname">test_missing_other_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_other_setting" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_missing_other_setting">
+<code class="descname">test_missing_other_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_missing_other_setting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a setting referenced in configuration but not interface.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_setting">
-<code class="descname">test_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_setting" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_missing_setting">
+<code class="descname">test_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_missing_setting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a setting referenced in configuration but not interface.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_secret_setting">
-<code class="descname">test_secret_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_secret_setting" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_secret_setting">
+<code class="descname">test_secret_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_secret_setting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a secret setting.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_successful_configuration">
-<code class="descname">test_successful_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful_configuration" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_successful_configuration">
+<code class="descname">test_successful_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_successful_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a valid configuration.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_successful_trigger">
-<code class="descname">test_successful_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_successful_trigger">
+<code class="descname">test_successful_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_successful_trigger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with a trigger.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobTypesValidationView.test_warnings">
-<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_warnings" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobTypesValidationViewV5.test_warnings">
+<code class="descname">test_warnings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV5.test_warnings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with mismatched media type warnings.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobTypesValidationViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<p>Tests related to the job-types validation endpoint</p>
+<dl class="attribute">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_bad_error">
+<code class="descname">test_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_bad_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with an invalid error relationship.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_bad_param">
+<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_deprecated_output_workspace">
+<code class="descname">test_deprecated_output_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_deprecated_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with an inactive output workspace.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_invalid_output_workspace">
+<code class="descname">test_invalid_output_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_invalid_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with an invalid output workspace.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_missing_mount">
+<code class="descname">test_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_missing_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a mount referenced in manifest but not configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_missing_output_workspace">
+<code class="descname">test_missing_output_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_missing_output_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a missing output workspace.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_missing_setting">
+<code class="descname">test_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_missing_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a setting referenced in manifest but not configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_secret_setting">
+<code class="descname">test_secret_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_secret_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a secret setting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_successful_configuration">
+<code class="descname">test_successful_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_successful_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a valid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_unknown_mount">
+<code class="descname">test_unknown_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_unknown_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a mount referenced in configuration but not manifest.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationViewV6.test_unknown_setting">
+<code class="descname">test_unknown_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationViewV6.test_unknown_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a setting referenced in configuration but not manifest.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1890,90 +2067,6 @@
 <dt id="job.test.test_views.TestJobTypesViewV6.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create">
-<code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_bad_custom_resources">
-<code class="descname">test_create_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with an invalid custom resources</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_bad_error">
-<code class="descname">test_create_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_bad_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with an invalid error relationship.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_bad_param">
-<code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a job type with invalid type fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_bad_trigger_config">
-<code class="descname">test_create_bad_trigger_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_bad_trigger_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with an invalid trigger rule configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_bad_trigger_type">
-<code class="descname">test_create_bad_trigger_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_bad_trigger_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with an invalid trigger type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_configuration">
-<code class="descname">test_create_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with a valid configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_max_scheduled">
-<code class="descname">test_create_max_scheduled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_max_scheduled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_missing_mount">
-<code class="descname">test_create_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_missing_mount" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with a mount referenced in configuration but not interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_missing_other_setting">
-<code class="descname">test_create_missing_other_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_missing_other_setting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with a setting referenced in configuration but not interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_missing_param">
-<code class="descname">test_create_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a job type with missing fields.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_missing_setting">
-<code class="descname">test_create_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_missing_setting" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with a setting referenced in configuration but not interface.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_secrets">
-<code class="descname">test_create_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_secrets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with secrets.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_views.TestJobTypesViewV6.test_create_trigger">
-<code class="descname">test_create_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesViewV6.test_create_trigger" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests creating a new job type with a trigger rule.</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="job.test.test_views.TestJobTypesViewV6.test_is_active">
@@ -2489,8 +2582,8 @@ status</p>
 
 <dl class="function">
 <dt id="job.test.utils.edit_job_type_v6">
-<code class="descclassname">job.test.utils.</code><code class="descname">edit_job_type_v6</code><span class="sig-paren">(</span><em>job_type</em>, <em>manifest_dict=None</em>, <em>trigger_rule_dict=None</em>, <em>configuration_dict=None</em>, <em>remove_trigger_rule=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.edit_job_type_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the manifest of a job type, including creating a new revision for unit testing</p>
+<code class="descclassname">job.test.utils.</code><code class="descname">edit_job_type_v6</code><span class="sig-paren">(</span><em>job_type</em>, <em>manifest_dict=None</em>, <em>docker_image=None</em>, <em>icon_code=None</em>, <em>is_active=None</em>, <em>is_paused=None</em>, <em>max_scheduled=None</em>, <em>configuration_dict=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.edit_job_type_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a job type, including creating a new revision for unit testing</p>
 </dd></dl>
 
 </div>
