@@ -140,7 +140,7 @@ class ErrorDetailsView(GenericAPIView):
         """
         
         if self.request.version == 'v6':
-            raise self._get_v6(request, error_id)
+            return self._get_v6(request, error_id)
         elif self.request.version == 'v5':
             return self._get_v5(request, error_id)
         elif self.request.version == 'v4': #TODO: Remove with REST API v4
