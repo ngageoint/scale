@@ -1,0 +1,129 @@
+openapi: "3.0.0"
+info:
+  title: Error Services
+  version: v6
+paths:
+  /v6/errors/:
+    get:
+      operationId: _rest_v6_error_list
+      summary: Error List
+      description: Returns a list of all errors
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: is_builtin
+          schema:
+            type: boolean
+          description: if provided, only return errors matching is_builtin
+        -in: query
+          name: job_type_name
+          schema:
+            type: string
+          description: if provided, only return errors for job types with the given name (any version)
+        -in: query
+          name: name
+          schema:
+            type: string
+          description: if provided, only return errors with the given name
+        -in: query
+          name: category
+          schema:
+            type: string
+          description: if provided, only return errors matching the given category
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_list'
+
+ /v6/ingests/errors/{id}/:
+    get:
+      operationId: _rest_v6_error_details
+      summary: Error Details
+      description: Returns detailed information about the error with the specified id
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing error
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/error_detail'
+
+components:
+  schemas:
+    error_list:
+      title: Error List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/error_details'
+          description: List of Error objects
+    error_details:
+      title: Error Details
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: my-error
+        title:
+          type: string
+          example: My Error
+        description:
+          type: string
+          example: My Error Description 
+        category:
+          type: string
+          example: SYSTEM 
+        is_builtin:
+          type: boolean
+          description: Whether the error was loaded during the installation process.
+          example: true
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
