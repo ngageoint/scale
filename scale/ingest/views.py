@@ -231,6 +231,49 @@ class ScansProcessView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._post_v5(request, scan_id)
+        elif request.version == 'v5':
+            return self._post_v5(request, scan_id)
+        elif request.version == 'v6':
+            return self._post_v6(request, scan_id)
+
+        raise Http404()
+
+    def _post_v5(self, request, scan_id=None):
+        """Launches a scan to ingest from an existing scan model instance
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: ID for Scan record to pull configuration from
+        :type scan_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        ingest = rest_util.parse_bool(request, 'ingest', default_value=False)
+
+        try:
+            scan = Scan.objects.queue_scan(scan_id, dry_run=not ingest)
+        except Scan.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(scan)
+        scan_url = reverse('scans_details_view', args=[scan.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+        
+    def _post_v6(self, request, scan_id=None):
+        """Launches a scan to ingest from an existing scan model instance
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: ID for Scan record to pull configuration from
+        :type scan_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         ingest = rest_util.parse_bool(request, 'ingest', default_value=False)
 
         try:
@@ -256,6 +299,47 @@ class ScansView(ListCreateAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._list_v5(request)
+        elif request.version == 'v5':
+            return self._list_v5(request)
+        elif request.version == 'v6':
+            return self._list_v6(request)
+
+        raise Http404()
+        
+    def _list_v5(self, request):
+        """Retrieves the list of all Scan process and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        names = rest_util.parse_string_list(request, 'name', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        scans = Scan.objects.get_scans(started, ended, names, order)
+
+        page = self.paginate_queryset(scans)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+        
+    def _list_v6(self, request):
+        """Retrieves the list of all Scan process and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -270,6 +354,48 @@ class ScansView(ListCreateAPIView):
         return self.get_paginated_response(serializer.data)
 
     def create(self, request):
+        """Creates a new Scan process and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._create_v5(request)
+        elif request.version == 'v5':
+            return self._create_v5(request)
+        elif request.version == 'v6':
+            return self._create_v6(request)
+
+        raise Http404()
+        
+    def _create_v5(self, request):
+        """Creates a new Scan process and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        try:
+            scan = Scan.objects.create_scan(name, title, description, configuration)
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+
+        serializer = ScanDetailsSerializer(scan)
+        scan_url = reverse('scans_details_view', args=[scan.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+        
+    def _create_v6(self, request):
         """Creates a new Scan process and returns a link to the detail URL
 
         :param request: the HTTP POST request
@@ -307,6 +433,45 @@ class ScansDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._get_v5(request, scan_id)
+        elif request.version == 'v5':
+            return self._get_v5(request, scan_id)
+        elif request.version == 'v6':
+            return self._get_v6(request, scan_id)
+
+        raise Http404()
+        
+    def _get_v5(self, request, scan_id):
+        """Retrieves the details for a Scan process and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            scan = Scan.objects.get_details(scan_id)
+        except Scan.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(scan)
+        return Response(serializer.data)
+
+    def _get_v6(self, request, scan_id):
+        """Retrieves the details for a Scan process and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         try:
             scan = Scan.objects.get_details(scan_id)
         except Scan.DoesNotExist:
@@ -316,6 +481,27 @@ class ScansDetailsView(GenericAPIView):
         return Response(serializer.data)
 
     def patch(self, request, scan_id):
+        """Edits an existing Scan process and returns the updated details
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._patch_v5(request, scan_id)
+        elif request.version == 'v5':
+            return self._patch_v5(request, scan_id)
+        elif request.version == 'v6':
+            return self._patch_v6(request, scan_id)
+
+        raise Http404()
+
+    def _patch_v5(self, request, scan_id):
         """Edits an existing Scan process and returns the updated details
 
         :param request: the HTTP GET request
@@ -342,12 +528,81 @@ class ScansDetailsView(GenericAPIView):
 
         serializer = self.get_serializer(scan)
         return Response(serializer.data)
+        
+    def _patch_v6(self, request, scan_id):
+        """Edits an existing Scan process and returns the updated details
 
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration', required=False)
+
+        try:
+            Scan.objects.edit_scan(scan_id, title, description, configuration)
+
+            scan = Scan.objects.get_details(scan_id)
+        except Scan.DoesNotExist:
+            raise Http404
+        except InvalidScanConfiguration as ex:
+            logger.exception('Unable to edit Scan process: %s', scan_id)
+            raise BadParameter(unicode(ex))
+
+        serializer = self.get_serializer(scan)
+        return Response(serializer.data)
+        
 class ScansValidationView(APIView):
     """This view is the endpoint for validating a new Scan process before attempting to actually create it"""
     queryset = Scan.objects.all()
 
     def post(self, request):
+        """Validates a new Scan process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        #TODO: Remove with v4 API
+        if request.version == 'v4':
+            return self._post_v5(request, scan_id)
+        elif request.version == 'v5':
+            return self._post_v5(request, scan_id)
+        elif request.version == 'v6':
+            return self._post_v6(request, scan_id)
+
+        raise Http404()
+        
+    def _post_v5(self, request):
+        """Validates a new Scan process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        # Validate the Scan configuration
+        try:
+            config = ScanConfiguration(configuration)
+            warnings = config.validate()
+        except InvalidScanConfiguration as ex:
+            logger.exception('Unable to validate Scan configuration.')
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})
+        
+    def _post_v6(self, request):
         """Validates a new Scan process and returns any warnings discovered
 
         :param request: the HTTP POST request
