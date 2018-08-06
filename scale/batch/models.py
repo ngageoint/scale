@@ -73,7 +73,7 @@ class BatchManager(models.Manager):
         batch.title = title
         batch.description = description
         batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
         batch.definition = definition.get_dict()
         configuration = BatchConfiguration()
         if 'priority' in definition.get_dict():
@@ -130,7 +130,7 @@ class BatchManager(models.Manager):
         batch.title = title
         batch.description = description
         batch.recipe_type = recipe_type
-        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
         batch.event = event
         batch.definition = convert_definition_to_v6(definition).get_dict()
         batch.configuration = convert_configuration_to_v6(configuration).get_dict()
@@ -488,7 +488,7 @@ class BatchManager(models.Manager):
 
         # Send messages to reprocess old recipes
         logger.info('Sending messages to reprocess old recipes: %i', old_recipes_count)
-        new_rev = RecipeTypeRevision.objects.get_revision(batch.recipe_type_id, batch.recipe_type.revision_num)
+        new_rev = RecipeTypeRevision.objects.get_revision_old(batch.recipe_type_id, batch.recipe_type.revision_num)
         root_recipe_ids = []
         for old_recipe in old_recipes.iterator():
             root_id = old_recipe.root_superseded_recipe_id if old_recipe.root_superseded_recipe_id else old_recipe.id
@@ -645,7 +645,8 @@ class BatchManager(models.Manager):
         try:
             batch = Batch()
             batch.recipe_type = recipe_type
-            batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+            batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id,
+                                                                                recipe_type.revision_num)
             batch.definition = convert_definition_to_v6(definition).get_dict()
             batch.configuration = convert_configuration_to_v6(configuration).get_dict()
 

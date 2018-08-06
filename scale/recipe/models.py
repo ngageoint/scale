@@ -140,7 +140,7 @@ class RecipeManager(models.Manager):
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type
-        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
         recipe.batch_id = batch_id
         recipe_definition = recipe.get_recipe_definition()
@@ -1678,7 +1678,20 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
-    def get_revision(self, recipe_type_id, revision_num):
+    def get_revision(self, recipe_type_name, revision_num):
+        """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The revision
+        :rtype: :class:`recipe.models.RecipeTypeRevision`
+        """
+
+        return self.select_related('recipe_type').get(recipe_type__name=recipe_type_name, revision_num=revision_num)
+
+    def get_revision_old(self, recipe_type_id, revision_num):
         """Returns the revision for the given recipe type and revision number
 
         :param recipe_type_id: The ID of the recipe type
