@@ -531,3 +531,142 @@ Response: 204 NO CONTENT
 | **Status**         | 204 No Content                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
+.. _rest_v6_scan_process:
+
+**Example PATCH /v6/scans/{id}/ API call**
+
+Request: PATCH http://.../v6/scans/{id}/
+
+ .. code-block:: javascript 
+ 
+  { 
+    "ingest": true 
+  } 
+
+Response: 201 OK
+Headers:
+Location http://.../v6/scans/105/
+
+ .. code-block:: javascript 
+ 
+   { 
+       "id": 1, 
+       "name": "my-scan-process", 
+       "title": "My Scan Process", 
+       "description": "This is my Strike process for detecting my favorite files!", 
+       "file_count": 50,
+       "job": { 
+           "id": 7, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+            "job_type_rev": { 
+                "id": 2 
+            }, 
+            "event": { 
+                "id": 1 
+            }, 
+            "node": { 
+                "id": 1 
+            }, 
+            "error": { 
+                "id": 1 
+            }, 
+           "status": "RUNNING", 
+           "priority": 10, 
+           "num_exes": 1 
+       },
+       "dry_run_job": { 
+           "id": 6, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+            "job_type_rev": { 
+                "id": 2 
+            }, 
+            "event": { 
+                "id": 1 
+            }, 
+            "node": { 
+                "id": 1 
+            }, 
+            "error": { 
+                "id": 1 
+            }, 
+           "status": "RUNNING", 
+           "priority": 10, 
+           "num_exes": 1 
+       },
+       "created": "2015-03-11T00:00:00Z",
+       "last_modified": "2015-03-11T00:00:00Z",
+       "configuration": { 
+           "workspace": "my-workspace", 
+           "monitor": { 
+               "type": "dir"
+           }, 
+           "recursive": true, 
+           "files_to_ingest": [{ 
+               "filename_regex": ".*txt" 
+           }] 
+       } 
+   } 
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Process Scan**                                                                                                        |
++=========================================================================================================================+
+| Launches an existing Scan with associated configuration                                                                 |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /scans/{id}/process/                                                                                           |
+|           Where {id} is the unique identifier of an existing model.                                                     |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ingest             | Boolean           | Optional | Whether a dry run or ingest triggering scan should be run.          |
+|                    |                   |          | Defaults to false when unset.                                       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details of the Scan model used to launch process                               |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| name               | String            | The identifying name of the Scan process used for queries.                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| title              | String            | The human readable display name of the Scan process.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| description        | String            | A longer description of the Scan process.                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| file_count         | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| job                | JSON Object       | The job that is associated with the Scan process.                              |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| dry_run_job        | JSON Object       | The dry run job that is associated with the Scan process.                      |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| configuration      | JSON Object       | JSON defining the Scan configuration.                                          |
+|                    |                   | (See :ref:`architecture_scan_spec`)                                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+

@@ -51,7 +51,9 @@ Response: 200 OK
                     "status": "RUNNING", 
                     "priority": 10, 
                     "num_exes": 1 
-                } 
+                },
+                "created": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
             }, 
             ... 
         ] 
@@ -103,7 +105,7 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .name              | String            | The identifying name of the Strike process used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -112,7 +114,7 @@ Response: 200 OK
 | .description       | String            | A longer description of the Strike process.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job               | JSON Object       | The job that is associated with the Strike process.                            |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -179,6 +181,8 @@ Location http://.../v6/strikes/105/
             "priority": 10, 
             "num_exes": 1 
         }, 
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z",
         "configuration": { 
             "workspace": "my-workspace", 
             "monitor": { 
@@ -188,7 +192,7 @@ Location http://.../v6/strikes/105/
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
             }] 
-        } 
+        }
     } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -263,7 +267,9 @@ Response: 200 OK
            "status": "RUNNING", 
            "priority": 10, 
            "num_exes": 1 
-       }, 
+       },
+       "created": "2015-03-11T00:00:00Z",
+       "last_modified": "2015-03-11T00:00:00Z",
        "configuration": { 
            "workspace": "my-workspace", 
            "monitor": { 
