@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import json
 import logging
+from copy import deepcopy
+
 import os
 
 from jsonschema import validate
@@ -17,53 +19,67 @@ with open(SCHEMA_FILENAME) as schema_file:
     METADATA_SCHEMA = json.load(schema_file)
 METADATA_SUFFIX = '.metadata.json'
 
+UNSUPPORTED_TYPES = ('FeatureCollection', 'GeometryCollection')
+
 
 class SeedMetadata(object):
-    """Represents the extended metadata for a single file captured from a Seed job"""
+    """Represents the extended metadata for a single file in Seed job.
 
-    def __init__(self, definition, do_validate=True):
-        """Creates a metadata class from the given definition. If the definition is invalid, a
-        :class:`job.configuration.interface.exceptions.InvalidMetadataDefinition` exception will be thrown.
+    Object instantiation from existing JSON should be accomplished via the metadata_from json helper.
+    This will safeguard us from having to deal with FeatureCollection and GeometryCollection objects."""
 
-        :param definition: The interface definition
-        :type definition: dict
+    def __init__(self):
+        """Initialize the metadata object with a basic placeholder"""
+
+        self._data = {
+            'type': 'Feature',
+            'geometry': None,
+            'properties': None
+        }
+
+    @staticmethod
+    def metadata_from_json(metadata, do_validate=True):
+        """Creates a metadata object from the given definition. If the definition is invalid, a
+        :class:`job.seed.exceptions.InvalidSeedMetadataDefinition` exception will be thrown.
+
+        :param metadata: The metadata definition
+        :type metadata: dict
         :param do_validate: Whether to perform validation on the JSON schema
         :type do_validate: bool
+        :raises InvalidSeedMetadataDefinition: If schema validation fails
         """
 
-        self.definition = definition
+        self = SeedMetadata()
 
         try:
             if do_validate:
-                validate(definition, METADATA_SCHEMA)
+                validate(metadata, METADATA_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidSeedMetadataDefinition('JSON_VALIDATION_ERROR', 'Error validating againsg schema: %s' % validation_error)
+            raise InvalidSeedMetadataDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' %
+                                                validation_error)
+        if metadata['type'] in UNSUPPORTED_TYPES:
+            raise InvalidSeedMetadataDefinition('UNSUPPORTED_GEOJSON', 'Scale does not process GeoJSON '
+                                                                       'FeatureCollection or GeometryCollection type')
+        # Ensure we never have to deal with anything but sanitized Feature GeoJSON objects
+        if metadata['type'] is not 'Feature':
+            self._data['geometry'] = metadata
 
-        self._populate_default_values()
+        return self
 
-    def get_geometry(self):
-        """Retrieves GeoJSON geometry if it is available in metadata object
+    def get_properties(self):
+        """Retrieves a valid properties dictionary
 
-        :return: Geometry as defined by GeoJSON specification, possibly None if unset
-        :rtype: dict or None
-        """
-        geometry = None
-
-        if 'geometry' in self.definition:
-            geometry = self.definition['geometry']
-
-        return geometry
-
-    def get_time(self):
-        """Retrieves Timestamp of data if it is available in metadata object
-
-        :return: Timestamp as defined in ISO8601 string format, possibly None if unset
-        :rtype: dict or None
+        :return: Properties found within metadata file
+        :rtype: dict
         """
 
-        timestamp = None
+        return self._data.get('properties', {})
 
-        if 'time' in self.definition:
-            timestamp = self.definition['time']
 
-        return timestamp
+    def get_data(self):
+        """Retrieves the internal dictionary of GeoJSON"""
+
+        return deepcopy(self._data)
+
+    def set_properties(self, key, value):
+        self._data['properties'] = self.get_properties()[key] = value
