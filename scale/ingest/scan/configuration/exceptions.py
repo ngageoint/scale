@@ -1,5 +1,5 @@
 """Defines exceptions that can occur when interacting with Scan configuration"""
-
+from util.exceptions import ValidationException
 
 class InvalidScanConfiguration(ValidationException):
     """Exception indicating that the provided Scan configuration was invalid"""
