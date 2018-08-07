@@ -68,7 +68,11 @@ paths:
         '201':
           description: |-
             The 201 CREATED response indicates a successful request 
-            
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_details'
+                
   /v6/scans/{id}/:
     get:
       operationId: _rest_v6_scan_details
@@ -98,7 +102,7 @@ paths:
         content:
           application/json: 
             schema:
-              $ref: '#/components/schemas/scan_post'
+              $ref: '#/components/schemas/scan_process'
       responses:
         '200':
           description: |-
@@ -106,7 +110,7 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/scan_validation'
+                $ref: '#/components/schemas/validation'
             
   /v6/scans/{id}/:
     patch:
@@ -129,6 +133,32 @@ paths:
         '204':
           description: |-
             The 204 No content response indicates a successful edit 
+            
+  /v6/scans/{id}/process/:
+    patch:
+      operationId: _rest_v6_scan_process
+      summary: Process Scan
+      description: Launches an existing Scan with associated configuration    
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_process'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful request  
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_details'
 
 components:
   schemas:
@@ -211,6 +241,16 @@ components:
         configuration:
           $ref: '#/components/schemas/scan_config'
           
+    scan_process:
+      title: Scan Process
+      type: object
+      properties:
+        ingest:
+          type: boolean
+          description: Whether a dry run or ingest triggering scan should be run. |
+            Defaults to false when unset.
+          example: true
+          
     scan_details:
       allof:
         - ref: '#/components/schemas/scan_base'
@@ -226,52 +266,20 @@ components:
       properties:
         workspace:
           type: string
-          description: The workspace field is a required string that specifies the name of the |
-            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of monitor can be used.
+          description: The workspace field is a required string that specifies |
+            the name of the workspace that is being scanned. The type of the |
+            workspace (its broker type) will determine which types of monitor |
+            can be used.
           example: my-host-workspace
-        monitor:
-          oneOf:
-          - $ref: '#/components/schemas/dir_monitor'
-          - $ref: '#/components/schemas/s3_monitor'
+        scanner:
+          $ref: '#/components/schemas/scanner'
+        recursive:
+          type: boolean
+          description: Indicates whether a scanner should be limited to the root |
+            of a workspace or traverse the entire tree. If ommitted, the default |
+            is true for full tree recursion.
         files_to_ingest:
           type: array
           items:
             $ref: '#/components/schemas/ingest_file'
           description: List of ingest objects
-          
-    scan_validation:
-      title: Scan Validation
-      type: object
-      properties:
-        is_valid:
-          type: boolean
-          description: The given scan process is valid
-          example: true
-        errors:
-          type: array
-            $ref: '#/components/schemas/validation_error'
-        errors:
-          type: array
-            $ref: '#/components/schemas/validation_warning'
-            
-    validation_error:
-      title: Validation Error
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the error
-        description:
-          type: string
-          description: A description of the validation error
-          
-    validation_warning:
-      title: Validation Warning
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the warning
-        description:
-          type: string
-          description: A description of the warning

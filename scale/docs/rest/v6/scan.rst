@@ -533,9 +533,9 @@ Response: 204 NO CONTENT
 
 .. _rest_v6_scan_process:
 
-**Example PATCH /v6/scans/{id}/ API call**
+**Example POST /v6/scans/{id}/process/ API call**
 
-Request: PATCH http://.../v6/scans/{id}/
+Request: POST http://.../v6/scans/{id}/process/
 
  .. code-block:: javascript 
  
@@ -545,7 +545,7 @@ Request: PATCH http://.../v6/scans/{id}/
 
 Response: 201 OK
 Headers:
-Location http://.../v6/scans/105/
+Location http://.../v6/scans/105/process/
 
  .. code-block:: javascript 
  
@@ -626,7 +626,7 @@ Location http://.../v6/scans/105/
 +=========================================================================================================================+
 | Launches an existing Scan with associated configuration                                                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /scans/{id}/process/                                                                                           |
+| **POST** /v6/scans/{id}/process/                                                                                        |
 |           Where {id} is the unique identifier of an existing model.                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |

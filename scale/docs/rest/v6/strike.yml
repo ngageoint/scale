@@ -107,7 +107,7 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/strike_validation'
+                $ref: '#/components/schemas/validation'
             
   /v6/strikes/{id}/:
     patch:
@@ -234,13 +234,13 @@ components:
             $ref: '#/components/schemas/ingest_file'
           description: List of ingest objects
           
-    strike_validation:
-      title: Strike Validation
+    validation:
+      title: Validation
       type: object
       properties:
         is_valid:
           type: boolean
-          description: The given strike process is valid
+          description: The given element is valid
           example: true
         errors:
           type: array
