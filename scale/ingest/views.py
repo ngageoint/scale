@@ -611,6 +611,8 @@ class ScansValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
+        configuration = rest_util.parse_dict(request, 'configuration')
+        
         # Validate the Scan configuration
         validation = Strike.objects.validate_scan_v6(configuration=configuration)
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
