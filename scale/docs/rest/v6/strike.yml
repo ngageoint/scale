@@ -205,56 +205,20 @@ components:
           example: This is my Strike process for detecting my favorite files!
         configuration:
           $ref: '#/components/schemas/strike_config'
-          
+
     strike_details:
-      title: Strike Details
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
-          example: 4
-        name:
-          type: string
-          description: The identifying name of the Strike process used for queries.  
-          example: my-strike-process
-        title:
-          type: string
-          description: The human readable display name of the Strike process.  
-          example: My Strike Process
-        description:
-          type: string
-          description: A longer description of the Strike process. 
-          example: This is my Strike process for detecting my favorite files!
-        job:
-          $ref: '#/components/schemas/job'
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-          example: 2015-09-10T15:24:53.503Z
-        last_modified:
-          type: string
-          format: date-time
-          description: When the associated database model was last saved.
-          example: 2015-09-10T15:24:53.987Z
-        configuration:
-          $ref: '#/components/schemas/strike_config'
+      allof:
+        - ref: '#/components/schemas/strike_base'
+        - title: Strike Details
+        - type: object
+        properties: 
+          configuration:
+            $ref: '#/components/schemas/strike_config'          
           
     strike_config:
       title: Strike Configuration
       type: object
       properties:
-        version:
-          type: string
-          description: The version is an optional string value that defines the version of the |
-            configuration used. This allows updates to be made to the specification while |
-            maintaining backwards compatibility by allowing Scale to recognize an older version |
-            and convert it to the current version. The default value for version if it is not |
-            included is the latest version, which is currently 2.0. It is recommended, though |
-            not required, that you include the version so that future changes to the specification |
-            will still accept your Strike configuration.
-          example: 1.0
         workspace:
           type: string
           description: The workspace field is a required string that specifies the name of the |
