@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 info:
-  title: Ingest Services
+  title: Strike Services
   version: v6
 paths:
   /v6/strikes:
@@ -54,7 +54,21 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/strike_list'
-
+    post:
+      operationId: _rest_v6_strike_create
+      summary: Create Strike
+      description: Creates a new Strike process and places it onto the queue.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/strike_post'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful request 
+            
   /v6/strikes/{id}/:
     get:
       operationId: _rest_v6_strike_details
@@ -74,23 +88,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/strike_details'
-                
-  /v6/strikes/:
-    post:
-      operationId: _rest_v6_strike_create
-      summary: Create Strike
-      description: Creates a new Strike process and places it onto the queue.  
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/strike_post'
-      responses:
-        '201':
-          description: |-
-            The 201 CREATED response indicates a successful request 
- 
+
   /v6/strikes/validation/:
     post:
       operationId: _rest_v6_strike_validate
@@ -136,7 +134,7 @@ paths:
 components:
   schemas:
     strike_list:
-      title: Ingest List
+      title: Strike List
       type: object
       properties:
         count:

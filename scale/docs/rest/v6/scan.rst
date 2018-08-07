@@ -108,7 +108,7 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Optional | Return only Strike processes with a given name.                     |
+| name               | String            | Optional | Return only Scan processes with a given name.                       |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
@@ -186,7 +186,7 @@ Location http://.../v6/scans/105/
        "id": 1, 
        "name": "my-scan-process", 
        "title": "My Scan Process", 
-       "description": "This is my Strike process for detecting my favorite files!", 
+       "description": "This is my Scan process for detecting my favorite files!", 
        "file_count": 50,
        "job": { 
            "id": 7, 
@@ -265,25 +265,25 @@ Location http://.../v6/scans/105/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Required | The human readable display name of the Strike process.              |
+| title              | String            | Required | The human readable display name of the Scan process.                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | A longer description of the Strike process.                         |
+| description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
+| configuration      | JSON Object       | Required | JSON defining the Scan configuration.                               |
+|                    |                   |          | (See :ref:`architecture_scan_spec`)                                 |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Location**       | URL pointing to the details for the newly created strike process                                   |
+| **Location**       | URL pointing to the details for the newly created scan process                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | JSON Object       | All fields are the same as the Strike process details model.                   |
-|                    |                   | (See :ref:`Strike Details <rest_v6_scan_details>`)                             |
+|                    | JSON Object       | All fields are the same as the Scan process details model.                     |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_scan_details:
@@ -300,7 +300,7 @@ Response: 200 OK
        "id": 1, 
        "name": "my-scan-process", 
        "title": "My Scan Process", 
-       "description": "This is my Strike process for detecting my favorite files!", 
+       "description": "This is my Scan process for detecting my favorite files!", 
        "file_count": 50,
        "job": { 
            "id": 7, 
@@ -385,7 +385,7 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_v6_scan_details>`)                             |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | name               | String            | The identifying name of the Scan process used for queries.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -553,7 +553,7 @@ Location http://.../v6/scans/105/
        "id": 1, 
        "name": "my-scan-process", 
        "title": "My Scan Process", 
-       "description": "This is my Strike process for detecting my favorite files!", 
+       "description": "This is my Scan process for detecting my favorite files!", 
        "file_count": 50,
        "job": { 
            "id": 7, 
