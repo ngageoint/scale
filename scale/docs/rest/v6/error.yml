@@ -110,6 +110,10 @@ components:
         description:
           type: string
           example: My Error Description 
+        job_type_name:
+          type: string
+          description: The name of the job type that relates to this error.
+          example: job-type
         category:
           type: string
           example: SYSTEM 

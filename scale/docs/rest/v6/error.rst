@@ -28,6 +28,7 @@ Response: 200 OK
                 "name": "unknown", 
                 "title": "Unknown", 
                 "description": "The error that caused the failure is unknown.", 
+                "job_type_name": "job-type",
                 "category": "SYSTEM", 
                 "is_builtin": true, 
                 "created": "2015-03-11T00:00:00Z", 
@@ -87,6 +88,8 @@ Response: 200 OK
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .description       | String            | A longer description of the error.                                                  |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
+| .job_type_name     | String            | The name of the job type that relates to this error.                                |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .category          | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | .is_builtin        | Boolean           | Whether the error was loaded during the installation process.                       |
@@ -113,6 +116,7 @@ Response: 200 OK
         "name": "unknown", 
         "title": "Unknown", 
         "description": "The error that caused the failure is unknown.", 
+        "job_type_name": "job-type",
         "category": "SYSTEM", 
         "is_builtin": true, 
         "created": "2015-03-11T00:00:00Z", 
@@ -142,6 +146,8 @@ Response: 200 OK
 | title              | String            | The human readable display name of the error.                                       |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | description        | String            | A longer description of the error.                                                  |
++--------------------+-------------------+-------------------------------------------------------------------------------------+
+| job_type_name      | String            | The name of the job type that relates to this error.                                |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+
 | category           | String            | The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].                      |
 +--------------------+-------------------+-------------------------------------------------------------------------------------+

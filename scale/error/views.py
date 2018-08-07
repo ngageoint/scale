@@ -9,7 +9,7 @@ from rest_framework.reverse import reverse
 
 import util.rest as rest_util
 from error.models import Error
-from error.serializers import ErrorDetailsSerializer, ErrorSerializer
+from error.serializers import ErrorDetailsSerializerV5, ErrorSerializerV5, ErrorDetailsSerializerV6, ErrorSerializerV6
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -18,7 +18,15 @@ logger = logging.getLogger(__name__)
 class ErrorsView(GenericAPIView):
     """This view is the endpoint for retrieving the list of all errors and creating a new error."""
     queryset = Error.objects.all()
-    serializer_class = ErrorSerializer
+    
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ErrorSerializerV6
+        else:
+            return ErrorSerializerV5
     
     def get(self, request):
         """Retrieves the list of all errors and returns it in JSON form
@@ -118,7 +126,7 @@ class ErrorsView(GenericAPIView):
 
         error = Error.objects.create_legacy_error(name, title, description, category)
 
-        serializer = ErrorDetailsSerializer(error)
+        serializer = ErrorDetailsSerializerV5(error)
         error_url = reverse('error_details_view', args=[error.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=error_url))
 
@@ -126,8 +134,16 @@ class ErrorsView(GenericAPIView):
 class ErrorDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of an error."""
     queryset = Error.objects.all()
-    serializer_class = ErrorDetailsSerializer
 
+    # TODO: remove this class and un-comment serializer declaration when REST API v5 is removed
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ErrorDetailsSerializerV6
+        else:
+            return ErrorDetailsSerializerV5
+            
     def get(self, request, error_id):
         """Retrieves the details for an error and return them in JSON form
 
