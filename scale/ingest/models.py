@@ -632,6 +632,7 @@ class Ingest(models.Model):
         """meta information for database"""
         db_table = 'ingest'
 
+ScanValidation = namedtuple('ScanValidation', ['is_valid', 'errors', 'warnings'])
 
 class ScanManager(models.Manager):
     """Provides additional methods for handling Scan processes
@@ -804,6 +805,28 @@ class ScanManager(models.Manager):
         scan.save()
  
         return scan
+        
+    def validate_scan_v6(self, configuration):
+        """Validates the given configuration for creating a new scan process
+
+        :param configuration: The scan configuration
+        :type configuration: dict
+        :returns: The scan validation
+        :rtype: :class:`strike.models.ScanValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+
+        try:
+            config = ScanConfigurationV6(configuration)
+            warnings = config.validate()
+        except InvalidScanConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+
+        return ScanValidation(is_valid, errors, warnings)
 
 
 class Scan(models.Model):
