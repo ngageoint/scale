@@ -261,94 +261,166 @@
 <div class="section" id="module-error.test.test_views">
 <span id="error-test-test-views-module"></span><h2>error.test.test_views module<a class="headerlink" href="#module-error.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="error.test.test_views.TestErrorDetailsView">
-<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5">
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorDetailsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="error.test.test_views.TestErrorDetailsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_bad_category">
-<code class="descname">test_edit_error_bad_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_bad_category" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_edit_error_bad_category">
+<code class="descname">test_edit_error_bad_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_bad_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the edit Error method with a bad category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_change_system">
-<code class="descname">test_edit_error_change_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_change_system" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_edit_error_change_system">
+<code class="descname">test_edit_error_change_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_change_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that an existing error cannot be changed to a system level error.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_not_found">
-<code class="descname">test_edit_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_not_found" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_edit_error_not_found">
+<code class="descname">test_edit_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the edit Error method with a bad error id.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_success">
-<code class="descname">test_edit_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_success" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_edit_error_success">
+<code class="descname">test_edit_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the edit Error method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_edit_error_system">
-<code class="descname">test_edit_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_edit_error_system" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_edit_error_system">
+<code class="descname">test_edit_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that an existing system error cannot be edited.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_get_error_not_found">
-<code class="descname">test_get_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_get_error_not_found">
+<code class="descname">test_get_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the Get Error method with a bad error id.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorDetailsView.test_get_error_success">
-<code class="descname">test_get_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsView.test_get_error_success" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV5.test_get_error_success">
+<code class="descname">test_get_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV5.test_get_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the Get Error method.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="error.test.test_views.TestErrorsView">
-<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV6">
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorDetailsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="error.test.test_views.TestErrorsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dl class="attribute">
+<dt id="error.test.test_views.TestErrorDetailsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorsView.test_create_error_bad_category">
-<code class="descname">test_create_error_bad_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_bad_category" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorDetailsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsViewV6.test_edit_error">
+<code class="descname">test_edit_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6.test_edit_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the edit error api is removed in v6.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsViewV6.test_get_error_not_found">
+<code class="descname">test_get_error_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6.test_get_error_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test calling the Get Error method with a bad error id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorDetailsViewV6.test_get_error_success">
+<code class="descname">test_get_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorDetailsViewV6.test_get_error_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test successfully calling the Get Error method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.test.test_views.TestErrorsViewV5">
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="error.test.test_views.TestErrorsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsViewV5.test_create_error_bad_category">
+<code class="descname">test_create_error_bad_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.test_create_error_bad_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the create Error method with a bad category value.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorsView.test_create_error_missing">
-<code class="descname">test_create_error_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_missing" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorsViewV5.test_create_error_missing">
+<code class="descname">test_create_error_missing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.test_create_error_missing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test calling the create Error method with missing data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorsView.test_create_error_success">
-<code class="descname">test_create_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_success" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorsViewV5.test_create_error_success">
+<code class="descname">test_create_error_success</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.test_create_error_success" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test successfully calling the create Error method.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorsView.test_create_error_system">
-<code class="descname">test_create_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_create_error_system" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorsViewV5.test_create_error_system">
+<code class="descname">test_create_error_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.test_create_error_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Test that system errors cannot be created.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.test.test_views.TestErrorsView.test_list_errors">
-<code class="descname">test_list_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsView.test_list_errors" title="Permalink to this definition">¶</a></dt>
+<dt id="error.test.test_views.TestErrorsViewV5.test_list_errors">
+<code class="descname">test_list_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV5.test_list_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Errors method.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="error.test.test_views.TestErrorsViewV6">
+<em class="property">class </em><code class="descclassname">error.test.test_views.</code><code class="descname">TestErrorsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="error.test.test_views.TestErrorsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#error.test.test_views.TestErrorsViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsViewV6.test_create_error">
+<code class="descname">test_create_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV6.test_create_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test that the create error API is gone in v6</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.test.test_views.TestErrorsViewV6.test_list_errors">
+<code class="descname">test_list_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.test.test_views.TestErrorsViewV6.test_list_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get Errors method.</p>
 </dd></dl>
 

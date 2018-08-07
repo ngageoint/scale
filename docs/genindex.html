@@ -606,9 +606,17 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.ancestors">ancestors (storage.models.ScaleFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.api">api (job.test.test_views.OldTestJobDetailsViewV5 attribute)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.api">api (error.test.test_views.TestErrorDetailsViewV5 attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.api">(error.test.test_views.TestErrorDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.api">(error.test.test_views.TestErrorsViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV6.api">(error.test.test_views.TestErrorsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.api">(job.test.test_views.OldTestJobDetailsViewV5 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsView.api">(job.test.test_views.TestCancelJobsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsViewV6.api">(job.test.test_views.TestJobDetailsViewV6 attribute)</a>
@@ -926,7 +934,7 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5">BatchDetailsSerializerV5.JobSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer">BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5">BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer">BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer (class in batch.serializers)</a>
 </li>
@@ -2608,11 +2616,15 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.error_system_count">error_system_count (metrics.models.MetricsJobType attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorBaseSerializer">ErrorBaseSerializer (class in error.serializers)</a>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorBaseSerializerV5">ErrorBaseSerializerV5 (class in error.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorBaseSerializerV6">ErrorBaseSerializerV6 (class in error.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig">ErrorConfig (class in error.apps)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorDetailsSerializer">ErrorDetailsSerializer (class in error.serializers)</a>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorDetailsSerializerV5">ErrorDetailsSerializerV5 (class in error.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorDetailsSerializerV6">ErrorDetailsSerializerV6 (class in error.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView">ErrorDetailsView (class in error.views)</a>
 </li>
@@ -2632,7 +2644,9 @@
         <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.errors">(port.schema.Configuration attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorSerializer">ErrorSerializer (class in error.serializers)</a>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorSerializerV5">ErrorSerializerV5 (class in error.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorSerializerV6">ErrorSerializerV6 (class in error.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView">ErrorsView (class in error.views)</a>
 </li>
@@ -4422,6 +4436,10 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.get_serializer_class">(batch.views.BatchesView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.get_serializer_class">(error.views.ErrorDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.get_serializer_class">(error.views.ErrorsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.get_serializer_class">(ingest.views.IngestDetailsView method)</a>
 </li>
@@ -6296,7 +6314,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5">JobDetailsSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.ErrorSerializer">JobDetailsSerializerV5.ErrorSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.ErrorSerializerV5">JobDetailsSerializerV5.ErrorSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializer">JobDetailsSerializerV5.RecipeSerializer (class in job.serializers)</a>
 </li>
@@ -6306,7 +6324,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6">JobDetailsSerializerV6 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.ErrorSerializer">JobDetailsSerializerV6.ErrorSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.ErrorSerializerV6">JobDetailsSerializerV6.ErrorSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.RecipeBaseSerializer">JobDetailsSerializerV6.RecipeBaseSerializer (class in job.serializers)</a>
 </li>
@@ -6344,7 +6362,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5">JobExecutionDetailsSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5.ErrorSerializer">JobExecutionDetailsSerializerV5.ErrorSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5.ErrorSerializerV5">JobExecutionDetailsSerializerV5.ErrorSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionDetailsSerializerV5.NodeSerializerV4">JobExecutionDetailsSerializerV5.NodeSerializerV4 (class in job.serializers)</a>
 </li>
@@ -6398,13 +6416,13 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5">JobExecutionSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5.ErrorBaseSerializer">JobExecutionSerializerV5.ErrorBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5.ErrorBaseSerializerV5">JobExecutionSerializerV5.ErrorBaseSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV5.NodeBaseSerializerV4">JobExecutionSerializerV5.NodeBaseSerializerV4 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6">JobExecutionSerializerV6 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6.ErrorBaseSerializer">JobExecutionSerializerV6.ErrorBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6.ErrorBaseSerializerV6">JobExecutionSerializerV6.ErrorBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializerV6.NodeBaseSerializer">JobExecutionSerializerV6.NodeBaseSerializer (class in job.serializers)</a>
 </li>
@@ -6556,13 +6574,13 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5">JobSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.ErrorBaseSerializer">JobSerializerV5.ErrorBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.ErrorBaseSerializerV5">JobSerializerV5.ErrorBaseSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.TriggerEventBaseSerializer">JobSerializerV5.TriggerEventBaseSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6">JobSerializerV6 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.ErrorBaseSerializer">JobSerializerV6.ErrorBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.ErrorBaseSerializerV6">JobSerializerV6.ErrorBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.TriggerEventBaseSerializer">JobSerializerV6.TriggerEventBaseSerializer (class in job.serializers)</a>
 </li>
@@ -6586,7 +6604,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5">JobTypeDetailsSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5.ErrorSerializer">JobTypeDetailsSerializerV5.ErrorSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5">JobTypeDetailsSerializerV5.ErrorSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer (class in job.serializers)</a>
 </li>
@@ -6598,7 +6616,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeFailedStatusSerializer">JobTypeFailedStatusSerializer (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeFailedStatusSerializer.ErrorSerializer">JobTypeFailedStatusSerializer.ErrorSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeFailedStatusSerializer.ErrorSerializerV5">JobTypeFailedStatusSerializer.ErrorSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeIDDetailsView">JobTypeIDDetailsView (class in job.views)</a>
 </li>
@@ -7286,7 +7304,7 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer">MetricsErrorDetailsSerializer (class in metrics.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer.ErrorBaseSerializer">MetricsErrorDetailsSerializer.ErrorBaseSerializer (class in metrics.serializers)</a>
+      <li><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer.ErrorBaseSerializerV6">MetricsErrorDetailsSerializer.ErrorBaseSerializerV6 (class in metrics.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsErrorManager">MetricsErrorManager (class in metrics.models)</a>
 </li>
@@ -8018,7 +8036,7 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5">NodeDetailsSerializerV4.JobExecutionSerializerV5 (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializer">NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializerV5">NodeDetailsSerializerV4.JobExecutionSerializerV5.ErrorBaseSerializerV5 (class in node.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializerV5.NodeBaseSerializerV4">NodeDetailsSerializerV4.JobExecutionSerializerV5.NodeBaseSerializerV4 (class in node.serializers_extra)</a>
 </li>
@@ -8060,7 +8078,7 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5">NodeStatusSerializer.JobExecutionSerializerV5 (class in node.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializer">NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializer (class in node.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializerV5">NodeStatusSerializer.JobExecutionSerializerV5.ErrorBaseSerializerV5 (class in node.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializerV5.NodeBaseSerializerV4">NodeStatusSerializer.JobExecutionSerializerV5.NodeBaseSerializerV4 (class in node.serializers_extra)</a>
 </li>
@@ -9866,7 +9884,7 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5">RecipeJobsSerializer.JobSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializer">RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializerV5">RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializerV5 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.TriggerEventBaseSerializer">RecipeJobsSerializer.JobSerializerV5.TriggerEventBaseSerializer (class in recipe.serializers)</a>
 </li>
@@ -10669,10 +10687,6 @@
 </li>
         <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.serializer_class">(diagnostic.views.QueueScaleRouletteView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.serializer_class">(error.views.ErrorDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.serializer_class">(error.views.ErrorsView attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestsView.serializer_class">(ingest.views.IngestsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansDetailsView.serializer_class">(ingest.views.ScansDetailsView attribute)</a>
@@ -10857,9 +10871,13 @@
 </li>
         <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.Test_get_job_error.setUp">(error.test.test_models.Test_get_job_error method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.setUp">(error.test.test_views.TestErrorDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.setUp">(error.test.test_views.TestErrorDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.setUp">(error.test.test_views.TestErrorsView method)</a>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.setUp">(error.test.test_views.TestErrorDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.setUp">(error.test.test_views.TestErrorsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV6.setUp">(error.test.test_views.TestErrorsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.setUp">(ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
@@ -12778,15 +12796,17 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.json.html#job.test.execution.configuration.json.test_exe_config.TestExecutionConfiguration.test_create_copy">test_create_copy() (job.test.execution.configuration.json.test_exe_config.TestExecutionConfiguration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_bad_category">test_create_error_bad_category() (error.test.test_views.TestErrorsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV6.test_create_error">test_create_error() (error.test.test_views.TestErrorsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_missing">test_create_error_missing() (error.test.test_views.TestErrorsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_create_error_bad_category">test_create_error_bad_category() (error.test.test_views.TestErrorsViewV5 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_create_error_missing">test_create_error_missing() (error.test.test_views.TestErrorsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.error.html#job.test.error.test_error.TestJobError.test_create_error_model">test_create_error_model() (job.test.error.test_error.TestJobError method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_success">test_create_error_success() (error.test.test_views.TestErrorsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_create_error_success">test_create_error_success() (error.test.test_views.TestErrorsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_system">test_create_error_system() (error.test.test_views.TestErrorsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_create_error_system">test_create_error_system() (error.test.test_views.TestErrorsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.configuration.html#batch.test.configuration.test_configuration.TestBatchDefinition.test_create_from_json">test_create_from_json() (batch.test.configuration.test_configuration.TestBatchDefinition method)</a>
 
@@ -13004,17 +13024,19 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition_and_trigger_rule">test_edit_definition_and_trigger_rule() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_edit_error_bad_category">test_edit_error_bad_category() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.test_edit_error">test_edit_error() (error.test.test_views.TestErrorDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_edit_error_change_system">test_edit_error_change_system() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_bad_category">test_edit_error_bad_category() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_change_system">test_edit_error_change_system() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_error_mapping">test_edit_error_mapping() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_edit_error_not_found">test_edit_error_not_found() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_not_found">test_edit_error_not_found() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_edit_error_success">test_edit_error_success() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_success">test_edit_error_success() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_edit_error_system">test_edit_error_system() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_system">test_edit_error_system() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_interface">test_edit_interface() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
@@ -13292,10 +13314,18 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobManager.test_get_details">test_get_details() (job.test.test_models.TestJobManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_get_error_not_found">test_get_error_not_found() (error.test.test_views.TestErrorDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_get_error_not_found">test_get_error_not_found() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.test_get_error_not_found">(error.test.test_views.TestErrorDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView.test_get_error_success">test_get_error_success() (error.test.test_views.TestErrorDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_get_error_success">test_get_error_success() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.test_get_error_success">(error.test.test_views.TestErrorDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_existing_jobs_to_queue">test_get_existing_jobs_to_queue() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks">test_get_initial_cleanup_tasks() (scheduler.test.node.test_manager.TestNodeManager method)</a>
@@ -14148,8 +14178,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_list_all">test_list_all() (recipe.test.test_views.TestRecipeTypesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_list_errors">test_list_errors() (error.test.test_views.TestErrorsView method)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_list_errors">test_list_errors() (error.test.test_views.TestErrorsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV6.test_list_errors">(error.test.test_views.TestErrorsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_bucket_not_found">test_list_objects_bucket_not_found() (util.test.test_aws.TestS3Client method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_empty_bucket">test_list_objects_empty_bucket() (util.test.test_aws.TestS3Client method)</a>
@@ -14672,12 +14706,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int">test_parse_int() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_accepted_all">test_parse_int_accepted_all() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_accepted_none">test_parse_int_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_default">test_parse_int_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_invalid">test_parse_int_invalid() (util.test.test_rest.TestRest method)</a>
@@ -16224,11 +16258,15 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_command.TestEnvironmentExpansion">TestEnvironmentExpansion (class in util.test.test_command)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsView">TestErrorDetailsView (class in error.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5">TestErrorDetailsViewV5 (class in error.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6">TestErrorDetailsViewV6 (class in error.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestErrorManager">TestErrorManager (class in error.test.test_models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView">TestErrorsView (class in error.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5">TestErrorsViewV5 (class in error.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV6">TestErrorsViewV6 (class in error.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.exceptions.TestException">TestException</a>
 </li>

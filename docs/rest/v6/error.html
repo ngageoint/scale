@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>v6 Scheduler Services &mdash; Scale 5.5.0-snapshot documentation</title>
+  <title>Error Services &mdash; Scale 5.5.0-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="v6 Scale File Services" href="scale_file.html" />
-    <link rel="prev" title="v6 Recipe Services" href="recipe.html" />
+    <link rel="next" title="v6 Ingest Services" href="ingest.html" />
+    <link rel="prev" title="v6 Diagnostic Services" href="diagnostic.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -101,17 +101,17 @@
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Error Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-list-errors">v6 List Errors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-error-details">v6 Error Details</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scheduler Services</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#v6-get-scheduler">v6 Get Scheduler</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#v6-update-scheduler">v6 Update Scheduler</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
@@ -168,13 +168,13 @@
         
           <li><a href="../index.html">REST API</a> &raquo;</li>
         
-      <li>v6 Scheduler Services</li>
+      <li>Error Services</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/rest/v6/scheduler.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rest/v6/error.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -187,39 +187,71 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="v6-scheduler-services">
-<span id="rest-v6-scheduler"></span><h1>v6 Scheduler Services<a class="headerlink" href="#v6-scheduler-services" title="Permalink to this headline">¶</a></h1>
-<p>These services provide access to information about the scheduler.</p>
-<div class="section" id="v6-get-scheduler">
-<span id="rest-v6-scheduler-details"></span><h2>v6 Get Scheduler<a class="headerlink" href="#v6-get-scheduler" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example GET /v6/scheduler/ API call</strong></p>
-<p>Request: GET <a class="reference external" href="http://.../v6/scheduler/">http://.../v6/scheduler/</a></p>
+  <div class="section" id="error-services">
+<span id="rest-v6-error"></span><h1>Error Services<a class="headerlink" href="#error-services" title="Permalink to this headline">¶</a></h1>
+<p>These services provide access to information about registered errors and error mappings.</p>
+<div class="section" id="v6-list-errors">
+<span id="rest-v6-error-list"></span><h2>v6 List Errors<a class="headerlink" href="#v6-list-errors" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/errors/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/errors/">http://.../v6/errors/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
-    <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;resource_level&quot;</span><span class="o">:</span> <span class="s1">&#39;GOOD&#39;</span><span class="p">,</span>
-    <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</div></blockquote>
+<div></div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
-<col width="17%" />
-<col width="1%" />
 <col width="16%" />
-<col width="66%" />
+<col width="15%" />
+<col width="8%" />
+<col width="60%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Get Scheduler</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Error List</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns data for the scheduler</td>
+<tr class="row-even"><td colspan="4">Returns a list of all errors.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/scheduler/</td>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/errors/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>is_builtin</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Return only errors matching the is_builtin flag</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only errors for job types with the given name (any version)</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only errors with the given name</td>
+</tr>
+<tr class="row-even"><td>category</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only errors with the specified category</td>
+</tr>
+<tr class="row-odd"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Include multiple times to multi-sort, (ex: order=name&amp;order=version).
+Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-name).</td>
 </tr>
 <tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -231,85 +263,133 @@
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2">is_paused</td>
-<td>Boolean</td>
-<td>True if the scheduler is paused. This functions like individually pausing
-all nodes but maintains separated state so toggling this back to unpaused
-results in the previous individual node pause state.</td>
-</tr>
-<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
-<td>The number of message handlers to have scheduled</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td colspan="2">resource_level</td>
-<td>String</td>
-<td>Describes the current resource level of scale. There are three valid values:
-TOO HIGH : Scale has more resources than required and can be scaled down
-TOO LOW : Scale needs more resources and should be scaled up
-GOOD : Scale has a good amount of resources</td>
+<tr class="row-odd"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<tr class="row-even"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-odd"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-v6-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.name</td>
 <td>String</td>
-<td>The logging level for all scale system components</td>
+<td colspan="2">The identifying name of the error used for queries.</td>
+</tr>
+<tr class="row-even"><td>.title</td>
+<td>String</td>
+<td colspan="2">The human readable display name of the error.</td>
+</tr>
+<tr class="row-odd"><td>.description</td>
+<td>String</td>
+<td colspan="2">A longer description of the error.</td>
+</tr>
+<tr class="row-even"><td>.job_type_name</td>
+<td>String</td>
+<td colspan="2">The name of the job type that relates to this error.</td>
+</tr>
+<tr class="row-odd"><td>.category</td>
+<td>String</td>
+<td colspan="2">The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].</td>
+</tr>
+<tr class="row-even"><td>.is_builtin</td>
+<td>Boolean</td>
+<td colspan="2">Whether the error was loaded during the installation process.</td>
+</tr>
+<tr class="row-odd"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section" id="v6-update-scheduler">
-<span id="rest-v6-scheduler-update"></span><h2>v6 Update Scheduler<a class="headerlink" href="#v6-update-scheduler" title="Permalink to this headline">¶</a></h2>
-<p><strong>Example PATCH /v6/scheduler/ API call</strong></p>
-<p>Request: PATCH <a class="reference external" href="http://.../v6/scheduler/">http://.../v6/scheduler/</a></p>
-<p>Response: 204 No content</p>
+<div class="section" id="v6-error-details">
+<span id="rest-v6-error-details"></span><h2>v6 Error Details<a class="headerlink" href="#v6-error-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/errors/{id}/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/errors">http://.../v6/errors</a>/{id}/</p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div></div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
-<col width="17%" />
-<col width="1%" />
 <col width="16%" />
-<col width="66%" />
+<col width="15%" />
+<col width="69%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Update Scheduler</strong></th>
+<tr class="row-odd"><th class="head" colspan="3"><strong>Error Details</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Update one or more fields for the scheduler.</td>
+<tr class="row-even"><td colspan="3">Returns the details for an error with the given id.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /v6/scheduler/</dt>
-<dd>All fields are optional and additional fields are not tolerated.</dd>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/errors/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="3"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td colspan="2">is_paused</td>
-<td>Boolean</td>
-<td>(Optional) True if the scheduler should be paused, false to resume</td>
-</tr>
-<tr class="row-odd"><td colspan="2">num_message_handlers</td>
-<td>Integer</td>
-<td>(Optional) The number of message handlers to have scheduled</td>
-</tr>
-<tr class="row-even"><td colspan="2">resource_level</td>
-<td>String</td>
-<td>(Optional) The current resource level of scale. There are three valid values:
-TOO HIGH : Scale has more resources than required and can be scaled down
-TOO LOW : Scale needs more resources and should be scaled up
-GOOD : Scale has a good amount of resources</td>
-</tr>
-<tr class="row-odd"><td colspan="2">system_logging_level</td>
-<td>String</td>
-<td>(Optional) The logging level sent to all scale system components.
-Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.
-Anything else will default to INFO</td>
-</tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="3">204 No content</td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model.</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>The identifying name of the error used for queries.</td>
+</tr>
+<tr class="row-even"><td>title</td>
+<td>String</td>
+<td>The human readable display name of the error.</td>
+</tr>
+<tr class="row-odd"><td>description</td>
+<td>String</td>
+<td>A longer description of the error.</td>
+</tr>
+<tr class="row-even"><td>job_type_name</td>
+<td>String</td>
+<td>The name of the job type that relates to this error.</td>
+</tr>
+<tr class="row-odd"><td>category</td>
+<td>String</td>
+<td>The category of the error. Choices: [SYSTEM, ALGORITHM, DATA].</td>
+</tr>
+<tr class="row-even"><td>is_builtin</td>
+<td>Boolean</td>
+<td>Whether the error was loaded during the installation process.</td>
+</tr>
+<tr class="row-odd"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-even"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was last saved.</td>
 </tr>
 </tbody>
 </table>
@@ -324,10 +404,10 @@ Anything else will default to INFO</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scale_file.html" class="btn btn-neutral float-right" title="v6 Scale File Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.html" class="btn btn-neutral float-right" title="v6 Ingest Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.html" class="btn btn-neutral" title="v6 Recipe Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="diagnostic.html" class="btn btn-neutral" title="v6 Diagnostic Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

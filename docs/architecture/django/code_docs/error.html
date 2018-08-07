@@ -962,23 +962,44 @@ object the first time, the query is executed.</p>
 <span id="error-serializers-module"></span><h2>error.serializers module<a class="headerlink" href="#module-error.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for errors</p>
 <dl class="class">
-<dt id="error.serializers.ErrorBaseSerializer">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="error.serializers.ErrorBaseSerializerV5">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="error.serializers.ErrorDetailsSerializer">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializer" title="error.serializers.ErrorSerializer"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializer</span></code></a></p>
+<dt id="error.serializers.ErrorBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="error.serializers.ErrorSerializer">
-<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorBaseSerializer" title="error.serializers.ErrorBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializer</span></code></a></p>
+<dt id="error.serializers.ErrorDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializerV5" title="error.serializers.ErrorSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializerV5</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorSerializerV6" title="error.serializers.ErrorSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorSerializerV6</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorSerializerV5">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorBaseSerializerV5" title="error.serializers.ErrorBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV5</span></code></a></p>
+<p>Converts error model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="error.serializers.ErrorSerializerV6">
+<em class="property">class </em><code class="descclassname">error.serializers.</code><code class="descname">ErrorSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.serializers.ErrorSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.serializers.ErrorBaseSerializerV6" title="error.serializers.ErrorBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">error.serializers.ErrorBaseSerializerV6</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
@@ -1019,6 +1040,12 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="error.views.ErrorDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="error.views.ErrorDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>error_id</em><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing error and returns the updated model</p>
@@ -1047,12 +1074,6 @@ object the first time, the query is executed.</p>
 <code class="descname">queryset</code><a class="headerlink" href="#error.views.ErrorDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="error.views.ErrorDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#error.views.ErrorDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ErrorDetailsSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1079,6 +1100,12 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="error.views.ErrorsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="error.views.ErrorsView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#error.views.ErrorsView.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new error and returns a link to the info URL</p>
@@ -1100,12 +1127,6 @@ object the first time, the query is executed.</p>
 <dt id="error.views.ErrorsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#error.views.ErrorsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="error.views.ErrorsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#error.views.ErrorsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ErrorSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
