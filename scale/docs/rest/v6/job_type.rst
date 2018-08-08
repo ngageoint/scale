@@ -21,6 +21,7 @@ Request: GET http://.../v6/job-types/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
         "count": 1, 
         "next": null, 
@@ -104,6 +105,7 @@ Request: GET http://.../v6/job-types/{name}/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
         "count": 2, 
         "next": null, 
@@ -210,6 +212,7 @@ Request: GET http://.../v6/job-types/{name}/{version}/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     { 
 		"id": 3, 
 		"name": "my-job", 
@@ -277,7 +280,7 @@ Response: 200 OK
 |                          |                   | (See :ref:`architecture_seed_manifest_spec`)                             | 
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | configuration            | JSON Object       | JSON description of the configuration for running the job                |
-|                          |                   | (See :ref:`rest_v6_job_type_configuration`)              		          |
+|                          |                   | (See :ref:`rest_v6_job_type_configuration`)                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -300,6 +303,7 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     {
       "count": 1,
       "next": null,
@@ -376,6 +380,7 @@ Request: GET http://.../v6/job-types/{name}/{version}/revisions/{revision_num}/
 Response: 200 OK
 
  .. code-block:: javascript  
+ 
     {
       "id": 3,
       "job_type": {
@@ -432,6 +437,7 @@ v6 Add Seed Image
 Request: POST http://.../v6/job-types/
 
  .. code-block:: javascript
+ 
      {
       "icon_code": "f1c5",
       "max_scheduled": 1,
@@ -565,6 +571,7 @@ Headers:
 Location http://.../v6/job-types/test/1.0.0/
 
  .. code-block:: javascript  
+ 
     { 
 		"id": 3, 
 		"name": "test", 
@@ -618,7 +625,7 @@ Location http://.../v6/job-types/test/1.0.0/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Body**           | JSON containing the details of the newly created batch, see :ref:`_rest_v6_job_type_details`       |
+| **Body**           | JSON containing the details of the newly created batch, see :ref:`rest_v6_job_type_details`        |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_job_type_validate:
@@ -631,6 +638,7 @@ v6 Validate Job Type
 Request: POST http://.../v6/job-types/validation/
 
  .. code-block:: javascript
+ 
      {
       "configuration": {
         "mounts": {
@@ -759,6 +767,7 @@ Request: POST http://.../v6/job-types/validation/
 Response: 200 OK
 
 .. code-block:: javascript
+
    {
       "is_valid": true,
       "errors": [],
@@ -811,7 +820,8 @@ v6 Edit Job Type
 
 Request: PATCH http://.../v6/job-types/test/1.0.0/
 
- .. code-block:: javascript  
+ .. code-block:: javascript
+ 
     {
       "icon_code": "012F",
       "is_active": true,
