@@ -12,12 +12,10 @@ from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
-from ingest.scan.scanners import factory
-from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '6'
+SCHEMA_VERSION = '1.0'
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -80,7 +78,7 @@ SCAN_CONFIGURATION_SCHEMA = {
 }
 
 
-class ScanConfigurationV6(object):
+class ScanConfigurationV1(object):
     """Represents the configuration for a running Scan instance. The configuration includes details about mounting the
     transfer directory, the suffix for identifying files still being transferred, and regular expressions to
     identify files to ingest and how to store them.
@@ -96,12 +94,9 @@ class ScanConfigurationV6(object):
         """
 
         self._configuration = configuration
-
-        # Convert old versions
-        if 'version' in self._configuration and self._configuration['version'] == '1.0':
-            self._configuration['version'] = '6'
+        
         if 'version' not in self._configuration:
-            self._configuration['version'] = '6'
+            self._configuration['version'] = '1.0'
 
         try:
             if do_validate:
@@ -149,7 +144,7 @@ class ScanConfigurationV6(object):
         config.workspace        = self._configuration['workspace']
 
         return config
-        
+
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
 
@@ -168,10 +163,7 @@ class ScanConfigurationV6(object):
         :rtype: dict
         """
 
-        config = configuration
-        if 'version' in config and config['version'] == '1.0':
-            config['version'] = '6'
-        return config
+        raise NotImplementedError
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
