@@ -201,6 +201,13 @@ class JobResults(object):
                             product_file_meta.geojson = metadata.get_data()
                             product_file_meta.data_start = metadata.get_properties('dataStarted')
                             product_file_meta.data_end = metadata.get_properties('dataEnded')
+
+                            product_file_meta.source_started = metadata.get_properties('sourceStarted')
+                            product_file_meta.source_ended = metadata.get_properties('sourceEnded')
+                            product_file_meta.source_sensor_class = metadata.get_properties('sourceSensorClass')
+                            product_file_meta.source_sensor = metadata.get_properties('sourceSensor')
+                            product_file_meta.source_collection = metadata.get_properties('sourceCollection')
+                            product_file_meta.source_task = metadata.get_properties('sourceTask')
                         except InvalidSeedMetadataDefinition:
                             logger.exception()
 
