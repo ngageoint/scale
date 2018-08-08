@@ -116,7 +116,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.clock">job.clock module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.deprecation">job.deprecation module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#job-errors-module">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.serializers">job.serializers module</a></li>
@@ -853,8 +853,41 @@ Seed compliant interfaces.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="job-errors-module">
-<h2>job.errors module<a class="headerlink" href="#job-errors-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-job.errors">
+<span id="job-errors-module"></span><h2>job.errors module<a class="headerlink" href="#module-job.errors" title="Permalink to this headline">¶</a></h2>
+<p>Defines functions for getting basic job errors</p>
+<dl class="function">
+<dt id="job.errors.get_invalid_manifest_error">
+<code class="descclassname">job.errors.</code><code class="descname">get_invalid_manifest_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.errors.get_invalid_manifest_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for invalid results manifest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The invalid results error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.errors.get_missing_output_error">
+<code class="descclassname">job.errors.</code><code class="descname">get_missing_output_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.errors.get_missing_output_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error for missing a required output</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The missing output error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.exceptions">
 <span id="job-exceptions-module"></span><h2>job.exceptions module<a class="headerlink" href="#module-job.exceptions" title="Permalink to this headline">¶</a></h2>

@@ -204,7 +204,24 @@
 <p>Request: GET <a class="reference external" href="http://.../v6/job-types/">http://.../v6/job-types/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple job type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_versions&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;latest_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -319,7 +336,35 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/job-types">http://.../v6/job-types</a>/{name}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple job type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -458,7 +503,136 @@ same time. May be null.</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/job-types">http://.../v6/job-types</a>/{name}/{version}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;A simple job type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="16%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Retrieve Job Type Details</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns job type details.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /v6/job-types/{name}/{version}/</dt>
+<dd>Where {name} is the name of the job type and {version} is its version</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="2">200 OK</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="2"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model.</td>
+</tr>
+<tr class="row-odd"><td>name</td>
+<td>String</td>
+<td>The name of the job type.</td>
+</tr>
+<tr class="row-even"><td>version</td>
+<td>String</td>
+<td>The version number for this version of the job type.</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>String</td>
+<td>The human readable display name for this version of the job type.</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>String</td>
+<td>A longer description of this version of the job type.</td>
+</tr>
+<tr class="row-odd"><td>icon_code</td>
+<td>String</td>
+<td>A font-awesome icon code to use when representing this job type version.</td>
+</tr>
+<tr class="row-even"><td>is_active</td>
+<td>Boolean</td>
+<td>Whether this job type is active or deprecated.</td>
+</tr>
+<tr class="row-odd"><td>is_paused</td>
+<td>Boolean</td>
+<td>Whether the job type is paused (while paused no jobs of this type will
+be scheduled off of the queue).</td>
+</tr>
+<tr class="row-even"><td>is_system</td>
+<td>Boolean</td>
+<td>Whether this is a system type.</td>
+</tr>
+<tr class="row-odd"><td>max_scheduled</td>
+<td>Ingeger</td>
+<td>Maximum  number of jobs of this type that may be scheduled to run at the
+same time. May be null.</td>
+</tr>
+<tr class="row-even"><td>revision_num</td>
+<td>Ingeger</td>
+<td>The number of versions of this job type.</td>
+</tr>
+<tr class="row-odd"><td>docker_image</td>
+<td>String</td>
+<td>The Docker image containing the code to run for this job.</td>
+</tr>
+<tr class="row-even"><td>manifest</td>
+<td>String</td>
+<td>Seed manifest describing Job, interface and requirements.
+(See <span class="xref std std-ref">architecture_seed_manifest_spec</span>)</td>
+</tr>
+<tr class="row-odd"><td>configuration</td>
+<td>JSON Object</td>
+<td>JSON description of the configuration for running the job
+(See <a class="reference internal" href="#rest-v6-job-type-configuration"><span class="std std-ref">Job Configuration JSON</span></a>)</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>deprecated</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job type was last deprecated (archived).</td>
+</tr>
+<tr class="row-even"><td>paused</td>
+<td>ISO-8601 Datetime</td>
+<td>When the job type was last paused.</td>
+</tr>
+<tr class="row-odd"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td>When the associated database model was last saved.</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section" id="v6-job-type-revisions">
 <span id="rest-v6-job-type-revisions"></span><h2>v6 Job Type Revisions<a class="headerlink" href="#v6-job-type-revisions" title="Permalink to this headline">¶</a></h2>
@@ -466,7 +640,30 @@ same time. May be null.</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/job-types">http://.../v6/job-types</a>/{name}/{version}/revisions/</p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first job&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My very first job&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;012F&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;num_versions&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;latest_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -557,7 +754,24 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
 <p>Request: GET <a class="reference external" href="http://.../v6/job-types">http://.../v6/job-types</a>/{name}/{version}/revisions/{revision_num}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My first job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My very first job&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;012F&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;num_versions&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;latest_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="22%" />
@@ -620,12 +834,163 @@ Defaults to 100, and can be anywhere from 1-1000.</td>
 <p><strong>Example POST /v6/job-types/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/job-types/">http://.../v6/job-types/</a></p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span> <span class="p">{</span>
+  <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;test-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;MOUNT_PATH&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/path/on/host&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;DB_HOST&quot;</span><span class="o">:</span> <span class="s2">&quot;som.host.name&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;DB_PASS&quot;</span><span class="o">:</span> <span class="s2">&quot;secret_password&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;seedVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;jobVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;packageVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Job to demonstrate job type APIs&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads input file and spit out specified number of bytes as output&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;tags&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job&quot;</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">3600</span><span class="p">,</span>
+      <span class="s2">&quot;maintainer&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;email&quot;</span><span class="o">:</span> <span class="s2">&quot;jdoe@example.com&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;organization&quot;</span><span class="o">:</span> <span class="s2">&quot;E-corp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phone&quot;</span><span class="o">:</span> <span class="s2">&quot;666-555-4321&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.example.com&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;code&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;There was a problem with input data&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Data Issue discovered&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;code&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Expected environment not provided&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Missing environment&quot;</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;${INPUT_TEXT} ${INPUT_FILES} ${READ_LENGTH}&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;mediaTypes&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;text/plain&quot;</span>
+              <span class="p">],</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;INPUT_TEXT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;partial&quot;</span><span class="o">:</span> <span class="kc">true</span>
+            <span class="p">}</span>
+          <span class="p">],</span>
+          <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READ_LENGTH&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="s2">&quot;ro&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MOUNT_PATH&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/container/path&quot;</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;mediaType&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;OUTPUT_TEXT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;pattern&quot;</span><span class="o">:</span> <span class="s2">&quot;output_text.txt&quot;</span>
+            <span class="p">}</span>
+          <span class="p">],</span>
+          <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;TOTAL_INPUT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;total_input&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_HOST&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret&quot;</span><span class="o">:</span> <span class="kc">false</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret&quot;</span><span class="o">:</span> <span class="kc">true</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;scalar&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;cpus&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mf">1.5</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;mem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">244</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;sharedMem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">1</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;inputMultiplier&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;disk&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">11</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <p>Response: 201 CREATED
 Headers:
 Location <a class="reference external" href="http://.../v6/job-types/test/1.0.0/">http://.../v6/job-types/test/1.0.0/</a></p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Job to demonstrate job type APIs&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads input file and spit out specified number of bytes as output&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f1c5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;docker_image&quot;</span><span class="o">:</span> <span class="s2">&quot;test-1.0.0-seed:1.0.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -688,7 +1053,7 @@ scheduled to run at the same time.</td>
 <td colspan="4"><em>application/json</em></td>
 </tr>
 <tr class="row-odd"><td><strong>Body</strong></td>
-<td colspan="4">JSON containing the details of the newly created batch, see <span class="xref std std-ref">_rest_v6_job_type_details</span></td>
+<td colspan="4">JSON containing the details of the newly created batch, see <a class="reference internal" href="#rest-v6-job-type-details"><span class="std std-ref">v6 Job Type Details</span></a></td>
 </tr>
 </tbody>
 </table>
@@ -698,8 +1063,141 @@ scheduled to run at the same time.</td>
 <p><strong>Example POST /v6/job-types/validation/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/job-types/validation/">http://.../v6/job-types/validation/</a></p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span> <span class="p">{</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;MOUNT_PATH&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/path/on/host&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;DB_HOST&quot;</span><span class="o">:</span> <span class="s2">&quot;som.host.name&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;DB_PASS&quot;</span><span class="o">:</span> <span class="s2">&quot;secret_password&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;manifest&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;seedVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;jobVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;packageVersion&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Job to demonstrate job type APIs&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Reads input file and spit out specified number of bytes as output&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;tags&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="s2">&quot;sample&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;job&quot;</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">3600</span><span class="p">,</span>
+      <span class="s2">&quot;maintainer&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;email&quot;</span><span class="o">:</span> <span class="s2">&quot;jdoe@example.com&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;John Doe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;organization&quot;</span><span class="o">:</span> <span class="s2">&quot;E-corp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;phone&quot;</span><span class="o">:</span> <span class="s2">&quot;666-555-4321&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://www.example.com&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;code&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;There was a problem with input data&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Data Issue discovered&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;code&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+          <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Expected environment not provided&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Missing environment&quot;</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;${INPUT_TEXT} ${INPUT_FILES} ${READ_LENGTH}&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;mediaTypes&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;text/plain&quot;</span>
+              <span class="p">],</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;INPUT_TEXT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;partial&quot;</span><span class="o">:</span> <span class="kc">true</span>
+            <span class="p">}</span>
+          <span class="p">],</span>
+          <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READ_LENGTH&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="s2">&quot;ro&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MOUNT_PATH&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/container/path&quot;</span>
+          <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;files&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;mediaType&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;OUTPUT_TEXT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;pattern&quot;</span><span class="o">:</span> <span class="s2">&quot;output_text.txt&quot;</span>
+            <span class="p">}</span>
+          <span class="p">],</span>
+          <span class="s2">&quot;json&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+              <span class="s2">&quot;key&quot;</span><span class="o">:</span> <span class="s2">&quot;TOTAL_INPUT&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;total_input&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;integer&quot;</span>
+            <span class="p">}</span>
+          <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_HOST&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret&quot;</span><span class="o">:</span> <span class="kc">false</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_PASS&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret&quot;</span><span class="o">:</span> <span class="kc">true</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;scalar&quot;</span><span class="o">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;cpus&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mf">1.5</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;mem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">244</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;sharedMem&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">1</span>
+          <span class="p">},</span>
+          <span class="p">{</span>
+            <span class="s2">&quot;inputMultiplier&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;disk&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="mi">11</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <p>Response: 200 OK</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;is_valid&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[],</span>
+   <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;EXAMPLE_WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is an example warning.&quot;</span><span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
@@ -776,7 +1274,27 @@ and <em>description</em> string fields.</td>
 <p><strong>Example PATCH /v6/job-types/{name}/{version}/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/job-types/test/1.0.0/">http://.../v6/job-types/test/1.0.0/</a></p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;012F&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="s2">&quot;max_scheduled&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;MOUNT_PATH&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/path/on/host&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;DB_HOST&quot;</span><span class="o">:</span> <span class="s2">&quot;som.host.name&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;DB_PASS&quot;</span><span class="o">:</span> <span class="s2">&quot;secret_password&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <p>Response: 204 No Content</p>
 <table border="1" class="docutils">
 <colgroup>
