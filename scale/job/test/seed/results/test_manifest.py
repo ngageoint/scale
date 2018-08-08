@@ -4,7 +4,7 @@ import django
 from django.test import TransactionTestCase
 
 
-class TestSeedManifest(TransactionTestCase):
+class TestSeedJobResults(TransactionTestCase):
     """Tests functions in the manifest module."""
 
     def setUp(self):
