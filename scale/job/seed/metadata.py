@@ -61,25 +61,33 @@ class SeedMetadata(object):
             raise InvalidSeedMetadataDefinition('UNSUPPORTED_GEOJSON', 'Scale does not process GeoJSON '
                                                                        'FeatureCollection or GeometryCollection type')
         # Ensure we never have to deal with anything but sanitized Feature GeoJSON objects
-        if metadata['type'] is not 'Feature':
+        if metadata['type'] != 'Feature':
             self._data['geometry'] = metadata
 
         return self
 
-    def get_properties(self):
+    @property
+    def properties(self):
         """Retrieves a valid properties dictionary
 
         :return: Properties found within metadata file
         :rtype: dict
         """
 
-        return self._data.get('properties', {})
+        self._data.setdefault('properties', {})
+        if self._data['properties'] is None:
+            self._data['properties'] = {}
 
+        return self._data['properties']
 
-    def get_data(self):
+    @property
+    def data(self):
         """Retrieves the internal dictionary of GeoJSON"""
 
         return deepcopy(self._data)
 
-    def set_properties(self, key, value):
-        self._data['properties'] = self.get_properties()[key] = value
+    def get_property(self, key):
+        return self.properties.get('key')
+
+    def set_property(self, key, value):
+        self.properties[key] = value
