@@ -14,6 +14,7 @@ from django.utils.timezone import now
 
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
+from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6

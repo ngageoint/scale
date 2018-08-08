@@ -317,7 +317,7 @@ components:
           description: The type is a required string that specifies the type of the scanner to use. |
             The other fields that configure the scanner are based upon the type of the scanner in the type field. |
             Certain scanner types may only be used on workspaces with corresponding broker types. The valid scanner types are dir and s3
-          example: dir-watcher
+          example: dir
         transfer_suffix:
           type: string
           description: The transfer_suffix field is an optional string that defines a suffix that is |

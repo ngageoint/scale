@@ -1105,7 +1105,7 @@ class TestScansValidationViewV6(TestCase):
             'configuration': {
                 'version': '1.0',
                 'workspace': self.workspace.name,
-                'scanner': {'type': 'dir-watcher'},
+                'scanner': {'type': 'dir'},
                 'files_to_ingest': [{
                     'filename_regex': '.*txt'
                 }],
