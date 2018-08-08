@@ -1,18 +1,18 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TransactionTestCase
+from django.test import TestCase
 from job.seed.exceptions import InvalidSeedMetadataDefinition
 from job.seed.metadata import SeedMetadata
 
 
-class TestSeedMetadata(TransactionTestCase):
+class TestSeedMetadata(TestCase):
     """Tests functions in the manifest module."""
 
     def setUp(self):
         django.setup()
 
-    def metadata_from_json_feature(self):
+    def test_metadata_from_json_feature(self):
         json = {
             'type': 'Feature',
             'geometry': None,
@@ -22,7 +22,7 @@ class TestSeedMetadata(TransactionTestCase):
         object = SeedMetadata.metadata_from_json(json)
         self.assertEquals(object.get_data(), json)
 
-    def metadata_from_json_geometry(self):
+    def test_metadata_from_json_geometry(self):
         json = {
             'type': 'Point',
             'coordinates': [0,0]
@@ -34,7 +34,7 @@ class TestSeedMetadata(TransactionTestCase):
         self.assertIn('properties', object.get_data())
         self.assertEquals(json, object.get_data()['geometry'])
 
-    def metadata_from_json_feature_collection(self):
+    def test_metadata_from_json_feature_collection(self):
         json = {
             'type': 'FeatureCollection',
             'features': []
@@ -45,7 +45,7 @@ class TestSeedMetadata(TransactionTestCase):
 
             self.assertContains('UNSUPPORTED_GEOJSON', ex)
 
-    def metadata_from_json_geometry_collection(self):
+    def test_metadata_from_json_geometry_collection(self):
         json = {
             'type': 'GeometryCollection',
             'geometry': None
@@ -56,7 +56,7 @@ class TestSeedMetadata(TransactionTestCase):
 
             self.assertContains('UNSUPPORTED_GEOJSON', ex)
 
-    def metadata_from_json_invalid_geojson(self):
+    def test_metadata_from_json_invalid_geojson(self):
         json = {
             'type': 'Invalid'
         }
