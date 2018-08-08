@@ -598,6 +598,12 @@ class ScaleFile(models.Model):
     meta_data = django.contrib.postgres.fields.JSONField(default=dict)
     countries = models.ManyToManyField(CountryData)
 
+    # Supplemental sensor metadata fields
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
+
     # Source file fields
     is_parsed = models.BooleanField(default=False)
     parsed = models.DateTimeField(blank=True, null=True)
