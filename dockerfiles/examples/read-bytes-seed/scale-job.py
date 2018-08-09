@@ -1,4 +1,5 @@
 import argparse
+import datetime
 import json
 import logging
 import sys
@@ -23,6 +24,7 @@ def run_algorithm(bytes_total, input_file, out_dir):
     logging.info('Reading %s bytes from %s and storing at %s.' % (bytes_total, input_file, out_dir))
 
     base_path = os.path.join(out_dir, 'output_file')
+    start = datetime.datetime.utcnow().isoformat()
     os.makedirs(base_path)
     output_file = os.path.join(base_path, os.path.basename(input_file))
     logging.info('Data being stored in %s' % output_file)
@@ -40,6 +42,22 @@ def run_algorithm(bytes_total, input_file, out_dir):
                 bytes_read += chunk_size
 
     logging.info('Copy complete')
+
+    end = datetime.datetime.utcnow().isoformat()
+
+    # Output metadata file for testing capture
+    metadata = {
+        'type': 'Feature',
+        'geometry': None,
+        'properties':
+            {
+                'dataStarted': start,
+                'dataEnded': end
+            }
+    }
+
+    with open(output_file + '.metadata.json', 'w') as outfile:
+        json.dump(metadata, outfile)
 
     return output_file
 
