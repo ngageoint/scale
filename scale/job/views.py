@@ -343,7 +343,7 @@ class JobTypesView(ListCreateAPIView):
                                                  is_paused=None, max_scheduled=max_scheduled,
                                                  configuration=configuration)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
-                logger.exception('Unable to update job type: %i', job_type.id)
+                logger.exception('Unable to update job type: %i', existing_job_type.id)
                 raise BadParameter(unicode(ex))
 
         # Fetch the full job type with details

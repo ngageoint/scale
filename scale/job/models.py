@@ -2468,8 +2468,8 @@ class JobTypeManager(models.Manager):
         job_type.version = manifest.get_job_version()
         job_type.title = manifest.get_title()
         job_type.description = manifest.get_description()
-        job_type.author_name = manifest.get_maintainer()['name']
-        job_type.author_url = manifest.get_maintainer()['url']
+        job_type.author_name = manifest.get_maintainer().get('name')
+        job_type.author_url = manifest.get_maintainer().get('url')
         job_type.manifest = manifest.get_dict()
         job_type.docker_image = docker_image
 
