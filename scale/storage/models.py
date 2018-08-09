@@ -588,17 +588,20 @@ class ScaleFile(models.Model):
     deleted = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
+    meta_data = django.contrib.postgres.fields.JSONField(default=dict)
+
     # Optional geospatial fields
-    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
-    meta_data = django.contrib.postgres.fields.JSONField(default=dict)
     countries = models.ManyToManyField(CountryData)
 
+    # Optional temporal fields
+    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+
     # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
     source_sensor = models.TextField(blank=True, null=True, db_index=True)
     source_collection = models.TextField(blank=True, null=True, db_index=True)

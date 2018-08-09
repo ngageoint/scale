@@ -63,6 +63,8 @@ class SeedMetadata(object):
         # Ensure we never have to deal with anything but sanitized Feature GeoJSON objects
         if metadata['type'] != 'Feature':
             self._data['geometry'] = metadata
+        else:
+            self._data = metadata
 
         return self
 
@@ -87,7 +89,7 @@ class SeedMetadata(object):
         return deepcopy(self._data)
 
     def get_property(self, key):
-        return self.properties.get('key')
+        return self.properties.get(key)
 
     def set_property(self, key, value):
         self.properties[key] = value

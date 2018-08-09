@@ -198,16 +198,16 @@ class JobResults(object):
                             metadata = SeedMetadata.metadata_from_json(json.load(metadata_file_handle))
 
                             # Property keys per #1160
-                            product_file_meta.geojson = metadata.get_data()
-                            product_file_meta.data_start = metadata.get_properties('dataStarted')
-                            product_file_meta.data_end = metadata.get_properties('dataEnded')
+                            product_file_meta.geojson = metadata.data
+                            product_file_meta.data_start = metadata.get_property('dataStarted')
+                            product_file_meta.data_end = metadata.get_property('dataEnded')
 
-                            product_file_meta.source_started = metadata.get_properties('sourceStarted')
-                            product_file_meta.source_ended = metadata.get_properties('sourceEnded')
-                            product_file_meta.source_sensor_class = metadata.get_properties('sourceSensorClass')
-                            product_file_meta.source_sensor = metadata.get_properties('sourceSensor')
-                            product_file_meta.source_collection = metadata.get_properties('sourceCollection')
-                            product_file_meta.source_task = metadata.get_properties('sourceTask')
+                            product_file_meta.source_started = metadata.get_property('sourceStarted')
+                            product_file_meta.source_ended = metadata.get_property('sourceEnded')
+                            product_file_meta.source_sensor_class = metadata.get_property('sourceSensorClass')
+                            product_file_meta.source_sensor = metadata.get_property('sourceSensor')
+                            product_file_meta.source_collection = metadata.get_property('sourceCollection')
+                            product_file_meta.source_task = metadata.get_property('sourceTask')
                         except InvalidSeedMetadataDefinition:
                             logger.exception()
 
