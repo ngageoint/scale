@@ -110,13 +110,15 @@ class ScanConfiguration(object):
         
         self.scanner_type = ''
         
-        self.scanner_confg = {}
+        self.scanner_config = {}
         
         self.recursive = True
 
         self.file_handler = FileHandler()
         
         self.workspace = ''
+        
+        self.config_dict = {}
 
     def get_scanner(self):
         """Returns the configured scanner for this Scan configuration
@@ -148,7 +150,7 @@ class ScanConfiguration(object):
         # Only load configuration if scanner type is unchanged
         if self.scanner_type == scanner.scanner_type:
             scanner.setup_workspaces(self.workspace, self.file_handler)
-            scanner.load_configuration(self.scanner_confg)
+            scanner.load_configuration(self.scanner_config)
             scanner.set_recursive(self.recursive)
         else:
             msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'

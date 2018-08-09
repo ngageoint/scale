@@ -40,18 +40,7 @@ Response: 200 OK
                     "job_type_rev": { 
                         "id": 2 
                     }, 
-                    "event": { 
-                        "id": 1 
-                    }, 
-                    "node": { 
-                        "id": 1 
-                    }, 
-                    "error": { 
-                        "id": 1 
-                    }, 
-                    "status": "RUNNING", 
-                    "priority": 10, 
-                    "num_exes": 1 
+                    "status": "RUNNING"
                 },
                 "dry_run_job": { 
                     "id": 6, 
@@ -63,21 +52,7 @@ Response: 200 OK
                         "revision_num": 1,
                         "icon_code": "f0e7" 
                     }, 
-                    "job_type_rev": { 
-                        "id": 1 
-                    }, 
-                    "event": { 
-                        "id": 1 
-                    }, 
-                    "node": { 
-                        "id": 1 
-                    }, 
-                    "error": { 
-                        "id": 1 
-                    }, 
-                    "status": "RUNNING", 
-                    "priority": 10, 
-                    "num_exes": 1 
+                    "status": "RUNNING"
                 },
                "created": "2015-03-11T00:00:00Z",
                "last_modified": "2015-03-11T00:00:00Z"
@@ -198,21 +173,7 @@ Location http://.../v6/scans/105/
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "dry_run_job": { 
            "id": 6, 
@@ -224,21 +185,7 @@ Location http://.../v6/scans/105/
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
@@ -312,21 +259,7 @@ Response: 200 OK
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "dry_run_job": { 
            "id": 6, 
@@ -338,21 +271,7 @@ Response: 200 OK
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",
@@ -543,7 +462,7 @@ Request: POST http://.../v6/scans/{id}/process/
     "ingest": true 
   } 
 
-Response: 201 OK
+Response: 200 OK
 Headers:
 Location http://.../v6/scans/105/process/
 
@@ -565,21 +484,7 @@ Location http://.../v6/scans/105/process/
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "dry_run_job": { 
            "id": 6, 
@@ -591,21 +496,7 @@ Location http://.../v6/scans/105/process/
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",

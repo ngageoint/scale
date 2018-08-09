@@ -77,6 +77,19 @@ SCAN_CONFIGURATION_SCHEMA = {
     }
 }
 
+def convert_config_to_v1_json(config):
+    """Returns the v1 scan configuration JSON for the given configuration
+
+    :param config: The scan configuration
+    :type config: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
+    :returns: The v1 scan configuration JSON
+    :rtype: :class:`ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6`
+    """
+
+    config_dict = config.config_dict
+    config_dict['version'] = SCHEMA_VERSION
+
+    return ScanConfigurationV1(configuration=config_dict, do_validate=False)
 
 class ScanConfigurationV1(object):
     """Represents the configuration for a running Scan instance. The configuration includes details about mounting the
@@ -138,10 +151,11 @@ class ScanConfigurationV1(object):
         config = ScanConfiguration()
         
         config.scanner_type     = self._configuration['scanner']['type']
-        config.scanner_confg    = self._configuration['scanner']
+        config.scanner_config   = self._configuration['scanner']
         config.recursive        = self._configuration['recursive']
         config.file_handler     = self._file_handler
         config.workspace        = self._configuration['workspace']
+        config.config_dict      = self._configuration
 
         return config
 

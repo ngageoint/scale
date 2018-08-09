@@ -641,7 +641,7 @@ class ScanManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_scan(self, name, title, description, configuration, dry_run=True):
+    def create_scan(self, name, title, description, configuration):
         """Creates a new Scan process with the given configuration and returns 
         the new Scan model. All changes to the database will occur in an atomic transaction.
 
@@ -652,9 +652,7 @@ class ScanManager(models.Manager):
         :param description: A description of this Scan process
         :type description: string
         :param configuration: The Scan configuration
-        :type configuration: dict
-        :param dry_run: Whether the scan will execute as a dry run
-        :type dry_run: bool
+        :type configuration: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
         :returns: The new Scan process
         :rtype: :class:`ingest.models.Scan`
 
@@ -663,14 +661,13 @@ class ScanManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        config = ScanConfiguration(configuration)
-        config.validate()
+        configuration.validate()
 
         scan = Scan()
         scan.name = name
         scan.title = title
         scan.description = description
-        scan.configuration = config.get_dict()
+        scan.configuration = configuration.config_dict
         scan.save()
 
         return scan
@@ -686,8 +683,8 @@ class ScanManager(models.Manager):
         :type title: string
         :param description: A description of this Scan process
         :type description: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
+        :param configuration: The Scan process configuration
+        :type configuration: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
 
         :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
             invalid.
@@ -700,9 +697,8 @@ class ScanManager(models.Manager):
 
         # Validate the configuration, no exception is success
         if configuration:
-            config = ScanConfiguration(configuration)
-            config.validate()
-            scan.configuration = config.get_dict()
+            configuration.validate()
+            scan.configuration = configuration.config_dict
 
         # Update editable fields
         if title:
@@ -822,7 +818,7 @@ class ScanManager(models.Manager):
         warnings = []
 
         try:
-            config = ScanConfigurationV6(configuration)
+            config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
             warnings = config.validate()
         except InvalidScanConfiguration as ex:
             is_valid = False
@@ -880,16 +876,27 @@ class Scan(models.Model):
         :rtype: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
         """
 
-        return ScanConfiguration(self.configuration)
+        return ScanConfigurationV6(self.configuration).get_configuration()
 
-    def get_scan_configuration_as_dict(self):
-        """Returns the configuration for this Scan process as a dict
+    def get_v1_configuration_json(self):
+        """Returns the scan configuration in v1 of the JSON schema
 
-        :returns: The configuration for this Scan process
+        :returns: The scan configuration in v1 of the JSON schema
         :rtype: dict
         """
 
-        return self.get_scan_configuration().get_dict()
+        #schemas are identical except for version number, just return dict with version stripped
+        return rest_utils.strip_schema_version(self.configuration)
+
+    def get_v6_configuration_json(self):
+        """Returns the scan configuration in v6 of the JSON schema
+
+        :returns: The scan configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        #schemas are identical except for version number, just return dict with version stripped
+        return rest_utils.strip_schema_version(self.configuration)
 
     class Meta(object):
         """meta information for database"""

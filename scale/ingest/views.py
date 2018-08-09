@@ -15,8 +15,11 @@ import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.scan.configuration.json.configuration_1_0 import ScanConfigurationV1
+from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.serializers import (IngestDetailsSerializerV5, IngestDetailsSerializerV6, IngestSerializer, IngestStatusSerializerV5, IngestStatusSerializerV6,
-                                ScanSerializer, StrikeSerializerV5, StrikeSerializerV6, ScanDetailsSerializer, StrikeDetailsSerializerV5, StrikeDetailsSerializerV6)
+                                ScanSerializerV5, ScanSerializerV6, ScanDetailsSerializerV5, ScanDetailsSerializerV6,
+                                StrikeSerializerV5, StrikeSerializerV6, StrikeDetailsSerializerV5, StrikeDetailsSerializerV6)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
@@ -218,7 +221,14 @@ class IngestsStatusView(ListAPIView):
 class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
-    serializer_class = ScanDetailsSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScanDetailsSerializerV6
+        else:
+            return ScanDetailsSerializerV5
 
     def post(self, request, scan_id=None):
         """Launches a scan to ingest from an existing scan model instance
@@ -283,12 +293,19 @@ class ScansProcessView(GenericAPIView):
 
         serializer = self.get_serializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=dict(location=scan_url))
 
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
     queryset = Scan.objects.all()
-    serializer_class = ScanSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScanSerializerV6
+        else:
+            return ScanSerializerV5
 
     def list(self, request):
         """Retrieves the list of all Scan process and returns it in JSON form
@@ -385,13 +402,19 @@ class ScansView(ListCreateAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
-
+        
+        config = None
         try:
-            scan = Scan.objects.create_scan(name, title, description, configuration)
+            config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
 
-        serializer = ScanDetailsSerializer(scan)
+        try:
+            scan = Scan.objects.create_scan(name, title, description, config)
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+
+        serializer = ScanDetailsSerializerV5(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
         
@@ -409,19 +432,32 @@ class ScansView(ListCreateAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration')
 
+        config = None
         try:
-            scan = Scan.objects.create_scan(name, title, description, configuration)
+            config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            
+        try:
+            scan = Scan.objects.create_scan(name, title, description, config)
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
 
-        serializer = ScanDetailsSerializer(scan)
+        serializer = ScanDetailsSerializerV6(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
 
 class ScansDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a Scan process."""
     queryset = Scan.objects.all()
-    serializer_class = ScanDetailsSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScanDetailsSerializerV6
+        else:
+            return ScanDetailsSerializerV5
 
     def get(self, request, scan_id):
         """Retrieves the details for a Scan process and return them in JSON form
@@ -516,8 +552,14 @@ class ScansDetailsView(GenericAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration', required=False)
 
+        config = None
         try:
-            Scan.objects.edit_scan(scan_id, title, description, configuration)
+            config = ScanConfigurationV1(configuration, do_validate=True).get_configuration()
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            
+        try:
+            Scan.objects.edit_scan(scan_id, title, description, config)
 
             scan = Scan.objects.get_details(scan_id)
         except Scan.DoesNotExist:
@@ -544,8 +586,14 @@ class ScansDetailsView(GenericAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         configuration = rest_util.parse_dict(request, 'configuration', required=False)
 
+        config = None
         try:
-            Scan.objects.edit_scan(scan_id, title, description, configuration)
+            config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+            
+        try:
+            Scan.objects.edit_scan(scan_id, title, description, config)
 
             scan = Scan.objects.get_details(scan_id)
         except Scan.DoesNotExist:
@@ -593,7 +641,7 @@ class ScansValidationView(APIView):
 
         # Validate the Scan configuration
         try:
-            config = ScanConfiguration(configuration)
+            config = ScanConfigurationV1(configuration).get_configuration()
             warnings = config.validate()
         except InvalidScanConfiguration as ex:
             logger.exception('Unable to validate Scan configuration.')

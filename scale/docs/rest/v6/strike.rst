@@ -36,21 +36,7 @@ Response: 200 OK
                         "revision_num": 1,
                         "icon_code": "f0e7" 
                     }, 
-                    "job_type_rev": { 
-                        "id": 2 
-                    }, 
-                    "event": { 
-                        "id": 1 
-                    }, 
-                    "node": { 
-                        "id": 1 
-                    }, 
-                    "error": { 
-                        "id": 1 
-                    }, 
-                    "status": "RUNNING", 
-                    "priority": 10, 
-                    "num_exes": 1 
+                    "status": "RUNNING"
                 },
                 "created": "2015-03-11T00:00:00Z",
                 "last_modified": "2015-03-11T00:00:00Z"
@@ -165,21 +151,7 @@ Location http://.../v6/strikes/105/
                 "revision_num": 1,
                 "icon_code": "f0e7" 
             }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-            "status": "RUNNING", 
-            "priority": 10, 
-            "num_exes": 1 
+            "status": "RUNNING"
         }, 
         "created": "2015-03-11T00:00:00Z",
         "last_modified": "2015-03-11T00:00:00Z",
@@ -252,21 +224,7 @@ Response: 200 OK
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
+           "status": "RUNNING"
        },
        "created": "2015-03-11T00:00:00Z",
        "last_modified": "2015-03-11T00:00:00Z",

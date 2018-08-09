@@ -17,8 +17,7 @@ class ScanBaseSerializer(ModelIdSerializer):
     job = ModelIdSerializer()
     dry_run_job = ModelIdSerializer()
 
-
-class ScanSerializer(ScanBaseSerializer):
+class ScanSerializerV5(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
 
     job = JobBaseSerializerV5()
@@ -28,12 +27,28 @@ class ScanSerializer(ScanBaseSerializer):
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-
-
-class ScanDetailsSerializer(ScanSerializer):
+    
+class ScanSerializerV6(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
 
-    configuration = serializers.JSONField(source='get_scan_configuration_as_dict')
+    job = JobBaseSerializerV6()
+    dry_run_job = JobBaseSerializerV6()
+
+    file_count = serializers.IntegerField()
+
+    created = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+class ScanDetailsSerializerV5(ScanSerializerV5):
+    """Converts scan model fields to REST output"""
+
+    configuration = serializers.JSONField(source='get_v1_configuration_json')
+    
+class ScanDetailsSerializerV6(ScanSerializerV6):
+    """Converts scan model fields to REST output"""
+
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
+
 
 
 class StrikeBaseSerializer(ModelIdSerializer):
@@ -122,7 +137,7 @@ class IngestSerializer(IngestBaseSerializer):
 class IngestDetailsSerializerV5(IngestSerializer):
     """Converts ingest model fields to REST output"""
 
-    scan = ScanDetailsSerializer()
+    scan = ScanDetailsSerializerV5()
     strike = StrikeDetailsSerializerV5()
 
     workspace = WorkspaceDetailsSerializer()
@@ -134,7 +149,7 @@ class IngestDetailsSerializerV5(IngestSerializer):
 class IngestDetailsSerializerV6(IngestSerializer):
     """Converts ingest model fields to REST output"""
 
-    scan = ScanDetailsSerializer()
+    scan = ScanDetailsSerializerV6()
     strike = StrikeDetailsSerializerV6()
 
     workspace = WorkspaceDetailsSerializer()
