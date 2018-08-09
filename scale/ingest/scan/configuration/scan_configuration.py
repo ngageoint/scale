@@ -16,69 +16,6 @@ from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-CURRENT_VERSION = '1.0'
-
-SCAN_CONFIGURATION_SCHEMA = {
-    'type': 'object',
-    'required': ['workspace', 'scanner', 'files_to_ingest'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'Version of the Scan configuration schema',
-            'type': 'string'
-        },
-        'workspace': {
-            'type': 'string',
-            'minLength': 1
-        },
-        'scanner': {
-            'type': 'object',
-            'required': ['type'],
-            'additionalProperties': True,
-            'properties': {
-                'type': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-            }
-        },
-        'files_to_ingest': {
-            'type': 'array',
-            'minItems': 1,
-            'items': {'$ref': '#/definitions/file_item'}
-        },
-        'recursive': {
-            'type': 'boolean'
-        },
-    },
-    'definitions': {
-        'file_item': {
-            'type': 'object',
-            'required': ['filename_regex'],
-            'additionalProperties': False,
-            'properties': {
-                'filename_regex': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'data_types': {
-                    'type': 'array',
-                    'items': {'type': 'string', 'minLength': 1}
-                },
-                'new_workspace': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'new_file_path': {
-                    'type': 'string',
-                    'minLength': 1
-                }
-            }
-        }
-    }
-}
-
-
 class ValidationWarning(object):
     """Tracks Scan configuration warnings during validation that may prevent the process from working."""
 
@@ -102,10 +39,6 @@ class ScanConfiguration(object):
 
     def __init__(self):
         """Creates a Scan configuration object.
-
-        :param configuration: The Scan configuration
-        :type configuration: dict
-        :raises InvalidScanConfiguration: If the given configuration is invalid
         """
         
         self.scanner_type = ''
