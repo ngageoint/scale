@@ -799,7 +799,7 @@ class StrikesView(ListCreateAPIView):
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
 
         try:
-            strike = Strike.objects.create_strike_v6(name, title, description, config)
+            strike = Strike.objects.create_strike(name, title, description, config)
         except InvalidStrikeConfiguration as ex:
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
 
@@ -944,7 +944,7 @@ class StrikeDetailsView(GenericAPIView):
             raise BadParameter('Strike configuration invalid: %s' % unicode(ex))
 
         try:
-            Strike.objects.edit_strike_v6(strike_id, title, description, config)
+            Strike.objects.edit_strike(strike_id, title, description, config)
         except Strike.DoesNotExist:
             raise Http404
         except InvalidStrikeConfiguration as ex:

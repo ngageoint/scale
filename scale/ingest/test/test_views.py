@@ -815,8 +815,6 @@ class TestScanDetailsViewV5(TestCase):
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.scan.id)
         self.assertEqual(result['title'], self.scan.title)
-        print result['configuration']
-        print ScanConfigurationV1(config).get_dict()
         self.assertDictEqual(result['configuration'], ScanConfigurationV1(config).get_dict())
 
         scan = Scan.objects.get(pk=self.scan.id)
