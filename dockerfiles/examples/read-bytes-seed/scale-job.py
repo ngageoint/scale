@@ -56,8 +56,11 @@ def run_algorithm(bytes_total, input_file, out_dir):
             }
     }
 
-    with open(output_file + '.metadata.json', 'w') as outfile:
+    metadata_file = output_file + '.metadata.json'
+    with open(metadata_file, 'w') as outfile:
         json.dump(metadata, outfile)
+
+    logging.info('Metadata written to %s' % metadata_file)
 
     return output_file
 
