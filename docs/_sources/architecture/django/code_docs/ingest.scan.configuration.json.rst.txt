@@ -1,0 +1,30 @@
+ingest\.scan\.configuration\.json package
+=========================================
+
+Submodules
+----------
+
+ingest\.scan\.configuration\.json\.configuration\_1\_0 module
+-------------------------------------------------------------
+
+.. automodule:: ingest.scan.configuration.json.configuration_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.scan\.configuration\.json\.configuration\_v6 module
+-----------------------------------------------------------
+
+.. automodule:: ingest.scan.configuration.json.configuration_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.scan.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,6 +1,13 @@
 ingest\.scan\.configuration package
 ===================================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.scan.configuration.json
+
 Submodules
 ----------
 

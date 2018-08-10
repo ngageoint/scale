@@ -4,6 +4,22 @@ ingest\.strike\.configuration\.json package
 Submodules
 ----------
 
+ingest\.strike\.configuration\.json\.configuration\_1\_0 module
+---------------------------------------------------------------
+
+.. automodule:: ingest.strike.configuration.json.configuration_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.strike\.configuration\.json\.configuration\_2\_0 module
+---------------------------------------------------------------
+
+.. automodule:: ingest.strike.configuration.json.configuration_2_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ingest\.strike\.configuration\.json\.configuration\_v6 module
 -------------------------------------------------------------
 

@@ -27,14 +27,6 @@ ingest\.strike\.configuration\.strike\_configuration module
     :undoc-members:
     :show-inheritance:
 
-ingest\.strike\.configuration\.strike\_configuration\_1\_0 module
------------------------------------------------------------------
-
-.. automodule:: ingest.strike.configuration.strike_configuration_1_0
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
 Module contents
 ---------------

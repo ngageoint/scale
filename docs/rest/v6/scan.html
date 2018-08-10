@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>v6 Strike Services &mdash; Scale 5.5.0-snapshot documentation</title>
+  <title>v6 Scan Services &mdash; Scale 5.5.0-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="v6 System Services" href="system.html" />
-    <link rel="prev" title="v6 Scan Services" href="scan.html" />
+    <link rel="next" title="v6 Strike Services" href="strike.html" />
+    <link rel="prev" title="v6 Scale File Services" href="scale_file.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -109,11 +109,11 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Strike Services</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#strike-configuration-json">Strike Configuration JSON</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scan Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scan-configuration-json">Scan Configuration JSON</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
 </ul>
 </li>
@@ -168,13 +168,13 @@
         
           <li><a href="../index.html">REST API</a> &raquo;</li>
         
-      <li>v6 Strike Services</li>
+      <li>v6 Scan Services</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/rest/v6/strike.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rest/v6/scan.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -187,11 +187,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="v6-strike-services">
-<span id="rest-v6-strike"></span><h1>v6 Strike Services<a class="headerlink" href="#v6-strike-services" title="Permalink to this headline">¶</a></h1>
-<p>These services allow a user to create, view, and manage Strike processes.</p>
-<p id="rest-v6-strike-list"><strong>Example GET /v6/strikes/ API call</strong></p>
-<p>Request: GET <a class="reference external" href="http://.../v6/strikes/">http://.../v6/strikes/</a></p>
+  <div class="section" id="v6-scan-services">
+<span id="rest-v6-scan"></span><h1>v6 Scan Services<a class="headerlink" href="#v6-scan-services" title="Permalink to this headline">¶</a></h1>
+<p>These services allow a user to create, view, and manage Scan processes.</p>
+<p id="rest-v6-scan-list"><strong>Example GET /v6/scans/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/scans/">http://.../v6/scans/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -201,23 +201,39 @@
     <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike-process&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-scan-process&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_count&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
             <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
                 <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
                     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming source files to ingest&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;dry_run_job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale scan&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
                     <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
                 <span class="p">},</span>
                 <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
             <span class="p">},</span>
-            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+           <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
         <span class="p">},</span>
         <span class="p">...</span>
     <span class="p">]</span>
@@ -233,13 +249,13 @@
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Strike List</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Scan List</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of all Strike processes.</td>
+<tr class="row-even"><td colspan="4">Returns a list of all Scan processes.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/strikes/</td>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /v6/scans/</td>
 </tr>
 <tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
 </tr>
@@ -271,7 +287,7 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 <tr class="row-odd"><td>name</td>
 <td>String</td>
 <td>Optional</td>
-<td>Return only Strike processes with a given name.
+<td>Return only Scan processes with a given name.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>order</td>
@@ -310,23 +326,32 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="#rest-v6-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.name</td>
 <td>String</td>
-<td colspan="2">The identifying name of the Strike process used for queries.</td>
+<td colspan="2">The identifying name of the Scan process used for queries.</td>
 </tr>
 <tr class="row-odd"><td>.title</td>
 <td>String</td>
-<td colspan="2">The human readable display name of the Strike process.</td>
+<td colspan="2">The human readable display name of the Scan process.</td>
 </tr>
 <tr class="row-even"><td>.description</td>
 <td>String</td>
-<td colspan="2">A longer description of the Strike process.</td>
+<td colspan="2">A longer description of the Scan process.</td>
 </tr>
-<tr class="row-odd"><td>.job</td>
+<tr class="row-odd"><td>.file_count</td>
+<td>Integer</td>
+<td colspan="2">Count of files identified from last scan operation (either dry run or ingest).</td>
+</tr>
+<tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
-<td colspan="2">The job that is associated with the Strike process.
+<td colspan="2">The job that is associated with the Scan process.
+(See <span class="xref std std-ref">Job Details</span>)</td>
+</tr>
+<tr class="row-odd"><td>.dry_run_job</td>
+<td>JSON Object</td>
+<td colspan="2">The dry run job that is associated with the Scan process.
 (See <span class="xref std std-ref">Job Details</span>)</td>
 </tr>
 <tr class="row-even"><td>.created</td>
@@ -339,18 +364,18 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-create"><strong>Example POST /v6/strikes/ API call</strong></p>
-<p>Request: POST <a class="reference external" href="http://.../v6/strikes/">http://.../v6/strikes/</a></p>
+<p id="rest-v6-scan-create"><strong>Example POST /v6/scans/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/scans/">http://.../v6/scans/</a></p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+        <span class="s2">&quot;scanner&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span><span class="p">,</span>
         <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
         <span class="p">}]</span>
@@ -361,20 +386,33 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </div></blockquote>
 <p>Response: 201 Created
 Headers:
-Location <a class="reference external" href="http://.../v6/strikes/105/">http://.../v6/strikes/105/</a></p>
+Location <a class="reference external" href="http://.../v6/scans/105/">http://.../v6/scans/105/</a></p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike-process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-scan-process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_count&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
         <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;dry_run_job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
             <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
         <span class="p">},</span>
@@ -385,9 +423,9 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
         <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span>
         <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
         <span class="p">}]</span>
@@ -404,13 +442,13 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Create Strike</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Create Scan</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Creates a new Strike process and places it onto the queue</td>
+<tr class="row-even"><td colspan="4">Creates a new Scan. To start a dry run or actual scan job, use the <em>/scans/{id}/process/</em> endpoint.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/strikes/</td>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/scans/</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
@@ -420,18 +458,18 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <tr class="row-even"><td>title</td>
 <td>String</td>
 <td>Required</td>
-<td>The human readable display name of the Strike process.</td>
+<td>The human readable display name of the Scan process.</td>
 </tr>
 <tr class="row-odd"><td>description</td>
 <td>String</td>
 <td>Optional</td>
-<td>A longer description of the Strike process.</td>
+<td>A longer description of the Scan process.</td>
 </tr>
 <tr class="row-even"><td>configuration</td>
 <td>JSON Object</td>
 <td>Required</td>
-<td>JSON defining the Strike configuration.
-(See <a class="reference internal" href="#rest-v6-strike-configuration"><span class="std std-ref">Strike Configuration JSON</span></a>)</td>
+<td>JSON defining the Scan configuration.
+(See <a class="reference internal" href="#rest-v6-scan-configuration"><span class="std std-ref">Scan Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -439,7 +477,7 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <td colspan="3">201 CREATED</td>
 </tr>
 <tr class="row-odd"><td><strong>Location</strong></td>
-<td colspan="3">URL pointing to the details for the newly created strike process</td>
+<td colspan="3">URL pointing to the details for the newly created scan process</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
@@ -448,27 +486,40 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 </tr>
 <tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
-<td colspan="2">All fields are the same as the Strike process details model.
-(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+<td colspan="2">All fields are the same as the Scan process details model.
+(See <a class="reference internal" href="#rest-v6-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-details"><strong>Example GET /v6/strikes/{id}/ API call</strong></p>
-<p>Request: GET <a class="reference external" href="http://.../v6/strikes">http://.../v6/strikes</a>/{id}/</p>
+<p id="rest-v6-scan-details"><strong>Example GET /v6/scans/{id}/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike-process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-scan-process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_count&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
     <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
         <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;dry_run_job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
             <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
             <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
         <span class="p">},</span>
@@ -479,9 +530,9 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
         <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span>
         <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
         <span class="p">}]</span>
@@ -497,14 +548,14 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <col width="67%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Strike Details</strong></th>
+<tr class="row-odd"><th class="head" colspan="3"><strong>Scan Details</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns Strike process details</td>
+<tr class="row-even"><td colspan="3">Returns Scan process details</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
-<dt><strong>GET</strong> /v6/strikes/{id}/</dt>
+<dt><strong>GET</strong> /v6/scans/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
@@ -522,24 +573,33 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="../strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-v6-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>name</td>
 <td>String</td>
-<td>The identifying name of the Strike process used for queries.</td>
+<td>The identifying name of the Scan process used for queries.</td>
 </tr>
 <tr class="row-even"><td>title</td>
 <td>String</td>
-<td>The human readable display name of the Strike process.</td>
+<td>The human readable display name of the Scan process.</td>
 </tr>
 <tr class="row-odd"><td>description</td>
 <td>String</td>
-<td>A longer description of the Strike process.</td>
+<td>A longer description of the Scan process.</td>
 </tr>
-<tr class="row-even"><td>job</td>
+<tr class="row-even"><td>file_count</td>
+<td>Integer</td>
+<td>Count of files identified from last scan operation (either dry run or ingest).</td>
+</tr>
+<tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
-<td>The job that is associated with the Strike process.
-(See <a class="reference internal" href="../job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+<td>The job that is associated with the Scan process.
+(See <span class="xref std std-ref">Job Details</span>)</td>
+</tr>
+<tr class="row-even"><td>dry_run_job</td>
+<td>JSON Object</td>
+<td>The dry run job that is associated with the Scan process.
+(See <span class="xref std std-ref">Job Details</span>)</td>
 </tr>
 <tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -551,23 +611,22 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 </tr>
 <tr class="row-odd"><td>configuration</td>
 <td>JSON Object</td>
-<td>JSON defining the Strike configuration.
-(See <a class="reference internal" href="#rest-v6-strike-configuration"><span class="std std-ref">Strike Configuration JSON</span></a>)</td>
+<td>JSON defining the Scan configuration.
+(See <a class="reference internal" href="#rest-v6-scan-configuration"><span class="std std-ref">Scan Configuration JSON</span></a>)</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-validate"><strong>Example POST /v6/strikes/validation/ API call</strong></p>
-<p>Request: POST <a class="reference external" href="http://.../v6/strikes/validation/">http://.../v6/strikes/validation/</a></p>
+<p id="rest-v6-scan-validate"><strong>Example POST /v6/scans/validation/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/scans/validation/">http://.../v6/scans/validation/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike-process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
         <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span>
         <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
         <span class="p">}]</span>
@@ -591,13 +650,13 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Validate Strike</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Validate Scan</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Validates a new Strike process configuration without actually saving it</td>
+<tr class="row-even"><td colspan="4">Validates a new Scan process configuration without actually saving it</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/strikes/validation/</td>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /v6/scans/validation/</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
@@ -607,18 +666,18 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 <tr class="row-even"><td>title</td>
 <td>String</td>
 <td>Required</td>
-<td>The human readable display name of the Strike process.</td>
+<td>The human readable display name of the Scan process.</td>
 </tr>
 <tr class="row-odd"><td>description</td>
 <td>String</td>
 <td>Optional</td>
-<td>A longer description of the Strike process.</td>
+<td>A longer description of the Scan process.</td>
 </tr>
 <tr class="row-even"><td>configuration</td>
 <td>JSON Object</td>
 <td>Required</td>
-<td>JSON defining the Strike configuration.
-(See <a class="reference internal" href="#rest-v6-strike-configuration"><span class="std std-ref">Strike Configuration JSON</span></a>)</td>
+<td>JSON defining the Scan configuration.
+(See <a class="reference internal" href="#rest-v6-scan-configuration"><span class="std std-ref">Scan Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -655,17 +714,17 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-edit"><strong>Example PATCH /v6/strikes/{id}/ API call</strong></p>
-<p>Request: PATCH <a class="reference external" href="http://.../v6/strikes">http://.../v6/strikes</a>/{id}/</p>
+<p id="rest-v6-scan-edit"><strong>Example PATCH /v6/scans/{id}/ API call</strong></p>
+<p>Request: PATCH <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Strike process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
         <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span>
         <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
         <span class="p">}]</span>
@@ -682,14 +741,14 @@ with <em>name</em> and <em>description</em> string fields.</td>
 <col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Edit Strike</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Edit Scan</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Edits an existing Strike process with associated configuration</td>
+<tr class="row-even"><td colspan="4">Edits an existing Scan process with associated configuration</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /v6/strikes/{id}/</dt>
+<dt><strong>PATCH</strong> /v6/scans/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
@@ -702,18 +761,18 @@ with <em>name</em> and <em>description</em> string fields.</td>
 <tr class="row-even"><td>title</td>
 <td>String</td>
 <td>Optional</td>
-<td>The human readable display name of the Strike process.</td>
+<td>The human readable display name of the Scan process.</td>
 </tr>
 <tr class="row-odd"><td>description</td>
 <td>String</td>
 <td>Optional</td>
-<td>A longer description of the Strike process.</td>
+<td>A longer description of the Scan process.</td>
 </tr>
 <tr class="row-even"><td>configuration</td>
 <td>JSON Object</td>
 <td>Optional</td>
-<td>JSON defining the Strike configuration.
-(See <a class="reference internal" href="#rest-v6-strike-configuration"><span class="std std-ref">Strike Configuration JSON</span></a>)</td>
+<td>JSON defining the Scan configuration.
+(See <a class="reference internal" href="#rest-v6-scan-configuration"><span class="std std-ref">Scan Configuration JSON</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -722,16 +781,161 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
-<div class="section" id="strike-configuration-json">
-<span id="rest-v6-strike-configuration"></span><h2>Strike Configuration JSON<a class="headerlink" href="#strike-configuration-json" title="Permalink to this headline">¶</a></h2>
-<p>A strike configuration JSON describes a set of configuration settings that affect how a strike job executes.</p>
-<p><strong>Example dir-watcher interface:</strong></p>
+<p id="rest-v6-scan-process"><strong>Example POST /v6/scans/{id}/process/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/process/</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;ingest&quot;</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Response: 200 OK</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-scan-process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is my Scan process for detecting my favorite files!&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;file_count&quot;</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;dry_run_job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Scan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scans a workspace for existing source files to ingest&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0e7&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[{</span>
+            <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span>
+        <span class="p">}]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Process Scan</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Launches an existing Scan with associated configuration</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>POST</strong> /v6/scans/{id}/process/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>ingest</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether a dry run or ingest triggering scan should be run.
+Defaults to false when unset.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API.
+(See <a class="reference internal" href="#rest-v6-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>name</td>
+<td>String</td>
+<td colspan="2">The identifying name of the Scan process used for queries.</td>
+</tr>
+<tr class="row-odd"><td>title</td>
+<td>String</td>
+<td colspan="2">The human readable display name of the Scan process.</td>
+</tr>
+<tr class="row-even"><td>description</td>
+<td>String</td>
+<td colspan="2">A longer description of the Scan process.</td>
+</tr>
+<tr class="row-odd"><td>file_count</td>
+<td>Integer</td>
+<td colspan="2">Count of files identified from last scan operation (either dry run or ingest).</td>
+</tr>
+<tr class="row-even"><td>job</td>
+<td>JSON Object</td>
+<td colspan="2">The job that is associated with the Scan process.
+(See <span class="xref std std-ref">Job Details</span>)</td>
+</tr>
+<tr class="row-odd"><td>dry_run_job</td>
+<td>JSON Object</td>
+<td colspan="2">The dry run job that is associated with the Scan process.
+(See <span class="xref std std-ref">Job Details</span>)</td>
+</tr>
+<tr class="row-even"><td>created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-even"><td>configuration</td>
+<td>JSON Object</td>
+<td colspan="2">JSON defining the Scan configuration.
+(See <a class="reference internal" href="#rest-v6-scan-configuration"><span class="std std-ref">Scan Configuration JSON</span></a>)</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="scan-configuration-json">
+<span id="rest-v6-scan-configuration"></span><h2>Scan Configuration JSON<a class="headerlink" href="#scan-configuration-json" title="Permalink to this headline">¶</a></h2>
+<p>A scan configuration JSON describes a set of configuration settings that affect how a scanner executes.</p>
+<p><strong>Example interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;workspace&quot;</span> <span class="o">:</span> <span class="s2">&quot;workspace_name&quot;</span><span class="p">,</span>
-  <span class="s2">&quot;monitor&quot;</span> <span class="o">:</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span> <span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;scanner&quot;</span> <span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;type&quot;</span> <span class="o">:</span> <span class="s2">&quot;dir&quot;</span><span class="p">,</span>
     <span class="s2">&quot;transfer_suffix&quot;</span> <span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
   <span class="p">},</span>
+  <span class="s2">&quot;recursive&quot;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span><span class="p">[</span>
     <span class="p">{</span>
       <span class="s2">&quot;filename_regex&quot;</span> <span class="o">:</span> <span class="s2">&quot;.*txt&quot;</span><span class="p">,</span>
@@ -743,32 +947,6 @@ with <em>name</em> and <em>description</em> string fields.</td>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Example S3 interface:</strong></p>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host-workspace&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sqs_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-sqs&quot;</span>
-        <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;access_key_id&quot;</span><span class="o">:</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;secret_access_key&quot;</span><span class="o">:</span> <span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;region_name&quot;</span><span class="o">:</span> <span class="s2">&quot;us-east-1&quot;</span>
-    <span class="p">},</span>
-    <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.h5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
-                <span class="s2">&quot;data type 1&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;data type 2&quot;</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/new/file/path&quot;</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
 <table border="1" class="docutils">
 <colgroup>
 <col width="23%" />
@@ -777,7 +955,7 @@ with <em>name</em> and <em>description</em> string fields.</td>
 <col width="56%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="4"><strong>Strike Configuration</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Scan Configuration</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -788,60 +966,30 @@ with <em>name</em> and <em>description</em> string fields.</td>
 scanned. The type of the workspace (its broker type) will determine
 which types of scanner can be used.</td>
 </tr>
-<tr class="row-odd"><td>monitor</td>
+<tr class="row-odd"><td>scanner</td>
 <td>JSON Object</td>
 <td>Required</td>
-<td>JSON object representing the type and configuration of the monitor
-that will watch <em>workspace</em> for new files.</td>
+<td>JSON object representing the type and configuration of the scanner
+that will scan <em>workspace</em> for files.</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>Required</td>
-<td>The type of the monitor. Must be either &#8216;dir-watcher&#8217; or &#8216;s3&#8217;</td>
+<td>The type of the scanner. Must be either &#8216;dir&#8217; or &#8216;s3&#8217;</td>
 </tr>
 <tr class="row-odd"><td>.transfer_suffix</td>
 <td>String</td>
-<td>Required</td>
-<td>(dir-watcher)Defines a suffix that is used on the file names to
-indicate that files are still transferring and have not yet
-finished being copied into the monitored directory</td>
-</tr>
-<tr class="row-even"><td>.sqs_name</td>
-<td>String</td>
-<td>Required</td>
-<td>(s3) Name of the SQS queue that should be polled for object
-creation notifications that describe new files in the S3 bucket.</td>
-</tr>
-<tr class="row-odd"><td>.credentials</td>
-<td>JSON Object</td>
 <td>Optional</td>
-<td>(s3) JSON object that provides the necessary information to access
-the bucket. This attribute should be omitted when using IAM
-role-based security. If it is included for key-based security, then
-both sub-attributes must be included. An IAM account should be
-created and granted the appropriate permissions to the bucket
-before attempting to use it here.</td>
+<td>Defines a suffix that is used on the file names to indicate that
+files are still transferring and have not yet finished being copied
+into the scanned directory</td>
 </tr>
-<tr class="row-even"><td>..access_key_id</td>
-<td>String</td>
+<tr class="row-even"><td>recursive</td>
+<td>Boolean</td>
 <td>Optional</td>
-<td>(s3) Unique identifier for the user account in IAM that will be
-used as a proxy for read and write operations within Scale.</td>
-</tr>
-<tr class="row-odd"><td>..secret_access_key</td>
-<td>String</td>
-<td>Required</td>
-<td>(s3) Generated token that the system can use to prove it should be
-able to make requests on behalf of the associated IAM account
-without requiring the actual password used by that account.</td>
-</tr>
-<tr class="row-even"><td>.region_name</td>
-<td>String</td>
-<td>Optional</td>
-<td>(s3) AWS region where the SQS Queue is located. This is not always
-required, as environment variables or configuration files could set
-the default region, but it is a highly recommended setting for
-explicitly indicating the SQS region.</td>
+<td>Indicates whether a scanner should be limited to the root of a
+workspace (false) or traverse the entire tree (true). If ommitted,
+the default is true</td>
 </tr>
 <tr class="row-odd"><td>files_to_ingest</td>
 <td>Array</td>
@@ -901,10 +1049,10 @@ automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="system.html" class="btn btn-neutral float-right" title="v6 System Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="strike.html" class="btn btn-neutral float-right" title="v6 Strike Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scan.html" class="btn btn-neutral" title="v6 Scan Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scale_file.html" class="btn btn-neutral" title="v6 Scale File Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

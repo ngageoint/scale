@@ -263,6 +263,16 @@
 <li class="toctree-l1"><a class="reference internal" href="ingest.scan.html">ingest.scan package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.scan.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ingest.scan.configuration.html">ingest.scan.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.scan.configuration.json.html">ingest.scan.configuration.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.scan.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json.configuration_1_0">ingest.scan.configuration.json.configuration_1_0 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json.configuration_v6">ingest.scan.configuration.json.configuration_v6 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.exceptions">ingest.scan.configuration.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.scan_configuration">ingest.scan.configuration.scan_configuration module</a></li>
@@ -290,6 +300,8 @@
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ingest.strike.configuration.json.html">ingest.strike.configuration.json package</a><ul>
 <li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_1_0">ingest.strike.configuration.json.configuration_1_0 module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_2_0">ingest.strike.configuration.json.configuration_2_0 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json.configuration_v6">ingest.strike.configuration.json.configuration_v6 module</a></li>
 <li class="toctree-l6"><a class="reference internal" href="ingest.strike.configuration.json.html#module-ingest.strike.configuration.json">Module contents</a></li>
 </ul>
@@ -299,7 +311,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.exceptions">ingest.strike.configuration.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration">Module contents</a></li>
 </ul>
 </li>
@@ -346,6 +357,7 @@
 <li class="toctree-l6"><a class="reference internal" href="ingest.test.strike.configuration.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l7"><a class="reference internal" href="ingest.test.strike.configuration.json.html">ingest.test.strike.configuration.json package</a><ul>
 <li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json.test_configuration_2_0">ingest.test.strike.configuration.json.test_configuration_2_0 module</a></li>
 <li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json.test_configuration_v6">ingest.test.strike.configuration.json.test_configuration_v6 module</a></li>
 <li class="toctree-l8"><a class="reference internal" href="ingest.test.strike.configuration.json.html#module-ingest.test.strike.configuration.json">Module contents</a></li>
 </ul>
@@ -1252,14 +1264,30 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.models.Scan.get_scan_configuration_as_dict">
-<code class="descname">get_scan_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the configuration for this Scan process as a dict</p>
+<dt id="ingest.models.Scan.get_v1_configuration_json">
+<code class="descname">get_v1_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_v1_configuration_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scan configuration in v1 of the JSON schema</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this Scan process</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scan configuration in v1 of the JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_v6_configuration_json">
+<code class="descname">get_v6_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_v6_configuration_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scan configuration in v6 of the JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scan configuration in v6 of the JSON schema</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
@@ -1355,8 +1383,7 @@ the new Scan model. All changes to the database will occur in an atomic transact
 <li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Scan process</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Scan process</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Scan process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Scan configuration</li>
-<li><strong>dry_run</strong> (<em>bool</em>) &#8211; Whether the scan will execute as a dry run</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>) &#8211; The Scan configuration</li>
 </ul>
 </td>
 </tr>
@@ -1387,7 +1414,7 @@ transaction. An argument of None for a field indicates that the field should not
 <li><strong>scan_id</strong> (<em>int</em>) &#8211; The unique identifier of the Scan process to edit</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Scan process</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Scan process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>) &#8211; The Scan process configuration</li>
 </ul>
 </td>
 </tr>
@@ -1483,6 +1510,48 @@ atomic transaction.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.validate_scan_v6">
+<code class="descname">validate_scan_v6</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.validate_scan_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given configuration for creating a new scan process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The scan configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scan validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">strike.models.ScanValidation</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.ScanValidation">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">ScanValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="ingest.models.ScanValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#ingest.models.ScanValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.ScanValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#ingest.models.ScanValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.ScanValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#ingest.models.ScanValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 </dd></dl>
@@ -1714,39 +1783,7 @@ the database will occur in an atomic transaction.</p>
 <li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Strike process</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike configuration</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Strike process</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Strike" title="ingest.models.Strike"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Strike</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
-<dd>invalid.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.models.StrikeManager.create_strike_v6">
-<code class="descname">create_strike_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.create_strike_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
-will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
-the database will occur in an atomic transaction.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Strike process</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
-<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="ingest.strike.configuration.strike_configuration.StrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.StrikeConfiguration</span></code></a>) &#8211; The Strike configuration</li>
 </ul>
 </td>
 </tr>
@@ -1777,32 +1814,7 @@ transaction. An argument of None for a field indicates that the field should not
 <li><strong>strike_id</strong> (<em>int</em>) &#8211; The unique identifier of the Strike process to edit</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:raises <a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration" title="ingest.strike.configuration.exceptions.InvalidStrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.exceptions.InvalidStrikeConfiguration</span></code></a>: If the configuration is</dt>
-<dd>invalid.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.models.StrikeManager.edit_strike_v6">
-<code class="descname">edit_strike_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.StrikeManager.edit_strike_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
-transaction. An argument of None for a field indicates that the field should not change.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>strike_id</strong> (<em>int</em>) &#8211; The unique identifier of the Strike process to edit</li>
-<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Strike process</li>
-<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Strike process</li>
-<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration" title="ingest.strike.configuration.strike_configuration.StrikeConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.configuration.strike_configuration.StrikeConfiguration</span></code></a>) &#8211; The Strike process configuration</li>
 </ul>
 </td>
 </tr>
@@ -1979,15 +1991,29 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.ScanDetailsSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanSerializer" title="ingest.serializers.ScanSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanSerializer</span></code></a></p>
+<dt id="ingest.serializers.ScanDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanSerializerV5" title="ingest.serializers.ScanSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanSerializerV5</span></code></a></p>
 <p>Converts scan model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.ScanSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.ScanDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanSerializerV6" title="ingest.serializers.ScanSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanSerializerV6</span></code></a></p>
+<p>Converts scan model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.ScanSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanBaseSerializer" title="ingest.serializers.ScanBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanBaseSerializer</span></code></a></p>
+<p>Converts scan model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.ScanSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanBaseSerializer" title="ingest.serializers.ScanBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanBaseSerializer</span></code></a></p>
 <p>Converts scan model fields to REST output</p>
 </dd></dl>
@@ -2265,6 +2291,12 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.views.ScansDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.views.ScansDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing Scan process and returns the updated details</p>
@@ -2293,12 +2325,6 @@ transaction. An argument of None for a field indicates that the field should not
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.ScansDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="ingest.views.ScansDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanDetailsSerializer</span></code></p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -2306,6 +2332,12 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">ScansProcessView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansProcessView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for launching a scan execution to ingest</p>
+<dl class="method">
+<dt id="ingest.views.ScansProcessView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansProcessView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="ingest.views.ScansProcessView.post">
 <code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansProcessView.post" title="Permalink to this definition">¶</a></dt>
@@ -2334,12 +2366,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.ScansProcessView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.ScansProcessView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.views.ScansProcessView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansProcessView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanDetailsSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
@@ -2397,6 +2423,12 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.views.ScansView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.views.ScansView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all Scan process and returns it in JSON form</p>
@@ -2418,12 +2450,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.ScansView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.ScansView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.views.ScansView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.scan.configuration package &mdash; Scale 5.5.0-snapshot documentation</title>
+  <title>ingest.scan.configuration.json package &mdash; Scale 5.5.0-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="ingest.scan.configuration.json package" href="ingest.scan.configuration.json.html" />
-    <link rel="prev" title="ingest.scan package" href="ingest.scan.html" />
+    <link rel="next" title="ingest.scan.scanners package" href="ingest.scan.scanners.html" />
+    <link rel="prev" title="ingest.scan.configuration package" href="ingest.scan.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -198,13 +198,15 @@
         
           <li><a href="ingest.scan.html">ingest.scan package</a> &raquo;</li>
         
-      <li>ingest.scan.configuration package</li>
+          <li><a href="ingest.scan.configuration.html">ingest.scan.configuration package</a> &raquo;</li>
+        
+      <li>ingest.scan.configuration.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/ingest.scan.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.scan.configuration.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -217,124 +219,139 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ingest-scan-configuration-package">
-<h1>ingest.scan.configuration package<a class="headerlink" href="#ingest-scan-configuration-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="ingest.scan.configuration.json.html">ingest.scan.configuration.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json.configuration_1_0">ingest.scan.configuration.json.configuration_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json.configuration_v6">ingest.scan.configuration.json.configuration_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.json.html#module-ingest.scan.configuration.json">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="ingest-scan-configuration-json-package">
+<h1>ingest.scan.configuration.json package<a class="headerlink" href="#ingest-scan-configuration-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-ingest.scan.configuration.exceptions">
-<span id="ingest-scan-configuration-exceptions-module"></span><h2>ingest.scan.configuration.exceptions module<a class="headerlink" href="#module-ingest.scan.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
-<p>Defines exceptions that can occur when interacting with Scan configuration</p>
-<dl class="exception">
-<dt id="ingest.scan.configuration.exceptions.InvalidScanConfiguration">
-<em class="property">exception </em><code class="descclassname">ingest.scan.configuration.exceptions.</code><code class="descname">InvalidScanConfiguration</code><span class="sig-paren">(</span><em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
-<p>Exception indicating that the provided Scan configuration was invalid</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.scan.configuration.scan_configuration">
-<span id="ingest-scan-configuration-scan-configuration-module"></span><h2>ingest.scan.configuration.scan_configuration module<a class="headerlink" href="#module-ingest.scan.configuration.scan_configuration" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for running an instance of Scan</p>
+<div class="section" id="module-ingest.scan.configuration.json.configuration_1_0">
+<span id="ingest-scan-configuration-json-configuration-1-0-module"></span><h2>ingest.scan.configuration.json.configuration_1_0 module<a class="headerlink" href="#module-ingest.scan.configuration.json.configuration_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 batch configuration schema</p>
 <dl class="class">
-<dt id="ingest.scan.configuration.scan_configuration.ScanConfiguration">
-<em class="property">class </em><code class="descclassname">ingest.scan.configuration.scan_configuration.</code><code class="descname">ScanConfiguration</code><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1">
+<em class="property">class </em><code class="descclassname">ingest.scan.configuration.json.configuration_1_0.</code><code class="descname">ScanConfigurationV1</code><span class="sig-paren">(</span><em>configuration</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the configuration for a running Scan instance. The configuration includes details about mounting the
 transfer directory, the suffix for identifying files still being transferred, and regular expressions to
 identify files to ingest and how to store them.</p>
 <dl class="method">
-<dt id="ingest.scan.configuration.scan_configuration.ScanConfiguration.get_scanner">
-<code class="descname">get_scanner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_scanner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the configured scanner for this Scan configuration</p>
+<dt id="ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scan configuration represented by this JSON</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configured scanner</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scan configuration</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner" title="ingest.scan.scanners.scanner.Scanner"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>:</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="ingest.scan.configuration.scan_configuration.ScanConfiguration.get_workspace">
-<code class="descname">get_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_workspace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the workspace name to be scanned for this Scan configuration</p>
+<dt id="ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_1_0.ScanConfigurationV1.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace name</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="ingest.scan.configuration.scan_configuration.ScanConfiguration.load_scanner_configuration">
-<code class="descname">load_scanner_configuration</code><span class="sig-paren">(</span><em>scanner</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ScanConfiguration.load_scanner_configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Loads the configuration into the given scanner</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.scan.configuration.json.configuration_1_0.convert_config_to_v1_json">
+<code class="descclassname">ingest.scan.configuration.json.configuration_1_0.</code><code class="descname">convert_config_to_v1_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_1_0.convert_config_to_v1_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v1 scan configuration JSON for the given configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scanner</strong> (<a class="reference internal" href="ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner" title="ingest.scan.scanners.scanner.Scanner"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner</span></code></a>) &#8211; The configuration as a dictionary</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>) &#8211; The scan configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v1 scan configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6" title="ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6</span></code></a></td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.scan.configuration.scan_configuration.ScanConfiguration.validate">
-<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ScanConfiguration.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the Scan configuration</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#ingest.scan.configuration.scan_configuration.ValidationWarning" title="ingest.scan.configuration.scan_configuration.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ValidationWarning</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-<dl class="docutils">
-<dt>:raises <a class="reference internal" href="#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="ingest.scan.configuration.exceptions.InvalidScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.exceptions.InvalidScanConfiguration</span></code></a>: If the configuration is</dt>
-<dd>invalid.</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ingest.scan.configuration.scan_configuration.ValidationWarning">
-<em class="property">class </em><code class="descclassname">ingest.scan.configuration.scan_configuration.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.scan_configuration.ValidationWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Tracks Scan configuration warnings during validation that may prevent the process from working.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ingest.scan.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.scan.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ingest.scan.configuration.json.configuration_v6">
+<span id="ingest-scan-configuration-json-configuration-v6-module"></span><h2>ingest.scan.configuration.json.configuration_v6 module<a class="headerlink" href="#module-ingest.scan.configuration.json.configuration_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 batch configuration schema</p>
+<dl class="class">
+<dt id="ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6">
+<em class="property">class </em><code class="descclassname">ingest.scan.configuration.json.configuration_v6.</code><code class="descname">ScanConfigurationV6</code><span class="sig-paren">(</span><em>configuration</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the configuration for a running Scan instance. The configuration includes details about mounting the
+transfer directory, the suffix for identifying files still being transferred, and regular expressions to
+identify files to ingest and how to store them.</p>
+<dl class="method">
+<dt id="ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the scan configuration represented by this JSON</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scan configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>:</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this Strike process configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.scan.configuration.json.configuration_v6.convert_config_to_v6_json">
+<code class="descclassname">ingest.scan.configuration.json.configuration_v6.</code><code class="descname">convert_config_to_v6_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.configuration.json.configuration_v6.convert_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 scan configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a>) &#8211; The scan configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 scan configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6" title="ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.json.configuration_v6.ScanConfigurationV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.scan.configuration.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -346,10 +363,10 @@ identify files to ingest and how to store them.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.scan.configuration.json.html" class="btn btn-neutral float-right" title="ingest.scan.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.scan.scanners.html" class="btn btn-neutral float-right" title="ingest.scan.scanners package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.scan.html" class="btn btn-neutral" title="ingest.scan package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.scan.configuration.html" class="btn btn-neutral" title="ingest.scan.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

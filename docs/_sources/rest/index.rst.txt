@@ -77,5 +77,6 @@ Future v6 Services
    v6/recipe
    v6/scheduler
    v6/scale_file
+   v6/scan
    v6/strike
    v6/system

@@ -114,6 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
 </ul>
@@ -515,34 +516,16 @@ DUPLICATE].</td>
             <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
                 <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming files to ingest&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-                <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
             <span class="p">},</span>
-            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span>
         <span class="p">},</span>
         <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span><span class="p">,</span>
             <span class="s2">&quot;mount&quot;</span><span class="o">:</span> <span class="s2">&quot;host:/transfer&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
             <span class="s2">&quot;mount_on&quot;</span><span class="o">:</span> <span class="s2">&quot;/mounts/transfer&quot;</span><span class="p">,</span>
             <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
                 <span class="p">{</span>
@@ -794,17 +777,9 @@ DUPLICATE].</td>
                     <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
                         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
                         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-strike&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Strike&quot;</span><span class="p">,</span>
                         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Monitors a directory for incoming source files to ingest&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
-                        <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-                        <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-                        <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                        <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                        <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                        <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
                         <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
                     <span class="p">},</span>
                     <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
