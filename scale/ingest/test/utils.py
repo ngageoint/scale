@@ -48,9 +48,9 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
         description = 'Test description'
     if not configuration:
         workspace = storage_test_utils.create_workspace()
-        configuration = {'version': '1.0', 'mount': 'host:/my/path', 'transfer_suffix': '_tmp',
-                         'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
-                                              'workspace_path': 'wksp/path'}]}
+        configuration = {'version': '2.0', 'workspace': workspace.name, 'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'new_workspace': workspace.name, 
+                                              'data_types': [], 'new_file_path': 'wksp/path'}]}
     if not job:
         job_type = Strike.objects.get_strike_job_type()
         job = job_utils.create_job(job_type=job_type)

@@ -308,37 +308,6 @@ components:
           type: integer
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
-          
-    scan_config:
-      title: Scan Configuration
-      type: object
-      properties:
-        version:
-          type: string
-          description: The version is an optional string value that defines the version of the |
-            configuration used. This allows updates to be made to the specification while |
-            maintaining backwards compatibility by allowing Scale to recognize an older version |
-            and convert it to the current version. The default value for version if it is not included |
-            is the latest version, which is currently 1.0. It is recommended, though not required, that |
-            you include the version so that future changes to the specification will still accept your Scan configuration.
-          example: 1.0
-        workspace:
-          type: string
-          description: The workspace field is a required string that specifies the name of the |
-            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of scanner can be used.
-          example: my-host-workspace
-        scanner:
-          $ref: '#/components/schemas/scanner'
-        recursive:
-          type: boolean
-          description: The recursive field is an optional boolean that indicates whether a scanner |
-            should be limited to the root of a workspace or traverse the entire tree. If ommitted, the default is true for full tree recursion.
-          example: True
-        files_to_ingest:
-          type: array
-          items:
-            $ref: '#/components/schemas/ingest_file'
-          description: List of ingest objects
     scanner:
       title: Scanner
       type: object
@@ -355,6 +324,9 @@ components:
             used on the file names to indicate that files are still transferring and have not yet finished |
             being copied into the scanned directory. Only used with dir scanners.
           example: _tmp
+      required:
+      - type
+      
     ingest_file:
       title: File Ingest Rule
       type: object
@@ -411,6 +383,7 @@ components:
           example: _tmp
       required:
       - type
+
     s3_monitor:
       title: S3 Monitor
       type: object

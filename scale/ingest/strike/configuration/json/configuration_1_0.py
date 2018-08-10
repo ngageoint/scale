@@ -62,7 +62,7 @@ STRIKE_CONFIGURATION_SCHEMA = {
 }
 
 
-class StrikeConfiguration(object):
+class StrikeConfigurationV1(object):
     """Represents the configuration for a running Strike instance. The configuration includes details about mounting the
     transfer NFS directory, the suffix for identifying files still being transferred, and regular expressions to
     identify files to ingest and how to store them.
@@ -119,40 +119,15 @@ class StrikeConfiguration(object):
 
         return self._configuration
 
-    def get_mount(self):
-        """Returns the "mount" value
+    def get_configuration(self):
+        """Returns the strike configuration represented by this JSON
 
-        :returns: The mount value
-        :rtype: str
+        :returns: The strike configuration
+        :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`:
         """
-
-        return self._configuration['mount']
-
-    def get_transfer_suffix(self):
-        """Returns the "transfer_suffix" value
-
-        :returns: The transfer_suffix value
-        :rtype: str
-        """
-
-        return self._configuration['transfer_suffix']
-
-    def match_file_name(self, file_name):
-        """Attempts to match the given file name against this configuration and if a match is made, returns the details
-        about how to ingest the file. If no match is found, None is returned
-
-        :param file_name: The name of the file
-        :type file_name: str
-        :returns: A tuple of the list of data types to add to the file, the remote path for storing the file within the
-            workspace, and the workspace, or None if no file name match is found
-        :rtype: tuple(list of str, str, :class:`storage.models.Workspace`)
-        """
-
-        for regex_entry in self.file_regex_entries:
-            if regex_entry[0].match(file_name):
-                return regex_entry[1], regex_entry[2], regex_entry[3]
-        return None
-
+        #This class only exists to convert v1 schemas to v2 or v6
+        raise NotImplementedError
+        
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
 

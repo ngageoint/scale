@@ -248,34 +248,16 @@ Response: 200 OK
                 "job_type": { 
                     "id": 2, 
                     "name": "scale-strike", 
-                    "version": "1.0", 
                     "title": "Scale Strike", 
                     "description": "Monitors a directory for incoming files to ingest", 
-                    "category": "system", 
-                    "author_name": null, 
-                    "author_url": null, 
-                    "is_system": true, 
-                    "is_long_running": true, 
-                    "is_active": true, 
-                    "is_operational": true, 
-                    "is_paused": false, 
+                    "revision_num": 1,
                     "icon_code": "f013" 
                 }, 
-                "job_type_rev": { 
-                    "id": 2 
-                }, 
-                "event": { 
-                    "id": 2 
-                }, 
-                "error": null, 
-                "status": "RUNNING", 
-                "priority": 5, 
-                "num_exes": 1 
+                "status": "RUNNING"
             }, 
             "configuration": { 
                 "transfer_suffix": "_tmp", 
                 "mount": "host:/transfer", 
-                "version": "1.0", 
                 "mount_on": "/mounts/transfer", 
                 "files_to_ingest": [ 
                     { 
@@ -471,17 +453,9 @@ Response: 200 OK
                         "job_type": { 
                             "id": 2, 
                             "name": "scale-strike", 
-                            "version": "1.0", 
                             "title": "Scale Strike", 
                             "description": "Monitors a directory for incoming source files to ingest", 
-                            "category": "system", 
-                            "author_name": null, 
-                            "author_url": null, 
-                            "is_system": true, 
-                            "is_long_running": true, 
-                            "is_active": true, 
-                            "is_operational": true, 
-                            "is_paused": false, 
+                            "revision_num": 1,
                             "icon_code": "f013" 
                         }, 
                         "event": { 

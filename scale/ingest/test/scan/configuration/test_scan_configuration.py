@@ -8,6 +8,8 @@ from django.test import TestCase
 import storage.test.utils as storage_test_utils
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.scan.configuration.json.configuration_1_0 import ScanConfigurationV1
+from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 
 
 class TestScanConfiguration(TestCase):
@@ -18,11 +20,11 @@ class TestScanConfiguration(TestCase):
         self.new_workspace = storage_test_utils.create_workspace()
         self.inactive_workspace = storage_test_utils.create_workspace(is_active=False)
 
-    def test_bare_min(self):
-        """Tests calling ScanConfiguration constructor with bare minimum JSON"""
+    def test_bare_min_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with bare minimum JSON"""
 
         # No exception is success
-        ScanConfiguration({
+        ScanConfigurationV1({
             'workspace': self.workspace.name,
             'scanner': {
                 'type': 'dir'
@@ -30,10 +32,24 @@ class TestScanConfiguration(TestCase):
             'files_to_ingest': [{
                 'filename_regex': '.*txt'
             }],
-        })
+        }, do_validate=True)
+        
+    def test_bare_min_v6(self):
+        """Tests calling ScanConfigurationV6 constructor with bare minimum JSON"""
 
-    def test_bad_version(self):
-        """Tests calling ScanConfiguration constructor with bad version number."""
+        # No exception is success
+        ScanConfigurationV6({
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt'
+            }],
+        }, do_validate=True)
+
+    def test_bad_version_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with bad version number."""
 
         config = {
             'version': 'BAD VERSION',
@@ -45,10 +61,25 @@ class TestScanConfiguration(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration, config)
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
+        
+    def test_bad_version_v1(self):
+        """Tests calling ScanConfigurationV6 constructor with bad version number."""
 
-    def test_missing_workspace(self):
-        """Tests calling ScanConfiguration constructor with missing workspace"""
+        config = {
+            'version': 'BAD VERSION',
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt'
+            }],
+        }
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
+
+    def test_missing_workspace_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with missing workspace"""
 
         config = {
             'scanner': {
@@ -58,10 +89,23 @@ class TestScanConfiguration(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration, config)
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
 
-    def test_missing_scanner(self):
-        """Tests calling ScanConfiguration constructor with missing scanner"""
+    def test_missing_workspace_v6(self):
+        """Tests calling ScanConfigurationV6 constructor with missing workspace"""
+
+        config = {
+            'scanner': {
+                'type': 'dir',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt'
+            }],
+        }
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
+        
+    def test_missing_scanner_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with missing scanner"""
 
         config = {
             'workspace': self.workspace.name,
@@ -69,10 +113,21 @@ class TestScanConfiguration(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration, config)
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
 
-    def test_blank_filename_regex(self):
-        """Tests calling ScanConfiguration constructor with blank filename_regex"""
+    def test_missing_scanner_v6(self):
+        """Tests calling ScanConfigurationV6 constructor with missing scanner"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'files_to_ingest': [{
+                'filename_regex': '.*txt'
+            }],
+        }
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
+        
+    def test_blank_filename_regex_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with blank filename_regex"""
 
         config = {
             'workspace': self.workspace.name,
@@ -83,10 +138,24 @@ class TestScanConfiguration(TestCase):
                 'filename_regex': ''
             }],
         }
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration, config)
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
 
-    def test_absolute_workspace_path(self):
-        """Tests calling ScanConfiguration constructor with absolute new_file_path."""
+    def test_blank_filename_regex_v6(self):
+        """Tests calling ScanConfigurationV6 constructor with blank filename_regex"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': ''
+            }],
+        }
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
+        
+    def test_absolute_workspace_path_v1(self):
+        """Tests calling ScanConfigurationV1 constructor with absolute new_file_path."""
 
         config = {
             'version': 'BAD VERSION',
@@ -99,10 +168,26 @@ class TestScanConfiguration(TestCase):
                 'new_file_path': '/absolute/path'
             }],
         }
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration, config)
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV1, config, True)
 
-    def test_successful_all(self):
-        """Tests calling ScanConfiguration constructor successfully with all information"""
+    def test_absolute_workspace_path_v6(self):
+        """Tests calling ScanConfigurationV6 constructor with absolute new_file_path."""
+
+        config = {
+            'version': 'BAD VERSION',
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_file_path': '/absolute/path'
+            }],
+        }
+        self.assertRaises(InvalidScanConfiguration, ScanConfigurationV6, config, True)
+        
+    def test_successful_all_v1(self):
+        """Tests calling ScanConfigurationV1 constructor successfully with all information"""
 
         config = {
             'workspace': self.workspace.name,
@@ -117,9 +202,27 @@ class TestScanConfiguration(TestCase):
             }],
         }
         # No exception is success
-        ScanConfiguration(config)
+        ScanConfigurationV1(config, do_validate=True)
 
-    def test_validate_bad_scanner_type(self):
+    def test_successful_all_v6(self):
+        """Tests calling ScanConfigurationV6 constructor successfully with all information"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.workspace.name,
+            }],
+        }
+        # No exception is success
+        ScanConfigurationV6(config, do_validate=True)
+        
+    def test_validate_bad_scanner_type_v1(self):
         """Tests calling ScanConfiguration.validate() with a bad scanner type"""
 
         config = {
@@ -132,9 +235,26 @@ class TestScanConfiguration(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration(config).validate)
+        config = ScanConfigurationV1(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
 
-    def test_validate_mismatched_scanner_type(self):
+    def test_validate_bad_scanner_type_v6(self):
+        """Tests calling ScanConfiguration.validate() with a bad scanner type"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'BAD'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+            }],
+        }
+
+        config = ScanConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+        
+    def test_validate_mismatched_scanner_type_v1(self):
         """Tests calling ScanConfiguration.validate() with a scanner type that does not match the broker type"""
 
         config = {
@@ -148,9 +268,27 @@ class TestScanConfiguration(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration(config).validate)
+        config = ScanConfigurationV1(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+        
+    def test_validate_mismatched_scanner_type_v6(self):
+        """Tests calling ScanConfiguration.validate() with a scanner type that does not match the broker type"""
 
-    def test_validate_bad_workspace(self):
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 's3',
+                'sqs_name': 'my-sqs',
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+            }],
+        }
+
+        config = ScanConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+
+    def test_validate_bad_workspace_v1(self):
         """Tests calling ScanConfiguration.validate() with a bad workspace"""
 
         config = {
@@ -164,9 +302,27 @@ class TestScanConfiguration(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration(config).validate)
+        config = ScanConfigurationV1(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
 
-    def test_validate_workspace_not_active(self):
+    def test_validate_bad_workspace_v6(self):
+        """Tests calling ScanConfiguration.validate() with a bad workspace"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_workspace': 'BADWORKSPACE',
+            }],
+        }
+
+        config = ScanConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+        
+    def test_validate_workspace_not_active_v1(self):
         """Tests calling ScanConfiguration.validate() with a new workspace that is not active"""
 
         config = {
@@ -180,9 +336,27 @@ class TestScanConfiguration(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidScanConfiguration, ScanConfiguration(config).validate)
+        config = ScanConfigurationV1(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+        
+    def test_validate_workspace_not_active_v6(self):
+        """Tests calling ScanConfiguration.validate() with a new workspace that is not active"""
 
-    def test_validate_recursive_invalid_type(self):
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_workspace': self.inactive_workspace.name,
+            }],
+        }
+
+        config = ScanConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidScanConfiguration, config.validate)
+        
+    def test_validate_recursive_invalid_type_v1(self):
         """Tests calling ScanConfiguration.validate() with recursive set to invalid type"""
 
         config = {
@@ -198,9 +372,27 @@ class TestScanConfiguration(TestCase):
         }
 
         with self.assertRaises(InvalidScanConfiguration):
-            ScanConfiguration(config).validate()
+            ScanConfigurationV1(config).get_configuration().validate()
 
-    def test_validate_successful_all(self):
+    def test_validate_recursive_invalid_type_v6(self):
+        """Tests calling ScanConfiguration.validate() with recursive set to invalid type"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'recursive': 'true',
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'new_workspace': self.inactive_workspace.name,
+            }],
+        }
+
+        with self.assertRaises(InvalidScanConfiguration):
+            ScanConfigurationV6(config).get_configuration().validate()
+
+    def test_validate_successful_all_v1(self):
         """Tests calling ScanConfiguration.validate() successfully with all information"""
 
         config = {
@@ -218,4 +410,24 @@ class TestScanConfiguration(TestCase):
         }
 
         # No exception is success
-        ScanConfiguration(config).validate()
+        ScanConfigurationV1(config).get_configuration().validate()
+
+    def test_validate_successful_all_v6(self):
+        """Tests calling ScanConfiguration.validate() successfully with all information"""
+
+        config = {
+            'workspace': self.workspace.name,
+            'scanner': {
+                'type': 'dir'
+            },
+            'recursive': True,
+            'files_to_ingest': [{
+                'filename_regex': '.*txt',
+                'data_types': ['one', 'two'],
+                'new_file_path': os.path.join('my', 'path'),
+                'new_workspace': self.new_workspace.name,
+            }],
+        }
+
+        # No exception is success
+        ScanConfigurationV6(config).get_configuration().validate()

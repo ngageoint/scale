@@ -1,16 +1,16 @@
 
-.. _rest_v6_strike:
+.. _rest_v6_scan:
 
-v6 Strike Services
-==================
+v6 Scan Services
+================
 
-These services allow a user to create, view, and manage Strike processes.
+These services allow a user to create, view, and manage Scan processes.
 
-.. _rest_v6_strike_list:
+.. _rest_v6_scan_list:
 
-**Example GET /v6/strikes/ API call**
+**Example GET /v6/scans/ API call**
 
-Request: GET http://.../v6/strikes/
+Request: GET http://.../v6/scans/
 
 Response: 200 OK
 
@@ -23,34 +23,50 @@ Response: 200 OK
         "results": [ 
             { 
                 "id": 1, 
-                "name": "my-strike-process", 
-                "title": "My Strike Process", 
-                "description": "This is my Strike process for detecting my favorite files!", 
+                "name": "my-scan-process", 
+                "title": "My Scan Process", 
+                "description": "This is my Scan process for detecting my favorite files!", 
+                "file_count": 50,
                 "job": { 
                     "id": 7, 
                     "job_type": { 
                         "id": 2, 
-                        "name": "scale-strike", 
-                        "title": "Scale Strike", 
-                        "description": "Monitors a directory for incoming source files to ingest", 
+                        "name": "scale-scan", 
+                        "title": "Scale Scan", 
+                        "description": "Scans a workspace for existing source files to ingest", 
+                        "revision_num": 1,
+                        "icon_code": "f0e7" 
+                    }, 
+                    "job_type_rev": { 
+                        "id": 2 
+                    }, 
+                    "status": "RUNNING"
+                },
+                "dry_run_job": { 
+                    "id": 6, 
+                    "job_type": { 
+                        "id": 2, 
+                        "name": "scale-scan", 
+                        "title": "Scale scan", 
+                        "description": "Scans a workspace for existing source files to ingest", 
                         "revision_num": 1,
                         "icon_code": "f0e7" 
                     }, 
                     "status": "RUNNING"
                 },
-                "created": "2015-03-11T00:00:00Z",
-                "last_modified": "2015-03-11T00:00:00Z"
+               "created": "2015-03-11T00:00:00Z",
+               "last_modified": "2015-03-11T00:00:00Z"
             }, 
             ... 
         ] 
     } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Strike List**                                                                                                         |
+| **Scan List**                                                                                                           |
 +=========================================================================================================================+
-| Returns a list of all Strike processes.                                                                                 |
+| Returns a list of all Scan processes.                                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/strikes/                                                                                                    |
+| **GET** /v6/scans/                                                                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -67,7 +83,7 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| name               | String            | Optional | Return only Strike processes with a given name.                     |
+| name               | String            | Optional | Return only Scan processes with a given name.                       |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
@@ -91,15 +107,20 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The identifying name of the Strike process used for queries.                   |
+| .name              | String            | The identifying name of the Scan process used for queries.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .title             | String            | The human readable display name of the Strike process.                         |
+| .title             | String            | The human readable display name of the Scan process.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .description       | String            | A longer description of the Strike process.                                    |
+| .description       | String            | A longer description of the Scan process.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job               | JSON Object       | The job that is associated with the Strike process.                            |
+| .file_count        | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The job that is associated with the Scan process.                              |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .dry_run_job       | JSON Object       | The dry run job that is associated with the Scan process.                      |
 |                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
@@ -107,23 +128,23 @@ Response: 200 OK
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_v6_strike_create:
+.. _rest_v6_scan_create:
 
-**Example POST /v6/strikes/ API call**
+**Example POST /v6/scans/ API call**
 
-Request: POST http://.../v6/strikes/
+Request: POST http://.../v6/scans/
 
  .. code-block:: javascript 
  
     { 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
+        "title": "My Scan Process", 
+        "description": "This is my Scan process for detecting my favorite files!", 
         "configuration": { 
             "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
+            "scanner": { 
+                "type": "dir",
             }, 
+            "recursive": true, 
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
             }] 
@@ -132,95 +153,35 @@ Request: POST http://.../v6/strikes/
 
 Response: 201 Created
 Headers:
-Location http://.../v6/strikes/105/
-
- .. code-block:: javascript 
- 
-    { 
-        "id": 1, 
-        "name": "my-strike-process", 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
-        "job": { 
-            "id": 7, 
-            "job_type": { 
-                "id": 2, 
-                "name": "scale-strike", 
-                "title": "Scale Strike", 
-                "description": "Monitors a directory for incoming source files to ingest", 
-                "revision_num": 1,
-                "icon_code": "f0e7" 
-            }, 
-            "status": "RUNNING"
-        }, 
-        "created": "2015-03-11T00:00:00Z",
-        "last_modified": "2015-03-11T00:00:00Z",
-        "configuration": { 
-            "workspace": "my-workspace", 
-            "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
-            "files_to_ingest": [{ 
-                "filename_regex": ".*txt" 
-            }] 
-        }
-    } 
-
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Create Strike**                                                                                                       |
-+=========================================================================================================================+
-| Creates a new Strike process and places it onto the queue                                                               |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /v6/strikes/                                                                                                   |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Required | The human readable display name of the Strike process.              |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | A longer description of the Strike process.                         |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| **Successful Response**                                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 201 CREATED                                                                                        |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Location**       | URL pointing to the details for the newly created strike process                                   |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | JSON Object       | All fields are the same as the Strike process details model.                   |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-
-.. _rest_v6_strike_details:
-
-**Example GET /v6/strikes/{id}/ API call**
-
-Request: GET http://.../v6/strikes/{id}/
-
-Response: 200 OK
+Location http://.../v6/scans/105/
 
  .. code-block:: javascript 
  
    { 
        "id": 1, 
-       "name": "my-strike-process", 
-       "title": "My Strike Process", 
-       "description": "This is my Strike process for detecting my favorite files!", 
+       "name": "my-scan-process", 
+       "title": "My Scan Process", 
+       "description": "This is my Scan process for detecting my favorite files!", 
+       "file_count": 50,
        "job": { 
            "id": 7, 
            "job_type": { 
                "id": 2, 
-               "name": "scale-strike", 
-               "title": "Scale Strike", 
-               "description": "Monitors a directory for incoming source files to ingest", 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+           "status": "RUNNING"
+       },
+       "dry_run_job": { 
+           "id": 6, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
@@ -231,9 +192,95 @@ Response: 200 OK
        "configuration": { 
            "workspace": "my-workspace", 
            "monitor": { 
-               "type": "dir-watcher", 
-               "transfer_suffix": "_tmp" 
+               "type": "dir"
            }, 
+           "recursive": true, 
+           "files_to_ingest": [{ 
+               "filename_regex": ".*txt" 
+           }] 
+       } 
+   } 
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Create Scan**                                                                                                         |
++=========================================================================================================================+
+| Creates a new Scan. To start a dry run or actual scan job, use the */scans/{id}/process/* endpoint.                     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/scans/                                                                                                     |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| title              | String            | Required | The human readable display name of the Scan process.                |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| description        | String            | Optional | A longer description of the Scan process.                           |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| configuration      | JSON Object       | Required | JSON defining the Scan configuration.                               |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details for the newly created scan process                                     |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+|                    | JSON Object       | All fields are the same as the Scan process details model.                     |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_scan_details:
+
+**Example GET /v6/scans/{id}/ API call**
+
+Request: GET http://.../v6/scans/{id}/
+
+Response: 200 OK
+
+ .. code-block:: javascript 
+ 
+   { 
+       "id": 1, 
+       "name": "my-scan-process", 
+       "title": "My Scan Process", 
+       "description": "This is my Scan process for detecting my favorite files!", 
+       "file_count": 50,
+       "job": { 
+           "id": 7, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+           "status": "RUNNING"
+       },
+       "dry_run_job": { 
+           "id": 6, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+           "status": "RUNNING"
+       },
+       "created": "2015-03-11T00:00:00Z",
+       "last_modified": "2015-03-11T00:00:00Z",
+       "configuration": { 
+           "workspace": "my-workspace", 
+           "monitor": { 
+               "type": "dir"
+           }, 
+           "recursive": true, 
            "files_to_ingest": [{ 
                "filename_regex": ".*txt" 
            }] 
@@ -241,11 +288,11 @@ Response: 200 OK
    } 
    
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Strike Details**                                                                                                      |
+| **Scan Details**                                                                                                        |
 +=========================================================================================================================+
-| Returns Strike process details                                                                                          |
+| Returns Scan process details                                                                                            |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/strikes/{id}/                                                                                               |
+| **GET** /v6/scans/{id}/                                                                                                 |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -257,43 +304,47 @@ Response: 200 OK
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| name               | String            | The identifying name of the Strike process used for queries.                   |
+| name               | String            | The identifying name of the Scan process used for queries.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| title              | String            | The human readable display name of the Strike process.                         |
+| title              | String            | The human readable display name of the Scan process.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| description        | String            | A longer description of the Strike process.                                    |
+| description        | String            | A longer description of the Scan process.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job                | JSON Object       | The job that is associated with the Strike process.                            |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+| file_count         | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| job                | JSON Object       | The job that is associated with the Scan process.                              |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| dry_run_job        | JSON Object       | The dry run job that is associated with the Scan process.                      |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| configuration      | JSON Object       | JSON defining the Strike configuration.                                        |
-|                    |                   | (See :ref:`rest_v6_strike_configuration`)                                      |
+| configuration      | JSON Object       | JSON defining the Scan configuration.                                          |
+|                    |                   | (See :ref:`rest_v6_scan_configuration`)                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_v6_strike_validate:
+.. _rest_v6_scan_validate:
 
-**Example POST /v6/strikes/validation/ API call**
+**Example POST /v6/scans/validation/ API call**
 
-Request: POST http://.../v6/strikes/validation/
+Request: POST http://.../v6/scans/validation/
 
 .. code-block:: javascript 
 
     { 
-        "name": "my-strike-process", 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
+        "title": "My Scan Process", 
+        "description": "This is my Scan process for detecting my favorite files!", 
         "configuration": { 
             "workspace": "my-workspace", 
             "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
-            }, 
+                "type": "dir"
+            },
+            "recursive": true,
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
             }] 
@@ -311,22 +362,22 @@ Response: 200 OK
    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Validate Strike**                                                                                                     |
+| **Validate Scan**                                                                                                       |
 +=========================================================================================================================+
-| Validates a new Strike process configuration without actually saving it                                                 |
+| Validates a new Scan process configuration without actually saving it                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /v6/strikes/validation/                                                                                        |
+| **POST** /v6/scans/validation/                                                                                          |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Required | The human readable display name of the Strike process.              |
+| title              | String            | Required | The human readable display name of the Scan process.                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | A longer description of the Strike process.                         |
+| description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
+| configuration      | JSON Object       | Required | JSON defining the Scan configuration.                               |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -350,23 +401,23 @@ Response: 200 OK
 | .details           | String            | A human-readable description of the problem.                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_v6_strike_edit:
+.. _rest_v6_scan_edit:
 
-**Example PATCH /v6/strikes/{id}/ API call**
+**Example PATCH /v6/scans/{id}/ API call**
 
-Request: PATCH http://.../v6/strikes/{id}/
+Request: PATCH http://.../v6/scans/{id}/
 
 .. code-block:: javascript 
  
     { 
-        "title": "My Strike Process", 
-        "description": "This is my Strike process for detecting my favorite files!", 
+        "title": "My Scan Process", 
+        "description": "This is my Scan process for detecting my favorite files!", 
         "configuration": { 
             "workspace": "my-workspace", 
             "monitor": { 
-                "type": "dir-watcher", 
-                "transfer_suffix": "_tmp" 
+                "type": "dir" 
             }, 
+            "recursive": true,
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
             }] 
@@ -376,46 +427,155 @@ Request: PATCH http://.../v6/strikes/{id}/
 Response: 204 NO CONTENT
     
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Edit Strike**                                                                                                         |
+| **Edit Scan**                                                                                                           |
 +=========================================================================================================================+
-| Edits an existing Strike process with associated configuration                                                          |
+| Edits an existing Scan process with associated configuration                                                            |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /v6/strikes/{id}/                                                                                             |
+| **PATCH** /v6/scans/{id}/                                                                                               |
 |           Where {id} is the unique identifier of an existing model.                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Optional | The human readable display name of the Strike process.              |
+| title              | String            | Optional | The human readable display name of the Scan process.                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | A longer description of the Strike process.                         |
+| description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | Optional | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
+| configuration      | JSON Object       | Optional | JSON defining the Scan configuration.                               |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 204 No Content                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 
-.. _rest_v6_strike_configuration:
+.. _rest_v6_scan_process:
 
-Strike Configuration JSON
--------------------------
+**Example POST /v6/scans/{id}/process/ API call**
 
-A strike configuration JSON describes a set of configuration settings that affect how a strike job executes.
+Request: POST http://.../v6/scans/{id}/process/
 
-**Example dir-watcher interface:**
+ .. code-block:: javascript 
+ 
+  { 
+    "ingest": true 
+  } 
+
+Response: 200 OK
+
+ .. code-block:: javascript 
+ 
+   { 
+       "id": 1, 
+       "name": "my-scan-process", 
+       "title": "My Scan Process", 
+       "description": "This is my Scan process for detecting my favorite files!", 
+       "file_count": 50,
+       "job": { 
+           "id": 7, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+           "status": "RUNNING"
+       },
+       "dry_run_job": { 
+           "id": 6, 
+           "job_type": { 
+               "id": 2, 
+               "name": "scale-scan", 
+               "title": "Scale Scan", 
+               "description": "Scans a workspace for existing source files to ingest", 
+               "revision_num": 1,
+               "icon_code": "f0e7" 
+           }, 
+           "status": "RUNNING"
+       },
+       "created": "2015-03-11T00:00:00Z",
+       "last_modified": "2015-03-11T00:00:00Z",
+       "configuration": { 
+           "workspace": "my-workspace", 
+           "monitor": { 
+               "type": "dir"
+           }, 
+           "recursive": true, 
+           "files_to_ingest": [{ 
+               "filename_regex": ".*txt" 
+           }] 
+       } 
+   } 
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Process Scan**                                                                                                        |
++=========================================================================================================================+
+| Launches an existing Scan with associated configuration                                                                 |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/scans/{id}/process/                                                                                        |
+|           Where {id} is the unique identifier of an existing model.                                                     |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ingest             | Boolean           | Optional | Whether a dry run or ingest triggering scan should be run.          |
+|                    |                   |          | Defaults to false when unset.                                       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| id                 | Integer           | The unique identifier of the model. Can be passed to the details API.          |
+|                    |                   | (See :ref:`Scan Details <rest_v6_scan_details>`)                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| name               | String            | The identifying name of the Scan process used for queries.                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| title              | String            | The human readable display name of the Scan process.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| description        | String            | A longer description of the Scan process.                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| file_count         | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| job                | JSON Object       | The job that is associated with the Scan process.                              |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| dry_run_job        | JSON Object       | The dry run job that is associated with the Scan process.                      |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| configuration      | JSON Object       | JSON defining the Scan configuration.                                          |
+|                    |                   | (See :ref:`rest_v6_scan_configuration`)                                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_scan_configuration:
+
+Scan Configuration JSON
+-----------------------
+
+A scan configuration JSON describes a set of configuration settings that affect how a scanner executes.
+
+**Example interface:**
 
 .. code-block:: javascript
 
     {
       "workspace" : "workspace_name",
-      "monitor" : {
-        "type" : "dir-watcher",
+      "scanner" : {
+        "type" : "dir",
         "transfer_suffix" : "_tmp"
       },
+      "recursive" : true,
       "files_to_ingest":[
         {
           "filename_regex" : ".*txt",
@@ -425,72 +585,26 @@ A strike configuration JSON describes a set of configuration settings that affec
         }
       ]
     }
-    
-**Example S3 interface:**
-
-.. code-block:: javascript
-
-    {
-        "workspace": "my-host-workspace",
-        "monitor": {
-            "type": "s3",
-            "sqs_name": "my-sqs"
-            "credentials": {
-                "access_key_id": "AKIAIOSFODNN7EXAMPLE",
-                "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-            },
-            "region_name": "us-east-1"
-        },
-        "files_to_ingest": [
-            {
-                "filename_regex": "*.h5",
-                "data_types": [
-                    "data type 1",
-                    "data type 2"
-                ],
-                "new_workspace": "my-new-workspace",
-                "new_file_path": "/new/file/path"
-            }
-        ]
-    }
 
 +-----------------------------------------------------------------------------------------------------------------------------+
-| **Strike Configuration**                                                                                                    |
+| **Scan Configuration**                                                                                                      |
 +============================+================+==========+====================================================================+
 | workspace                  | String         | Required | String that specifies the name of the workspace that is being      |
 |                            |                |          | scanned. The type of the workspace (its broker type) will determine|
 |                            |                |          | which types of scanner can be used.                                |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| monitor                    | JSON Object    | Required | JSON object representing the type and configuration of the monitor |
-|                            |                |          | that will watch *workspace* for new files.                         |
+| scanner                    | JSON Object    | Required | JSON object representing the type and configuration of the scanner |
+|                            |                |          | that will scan *workspace* for files.                              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .type                      | String         | Required | The type of the monitor. Must be either 'dir-watcher' or 's3'      |
+| .type                      | String         | Required | The type of the scanner. Must be either 'dir' or 's3'              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .transfer_suffix           | String         | Required | (dir-watcher)Defines a suffix that is used on the file names to    |
-|                            |                |          | indicate that files are still transferring and have not yet        |
-|                            |                |          | finished being copied into the monitored directory                 |
+| .transfer_suffix           | String         | Optional | Defines a suffix that is used on the file names to indicate that   |
+|                            |                |          | files are still transferring and have not yet finished being copied|
+|                            |                |          | into the scanned directory                                         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .sqs_name                  | String         | Required | (s3) Name of the SQS queue that should be polled for object        |
-|                            |                |          | creation notifications that describe new files in the S3 bucket.   |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .credentials               | JSON Object    | Optional | (s3) JSON object that provides the necessary information to access |
-|                            |                |          | the bucket. This attribute should be omitted when using IAM        |
-|                            |                |          | role-based security. If it is included for key-based security, then|
-|                            |                |          | both sub-attributes must be included. An IAM account should be     |
-|                            |                |          | created and granted the appropriate permissions to the bucket      |
-|                            |                |          | before attempting to use it here.                                  |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..access_key_id            | String         | Optional | (s3) Unique identifier for the user account in IAM that will be    |
-|                            |                |          | used as a proxy for read and write operations within Scale.        |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| ..secret_access_key        | String         | Required | (s3) Generated token that the system can use to prove it should be |
-|                            |                |          | able to make requests on behalf of the associated IAM account      |
-|                            |                |          | without requiring the actual password used by that account.        |
-+----------------------------+----------------+----------+--------------------------------------------------------------------+
-| .region_name               | String         | Optional | (s3) AWS region where the SQS Queue is located. This is not always |
-|                            |                |          | required, as environment variables or configuration files could set|
-|                            |                |          | the default region, but it is a highly recommended setting for     |
-|                            |                |          | explicitly indicating the SQS region.                              |
+| recursive                  | Boolean        | Optional | Indicates whether a scanner should be limited to the root of a     |
+|                            |                |          | workspace (false) or traverse the entire tree (true). If ommitted, |
+|                            |                |          | the default is true                                                |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | files_to_ingest            | Array          | Required | List of JSON objects that define the rules for how to handle files |
 |                            |                |          | that appear in the scanned workspace. The array must contain at    |

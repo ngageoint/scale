@@ -198,14 +198,8 @@ class JobBaseSerializerV5(ModelIdSerializer):
 class JobBaseSerializerV6(ModelIdSerializer):
     """Converts job model fields to REST output."""
     job_type = JobTypeBaseSerializerV6()
-    job_type_rev = ModelIdSerializer()
-    event = ModelIdSerializer()
-    node = ModelIdSerializer()
-    error = ModelIdSerializer()
-
     status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
-    priority = serializers.IntegerField()
-    num_exes = serializers.IntegerField()
+
 
 
 # TODO: remove this function when REST API v5 is removed
@@ -251,6 +245,8 @@ class JobSerializerV6(JobBaseSerializerV6):
     node = NodeBaseSerializer()
     error = ErrorBaseSerializerV6()
     resources = serializers.JSONField(source='get_resources_dict')
+    priority = serializers.IntegerField()
+    num_exes = serializers.IntegerField()
 
     timeout = serializers.IntegerField()
     max_tries = serializers.IntegerField()

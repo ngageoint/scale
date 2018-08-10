@@ -13,8 +13,11 @@ from django.db import models, transaction
 from django.utils.timezone import now
 
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
+from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.configuration.data.job_data import JobData
@@ -632,13 +635,14 @@ class Ingest(models.Model):
         """meta information for database"""
         db_table = 'ingest'
 
+ScanValidation = namedtuple('ScanValidation', ['is_valid', 'errors', 'warnings'])
 
 class ScanManager(models.Manager):
     """Provides additional methods for handling Scan processes
     """
 
     @transaction.atomic
-    def create_scan(self, name, title, description, configuration, dry_run=True):
+    def create_scan(self, name, title, description, configuration):
         """Creates a new Scan process with the given configuration and returns 
         the new Scan model. All changes to the database will occur in an atomic transaction.
 
@@ -649,9 +653,7 @@ class ScanManager(models.Manager):
         :param description: A description of this Scan process
         :type description: string
         :param configuration: The Scan configuration
-        :type configuration: dict
-        :param dry_run: Whether the scan will execute as a dry run
-        :type dry_run: bool
+        :type configuration: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
         :returns: The new Scan process
         :rtype: :class:`ingest.models.Scan`
 
@@ -660,14 +662,13 @@ class ScanManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        config = ScanConfiguration(configuration)
-        config.validate()
+        configuration.validate()
 
         scan = Scan()
         scan.name = name
         scan.title = title
         scan.description = description
-        scan.configuration = config.get_dict()
+        scan.configuration = configuration.config_dict
         scan.save()
 
         return scan
@@ -683,8 +684,8 @@ class ScanManager(models.Manager):
         :type title: string
         :param description: A description of this Scan process
         :type description: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
+        :param configuration: The Scan process configuration
+        :type configuration: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
 
         :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
             invalid.
@@ -697,9 +698,8 @@ class ScanManager(models.Manager):
 
         # Validate the configuration, no exception is success
         if configuration:
-            config = ScanConfiguration(configuration)
-            config.validate()
-            scan.configuration = config.get_dict()
+            configuration.validate()
+            scan.configuration = configuration.config_dict
 
         # Update editable fields
         if title:
@@ -804,6 +804,28 @@ class ScanManager(models.Manager):
         scan.save()
  
         return scan
+        
+    def validate_scan_v6(self, configuration):
+        """Validates the given configuration for creating a new scan process
+
+        :param configuration: The scan configuration
+        :type configuration: dict
+        :returns: The scan validation
+        :rtype: :class:`strike.models.ScanValidation`
+        """
+
+        is_valid = True
+        errors = []
+        warnings = []
+
+        try:
+            config = ScanConfigurationV6(configuration, do_validate=True).get_configuration()
+            warnings = config.validate()
+        except InvalidScanConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+
+        return ScanValidation(is_valid, errors, warnings)
 
 
 class Scan(models.Model):
@@ -855,16 +877,26 @@ class Scan(models.Model):
         :rtype: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
         """
 
-        return ScanConfiguration(self.configuration)
+        return ScanConfigurationV6(self.configuration).get_configuration()
 
-    def get_scan_configuration_as_dict(self):
-        """Returns the configuration for this Scan process as a dict
+    def get_v1_configuration_json(self):
+        """Returns the scan configuration in v1 of the JSON schema
 
-        :returns: The configuration for this Scan process
+        :returns: The scan configuration in v1 of the JSON schema
         :rtype: dict
         """
 
-        return self.get_scan_configuration().get_dict()
+        return self.configuration
+
+    def get_v6_configuration_json(self):
+        """Returns the scan configuration in v6 of the JSON schema
+
+        :returns: The scan configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        #schemas are identical except for version number, just return dict with version stripped
+        return rest_utils.strip_schema_version(self.configuration)
 
     class Meta(object):
         """meta information for database"""
@@ -889,7 +921,7 @@ class StrikeManager(models.Manager):
         :param description: A description of this Strike process
         :type description: string
         :param configuration: The Strike configuration
-        :type configuration: dict
+        :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
         :returns: The new Strike process
         :rtype: :class:`ingest.models.Strike`
 
@@ -897,15 +929,14 @@ class StrikeManager(models.Manager):
             invalid.
         """
 
-        # Validate the configuration, no exception is success
-        config = StrikeConfiguration(configuration)
-        config.validate()
-
         strike = Strike()
         strike.name = name
         strike.title = title
         strike.description = description
-        strike.configuration = config.get_dict()
+        # Validate the configuration, no exception is success
+        if configuration:
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
         strike.save()
 
         strike_type = self.get_strike_job_type()
@@ -917,48 +948,7 @@ class StrikeManager(models.Manager):
         strike.save()
 
         return strike
-        
-    @transaction.atomic
-    def create_strike_v6(self, name, title, description, configuration):
-        """Creates a new Strike process with the given configuration and returns the new Strike model. The Strike model
-        will be saved in the database and the job to run the Strike process will be placed on the queue. All changes to
-        the database will occur in an atomic transaction.
 
-        :param name: The identifying name of this Strike process
-        :type name: string
-        :param title: The human-readable name of this Strike process
-        :type title: string
-        :param description: A description of this Strike process
-        :type description: string
-        :param configuration: The Strike configuration
-        :type configuration: dict
-        :returns: The new Strike process
-        :rtype: :class:`ingest.models.Strike`
-
-        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
-            invalid.
-        """
-
-        # Validate the configuration, no exception is success
-        config = StrikeConfigurationV6(configuration)
-        config.validate()
-
-        strike = Strike()
-        strike.name = name
-        strike.title = title
-        strike.description = description
-        strike.configuration = config.get_dict()
-        strike.save()
-
-        strike_type = self.get_strike_job_type()
-        job_data = JobData()
-        job_data.add_property_input('Strike ID', unicode(strike.id))
-        event_description = {'strike_id': strike.id}
-        event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
-        strike.save()
-
-        return strike
 
     @transaction.atomic
     def edit_strike(self, strike_id, title=None, description=None, configuration=None):
@@ -972,7 +962,7 @@ class StrikeManager(models.Manager):
         :param description: A description of this Strike process
         :type description: string
         :param configuration: The Strike process configuration
-        :type configuration: dict
+        :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
 
         :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
             invalid.
@@ -982,42 +972,8 @@ class StrikeManager(models.Manager):
 
         # Validate the configuration, no exception is success
         if configuration:
-            config = StrikeConfiguration(configuration)
-            config.validate()
-            strike.configuration = config.get_dict()
-
-        # Update editable fields
-        if title:
-            strike.title = title
-        if description:
-            strike.description = description
-        strike.save()
-        
-    @transaction.atomic
-    def edit_strike_v6(self, strike_id, title=None, description=None, configuration=None):
-        """Edits the given Strike process and saves the changes in the database. All database changes occur in an atomic
-        transaction. An argument of None for a field indicates that the field should not change.
-
-        :param strike_id: The unique identifier of the Strike process to edit
-        :type strike_id: int
-        :param title: The human-readable name of this Strike process
-        :type title: string
-        :param description: A description of this Strike process
-        :type description: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
-
-        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
-            invalid.
-        """
-
-        strike = Strike.objects.get(pk=strike_id)
-
-        # Validate the configuration, no exception is success
-        if configuration:
-            config = StrikeConfigurationV6(configuration)
-            config.validate()
-            strike.configuration = config.get_dict()
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
 
         # Update editable fields
         if title:
@@ -1095,7 +1051,7 @@ class StrikeManager(models.Manager):
         warnings = []
 
         try:
-            config = StrikeConfigurationV6(configuration)
+            config = StrikeConfigurationV6(configuration, do_validate=True).get_configuration()
             warnings = config.validate()
         except InvalidStrikeConfiguration as ex:
             is_valid = False
@@ -1144,7 +1100,7 @@ class Strike(models.Model):
         :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
         """
 
-        return StrikeConfigurationV6(self.configuration)
+        return StrikeConfigurationV6(self.configuration).get_configuration()
 
     def get_v5_strike_configuration_as_dict(self):
         """Returns the v5 configuration for this Strike process as a dict
@@ -1153,7 +1109,7 @@ class Strike(models.Model):
         :rtype: dict
         """
 
-        return StrikeConfiguration(self.configuration).get_dict()
+        return StrikeConfigurationV2(self.configuration).get_configuration().get_dict()
         
     def get_v6_configuration_json(self):
         """Returns the batch configuration in v6 of the JSON schema
