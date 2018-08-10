@@ -184,7 +184,7 @@ class CreateJobs(CommandMessage):
 
         jobs = []
 
-        # If this job is in a recipe that supersedes another recipe, find the corresponding superseded job
+        # If this new job(s) is in a recipe that supersedes another recipe, find the corresponding superseded job(s)
         superseded_job = None
         if self.superseded_recipe_id:
             superseded_jobs = RecipeNode.objects.get_superseded_recipe_jobs(self.superseded_recipe_id,

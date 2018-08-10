@@ -97,6 +97,62 @@ class RecipeManager(models.Manager):
 
         return recipe
 
+    def create_recipe_v6(self, job_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None, batch_id=None,
+                      superseded_job=None):
+        """Creates a new job for the given job type revision and returns the (unsaved) job model
+
+        :param job_type_rev: The job type revision (with populated job_type model) of the job to create
+        :type job_type_rev: :class:`job.models.JobTypeRevision`
+        :param event_id: The event ID that triggered the creation of this job
+        :type event_id: int
+        :param input_data: The job's input data (optional)
+        :type input_data: :class:`data.data.data.Data`
+        :param root_recipe_id: The ID of the root recipe that contains this job
+        :type root_recipe_id: int
+        :param recipe_id: The ID of the original recipe that created this job
+        :type recipe_id: int
+        :param batch_id: The ID of the batch that contains this job
+        :type batch_id: int
+        :param superseded_job: The job that the created job is superseding, possibly None
+        :type superseded_job: :class:`job.models.Job`
+        :returns: The new job model
+        :rtype: :class:`job.models.Job`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
+        """
+
+        # TODO: doc and signature
+        # TODO: create recipe model
+        # TODO: create recipe node models for copied jobs/sub-recipes
+        # TODO: supersede/cancel jobs/sub-recipes?
+        # TODO: unpublish jobs?
+        job = Job()
+        job.job_type = job_type_rev.job_type
+        job.job_type_rev = job_type_rev
+        job.event_id = event_id
+        job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        job.recipe_id = recipe_id
+        job.batch_id = batch_id
+        job.max_tries = job_type_rev.job_type.max_tries
+
+        if input_data:
+            input_data.validate(job_type_rev.get_input_interface())
+            job.input = convert_data_to_v6_json(input_data).get_dict()
+
+        # TODO: remove this legacy job types are removed
+        if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
+            job.priority = job_type_rev.job_type.priority
+            job.timeout = job_type_rev.job_type.timeout
+
+        if superseded_job:
+            root_id = superseded_job.root_superseded_job_id
+            if not root_id:
+                root_id = superseded_job.id
+            job.root_superseded_job_id = root_id
+            job.superseded_job = superseded_job
+
+        return job
+
     # TODO: remove this once old recipe creation is removed
     @transaction.atomic
     def create_recipe_old(self, recipe_type, input, event, batch_id=None, superseded_recipe=None, delta=None,
@@ -1280,6 +1336,20 @@ class RecipeNodeManager(models.Manager):
         """
 
         return [rn.job for rn in self.filter(recipe_id=recipe_id, node_name=node_name, job__is_superseded=True)]
+
+    def get_superseded_subrecipes(self, recipe_id, node_name):
+        """Returns the superseded sub-recipe models that belong to the given superseded recipe with the given node name
+
+        :param recipe_id: The superseded recipe ID
+        :type recipe_id: int
+        :param node_name: The node name
+        :type node_name: string
+        :returns: The superseded recipe models for the recipe
+        :rtype: list
+        """
+
+        qry = self.filter(recipe_id=recipe_id, node_name=node_name, sub_recipe__is_superseded=True)
+        return [rn.sub_recipe for rn in qry]
 
 
 class RecipeNode(models.Model):

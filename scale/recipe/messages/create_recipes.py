@@ -163,6 +163,26 @@ class CreateRecipes(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # TODO:
+        #  - lock superseded recipes to make sure a recipe isn't reprocessed twice
+        #  - look for existing recipes to see if message has already run, if not go to next step
+        #  - superseded recipe can be provided or found from containing recipe's superseded recipe (two cases, one from
+        #    top level reprocess/batch and the other from update_recipes)
+        #  - bulk create new recipe models
+        #  - bulk create new recipe_node models if new recipes are sub-recipes
+        #  - if new recipe is superseding another recipe, then it is a reprocess, flag indicates to do diff
+        #   - if flag is set
+        #       - if superseded recipe has data, copy data from it
+        #       - supersede/cancel/unpublish deleted jobs and sub-recipes (message for sub-recipes to s/c/u)
+        #       - supersede/cancel changed jobs and sub-recipes (message for sub-recipes to s/c)
+        #       - copy identical jobs and sub-recipes from superseded recipe
+        #   - if has data or in a recipe and process_input flag, send message to process_recipe_input
+        #  - send messages for canceling and unpublishing
+        #  - send update_recipe_metrics message if in a recipe
+
+        # TODO: figure out how to handle two re-processes over top of each other
+
+        # TODO: move this to _create_recipes()?
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.recipe_type_rev_num)
 
         # Check to see if jobs were already created so that message is idempotent
@@ -179,30 +199,33 @@ class CreateRecipes(CommandMessage):
         return True
 
     # TODO:
-    def _create_jobs(self, job_type_rev):
-        """Creates the job models for the message
+    def _create_recipes(self, recipe_type_rev):
+        """Creates the recipe models for the message
 
-        :param job_type_rev: The job type revision with populated job_type model
-        :type job_type_rev: :class:`job.models.JobTypeRevision`
-        :returns: The list of job models created
+        :param recipe_type_rev: The recipe type revision with populated recipe_type model
+        :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
+        :returns: The list of recipe models created
         :rtype: list
         """
 
-        from recipe.models import RecipeNode
+        recipes = []
 
-        jobs = []
+        # TODO: superseded jobs and sub-recipes all the way down
+        # TODO: create messages to cancel superseded jobs all the way down
+        # TODO: create messages to unpublish deleted jobs all the way down
 
-        # If this job is in a recipe that supersedes another recipe, find the corresponding superseded job
-        superseded_job = None
+        # If this new sub-recipe(s) is in a recipe that supersedes another recipe, find the corresponding superseded
+        # sub-recipe(s)
+        superseded_subrecipe = None
         if self.superseded_recipe_id:
-            superseded_jobs = RecipeNode.objects.get_superseded_recipe_jobs(self.superseded_recipe_id,
-                                                                            self.recipe_node_name)
-            if len(superseded_jobs) == 1:
-                superseded_job = superseded_jobs[0]
+            superseded_subrecipes = RecipeNode.objects.get_superseded_subrecipes(self.superseded_recipe_id,
+                                                                                 self.recipe_node_name)
+            if len(superseded_subrecipes) == 1:
+                superseded_subrecipe = superseded_subrecipes[0]
 
         try:
             with transaction.atomic():
-                # Bulk create jobs
+                # Bulk create recipes
                 for _ in xrange(self.count):
                     input_data = DataV6(self.input_data, do_validate=True).get_data() if self.input_data else None
                     job = Job.objects.create_job_v6(job_type_rev, self.event_id, input_data=input_data,
@@ -217,26 +240,29 @@ class CreateRecipes(CommandMessage):
                                                                              jobs)
                     RecipeNode.objects.bulk_create(node_models)
         except InvalidData:
-            msg = 'Job of type (%s, %s, %d) was given invalid input data. Message will not re-run.'
-            logger.exception(msg, self.job_type_name, self.job_type_version, self.job_type_rev_num)
-            jobs = []
+            msg = 'Recipe of type (%s, %d) was given invalid input data. Message will not re-run.'
+            logger.exception(msg, self.recipe_type_name, self.recipe_type_rev_num)
+            recipes = []
 
-        return jobs
+        return recipes
 
-    def _find_existing_recipes(self, recipe_type_rev):
+    def _find_existing_recipes(self):
         """Searches to determine if this message already ran and the recipes already exist
 
-        :param recipe_type_rev: The recipe type revision with populated recipe_type model
-        :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
         :returns: The list of recipe models found
         :rtype: list
         """
 
         if self.recipe_id:
             qry = RecipeNode.objects.filter(recipe_id=self.recipe_id, node_name=self.recipe_node_name)
-            qry = qry.filter(sub_recipe__recipe_type_rev_id=recipe_type_rev.id, sub_recipe__event_id=self.event_id)
+            qry = qry.filter(sub_recipe__event_id=self.event_id)
             recipes = [recipe_node.sub_recipe for recipe_node in qry]
         else:
-            recipes = list(Recipe.objects.filter(recipe_type_rev_id=recipe_type_rev.id, event_id=self.event_id))
+            qry = Recipe.objects.filter(event_id=self.event_id)
+            if self.batch_id:
+                qry = qry.filter(batch_id=self.batch_id)
+            if self.input_data:
+                qry = qry.filter(input=self.input_data)
+            recipes = list(qry)
 
         return recipes
