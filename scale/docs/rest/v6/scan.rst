@@ -575,7 +575,7 @@ A scan configuration JSON describes a set of configuration settings that affect 
         "type" : "dir",
         "transfer_suffix" : "_tmp"
       },
-      recursive : true,
+      "recursive" : true,
       "files_to_ingest":[
         {
           "filename_regex" : ".*txt",

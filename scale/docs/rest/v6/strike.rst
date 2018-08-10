@@ -416,7 +416,6 @@ A strike configuration JSON describes a set of configuration settings that affec
         "type" : "dir-watcher",
         "transfer_suffix" : "_tmp"
       },
-      recursive : true,
       "files_to_ingest":[
         {
           "filename_regex" : ".*txt",
