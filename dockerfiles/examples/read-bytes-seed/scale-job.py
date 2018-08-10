@@ -51,8 +51,8 @@ def run_algorithm(bytes_total, input_file, out_dir):
         'geometry': None,
         'properties':
             {
-                'dataStarted': start,
-                'dataEnded': end
+                'dataStarted': start + 'Z',
+                'dataEnded': end + 'Z'
             }
     }
 
