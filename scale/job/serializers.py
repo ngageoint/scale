@@ -396,8 +396,8 @@ class JobDetailsSerializerV6(JobSerializerV6):
     from error.serializers import ErrorSerializerV6
     from trigger.serializers import TriggerEventDetailsSerializer
 
-    job_type = JobTypeSerializerV6()
-    job_type_rev = JobTypeRevisionSerializerV6()
+    job_type = JobTypeBaseSerializerV6()
+    job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializerV6()
 
