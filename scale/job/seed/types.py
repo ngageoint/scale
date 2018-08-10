@@ -5,6 +5,7 @@ import os
 
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
+from job.seed.metadata import METADATA_SUFFIX
 
 
 class SeedFiles(object):
@@ -74,6 +75,9 @@ class SeedOutputFiles(SeedFiles):
         """
         path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, self.pattern)
         results = glob.glob(path_pattern)
+
+        # Remove any metadata.json files from results
+        results = [x for x in results if METADATA_SUFFIX not in x]
 
         # Handle required validation
         if self.required and len(results) == 0:
