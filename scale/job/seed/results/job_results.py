@@ -185,15 +185,16 @@ class JobResults(object):
             # For files obj that are detected, handle results (may be multiple)
             product_files = []
             for matched_file in output_file.get_files():
+                logger.info('File detected for output capture: %s' % matched_file)
 
                 product_file_meta = ProductFileMetadata(output_file.name, matched_file, output_file.media_type)
 
                 # check to see if there is a side-car metadata file
-                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
+                metadata_file = matched_file + METADATA_SUFFIX
 
                 # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
                 if os.path.isfile(metadata_file):
-                    logger.info('Capturing metadata from side-car file: %s' % metadata_file)
+                    logger.info('Capturing metadata from detected side-car file: %s' % metadata_file)
                     with open(metadata_file) as metadata_file_handle:
                         try:
                             metadata = SeedMetadata.metadata_from_json(json.load(metadata_file_handle))
