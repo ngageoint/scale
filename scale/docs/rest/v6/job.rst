@@ -44,28 +44,42 @@ Response: 200 OK
           "event": {
             "id": 3,
             "type": "STRIKE_TRANSFER",
-            "rule": null,
             "occurred": "2015-08-28T17:57:24.261Z"
           },
-          "node": {
+          "recipe": { 
             "id": 1,
-            "hostname": "my-host.example.domain"
+            "recipe_type": {
+              "id": 208,
+              "name": "my-recipe-type",
+              "title": "My Recipe Type",
+              "description": "My Recipe Type Description",
+              "revision_num": 1
+            }
+            "recipe_type_rev": {
+              "id": 1
+            },
+            "event": {
+              "id": 1
+            }
+          },
+          "batch": {
+            "id": 1,
+            "title": "My Batch",
+            "description": "My batch of recipes",
+            "created": "2015-08-28T17:55:41.005Z"
+          },
+          "is_superseded": false,
+          "superseded_job": null,
+          "status": "COMPLETED",
+          "node": { 
+            "id": 1,
+            "hostname": "my-host.example.domain" 
           },
           "error": null,
-          "status": "COMPLETED",
-          "priority": 10,
           "num_exes": 1,
-          "timeout": 1800,
-          "max_tries": 3,
-          "cpus_required": 1,
-          "mem_required": 64,
-          "disk_in_required": 0,
-          "disk_out_required": 64,
-          "is_superseded": false,
-          "root_superseded_job": null,
-          "superseded_job": null,
-          "superseded_by_job": null,
-          "delete_superseded": true,
+          "input_file_size": 64,
+          "source_started": "2015-08-28T17:55:41.005Z",
+          "source_ended": "2015-08-28T17:56:41.005Z",
           "created": "2015-08-28T17:55:41.005Z",
           "queued": "2015-08-28T17:56:41.005Z",
           "started": "2015-08-28T17:57:41.005Z",

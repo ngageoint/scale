@@ -5,8 +5,10 @@ import logging
 
 import rest_framework.serializers as serializers
 
+from batch.serializers import BatchBaseSerializerV6
 from job.models import Job
 from node.serializers import NodeBaseSerializer
+from recipe.serializers import RecipeBaseSerializer
 from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
@@ -206,10 +208,10 @@ class JobBaseSerializerV6(ModelIdSerializer):
 class JobSerializerV5(JobBaseSerializerV5):
     """Converts job model fields to REST output."""
     from error.serializers import ErrorBaseSerializerV5
-    from trigger.serializers import TriggerEventBaseSerializer
+    from trigger.serializers import TriggerEventBaseSerializerV5
 
     job_type_rev = JobTypeRevisionBaseSerializer()
-    event = TriggerEventBaseSerializer()
+    event = TriggerEventBaseSerializerV5()
     node = NodeBaseSerializer()
     error = ErrorBaseSerializerV5()
 
@@ -238,27 +240,22 @@ class JobSerializerV5(JobBaseSerializerV5):
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from error.serializers import ErrorBaseSerializerV6
-    from trigger.serializers import TriggerEventBaseSerializer
+    from trigger.serializers import TriggerEventSerializerV6
 
     job_type_rev = JobTypeRevisionBaseSerializer()
-    event = TriggerEventBaseSerializer()
+    event = TriggerEventSerializerV6()
+    recipe = RecipeBaseSerializer()
+    batch = BatchBaseSerializerV6()
+    is_superseded = serializers.BooleanField()
+    superseded_job = ModelIdSerializer()
+    status = serializers.ChoiceField(choices=Job.JOB_STATUSES)
     node = NodeBaseSerializer()
     error = ErrorBaseSerializerV6()
-    resources = serializers.JSONField(source='get_resources_dict')
-    priority = serializers.IntegerField()
     num_exes = serializers.IntegerField()
-
-    timeout = serializers.IntegerField()
-    max_tries = serializers.IntegerField()
-
     input_file_size = serializers.FloatField()
 
-    is_superseded = serializers.BooleanField()
-    root_superseded_job = ModelIdSerializer()
-    superseded_job = ModelIdSerializer()
-    superseded_by_job = ModelIdSerializer()
-    delete_superseded = serializers.BooleanField()
-
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
