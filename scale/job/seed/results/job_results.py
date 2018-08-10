@@ -193,6 +193,7 @@ class JobResults(object):
 
                 # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
                 if os.path.isfile(metadata_file):
+                    logger.info('Capturing metadata from side-car file: %s' % metadata_file)
                     with open(metadata_file) as metadata_file_handle:
                         try:
                             metadata = SeedMetadata.metadata_from_json(json.load(metadata_file_handle))
