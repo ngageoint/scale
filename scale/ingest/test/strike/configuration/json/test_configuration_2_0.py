@@ -8,11 +8,11 @@ from django.test import TestCase
 import storage.test.utils as storage_test_utils
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from storage.models import Workspace
 
 
-class TestStrikeConfigurationV6(TestCase):
+class TestStrikeConfigurationV2(TestCase):
 
     def setUp(self):
         django.setup()
@@ -25,7 +25,7 @@ class TestStrikeConfigurationV6(TestCase):
         """Tests calling StrikeConfigurationV6 constructor with bare minimum JSON"""
 
         # No exception is success
-        StrikeConfigurationV6({
+        StrikeConfigurationV2({
             'workspace': self.workspace.name,
             'monitor': {
                 'type': 'dir-watcher',
@@ -50,7 +50,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV2, config, True)
 
     def test_missing_workspace(self):
         """Tests calling StrikeConfigurationV6 constructor with missing workspace"""
@@ -64,7 +64,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV2, config, True)
 
     def test_missing_monitor(self):
         """Tests calling StrikeConfigurationV6 constructor with missing monitor"""
@@ -75,7 +75,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV2, config, True)
 
     def test_blank_filename_regex(self):
         """Tests calling StrikeConfigurationV6 constructor with blank filename_regex"""
@@ -90,7 +90,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': ''
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV2, config, True)
 
     def test_absolute_workspace_path(self):
         """Tests calling StrikeConfigurationV6 constructor with absolute new_file_path."""
@@ -107,7 +107,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'new_file_path': '/absolute/path'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV2, config, True)
 
     def test_successful_all(self):
         """Tests calling StrikeConfigurationV6 constructor successfully with all information"""
@@ -126,7 +126,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
         # No exception is success
-        StrikeConfigurationV6(config)
+        StrikeConfigurationV2(config)
 
     def test_validate_bad_monitor_type(self):
         """Tests calling StrikeConfigurationV6.validate() with a bad monitor type"""
@@ -142,7 +142,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        configuration = StrikeConfigurationV6(config).get_configuration()
+        configuration = StrikeConfigurationV2(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
 
     def test_validate_mismatched_monitor_type(self):
@@ -159,7 +159,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        configuration = StrikeConfigurationV6(config).get_configuration()
+        configuration = StrikeConfigurationV2(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
 
     def test_validate_bad_workspace(self):
@@ -177,7 +177,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        configuration = StrikeConfigurationV6(config).get_configuration()
+        configuration = StrikeConfigurationV2(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
         
     def test_validate_workspace_not_active(self):
@@ -195,7 +195,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        configuration = StrikeConfigurationV6(config).get_configuration()
+        configuration = StrikeConfigurationV2(config).get_configuration()
         self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
         
     def test_validate_successful_all(self):
@@ -216,7 +216,7 @@ class TestStrikeConfigurationV6(TestCase):
         }
 
         # No exception is success
-        StrikeConfigurationV6(config).get_configuration().validate()
+        StrikeConfigurationV2(config).get_configuration().validate()
 
     def test_conversion_from_1_0(self):
         """Tests calling StrikeConfigurationV6.validate() after converting from schema version 1.0"""
@@ -233,12 +233,12 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        strike_config = StrikeConfigurationV6(old_config).get_configuration()
+        strike_config = StrikeConfigurationV2(old_config).get_configuration()
         strike_config.validate()
 
         auto_workspace = Workspace.objects.get(name__contains='auto')
         new_config = {
-            'version': '6',
+            'version': '2.0',
             'workspace': auto_workspace.name,
             'monitor': {
                 'type': 'dir-watcher',

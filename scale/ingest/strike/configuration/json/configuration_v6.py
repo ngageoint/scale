@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from ingest.strike.configuration.strike_configuration_1_0 import StrikeConfiguration as StrikeConfiguration_1_0
+from ingest.strike.configuration.json.configuration_1_0 import StrikeConfigurationV1
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.monitors import factory
 from storage.models import Workspace
@@ -84,7 +84,7 @@ class StrikeConfigurationV6(object):
     identify files to ingest and how to store them.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, do_validate=False):
         """Creates a Strike configuration object from the given dictionary. The general format is checked for
         correctness, but the specified workspace(s) are not checked.
 
@@ -103,7 +103,8 @@ class StrikeConfigurationV6(object):
             self._configuration['version'] = '6'
 
         try:
-            validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
+            if do_validate:
+                validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
 
@@ -139,84 +140,20 @@ class StrikeConfigurationV6(object):
         """
 
         return self._configuration
+        
+    def get_configuration(self):
+        """Returns the strike configuration represented by this JSON
 
-    def get_monitor(self):
-        """Returns the configured monitor for this Strike configuration
-
-        :returns: The configured monitor
-        :rtype: :class:`ingest.strike.monitors.monitor.Monitor`
+        :returns: The strike configuration
+        :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`:
         """
 
-        monitor_type = self._configuration['monitor']['type']
-        monitor = factory.get_monitor(monitor_type)
-        self.load_monitor_configuration(monitor)
-        return monitor
+        config = StrikeConfiguration()
+        
+        config.configuration    = self._configuration
+        config.file_handler     = self._file_handler
 
-    def get_workspace(self):
-        """Returns the monitored workspace name for this Strike configuration
-
-        :returns: The monitored workspace name
-        :rtype: string
-        """
-
-        return self._configuration['workspace']
-
-    def load_monitor_configuration(self, monitor):
-        """Loads the configuration into the given monitor
-
-        :param monitor: The configuration as a dictionary
-        :type monitor: :class:`ingest.strike.monitors.monitor.Monitor`
-        """
-
-        monitor_dict = self._configuration['monitor']
-        monitor_type = monitor_dict['type']
-        workspace = self._configuration['workspace']
-
-        # Only load configuration if monitor type is unchanged
-        if monitor_type == monitor.monitor_type:
-            monitor.setup_workspaces(workspace, self._file_handler)
-            monitor.load_configuration(monitor_dict)
-        else:
-            msg = 'Strike monitor type has been changed from %s to %s. Cannot reload configuration.'
-            logger.warning(msg, monitor.monitor_type, monitor_type)
-
-    def validate(self):
-        """Validates the Strike configuration
-
-        :returns: A list of warnings discovered during validation
-        :rtype: list[:class:`util.validation.ValidationWarning`]
-
-        :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
-            invalid.
-        """
-
-        warnings = []
-
-        monitor_type = self._configuration['monitor']['type']
-        if monitor_type not in factory.get_monitor_types():
-            raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
-
-        monitored_workspace_name = self._configuration['workspace']
-        workspace_names = {monitored_workspace_name}
-        for rule in self._file_handler.rules:
-            if rule.new_workspace:
-                workspace_names.add(rule.new_workspace)
-
-        for workspace in Workspace.objects.filter(name__in=workspace_names):
-            if workspace.name == monitored_workspace_name:
-                broker_type = workspace.get_broker().broker_type
-                monitor = factory.get_monitor(monitor_type)
-                if broker_type not in monitor.supported_broker_types:
-                    msg = 'Monitor type %s does not support broker type %s'
-                    raise InvalidStrikeConfiguration(msg % (monitor_type, broker_type))
-            if not workspace.is_active:
-                raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
-            workspace_names.remove(workspace.name)
-
-        if workspace_names:
-            raise InvalidStrikeConfiguration('Unknown workspace name: %s' % workspace_names.pop())
-
-        return warnings
+        return config
 
     def _convert_schema(self, configuration):
         """Tries to validate the configuration as version 1.0 and convert it to version 6
@@ -228,7 +165,7 @@ class StrikeConfigurationV6(object):
         """
 
         # Try converting from 1.0
-        converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
+        converted_configuration = StrikeConfigurationV1(configuration).get_dict()
         converted_configuration['version'] = SCHEMA_VERSION
 
         mount = converted_configuration['mount']

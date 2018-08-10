@@ -4,6 +4,8 @@ import django
 from django.test import TestCase, TransactionTestCase
 
 import storage.test.utils as storage_test_utils
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.models import Ingest, Strike
 from storage.exceptions import InvalidDataTypeTag
 
@@ -83,6 +85,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
             }]
         }
 
+        config = StrikeConfigurationV2(config).get_configuration()
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')
         
@@ -100,5 +103,6 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
             }]
         }
 
+        config = StrikeConfigurationV6(config).get_configuration()
         strike = Strike.objects.create_strike_v6('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')

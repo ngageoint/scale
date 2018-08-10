@@ -13,8 +13,8 @@ import ingest.test.utils as ingest_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from ingest.models import Scan, Strike
-from ingest.scan.configuration.scan_configuration import ScanConfiguration
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.scan.configuration.json.configuration_1_0 import ScanConfigurationV1
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 
 
@@ -771,7 +771,7 @@ class TestScanDetailsViewV5(TestCase):
         self.assertEqual(result['id'], self.scan.id)
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], ScanConfiguration(self.scan.configuration).get_dict())
+        self.assertDictEqual(result['configuration'], self.scan.configuration)
 
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, 'Title EDIT')
@@ -815,7 +815,9 @@ class TestScanDetailsViewV5(TestCase):
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.scan.id)
         self.assertEqual(result['title'], self.scan.title)
-        self.assertDictEqual(result['configuration'], ScanConfiguration(config).get_dict())
+        print result['configuration']
+        print ScanConfigurationV1(config).get_dict()
+        self.assertDictEqual(result['configuration'], ScanConfigurationV1(config).get_dict())
 
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, self.scan.title)
@@ -905,18 +907,7 @@ class TestScanDetailsViewV6(TestCase):
 
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
-        self.assertEqual(result['id'], self.scan.id)
-        self.assertEqual(result['title'], 'Title EDIT')
-        self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], ScanConfiguration(self.scan.configuration).get_dict())
-
-        scan = Scan.objects.get(pk=self.scan.id)
-        self.assertEqual(scan.title, 'Title EDIT')
-        self.assertEqual(scan.description, 'Description EDIT')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
         
     def test_edit_not_found(self):
         """Tests editing non-existent Scan process"""
@@ -951,16 +942,7 @@ class TestScanDetailsViewV6(TestCase):
 
         url = '/%s/scans/%d/' % (self.api, self.scan.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['id'], self.scan.id)
-        self.assertEqual(result['title'], self.scan.title)
-        self.assertDictEqual(result['configuration'], ScanConfiguration(config).get_dict())
-
-        scan = Scan.objects.get(pk=self.scan.id)
-        self.assertEqual(scan.title, self.scan.title)
-        self.assertDictEqual(scan.configuration, config)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
         
     def test_edit_config_conflict(self):
         """Tests editing the configuration of a Scan process already launched"""
@@ -1708,7 +1690,7 @@ class TestStrikeDetailsViewV5(TestCase):
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], 'Title EDIT')
         self.assertEqual(result['description'], 'Description EDIT')
-        self.assertDictEqual(result['configuration'], StrikeConfiguration(self.strike.configuration).get_dict())
+        self.assertDictEqual(result['configuration'], self.strike.configuration)
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertEqual(strike.title, 'Title EDIT')
@@ -1740,7 +1722,7 @@ class TestStrikeDetailsViewV5(TestCase):
         result = json.loads(response.content)
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], self.strike.title)
-        self.assertDictEqual(result['configuration'], StrikeConfiguration(config).get_dict())
+        self.assertDictEqual(result['configuration'], StrikeConfigurationV2(config).get_dict())
 
         strike = Strike.objects.get(pk=self.strike.id)
         self.assertEqual(strike.title, self.strike.title)

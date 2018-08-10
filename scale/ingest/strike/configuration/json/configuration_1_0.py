@@ -125,13 +125,8 @@ class StrikeConfigurationV1(object):
         :returns: The strike configuration
         :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`:
         """
-
-        config = StrikeConfiguration()
-        
-        config.configuration     = self._configuration
-        config.file_handler     = self._file_handler
-
-        return config
+        #This class only exists to convert v1 schemas to v2 or v6
+        raise NotImplementedError
         
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""

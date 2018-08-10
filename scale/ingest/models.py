@@ -17,6 +17,7 @@ from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
 from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from job.configuration.data.job_data import JobData
@@ -885,8 +886,7 @@ class Scan(models.Model):
         :rtype: dict
         """
 
-        #schemas are identical except for version number, just return dict with version stripped
-        return rest_utils.strip_schema_version(self.configuration)
+        return self.configuration
 
     def get_v6_configuration_json(self):
         """Returns the scan configuration in v6 of the JSON schema
@@ -929,15 +929,14 @@ class StrikeManager(models.Manager):
             invalid.
         """
 
-        # Validate the configuration, no exception is success
-        config = StrikeConfiguration(configuration)
-        config.validate()
-
         strike = Strike()
         strike.name = name
         strike.title = title
         strike.description = description
-        strike.configuration = config.get_dict()
+        # Validate the configuration, no exception is success
+        if configuration:
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
         strike.save()
 
         strike_type = self.get_strike_job_type()
@@ -963,7 +962,7 @@ class StrikeManager(models.Manager):
         :param description: A description of this Strike process
         :type description: string
         :param configuration: The Strike configuration
-        :type configuration: dict
+        :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
         :returns: The new Strike process
         :rtype: :class:`ingest.models.Strike`
 
@@ -971,15 +970,14 @@ class StrikeManager(models.Manager):
             invalid.
         """
 
-        # Validate the configuration, no exception is success
-        config = StrikeConfigurationV6(configuration)
-        config.validate()
-
         strike = Strike()
         strike.name = name
         strike.title = title
         strike.description = description
-        strike.configuration = config.get_dict()
+        # Validate the configuration, no exception is success
+        if configuration:
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
         strike.save()
 
         strike_type = self.get_strike_job_type()
@@ -1014,9 +1012,8 @@ class StrikeManager(models.Manager):
 
         # Validate the configuration, no exception is success
         if configuration:
-            config = StrikeConfiguration(configuration)
-            config.validate()
-            strike.configuration = config.get_dict()
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
 
         # Update editable fields
         if title:
@@ -1036,8 +1033,8 @@ class StrikeManager(models.Manager):
         :type title: string
         :param description: A description of this Strike process
         :type description: string
-        :param configuration: The Strike process configuration
-        :type configuration: dict
+        :param configuration: The Strike configuration
+        :type configuration: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
 
         :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
             invalid.
@@ -1047,9 +1044,8 @@ class StrikeManager(models.Manager):
 
         # Validate the configuration, no exception is success
         if configuration:
-            config = StrikeConfigurationV6(configuration)
-            config.validate()
-            strike.configuration = config.get_dict()
+            configuration.validate()
+            strike.configuration = configuration.get_dict()
 
         # Update editable fields
         if title:
@@ -1127,7 +1123,7 @@ class StrikeManager(models.Manager):
         warnings = []
 
         try:
-            config = StrikeConfigurationV6(configuration)
+            config = StrikeConfigurationV6(configuration, do_validate=True).get_configuration()
             warnings = config.validate()
         except InvalidStrikeConfiguration as ex:
             is_valid = False
@@ -1176,7 +1172,7 @@ class Strike(models.Model):
         :rtype: :class:`ingest.strike.configuration.strike_configuration.StrikeConfiguration`
         """
 
-        return StrikeConfigurationV6(self.configuration)
+        return StrikeConfigurationV6(self.configuration).get_configuration()
 
     def get_v5_strike_configuration_as_dict(self):
         """Returns the v5 configuration for this Strike process as a dict
@@ -1185,7 +1181,7 @@ class Strike(models.Model):
         :rtype: dict
         """
 
-        return StrikeConfiguration(self.configuration).get_dict()
+        return StrikeConfigurationV2(self.configuration).get_configuration().get_dict()
         
     def get_v6_configuration_json(self):
         """Returns the batch configuration in v6 of the JSON schema

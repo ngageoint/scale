@@ -84,7 +84,7 @@ class StrikeConfigurationV2(object):
     identify files to ingest and how to store them.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration, do_validate=False):
         """Creates a Strike configuration object from the given dictionary. The general format is checked for
         correctness, but the specified workspace(s) are not checked.
 
@@ -100,7 +100,8 @@ class StrikeConfigurationV2(object):
             self._configuration = self._convert_schema(configuration)
 
         try:
-            validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
+            if do_validate:
+                validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
 
@@ -146,7 +147,7 @@ class StrikeConfigurationV2(object):
 
         config = StrikeConfiguration()
         
-        config.configuration     = self._configuration
+        config.configuration    = self._configuration
         config.file_handler     = self._file_handler
 
         return config
@@ -161,7 +162,7 @@ class StrikeConfigurationV2(object):
         """
 
         # Try converting from 1.0
-        converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
+        converted_configuration = StrikeConfigurationV1(configuration).get_dict()
         converted_configuration['version'] = CURRENT_VERSION
 
         mount = converted_configuration['mount']
