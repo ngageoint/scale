@@ -292,8 +292,7 @@ class ScansProcessView(GenericAPIView):
             raise Http404
 
         serializer = self.get_serializer(scan)
-        scan_url = reverse('scans_details_view', args=[scan.id], request=request)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=dict(location=scan_url))
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""

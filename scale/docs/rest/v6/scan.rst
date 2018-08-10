@@ -217,7 +217,7 @@ Location http://.../v6/scans/105/
 | description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Required | JSON defining the Scan configuration.                               |
-|                    |                   |          | (See :ref:`architecture_scan_spec`)                                 |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -325,7 +325,7 @@ Response: 200 OK
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | configuration      | JSON Object       | JSON defining the Scan configuration.                                          |
-|                    |                   | (See :ref:`architecture_scan_spec`)                                            |
+|                    |                   | (See :ref:`rest_v6_scan_configuration`)                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_scan_validate:
@@ -377,7 +377,7 @@ Response: 200 OK
 | description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Required | JSON defining the Scan configuration.                               |
-|                    |                   |          | (See :ref:`architecture_scan_spec`)                                 |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -443,7 +443,7 @@ Response: 204 NO CONTENT
 | description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Optional | JSON defining the Scan configuration.                               |
-|                    |                   |          | (See :ref:`architecture_scan_spec`)                                 |
+|                    |                   |          | (See :ref:`rest_v6_scan_configuration`)                             |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -463,8 +463,6 @@ Request: POST http://.../v6/scans/{id}/process/
   } 
 
 Response: 200 OK
-Headers:
-Location http://.../v6/scans/105/process/
 
  .. code-block:: javascript 
  
@@ -529,9 +527,7 @@ Location http://.../v6/scans/105/process/
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 201 OK                                                                                             |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Location**       | URL pointing to the details of the Scan model used to launch process                               |
+| **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -559,5 +555,84 @@ Location http://.../v6/scans/105/process/
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | configuration      | JSON Object       | JSON defining the Scan configuration.                                          |
-|                    |                   | (See :ref:`architecture_scan_spec`)                                            |
+|                    |                   | (See :ref:`rest_v6_scan_configuration`)                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_scan_configuration:
+
+Scan Configuration JSON
+-----------------------
+
+A scan configuration JSON describes a set of configuration settings that affect how a scanner executes.
+
+**Example interface:**
+
+.. code-block:: javascript
+
+    {
+      "workspace" : "workspace_name",
+      "scanner" : {
+        "type" : "dir",
+        "transfer_suffix" : "_tmp"
+      },
+      recursive : true,
+      "files_to_ingest":[
+        {
+          "filename_regex" : ".*txt",
+          "data_types": [ "type1", "type2" ],
+          "new_workspace" : "workspace_name",
+          "new_file_path" : "wksp/path"
+        }
+      ]
+    }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Scan Configuration**                                                                                                      |
++============================+================+==========+====================================================================+
+| workspace                  | String         | Required | String that specifies the name of the workspace that is being      |
+|                            |                |          | scanned. The type of the workspace (its broker type) will determine|
+|                            |                |          | which types of scanner can be used.                                |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| scanner                    | JSON Object    | Required | JSON object representing the type and configuration of the scanner |
+|                            |                |          | that will scan *workspace* for files.                              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .type                      | String         | Required | The type of the scanner. Must be either 'dir' or 's3'              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .transfer_suffix           | String         | Optional | Defines a suffix that is used on the file names to indicate that   |
+|                            |                |          | files are still transferring and have not yet finished being copied|
+|                            |                |          | into the scanned directory                                         |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| recursive                  | Boolean        | Optional | Indicates whether a scanner should be limited to the root of a     |
+|                            |                |          | workspace (false) or traverse the entire tree (true). If ommitted, |
+|                            |                |          | the default is true                                                |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| files_to_ingest            | Array          | Required | List of JSON objects that define the rules for how to handle files |
+|                            |                |          | that appear in the scanned workspace. The array must contain at    |
+|                            |                |          | least one item.                                                    |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |   
+|                            |                |          | scanned workspace. When a new file appears in the workspace, the   |
+|                            |                |          | file’s name is checked against each expression in order of the     | 
+|                            |                |          | files_to_ingest array. If an expression matches the new file name  |
+|                            |                |          | in the workspace, that file is ingested according to the other     |
+|                            |                |          | fields in the JSON object and all subsequent rules in the list are |
+|                            |                |          | ignored (first rule matched is applied).                           |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .data_types                | Array          | Optional | Any file that matches the corresponding file name regular          |
+|                            |                |          | expression will have these data type strings “tagged” with the     |
+|                            |                |          | file. If not provided, data_types defaults to an empty array.      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .new_workspace             | String         | Optional | Specifies the name of a new workspace to which the file should be  |
+|                            |                |          | copied. This allows the ingest process to move files to a different|
+|                            |                |          | workspace after they appear in the scanned workspace.              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .new_file_path             | String         | Optional | Specifies a new relative path for storing new files. If            |
+|                            |                |          | new_workspace is also specified, the file is moved to the new      |
+|                            |                |          | workspace at this new path location (instead of using the current  |
+|                            |                |          | path the new file originally came in on). If new_workspace is not  |
+|                            |                |          | specified, the file is moved to this new path location within the  |
+|                            |                |          | original scanned workspace. In either of these cases, three        |
+|                            |                |          | additional and dynamically named directories, for the current year,|
+|                            |                |          | month, and day, will be appended to the new_file_path value        |
+|                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
++----------------------------+----------------+----------+--------------------------------------------------------------------+
