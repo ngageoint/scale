@@ -36,7 +36,7 @@ from job.serializers import (JobSerializerV5, JobSerializerV6, JobTypeSerializer
                              JobTypeDetailsSerializerV5, JobTypeDetailsSerializerV6, 
                              JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
                              JobTypeFailedStatusSerializer, JobTypeStatusSerializer,
-                             JobUpdateSerializerV5, JobUpdateSerializerV6)
+                             JobUpdateSerializerV5)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.exceptions import InvalidResources

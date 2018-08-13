@@ -162,14 +162,14 @@ Response: 200 OK
 | results             | Array             | List of result JSON objects that match the query parameters.                  |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.    |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
+|                     |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .job_type           | JSON Object       | The job type that is associated with the job.                                 |
-|                     |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                         |
+|                     |                   | (See :ref:`Job Type Details <rest__v6_job_type_details>`)                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
 |                     |                   | This represents the definition at the time the job was scheduled.             |
-|                     |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)            |
+|                     |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_rev_details>`)         |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the job.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -182,7 +182,7 @@ Response: 200 OK
 | .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
+|                     |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .status             | String            | The current status of the job.                                                |
 |                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
@@ -190,7 +190,7 @@ Response: 200 OK
 | .node               | JSON Object       | The node that the job is/was running on.                                      |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .error              | JSON Object       | The error that is associated with the job.                                    |
-|                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
+|                     |                   | (See :ref:`Error Details <rest_v6_error_details>`)                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .num_exes           | Integer           | The number of executions this job has had.                                    |
 +---------------------+-------------------+-------------------------------------------------------------------------------+

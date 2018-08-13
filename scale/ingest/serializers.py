@@ -2,7 +2,6 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
-from job.serializers import JobBaseSerializerV5, JobBaseSerializerV6
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
 from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
 from util.rest import ModelIdSerializer
@@ -19,6 +18,7 @@ class ScanBaseSerializer(ModelIdSerializer):
 
 class ScanSerializerV5(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
+    from job.serializers import JobBaseSerializerV5
 
     job = JobBaseSerializerV5()
     dry_run_job = JobBaseSerializerV5()
@@ -30,6 +30,7 @@ class ScanSerializerV5(ScanBaseSerializer):
     
 class ScanSerializerV6(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
+    from job.serializers import JobBaseSerializerV6
 
     job = JobBaseSerializerV6()
     dry_run_job = JobBaseSerializerV6()
@@ -62,6 +63,7 @@ class StrikeBaseSerializer(ModelIdSerializer):
 
 class StrikeSerializerV5(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
+    from job.serializers import JobBaseSerializerV5
 
     job = JobBaseSerializerV5()
 
@@ -70,6 +72,7 @@ class StrikeSerializerV5(StrikeBaseSerializer):
     
 class StrikeSerializerV6(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
+    from job.serializers import JobBaseSerializerV6
 
     job = JobBaseSerializerV6()
 

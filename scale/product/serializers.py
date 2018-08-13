@@ -5,7 +5,7 @@ import rest_framework.fields as fields
 import rest_framework.serializers as serializers
 
 from batch.serializers import BatchBaseSerializerV5, BatchBaseSerializerV6
-from recipe.serializers import RecipeTypeBaseSerializer
+from recipe.serializers import RecipeTypeBaseSerializerV5, RecipeTypeBaseSerializerV6
 from storage.serializers import ScaleFileSerializerV5
 from util.rest import ModelIdSerializer
 
@@ -35,11 +35,11 @@ class ProductFileBaseSerializer(ScaleFileSerializerV5):
 
 class ProductFileSerializer(ProductFileBaseSerializer):
     """Converts product file model fields to REST output"""
-    from job.serializers import JobTypeBaseSerializerV5
+    from job.serializers import JobTypeBaseSerializerV6
 
-    job_type = JobTypeBaseSerializerV5()
+    job_type = JobTypeBaseSerializerV6()
     batch = BatchBaseSerializerV6()
-    recipe_type = RecipeTypeBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializerV6()
 
 
 # TODO: remove when REST API v5 is removed
@@ -49,7 +49,7 @@ class ProductFileSerializerV5(ProductFileBaseSerializer):
 
     job_type = JobTypeBaseSerializerV5()
     batch = BatchBaseSerializerV5()
-    recipe_type = RecipeTypeBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializerV5()
 
 
 class ProductFileDetailsSerializer(ProductFileSerializer):

@@ -20,7 +20,7 @@ from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, Req
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import Recipe, RecipeType
-from recipe.serializers import RecipeDetailsSerializer, OldRecipeDetailsSerializer
+from recipe.serializers import RecipeDetailsSerializerV6, OldRecipeDetailsSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -120,7 +120,7 @@ class QueueNewRecipeView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return RecipeDetailsSerializer
+            return RecipeDetailsSerializerV6
         else:
             return OldRecipeDetailsSerializer
 

@@ -5,10 +5,8 @@ import logging
 
 import rest_framework.serializers as serializers
 
-from batch.serializers import BatchBaseSerializerV6
 from job.models import Job
 from node.serializers import NodeBaseSerializer
-from recipe.serializers import RecipeBaseSerializer
 from util.rest import ModelIdSerializer
 
 logger = logging.getLogger(__name__)
@@ -239,12 +237,14 @@ class JobSerializerV5(JobBaseSerializerV5):
     
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
+    from batch.serializers import BatchBaseSerializerV6
     from error.serializers import ErrorBaseSerializerV6
     from trigger.serializers import TriggerEventSerializerV6
+    #from recipe.serializers import RecipeBaseSerializerV6
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventSerializerV6()
-    recipe = RecipeBaseSerializer()
+    #recipe = RecipeBaseSerializerV6()
     batch = BatchBaseSerializerV6()
     is_superseded = serializers.BooleanField()
     superseded_job = ModelIdSerializer()
@@ -359,11 +359,11 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
 class JobDetailsSerializerV5(JobSerializerV5):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializerV5
-    from trigger.serializers import TriggerEventDetailsSerializer
+    from trigger.serializers import TriggerEventDetailsSerializerV5
 
     job_type = JobTypeSerializerV5()
     job_type_rev = JobTypeRevisionSerializerV5()
-    event = TriggerEventDetailsSerializer()
+    event = TriggerEventDetailsSerializerV5()
     error = ErrorSerializerV5()
 
     data = serializers.JSONField(default=dict, source='input')
@@ -376,9 +376,9 @@ class JobDetailsSerializerV5(JobSerializerV5):
     # Attempt to serialize related model fields
     # Use a localized import to make higher level application dependencies optional
     try:
-        from recipe.serializers import RecipeSerializer
+        from recipe.serializers import RecipeSerializerV5
 
-        recipes = RecipeSerializer(many=True)
+        recipes = RecipeSerializerV5(many=True)
     except:
         recipes = []
 
@@ -391,16 +391,16 @@ class JobDetailsSerializerV5(JobSerializerV5):
 class JobDetailsSerializerV6(JobSerializerV6):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializerV6
-    from trigger.serializers import TriggerEventDetailsSerializer
+    from trigger.serializers import TriggerEventDetailsSerializerV6
 
     job_type = JobTypeBaseSerializerV6()
     job_type_rev = JobTypeRevisionBaseSerializer()
-    event = TriggerEventDetailsSerializer()
+    event = TriggerEventDetailsSerializerV6()
     error = ErrorSerializerV6()
 
     try:
-        from recipe.serializers import RecipeBaseSerializer
-        recipe = RecipeBaseSerializer()
+        from recipe.serializers import RecipeBaseSerializerV6
+        recipe = RecipeBaseSerializerV6()
     except:
         recipe = {}
 
@@ -419,12 +419,6 @@ class JobUpdateSerializerV5(JobSerializerV5):
     from storage.serializers import ScaleFileSerializerV5
 
     input_files = ScaleFileSerializerV5(many=True)
-    
-class JobUpdateSerializerV6(JobSerializerV6):
-    """Converts job updates to REST output"""
-    from storage.serializers import ScaleFileSerializerV6
-
-    input_files = ScaleFileSerializerV6(many=True)
 
 
 # TODO: remove this function when REST API v5 is removed

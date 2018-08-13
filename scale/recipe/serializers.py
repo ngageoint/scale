@@ -46,6 +46,18 @@ class RecipeTypeSerializerV5(RecipeTypeBaseSerializerV5):
     archived = serializers.DateTimeField()
 
     trigger_rule = ModelIdSerializer()
+    
+class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
+    """Converts recipe type model fields to REST output."""
+    is_system = serializers.BooleanField()
+    is_active = serializers.BooleanField()
+    definition = serializers.JSONField(default=dict)
+    revision_num = serializers.IntegerField()
+    created = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+    archived = serializers.DateTimeField()
+
+    trigger_rule = ModelIdSerializer()
 
 
 class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
@@ -59,6 +71,16 @@ class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
     trigger_rule = TriggerRuleDetailsSerializer()
     job_types = RecipeTypeDetailsJobSerializer(many=True)
 
+class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
+    """Converts recipe type model fields to REST output."""
+    from job.serializers import JobTypeBaseSerializerV6
+    from trigger.serializers import TriggerRuleDetailsSerializer
+
+    class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV6):
+        interface = serializers.JSONField(default=dict)
+
+    trigger_rule = TriggerRuleDetailsSerializer()
+    job_types = RecipeTypeDetailsJobSerializer(many=True)
 
 class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
     """Converts recipe type revision model fields to REST output."""
@@ -130,12 +152,17 @@ class RecipeJobsSerializer(serializers.Serializer):
     recipe = ModelIdSerializer()
 
 
-class RecipeJobsDetailsSerializer(RecipeJobsSerializer):
+class RecipeJobsDetailsSerializerV5(RecipeJobsSerializer):
     """Converts related recipe model fields to REST output."""
     from job.serializers import JobRevisionSerializerV5
 
     job = JobRevisionSerializerV5()
 
+class RecipeJobsDetailsSerializerV6(RecipeJobsSerializer):
+    """Converts related recipe model fields to REST output."""
+    from job.serializers import JobRevisionSerializerV6
+
+    job = JobRevisionSerializerV6()
 
 class RecipeDetailsInputSerializer(serializers.Serializer):
     """Converts recipe detail model input fields to REST output"""
@@ -170,7 +197,7 @@ class RecipeDetailsSerializerV6(RecipeSerializerV6):
     event = TriggerEventDetailsSerializerV6()
     input = serializers.JSONField(default=dict)
 
-    jobs = RecipeJobsDetailsSerializer(many=True)
+    jobs = RecipeJobsDetailsSerializerV6(many=True)
 
     root_superseded_recipe = RecipeBaseSerializerV6()
     superseded_recipe = RecipeBaseSerializerV6()
@@ -182,14 +209,14 @@ class OldRecipeDetailsSerializer(RecipeSerializerV5):
     """Converts related recipe model fields to REST output."""
     from trigger.serializers import TriggerEventDetailsSerializerV5
 
-    recipe_type = RecipeTypeSerializer()
+    recipe_type = RecipeTypeSerializerV5()
     recipe_type_rev = RecipeTypeRevisionSerializer()
     event = TriggerEventDetailsSerializerV5()
     data = serializers.JSONField(default=dict, source='input')
 
     inputs = RecipeDetailsInputSerializer(many=True)
-    jobs = RecipeJobsDetailsSerializer(many=True)
+    jobs = RecipeJobsDetailsSerializerV5(many=True)
 
-    root_superseded_recipe = RecipeBaseSerializer()
-    superseded_recipe = RecipeBaseSerializer()
-    superseded_by_recipe = RecipeBaseSerializer()
+    root_superseded_recipe = RecipeBaseSerializerV5()
+    superseded_recipe = RecipeBaseSerializerV5()
+    superseded_by_recipe = RecipeBaseSerializerV5()
