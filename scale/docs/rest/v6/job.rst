@@ -173,36 +173,32 @@ Response: 200 OK
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .event              | JSON Object       | The trigger event that is associated with the job.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .recipe             | JSON Object       | The recipe instance associated with this job.                                 |
+|                     |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .batch              | JSON Object       | The batch instance associated with this job                                   |
+|                     |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .status             | String            | The current status of the job.                                                |
+|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .node               | JSON Object       | The node that the job is/was running on.                                      |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .error              | JSON Object       | The error that is associated with the job.                                    |
 |                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
-| .status             | String            | The current status of the job.                                                |
-|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .priority           | Integer           | The priority of the job.                                                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
 | .num_exes           | Integer           | The number of executions this job has had.                                    |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds). |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).    |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .input_file_size    | Decimal           | The amount of disk space in MiB required for input files for this job.        |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
-| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
+| .source_started     | ISO-8601 Datetime | When collection of the source file started.                                   |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
-| .root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                        |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                           |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.   |
+| .source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
