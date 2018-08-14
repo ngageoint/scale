@@ -590,11 +590,9 @@ class TestJobDetailsViewV6(TestCase):
 
         result = json.loads(response.content)
         self.assertTrue(result['is_superseded'])
-        self.assertIsNone(result['root_superseded_job'])
         self.assertIsNotNone(result['superseded_by_job'])
         self.assertEqual(result['superseded_by_job']['id'], new_job.id)
         self.assertIsNotNone(result['superseded'])
-        self.assertTrue(result['delete_superseded'])
 
         # Make sure the new new job has the expected relations
         url = '/%s/jobs/%i/' % (self.api, new_job.id)
@@ -603,12 +601,9 @@ class TestJobDetailsViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertFalse(result['is_superseded'])
-        self.assertIsNotNone(result['root_superseded_job'])
-        self.assertEqual(result['root_superseded_job']['id'], self.job.id)
         self.assertIsNotNone(result['superseded_job'])
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
-        self.assertTrue(result['delete_superseded'])
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""

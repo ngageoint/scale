@@ -73,14 +73,14 @@ class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
 
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     """Converts recipe type model fields to REST output."""
-    from job.serializers import JobTypeBaseSerializerV6
+    #from job.serializers import JobTypeBaseSerializerV6
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV6):
-        interface = serializers.JSONField(default=dict)
+    #class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV6):
+        #interface = serializers.JSONField(default=dict)
 
     trigger_rule = TriggerRuleDetailsSerializer()
-    job_types = RecipeTypeDetailsJobSerializer(many=True)
+    #job_types = RecipeTypeDetailsJobSerializer(many=True)
 
 class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
     """Converts recipe type revision model fields to REST output."""
@@ -142,7 +142,7 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     last_modified = serializers.DateTimeField()
 
 
-class RecipeJobsSerializer(serializers.Serializer):
+class RecipeJobsSerializerV5(serializers.Serializer):
     """Converts recipe model fields to REST output."""
     from job.serializers import JobSerializerV5
 
@@ -150,15 +150,24 @@ class RecipeJobsSerializer(serializers.Serializer):
     job_name = serializers.CharField(source='node_name')
     is_original = serializers.BooleanField()
     recipe = ModelIdSerializer()
+    
+class RecipeJobsSerializerV6(serializers.Serializer):
+    """Converts recipe model fields to REST output."""
+    from job.serializers import JobSerializerV6
+
+    job = JobSerializerV6()
+    job_name = serializers.CharField(source='node_name')
+    is_original = serializers.BooleanField()
+    recipe = ModelIdSerializer()
 
 
-class RecipeJobsDetailsSerializerV5(RecipeJobsSerializer):
+class RecipeJobsDetailsSerializerV5(RecipeJobsSerializerV5):
     """Converts related recipe model fields to REST output."""
     from job.serializers import JobRevisionSerializerV5
 
     job = JobRevisionSerializerV5()
 
-class RecipeJobsDetailsSerializerV6(RecipeJobsSerializer):
+class RecipeJobsDetailsSerializerV6(RecipeJobsSerializerV6):
     """Converts related recipe model fields to REST output."""
     from job.serializers import JobRevisionSerializerV6
 
@@ -175,18 +184,15 @@ class RecipeDetailsInputSerializer(serializers.Serializer):
 
         value = None
         if 'value' in obj:
+            from storage.serializers import ScaleFileSerializerV5
             if obj['type'] == 'file':
-                value = self.Meta.FILE_SERIALIZER().to_representation(obj['value'])
+                value = ScaleFileSerializerV5().to_representation(obj['value'])
             elif obj['type'] == 'files':
-                value = [self.Meta.FILE_SERIALIZER().to_representation(v) for v in obj['value']]
+                value = [ScaleFileSerializerV5().to_representation(v) for v in obj['value']]
             else:
                 value = obj['value']
         result['value'] = value
         return result
-
-    class Meta:
-        from storage.serializers import ScaleFileSerializerV5
-        FILE_SERIALIZER = ScaleFileSerializerV5
 
 
 class RecipeDetailsSerializerV6(RecipeSerializerV6):
