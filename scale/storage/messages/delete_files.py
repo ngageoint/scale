@@ -97,10 +97,21 @@ class DeleteFiles(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        when = timezone.now()
+        files_to_delete = ScaleFile.objects.filter(id__in=self._file_ids)
+
         if self.purge:
-            ScaleFile.objects.filter(id__in=self._file_ids).delete()
+            files_to_delete.delete()
+            jobs_to_purge = set(files_to_delete.values_list('job__id', flat=True))
+
+            # Send messages to purge jobs
+            from job.messages.purge_jobs import create_purge_jobs_messages
+            try:
+                self.new_messages.extend(create_purge_jobs_messages(jobs_to_purge, when))
+            except:
+                pass
+
         else:
-            when = timezone.now()
-            ScaleFile.objects.filter(id__in=self._file_ids).update(is_deleted=False, deleted=when,
-                                                                   is_published=False, unpublished=when)
+            files_to_delete.update(is_deleted=True, deleted=when, is_published=False, unpublished=when)
+
         return True
