@@ -109,11 +109,12 @@ class PurgeJobs(CommandMessage):
         """
 
         with transaction.atomic():
+            job_exe_queryset = JobExecution.objects.filter(job__in=self._purge_job_ids)
+            TaskUpdate.objects.filter(job_exe__in=job_exe_queryset).delete()
+            JobExecutionOutput.objects.filter(job_exe__in=job_exe_queryset).delete()
+            JobExecutionEnd.objects.filter(job_exe__in=job_exe_queryset).delete()
+            job_exe_queryset.delete()
             FileAncestryLink.objects.filter(job__in=self._purge_job_ids).delete()
-            TaskUpdate.objects.filter().delete() # sub filter based off job_exe? 
-            JobExecutionOutput.objects.filter().delete()
-            JobExecutionEnd.objects.filter().delete()
-            JobExecution.objects.filter(job__in=self._purge_job_ids).delete()
             BatchJob.filter(job__in=self._purge_job_ids).delete()
             RecipeNode.objects.filter(job__in=self._purge_job_ids).delete()
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
