@@ -36,6 +36,7 @@ class JobConfig(AppConfig):
         from job.messages.pending_jobs import PendingJobs
         from job.messages.process_job_input import ProcessJobInput
         from job.messages.publish_job import PublishJob
+        from job.messages.purge_jobs import PurgeJobs
         from job.messages.running_jobs import RunningJobs
         from job.messages.uncancel_jobs import UncancelJobs
         from job.messages.unpublish_jobs import UnpublishJobs
@@ -50,6 +51,7 @@ class JobConfig(AppConfig):
         add_message_type(PendingJobs)
         add_message_type(ProcessJobInput)
         add_message_type(PublishJob)
+        add_message_type(PurgeJobs)
         add_message_type(RunningJobs)
         add_message_type(UncancelJobs)
         add_message_type(UnpublishJobs)
