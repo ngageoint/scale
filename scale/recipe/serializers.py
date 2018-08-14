@@ -62,7 +62,7 @@ class RecipeTypeSerializerV6(RecipeTypeBaseSerializerV6):
 
 class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
     """Converts recipe type model fields to REST output."""
-    from job.serializers import JobTypeBaseSerializerV5
+    from job.job_type_serializers import JobTypeBaseSerializerV5
     from trigger.serializers import TriggerRuleDetailsSerializer
 
     class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV5):
@@ -73,14 +73,14 @@ class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
 
 class RecipeTypeDetailsSerializerV6(RecipeTypeSerializerV6):
     """Converts recipe type model fields to REST output."""
-    #from job.serializers import JobTypeBaseSerializerV6
+    from job.job_type_serializers import JobTypeBaseSerializerV6
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    #class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV6):
-        #interface = serializers.JSONField(default=dict)
+    class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV6):
+        interface = serializers.JSONField(default=dict)
 
     trigger_rule = TriggerRuleDetailsSerializer()
-    #job_types = RecipeTypeDetailsJobSerializer(many=True)
+    job_types = RecipeTypeDetailsJobSerializer(many=True)
 
 class RecipeTypeRevisionBaseSerializer(ModelIdSerializer):
     """Converts recipe type revision model fields to REST output."""

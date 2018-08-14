@@ -2,6 +2,7 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
+#TODO: Look at moving job serializers imports back to top of file
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
 from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
 from util.rest import ModelIdSerializer

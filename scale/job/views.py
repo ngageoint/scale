@@ -27,16 +27,16 @@ from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-from job.serializers import (JobSerializerV5, JobSerializerV6, JobTypeSerializerV5, JobTypeSerializerV6,
-                             JobTypeListSerializerV6, JobTypeRevisionSerializerV6, JobTypeRevisionDetailsSerializerV6,
+from job.serializers import (JobSerializerV5, JobSerializerV6, 
                              JobDetailsSerializerV5, JobDetailsSerializerV6, 
                              JobExecutionSerializerV5, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV5, JobExecutionDetailsSerializerV6,
-                             JobWithExecutionSerializerV5,
+                             JobWithExecutionSerializerV5, JobUpdateSerializerV5)
+from job.job_type_serializers import (JobTypeSerializerV5, JobTypeSerializerV6,
+                             JobTypeListSerializerV6, JobTypeRevisionSerializerV6, JobTypeRevisionDetailsSerializerV6,
                              JobTypeDetailsSerializerV5, JobTypeDetailsSerializerV6, 
                              JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
-                             JobTypeFailedStatusSerializer, JobTypeStatusSerializer,
-                             JobUpdateSerializerV5)
+                             JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.exceptions import InvalidResources

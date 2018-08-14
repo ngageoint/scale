@@ -131,7 +131,7 @@ class ScaleFileSerializerV5(ScaleFileBaseSerializerV5):
 class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
     from batch.serializers import BatchBaseSerializerV6
-    from job.serializers import JobTypeBaseSerializerV6
+    from job.job_type_serializers import JobTypeBaseSerializerV6
     from recipe.serializers import RecipeTypeBaseSerializerV6
 
     workspace = WorkspaceBaseSerializer()
