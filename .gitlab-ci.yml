@@ -5,6 +5,8 @@
 # DOCKER_DEV_AUTH_CONFIG
 # DOCKER_DEV_USER
 # DOCKER_USER
+# DOCKER_IMAGE
+# DIND_IMAGE
 # GOSU_URL
 # LOGSTASH_IMAGE
 # REGISTRY
@@ -14,10 +16,10 @@ variables:
   IMAGE_PREFIX: "scale"
   EPEL_INSTALL: "0"
 
-image: ${REGISTRY}/${DOCKER_DEV_USER}/docker:17
+image: ${DOCKER_IMAGE}
 
 services:
-  - ${REGISTRY}/${DOCKER_DEV_USER}/dind:17
+  - ${DIND_IMAGE}
 
 stages:
   - package
