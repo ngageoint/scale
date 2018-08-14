@@ -81,15 +81,12 @@ class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
     from error.serializers import ErrorBaseSerializerV6
+    from recipe.serializers import RecipeBaseSerializerV6
     from trigger.serializers import TriggerEventSerializerV6
 
     job_type_rev = JobTypeRevisionBaseSerializer()
     event = TriggerEventSerializerV6()
-    try:
-        from recipe.serializers import RecipeBaseSerializerV6
-        recipe = RecipeBaseSerializerV6()
-    except:
-        recipe = {}
+    recipe = RecipeBaseSerializerV6()
     batch = BatchBaseSerializerV6()
     is_superseded = serializers.BooleanField()
     superseded_job = ModelIdSerializer()
@@ -230,15 +227,6 @@ class JobDetailsSerializerV5(JobSerializerV5):
     superseded_by_job = JobBaseSerializerV5()
     
     recipes = RecipeSerializerV5(many=True)
-
-    # Attempt to serialize related model fields
-    # Use a localized import to make higher level application dependencies optional
-    """try:
-        from recipe.serializers import RecipeSerializerV5
-
-        recipes = RecipeSerializerV5(many=True)
-    except:
-        recipes = []"""
 
     job_exes = JobExecutionBaseSerializerV5(many=True)
 

@@ -17,6 +17,7 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
+import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from error.models import Error
@@ -27,7 +28,7 @@ from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 
 
-class TestJobsView(TestCase):
+class TestJobsViewV5(TestCase):
 
     api = 'v5'
     
@@ -176,6 +177,178 @@ class TestJobsView(TestCase):
         self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
         self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+
+class TestJobsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
+
+        self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
+
+        self.job3 = job_test_utils.create_job(is_superseded=True)
+
+    def test_successful(self):
+        """Tests successfully calling the jobs view."""
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.job1.id:
+                expected = self.job1
+            elif entry['id'] == self.job2.id:
+                expected = self.job2
+            elif entry['id'] == self.job3.id:
+                expected = self.job3
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['job_type']['name'], expected.job_type.name)
+            self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
+            self.assertEqual(entry['is_superseded'], expected.is_superseded)
+
+
+    def test_status(self):
+        """Tests successfully calling the jobs view filtered by status."""
+
+        url = '/%s/jobs/?status=RUNNING' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_id(self):
+        """Tests successfully calling the jobs view filtered by job identifier."""
+
+        url = '/%s/jobs/?job_id=%s' % (self.api, self.job1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
+    def test_job_type_id(self):
+        """Tests successfully calling the jobs view filtered by job type identifier."""
+
+        url = '/%s/jobs/?job_type_id=%s' % (self.api, self.job1.job_type.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_type_name(self):
+        """Tests successfully calling the jobs view filtered by job type name."""
+
+        url = '/%s/jobs/?job_type_name=%s' % (self.api, self.job1.job_type.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+
+
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/%s/jobs/?error_category=%s' % (self.api, error.category)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+        
+    def test_error_id(self):
+        """Tests successfully calling the jobs view filtered by error id."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/%s/jobs/?error_id=%d' % (self.api, error.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['id'], error.id)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs."""
+
+        url = '/%s/jobs/?is_superseded=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_batch(self):
+        """Tests filtering jobs by batch"""
+        batch = batch_test_utils.create_batch()
+        self.job1.batch_id = batch.id
+        self.job1.save()
+
+        url = '/%s/jobs/?batch_id=%d' % (self.api, batch.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+        
+    def test_recipe(self):
+        """Tests filtering jobs by recipe"""
+        recipe = recipe_test_utils.create_recipe()
+        self.job1.recipe_id = recipe.id
+        self.job1.save()
+
+        url = '/%s/jobs/?recipe_id=%d' % (self.api, recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
+    def test_order_by(self):
+        """Tests successfully calling the jobs view with sorting."""
+
+        job_type1b = job_test_utils.create_job_type(name='scale-batch-creator', version='2.0', category='test-1')
+        job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
+
+        job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
+        job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
+
+        url = '/%s/jobs/?order=job_type__name&order=-job_type__version' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 5)
+        self.assertEqual(result['results'][0]['job_type']['id'], job_type1c.id)
+        self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
+        self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
+        self.assertEqual(result['results'][4]['job_type']['id'], self.job_type2.id)
 
 # TODO: remove when REST API v5 is removed
 class OldTestJobDetailsViewV5(TestCase):
