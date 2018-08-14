@@ -6,7 +6,7 @@ import logging
 from django.db import transaction
 from django.utils.timezone import now
 
-from batch.models import Batch
+from batch.models import BatchJob
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
 from product.models import FileAncestryLink
 from queue.models import Queue
@@ -109,16 +109,15 @@ class PurgeJobs(CommandMessage):
         """
 
         with transaction.atomic():
-            FileAncestryLink.filter(job__in=self._purge_job_ids).delete()
-            TaskUpdate.filter().delete()
-            JobExecutionOutput.filter().delete()
-            JobExecutionEnd.filter().delete()
-            JobExecution.filter().delete()
-            BatchJob.filter().delete()
-            RecipeNode.filter().delete()
-            JobInputFile.filter().delete()
-            Queue.filter().delete()
-            models that match the jobs to be purged, then purge the 
-            Job
+            FileAncestryLink.objects.filter(job__in=self._purge_job_ids).delete()
+            TaskUpdate.objects.filter().delete() # sub filter based off job_exe? 
+            JobExecutionOutput.objects.filter().delete()
+            JobExecutionEnd.objects.filter().delete()
+            JobExecution.objects.filter(job__in=self._purge_job_ids).delete()
+            BatchJob.filter(job__in=self._purge_job_ids).delete()
+            RecipeNode.objects.filter(job__in=self._purge_job_ids).delete()
+            JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
+            Queue.objects.filter(job__in=self._purge_job_ids).delete()
+            Job.objects.filter(id__in=self._purge_job_ids).delete()
 
         return True
