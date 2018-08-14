@@ -118,12 +118,11 @@ https://ngageoint.github.io/scale/docs/algorithm_integration/index.html
 
 Scale Development
 -----------------
-If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 3 primary
+If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 2 primary
 components of Scale:
 
 - Scale User Interface: https://github.com/ngageoint/scale/tree/master/scale-ui
 - Scheduler / Service APIs: https://github.com/ngageoint/scale/tree/master/scale
-- Scale Command Line Interface: https://github.com/ngageoint/scale/tree/master/scale-cli
 
 The links provide specific development environment setup instructions for each individual component.
 
