@@ -4,7 +4,7 @@ set -e
 # When CI_BUILD_TAG is unset we are building a snapshot
 if [[ "${CI_BUILD_TAG}x" == "x" ]]
 then
-    docker login -u ${DOCKER_DEV_USER} -p "${DOCKER_DEV_PASS}" ${REGISTRY}
+    echo docker login -u ${DOCKER_DEV_USER} -p "${DOCKER_DEV_PASS}" ${REGISTRY}
 
     export IMAGE_URL=${REGISTRY}/${DOCKER_DEV_ORG}/${IMAGE_PREFIX}
 
