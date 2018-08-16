@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
 
-from datetime import datetime as dt
 import django
 from django.test import TransactionTestCase
+from django.utils import timezone
 
 from job.messages.purge_jobs import PurgeJobs
 from job.models import Job, JobExecution
@@ -22,16 +22,18 @@ class TestPurgeJobs(TransactionTestCase):
 
         # Add job to message
         message = PurgeJobs()
-        message.job_id = job.id
-        message.status_change = dt.utcnow()
+        message._purge_job_ids = [job.id]
+        message.status_change = timezone.now()
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
         new_message = PurgeJobs.from_json(message_json_dict)
         result = new_message.execute()
-
         self.assertTrue(result)
-        self.assertFalse(Job.objects.filter(id=job.id))
+
+        # Check that job is deleted
+        self.assertEqual(Job.objects.filter(id=job.id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(id=job_exe.id).count(), 0)
 
     def test_execute(self):
         """Tests calling PurgeJobs.execute() successfully"""
@@ -41,12 +43,13 @@ class TestPurgeJobs(TransactionTestCase):
 
         # Add job to message
         message = PurgeJobs()
-        message.job_id = job.id
-        message.status_change = dt.utcnow()
+        message._purge_job_ids = [job.id]
+        message.status_change = timezone.now()
 
         # Execute message
         result = message.execute()
         self.assertTrue(result)
 
         # Check that job is deleted
-        self.assertFalse(Job.objects.filter(id=job.id))
+        self.assertEqual(Job.objects.filter(id=job.id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(id=job_exe.id).count(), 0)
