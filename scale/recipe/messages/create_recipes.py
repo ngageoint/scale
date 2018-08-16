@@ -46,7 +46,7 @@ def create_jobs_message(job_type_name, job_type_version, job_type_rev_num, event
     return message
 
 
-# TODO:
+# TODO: have methods both for reprocessing (top-level) and for sub-recipes
 def create_jobs_message_for_recipe(recipe, node_name, job_type_name, job_type_version, job_type_rev_num, count=1,
                                    process_input=False):
     """Creates a message to create job(s) of the given type for the given recipe
@@ -89,19 +89,21 @@ class CreateRecipes(CommandMessage):
 
         super(CreateRecipes, self).__init__('create_recipes')
 
-        self.count = 1
+        self.count = 1  # TODO: determine this from superseded_recipes (reprocess) or 1 (sub-recipes)
+        self.event_id = None
+
+        # TODO: group fields so we could do multiple recipe types
+        # recipe_type_name, recipe_type_rev_num, recipe_node_name
         self.recipe_type_name = None
         self.recipe_type_rev_num = None
-        self.event_id = None
-        self.input_data = None
+        self.recipe_node_name = None
+        self.process_input = False
 
         # These fields are related to the recipe containing the new created recipe(s)
         self.root_recipe_id = None
         self.superseded_recipe_id = None
         self.recipe_id = None
-        self.recipe_node_name = None
         self.batch_id = None
-        self.process_input = False
 
         # TODO: figure out all_jobs and job_names functionality
 
