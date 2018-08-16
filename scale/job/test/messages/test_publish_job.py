@@ -37,7 +37,7 @@ class TestPublishJob(TransactionTestCase):
             self.assertTrue(scale_file.is_published)
 
     def test_execute(self):
-        """Tests calling CompletedJobs.execute() successfully"""
+        """Tests calling PublishJob.execute() successfully"""
 
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
         job = job_exe.job
