@@ -9,7 +9,7 @@ version_info_t = namedtuple(
     'version_info_t', ('major', 'minor', 'patch', 'qualifier'),
 )
 
-VERSION = version_info_t(5, 5, 0, '-snapshot')
+VERSION = version_info_t(5, 6, 0, '-snapshot')
 
 __version__ = '{0.major}.{0.minor}.{0.patch}{0.qualifier}'.format(VERSION)
 
