@@ -115,7 +115,7 @@ class PurgeJobs(CommandMessage):
             JobExecutionEnd.objects.filter(job_exe__in=job_exe_queryset).delete()
             job_exe_queryset.delete()
             FileAncestryLink.objects.filter(job__in=self._purge_job_ids).delete()
-            BatchJob.filter(job__in=self._purge_job_ids).delete()
+            BatchJob.objects.filter(job__in=self._purge_job_ids).delete()
             RecipeNode.objects.filter(job__in=self._purge_job_ids).delete()
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
