@@ -184,6 +184,9 @@ Response: 200 OK
 | .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
 |                     |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
+| .superseded_by_job  | JSON Object       | The job in the chain that supersedes this job.                                |
+|                     |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                |
++---------------------+-------------------+-------------------------------------------------------------------------------+
 | .status             | String            | The current status of the job.                                                |
 |                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -215,19 +218,148 @@ Response: 200 OK
 | .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 
-.. _rest_job_details:
+.. _rest_v6_job_details:
+
+v6 Job Details
+--------------
+
+**Example GET /v6/jobs/{id}/ API call**
+
+Request: GET http://.../v6/jobs/{id}/
+
+Response: 200 OK
+
+ .. code-block:: javascript 
+
+    {
+      "id": 3,
+      "job_type": {
+        "id": 1,
+        "name": "scale-ingest",
+        "title": "Scale Ingest",
+        "description": "Ingests a source file into a workspace",
+        "revision_num": 1,
+        "icon_code": "f013"
+      },
+      "job_type_rev": {
+        "id": 5,
+        "job_type": {
+          "id": 1
+        },
+        "revision_num": 1,
+        "docker_image": "scale-ingest-1.0.0-seed:1.0.0",
+        "created": "2015-08-28T17:55:41.005Z",
+        "manifest": {...}
+      },
+      "event": {
+        "id": 3,
+        "type": "STRIKE_TRANSFER",
+        "occurred": "2015-08-28T17:57:24.261Z"
+      },
+      "recipe": { 
+        "id": 1,
+        "recipe_type": {
+          "id": 208,
+          "name": "my-recipe-type",
+          "title": "My Recipe Type",
+          "description": "My Recipe Type Description",
+          "revision_num": 1
+        }
+        "recipe_type_rev": {
+          "id": 1
+        },
+        "event": {
+          "id": 1
+        }
+      },
+      "batch": {
+        "id": 1,
+        "title": "My Batch",
+        "description": "My batch of recipes",
+        "created": "2015-08-28T17:55:41.005Z"
+      },
+      "is_superseded": false,
+      "superseded_job": null,
+      "superseded_by_job": null,
+      "status": "COMPLETED",
+      "node": { 
+        "id": 1,
+        "hostname": "my-host.example.domain" 
+      },
+      "resources": {
+        "resources": { 
+          "mem": 128.0,
+          "disk": 11.0,
+          "cpus": 1.0
+        }      
+      },
+      "error": null,
+      "num_exes": 1,
+      "execution": {
+        "id": 3,
+         "status": "COMPLETED",
+         "exe_num": 1,
+         "cluster_id": "scale_job_1234_263x0",
+         "created": "2015-08-28T17:57:41.033Z",
+         "queued": "2015-08-28T17:57:41.010Z",
+         "started": "2015-08-28T17:57:44.494Z",
+         "ended": "2015-08-28T17:57:45.906Z",
+         "job": {
+             "id": 3,
+         },
+         "node": {
+             "id": 1,
+             "hostname": "machine.com"
+         },
+         "error": null,
+         "job_type": {
+            "id": 1,
+            "name": "scale-ingest",
+            "title": "Scale Ingest",
+            "description": "Ingests a source file into a workspace",
+            "revision_num": 1,
+            "icon_code": "f013"
+         },
+         "timeout": 1800,
+         "input_file_size": 10.0,
+         "task_results": null,
+         "resources": {
+             "resources": {
+                 "mem": 128.0,
+                 "disk": 11.0,
+                 "cpus": 1.0
+             }
+         },
+         "configuration": {
+             "tasks": [...],
+         },
+         "output": {
+             "output_data": [
+                 {
+                     "name": "output_file",
+                     "file_id": 3
+                 }
+             ]
+         }
+      },
+      "input": {},
+      "input_file_size": 64,
+      "output": {},
+      "source_started": "2015-08-28T17:55:41.005Z",
+      "source_ended": "2015-08-28T17:56:41.005Z",
+      "created": "2015-08-28T17:55:41.005Z",
+      "queued": "2015-08-28T17:56:41.005Z",
+      "started": "2015-08-28T17:57:41.005Z",
+      "ended": "2015-08-28T17:58:41.005Z",
+      "last_status_change": "2015-08-28T17:58:45.906Z",
+      "superseded": null,
+      "last_modified": "2015-08-28T17:58:46.001Z"
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Details**                                                                                                         |
 +=========================================================================================================================+
 | Returns a specific job and all its related model information including executions, recipes, and products.               |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This documentation describes the API **v5** version of the Job Details endpoint response.  Starting with |
-|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*,   |
-|                *inputs*, *outputs*, *job_exes*, *recipes*.  The following fields will be added: *resources*,            |
-|                *execution*, *recipe*.  Additionally, *disk_in_required* is renamed to *input_file_size*, *data* is      |
-|                renamed to *input*, and *results* is renamed to *output*.                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/{id}/                                                                                                     |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -242,25 +374,40 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_type           | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+| job_type           | JSON Object       | The job type that is associated with the job.                                  |
+|                    |                   | (See :ref:`Job Type Details <rest__v6_job_type_details>`)                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type_rev      | JSON Object       | The job type revision that is associated with the job.                         |
+| job_type_rev       | JSON Object       | The job type revision that is associated with the job.                         |
 |                    |                   | This represents the definition at the time the job was scheduled.              |
-|                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
+|                    |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_rev_details>`)          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| event              | JSON Object       | The trigger event that is associated with the count.                           |
+| event              | JSON Object       | The trigger event that is associated with the job.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .node              | JSON Object       | The node that the job is/was running on.                                       |
+| recipe             | JSON Object       | The recipe instance associated with this job.                                  |
+|                    |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| error              | JSON Object       | The error that is associated with the count.                                   |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
+| batch              | JSON Object       | The batch instance associated with this job                                    |
+|                    |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                 |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | status             | String            | The current status of the job.                                                 |
+|                    |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| priority           | Integer           | The priority of the job.                                                       |
+| node               | JSON Object       | The node that the job is/was running on.                                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| resources          | JSON Object       | JSON description describing the resources required for this job.               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| error              | JSON Object       | The error that is associated with the job.                                     |
+|                    |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | num_exes           | Integer           | The number of executions this job has had.                                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| execution          | JSON Object       | The most recent execution of the job.                                          |
+|                    |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

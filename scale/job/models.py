@@ -1523,6 +1523,15 @@ class Job(models.Model):
         """
 
         return self.get_resources().get_json().get_dict()
+        
+    def get_v6_resources_json(self):
+        """Returns the job resources in v6 of the JSON schema
+
+        :returns: The job resources in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(self.get_resources_dict())
 
     def has_been_queued(self):
         """Indicates whether this job has been queued at least once

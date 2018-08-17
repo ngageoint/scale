@@ -286,7 +286,7 @@ class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
 
     task_results = serializers.JSONField(default=dict, source='jobexecutionend.task_results')
-    resources = serializers.JSONField(default=dict)
+    resources = serializers.JSONField(source='get_v6_resources_json')
     configuration = serializers.JSONField(default=dict)
     output = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
@@ -297,7 +297,7 @@ class JobDetailsSerializerV6(JobSerializerV6):
 
     superseded_job = JobBaseSerializerV6()
     superseded_by_job = JobBaseSerializerV6()
-    resources = serializers.JSONField(source='get_resources_dict')
+    resources = serializers.JSONField(source='get_v6_resources_json')
     
     execution = JobExecutionDetailsSerializerV6()
     #input = serializers.JSONField(default=dict) #TODO: update to v6 json
