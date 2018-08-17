@@ -39,6 +39,7 @@ class JobConfig(AppConfig):
         from job.messages.publish_job import PublishJob
         from job.messages.purge_jobs import PurgeJobs
         from job.messages.running_jobs import RunningJobs
+        from job.messages.spawn_delete_files_job import SpawnDeleteFilesJob
         from job.messages.uncancel_jobs import UncancelJobs
         from job.messages.unpublish_jobs import UnpublishJobs
         from messaging.messages.factory import add_message_type
@@ -55,5 +56,6 @@ class JobConfig(AppConfig):
         add_message_type(PublishJob)
         add_message_type(PurgeJobs)
         add_message_type(RunningJobs)
+        add_message_type(SpawnDeleteFilesJob)
         add_message_type(UncancelJobs)
         add_message_type(UnpublishJobs)
