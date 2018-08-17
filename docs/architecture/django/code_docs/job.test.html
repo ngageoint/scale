@@ -118,6 +118,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.deprecation">job.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.job_type_serializers">job.job_type_serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
@@ -2159,76 +2160,158 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="job.test.test_views.TestJobsView">
-<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsViewV5</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="attribute">
-<dt id="job.test.test_views.TestJobsView.api">
-<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#job.test.test_views.TestJobsView.api" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.api">
+<code class="descname">api</code><em class="property"> = u'v5'</em><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.api" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_batch">
-<code class="descname">test_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_batch" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_batch">
+<code class="descname">test_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests filtering jobs by batch</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_error_category">
-<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_error_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by error category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_job_id">
-<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_id" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_job_id">
+<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_job_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_job_type_id">
-<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_job_type_legacy_category">
-<code class="descname">test_job_type_legacy_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_legacy_category" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_job_type_legacy_category">
+<code class="descname">test_job_type_legacy_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_job_type_legacy_category" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type category.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_job_type_name">
-<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_job_type_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by job type name.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_order_by">
-<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_order_by" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_order_by">
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_order_by" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view with sorting.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_status">
-<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_status" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view filtered by status.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the jobs view.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.test_views.TestJobsView.test_superseded">
-<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.test_views.TestJobsViewV5.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV5.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded jobs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.test_views.TestJobsViewV6">
+<em class="property">class </em><code class="descclassname">job.test.test_views.</code><code class="descname">TestJobsViewV6</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.test_views.TestJobsViewV6.api">
+<code class="descname">api</code><em class="property"> = u'v6'</em><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.api" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_batch">
+<code class="descname">test_batch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests filtering jobs by batch</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by error category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_error_id">
+<code class="descname">test_error_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_error_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by error id.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_job_id">
+<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by job identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_order_by">
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_order_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view with sorting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_recipe">
+<code class="descname">test_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests filtering jobs by recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view filtered by status.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the jobs view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsViewV6.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsViewV6.test_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting superseded jobs.</p>
 </dd></dl>
 

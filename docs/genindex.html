@@ -482,8 +482,6 @@
         <li><a href="architecture/django/code_docs/recipe.seed.html#recipe.seed.recipe_connection.SeedRecipeConnection.add_property">(recipe.seed.recipe_connection.SeedRecipeConnection method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.add_property_input">add_property_input() (job.configuration.data.job_data.JobData method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.reprocess_recipes.ReprocessRecipes.add_recipe">add_recipe() (recipe.messages.reprocess_recipes.ReprocessRecipes method)</a>
@@ -494,6 +492,8 @@
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.UpdateRecipes.add_recipe">(recipe.messages.update_recipes.UpdateRecipes method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode.add_recipe_input">add_recipe_input() (recipe.handlers.node.RecipeNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.html#recipe.definition.definition.RecipeDefinition.add_recipe_input_connection">add_recipe_input_connection() (recipe.definition.definition.RecipeDefinition method)</a>
@@ -675,7 +675,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.api">(job.test.test_views.TestJobsUpdateView attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.api">(job.test.test_views.TestJobsView attribute)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.api">(job.test.test_views.TestJobsViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.api">(job.test.test_views.TestJobsViewV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionViewV5.api">(job.test.test_views.TestJobsWithExecutionViewV5 attribute)</a>
 </li>
@@ -692,6 +694,34 @@
         <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsViewV5.api">(product.test.test_views.TestProductsViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsViewsV6.api">(product.test.test_views.TestProductsViewsV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.OldTestRecipeDetailsView.api">(recipe.test.test_views.OldTestRecipeDetailsView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsViewV6.api">(recipe.test.test_views.TestRecipeDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.api">(recipe.test.test_views.TestRecipeInputFilesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.api">(recipe.test.test_views.TestRecipeInputFilesViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.api">(recipe.test.test_views.TestRecipeReprocessViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.api">(recipe.test.test_views.TestRecipeReprocessViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.api">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.api">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.api">(recipe.test.test_views.TestRecipeTypesValidationViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.api">(recipe.test.test_views.TestRecipeTypesValidationViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.api">(recipe.test.test_views.TestRecipeTypesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.api">(recipe.test.test_views.TestRecipeTypesViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.api">(recipe.test.test_views.TestRecipesViewV5 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.api">(recipe.test.test_views.TestRecipesViewV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceDetailsViewV5.api">(source.test.test_views.TestSourceDetailsViewV5 attribute)</a>
 </li>
@@ -956,17 +986,17 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5">BatchDetailsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer">BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5">BatchDetailsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializer">BatchDetailsSerializerV5.RecipeTypeSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.RecipeTypeSerializerV5">BatchDetailsSerializerV5.RecipeTypeSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.TriggerEventDetailsSerializer">BatchDetailsSerializerV5.TriggerEventDetailsSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.TriggerEventDetailsSerializerV5">BatchDetailsSerializerV5.TriggerEventDetailsSerializerV5 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6">BatchDetailsSerializerV6 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6.RecipeTypeRevisionSerializerV6">BatchDetailsSerializerV6.RecipeTypeRevisionSerializerV6 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6.TriggerEventDetailsSerializer">BatchDetailsSerializerV6.TriggerEventDetailsSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV6.TriggerEventDetailsSerializerV6">BatchDetailsSerializerV6.TriggerEventDetailsSerializerV6 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView">BatchDetailsView (class in batch.views)</a>
 </li>
@@ -1016,9 +1046,9 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.JobBaseSerializerV5">BatchSerializerV5.JobBaseSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializer">BatchSerializerV5.RecipeTypeBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.RecipeTypeBaseSerializerV5">BatchSerializerV5.RecipeTypeBaseSerializerV5 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.TriggerEventBaseSerializer">BatchSerializerV5.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV5.TriggerEventBaseSerializerV5">BatchSerializerV5.TriggerEventBaseSerializerV5 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6">BatchSerializerV6 (class in batch.serializers)</a>
 </li>
@@ -1026,7 +1056,7 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.RecipeTypeRevisionBaseSerializerV6">BatchSerializerV6.RecipeTypeRevisionBaseSerializerV6 (class in batch.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.TriggerEventBaseSerializer">BatchSerializerV6.TriggerEventBaseSerializer (class in batch.serializers)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchSerializerV6.TriggerEventBaseSerializerV6">BatchSerializerV6.TriggerEventBaseSerializerV6 (class in batch.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition">BatchTriggerCondition (class in batch.definition.json.old.batch_definition)</a>
 </li>
@@ -1445,7 +1475,7 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.cpus_required">(job.serializers.JobSerializerV5 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
@@ -2433,7 +2463,7 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.disk_out_required">(job.serializers.JobSerializerV5 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.disk_out_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.disk_out_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.disk_out_scheduled">disk_out_scheduled (job.models.JobExecution attribute)</a>
@@ -2861,13 +2891,7 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.Meta.FILE_SERIALIZER">FILE_SERIALIZER (job.serializers.JobDetailsInputSerializer.Meta attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer.Meta.FILE_SERIALIZER">(job.serializers.JobDetailsOutputSerializer.Meta attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta.FILE_SERIALIZER">(recipe.serializers.RecipeDetailsInputSerializer.Meta attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.file_size">file_size (ingest.models.Ingest attribute)</a>
 
       <ul>
@@ -2934,7 +2958,9 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.filter_jobs">filter_jobs() (job.models.JobManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.filter_jobs_related">filter_jobs_related() (job.models.JobManager method)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.filter_jobs_related_v5">filter_jobs_related_v5() (job.models.JobManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.filter_jobs_related_v6">filter_jobs_related_v6() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.filter_products">filter_products() (product.models.ProductFileManager method)</a>
 </li>
@@ -3790,8 +3816,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_job_with_interfaces">get_job_with_interfaces() (job.models.JobManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_jobs">get_jobs() (job.models.JobManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_first_queue">get_jobs_ready_for_first_queue() (recipe.handlers.handler.RecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.get_jobs_ready_for_input">get_jobs_ready_for_input() (recipe.handlers.handler.RecipeHandler method)</a>
@@ -3814,6 +3838,10 @@
         <li><a href="architecture/django/code_docs/recipe.instance.html#recipe.instance.recipe.RecipeInstance.get_jobs_to_update">(recipe.instance.recipe.RecipeInstance method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_jobs_v5">get_jobs_v5() (job.models.JobManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_jobs_v6">get_jobs_v6() (job.models.JobManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_jobs_with_related">get_jobs_with_related() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.get_json">get_json() (node.resources.node_resources.NodeResources method)</a>
@@ -4501,8 +4529,6 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesView.get_serializer_class">(job.views.JobTypesView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView.get_serializer_class">(job.views.JobUpdatesView method)</a>
-</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobsView.get_serializer_class">(job.views.JobsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_serializer_class">(node.views.NodeDetailsView method)</a>
@@ -4522,6 +4548,12 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView.get_serializer_class">(recipe.views.RecipeDetailsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeReprocessView.get_serializer_class">(recipe.views.RecipeReprocessView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.get_serializer_class">(recipe.views.RecipeTypeDetailsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.get_serializer_class">(recipe.views.RecipeTypesView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView.get_serializer_class">(recipe.views.RecipesView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView.get_serializer_class">(scheduler.views.SchedulerView method)</a>
 </li>
@@ -5063,6 +5095,8 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.id">(ingest.models.Strike attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeListSerializerV6.id">(job.job_type_serializers.JobTypeListSerializerV6 attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.Job.id">(job.models.Job attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.id">(job.models.JobExecution attribute)</a>
@@ -5076,8 +5110,6 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTag.id">(job.models.JobTypeTag attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.id">(job.models.TaskUpdate attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeListSerializerV6.id">(job.serializers.JobTypeListSerializerV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.id">(job.tasks.base_task.Task attribute)</a>
 </li>
@@ -5868,6 +5900,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.handlers.inputs.html#module-job.handlers.inputs.property">job.handlers.inputs.property (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#module-job.job_type_serializers">job.job_type_serializers (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.management.html#module-job.management">job.management (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.management.commands.html#module-job.management.commands">job.management.commands (module)</a>
@@ -6366,27 +6400,17 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer">JobDetailsOutputSerializer (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer.Meta">JobDetailsOutputSerializer.Meta (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer">JobDetailsOutputSerializer.Meta.ProductFileBaseSerializer (class in job.serializers)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5">JobDetailsSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.ErrorSerializerV5">JobDetailsSerializerV5.ErrorSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializer">JobDetailsSerializerV5.RecipeSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializerV5">JobDetailsSerializerV5.RecipeSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializer.TriggerEventBaseSerializer">JobDetailsSerializerV5.RecipeSerializer.TriggerEventBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.RecipeSerializerV5.TriggerEventBaseSerializerV5">JobDetailsSerializerV5.RecipeSerializerV5.TriggerEventBaseSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.TriggerEventDetailsSerializer">JobDetailsSerializerV5.TriggerEventDetailsSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV5.TriggerEventDetailsSerializerV5">JobDetailsSerializerV5.TriggerEventDetailsSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6">JobDetailsSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.ErrorSerializerV6">JobDetailsSerializerV6.ErrorSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.RecipeBaseSerializer">JobDetailsSerializerV6.RecipeBaseSerializer (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsSerializerV6.TriggerEventDetailsSerializer">JobDetailsSerializerV6.TriggerEventDetailsSerializer (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobDetailsView">JobDetailsView (class in job.views)</a>
 </li>
@@ -6634,13 +6658,17 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.ErrorBaseSerializerV5">JobSerializerV5.ErrorBaseSerializerV5 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.TriggerEventBaseSerializer">JobSerializerV5.TriggerEventBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.TriggerEventBaseSerializerV5">JobSerializerV5.TriggerEventBaseSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6">JobSerializerV6 (class in job.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.BatchBaseSerializerV6">JobSerializerV6.BatchBaseSerializerV6 (class in job.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.ErrorBaseSerializerV6">JobSerializerV6.ErrorBaseSerializerV6 (class in job.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.TriggerEventBaseSerializer">JobSerializerV6.TriggerEventBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.RecipeBaseSerializerV6">JobSerializerV6.RecipeBaseSerializerV6 (class in job.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV6.TriggerEventSerializerV6">JobSerializerV6.TriggerEventSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobsView">JobsView (class in job.views)</a>
 </li>
@@ -6656,29 +6684,29 @@
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.jobtype_set">jobtype_set (trigger.models.TriggerRule attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializerV5">JobTypeBaseSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeBaseSerializerV5">JobTypeBaseSerializerV5 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeBaseSerializerV6">JobTypeBaseSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeBaseSerializerV6">JobTypeBaseSerializerV6 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5">JobTypeDetailsSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV5">JobTypeDetailsSerializerV5 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5">JobTypeDetailsSerializerV5.ErrorSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV5.ErrorSerializerV5">JobTypeDetailsSerializerV5.ErrorSerializerV5 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">JobTypeDetailsSerializerV5.TriggerRuleDetailsSerializer (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeDetailsSerializerV6">JobTypeDetailsSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeDetailsSerializerV6">JobTypeDetailsSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeDetailsView">JobTypeDetailsView (class in job.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeFailedStatus">JobTypeFailedStatus (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeFailedStatusSerializer">JobTypeFailedStatusSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeFailedStatusSerializer">JobTypeFailedStatusSerializer (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeFailedStatusSerializer.ErrorSerializerV5">JobTypeFailedStatusSerializer.ErrorSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeFailedStatusSerializer.ErrorSerializerV5">JobTypeFailedStatusSerializer.ErrorSerializerV5 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeIDDetailsView">JobTypeIDDetailsView (class in job.views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeListSerializerV6">JobTypeListSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeListSerializerV6">JobTypeListSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager">JobTypeManager (class in job.models)</a>
 
@@ -6688,7 +6716,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypePendingStatus">JobTypePendingStatus (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypePendingStatusSerializer">JobTypePendingStatusSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypePendingStatusSerializer">JobTypePendingStatusSerializer (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision">JobTypeRevision (class in job.models)</a>
 </li>
@@ -6698,27 +6726,27 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.jobtyperevision_set">jobtyperevision_set (job.models.JobType attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRevisionBaseSerializer">JobTypeRevisionBaseSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeRevisionBaseSerializer">JobTypeRevisionBaseSerializer (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRevisionDetailsSerializerV6">JobTypeRevisionDetailsSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeRevisionDetailsSerializerV6">JobTypeRevisionDetailsSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeRevisionDetailsView">JobTypeRevisionDetailsView (class in job.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevisionManager">JobTypeRevisionManager (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRevisionSerializerV5">JobTypeRevisionSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeRevisionSerializerV5">JobTypeRevisionSerializerV5 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRevisionSerializerV6">JobTypeRevisionSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeRevisionSerializerV6">JobTypeRevisionSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypeRevisionsView">JobTypeRevisionsView (class in job.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRunningStatus">JobTypeRunningStatus (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeRunningStatusSerializer">JobTypeRunningStatusSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeRunningStatusSerializer">JobTypeRunningStatusSerializer (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializerV5">JobTypeSerializerV5 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeSerializerV5">JobTypeSerializerV5 (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeSerializerV6">JobTypeSerializerV6 (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeSerializerV6">JobTypeSerializerV6 (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesPendingView">JobTypesPendingView (class in job.views)</a>
 </li>
@@ -6732,9 +6760,9 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeStatusCounts">JobTypeStatusCounts (class in job.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeStatusCountsSerializer">JobTypeStatusCountsSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeStatusCountsSerializer">JobTypeStatusCountsSerializer (class in job.job_type_serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobTypeStatusSerializer">JobTypeStatusSerializer (class in job.serializers)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeStatusSerializer">JobTypeStatusSerializer (class in job.job_type_serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesValidationView">JobTypesValidationView (class in job.views)</a>
 </li>
@@ -6755,16 +6783,6 @@
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV5">JobUpdateSerializerV5 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV5.ScaleFileSerializerV5">JobUpdateSerializerV5.ScaleFileSerializerV5 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6">JobUpdateSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.BatchBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.BatchBaseSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.JobTypeBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.JobTypeBaseSerializerV6 (class in job.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.serializers.JobUpdateSerializerV6.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6">JobUpdateSerializerV6.ScaleFileSerializerV6.RecipeTypeBaseSerializerV6 (class in job.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView">JobUpdatesView (class in job.views)</a>
 </li>
@@ -7189,7 +7207,7 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.serializers.JobSerializerV5.mem_required">(job.serializers.JobSerializerV5 attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.mem_required">(recipe.serializers.RecipeJobsSerializer.JobSerializerV5 attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.mem_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.mem_scheduled">mem_scheduled (job.models.JobExecution attribute)</a>
@@ -8250,7 +8268,7 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.OldRecipeDetailsSerializer">OldRecipeDetailsSerializer (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.OldRecipeDetailsSerializer.TriggerEventDetailsSerializer">OldRecipeDetailsSerializer.TriggerEventDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.OldRecipeDetailsSerializer.TriggerEventDetailsSerializerV5">OldRecipeDetailsSerializer.TriggerEventDetailsSerializerV5 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5">OldTestJobDetailsViewV5 (class in job.test.test_views)</a>
 </li>
@@ -9098,7 +9116,7 @@
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.serializers.ProductFileSerializer">ProductFileSerializer (class in product.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/product.html#product.serializers.ProductFileSerializer.JobTypeBaseSerializerV5">ProductFileSerializer.JobTypeBaseSerializerV5 (class in product.serializers)</a>
+      <li><a href="architecture/django/code_docs/product.html#product.serializers.ProductFileSerializer.JobTypeBaseSerializerV6">ProductFileSerializer.JobTypeBaseSerializerV6 (class in product.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.serializers.ProductFileSerializerV5">ProductFileSerializerV5 (class in product.serializers)</a>
 </li>
@@ -9852,7 +9870,9 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.recipe_types">recipe_types (port.schema.Configuration attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeBaseSerializer">RecipeBaseSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeBaseSerializerV5">RecipeBaseSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeBaseSerializerV6">RecipeBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.apps.RecipeConfig">RecipeConfig (class in recipe.apps)</a>
 </li>
@@ -9874,24 +9894,20 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v1.RecipeDefinitionV1">RecipeDefinitionV1 (class in recipe.definition.json.definition_v1)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6">RecipeDefinitionV6 (class in recipe.definition.json.definition_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer">RecipeDetailsInputSerializer (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta">RecipeDetailsInputSerializer.Meta (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializerV6">RecipeDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5">RecipeDetailsInputSerializer.Meta.ScaleFileSerializerV5 (class in recipe.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializer">RecipeDetailsSerializer (class in recipe.serializers)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer">RecipeDetailsSerializer.TriggerEventDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsSerializerV6.TriggerEventDetailsSerializerV6">RecipeDetailsSerializerV6.TriggerEventDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView">RecipeDetailsView (class in recipe.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.diff.html#recipe.diff.diff.RecipeDiff">RecipeDiff (class in recipe.diff.diff)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.RecipeDiffV6">RecipeDiffV6 (class in recipe.diff.json.diff_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph">RecipeGraph (class in recipe.handlers.graph)</a>
@@ -9926,17 +9942,33 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.instance.json.html#recipe.instance.json.recipe_v6.RecipeInstanceV6">RecipeInstanceV6 (class in recipe.instance.json.recipe_v6)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer">RecipeJobsDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializerV5">RecipeJobsDetailsSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializerV5">RecipeJobsDetailsSerializer.JobRevisionSerializerV5 (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializerV5.JobRevisionSerializerV5">RecipeJobsDetailsSerializerV5.JobRevisionSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer">RecipeJobsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializerV6">RecipeJobsDetailsSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5">RecipeJobsSerializer.JobSerializerV5 (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializerV6.JobRevisionSerializerV6">RecipeJobsDetailsSerializerV6.JobRevisionSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializerV5">RecipeJobsSerializer.JobSerializerV5.ErrorBaseSerializerV5 (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5">RecipeJobsSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializerV5.TriggerEventBaseSerializer">RecipeJobsSerializer.JobSerializerV5.TriggerEventBaseSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5">RecipeJobsSerializerV5.JobSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5">RecipeJobsSerializerV5.JobSerializerV5.ErrorBaseSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5">RecipeJobsSerializerV5.JobSerializerV5.TriggerEventBaseSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6">RecipeJobsSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6">RecipeJobsSerializerV6.JobSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.BatchBaseSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.BatchBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.ErrorBaseSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.ErrorBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.RecipeBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV6.JobSerializerV6.TriggerEventSerializerV6">RecipeJobsSerializerV6.JobSerializerV6.TriggerEventSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager">RecipeManager (class in recipe.models)</a>
 </li>
@@ -9972,9 +10004,13 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipes_total">recipes_total (batch.models.Batch attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializer">RecipeSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV5">RecipeSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializer.TriggerEventBaseSerializer">RecipeSerializer.TriggerEventBaseSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV5.TriggerEventBaseSerializerV5">RecipeSerializerV5.TriggerEventBaseSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6">RecipeSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeSerializerV6.TriggerEventBaseSerializerV6">RecipeSerializerV6.TriggerEventBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView">RecipesView (class in recipe.views)</a>
 </li>
@@ -9988,17 +10024,25 @@
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.recipetype_set">recipetype_set (trigger.models.TriggerRule attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeBaseSerializer">RecipeTypeBaseSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeBaseSerializerV5">RecipeTypeBaseSerializerV5 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeBaseSerializerV6">RecipeTypeBaseSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializer">RecipeTypeDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV5">RecipeTypeDetailsSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializer.JobTypeBaseSerializerV5">RecipeTypeDetailsSerializer.JobTypeBaseSerializerV5 (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV5.JobTypeBaseSerializerV5">RecipeTypeDetailsSerializerV5.JobTypeBaseSerializerV5 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer">RecipeTypeDetailsSerializer.RecipeTypeDetailsJobSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV5.RecipeTypeDetailsJobSerializer">RecipeTypeDetailsSerializerV5.RecipeTypeDetailsJobSerializer (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer">RecipeTypeDetailsSerializer.TriggerRuleDetailsSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV5.TriggerRuleDetailsSerializer">RecipeTypeDetailsSerializerV5.TriggerRuleDetailsSerializer (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6">RecipeTypeDetailsSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.JobTypeBaseSerializerV6">RecipeTypeDetailsSerializerV6.JobTypeBaseSerializerV6 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.RecipeTypeDetailsJobSerializer">RecipeTypeDetailsSerializerV6.RecipeTypeDetailsJobSerializer (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeDetailsSerializerV6.TriggerRuleDetailsSerializer">RecipeTypeDetailsSerializerV6.TriggerRuleDetailsSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView">RecipeTypeDetailsView (class in recipe.views)</a>
 </li>
@@ -10022,7 +10066,9 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeRevisionSerializerV6">RecipeTypeRevisionSerializerV6 (class in recipe.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializer">RecipeTypeSerializer (class in recipe.serializers)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV5">RecipeTypeSerializerV5 (class in recipe.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeTypeSerializerV6">RecipeTypeSerializerV6 (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesValidationView">RecipeTypesValidationView (class in recipe.views)</a>
 </li>
@@ -10420,7 +10466,11 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.ScanSerializerV5">ScanSerializerV5 (class in ingest.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.ScanSerializerV5.JobBaseSerializerV5">ScanSerializerV5.JobBaseSerializerV5 (class in ingest.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.ScanSerializerV6">ScanSerializerV6 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.ScanSerializerV6.JobBaseSerializerV6">ScanSerializerV6.JobBaseSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansProcessView">ScansProcessView (class in ingest.views)</a>
 </li>
@@ -10771,6 +10821,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobTypesSystemFailuresView.serializer_class">(job.views.JobTypesSystemFailuresView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.views.JobUpdatesView.serializer_class">(job.views.JobUpdatesView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.views.JobsWithExecutionView.serializer_class">(job.views.JobsWithExecutionView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.views.RequeueJobsView.serializer_class">(job.views.RequeueJobsView attribute)</a>
@@ -10788,12 +10840,6 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.views.RequeueJobsView.serializer_class">(queue.views.RequeueJobsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeInputFilesView.serializer_class">(recipe.views.RecipeInputFilesView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypeDetailsView.serializer_class">(recipe.views.RecipeTypeDetailsView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.serializer_class">(recipe.views.RecipeTypesView attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipesView.serializer_class">(recipe.views.RecipesView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.html#source.views.SourceIngestsView.serializer_class">(source.views.SourceIngestsView attribute)</a>
 </li>
@@ -11205,7 +11251,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.setUp">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.setUp">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.setUp">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.setUp">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionViewV5.setUp">(job.test.test_views.TestJobsWithExecutionViewV5 method)</a>
 </li>
@@ -11409,19 +11457,31 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.OldTestRecipeDetailsView.setUp">(recipe.test.test_views.OldTestRecipeDetailsView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsView.setUp">(recipe.test.test_views.TestRecipeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsViewV6.setUp">(recipe.test.test_views.TestRecipeDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.setUp">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.setUp">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.setUp">(recipe.test.test_views.TestRecipeReprocessView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.setUp">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.setUp">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.setUp">(recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.setUp">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.setUp">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.setUp">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.setUp">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.setUp">(recipe.test.test_views.TestRecipesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.setUp">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.setUp">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.setUp">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.setUp">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.setUp">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.setUp">(recipe.test.test_views.TestRecipesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.setUp">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.database.html#scheduler.test.database.test_updater.TestDatabaseUpdater.setUp">(scheduler.test.database.test_updater.TestDatabaseUpdater method)</a>
 </li>
@@ -11744,7 +11804,7 @@
 </li>
       <li><a href="architecture/django/code_docs/source.html#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer">SourceFileDetailsSerializerV4.ProductFileSerializer (class in source.serializers_extra)</a>
 </li>
-      <li><a href="architecture/django/code_docs/source.html#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV5">SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV5 (class in source.serializers_extra)</a>
+      <li><a href="architecture/django/code_docs/source.html#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV6">SourceFileDetailsSerializerV4.ProductFileSerializer.JobTypeBaseSerializerV6 (class in source.serializers_extra)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.html#source.serializers_extra.SourceFileDetailsSerializerV4.SourceFileDetailsProductFileSerializer">SourceFileDetailsSerializerV4.SourceFileDetailsProductFileSerializer (class in source.serializers_extra)</a>
 </li>
@@ -12042,7 +12102,11 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV5">StrikeSerializerV5 (class in ingest.serializers)</a>
 </li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV5.JobBaseSerializerV5">StrikeSerializerV5.JobBaseSerializerV5 (class in ingest.serializers)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV6">StrikeSerializerV6 (class in ingest.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.StrikeSerializerV6.JobBaseSerializerV6">StrikeSerializerV6.JobBaseSerializerV6 (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView">StrikesValidationView (class in ingest.views)</a>
 </li>
@@ -12340,8 +12404,12 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_all_job">test_all_job() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_all_jobs">test_all_jobs() (recipe.test.test_views.TestRecipeReprocessView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_all_jobs">test_all_jobs() (recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_all_jobs">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImportV5.test_all_mixed">test_all_mixed() (port.test.test_views.TestConfigurationViewImportV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImportV5.test_all_mixed_bad">test_all_mixed_bad() (port.test.test_views.TestConfigurationViewImportV5 method)</a>
@@ -12379,7 +12447,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_bad_file_name">test_bad_file_name() (job.test.test_views.TestJobInputFilesView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_bad_file_name">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_bad_file_name">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_bad_file_name">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_bad_file_name">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
@@ -12396,8 +12466,12 @@
         <li><a href="architecture/django/code_docs/source.test.triggers.configuration.html#source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe.test_bad_input_name">(source.test.triggers.configuration.test_parse_trigger_rule.TestParseTriggerRuleConfigurationValidateTriggerForRecipe method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_job">test_bad_job() (recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_job">test_bad_job() (recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_job">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobExecutionSpecificLogView.test_bad_job_exe_id">test_bad_job_exe_id() (job.test.test_views.TestJobExecutionSpecificLogView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewJobView.test_bad_job_type_id">test_bad_job_type_id() (queue.test.test_views.TestQueueNewJobView method)</a>
@@ -12427,7 +12501,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV6.test_bad_param">(job.test.test_views.TestJobTypesValidationViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_param">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_param">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_param">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView.test_bad_recipe_id">test_bad_recipe_id() (queue.test.test_views.TestQueueNewRecipeView method)</a>
@@ -12435,13 +12511,17 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_config">test_bad_trigger_config() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_bad_trigger_type">test_bad_trigger_type() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_type">test_bad_type() (storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
@@ -12482,9 +12562,11 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bare_min_v6">test_bare_min_v6() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_batch">test_batch() (job.test.test_views.TestJobsView method)</a>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_batch">test_batch() (job.test.test_views.TestJobsViewV5 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_batch">(job.test.test_views.TestJobsViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsViewV5.test_batch">(source.test.test_views.TestSourceJobsViewV5 method)</a>
 </li>
       </ul></li>
@@ -12833,7 +12915,9 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create">(job.test.test_views.TestJobTypesViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_custom_resources">test_create_bad_custom_resources() (job.test.test_views.TestJobTypesViewV5 method)</a>
@@ -12842,26 +12926,36 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_error">test_create_bad_error() (job.test.test_views.TestJobTypesViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_job">test_create_bad_job() (recipe.test.test_views.TestRecipeTypesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_job">test_create_bad_job() (recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_job">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_bad_param">test_create_bad_param() (batch.test.test_views.TestBatchesViewV5 method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_param">(job.test.test_views.TestJobTypesViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_param">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_param">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_param">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_trigger_config">test_create_bad_trigger_config() (job.test.test_views.TestJobTypesViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_config">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_bad_trigger_type">test_create_bad_trigger_type() (job.test.test_views.TestJobTypesViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_bad_trigger_type">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job">test_create_clock_job() (scheduler.test.test_initialize.TestInitializeSystem method)</a>
@@ -12951,7 +13045,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_trigger">test_create_trigger() (job.test.test_views.TestJobTypesViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_trigger">(recipe.test.test_views.TestRecipeTypesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_create_trigger">(recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_create_trigger">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV5.test_create_trigger_custom">test_create_trigger_custom() (batch.test.test_views.TestBatchesViewV5 method)</a>
@@ -13074,8 +13170,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_custom_resources">test_edit_bad_custom_resources() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_definition">test_edit_bad_definition() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_definition">test_edit_bad_definition() (recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_bad_definition">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_error_mapping">test_edit_bad_error_mapping() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_interface">test_edit_bad_interface() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
@@ -13083,7 +13183,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_bad_trigger">test_edit_bad_trigger() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_trigger">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_bad_trigger">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_bad_trigger">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsViewV5.test_edit_config">test_edit_config() (ingest.test.test_views.TestScanDetailsViewV5 method)</a>
@@ -13114,10 +13216,18 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_custom_resources">test_edit_custom_resources() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition">test_edit_definition() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition">test_edit_definition() (recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition_and_trigger_rule">test_edit_definition_and_trigger_rule() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_definition_and_trigger_rule">test_edit_definition_and_trigger_rule() (recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_definition_and_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV6.test_edit_error">test_edit_error() (error.test.test_views.TestErrorDetailsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_edit_error_bad_category">test_edit_error_bad_category() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
@@ -13167,7 +13277,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV6.test_edit_simple">(job.test.test_views.TestJobTypeDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_simple">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_simple">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_simple">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_edit_simple">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
 </li>
@@ -13181,33 +13293,43 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_trigger_rule">test_edit_trigger_rule() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_trigger_rule_pause">test_edit_trigger_rule_pause() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_pause">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_pause">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_pause">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_edit_trigger_rule_remove">test_edit_trigger_rule_remove() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_trigger_rule_remove">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_edit_trigger_rule_remove">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_edit_trigger_rule_remove">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_empty_results_manifest">test_empty_results_manifest() (job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_error_categories">test_error_categories() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_error_category">test_error_category() (job.test.test_views.TestJobsView method)</a>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_error_category">test_error_category() (job.test.test_views.TestJobsViewV5 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_error_category">(job.test.test_views.TestJobsViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionViewV5.test_error_category">(job.test.test_views.TestJobsWithExecutionViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsViewV5.test_error_category">(source.test.test_views.TestSourceJobsViewV5 method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_error_id">test_error_id() (job.test.test_views.TestJobsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationValidationViewV5.test_errors">test_errors() (port.test.test_views.TestConfigurationValidationViewV5 method)</a>
 
       <ul>
@@ -13359,7 +13481,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_file_name_successful">test_file_name_successful() (job.test.test_views.TestJobInputFilesView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_file_name_successful">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_file_name_successful">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_file_name_successful">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_file_name_successful">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
@@ -13374,8 +13498,12 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_filter_job_input">test_filter_job_input() (job.test.test_views.TestJobInputFilesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_filter_recipe_input">test_filter_recipe_input() (recipe.test.test_views.TestRecipeInputFilesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_filter_recipe_input">test_filter_recipe_input() (recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_filter_recipe_input">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_all_job">test_forced_all_job() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job">test_forced_specific_job() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
@@ -14090,13 +14218,19 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles.test_jamming_multiple_into_single">test_jamming_multiple_into_single() (job.test.configuration.data.test_job_connection.TestJobConnectionValidateInputFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_job">test_job() (recipe.test.test_views.TestRecipeReprocessView method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task">test_job_exe_clean_task() (scheduler.test.node.test_manager.TestNodeManager method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_job_id">test_job_id() (job.test.test_views.TestJobsView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_job">test_job() (recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_job">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task">test_job_exe_clean_task() (scheduler.test.node.test_manager.TestNodeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_job_id">test_job_id() (job.test.test_views.TestJobsViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_job_id">(job.test.test_views.TestJobsViewV6 method)</a>
+</li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsViewV5.test_job_id">(source.test.test_views.TestSourceJobsViewV5 method)</a>
 </li>
       </ul></li>
@@ -14121,7 +14255,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_job_type_id">test_job_type_id() (job.test.test_views.TestJobsUpdateView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_job_type_id">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_job_type_id">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_job_type_id">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsUpdatesViewV5.test_job_type_id">(product.test.test_views.TestProductsUpdatesViewV5 method)</a>
 </li>
@@ -14141,7 +14277,7 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_job_type_legacy_category">test_job_type_legacy_category() (job.test.test_views.TestJobsUpdateView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_job_type_legacy_category">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_job_type_legacy_category">(job.test.test_views.TestJobsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsUpdatesViewV5.test_job_type_legacy_category">(product.test.test_views.TestProductsUpdatesViewV5 method)</a>
 </li>
@@ -14157,7 +14293,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_job_type_name">test_job_type_name() (job.test.test_views.TestJobsUpdateView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_job_type_name">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_job_type_name">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_job_type_name">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsUpdatesViewV5.test_job_type_name">(product.test.test_views.TestProductsUpdatesViewV5 method)</a>
 </li>
@@ -14280,18 +14418,28 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_legacy_filter_job_input">test_legacy_filter_job_input() (job.test.test_views.TestJobInputFilesView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_legacy_filter_recipe_input">test_legacy_filter_recipe_input() (recipe.test.test_views.TestRecipeInputFilesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_filter_recipe_input">test_legacy_filter_recipe_input() (recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_filter_recipe_input">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_legacy_successful_file">test_legacy_successful_file() (job.test.test_views.TestJobInputFilesView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_legacy_successful_file">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_legacy_successful_file">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_legacy_successful_file">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_list_a_thousand">test_list_a_thousand() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_list_all">test_list_all() (recipe.test.test_views.TestRecipeTypesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5.test_list_all">test_list_all() (recipe.test.test_views.TestRecipeTypesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6.test_list_all">(recipe.test.test_views.TestRecipeTypesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsViewV5.test_list_errors">test_list_errors() (error.test.test_views.TestErrorsViewV5 method)</a>
 
       <ul>
@@ -14625,7 +14773,9 @@
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes">test_no_changes() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_no_changes">(recipe.test.test_views.TestRecipeReprocessView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_no_changes">(recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_no_changes">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_no_conditions">test_no_conditions() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
@@ -14701,7 +14851,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeRevisionsViewV6.test_not_found">(job.test.test_views.TestJobTypeRevisionsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_not_found">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_not_found">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_not_found">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.test_not_found">(storage.test.test_models.TestCountryData method)</a>
 </li>
@@ -14729,7 +14881,9 @@
       <ul>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesViewV6.test_order_by">(batch.test.test_views.TestBatchesViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_order_by">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_order_by">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_order_by">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceJobsViewV5.test_order_by">(source.test.test_views.TestSourceJobsViewV5 method)</a>
 </li>
@@ -14824,12 +14978,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_optional">test_parse_float_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_post">test_parse_float_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_valid">test_parse_float_valid() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_zero">test_parse_float_zero() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_geospatial_utils.TestGeospatialUtils.test_parse_geo_json">test_parse_geo_json() (storage.test.test_geospatial_utils.TestGeospatialUtils method)</a>
@@ -14951,7 +15105,9 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority">(recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_priority">(recipe.test.test_views.TestRecipeReprocessView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_priority">(recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_priority">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.definition.json.old.html#batch.test.definition.json.old.test_batch_definition.TestBatchDefinition.test_priority_invalid">test_priority_invalid() (batch.test.definition.json.old.test_batch_definition.TestBatchDefinition method)</a>
@@ -15027,6 +15183,8 @@
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_1">test_receive_messages_1_batch_size_1() (util.test.test_aws.TestSQSClient method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_100">test_receive_messages_1_batch_size_100() (util.test.test_aws.TestSQSClient method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_recipe">test_recipe() (job.test.test_views.TestJobsViewV6 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.definition.html#recipe.test.definition.test_definition.TestRecipeDefinition.test_recipe_input_conn_duplicate_input">test_recipe_input_conn_duplicate_input() (recipe.test.definition.test_definition.TestRecipeDefinition method)</a>
 </li>
@@ -15295,7 +15453,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_status">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_status">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_status">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_status">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_status">(queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
@@ -15487,7 +15647,9 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_successful">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_successful">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_successful">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_successful">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricDetailsViewV5.test_successful">(metrics.test.test_views.TestMetricDetailsViewV5 method)</a>
 </li>
@@ -15547,11 +15709,15 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.OldTestRecipeDetailsView.test_successful">(recipe.test.test_views.OldTestRecipeDetailsView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsView.test_successful">(recipe.test.test_views.TestRecipeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsViewV6.test_successful">(recipe.test.test_views.TestRecipeDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_successful">(recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_successful">(recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_successful">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6.test_successful">(recipe.test.test_views.TestRecipeTypeDetailsViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.configuration.html#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful">(source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults method)</a>
 </li>
@@ -15593,15 +15759,21 @@
       <ul>
         <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.json.html#ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6.test_successful_all">(ingest.test.strike.configuration.json.test_configuration_v6.TestStrikeConfigurationV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_all">(recipe.test.test_views.TestRecipesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_all">(recipe.test.test_views.TestRecipesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_all">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_successful_all_v1">test_successful_all_v1() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_successful_all_v6">test_successful_all_v6() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_batch">test_successful_batch() (recipe.test.test_views.TestRecipesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_batch">test_successful_batch() (recipe.test.test_views.TestRecipesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_batch">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_successful_configuration">test_successful_configuration() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
 
       <ul>
@@ -15613,7 +15785,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeRevisionsViewV6.test_successful_details">test_successful_details() (job.test.test_views.TestJobTypeRevisionsViewV6 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_details">(recipe.test.test_views.TestRecipesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_details">(recipe.test.test_views.TestRecipesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_details">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_successful_empty">test_successful_empty() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
@@ -15633,7 +15807,9 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.data.html#recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData.test_successful_file">(recipe.test.configuration.data.test_recipe_data.TestRecipeDataAddInputToData method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_successful_file">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_successful_file">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_successful_file">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData.test_successful_file_list">test_successful_file_list() (job.test.configuration.results.test_job_results.TestJobResultsAddOutputToData method)</a>
@@ -15706,22 +15882,36 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type">test_successful_supersede_same_recipe_type() (recipe.test.test_models.TestRecipeManagerCreateRecipe method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_superseded">test_successful_superseded() (recipe.test.test_views.TestRecipesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_superseded">test_successful_superseded() (recipe.test.test_views.TestRecipesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_superseded">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV5.test_successful_trigger">test_successful_trigger() (job.test.test_views.TestJobTypesValidationViewV5 method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_successful_trigger">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_successful_trigger">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_successful_trigger">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_custom">test_successful_trigger_custom() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV5.test_successful_trigger_true">test_successful_trigger_true() (batch.test.test_views.TestBatchesValidationViewV5 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_type_id">test_successful_type_id() (recipe.test.test_views.TestRecipesView method)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_type_id">test_successful_type_id() (recipe.test.test_views.TestRecipesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_type_id">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_type_name">test_successful_type_name() (recipe.test.test_views.TestRecipesView method)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_successful_type_name">test_successful_type_name() (recipe.test.test_views.TestRecipesViewV5 method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_successful_type_name">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_successful_update">test_successful_update() (scheduler.test.node.test_manager.TestNodeManager method)</a>
 
       <ul>
@@ -15795,17 +15985,23 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_superseded">(job.test.test_views.TestJobsUpdateView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_superseded">(job.test.test_views.TestJobsView method)</a>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5.test_superseded">(job.test.test_views.TestJobsViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6.test_superseded">(job.test.test_views.TestJobsViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionViewV5.test_superseded">(job.test.test_views.TestJobsWithExecutionViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.OldTestRecipeDetailsView.test_superseded">(recipe.test.test_views.OldTestRecipeDetailsView method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsView.test_superseded">(recipe.test.test_views.TestRecipeDetailsView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsViewV6.test_superseded">(recipe.test.test_views.TestRecipeDetailsViewV6 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_superseded">(recipe.test.test_views.TestRecipeReprocessView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5.test_superseded">(recipe.test.test_views.TestRecipeReprocessViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_superseded">(recipe.test.test_views.TestRecipesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6.test_superseded">(recipe.test.test_views.TestRecipeReprocessViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5.test_superseded">(recipe.test.test_views.TestRecipesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6.test_superseded">(recipe.test.test_views.TestRecipesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceDetailsViewV4.test_superseded">(source.test.test_views.TestSourceDetailsViewV4 method)</a>
 </li>
@@ -15847,7 +16043,9 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesView.test_time_successful">test_time_successful() (job.test.test_views.TestJobInputFilesView method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView.test_time_successful">(recipe.test.test_views.TestRecipeInputFilesView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5.test_time_successful">(recipe.test.test_views.TestRecipeInputFilesViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6.test_time_successful">(recipe.test.test_views.TestRecipeInputFilesViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.test_time_successful">(storage.test.test_views.TestFilesViewV5 method)</a>
 </li>
@@ -16279,7 +16477,9 @@
       <ul>
         <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationValidationViewV5.test_warnings">(port.test.test_views.TestConfigurationValidationViewV5 method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_warnings">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5.test_warnings">(recipe.test.test_views.TestRecipeTypesValidationViewV5 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6.test_warnings">(recipe.test.test_views.TestRecipeTypesValidationViewV6 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesValidationView.test_warnings">(storage.test.test_views.TestWorkspacesValidationView method)</a>
 </li>
@@ -16586,7 +16786,9 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView">TestJobsUpdateView (class in job.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView">TestJobsView (class in job.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV5">TestJobsViewV5 (class in job.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsViewV6">TestJobsViewV6 (class in job.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionViewV5">TestJobsWithExecutionViewV5 (class in job.test.test_views)</a>
 </li>
@@ -16816,7 +17018,7 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateJobInterfaces">TestRecipeDefinitionValidateJobInterfaces (class in recipe.test.configuration.definition.test_recipe_definition)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsView">TestRecipeDetailsView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeDetailsViewV6">TestRecipeDetailsViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.diff.html#recipe.test.diff.test_diff.TestRecipeDiff">TestRecipeDiff (class in recipe.test.diff.test_diff)</a>
 </li>
@@ -16828,7 +17030,9 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler">TestRecipeHandler (class in recipe.test.handlers.test_handler)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesView">TestRecipeInputFilesView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV5">TestRecipeInputFilesViewV5 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeInputFilesViewV6">TestRecipeInputFilesViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.instance.json.html#recipe.test.instance.json.test_recipe_v6.TestRecipeInstanceV6">TestRecipeInstanceV6 (class in recipe.test.instance.json.test_recipe_v6)</a>
 </li>
@@ -16840,19 +17044,29 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipePopulateJobs">TestRecipePopulateJobs (class in recipe.test.test_models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView">TestRecipeReprocessView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV5">TestRecipeReprocessViewV5 (class in recipe.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView">TestRecipesView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessViewV6">TestRecipeReprocessViewV6 (class in recipe.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView">TestRecipeTypeDetailsView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV5">TestRecipesViewV5 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesViewV6">TestRecipesViewV6 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5">TestRecipeTypeDetailsViewV5 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV6">TestRecipeTypeDetailsViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerCreateRecipeType">TestRecipeTypeManagerCreateRecipeType (class in recipe.test.test_models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType">TestRecipeTypeManagerEditRecipeType (class in recipe.test.test_models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView">TestRecipeTypesValidationView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV5">TestRecipeTypesValidationViewV5 (class in recipe.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView">TestRecipeTypesView (class in recipe.test.test_views)</a>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationViewV6">TestRecipeTypesValidationViewV6 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV5">TestRecipeTypesViewV5 (class in recipe.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesViewV6">TestRecipeTypesViewV6 (class in recipe.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_scheduler.TestScheduler.testRegistration">testRegistration() (scheduler.test.test_scheduler.TestScheduler method)</a>
 </li>
@@ -17167,6 +17381,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.to_representation">to_representation() (job.serializers.JobDetailsInputSerializer method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsOutputSerializer.to_representation">(job.serializers.JobDetailsOutputSerializer method)</a>
+</li>
         <li><a href="architecture/django/code_docs/product.html#product.serializers.ProductFileUpdateField.to_representation">(product.serializers.ProductFileUpdateField method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer.to_representation">(recipe.serializers.RecipeDetailsInputSerializer method)</a>
@@ -17266,13 +17482,19 @@
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule.triggerevent_set">triggerevent_set (trigger.models.TriggerRule attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventBaseSerializer">TriggerEventBaseSerializer (class in trigger.serializers)</a>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventBaseSerializerV5">TriggerEventBaseSerializerV5 (class in trigger.serializers)</a>
 </li>
-      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventDetailsSerializer">TriggerEventDetailsSerializer (class in trigger.serializers)</a>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventBaseSerializerV6">TriggerEventBaseSerializerV6 (class in trigger.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventDetailsSerializerV5">TriggerEventDetailsSerializerV5 (class in trigger.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventDetailsSerializerV6">TriggerEventDetailsSerializerV6 (class in trigger.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEventManager">TriggerEventManager (class in trigger.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventSerializer">TriggerEventSerializer (class in trigger.serializers)</a>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventSerializerV5">TriggerEventSerializerV5 (class in trigger.serializers)</a>
+</li>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.serializers.TriggerEventSerializerV6">TriggerEventSerializerV6 (class in trigger.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerRule">TriggerRule (class in trigger.models)</a>
 </li>

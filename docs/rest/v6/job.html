@@ -8,12 +8,12 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Job Services &mdash; Scale 5.6.0-snapshot documentation</title>
+  <title>v6 Job Services &mdash; Scale 5.6.0-snapshot documentation</title>
   
 
   
   
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
   
   
   
@@ -26,17 +26,17 @@
 
   
 
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Job Execution Services" href="job_execution.html" />
-    <link rel="prev" title="Ingest Services" href="ingest.html" />
-    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="v6 Job Type Services" href="job_type.html" />
+    <link rel="prev" title="v6 Ingest Services" href="ingest.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
 
   
-  <script src="../_static/js/modernizr.min.js"></script>
+  <script src="../../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -52,12 +52,12 @@
           
 
           
-            <a href="../index.html" class="icon icon-home"> Scale
+            <a href="../../index.html" class="icon icon-home"> Scale
           
 
           
             
-            <img src="../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
+            <img src="../../_static/scale3-transparent-128.png" class="logo" alt="Logo"/>
           
           </a>
 
@@ -72,7 +72,7 @@
 
           
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -90,41 +90,38 @@
             
             
               <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../architecture/index.html">Architecture</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">REST API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="index.html#api-versions">API Versions</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="index.html#current-v5-services">Current v5 Services</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="batch.html">Batch Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">Diagnostic Services</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture/index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">REST API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../index.html#api-versions">API Versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#current-v5-services">Current v5 Services</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html#future-v6-services">Future v6 Services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Job Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Job Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-job-list">v6 Job List</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#future-v6-services">Future v6 Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">v6 Metrics Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">v6 Node Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">v6 Recipe Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
 </ul>
 
             
@@ -139,7 +136,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">Scale</a>
+          <a href="../../index.html">Scale</a>
         
       </nav>
 
@@ -168,17 +165,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="../index.html">Docs</a> &raquo;</li>
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="index.html">REST API</a> &raquo;</li>
+          <li><a href="../index.html">REST API</a> &raquo;</li>
         
-      <li>Job Services</li>
+      <li>v6 Job Services</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/job.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/rest/v6/job.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -191,10 +188,90 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-services">
-<span id="rest-job"></span><h1>Job Services<a class="headerlink" href="#job-services" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="v6-job-services">
+<span id="rest-v6-job"></span><h1>v6 Job Services<a class="headerlink" href="#v6-job-services" title="Permalink to this headline">¶</a></h1>
 <p>These services provide access to information about &#8220;all&#8221;, &#8220;currently running&#8221; and &#8220;previously finished&#8221; jobs.</p>
-<table border="1" class="docutils" id="rest-job-list">
+<div class="section" id="v6-job-list">
+<span id="rest-v6-job-list"></span><h2>v6 Job List<a class="headerlink" href="#v6-job-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/jobs/ API call</strong></p>
+<p>Request: GET <a class="reference external" href="http://.../v6/jobs/?batch_id=1">http://.../v6/jobs/?batch_id=1</a></p>
+<p>Response: 200 OK</p>
+<blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+  <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">208</span><span class="p">,</span>
+          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe-type&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe Type&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe Type Description&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+        <span class="s2">&quot;recipe_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;batch&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My batch of recipes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host.example.domain&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="s2">&quot;input_file_size&quot;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+      <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="0%" />
@@ -208,82 +285,67 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="6">Returns a list of all jobs. Jobs marked as superseded are excluded by default.</td>
+<tr class="row-even"><td colspan="6">Returns a list of all jobs.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><dl class="first last docutils">
-<dt><strong>DEPRECATED</strong></dt>
-<dd>This documentation describes the API <strong>v5</strong> version of the Job List endpoint response.  Starting with
-API <strong>v6</strong> the following fields will be removed: <em>cpus_required</em>, <em>mem_required</em>, <em>disk_out_required</em>.
-A <em>resources</em> section will also be added to the response. Additionally, <em>disk_in_required</em> is renamed to
-<em>input_file_size</em>, <em>data</em> is renamed to <em>input</em>, and <em>results</em> is renamed to <em>output</em>.</dd>
-</dl>
-</td>
+<tr class="row-odd"><td colspan="6"><strong>GET</strong> /v6/jobs/</td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>GET</strong> /jobs/</td>
+<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>Query Parameters</strong></td>
-</tr>
-<tr class="row-even"><td>page</td>
+<tr class="row-odd"><td>page</td>
 <td colspan="2">Integer</td>
 <td colspan="2">Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
-<tr class="row-odd"><td>page_size</td>
+<tr class="row-even"><td>page_size</td>
 <td colspan="2">Integer</td>
 <td colspan="2">Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
-<tr class="row-even"><td>started</td>
+<tr class="row-odd"><td>started</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-odd"><td>ended</td>
+<tr class="row-even"><td>ended</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-even"><td>order</td>
+<tr class="row-odd"><td>order</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
-<tr class="row-odd"><td>status</td>
+<tr class="row-even"><td>status</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>Return only jobs with a status matching this string.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>job_id</td>
+<tr class="row-odd"><td>job_id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">Optional</td>
 <td>Return only jobs with a given identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>job_type_id</td>
+<tr class="row-even"><td>job_type_id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">Optional</td>
 <td>Return only jobs with a given job type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>job_type_name</td>
+<tr class="row-odd"><td>job_type_name</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>Return only jobs with a given job type name.
-Duplicate it to filter by multiple values.</td>
-</tr>
-<tr class="row-odd"><td>job_type_category</td>
-<td colspan="2">String</td>
-<td colspan="2">Optional</td>
-<td>Return only jobs with a given job type category.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>batch_id</td>
@@ -292,17 +354,29 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only jobs associated with the given batch identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>error_category</td>
+<tr class="row-odd"><td>recipe_id</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
+<td>Return only jobs associated with the given recipe identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>error_category</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>Return only jobs that failed due to an error with a given category.
 Choices: [SYSTEM, DATA, ALGORITHM].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>include_superseded</td>
+<tr class="row-odd"><td>error_id</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
+<td>Return only jobs that failed with this error
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>is_superseded</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Optional</td>
-<td>Whether to include superseded job instances. Defaults to false.</td>
+<td>Return only jobs matching is_superseded flag. Defaults to all jobs.</td>
 </tr>
 <tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
@@ -333,186 +407,99 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <span class="xref std std-ref">Job Details</span>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <span class="xref std std-ref">Job Type Details</span>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
+(See <span class="xref std std-ref">Job Type Revision Details</span>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The trigger event that is associated with the job.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.node</td>
+<tr class="row-odd"><td colspan="2">.recipe</td>
 <td colspan="2">JSON Object</td>
-<td colspan="2">The node that the job is/was running on.</td>
+<td colspan="2">The recipe instance associated with this job.
+(See <span class="xref std std-ref">Recipe Details</span>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.error</td>
+<tr class="row-even"><td colspan="2">.batch</td>
 <td colspan="2">JSON Object</td>
-<td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+<td colspan="2">The batch instance associated with this job
+(See <a class="reference internal" href="batch.html#rest-v6-batch-details"><span class="std std-ref">Batch Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.is_superseded</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this job has been replaced and is now obsolete.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.superseded_job</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The previous job in the chain that was superseded by this job.
+(See <span class="xref std std-ref">Job Details</span>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.status</td>
 <td colspan="2">String</td>
 <td colspan="2">The current status of the job.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td colspan="2">.priority</td>
-<td colspan="2">Integer</td>
-<td colspan="2">The priority of the job.</td>
+<tr class="row-even"><td colspan="2">.node</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The node that the job is/was running on.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.num_exes</td>
+<tr class="row-odd"><td colspan="2">.error</td>
+<td colspan="2">JSON Object</td>
+<td colspan="2">The error that is associated with the job.
+(See <a class="reference internal" href="error.html#rest-v6-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.num_exes</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The number of executions this job has had.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.timeout</td>
-<td colspan="2">Integer</td>
-<td colspan="2">The maximum amount of time this job can run before being killed (in seconds).</td>
-</tr>
-<tr class="row-odd"><td colspan="2">.max_tries</td>
-<td colspan="2">Integer</td>
-<td colspan="2">The maximum number of times to attempt this job when failed (minimum one).</td>
-</tr>
-<tr class="row-even"><td colspan="2">.cpus_required</td>
-<td colspan="2">Decimal</td>
-<td colspan="2">The number of CPUs needed for a job of this type.</td>
-</tr>
-<tr class="row-odd"><td colspan="2">.mem_required</td>
-<td colspan="2">Decimal</td>
-<td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
-</tr>
-<tr class="row-even"><td colspan="2">.disk_in_required</td>
+<tr class="row-odd"><td colspan="2">.input_file_size</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">The amount of disk space in MiB required for input files for this job.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.disk_out_required</td>
-<td colspan="2">Decimal</td>
-<td colspan="2">The amount of disk space in MiB required for output files for this job.</td>
+<tr class="row-even"><td colspan="2">.source_started</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When collection of the source file started.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_superseded</td>
-<td colspan="2">Boolean</td>
-<td colspan="2">Whether this job has been replaced and is now obsolete.</td>
+<tr class="row-odd"><td colspan="2">.source_ended</td>
+<td colspan="2">ISO-8601 Datetime</td>
+<td colspan="2">When collection of the source file ended.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.root_superseded_job</td>
-<td colspan="2">JSON Object</td>
-<td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td colspan="2">.superseded_job</td>
-<td colspan="2">JSON Object</td>
-<td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td colspan="2">.superseded_by_job</td>
-<td colspan="2">JSON Object</td>
-<td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
-</tr>
-<tr class="row-even"><td colspan="2">.delete_superseded</td>
-<td colspan="2">Boolean</td>
-<td colspan="2">Whether the products of the previous job should be deleted when superseded.</td>
-</tr>
-<tr class="row-odd"><td colspan="2">.created</td>
+<tr class="row-even"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.queued</td>
+<tr class="row-odd"><td colspan="2">.queued</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job was added to the queue to be run when resources are available.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.started</td>
+<tr class="row-even"><td colspan="2">.started</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job started running.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.ended</td>
+<tr class="row-odd"><td colspan="2">.ended</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job stopped running, which could be due to success or failure.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.last_status_change</td>
+<tr class="row-even"><td colspan="2">.last_status_change</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the status of the job was last changed.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.superseded</td>
+<tr class="row-odd"><td colspan="2">.superseded</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the the job became superseded by another job.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.last_modified</td>
+<tr class="row-even"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
-</tr>
-<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
-    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-ingest&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Ingest&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Ingests a source file into a workspace&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-                <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-                <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
-                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
-                <span class="p">},</span>
-                <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;STRIKE_TRANSFER&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-                <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:24.261Z&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host.example.domain&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
-            <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
-            <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
-            <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
-            <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">64.0</span><span class="p">,</span>
-            <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
-        <span class="p">},</span>
-        <span class="p">...</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-</td>
 </tr>
 </tbody>
 </table>
@@ -562,13 +549,13 @@ renamed to <em>input</em>, and <em>results</em> is renamed to <em>output</em>.</
 <tr class="row-even"><td>job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_type_rev</td>
 <td>JSON Object</td>
 <td>The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>event</td>
 <td>JSON Object</td>
@@ -581,7 +568,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>error</td>
 <td>JSON Object</td>
 <td>The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>status</td>
 <td>String</td>
@@ -626,17 +613,17 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td>root_superseded_job</td>
 <td>JSON Object</td>
 <td>The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>superseded_job</td>
 <td>JSON Object</td>
 <td>The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>superseded_by_job</td>
 <td>JSON Object</td>
 <td>The next job in the chain that superseded this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>delete_superseded</td>
 <td>Boolean</td>
@@ -673,7 +660,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>data</td>
 <td>JSON Object</td>
 <td>An interface description for all the job input and output files.
-(See <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span class="std std-ref">Job Data Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span class="std std-ref">Job Data Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>results</td>
 <td>JSON Object</td>
@@ -682,12 +669,12 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>recipes</td>
 <td>Array</td>
 <td>A list of all recipes associated with the job.
-(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="../recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>job_exes</td>
 <td>Array</td>
 <td>A list of all job executions associated with the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="../job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>inputs</td>
 <td>Array</td>
@@ -696,12 +683,12 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the input as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the input as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.value</td>
 <td>Various</td>
@@ -716,18 +703,18 @@ will include a full JSON representation of a Scale file object.</td>
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the output as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the output as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the output, which can vary depending on the type. A file or
 files type will include a full JSON representation of a Product file object.
-(See <a class="reference internal" href="product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
+(See <a class="reference internal" href="../product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
@@ -1169,18 +1156,18 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -1193,7 +1180,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -1239,17 +1226,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -1498,12 +1485,12 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -1516,7 +1503,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -1562,17 +1549,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -1609,7 +1596,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.latest_job_exe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The most recent execution of the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="../job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
@@ -1856,7 +1843,7 @@ time filtering. Valid values are:</p>
 <tr class="row-even"><td>workspace</td>
 <td colspan="2">JSON Object</td>
 <td colspan="3">The workspace storing the file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="../workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.id</td>
 <td colspan="2">Integer</td>
@@ -1937,7 +1924,7 @@ descending (most recent first)</td>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>NOTE</strong></dt>
 <dd>This API endpoint is available starting with API <strong>v6</strong>.  It replaces a very similar API endpoint which
-you can see described here: <a class="reference internal" href="job_execution.html#rest-job-execution-list"><span class="std std-ref">Job Execution List</span></a>.</dd>
+you can see described here: <a class="reference internal" href="../job_execution.html#rest-job-execution-list"><span class="std std-ref">Job Execution List</span></a>.</dd>
 </dl>
 </td>
 </tr>
@@ -2016,7 +2003,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="../job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.status</td>
 <td>String</td>
@@ -2050,22 +2037,22 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job that is associated with the execution.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.node</td>
 <td>JSON Object</td>
 <td colspan="2">The node that ran the execution.
-(See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
+(See <a class="reference internal" href="../node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td colspan="2">The last error that was recorded for the execution.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the execution.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.timeout</td>
 <td>Integer</td>
@@ -2140,7 +2127,7 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
 <dt><strong>NOTE</strong></dt>
 <dd>This API endpoint is available starting with API <strong>v6</strong>.  It replaces a very similar API endpoint which
-you can see described here: <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution List</span></a>.</dd>
+you can see described here: <a class="reference internal" href="../job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution List</span></a>.</dd>
 </dl>
 </td>
 </tr>
@@ -2164,7 +2151,7 @@ as it relates to the job.</dd>
 <tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="../job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>status</td>
 <td>String</td>
@@ -2198,22 +2185,22 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the execution.
-(See <a class="reference internal" href="v6/job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>node</td>
 <td>JSON Object</td>
 <td>The node that ran the execution.
-(See <a class="reference internal" href="node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
+(See <a class="reference internal" href="../node.html#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>error</td>
 <td>JSON Object</td>
 <td>The last error that was recorded for the execution.
-(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
+(See <a class="reference internal" href="../error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the execution.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="../job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>timeout</td>
 <td>Integer</td>
@@ -2226,7 +2213,7 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>task_results</td>
 <td>JSON Object</td>
 <td>JSON description of the task results for this execution.
-(See <a class="reference internal" href="../architecture/jobs/task_results.html#architecture-jobs-task-results-spec"><span class="std std-ref">Job Task Results</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/task_results.html#architecture-jobs-task-results-spec"><span class="std std-ref">Job Task Results</span></a>)</td>
 </tr>
 <tr class="row-even"><td>resources</td>
 <td>JSON Object</td>
@@ -2235,7 +2222,7 @@ Choices: [RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>configuration</td>
 <td>JSON Object</td>
 <td>JSON description of the configuration for running the job
-(See <a class="reference internal" href="../architecture/jobs/exe_configuration.html#architecture-jobs-exe-configuration"><span class="std std-ref">Job Execution Configuration</span></a>)</td>
+(See <a class="reference internal" href="../../architecture/jobs/exe_configuration.html#architecture-jobs-exe-configuration"><span class="std std-ref">Job Execution Configuration</span></a>)</td>
 </tr>
 <tr class="row-even"><td>output</td>
 <td>JSON Object</td>
@@ -2474,6 +2461,7 @@ Defaults to jobs current priority, lower number is higher priority.</td>
 </tbody>
 </table>
 </div>
+</div>
 
 
            </div>
@@ -2483,10 +2471,10 @@ Defaults to jobs current priority, lower number is higher priority.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job_execution.html" class="btn btn-neutral float-right" title="Job Execution Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job_type.html" class="btn btn-neutral float-right" title="v6 Job Type Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.html" class="btn btn-neutral" title="Ingest Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.html" class="btn btn-neutral" title="v6 Ingest Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -2516,7 +2504,7 @@ Defaults to jobs current priority, lower number is higher priority.</td>
 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
+            URL_ROOT:'../../',
             VERSION:'5.6.0-snapshot',
             LANGUAGE:'None',
             COLLAPSE_INDEX:false,
@@ -2525,13 +2513,13 @@ Defaults to jobs current priority, lower number is higher priority.</td>
             SOURCELINK_SUFFIX: '.txt'
         };
     </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
 
   
 
-  <script type="text/javascript" src="../_static/js/theme.js"></script>
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
   <script type="text/javascript">
       jQuery(function () {

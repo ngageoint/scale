@@ -62,6 +62,14 @@ job\.exceptions module
     :undoc-members:
     :show-inheritance:
 
+job\.job\_type\_serializers module
+----------------------------------
+
+.. automodule:: job.job_type_serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.models module
 ------------------
 

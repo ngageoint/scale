@@ -814,23 +814,44 @@ unique. This is implemented to allow the loading of defined system trigger rules
 <span id="trigger-serializers-module"></span><h2>trigger.serializers module<a class="headerlink" href="#module-trigger.serializers" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for trigger events and rules</p>
 <dl class="class">
-<dt id="trigger.serializers.TriggerEventBaseSerializer">
-<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="trigger.serializers.TriggerEventBaseSerializerV5">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventBaseSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventBaseSerializerV5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="trigger.serializers.TriggerEventDetailsSerializer">
-<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
+<dt id="trigger.serializers.TriggerEventBaseSerializerV6">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventBaseSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventBaseSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="trigger.serializers.TriggerEventSerializer">
-<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
+<dt id="trigger.serializers.TriggerEventDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializerV5" title="trigger.serializers.TriggerEventBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV5</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="trigger.serializers.TriggerEventDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializerV6" title="trigger.serializers.TriggerEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV6</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="trigger.serializers.TriggerEventSerializerV5">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializerV5" title="trigger.serializers.TriggerEventBaseSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV5</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="trigger.serializers.TriggerEventSerializerV6">
+<em class="property">class </em><code class="descclassname">trigger.serializers.</code><code class="descname">TriggerEventSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.serializers.TriggerEventSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#trigger.serializers.TriggerEventBaseSerializerV6" title="trigger.serializers.TriggerEventBaseSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializerV6</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
 
