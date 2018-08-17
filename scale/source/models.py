@@ -177,7 +177,7 @@ class SourceFileManager(models.GeoManager):
             order.append('id')
         else:
             order = ['last_modified', 'id']
-        jobs = Job.objects.filter_jobs_related(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+        jobs = Job.objects.filter_jobs_related_v5(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                                job_type_ids=job_type_ids, job_type_names=job_type_names,
                                                job_type_categories=job_type_categories, batch_ids=batch_ids,
                                                error_categories=error_categories, include_superseded=include_superseded,

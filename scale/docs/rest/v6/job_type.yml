@@ -101,7 +101,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_versions'
- /v6/ingests/job-types/{name}/{version}/:
+ /v6/job-types/{name}/{version}/:
     get:
       operationId: _rest_v6_job_type_details
       summary: Job Type Details
@@ -185,7 +185,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_revisions'
- /v6/ingests/job-types/{name}/{version}/revisions/{revision_num}/:
+ /v6/job-types/{name}/{version}/revisions/{revision_num}/:
     get:
       operationId: _rest_v6_job_type_revision_details
       summary: Job Type Revision Details
@@ -493,27 +493,41 @@ components:
           items:
             $ref: '#/components/schemas/job_type_revision'
           description: List of Job Type Revisions
-    job_type_revision:
-      title: Job Type Revision
+    model:
+      title: Model
       type: object
-      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+    job_type_revision_base:
+      title: Job Type Revision Base
+      type: object
         id:
           type: integer
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         job_type:
-          $ref: '#/components/schemas/job_type_base'
+          $ref: '#/components/schemas/model'
         revision_num:
           type: integer
           example: 1
-        docker_image:
-          type: string
-          example: "my-job-1.0.0-seed:1.0.0"
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-          example: 2015-09-10T15:24:53.503Z
+    job_type_revision:
+      allof:
+        - ref: '#/components/schemas/job_type_revision_base'
+        - title: Job Type Revision
+        - type: object
+          properties:   
+          job_type:
+            $ref: '#/components/schemas/job_type_base'
+          docker_image:
+            type: string
+            example: "my-job-1.0.0-seed:1.0.0"
+          created:
+            type: string
+            format: date-time
+            description: When the associated database model was initially created.
+            example: 2015-09-10T15:24:53.503Z
     job_type_revision_detail:
       title: Job Type Revision Details
       type: object
