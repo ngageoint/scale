@@ -339,16 +339,16 @@ class TestJobsViewV6(TestCase):
         job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
-        url = '/%s/jobs/?order=job_type__name&order=-job_type__version' % self.api
+        url = '/%s/jobs/?is_superseded=false&order=job_type__name&order=-job_type__version' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 5)
+        self.assertEqual(len(result['results']), 4)
         self.assertEqual(result['results'][0]['job_type']['id'], job_type1c.id)
         self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
         self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
-        self.assertEqual(result['results'][4]['job_type']['id'], self.job_type2.id)
+        self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 # TODO: remove when REST API v5 is removed
 class OldTestJobDetailsViewV5(TestCase):
