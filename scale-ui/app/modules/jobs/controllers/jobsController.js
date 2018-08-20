@@ -61,9 +61,9 @@
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
                 filterHeaderTemplate: '' +
-                    '<div class="ui-grid-filter-container">' +
+                    '<div class="ui-grid-filter-container" style="display: flex; justify-content: space-between">' +
                         '<select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title) for jobType in grid.appScope.vm.jobTypeValues"></select>' +
-                        '<select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobTypeVersion" ng-options="jobVersion as (jobVersion.label) for jobVersion in grid.appScope.vm.jobTypeVersionValues"></select>' +
+                        '<select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobTypeVersion" ng-options="jobVersion as (jobVersion.label) for jobVersion in grid.appScope.vm.jobTypeVersionValues" ng-disabled="grid.appScope.vm.isVersionDisabled()"></select>' +
                     '</div>' +
                 ''
             },
@@ -290,6 +290,13 @@
             if (!vm.loading) {
                 vm.filterResults();
             }
+        };
+
+        vm.isVersionDisabled = function () {
+            if (vm.selectedJobType.name) {
+                return vm.selectedJobType.name === 'VIEW ALL';
+            }
+            return false;
         };
 
         vm.gridOptions.onRegisterApi = function (gridApi) {
