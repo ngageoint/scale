@@ -1022,6 +1022,89 @@ model locks on the given jobs.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.messages.purge_jobs">
+<span id="job-messages-purge-jobs-module"></span><h2>job.messages.purge_jobs module<a class="headerlink" href="#module-job.messages.purge_jobs" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that purges jobs</p>
+<dl class="class">
+<dt id="job.messages.purge_jobs.PurgeJobs">
+<em class="property">class </em><code class="descclassname">job.messages.purge_jobs.</code><code class="descname">PurgeJobs</code><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that removes job models</p>
+<dl class="method">
+<dt id="job.messages.purge_jobs.PurgeJobs.add_job">
+<code class="descname">add_job</code><span class="sig-paren">(</span><em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs.add_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job ID to this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.purge_jobs.PurgeJobs.can_fit_more">
+<code class="descname">can_fit_more</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs.can_fit_more" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether more jobs can fit in this message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if more jobs can fit, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.purge_jobs.PurgeJobs.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.purge_jobs.PurgeJobs.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.purge_jobs.PurgeJobs.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.PurgeJobs.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.purge_jobs.create_purge_jobs_messages">
+<code class="descclassname">job.messages.purge_jobs.</code><code class="descname">create_purge_jobs_messages</code><span class="sig-paren">(</span><em>purge_job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.create_purge_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to remove the given job IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>purge_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.messages.running_jobs">
 <span id="job-messages-running-jobs-module"></span><h2>job.messages.running_jobs module<a class="headerlink" href="#module-job.messages.running_jobs" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that sets RUNNING status for job models</p>

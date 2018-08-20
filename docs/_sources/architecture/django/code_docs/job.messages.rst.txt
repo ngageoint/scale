@@ -84,6 +84,14 @@ job\.messages\.publish\_job module
     :undoc-members:
     :show-inheritance:
 
+job\.messages\.purge\_jobs module
+---------------------------------
+
+.. automodule:: job.messages.purge_jobs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.messages\.running\_jobs module
 -----------------------------------
 
