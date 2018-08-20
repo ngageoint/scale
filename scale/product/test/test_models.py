@@ -457,7 +457,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(self.workspace.id, products[0].workspace_id)
         self.assertEqual(self.job_exe.job_type.name, products[0].job_name)
         self.assertEqual(self.job_exe.job_type.version, products[0].job_version)
-        self.assetIsNone(products[0].package_version)
+        self.assertIsNone(products[0].package_version)
         self.assertIsNotNone(products[0].uuid)
         self.assertTrue(products[0].is_operational)
 
@@ -468,7 +468,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(self.workspace.id, products[1].workspace_id)
         self.assertEqual(self.job_exe.job_type.name, products[1].job_name)
         self.assertEqual(self.job_exe.job_type.version, products[1].job_version)
-        self.assetIsNone(products[1].package_version)
+        self.assertIsNone(products[1].package_version)
         self.assertIsNotNone(products[1].uuid)
         self.assertTrue(products[1].is_operational)
 
