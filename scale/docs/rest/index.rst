@@ -69,9 +69,15 @@ Future v6 Services
    v6/batch
    v6/data
    v6/diagnostic
+   v6/error
    v6/ingest
+   v6/job
+   v6/job_type
    v6/metrics
    v6/node
    v6/recipe
    v6/scheduler
+   v6/scale_file
+   v6/scan
+   v6/strike
    v6/system

@@ -8,7 +8,7 @@ from django.db import transaction
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.models import RecipeType
 from source.triggers.configuration.parse_trigger_rule import ParseTriggerRuleConfiguration
 from storage.models import Workspace
@@ -73,7 +73,7 @@ class ParseTriggerHandler(TriggerRuleHandler):
                     Queue.objects.queue_new_job(job_type, job_data, event)
                 elif isinstance(thing_to_create, RecipeType):
                     recipe_type = thing_to_create
-                    recipe_data = RecipeData({})
+                    recipe_data = LegacyRecipeData({})
                     recipe_data.add_file_input(rule_config.get_input_data_name(), source_file.id)
                     recipe_data.set_workspace_id(workspace.id)
                     logger.info('Queuing new recipe of type %s %s', recipe_type.name, recipe_type.version)

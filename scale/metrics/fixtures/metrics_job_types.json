@@ -15,7 +15,7 @@
 			"uses_docker": true,
 			"docker_privileged": false,
 			"docker_image": "scale",
-			"interface": {
+			"manifest": {
 			     "version": "1.0",
 			     "command": "",
 			     "command_arguments": "scale_daily_metrics ${:Day}",
@@ -42,7 +42,7 @@
         "fields": {
             "job_type": ["scale-daily-metrics", "1.0"],
             "revision_num": 1,
-            "interface": {
+            "manifest": {
                  "version": "1.0",
                  "command": "",
                  "command_arguments": "scale_daily_metrics ${:Day}",

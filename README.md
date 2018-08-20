@@ -118,12 +118,11 @@ https://ngageoint.github.io/scale/docs/algorithm_integration/index.html
 
 Scale Development
 -----------------
-If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 3 primary
+If you want to contribute to the actual Scale open source project, we welcome your contributions. There are 2 primary
 components of Scale:
 
 - Scale User Interface: https://github.com/ngageoint/scale/tree/master/scale-ui
 - Scheduler / Service APIs: https://github.com/ngageoint/scale/tree/master/scale
-- Scale Command Line Interface: https://github.com/ngageoint/scale/tree/master/scale-cli
 
 The links provide specific development environment setup instructions for each individual component.
 
@@ -138,7 +137,7 @@ A new release can be cut using the generate-release.sh shell script from a clone
 to MAJOR MINOR PATCH versions respectively):
 
 ```bash
-./generate-release.sh 4 0 0
+./generate-release.sh 4 0 0 
 ```
 
 There is no direct connection between the Travis CI and Docker Hub builds, but both are launched via push to the GitHub

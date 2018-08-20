@@ -4,6 +4,8 @@ import django
 from django.test import TestCase, TransactionTestCase
 
 import storage.test.utils as storage_test_utils
+from ingest.strike.configuration.json.configuration_2_0 import StrikeConfigurationV2
+from ingest.strike.configuration.json.configuration_v6 import StrikeConfigurationV6
 from ingest.models import Ingest, Strike
 from storage.exceptions import InvalidDataTypeTag
 
@@ -70,7 +72,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         self.workspace = storage_test_utils.create_workspace()
 
     def test_successful(self):
-        """Tests calling StrikeManager.create_strike_process() successfully"""
+        """Tests calling StrikeManager.create_strike() successfully"""
 
         config = {
             'version': '1.0',
@@ -83,5 +85,25 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
             }]
         }
 
+        config = StrikeConfigurationV2(config).get_configuration()
+        strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
+        self.assertEqual(strike.job.status, 'QUEUED')
+        
+    def test_successful_v6(self):
+        """Tests calling StrikeManager.create_strike successfully with v6 config"""
+
+        config = {
+            'version': '6',
+            'workspace': self.workspace.name, 
+            'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+            'files_to_ingest': [{
+                'filename_regex': 'foo',
+                'data_types': ['test1','test2'],
+                'new_workspace': self.workspace.name,
+                'new_file_path': 'my/path'
+            }]
+        }
+
+        config = StrikeConfigurationV6(config).get_configuration()
         strike = Strike.objects.create_strike('my_name', 'my_title', 'my_description', config)
         self.assertEqual(strike.job.status, 'QUEUED')

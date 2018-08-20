@@ -1,5 +1,6 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import datetime
 
@@ -7,13 +8,15 @@ import django.utils.timezone as timezone
 
 import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
-from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
+from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
+from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
+from job.seed.manifest import SeedManifest
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
@@ -31,6 +34,126 @@ RULE_EVENT_COUNTER = 1
 
 MOCK_TYPE = 'MOCK_JOB_TRIGGER_RULE_TYPE'
 MOCK_ERROR_TYPE = 'MOCK_JOB_TRIGGER_RULE_ERROR_TYPE'
+
+COMPLETE_MANIFEST = {
+    'seedVersion': '1.0.0',
+    'job': {
+        'name': 'my-job',
+        'jobVersion': '1.0.0',
+        'packageVersion': '1.0.0',
+        'title': 'My first job',
+        'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
+        'tags': [ 'hdf5', 'png', 'csv', 'image processing' ],
+        'maintainer': {
+          'name': 'John Doe',
+          'organization': 'E-corp',
+          'email': 'jdoe@example.com',
+          'url': 'http://www.example.com',
+          'phone': '666-555-4321'
+        },
+        'timeout': 3600,
+        'interface': {
+          'command': '${INPUT_FILE} ${OUTPUT_DIR} ${VERSION}',
+          'inputs': {
+            'files': [
+              {
+                'name': 'INPUT_FILE',
+                'required': True,
+                'mediaTypes': [
+                  'image/x-hdf5-image'
+                ],
+                'partial': True
+              }
+            ],
+            'json': [
+              {
+                'name': 'INPUT_JSON',
+                'type': 'string',
+                'required': True
+              }
+            ]
+          },
+          'outputs': {
+            'files': [
+              {
+                'name': 'output_file_pngs',
+                'mediaType': 'image/png',
+                'multiple': True,
+                'pattern': 'outfile*.png'
+              },
+              {
+                'name': 'output_file_csv',
+                'mediaType': 'text/csv',
+                'pattern': 'outfile*.csv',
+                'required': False
+              }
+            ],
+            'json': [
+              {
+                'name': 'cell_count',
+                'key': 'cellCount',
+                'type': 'integer'
+              },
+              {
+                'name': 'dummy',
+                'type': 'integer',
+                'required': False
+              }
+            ]
+          },
+          'mounts': [
+            {
+              'name': 'MOUNT_PATH',
+              'path': '/the/container/path',
+              'mode': 'ro'
+            },
+            {
+              'name': 'WRITE_PATH',
+              'path': '/write',
+              'mode': 'rw'
+            }
+          ],
+          'settings': [
+            {
+              'name': 'VERSION',
+              'secret': False
+            },
+            {
+              'name': 'DB_HOST',
+              'secret': False
+            },
+            {
+              'name': 'DB_PASS',
+              'secret': True
+            }
+          ]
+        },
+        'resources': {
+          'scalar': [
+            { 'name': 'cpus', 'value': 1.0 },
+            { 'name': 'mem', 'value': 1024.0 },
+            { 'name': 'sharedMem', 'value': 1024.0 },
+            { 'name': 'disk', 'value': 1000.0, 'inputMultiplier': 4.0 }
+          ]
+        },
+        'errors': [
+          {
+            'code': 1,
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          },
+          {
+            'code': 2,
+            'name': 'error-name-two',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'job'
+          }
+        ]
+      }
+    }
 
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
@@ -129,10 +252,12 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
+#def create_seed_job()
+
+
 def create_job(job_type=None, event=None, status='PENDING', error=None, input=None, num_exes=1, max_tries=None,
                queued=None, started=None, ended=None, last_status_change=None, priority=100, output=None,
-               superseded_job=None, delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0,
-               save=True):
+               superseded_job=None, is_superseded=False, superseded=None, input_file_size=10.0, save=True):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -164,7 +289,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
     if is_superseded and not superseded:
         superseded = timezone.now()
 
-    job = Job.objects.create_job(job_type, event.id, superseded_job=superseded_job, delete_superseded=delete_superseded)
+    job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
+    job = Job.objects.create_job_v6(job_type_rev, event.id, superseded_job=superseded_job)
     job.priority = priority
     job.input = input
     job.status = status
@@ -259,9 +385,84 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     return job_exe
 
 
+def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
+                         is_operational=True, trigger_rule=None, configuration=None):
+    if not manifest:
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'image-watermark',
+                'jobVersion': '0.1.0',
+                'packageVersion': '0.1.0',
+                'title': 'Image Watermarker',
+                'description': 'Processes an input PNG and outputs watermarked PNG.',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 30,
+                'interface': {
+                    'command': '${INPUT_IMAGE} ${OUTPUT_DIR}',
+                    'inputs': {
+                        'files': [{'name': 'INPUT_IMAGE'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png'}]
+                    }
+                },
+                'resources': {
+                    'scalar': [
+                        {'name': 'cpus', 'value': 1.0},
+                        {'name': 'mem', 'value': 64.0}
+                    ]
+                },
+                'errors': [
+                    {
+                        'code': 1,
+                        'name': 'image-corrupt',
+                        'title': 'Image Corrupt',
+                        'description': 'Image input is not recognized as a valid PNG.',
+                        'category': 'data'
+                    }
+                ]
+            }
+        }
+
+    if not trigger_rule:
+        trigger_rule = trigger_test_utils.create_trigger_rule()
+
+    if not configuration:
+        configuration = {
+            'version': '1.0',
+            'default_settings': {}
+        }
+
+    job_type = JobType.objects.create(name=manifest['job']['name'], version=manifest['job']['jobVersion'],
+                                      manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
+                                      max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
+                                      is_operational=is_operational, trigger_rule=trigger_rule,
+                                      configuration=configuration)
+    JobTypeRevision.objects.create_job_type_revision(job_type)
+    return job_type
+
+def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
+                            is_paused=None, max_scheduled=None, configuration_dict=None):
+    """Updates a job type, including creating a new revision for unit testing
+    """
+    
+    manifest = SeedManifest(manifest_dict, do_validate=True)
+        
+    configuration = None
+    if configuration_dict:
+        configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+
+    JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image, 
+                         icon_code=icon_code, is_active=is_active, is_paused=is_paused, 
+                         max_scheduled=max_scheduled, configuration=configuration)
+
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
-                    is_operational=True, trigger_rule=None, configuration=None):
+                    is_system=False, is_operational=True, trigger_rule=None, configuration=None):
     """Creates a job type model for unit testing
 
     :returns: The job type model
@@ -309,11 +510,11 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
             'default_settings': {}
         }
 
-    job_type = JobType.objects.create(name=name, version=version, category=category, interface=interface,
+    job_type = JobType.objects.create(name=name, version=version, category=category, manifest=interface,
                                       priority=priority, timeout=timeout, max_tries=max_tries,
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
-                                      is_operational=is_operational, trigger_rule=trigger_rule,
+                                      is_system=is_system, is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type

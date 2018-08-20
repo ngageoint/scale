@@ -205,7 +205,8 @@
             "overrides": {
                 "status": "./api/v4/",
                 "sources": "./api/v4/",
-                "data": "./api/v5/"
+                "data": "./api/v5/",
+                "scheduler": "./api/v6/"
             },
             "documentation": "./docs"
         },

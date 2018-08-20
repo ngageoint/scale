@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
 import json
 
@@ -8,7 +9,6 @@ from rest_framework import status
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
-import util.rest as rest_util
 
 
 class TestMetricsViewV5(TestCase):

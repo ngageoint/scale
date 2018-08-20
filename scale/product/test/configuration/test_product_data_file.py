@@ -11,6 +11,7 @@ from mock import MagicMock, patch
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.test import utils as job_utils
 from product.configuration.product_data_file import ProductDataFileStore
+from product.types import ProductFileMetadata
 from recipe.test import utils as recipe_utils
 from storage.models import Workspace
 from trigger.models import TriggerEvent
@@ -43,7 +44,7 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
         self.workspace_1 = Workspace.objects.create(name='Test workspace 1')
         self.workspace_2 = Workspace.objects.create(name='Test workspace 2', is_active=False)
 
-        interface = {'version': '1.0', 'command': 'my command'}  
+        interface = {'version': '1.0', 'command': 'my command', 'command_arguments': 'command arguments'}
 
         job_type = job_utils.create_job_type(name='Type 1', version='1.0', interface=interface)
 
@@ -76,28 +77,38 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
             results = []
             for file_entry in file_entries:
                 # Check base remote path for job type name and version
-                self.assertTrue(file_entry[1].startswith(self.remote_base_path))
-                if file_entry[0] == local_path_1:
+                self.assertTrue(file_entry.remote_path.startswith(self.remote_base_path))
+                if file_entry.local_path == local_path_1:
                     mock_1 = MagicMock()
                     mock_1.id = 1
                     results.append(mock_1)
-                elif file_entry[0] == local_path_2:
+                elif file_entry.local_path == local_path_2:
                     mock_2 = MagicMock()
                     mock_2.id = 2
                     results.append(mock_2)
-                elif file_entry[0] == local_path_3:
+                elif file_entry.local_path == local_path_3:
                     mock_3 = MagicMock()
                     mock_3.id = 3
                     results.append(mock_3)
-                elif file_entry[0] == local_path_4:
+                elif file_entry.local_path == local_path_4:
                     mock_4 = MagicMock()
                     mock_4.id = 4
                     results.append(mock_4)
             return results
         mock_upload_files.side_effect = new_upload_files
 
-        data_files = {self.workspace_1.id: [(local_path_1, media_type_1, job_output_1), (local_path_2, media_type_2, job_output_2)],
-                      self.workspace_2.id: [(local_path_3, media_type_3, job_output_3), (local_path_4, media_type_4, job_output_4)]}
+        data_files = {self.workspace_1.id: [ProductFileMetadata(output_name=job_output_1,
+                                                                local_path=local_path_1,
+                                                                media_type=media_type_1),
+                                            ProductFileMetadata(output_name=job_output_2,
+                                                                local_path=local_path_2,
+                                                                media_type=media_type_2)],
+                      self.workspace_2.id: [ProductFileMetadata(output_name=job_output_3,
+                                                                local_path=local_path_3,
+                                                                media_type=media_type_3),
+                                            ProductFileMetadata(output_name=job_output_4,
+                                                                local_path=local_path_4,
+                                                                media_type=media_type_4)]}
 
         parent_ids = {98, 99}
 
@@ -139,28 +150,38 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
             results = []
             for file_entry in file_entries:
                 # Check base remote path for recipe type and job type information
-                self.assertTrue(file_entry[1].startswith(remote_base_path_with_recipe))
-                if file_entry[0] == local_path_1:
+                self.assertTrue(file_entry.remote_path.startswith(remote_base_path_with_recipe))
+                if file_entry.local_path == local_path_1:
                     mock_1 = MagicMock()
                     mock_1.id = 1
                     results.append(mock_1)
-                elif file_entry[0] == local_path_2:
+                elif file_entry.local_path == local_path_2:
                     mock_2 = MagicMock()
                     mock_2.id = 2
                     results.append(mock_2)
-                elif file_entry[0] == local_path_3:
+                elif file_entry.local_path == local_path_3:
                     mock_3 = MagicMock()
                     mock_3.id = 3
                     results.append(mock_3)
-                elif file_entry[0] == local_path_4:
+                elif file_entry.local_path == local_path_4:
                     mock_4 = MagicMock()
                     mock_4.id = 4
                     results.append(mock_4)
             return results
         mock_upload_files.side_effect = new_upload_files
 
-        data_files = {self.workspace_1.id: [(local_path_1, media_type_1, job_output_1), (local_path_2, media_type_2, job_output_2)],
-                      self.workspace_2.id: [(local_path_3, media_type_3, job_output_3), (local_path_4, media_type_4, job_output_4)]}
+        data_files = {self.workspace_1.id: [ProductFileMetadata(output_name=job_output_1,
+                                                                local_path=local_path_1,
+                                                                media_type=media_type_1),
+                                            ProductFileMetadata(output_name=job_output_2,
+                                                                local_path=local_path_2,
+                                                                media_type=media_type_2)],
+                      self.workspace_2.id: [ProductFileMetadata(output_name=job_output_3,
+                                                                local_path=local_path_3,
+                                                                media_type=media_type_3),
+                                            ProductFileMetadata(output_name=job_output_4,
+                                                                local_path=local_path_4,
+                                                                media_type=media_type_4)]}
 
         parent_ids = {98, 99}  # Dummy values
 
@@ -192,10 +213,17 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
         remote_path_2 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_2)
         media_type_2 = 'application/json'
         job_output_2 = 'mock_output_2'
+        metadata_1 = ProductFileMetadata(output_name=job_output_1,
+                                         local_path=full_local_path_1,
+                                         remote_path=remote_path_1,
+                                         media_type=media_type_1,
+                                         geojson=geo_metadata)
+        metadata_2 = ProductFileMetadata(output_name=job_output_2,
+                                         local_path=full_local_path_2,
+                                         remote_path=remote_path_2,
+                                         media_type=media_type_2)
 
-        data_files = {self.workspace_1.id: [(full_local_path_1, media_type_1, job_output_1, geo_metadata),
-                                            (full_local_path_2, media_type_2, job_output_2)]}
+        data_files = {self.workspace_1.id: [metadata_1, metadata_2]}
         ProductDataFileStore().store_files(data_files, parent_ids, self.job_exe)
-        files_to_store = [(full_local_path_1, remote_path_1, media_type_1, job_output_1, geo_metadata),
-                          (full_local_path_2, remote_path_2, media_type_2, job_output_2)]
+        files_to_store = [metadata_1, metadata_2]
         mock_upload_files.assert_called_with(files_to_store, parent_ids, self.job_exe, self.workspace_1)

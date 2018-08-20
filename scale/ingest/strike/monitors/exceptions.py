@@ -1,13 +1,19 @@
 """Defines the exceptions related to Strike monitors"""
 
-from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
+from util.exceptions import ValidationException
 
 
-class InvalidMonitorConfiguration(InvalidStrikeConfiguration):
-    """Exception indicating that a monitor configuration was invalid
-    """
+class InvalidMonitorConfiguration(ValidationException):
+    """Exception indicating that the provided strike configuration was invalid"""
 
-    pass
+    def __init__(self, description):
+        """Constructor
+
+        :param description: The description of the validation error
+        :type description: string
+        """
+
+        super(InvalidMonitorConfiguration, self).__init__('INVALID_MONITOR_CONFIGURATION', description)
 
 
 class SQSNotificationError(Exception):

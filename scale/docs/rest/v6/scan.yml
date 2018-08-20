@@ -1,0 +1,285 @@
+openapi: "3.0.0"
+info:
+  title: Scan Services
+  version: v6
+paths:
+  /v6/scans/:
+    get:
+      operationId: _rest_v6_scan_list
+      summary: Scan List
+      description: Returns a list of all scan processes
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: name
+          schema:
+            type: string
+          description: Return only Scan processes with a given name. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+            Nested objects require a delimiter (ex: order=source_file__created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_list'
+    post:
+      operationId: _rest_v6_scan_create
+      summary: Create Scan
+      description: Creates a new Scan process and places it onto the queue.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_post'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful request 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_details'
+                
+  /v6/scans/{id}/:
+    get:
+      operationId: _rest_v6_scan_details
+      summary: Scan Details
+      description: Returns a specific scan process and all its related model information
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_details'
+  /v6/scans/validation/:
+    post:
+      operationId: _rest_v6_scan_validate
+      summary: Validate Scan
+      description: Validates a new Scan process configuration without actually saving it.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_process'
+      responses:
+        '200':
+          description: |-
+            The 200 OK response indicates a valid scan configuration 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/validation'
+            
+  /v6/scans/{id}/:
+    patch:
+      operationId: _rest_v6_scan_edit
+      summary: Edit Scan
+      description: Edits an existing Scan process with associated configuration. 
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_post'
+      responses:
+        '204':
+          description: |-
+            The 204 No content response indicates a successful edit 
+            
+  /v6/scans/{id}/process/:
+    patch:
+      operationId: _rest_v6_scan_process
+      summary: Process Scan
+      description: Launches an existing Scan with associated configuration    
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_process'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful request  
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/scan_details'
+
+components:
+  schemas:
+    scan_list:
+      title: Scan List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/scan_base'
+          description: List of scan process objects
+          
+    scan_base:
+      title: Scan Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Scan process used for queries.  
+          example: my-scan-process
+        title:
+          type: string
+          description: The human readable display name of the Scan process.  
+          example: My Scan Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        file_count:
+          type: integer
+          description: Count of files identified from last scan operation (either dry run or ingest)
+          example: 50
+        job:
+          $ref: '#/components/schemas/job_base'
+        dry_run_job:
+          $ref: '#/components/schemas/job_base'
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+          
+    scan_post:
+      title: Scan Post
+      type: object
+      properties:
+        title:
+          type: string
+          description: The human readable display name of the Scan process. |
+            This will be used to generate the name field
+          example: My Scan Process
+        description:
+          type: string
+          description: A longer description of the Scan process. 
+          example: This is my Scan process for detecting my favorite files!
+        configuration:
+          $ref: '#/components/schemas/scan_config'
+          
+    scan_process:
+      title: Scan Process
+      type: object
+      properties:
+        ingest:
+          type: boolean
+          description: Whether a dry run or ingest triggering scan should be run. |
+            Defaults to false when unset.
+          example: true
+          
+    scan_details:
+      allof:
+        - ref: '#/components/schemas/scan_base'
+        - title: Scan Details
+        - type: object
+        properties: 
+          configuration:
+            $ref: '#/components/schemas/scan_config'
+          
+    scan_config:
+      title: Scan Configuration
+      type: object
+      properties:
+        workspace:
+          type: string
+          description: The workspace field is a required string that specifies |
+            the name of the workspace that is being scanned. The type of the |
+            workspace (its broker type) will determine which types of monitor |
+            can be used.
+          example: my-host-workspace
+        scanner:
+          $ref: '#/components/schemas/scanner'
+        recursive:
+          type: boolean
+          description: Indicates whether a scanner should be limited to the root |
+            of a workspace or traverse the entire tree. If ommitted, the default |
+            is true for full tree recursion.
+        files_to_ingest:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_file'
+          description: List of ingest objects

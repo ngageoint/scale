@@ -170,11 +170,12 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | jobs_canceled           | Integer           | The count of CANCELED jobs within this batch's recipes                        |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_estimated       | Integer           | The estimated count of recipes that will be created for this batch            |
+| recipes_estimated       | Integer           | The estimated count of recipes (including sub-recipes) that will be created   |
+|                         |                   | for this batch                                                                |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_total           | Integer           | The total count of recipes within this batch                                  |
+| recipes_total           | Integer           | The total count of recipes (including sub-recipes) within this batch          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_completed       | Integer           | The count of completed recipes within this batch                              |
+| recipes_completed       | Integer           | The count of completed recipes (including sub-recipes) within this batch      |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | created                 | ISO-8601 Datetime | When the batch was initially created                                          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
@@ -685,11 +686,12 @@ Response: 200 OK
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | jobs_canceled           | Integer           | The count of CANCELED jobs within this batch's recipes                        |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_estimated       | Integer           | The estimated count of recipes that will be created for this batch            |
+| recipes_estimated       | Integer           | The estimated count of recipes (including sub-recipes) that will be created   |
+|                         |                   | for this batch                                                                |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_total           | Integer           | The total count of recipes within this batch                                  |
+| recipes_total           | Integer           | The total count of recipes (including sub-recipes) within this batch          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| recipes_completed       | Integer           | The count of completed recipes within this batch                              |
+| recipes_completed       | Integer           | The count of completed recipes (including sub-recipes) within this batch      |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 | created                 | ISO-8601 Datetime | When the batch was initially created                                          |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
@@ -703,12 +705,12 @@ Response: 200 OK
 | configuration           | JSON Object       | The configuration of the batch                                                |
 |                         |                   | See :ref:`rest_v6_batch_json_configuration`                                   |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
-| job_metrics             | JSON Object       | The metrics for each recipe job in the batch. Each recipe job name maps to    |
-|                         |                   | the metrics for that job. The job count metrics (e.g. jobs_total) are similar |
-|                         |                   | to the top level batch metrics. The duration metrics (e.g. min_seed_duration) |
-|                         |                   | detail the minimum, average, and maximum durations for completing the Seed    |
-|                         |                   | run and completing the overall Scale job. The durations are provided in the   |
-|                         |                   | ISO-8601 duration format.                                                     |
+| job_metrics             | JSON Object       | The metrics for each top level recipe job (not in a sub-recipe) in the batch. |
+|                         |                   | Each recipe job name maps to the metrics for that job. The job count metrics  |
+|                         |                   | (e.g. jobs_total) are similar to the top level batch metrics. The duration    |
+|                         |                   | metrics (e.g. min_seed_duration) detail the minimum, average, and maximum     |
+|                         |                   | durations for completing the Seed run and completing the overall Scale job.   |
+|                         |                   | The durations are provided in the ISO-8601 duration format.                   |
 +-------------------------+-------------------+-------------------------------------------------------------------------------+
 
 .. _rest_v6_batch_edit:

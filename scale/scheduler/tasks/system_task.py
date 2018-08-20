@@ -5,7 +5,7 @@ from abc import ABCMeta
 
 from django.conf import settings
 
-from job.configuration.docker_param import DockerParameter
+from job.execution.configuration.docker_param import DockerParameter
 from job.tasks.base_task import Task
 
 

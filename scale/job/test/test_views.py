@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
+from __future__ import absolute_import
 
+import copy
 import datetime
 import json
 import time
@@ -15,6 +17,7 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
+import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from error.models import Error
@@ -25,8 +28,10 @@ from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
 
 
-class TestJobsView(TestCase):
+class TestJobsViewV5(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -41,7 +46,7 @@ class TestJobsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
-        url = rest_util.get_url('/jobs/')
+        url = '/%s/jobs/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -61,7 +66,7 @@ class TestJobsView(TestCase):
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 
-        url = rest_util.get_url('/jobs/?status=RUNNING')
+        url = '/%s/jobs/?status=RUNNING' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -72,7 +77,7 @@ class TestJobsView(TestCase):
     def test_job_id(self):
         """Tests successfully calling the jobs view filtered by job identifier."""
 
-        url = rest_util.get_url('/jobs/?job_id=%s' % self.job1.id)
+        url = '/%s/jobs/?job_id=%s' % (self.api, self.job1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -83,7 +88,7 @@ class TestJobsView(TestCase):
     def test_job_type_id(self):
         """Tests successfully calling the jobs view filtered by job type identifier."""
 
-        url = rest_util.get_url('/jobs/?job_type_id=%s' % self.job1.job_type.id)
+        url = '/%s/jobs/?job_type_id=%s' % (self.api, self.job1.job_type.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -94,7 +99,7 @@ class TestJobsView(TestCase):
     def test_job_type_name(self):
         """Tests successfully calling the jobs view filtered by job type name."""
 
-        url = rest_util.get_url('/jobs/?job_type_name=%s' % self.job1.job_type.name)
+        url = '/%s/jobs/?job_type_name=%s' % (self.api, self.job1.job_type.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -102,10 +107,11 @@ class TestJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_util.get_url('/jobs/?job_type_category=%s' % self.job1.job_type.category)
+        url = '/v5/jobs/?job_type_category=%s' % self.job1.job_type.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -119,7 +125,7 @@ class TestJobsView(TestCase):
         error = error_test_utils.create_error(category='DATA')
         job = job_test_utils.create_job(error=error)
 
-        url = rest_util.get_url('/jobs/?error_category=%s' % error.category)
+        url = '/%s/jobs/?error_category=%s' % (self.api, error.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -131,7 +137,7 @@ class TestJobsView(TestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_util.get_url('/jobs/?include_superseded=true')
+        url = '/%s/jobs/?include_superseded=true' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -144,7 +150,7 @@ class TestJobsView(TestCase):
         self.job1.batch_id = batch.id
         self.job1.save()
 
-        url = rest_util.get_url('/jobs/?batch_id=%d' % batch.id)
+        url = '/%s/jobs/?batch_id=%d' % (self.api, batch.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -161,7 +167,179 @@ class TestJobsView(TestCase):
         job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
-        url = rest_util.get_url('/jobs/?order=job_type__name&order=-job_type__version')
+        url = '/%s/jobs/?order=job_type__name&order=-job_type__version' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(result['results'][0]['job_type']['id'], job_type1c.id)
+        self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
+        self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
+        self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+
+class TestJobsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
+
+        self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
+
+        self.job3 = job_test_utils.create_job(is_superseded=True)
+
+    def test_successful(self):
+        """Tests successfully calling the jobs view."""
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.job1.id:
+                expected = self.job1
+            elif entry['id'] == self.job2.id:
+                expected = self.job2
+            elif entry['id'] == self.job3.id:
+                expected = self.job3
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['job_type']['name'], expected.job_type.name)
+            self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
+            self.assertEqual(entry['is_superseded'], expected.is_superseded)
+
+
+    def test_status(self):
+        """Tests successfully calling the jobs view filtered by status."""
+
+        url = '/%s/jobs/?status=RUNNING' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_id(self):
+        """Tests successfully calling the jobs view filtered by job identifier."""
+
+        url = '/%s/jobs/?job_id=%s' % (self.api, self.job1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
+    def test_job_type_id(self):
+        """Tests successfully calling the jobs view filtered by job type identifier."""
+
+        url = '/%s/jobs/?job_type_id=%s' % (self.api, self.job1.job_type.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_type_name(self):
+        """Tests successfully calling the jobs view filtered by job type name."""
+
+        url = '/%s/jobs/?job_type_name=%s' % (self.api, self.job1.job_type.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+
+
+    def test_error_category(self):
+        """Tests successfully calling the jobs view filtered by error category."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/%s/jobs/?error_category=%s' % (self.api, error.category)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+        
+    def test_error_id(self):
+        """Tests successfully calling the jobs view filtered by error id."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+
+        url = '/%s/jobs/?error_id=%d' % (self.api, error.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['id'], error.id)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs."""
+
+        url = '/%s/jobs/?is_superseded=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_batch(self):
+        """Tests filtering jobs by batch"""
+        batch = batch_test_utils.create_batch()
+        self.job1.batch_id = batch.id
+        self.job1.save()
+
+        url = '/%s/jobs/?batch_id=%d' % (self.api, batch.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+        
+    def test_recipe(self):
+        """Tests filtering jobs by recipe"""
+        recipe = recipe_test_utils.create_recipe()
+        self.job1.recipe_id = recipe.id
+        self.job1.save()
+
+        url = '/%s/jobs/?recipe_id=%d' % (self.api, recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
+    def test_order_by(self):
+        """Tests successfully calling the jobs view with sorting."""
+
+        job_type1b = job_test_utils.create_job_type(name='scale-batch-creator', version='2.0', category='test-1')
+        job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
+
+        job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
+        job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
+
+        url = '/%s/jobs/?is_superseded=false&order=job_type__name&order=-job_type__version' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -173,8 +351,10 @@ class TestJobsView(TestCase):
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 # TODO: remove when REST API v5 is removed
-class OldTestJobDetailsView(TestCase):
+class OldTestJobDetailsViewV5(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -255,7 +435,7 @@ class OldTestJobDetailsView(TestCase):
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -283,7 +463,7 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_property(self):
         """Tests successfully calling the job details view for one input property."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_field',
             'type': 'property',
         }]
@@ -294,7 +474,7 @@ class OldTestJobDetailsView(TestCase):
         }]
         self.job.save()
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -304,11 +484,11 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_file(self):
         """Tests successfully calling the job details view for one input/output file."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_file',
             'type': 'file',
         }]
-        self.job.job_type_rev.interface['output_data'] = [{
+        self.job.job_type_rev.manifest['output_data'] = [{
             'name': 'output_file',
             'type': 'file',
         }]
@@ -324,7 +504,7 @@ class OldTestJobDetailsView(TestCase):
             }]
         self.job.save()
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -340,11 +520,11 @@ class OldTestJobDetailsView(TestCase):
 
     def test_successful_files(self):
         """Tests successfully calling the job details view for multiple input/output files."""
-        self.job.job_type_rev.interface['input_data'] = [{
+        self.job.job_type_rev.manifest['input_data'] = [{
             'name': 'input_files',
             'type': 'files',
         }]
-        self.job.job_type_rev.interface['output_data'] = [{
+        self.job.job_type_rev.manifest['output_data'] = [{
             'name': 'output_files',
             'type': 'files',
         }]
@@ -360,7 +540,7 @@ class OldTestJobDetailsView(TestCase):
             }]
         self.job.save()
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -384,10 +564,10 @@ class OldTestJobDetailsView(TestCase):
             'output_data': []
         }
         new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
-                                            superseded_job=self.job, delete_superseded=False)
+                                            superseded_job=self.job)
 
         # Make sure the original job was updated
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -400,7 +580,7 @@ class OldTestJobDetailsView(TestCase):
         self.assertTrue(result['delete_superseded'])
 
         # Make sure the new new job has the expected relations
-        url = rest_util.get_url('/jobs/%i/' % new_job.id)
+        url = '/%s/jobs/%i/' % (self.api, new_job.id)
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
 
@@ -411,12 +591,12 @@ class OldTestJobDetailsView(TestCase):
         self.assertIsNotNone(result['superseded_job'])
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
-        self.assertFalse(result['delete_superseded'])
+        self.assertTrue(result['delete_superseded'])
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -427,7 +607,7 @@ class OldTestJobDetailsView(TestCase):
     def test_cancel_bad_param(self):
         """Tests cancelling a job with invalid arguments."""
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'foo': 'bar'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -435,14 +615,16 @@ class OldTestJobDetailsView(TestCase):
     def test_cancel_bad_value(self):
         """Tests cancelling a job with an incorrect status."""
 
-        url = rest_util.get_url('/jobs/%i/' % self.job.id)
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'COMPLETED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestJobDetailsView(TestCase):
+class TestJobDetailsViewV6(TestCase):
 
+    api = 'v6'
+    
     def setUp(self):
         django.setup()
 
@@ -523,15 +705,13 @@ class TestJobDetailsView(TestCase):
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(result['job_type']['name'], self.job.job_type.name)
-        self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
+        self.assertEqual(result['job_type_rev']['job_type']['name'], self.job.job_type.name)
 
         if self.recipe:
             self.assertEqual(result['recipe']['recipe_type']['name'], self.recipe.recipe_type.name)
@@ -541,9 +721,7 @@ class TestJobDetailsView(TestCase):
     def test_successful_execution(self):
         """Tests successfully calling the job details view and checking the execution response."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -556,9 +734,7 @@ class TestJobDetailsView(TestCase):
     def test_successful_resources(self):
         """Tests successfully calling the job details view for resources."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -578,45 +754,34 @@ class TestJobDetailsView(TestCase):
             'output_data': []
         }
         new_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results,
-                                            superseded_job=self.job, delete_superseded=False)
+                                            superseded_job=self.job)
 
         # Make sure the original job was updated
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertTrue(result['is_superseded'])
-        self.assertIsNone(result['root_superseded_job'])
         self.assertIsNotNone(result['superseded_by_job'])
         self.assertEqual(result['superseded_by_job']['id'], new_job.id)
         self.assertIsNotNone(result['superseded'])
-        self.assertTrue(result['delete_superseded'])
 
         # Make sure the new new job has the expected relations
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % new_job.id)
-        url = '/v6/jobs/%i/' % new_job.id
+        url = '/%s/jobs/%i/' % (self.api, new_job.id)
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertFalse(result['is_superseded'])
-        self.assertIsNotNone(result['root_superseded_job'])
-        self.assertEqual(result['root_superseded_job']['id'], self.job.id)
         self.assertIsNotNone(result['superseded_job'])
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
-        self.assertFalse(result['delete_superseded'])
 
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -627,9 +792,7 @@ class TestJobDetailsView(TestCase):
     def test_cancel_bad_param(self):
         """Tests cancelling a job with invalid arguments."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'foo': 'bar'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -637,9 +800,7 @@ class TestJobDetailsView(TestCase):
     def test_cancel_bad_value(self):
         """Tests cancelling a job with an incorrect status."""
 
-        # TODO: remove comment and replace `url` assignment when REST API v5 is removed
-        # url = rest_util.get_url('/jobs/%i/' % self.job.id)
-        url = '/v6/jobs/%i/' % self.job.id
+        url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'COMPLETED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -647,6 +808,8 @@ class TestJobDetailsView(TestCase):
 
 class TestJobsUpdateView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -670,7 +833,7 @@ class TestJobsUpdateView(TestCase):
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
-        url = rest_util.get_url('/jobs/updates/')
+        url = '/%s/jobs/updates/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -691,7 +854,7 @@ class TestJobsUpdateView(TestCase):
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 
-        url = rest_util.get_url('/jobs/updates/?status=RUNNING')
+        url = '/%s/jobs/updates/?status=RUNNING' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -702,7 +865,7 @@ class TestJobsUpdateView(TestCase):
     def test_job_type_id(self):
         """Tests successfully calling the jobs view filtered by job type identifier."""
 
-        url = rest_util.get_url('/jobs/updates/?job_type_id=%s' % self.job1.job_type.id)
+        url = '/%s/jobs/updates/?job_type_id=%s' % (self.api, self.job1.job_type.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -713,7 +876,7 @@ class TestJobsUpdateView(TestCase):
     def test_job_type_name(self):
         """Tests successfully calling the jobs view filtered by job type name."""
 
-        url = rest_util.get_url('/jobs/updates/?job_type_name=%s' % self.job1.job_type.name)
+        url = '/%s/jobs/updates/?job_type_name=%s' % (self.api, self.job1.job_type.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -721,10 +884,11 @@ class TestJobsUpdateView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
 
-    def test_job_type_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_job_type_legacy_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_util.get_url('/jobs/updates/?job_type_category=%s' % self.job1.job_type.category)
+        url = '/v5/jobs/updates/?job_type_category=%s' % self.job1.job_type.category
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -735,7 +899,7 @@ class TestJobsUpdateView(TestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_util.get_url('/jobs/updates/?include_superseded=true')
+        url = '/%s/jobs/updates/?include_superseded=true' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -743,8 +907,10 @@ class TestJobsUpdateView(TestCase):
         self.assertEqual(len(result['results']), 3)
 
 
-class TestJobTypesView(TestCase):
-
+class TestJobTypesViewV5(TestCase):
+    
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -757,7 +923,7 @@ class TestJobTypesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
 
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -778,7 +944,7 @@ class TestJobTypesView(TestCase):
     def test_name(self):
         """Tests successfully calling the job types view filtered by job type name."""
 
-        url = rest_util.get_url('/job-types/?name=%s' % self.job_type1.name)
+        url = '/%s/job-types/?name=%s' % (self.api, self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -787,10 +953,11 @@ class TestJobTypesView(TestCase):
         self.assertEqual(result['results'][0]['id'], self.job_type1.id)
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
-    def test_category(self):
+    # TODO: Remove when v5 deprecated
+    def test_legacy_category(self):
         """Tests successfully calling the job types view filtered by job type category."""
 
-        url = rest_util.get_url('/job-types/?category=%s' % self.job_type1.category)
+        url = '/%s/job-types/?category=%s' % (self.api, self.job_type1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -802,7 +969,7 @@ class TestJobTypesView(TestCase):
     def test_is_active(self):
         """Tests successfully calling the job types view filtered by inactive state."""
 
-        url = rest_util.get_url('/job-types/?is_active=false')
+        url = '/%s/job-types/?is_active=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -814,7 +981,7 @@ class TestJobTypesView(TestCase):
     def test_is_operational(self):
         """Tests successfully calling the job types view filtered by operational state."""
 
-        url = rest_util.get_url('/job-types/?is_operational=false')
+        url = '/%s/job-types/?is_operational=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -826,7 +993,7 @@ class TestJobTypesView(TestCase):
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = rest_util.get_url('/job-types/?order=priority')
+        url = '/%s/job-types/?order=priority' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -839,7 +1006,7 @@ class TestJobTypesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_util.get_url('/job-types/?order=-mem_const_required')
+        url = '/%s/job-types/?order=-mem_const_required' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -851,7 +1018,7 @@ class TestJobTypesView(TestCase):
 
     def test_create(self):
         """Tests creating a new job type."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -896,7 +1063,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_configuration(self):
         """Tests creating a new job type with a valid configuration."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test-config',
             'version': '1.0.0',
@@ -955,7 +1122,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_secrets(self):
         """Tests creating a new job type with secrets."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test-secret',
             'version': '1.0.0',
@@ -1024,7 +1191,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_max_scheduled(self):
         """Tests creating a new job type."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-max_scheduled-test',
             'version': '1.0.0',
@@ -1059,7 +1226,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_trigger(self):
         """Tests creating a new job type with a trigger rule."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1107,7 +1274,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_missing_mount(self):
         """Tests creating a new job type with a mount referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-mount',
             'version': '1.0.0',
@@ -1162,7 +1329,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_missing_setting(self):
         """Tests creating a new job type with a setting referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-setting',
             'version': '1.0.0',
@@ -1217,7 +1384,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_missing_other_setting(self):
         """Tests creating a new job type with a setting referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-other-setting',
             'version': '1.0.0',
@@ -1280,7 +1447,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_missing_param(self):
         """Tests creating a job type with missing fields."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
         }
@@ -1290,7 +1457,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_param(self):
         """Tests creating a job type with invalid type fields."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1312,7 +1479,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_error(self):
         """Tests creating a new job type with an invalid error relationship."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1338,7 +1505,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_custom_resources(self):
         """Tests creating a new job type with an invalid custom resources"""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1364,7 +1531,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_trigger_type(self):
         """Tests creating a new job type with an invalid trigger type."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1388,7 +1555,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_trigger_config(self):
         """Tests creating a new job type with an invalid trigger rule configuration."""
-        url = rest_util.get_url('/job-types/')
+        url = '/%s/job-types/' % self.api
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -1413,9 +1580,419 @@ class TestJobTypesView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+class TestJobTypesViewV6(TestCase):
+    
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
 
-class TestJobTypeDetailsView(TestCase):
+        self.workspace = storage_test_utils.create_workspace()
+        self.error = error_test_utils.create_error()
+        self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
+        self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_system=True)
+        self.job_type3 = job_test_utils.create_job_type(priority=1, mem=2.0, is_active=False)
+        self.job_type4 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.0.0", is_active=False)
+        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.1.0", is_active=True)
 
+    def test_successful(self):
+        """Tests successfully calling the get all job types view."""
+
+        url = '/%s/job-types/' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        for entry in result['results']:
+            expected = None
+            if entry['name'] == self.job_type1.name:
+                expected = self.job_type1
+            elif entry['name'] == self.job_type2.name:
+                expected = self.job_type2
+            elif entry['name'] == self.job_type3.name:
+                expected = self.job_type3
+            elif entry['name'] == self.job_type5.name:
+                expected = self.job_type5
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['num_versions'], expected.revision_num)
+            self.assertEqual(entry['latest_version'], expected.version)
+
+    def test_keyword(self):
+        """Tests successfully calling the job types view filtered by keyword."""
+
+        url = '/%s/job-types/?keyword=%s' % (self.api, self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.job_type1.name)
+
+        url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+
+        url = '/%s/job-types/?keyword=%s' % (self.api, 'job-type-for-view-test')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_is_active(self):
+        """Tests successfully calling the job types view filtered by inactive state."""
+
+        url = '/%s/job-types/?is_active=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        
+    def test_is_system(self):
+        """Tests successfully calling the job types view filtered by system status."""
+
+        url = '/%s/job-types/?is_system=false' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+        
+        url = '/%s/job-types/?is_system=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        
+    def test_version_successful(self):
+        """Tests successfully calling the job type versions view."""
+
+        url = '/%s/job-types/job-type-for-view-test/' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.job_type4.id:
+                expected = self.job_type4
+            elif entry['id'] == self.job_type5.id:
+                expected = self.job_type5
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['version'], expected.version)
+            self.assertEqual(entry['title'], expected.title)
+            self.assertEqual(entry['description'], expected.description)
+            self.assertEqual(entry['icon_code'], expected.icon_code)
+            self.assertEqual(entry['is_active'], expected.is_active)
+            self.assertEqual(entry['is_paused'], expected.is_paused)
+            self.assertEqual(entry['is_system'], expected.is_system)
+            self.assertEqual(entry['max_scheduled'], expected.max_scheduled)
+            self.assertEqual(entry['revision_num'], expected.revision_num)
+            self.assertEqual(entry['docker_image'], expected.docker_image)
+            
+    def test_version_is_active(self):
+        """Tests successfully calling the job type versions view filtered by inactive state."""
+
+        url = '/%s/job-types/job-type-for-view-test/?is_active=false' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+class TestJobTypesPostViewV6(TestCase):
+    
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
+
+        self.configuration = {
+            'version': '6',
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': self.workspace.name,
+            }
+        }
+        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                                   configuration=self.trigger_config)
+
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+        
+        
+        
+    def test_add_seed_job_type(self):
+        """Tests adding a seed image."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-new-job'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        good_setting = {
+            'DB_HOST': 'scale'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-new-job/1.0.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-new-job').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 1)
+        self.assertIsNone(results['max_scheduled'])
+        self.assertEqual(results['configuration']['settings'], good_setting)
+        
+    def test_add_seed_version_job_type(self):
+        """Tests adding a new version of a seed image."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['jobVersion'] = '1.1.0'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.1.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.1.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-job', version='1.1.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+        
+    def test_edit_seed_job_type(self):
+        """Tests editing an existing seed job type."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['packageVersion'] = '1.0.1'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.1',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 2)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+
+    def test_create_seed_secrets(self):
+        """Tests creating a new seed job type with secrets."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        name = 'job-type-post-test-secret'
+        manifest['job']['name'] = name
+        manifest['job']['interface']['settings'] = [
+            {
+              'name': 'VERSION',
+              'secret': True
+            },
+            {
+              'name': 'DB_HOST',
+              'secret': True
+            },
+            {
+              'name': 'DB_PASS',
+              'secret': True
+            }
+          ]
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name=name).first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+
+        # Secrets sent to Vault
+        secrets_name = '-'.join([results['name'], results['version']]).replace('.', '_')
+        secrets = json_data['configuration']['settings']
+        mock_set_secret.assert_called_once_with(secrets_name, secrets)
+
+        #Secrets scrubbed from configuration on return
+        self.assertEqual(results['configuration']['settings'], {})
+
+    def test_create_seed_missing_mount(self):
+        """Tests creating a new seed job type with a mount referenced in configuration but not interface."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-mount'
+        manifest['job']['interface']['mounts'] = []
+        
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether mounts in config but not manifest should be removed
+        config['mounts'] = {}
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-mount-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='my-job-no-mount').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['configuration']['mounts'], {})
+
+    def test_create_seed_missing_setting(self):
+        """Tests creating a new seed job type with a setting referenced in configuration but not interface."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-setting'
+        manifest['job']['interface']['settings'] = []
+        config = copy.deepcopy(self.configuration)
+        #TODO investigate whether settings in config but not manifest should be removed
+        config['settings'] = {}
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-no-setting-1.0.0-seed:1.0.0',
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='my-job-no-setting').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['manifest']['job']['interface']['settings'], [])
+        self.assertEqual(results['configuration']['settings'], {})
+
+    def test_create_seed_missing_param(self):
+        """Tests creating a seed job type with missing fields."""
+
+        url = '/%s/job-types/' % self.api
+        json_data = {
+            'manifest': {
+                'seedVersion': '1.0.0',
+                'job': {
+                    'name': 'my-job'
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_seed_bad_param(self):
+        """Tests creating a job type with invalid type fields."""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-bad-parameter'
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 'BAD',
+            'docker_image': '',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+
+class TestJobTypeDetailsViewV5(TestCase):
+
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -1484,7 +2061,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
 
-        url = rest_util.get_url('/job-types/100/')
+        url = '/%s/job-types/100/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -1492,7 +2069,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get job type details view."""
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1542,7 +2119,7 @@ class TestJobTypeDetailsView(TestCase):
                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
                                                       configuration=configuration)
 
-        url = rest_util.get_url('/job-types/%d/' % new_job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, new_job_type.id)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1586,7 +2163,7 @@ class TestJobTypeDetailsView(TestCase):
                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
                                                       configuration=configuration)
 
-        url = rest_util.get_url('/job-types/%d/' % new_job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, new_job_type.id)
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1606,7 +2183,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a job type"""
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
@@ -1629,7 +2206,7 @@ class TestJobTypeDetailsView(TestCase):
         interface = self.interface.copy()
         interface['command'] = 'test_cmd_edit'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'interface': interface,
         }
@@ -1654,7 +2231,7 @@ class TestJobTypeDetailsView(TestCase):
                 }
             }
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'configuration': configuration,
         }
@@ -1680,7 +2257,7 @@ class TestJobTypeDetailsView(TestCase):
             'secret': True,
         }]
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'configuration': configuration,
             'interface': interface,
@@ -1712,7 +2289,7 @@ class TestJobTypeDetailsView(TestCase):
         error_mapping = self.error_mapping.copy()
         error_mapping['exit_codes']['10'] = error.name
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'error_mapping': error_mapping,
         }
@@ -1729,7 +2306,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_custom_resources(self):
         """Tests editing the custom resources of a job type"""
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'custom_resources': {'resources': {'foo': 10.0}},
         }
@@ -1747,7 +2324,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
@@ -1770,7 +2347,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'is_active': False,
@@ -1788,7 +2365,7 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_trigger_rule_remove(self):
         """Tests removing the trigger rule from a job type"""
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'trigger_rule': None,
         }
@@ -1809,7 +2386,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'interface': interface,
             'trigger_rule': {
@@ -1833,7 +2410,7 @@ class TestJobTypeDetailsView(TestCase):
         interface = self.interface.copy()
         interface['version'] = 'BAD'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'interface': interface,
         }
@@ -1846,7 +2423,7 @@ class TestJobTypeDetailsView(TestCase):
         error_mapping = self.error_mapping.copy()
         error_mapping['version'] = 'BAD'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'error_mapping': error_mapping,
         }
@@ -1857,7 +2434,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_bad_custom_resources(self):
         """Tests attempting to edit a job type using an invalid custom resources"""
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'custom_resources': {'version': '1.0', 'resources': {'foo': 'BAD'}},
         }
@@ -1870,7 +2447,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['version'] = 'BAD'
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
@@ -1884,7 +2461,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_system_job_pause(self):
         """Tests pausing a system job"""
 
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'is_paused': True
         }
@@ -1902,7 +2479,7 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_system_job_invalid_field(self):
         """Tests updating an invalid system job field"""
-        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        url = '/%s/job-types/%d/' % (self.api, self.job_type.id)
         json_data = {
             'title': 'Invalid title change'
         }
@@ -1912,10 +2489,234 @@ class TestJobTypeDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+class TestJobTypeDetailsViewV6(TestCase):
 
-class TestJobTypesValidationView(TransactionTestCase):
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
+
+        self.configuration = {
+            'version': '6',
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+                'WRITE_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': self.workspace.name,
+            }
+        }
+        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                                   configuration=self.trigger_config)
+
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+
+    def test_not_found(self):
+        """Tests calling the get job type details view with a job name/version that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the get job type details view."""
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['name'], self.job_type.name)
+        self.assertEqual(result['version'], self.job_type.version)
+
+        self.assertIsNotNone(result['manifest'])
+        self.assertIsNotNone(result['configuration'])
+        self.assertEqual(result['max_scheduled'], 2)
+
+    def test_edit_not_found(self):
+        """Tests calling the get job type details view with a job name/version that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/' % self.api
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a job type"""
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_active': False,
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_configuration(self):
+        """Tests editing the configuration of a job type"""
+        configuration = copy.deepcopy(self.configuration)
+        configuration['settings'] = {'DB_HOST': 'other_scale_db'}
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/some/new/path'
+                }
+            }
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_edit_bad_configuration(self):
+        """Tests passing an invalid configuration of a job type to the patch interface"""
+        configuration = copy.deepcopy(self.configuration)
+        configuration['priority'] = 0
+
+        url = '/%s/job-types/%s/%s/' % (self.api, self.job_type.name, self.job_type.version)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+class TestJobTypeRevisionsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.manifest = job_test_utils.COMPLETE_MANIFEST
+
+        self.configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace()
+        self.trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': self.workspace.name,
+            }
+        }
+        self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                                   configuration=self.trigger_config)
+
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+                                                       
+        manifest2 = copy.deepcopy(self.manifest)
+        manifest2['job']['packageVersion'] = '1.0.1'
+        manifest2['job']['maintainer']['name'] = 'Jane Doe'
+        self.job_type.manifest = manifest2
+        job_test_utils.edit_job_type_v6(self.job_type, manifest2)
+
+    def test_not_found(self):
+        """Tests successfully calling the get job type revisions view with a job type that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/revisions/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+        # correct job type, bad version
+        url = '/%s/job-types/my-job/9.9.9/revisions/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful_list(self):
+        """Tests successfully calling the get job type revisions view."""
+
+        url = '/%s/job-types/%s/%s/revisions/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        result = result['results']
+        self.assertEqual(len(result), 2)
+        self.assertTrue(isinstance(result[0], dict), 'result  must be a dictionary')
+        self.assertEqual(result[0]['job_type']['name'], self.job_type.name)
+        self.assertEqual(result[0]['revision_num'], 2)
+        self.assertEqual(result[0]['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+
+    def test_details_not_found(self):
+        """Tests successfully calling the get job type revision details view with a job type revision that does not exist."""
+
+        url = '/%s/job-types/missing-job/1.0.0/revisions/9/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+        
+    def test_successful_details(self):
+        """Tests successfully calling the get job type revision details view."""
+
+        url = '/%s/job-types/%s/%s/revisions/1/' % (self.api, self.job_type.name, self.job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['job_type']['name'], self.job_type.name)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.0')
+        self.assertIsNotNone(result['manifest'])
+
+
+class TestJobTypesValidationViewV5(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -1951,7 +2752,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             },
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1989,7 +2790,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1998,7 +2799,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_successful_configuration(self):
         """Tests validating a new job type with a valid configuration."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test-config',
             'version': '1.0.0',
@@ -2053,7 +2854,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_missing_mount(self):
         """Tests validating a new job type with a mount referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-mount',
             'version': '1.0.0',
@@ -2106,7 +2907,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_missing_setting(self):
         """Tests validating a new job type with a setting referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-setting',
             'version': '1.0.0',
@@ -2159,7 +2960,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_missing_other_setting(self):
         """Tests validating a new job type with a setting referenced in configuration but not interface."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-other-setting',
             'version': '1.0.0',
@@ -2216,7 +3017,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_secret_setting(self):
         """Tests validating a new job type with a secret setting."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test-no-other-setting',
             'version': '1.0.0',
@@ -2272,7 +3073,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_bad_param(self):
         """Tests validating a new job type with missing fields."""
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         json_data = {
             'name': 'job-type-post-test',
         }
@@ -2294,7 +3095,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             },
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -2312,7 +3113,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             },
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -2349,7 +3150,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2376,7 +3177,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -2403,14 +3204,296 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_util.get_url('/job-types/validation/')
+        url = '/%s/job-types/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+class TestJobTypesValidationViewV6(TransactionTestCase):
+    """Tests related to the job-types validation endpoint"""
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+        
+        self.configuration = {
+            'version': '6',
+            'output_workspaces': {
+              'default': 'workspace_1',
+              'outputs': {'output_file_pngs': 'workspace_2'}
+            },
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
+                'WRITE_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/mount',
+                    },
+            },
+            'settings': {
+                'VERSION': '1.0.0',
+                'DB_HOST': 'scale',
+                'DB_PASS': 'password',
+            },
+        }
+
+        self.workspace1 = storage_test_utils.create_workspace(name='workspace_1')
+        self.workspace2 = storage_test_utils.create_workspace(name='workspace_2')
+        self.inactivews = storage_test_utils.create_workspace(name='inactive', is_active=False)
+        
+    def test_successful(self):
+        """Tests validating a new job type."""
+        
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_successful_configuration(self):
+        """Tests validating a new job type with a valid configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_missing_mount(self):
+        """Tests validating a new job type with a mount referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['mounts'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_MOUNT')
+        
+    def test_unknown_mount(self):
+        """Tests validating a new job type with a mount referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'my-job-no-mount'
+        manifest['job']['interface']['mounts'] = []
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_MOUNT')
+        self.assertEqual(results['warnings'][1]['name'], 'UNKNOWN_MOUNT')
+
+    def test_missing_setting(self):
+        """Tests validating a new job type with a setting referenced in manifest but not configuration."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 3)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_SETTING')
+
+    def test_unknown_setting(self):
+        """Tests validating a new job type with a setting referenced in configuration but not manifest."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['settings'] = {
+                'VERSION': '1.0.0',
+                'DB_HOST': 'scale',
+                'DB_PASS': 'password',
+                'setting': 'extra'
+        }
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'UNKNOWN_SETTING')
+
+    def test_secret_setting(self):
+        """Tests validating a new job type with a secret setting."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 0)
+
+    def test_bad_param(self):
+        """Tests validating a new job type with missing fields."""
+        url = '/%s/job-types/validation/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['name'] = None
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_bad_error(self):
+        """Tests validating a new job type with an invalid error relationship."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['errors'] = [
+          {
+            'code': '1',
+            'name': 'error-name-one',
+            'title': 'Error Name',
+            'description': 'Error Description',
+            'category': 'data'
+          }
+        ]
+        json_data = {
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'JSON_VALIDATION_ERROR')
+
+    def test_invalid_output_workspace(self):
+        """Tests validating a new job type with an invalid output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'bad_name'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertFalse(results['is_valid'])
+        self.assertEqual(len(results['errors']), 1)
+        self.assertEqual(results['errors'][0]['name'], 'INVALID_WORKSPACE')
+        
+    def test_deprecated_output_workspace(self):
+        """Tests validating a new job type with an inactive output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {
+            'default': 'inactive'
+        }
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'DEPRECATED_WORKSPACE')
+        
+    def test_missing_output_workspace(self):
+        """Tests validating a new job type with a missing output workspace."""
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        config = copy.deepcopy(self.configuration)
+        config['output_workspaces'] = {}
+        json_data = {
+            'manifest': manifest,
+            'configuration': config
+        }
+
+        url = '/%s/job-types/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertTrue(results['is_valid'])
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(results['warnings'][0]['name'], 'MISSING_WORKSPACE')
+        self.assertEqual(results['warnings'][1]['name'], 'MISSING_WORKSPACE')
+
 
 class TestJobTypesStatusView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2420,7 +3503,7 @@ class TestJobTypesStatusView(TestCase):
         """Tests successfully calling the status view."""
         job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED')
 
-        url = rest_util.get_url('/job-types/status/')
+        url = '/%s/job-types/status/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2441,7 +3524,7 @@ class TestJobTypesStatusView(TestCase):
         job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED', last_status_change=new_timestamp)
         job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', last_status_change=new_timestamp)
 
-        url = rest_util.get_url('/job-types/status/?started=2015-01-05T00:00:00Z')
+        url = '/%s/job-types/status/?started=2015-01-05T00:00:00Z' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2464,7 +3547,7 @@ class TestJobTypesStatusView(TestCase):
         job_type2 = job_test_utils.create_job_type(is_operational=False)
         job_test_utils.create_job(job_type=job_type2, status='COMPLETED')
 
-        url = rest_util.get_url('/job-types/status/?is_operational=false')
+        url = '/%s/job-types/status/?is_operational=false' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2478,6 +3561,8 @@ class TestJobTypesStatusView(TestCase):
 
 class TestJobTypesPendingView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2486,7 +3571,7 @@ class TestJobTypesPendingView(TestCase):
     def test_successful(self):
         """Tests successfully calling the pending status view."""
 
-        url = rest_util.get_url('/job-types/pending/')
+        url = '/%s/job-types/pending/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2499,6 +3584,8 @@ class TestJobTypesPendingView(TestCase):
 
 class TestJobTypesRunningView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2507,7 +3594,7 @@ class TestJobTypesRunningView(TestCase):
     def test_successful(self):
         """Tests successfully calling the running status view."""
 
-        url = rest_util.get_url('/job-types/running/')
+        url = '/%s/job-types/running/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2520,6 +3607,8 @@ class TestJobTypesRunningView(TestCase):
 
 class TestJobTypesSystemFailuresView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2530,7 +3619,7 @@ class TestJobTypesSystemFailuresView(TestCase):
     def test_successful(self):
         """Tests successfully calling the system failures view."""
 
-        url = rest_util.get_url('/job-types/system-failures/')
+        url = '/%s/job-types/system-failures/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2541,9 +3630,11 @@ class TestJobTypesSystemFailuresView(TestCase):
         self.assertEqual(result['results'][0]['count'], 1)
 
 # TODO: remove when REST API v5 is removed
-class TestJobsWithExecutionView(TransactionTestCase):
+class TestJobsWithExecutionViewV5(TransactionTestCase):
     """An integration test of the Jobs with latest execution view"""
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2589,7 +3680,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.job_2b.id: (self.job_2b, self.job_type_2, self.last_run_2b),
         }
 
-        url = rest_util.get_url('/jobs/executions/')
+        url = '/%s/jobs/executions/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2617,7 +3708,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertEqual(expected_last_run.job_exit_code, result_last_run_dict['job_exit_code'])
 
     def test_with_status_filter(self):
-        url = rest_util.get_url('/jobs/executions/?status=COMPLETED')
+        url = '/%s/jobs/executions/?status=COMPLETED' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2628,7 +3719,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_1a.id, self.job_2b.id))
 
     def test_with_job_type_id_filter(self):
-        url = rest_util.get_url('/jobs/executions/?job_type_id=%s' % self.job_type_1.id)
+        url = '/%s/jobs/executions/?job_type_id=%s' % (self.api, self.job_type_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2639,7 +3730,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_1a.id, self.job_1b.id))
 
     def test_with_job_type_name_filter(self):
-        url = rest_util.get_url('/jobs/executions/?job_type_name=%s' % self.job_type_2.name)
+        url = '/%s/jobs/executions/?job_type_name=%s' % (self.api, self.job_type_2.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2650,7 +3741,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_2a.id, self.job_2b.id))
 
     def test_with_job_type_category_filter(self):
-        url = rest_util.get_url('/jobs/executions/?job_type_category=%s' % self.job_type_2.category)
+        url = '/%s/jobs/executions/?job_type_category=%s' % (self.api, self.job_type_2.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2666,7 +3757,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
         error = error_test_utils.create_error(category='DATA')
         job = job_test_utils.create_job(error=error)
 
-        url = rest_util.get_url('/jobs/executions/?error_category=%s' % error.category)
+        url = '/%s/jobs/executions/?error_category=%s' % (self.api, error.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2678,7 +3769,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_util.get_url('/jobs/executions/?include_superseded=true')
+        url = '/%s/jobs/executions/?include_superseded=true' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2688,6 +3779,8 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
 class TestJobExecutionsView(TransactionTestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2707,7 +3800,7 @@ class TestJobExecutionsView(TransactionTestCase):
 
     def test_get_job_executions(self):
         """This test checks to make sure there are 4 job executions."""
-        url = rest_util.get_url('/jobs/%d/executions/' % self.job_1.id)
+        url = '/%s/jobs/%d/executions/' % (self.api, self.job_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2716,13 +3809,13 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(job_exe_count, 4)
 
     def test_get_job_execution_bad_id(self):
-        url = rest_util.get_url('/jobs/999999999/executions/')
+        url = '/%s/jobs/999999999/executions/' % self.api
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
         self.assertEqual(result['results'], [])
 
     def test_get_job_execution_filter_node(self):
-        url = rest_util.get_url('/jobs/%d/executions/?node_id=%d' % (self.job_1.id, self.node_1.id))
+        url = '/%s/jobs/%d/executions/?node_id=%d' % (self.api, self.job_1.id, self.node_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2731,7 +3824,7 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(job_exe_count, 1)
 
     def test_get_job_execution_filter_status(self):
-        url = rest_util.get_url('/jobs/%d/executions/?status=COMPLETED' % self.job_1.id)
+        url = '/%s/jobs/%d/executions/?status=COMPLETED' % (self.api, self.job_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2740,7 +3833,7 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(job_exe_count, 2)
 
     def test_get_job_execution_filter_time(self):
-        url = rest_util.get_url('/jobs/%d/executions/?started=2017-01-01T00:00:00Z&ended=2017-01-02T00:00:00Z' % self.job_1.id)
+        url = '/%s/jobs/%d/executions/?started=2017-01-01T00:00:00Z&ended=2017-01-02T00:00:00Z' % (self.api, self.job_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2751,6 +3844,8 @@ class TestJobExecutionsView(TransactionTestCase):
 
 class TestJobExecutionDetailsView(TransactionTestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2760,7 +3855,7 @@ class TestJobExecutionDetailsView(TransactionTestCase):
         self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=9999, status='COMPLETED')
 
     def test_get_job_execution_for_job_exe_id(self):
-        url = rest_util.get_url('/jobs/%d/executions/%d/' % (self.job_1.id, self.job_exe_1a.exe_num))
+        url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, self.job_exe_1a.exe_num)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2768,14 +3863,16 @@ class TestJobExecutionDetailsView(TransactionTestCase):
         self.assertEqual(results['id'], self.job_exe_1a.id)
 
     def test_get_job_execution_bad_exe_num(self):
-        url = rest_util.get_url('/jobs/%d/executions/%d/' % (self.job_1.id, 999999999))
+        url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, 999999999)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 # TODO: remove when REST API v5 is removed
-class TestOldJobExecutionsView(TransactionTestCase):
+class TestOldJobExecutionsViewV5(TransactionTestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -2802,7 +3899,7 @@ class TestOldJobExecutionsView(TransactionTestCase):
 
     def test_get_job_executions(self):
         """This test checks to make sure there are 10 job executions."""
-        url = rest_util.get_url('/job-executions/')
+        url = '/%s/job-executions/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2812,7 +3909,7 @@ class TestOldJobExecutionsView(TransactionTestCase):
 
     def test_get_job_executions_running_status(self):
         """This test checks to make sure there are 2 job executions running."""
-        url = rest_util.get_url('/job-executions/?status=RUNNING')
+        url = '/%s/job-executions/?status=RUNNING' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2820,7 +3917,7 @@ class TestOldJobExecutionsView(TransactionTestCase):
         self.assertEqual(results['count'], 2)
 
     def test_get_job_executions_for_job_id(self):
-        url = rest_util.get_url('/job-executions/?job_type_id=%s' % self.job_type_1.id)
+        url = '/%s/job-executions/?job_type_id=%s' % (self.api, self.job_type_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2834,7 +3931,7 @@ class TestOldJobExecutionsView(TransactionTestCase):
             self.assertTrue(job_exe_id in job_1_exe_list)
 
     def test_get_job_executions_for_job_name(self):
-        url = rest_util.get_url('/job-executions/?job_type_name=%s' % self.job_type_1.name)
+        url = '/%s/job-executions/?job_type_name=%s' % (self.api, self.job_type_1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2848,7 +3945,7 @@ class TestOldJobExecutionsView(TransactionTestCase):
             self.assertTrue(job_exe_id in job_1_exe_list)
 
     def test_get_job_executions_for_job_category(self):
-        url = rest_util.get_url('/job-executions/?job_type_category=%s' % self.job_type_1.category)
+        url = '/%s/job-executions/?job_type_category=%s' % (self.api, self.job_type_1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2864,13 +3961,13 @@ class TestOldJobExecutionsView(TransactionTestCase):
     def test_no_tz(self):
         start_date_time = now() - datetime.timedelta(hours=1)
         end_date_time = now()
-        url = rest_util.get_url('/job-executions/?started={0}&ended={1}'.format(start_date_time.isoformat(),
-                                                                                end_date_time.isoformat()))
+        url = '/%s/job-executions/?started={0}&ended={1}' % self.api
+        url = url.format(start_date_time.isoformat(), end_date_time.isoformat())
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_get_job_execution_for_job_exe_id(self):
-        url = rest_util.get_url('/job-executions/%d/' % self.job_exe_1a.id)
+        url = '/%s/job-executions/%d/' % (self.api, self.job_exe_1a.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -2878,18 +3975,20 @@ class TestOldJobExecutionsView(TransactionTestCase):
         self.assertEqual(results['id'], self.job_exe_1a.id)
 
     def test_get_job_execution_bad_id(self):
-        url = rest_util.get_url('/job-executions/9999999/')
+        url = '/%s/job-executions/9999999/' % self.api
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 class TestJobExecutionSpecificLogView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
     def test_bad_job_exe_id(self):
-        url = rest_util.get_url('/job-executions/999999/logs/combined/')
+        url = '/%s/job-executions/999999/logs/combined/' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -2903,7 +4002,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return {}, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2919,7 +4018,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return 'hello', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=txt')
+        url = '/%s/job-executions/999999/logs/combined/?format=txt' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2935,7 +4034,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=html')
+        url = '/%s/job-executions/999999/logs/combined/?format=html' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2950,7 +4049,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return None, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
@@ -2965,7 +4064,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_util.get_url('/job-executions/999999/logs/stdout/?format=html')
+        url = '/%s/job-executions/999999/logs/stdout/?format=html' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2981,7 +4080,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_util.get_url('/job-executions/999999/logs/stderr/?format=html')
+        url = '/%s/job-executions/999999/logs/stderr/?format=html' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -2998,7 +4097,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return {}, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_util.get_url('/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json')
+        url = '/%s/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -3007,6 +4106,8 @@ class TestJobExecutionSpecificLogView(TestCase):
 
 class TestJobInputFilesView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
 
         # Create legacy test files
@@ -3090,7 +4191,7 @@ class TestJobInputFilesView(TestCase):
     def test_successful_file(self):
         """Tests successfully calling the job input files view"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/' % self.job.id)
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3103,7 +4204,7 @@ class TestJobInputFilesView(TestCase):
     def test_legacy_successful_file(self):
         """Tests successfully calling the job input files view for legacy files with job_data"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/' % self.legacy_job.id)
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.legacy_job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3116,7 +4217,7 @@ class TestJobInputFilesView(TestCase):
     def test_filter_job_input(self):
         """Tests successfully calling the job inputs files view with job_input string filtering"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/?job_input=%s' % (self.job.id, self.f4_job_input))
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.job.id, self.f4_job_input)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3128,7 +4229,7 @@ class TestJobInputFilesView(TestCase):
     def test_legacy_filter_job_input(self):
         """Tests successfully calling the job inputs files view for legacy files with job_input string filtering"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/?job_input=%s' % (self.legacy_job.id, self.f2_job_input))
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.legacy_job.id, self.f2_job_input)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3140,7 +4241,7 @@ class TestJobInputFilesView(TestCase):
     def test_file_name_successful(self):
         """Tests successfully calling the get files by name view"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/?file_name=%s' % (self.job.id, self.f3_file_name))
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, self.f3_file_name)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3155,7 +4256,7 @@ class TestJobInputFilesView(TestCase):
     def test_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/?file_name=%s' % (self.job.id, 'not_a.file'))
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, 'not_a.file')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3166,10 +4267,10 @@ class TestJobInputFilesView(TestCase):
     def test_time_successful(self):
         """Tests unsuccessfully calling the get files by name view"""
 
-        url = rest_util.get_url('/jobs/%i/input_files/?started=%s&ended=%s&time_field=%s' % (self.job.id,
+        url = '/%s/jobs/%i/input_files/?started=%s&ended=%s&time_field=%s' % (self.api, self.job.id,
                                                                                              '2016-01-10T00:00:00Z',
                                                                                              '2016-01-13T00:00:00Z',
-                                                                                             'source'))
+                                                                                             'source')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -3182,6 +4283,8 @@ class TestJobInputFilesView(TestCase):
 
 class TestCancelJobsView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -3210,7 +4313,7 @@ class TestCancelJobsView(TestCase):
             'job_type_ids': job_type_ids,
         }
 
-        url = rest_util.get_url('/jobs/cancel/')
+        url = '/%s/jobs/cancel/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
@@ -3221,6 +4324,8 @@ class TestCancelJobsView(TestCase):
 
 class TestRequeueJobsView(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -3251,7 +4356,7 @@ class TestRequeueJobsView(TestCase):
             'priority': priority,
         }
 
-        url = rest_util.get_url('/jobs/requeue/')
+        url = '/%s/jobs/requeue/' % self.api
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)

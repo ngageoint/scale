@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-from recipe.configuration.data.recipe_data import RecipeData
+from recipe.configuration.data.recipe_data import LegacyRecipeData
 
 
 class Migration(migrations.Migration):
@@ -34,13 +34,13 @@ class Migration(migrations.Migration):
             batch_file_ids = set()
             recipes = Recipe.objects.all().order_by('id')[done_count:batch_end]
             for recipe in recipes:
-                batch_file_ids.update(RecipeData(recipe.data).get_input_file_ids())
+                batch_file_ids.update(LegacyRecipeData(recipe.data).get_input_file_ids())
             valid_file_ids = {scale_file.id for scale_file in ScaleFile.objects.filter(pk__in=batch_file_ids)}
 
             # Create a model for each recipe input file
             recipe_files = []
             for recipe in recipes:
-                input_file_ids = RecipeData(recipe.data).get_input_file_ids()
+                input_file_ids = LegacyRecipeData(recipe.data).get_input_file_ids()
                 for input_file_id in input_file_ids:
                     if input_file_id in valid_file_ids:
                         recipe_file = RecipeFile()

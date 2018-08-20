@@ -19,8 +19,8 @@ from job.configuration.data.job_data import JobData
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
-from recipe.configuration.data.recipe_data import RecipeData
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.data.recipe_data import LegacyRecipeData
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode
 
@@ -254,6 +254,101 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         self.assertEqual(final_job.status, 'CANCELED')
 
 
+class TestQueueManagerQueueNewJob(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+    def test_successful_legacy(self):
+        """Tests calling QueueManager.queue_new_job() successfully with a legacy job type"""
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+
+        interface = {
+            'version': '1.0',
+            'command': 'test_command',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'name': 'input_a',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]
+        }
+        job_type = job_test_utils.create_job_type(interface=interface)
+
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobData(data_dict)
+
+        job = Queue.objects.queue_new_job(job_type, data, event)
+        self.assertEqual(job.status, 'QUEUED')
+
+    def test_successful(self):
+        """Tests calling QueueManager.queue_new_job() successfully with a Seed job type"""
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+
+        manifest = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'test-job',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Test Job',
+                'description': 'This is a test job',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'input_a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'output_a', 'multiple': True, 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest)
+
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobData(data_dict)
+
+        job = Queue.objects.queue_new_job(job_type, data, event)
+        self.assertEqual(job.status, 'QUEUED')
+
+
 class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
     fixtures = ['basic_system_job_types.json']
@@ -344,7 +439,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             }],
             'workspace_id': workspace.id,
         }
-        self.data = RecipeData(data)
+        self.data = LegacyRecipeData(data)
 
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
@@ -392,7 +487,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
-                                                        interface=self.job_type_2.interface)
+                                                        interface=self.job_type_2.manifest)
         new_definition = {
             'version': '1.0',
             'input_data': [{
@@ -431,6 +526,183 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 2')
         superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
         graph_a = self.recipe_type.get_recipe_definition().get_graph()
+        graph_b = new_recipe_type.get_recipe_definition().get_graph()
+        delta = RecipeGraphDelta(graph_a, graph_b)
+
+        # Queue new recipe that supersedes the old recipe
+        new_handler = Queue.objects.queue_new_recipe(new_recipe_type, None, event, superseded_recipe=recipe,
+                                                     delta=delta, superseded_jobs=superseded_jobs)
+
+        # Ensure old recipe is superseded
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        self.assertTrue(recipe.is_superseded)
+
+        # Ensure new recipe supersedes old recipe
+        new_recipe = Recipe.objects.get(id=new_handler.recipe.id)
+        self.assertEqual(new_recipe.superseded_recipe_id, handler.recipe.id)
+
+        # Ensure that job 1 is already completed (it was copied from original recipe) and that job 2 is queued
+        new_recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
+                                                                        node_name='New Job 1')
+        new_recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
+                                                                        node_name='New Job 2')
+        self.assertEqual(new_recipe_job_1.job.status, 'COMPLETED')
+        self.assertFalse(new_recipe_job_1.is_original)
+        self.assertEqual(new_recipe_job_2.job.status, 'QUEUED')
+        self.assertTrue(new_recipe_job_2.is_original)
+
+    def test_successful_supersede_mixed(self):
+        """Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe where the results of a
+        Seed job get passed to the input of a legacy job
+        """
+
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+
+        interface_1 = {
+            'seedVersion': '1.0.0',
+            'job': {
+                'name': 'job-type-a',
+                'jobVersion': '1.0.0',
+                'packageVersion': '1.0.0',
+                'title': 'Job Type 1',
+                'description': 'This is a description',
+                'maintainer': {
+                    'name': 'John Doe',
+                    'email': 'jdoe@example.com'
+                },
+                'timeout': 10,
+                'interface': {
+                    'command': '',
+                    'inputs': {
+                        'files': [{'name': 'test-input-a'}]
+                    },
+                    'outputs': {
+                        'files': [{'name': 'test-output-a', 'pattern': '*.png'}]
+                    }
+                }
+            }
+        }
+        job_type_1 = job_test_utils.create_seed_job_type(manifest=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'test_command',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'file',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]
+        }
+        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'test-input-a',
+                }]
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': 'test-output-a',
+                        'input': 'Test Input 2',
+                    }]
+                }]
+            }]
+        }
+
+        recipe_definition = RecipeDefinition(definition)
+        recipe_definition.validate_job_interfaces()
+
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': source_file.id,
+            }],
+            'workspace_id': workspace.id,
+        }
+        data = LegacyRecipeData(data)
+
+        # Queue initial recipe and complete its first job
+        handler = Queue.objects.queue_new_recipe(recipe_type, data, event)
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        recipe_job_1 = RecipeNode.objects.select_related('job')
+        recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, node_name='Job 1')
+        Job.objects.update_jobs_to_running([recipe_job_1.job], now())
+        results = JobResults()
+        results.add_file_parameter('test-output-a', product_test_utils.create_product().id)
+        job_test_utils.create_job_exe(job=recipe_job_1.job, status='COMPLETED', output=results)
+        Job.objects.update_jobs_to_completed([recipe_job_1.job], now())
+        Job.objects.process_job_output([recipe_job_1.job_id], now())
+
+        # Create a new recipe type that has a new version of job 2 (job 1 is identical)
+        new_job_type_2 = job_test_utils.create_job_type(name=job_type_2.name, version='New Version',
+                                                        interface=job_type_2.manifest)
+        new_definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'New Job 1',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'test-input-a',
+                }]
+            }, {
+                'name': 'New Job 2',
+                'job_type': {
+                    'name': new_job_type_2.name,
+                    'version': new_job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'New Job 1',
+                    'connections': [{
+                        'output': 'test-output-a',
+                        'input': 'Test Input 2',
+                    }]
+                }]
+            }]
+        }
+        new_recipe_type = recipe_test_utils.create_recipe_type(name=recipe_type.name, definition=new_definition)
+        event = trigger_test_utils.create_trigger_event()
+        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 1')
+        recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 2')
+        superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
+        graph_a = recipe_type.get_recipe_definition().get_graph()
         graph_b = new_recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph_a, graph_b)
 

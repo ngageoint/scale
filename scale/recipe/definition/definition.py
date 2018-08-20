@@ -122,6 +122,23 @@ class RecipeDefinition(object):
 
         self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
 
+    def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
+        """Generates the input data for the node with the given name
+
+        :param node_name: The name of the node
+        :type node_name: string
+        :param recipe_input_data: The input data for the recipe
+        :type recipe_input_data: :class:`data.data.data.Data`
+        :param node_outputs: The RecipeNodeOutput tuples stored in a dict by node name
+        :type node_outputs: dict
+        :returns: The input data for the node
+        :rtype: :class:`data.data.data.Data`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If there is a duplicate data value
+        """
+
+        return self.graph[node_name].generate_input_data(recipe_input_data, node_outputs)
+
     def get_topological_order(self):
         """Returns the recipe node names in a valid topological ordering (dependency order)
 

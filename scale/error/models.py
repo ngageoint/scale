@@ -10,12 +10,11 @@ from util.exceptions import ScaleLogicBug
 logger = logging.getLogger(__name__)
 
 
-CACHED_BUILTIN_ERROR_NAMES = {}  # {Name: Error ID}
+CACHED_BUILTIN_ERROR_NAMES = {}  # {Error Name: Error ID}
+CACHED_JOB_ERROR_NAMES = {}  # {Job Type Name: {Error Name: Error ID}}
+# TODO: remove caching of legacy job error names when legacy-style job types are removed
+CACHED_LEGACY_JOB_ERROR_NAMES = {}  # {Error Name: Error ID}
 CACHED_ERRORS = {}  # {Error ID: Error model}
-
-# TODO: Once Seed job types are in place, we can update job errors to be cached by a combination of job type rev ID (?)
-# and exit code
-CACHED_JOB_ERROR_NAMES = {}  # {Name: Error ID}
 
 
 def get_builtin_error(name):
@@ -50,20 +49,30 @@ def get_error(error_id):
     return CACHED_ERRORS[error_id]
 
 
-def get_job_error(name):
+def get_job_error(job_type_name, error_name):
     """Returns the job error with the given name, might require database access if the error is not currently cached
 
-    :param name: The name of the error
-    :type name: string
+    :param job_type_name: The name of the job type
+    :type job_type_name: string
+    :param error_name: The name of the error
+    :type error_name: string
     :returns: The error with the given name
     :rtype: :class:`error.models.Error`
     """
 
-    if name not in CACHED_JOB_ERROR_NAMES:
-        error = Error.objects.get(name=name)
+    if job_type_name is None:
+        # Legacy style job type
+        if error_name not in CACHED_LEGACY_JOB_ERROR_NAMES:
+            error = Error.objects.get(job_type_name__isnull=True, name=error_name)
+            _cache_error(error)
+        error_id = CACHED_LEGACY_JOB_ERROR_NAMES[error_name]
+        return CACHED_ERRORS[error_id]
+
+    if job_type_name not in CACHED_JOB_ERROR_NAMES or error_name not in CACHED_JOB_ERROR_NAMES[job_type_name]:
+        error = Error.objects.get(job_type_name=job_type_name, name=error_name)
         _cache_error(error)
 
-    error_id = CACHED_JOB_ERROR_NAMES[name]
+    error_id = CACHED_JOB_ERROR_NAMES[job_type_name][error_name]
     return CACHED_ERRORS[error_id]
 
 
@@ -82,8 +91,9 @@ def reset_error_cache():
     """
 
     CACHED_BUILTIN_ERROR_NAMES.clear()
-    CACHED_ERRORS.clear()
     CACHED_JOB_ERROR_NAMES.clear()
+    CACHED_LEGACY_JOB_ERROR_NAMES.clear()
+    CACHED_ERRORS.clear()
 
     Error.objects.cache_builtin_errors()
 
@@ -99,9 +109,14 @@ def _cache_error(error):
     if error.is_builtin:
         CACHED_BUILTIN_ERROR_NAMES[error.name] = error.id
         # TODO: this is a hack for legacy jobs that use builtin Scale errors, remove this after legacy jobs are removed
-        CACHED_JOB_ERROR_NAMES[error.name] = error.id
+        CACHED_LEGACY_JOB_ERROR_NAMES[error.name] = error.id
     else:
-        CACHED_JOB_ERROR_NAMES[error.name] = error.id
+        if error.job_type_name is None:
+            CACHED_LEGACY_JOB_ERROR_NAMES[error.name] = error.id
+        else:
+            if error.job_type_name not in CACHED_JOB_ERROR_NAMES:
+                CACHED_JOB_ERROR_NAMES[error.job_type_name] = {}
+            CACHED_JOB_ERROR_NAMES[error.job_type_name][error.name] = error.id
 
 
 class ErrorManager(models.Manager):
@@ -143,19 +158,39 @@ class ErrorManager(models.Manager):
             errors = errors.order_by('last_modified')
         return errors
 
-    def get_by_natural_key(self, name):
+    def get_by_natural_key(self, job_type_name, error_name):
         """Django method to retrieve an error for the given natural key
 
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
         :param name: The name of the error
-        :type name: str
+        :type name: string
         :returns: The error defined by the natural key
         :rtype: :class:`error.models.Error`
         """
 
-        return self.get(name=name)
+        return self.get(job_type_name=job_type_name, name=error_name)
 
-    @transaction.atomic
-    def create_error(self, name, title, description, category):
+    def save_job_error_models(self, job_type_name, error_models):
+        """Saves the given job error models to the database
+
+        :param job_type_name: The job type name
+        :type job_type_name: string
+        :param error_models: The error models
+        :type error_models: list
+        """
+
+        error_names = [error.name for error in error_models]
+        existing_errors = {err.name: err for err in self.filter(job_type_name=job_type_name, name__in=error_names)}
+        for error_model in error_models:
+            if error_model.name in existing_errors:
+                # Error already exists, grab ID so save() will perform an update
+                error_model.id = existing_errors[error_model.name].id
+                error_model.created = existing_errors[error_model.name].created # Keep created value unchanged
+            error_model.save()
+
+    # TODO - this is for creating errors for legacy job types, remove when legacy job types are removed
+    def create_legacy_error(self, name, title, description, category):
         """Create a new error in the database.
 
         :param name: The name of the error
@@ -180,17 +215,19 @@ class ErrorManager(models.Manager):
 class Error(models.Model):
     """Represents an error that occurred during processing
 
-    :keyword name: The identifying name of the error used by clients for queries
+    :keyword name: The identifying name of the error
     :type name: :class:`django.db.models.CharField`
+    :keyword job_type_name: The name of the job type that relates to this error
+    :type job_type_name: :class:`django.db.models.CharField`
     :keyword title: The human-readable name of the error
     :type title: :class:`django.db.models.CharField`
     :keyword description: A longer description of the error
     :type description: :class:`django.db.models.CharField`
     :keyword category: The category of the error
     :type category: :class:`django.db.models.CharField`
-    :keyword is_builtin: Where the error was loaded during system installation.
+    :keyword is_builtin: Where the error is a builtin Scale error that does not relate to a particular job type
     :type is_builtin: :class:`django.db.models.BooleanField`
-    :keyword should_be_retried: Whether the error should be automatically retried
+    :keyword should_be_retried: Whether a job failure with this error should be automatically retried
     :type should_be_retried: :class:`django.db.models.BooleanField`
 
     :keyword created: When the error model was created
@@ -198,16 +235,18 @@ class Error(models.Model):
     :keyword last_modified: When the error model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
+
     CATEGORIES = (
         ('SYSTEM', 'SYSTEM'),
         ('ALGORITHM', 'ALGORITHM'),
         ('DATA', 'DATA'),
     )
 
-    name = models.CharField(db_index=True, max_length=50, unique=True)
+    name = models.CharField(max_length=50)
+    job_type_name = models.CharField(blank=True, max_length=250, null=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(max_length=250, null=True)
-    category = models.CharField(db_index=True, choices=CATEGORIES, default='SYSTEM', max_length=50)
+    description = models.CharField(blank=True, max_length=250, null=True)
+    category = models.CharField(choices=CATEGORIES, default='SYSTEM', max_length=50)
     is_builtin = models.BooleanField(db_index=True, default=False)
     should_be_retried = models.BooleanField(default=False)
 
@@ -220,14 +259,15 @@ class Error(models.Model):
         """Django method to define the natural key for an error as the name
 
         :returns: A tuple representing the natural key
-        :rtype: tuple(str,)
+        :rtype: tuple
         """
 
-        return (self.name,)
+        return (self.job_type_name, self.name)
 
     class Meta(object):
-        """meta information for the db"""
+        """Meta information for the db"""
         db_table = 'error'
+        unique_together = ('job_type_name', 'name')
 
 
 class LogEntry(models.Model):

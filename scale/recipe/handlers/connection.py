@@ -26,7 +26,8 @@ class NodeInputConnection(object):
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param recipe_data: The recipe data
-        :type recipe_data: :class:`recipe.configuration.data.recipe_data.RecipeData`
+        :type recipe_data: :class:`recipe.configuration.data.recipe_data.LegacyRecipeData` or
+                           :class:`recipe.seed.recipe_data.RecipeData`
         :param parent_results: The results of each parent job stored by job name
         :type parent_results: {str: :class:`job.configuration.results.job_results.JobResults`}
         """

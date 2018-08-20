@@ -1,17 +1,14 @@
-"""Defines a command message that processes the input for a list of recipes"""
+"""Defines a command message that processes the input for a recipe"""
 from __future__ import unicode_literals
 
 import logging
 
 from django.db import transaction
 
+from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.messages.update_recipes import create_update_recipes_messages
-from recipe.models import Recipe
-
-# This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
-# this type is less than 25 KiB long and that each message can be processed quickly.
-MAX_NUM = 100
+from recipe.models import Recipe, RecipeNode
 
 
 logger = logging.getLogger(__name__)
@@ -28,22 +25,16 @@ def create_process_recipe_input_messages(recipe_ids):
 
     messages = []
 
-    message = None
     for recipe_id in recipe_ids:
-        if not message:
-            message = ProcessRecipeInput()
-        elif not message.can_fit_more():
-            messages.append(message)
-            message = ProcessRecipeInput()
-        message.add_recipe(recipe_id)
-    if message:
+        message = ProcessRecipeInput()
+        message.recipe_id = recipe_id
         messages.append(message)
 
     return messages
 
 
 class ProcessRecipeInput(CommandMessage):
-    """Command message that processes the input for a list of recipes
+    """Command message that processes the input for a recipes
     """
 
     def __init__(self):
@@ -52,31 +43,13 @@ class ProcessRecipeInput(CommandMessage):
 
         super(ProcessRecipeInput, self).__init__('process_recipe_input')
 
-        self._recipe_ids = []
-
-    def add_recipe(self, recipe_id):
-        """Adds the given recipe ID to this message
-
-        :param recipe_id: The recipe ID
-        :type recipe_id: int
-        """
-
-        self._recipe_ids.append(recipe_id)
-
-    def can_fit_more(self):
-        """Indicates whether more jobs can fit in this message
-
-        :return: True if more jobs can fit, False otherwise
-        :rtype: bool
-        """
-
-        return len(self._recipe_ids) < MAX_NUM
+        self.recipe_id = None
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'recipe_ids': self._recipe_ids}
+        return {'recipe_id': self.recipe_id}
 
     @staticmethod
     def from_json(json_dict):
@@ -84,23 +57,62 @@ class ProcessRecipeInput(CommandMessage):
         """
 
         message = ProcessRecipeInput()
-        for recipe_id in json_dict['recipe_ids']:
-            message.add_recipe(recipe_id)
-
+        message.recipe_id = json_dict['recipe_id']
         return message
 
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        recipe = Recipe.objects.get_recipe_with_interfaces(self.recipe_id)
+
+        if not recipe.has_input():
+            if not recipe.recipe:
+                logger.error('Recipe %d has no input and is not in a recipe. Message will not re-run.', self.recipe_id)
+                return True
+
+            try:
+                self._generate_input_data_from_recipe(recipe)
+            except InvalidData:
+                msg = 'Recipe created invalid input data for sub-recipe %d. Message will not re-run.'
+                logger.exception(msg, self.recipe_id)
+                return True
+
+        # Lock recipe model and process recipe's input data
         with transaction.atomic():
-            # Retrieve locked recipe models
-            recipe_models = Recipe.objects.get_locked_recipes(self._recipe_ids)
+            recipe = Recipe.objects.get_locked_recipe(self.recipe_id)
+            Recipe.objects.process_recipe_input(recipe)
 
-            # Process recipe input
-            Recipe.objects.process_recipe_input(recipe_models)
-
-        logger.info('Processed recipe inputs for %d recipe(s)', len(self._recipe_ids))
-        self.new_messages.extend(create_update_recipes_messages(self._recipe_ids))
+        # Create message to update the recipe
+        logger.info('Processed input for recipe %d, sending message to update recipe', self.recipe_id)
+        self.new_messages.extend(create_update_recipes_messages([self.recipe_id]))
 
         return True
+
+    def _generate_input_data_from_recipe(self, sub_recipe):
+        """Generates the sub-recipe's input data from its recipe dependencies and validates and sets the input data on
+        the sub-recipe
+
+        :param sub_recipe: The sub-recipe with related recipe_type_rev and recipe__recipe_type_rev models
+        :type sub_recipe: :class:`recipe.models.Recipe`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the data is invalid
+        """
+
+        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+        old_recipe_input_dict = dict(sub_recipe.recipe.input)
+
+        # Get sub-recipe input from dependencies in the recipe
+        recipe_input_data = sub_recipe.recipe.get_input_data()
+        node_outputs = RecipeNode.objects.get_recipe_node_outputs(sub_recipe.recipe_id)
+        for node_output in node_outputs.values():
+            if node_output.node_type == 'recipe' and node_output.id == sub_recipe.id:
+                node_name = node_output.node_name
+                break
+
+        # TODO: this is a hack to work with old legacy recipe data with workspaces, remove when legacy job types go
+        sub_recipe.recipe.input = old_recipe_input_dict
+
+        definition = sub_recipe.recipe.recipe_type_rev.get_definition()
+        input_data = definition.generate_node_input_data(node_name, recipe_input_data, node_outputs)
+        Recipe.objects.set_recipe_input_data_v6(sub_recipe, input_data)

@@ -16,69 +16,6 @@ from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
 
-CURRENT_VERSION = '1.0'
-
-SCAN_CONFIGURATION_SCHEMA = {
-    'type': 'object',
-    'required': ['workspace', 'scanner', 'files_to_ingest'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'Version of the Scan configuration schema',
-            'type': 'string'
-        },
-        'workspace': {
-            'type': 'string',
-            'minLength': 1
-        },
-        'scanner': {
-            'type': 'object',
-            'required': ['type'],
-            'additionalProperties': True,
-            'properties': {
-                'type': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-            }
-        },
-        'files_to_ingest': {
-            'type': 'array',
-            'minItems': 1,
-            'items': {'$ref': '#/definitions/file_item'}
-        },
-        'recursive': {
-            'type': 'boolean'
-        },
-    },
-    'definitions': {
-        'file_item': {
-            'type': 'object',
-            'required': ['filename_regex'],
-            'additionalProperties': False,
-            'properties': {
-                'filename_regex': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'data_types': {
-                    'type': 'array',
-                    'items': {'type': 'string', 'minLength': 1}
-                },
-                'new_workspace': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'new_file_path': {
-                    'type': 'string',
-                    'minLength': 1
-                }
-            }
-        }
-    }
-}
-
-
 class ValidationWarning(object):
     """Tracks Scan configuration warnings during validation that may prevent the process from working."""
 
@@ -100,54 +37,21 @@ class ScanConfiguration(object):
     identify files to ingest and how to store them.
     """
 
-    def __init__(self, configuration):
-        """Creates a Scan configuration object from the given dictionary. The general format is checked for
-        correctness, but the specified workspace(s) are not checked.
-
-        :param configuration: The Scan configuration
-        :type configuration: dict
-        :raises InvalidScanConfiguration: If the given configuration is invalid
+    def __init__(self):
+        """Creates a Scan configuration object.
         """
+        
+        self.scanner_type = ''
+        
+        self.scanner_config = {}
+        
+        self.recursive = True
 
-        self._configuration = configuration
-
-        try:
-            validate(configuration, SCAN_CONFIGURATION_SCHEMA)
-        except ValidationError as ex:
-            raise InvalidScanConfiguration('Invalid Scan configuration: %s' % unicode(ex))
-
-        self._populate_default_values()
-        if self._configuration['version'] != CURRENT_VERSION:
-            msg = 'Invalid Scan configuration: %s is an unsupported version number'
-            raise InvalidScanConfiguration(msg % self._configuration['version'])
-
-        self._file_handler = FileHandler()
-        for file_dict in self._configuration['files_to_ingest']:
-            try:
-                regex_pattern = re.compile(file_dict['filename_regex'])
-            except re.error:
-                raise InvalidScanConfiguration('Invalid file name regex: %s' % file_dict['filename_regex'])
-            new_workspace = None
-            if 'new_workspace' in file_dict:
-                new_workspace = file_dict['new_workspace']
-            new_file_path = None
-            if 'new_file_path' in file_dict:
-                if os.path.isabs(file_dict['new_file_path']):
-                    msg = 'Invalid Scan configuration: new_file_path may not be an absolute path'
-                    raise InvalidScanConfiguration(msg)
-                file_dict['new_file_path'] = os.path.normpath(file_dict['new_file_path'])
-                new_file_path = file_dict['new_file_path']
-            rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
-            self._file_handler.add_rule(rule)
-
-    def get_dict(self):
-        """Returns the internal dictionary that represents this Scan process configuration.
-
-        :returns: The internal dictionary
-        :rtype: dict
-        """
-
-        return self._configuration
+        self.file_handler = FileHandler()
+        
+        self.workspace = ''
+        
+        self.config_dict = {}
 
     def get_scanner(self):
         """Returns the configured scanner for this Scan configuration
@@ -156,8 +60,7 @@ class ScanConfiguration(object):
         :rtype: :class:`ingest.scan.scanners.scanner.Scanner`
         """
 
-        scanner_type = self._configuration['scanner']['type']
-        scanner = factory.get_scanner(scanner_type)
+        scanner = factory.get_scanner(self.scanner_type)
         self.load_scanner_configuration(scanner)
         return scanner
 
@@ -168,7 +71,7 @@ class ScanConfiguration(object):
         :rtype: string
         """
 
-        return self._configuration['workspace']
+        return self.workspace
 
     def load_scanner_configuration(self, scanner):
         """Loads the configuration into the given scanner
@@ -177,18 +80,14 @@ class ScanConfiguration(object):
         :type scanner: :class:`ingest.scan.scanners.scanner.Scanner`
         """
 
-        scanner_dict = self._configuration['scanner']
-        scanner_type = scanner_dict['type']
-        workspace = self._configuration['workspace']
-
         # Only load configuration if scanner type is unchanged
-        if scanner_type == scanner.scanner_type:
-            scanner.setup_workspaces(workspace, self._file_handler)
-            scanner.load_configuration(scanner_dict)
-            scanner.set_recursive(self._configuration['recursive'])
+        if self.scanner_type == scanner.scanner_type:
+            scanner.setup_workspaces(self.workspace, self.file_handler)
+            scanner.load_configuration(self.scanner_config)
+            scanner.set_recursive(self.recursive)
         else:
             msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'
-            logger.warning(msg, scanner.scanner_type, scanner_type)
+            logger.warning(msg, scanner.scanner_type, self.scanner_type)
 
     def validate(self):
         """Validates the Scan configuration
@@ -202,13 +101,13 @@ class ScanConfiguration(object):
 
         warnings = []
 
-        scanner_type = self._configuration['scanner']['type']
+        scanner_type = self.scanner_type
         if scanner_type not in factory.get_scanner_types():
             raise InvalidScanConfiguration('\'%s\' is an invalid scanner' % scanner_type)
 
-        scanned_workspace_name = self._configuration['workspace']
+        scanned_workspace_name = self.workspace
         workspace_names = {scanned_workspace_name}
-        for rule in self._file_handler.rules:
+        for rule in self.file_handler.rules:
             if rule.new_workspace:
                 workspace_names.add(rule.new_workspace)
 
@@ -241,12 +140,6 @@ class ScanConfiguration(object):
 
     def _populate_default_values(self):
         """Goes through the configuration and populates any missing values with defaults."""
-
-        if 'version' not in self._configuration:
-            self._configuration['version'] = CURRENT_VERSION
-
-        if 'recursive' not in self._configuration:
-            self._configuration['recursive'] = True
 
         for file_dict in self._configuration['files_to_ingest']:
             if 'data_types' not in file_dict:

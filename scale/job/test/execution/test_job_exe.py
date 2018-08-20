@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from datetime import timedelta
 
 import django
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
@@ -14,7 +14,7 @@ from scheduler.models import Scheduler
 from util.parse import datetime_to_string
 
 
-class TestRunningJobExecution(TestCase):
+class TestRunningJobExecution(TransactionTestCase):
     """Tests the RunningJobExecution class"""
 
     fixtures = ['basic_errors.json', 'basic_job_errors.json']

@@ -6,7 +6,6 @@ import logging
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -207,8 +206,8 @@ class RecipeHandler(object):
                 qry = RecipeNode.objects.select_related('job').filter(recipe_id=sup_recipe_id)
                 superseded_jobs = {r.node_name: r.job for r in qry}
             superseded_job = superseded_jobs[job_name] if job_name in superseded_jobs else None
-            job = Job.objects.create_job(job_type, event_id, root_recipe_id=root_recipe_id, recipe_id=self.recipe.id,
-                                         batch_id=batch_id, superseded_job=superseded_job)
+            job = Job.objects.create_job_old(job_type, event_id, root_recipe_id=root_recipe_id,
+                                             recipe_id=self.recipe.id, batch_id=batch_id, superseded_job=superseded_job)
             if self.recipe.batch:
                 priority = self.recipe.batch.get_configuration().priority
                 if priority is not None:

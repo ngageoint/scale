@@ -4,8 +4,15 @@ set -e
 BASE_IMAGE=$1
 COMPONENT=$2
 
-IMAGE_URL=${REGISTRY}/${DOCKER_USER}/${IMAGE_PREFIX}-${COMPONENT}:${CI_BUILD_TAG}
+docker login -u ${DOCKER_USER} -p "${DOCKER_PASS}" ${REGISTRY}
 
-docker build -t ${IMAGE_URL} --build-arg VAULT_ZIP=${VAULT_ZIP} --build-arg IMAGE=${BASE_IMAGE} dockerfiles/${COMPONENT}
-docker push ${IMAGE_URL}
+IMAGE_URL=${REGISTRY}/${DOCKER_ORG}/${IMAGE_PREFIX}-${COMPONENT}
+docker pull ${IMAGE_URL} || true
+
+docker build \
+    -t ${IMAGE_URL}:${CI_BUILD_TAG} \
+    --build-arg VAULT_ZIP=${VAULT_ZIP} \
+    --build-arg IMAGE=${BASE_IMAGE} \
+    dockerfiles/${COMPONENT}
+docker push ${IMAGE_URL}:${CI_BUILD_TAG}
 

@@ -5,6 +5,7 @@ import logging
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
+from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -15,12 +16,13 @@ import util.rest as rest_util
 from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
-from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
-                                RecipeTypeSerializer, OldRecipeDetailsSerializer)
+from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,  
+                                RecipeSerializerV5,RecipeSerializerV6,
+                                RecipeTypeDetailsSerializerV5, RecipeTypeDetailsSerializerV6,
+                                RecipeTypeSerializerV5, RecipeTypeSerializerV6 )
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializer
+from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
 
@@ -31,7 +33,14 @@ logger = logging.getLogger(__name__)
 class RecipeTypesView(GenericAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
-    serializer_class = RecipeTypeSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeTypeSerializerV6
+        else:
+            return RecipeTypeSerializerV5
 
     def get(self, request):
         """Retrieves the list of all recipe types returns it in JSON form
@@ -86,7 +95,8 @@ class RecipeTypesView(GenericAPIView):
         try:
             with transaction.atomic():
                 # Validate the recipe definition
-                recipe_def = RecipeDefinition(definition_dict)
+                logger.info(definition_dict)
+                recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
                 # Attempt to create the trigger rule
                 trigger_rule = None
@@ -107,14 +117,24 @@ class RecipeTypesView(GenericAPIView):
             raise Http404
 
         url = reverse('recipe_type_details_view', args=[recipe_type.id], request=request)
-        serializer = RecipeTypeDetailsSerializer(recipe_type)
+        if self.request.version == 'v6':
+            serializer = RecipeTypeDetailsSerializerV6(recipe_type)
+        else:
+            serializer = RecipeTypeDetailsSerializerV5(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
 
 class RecipeTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details of a recipe type"""
     queryset = RecipeType.objects.all()
-    serializer_class = RecipeTypeDetailsSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeTypeDetailsSerializerV6
+        else:
+            return RecipeTypeDetailsSerializerV5
 
     def get(self, request, recipe_type_id):
         """Retrieves the details for a recipe type and return them in JSON form
@@ -176,7 +196,7 @@ class RecipeTypeDetailsView(GenericAPIView):
                 # Validate the recipe definition
                 recipe_def = None
                 if definition_dict:
-                    recipe_def = RecipeDefinition(definition_dict)
+                    recipe_def = RecipeDefinitionSunset.create(definition_dict)
 
                 # Attempt to create the trigger rule
                 trigger_rule = None
@@ -250,7 +270,7 @@ class RecipeTypesValidationView(APIView):
 
         # Validate the recipe definition
         try:
-            recipe_def = RecipeDefinition(definition_dict)
+            recipe_def = RecipeDefinitionSunset.create(definition_dict)
             warnings = RecipeType.objects.validate_recipe_type(name, title, version, description, recipe_def,
                                                                trigger_config)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule, InvalidRecipeConnection) as ex:
@@ -264,7 +284,14 @@ class RecipeTypesValidationView(APIView):
 class RecipesView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipes"""
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
+    
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return RecipeSerializerV6
+        else:
+            return RecipeSerializerV5
 
     def list(self, request):
         """Retrieves the list of all recipes and returns it in JSON form
@@ -302,7 +329,7 @@ class RecipeDetailsView(RetrieveAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return RecipeDetailsSerializer
+            return RecipeDetailsSerializerV6
         else:
             return OldRecipeDetailsSerializer
 
@@ -333,7 +360,7 @@ class RecipeDetailsView(RetrieveAPIView):
 class RecipeInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a given recipe."""
     queryset = RecipeInputFile.objects.all()
-    serializer_class = ScaleFileSerializer
+    serializer_class = ScaleFileSerializerV5
 
     def get(self, request, recipe_id):
         """Retrieve detailed information about the input files for a recipe
@@ -411,7 +438,7 @@ class RecipeReprocessView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
         if self.request.version == 'v6':
-            return RecipeDetailsSerializer
+            return RecipeDetailsSerializerV6
         else:
             return OldRecipeDetailsSerializer
     

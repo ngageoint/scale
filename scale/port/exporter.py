@@ -8,7 +8,7 @@ from django.db.models import Q
 import port.serializers as serializers
 from error.models import Error
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.job.job_config import JobConfiguration
+from job.configuration.json.job_config_2_0 import JobConfigurationV2
 from job.models import JobType
 from port.schema import Configuration
 from recipe.models import RecipeType
@@ -81,8 +81,8 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
     # Scrub configuration for secrets
     for job_type in job_types:
         if job_type.configuration:
-            configuration = JobConfiguration(job_type.configuration)
-            interface = JobInterface(job_type.interface)
+            configuration = JobConfigurationV2(job_type.configuration)
+            interface = JobInterface(job_type.manifest)
             configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
 
@@ -106,7 +106,7 @@ def get_errors(job_types=None, error_ids=None, error_names=None):
     error_names = set(error_names) if error_names else set()
     if job_types and not (error_ids or error_names):
         for job_type in job_types:
-            error_names.update(job_type.get_error_interface().get_error_names())
+            error_names.update(job_type.get_error_mapping().get_error_names_legacy())
         if not error_names:
             return []
 

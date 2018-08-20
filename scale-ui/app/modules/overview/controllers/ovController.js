@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').controller('ovController', function($rootScope, $scope, navService, nodeService, jobService, jobTypeService, statusService, gaugeFactory, scaleConfig, scaleService, schedulerService, userService) {
         var vm = this;
-        
+
         vm.date = new Date();
         vm.jobError = null;
         vm.jobErrorStatus = null;
@@ -32,7 +32,6 @@
         vm.user = userService.getUserCreds();
         vm.schedulerContainerClass = vm.user ? vm.user.is_admin ? 'col-xs-8 col-lg-10' : 'col-xs-12' : 'col-xs-12';
         vm.schedulerBtnClass = 'fa-pause';
-        vm.schedulerResourceLevel = null;
         vm.toggleBtnClass = null;
 
         vm.toggleScheduler = function () {
@@ -45,19 +44,6 @@
                 vm.schedulerStatusClass = vm.schedulerIsPaused ? 'alert-warning' : 'alert-success';
                 vm.schedulerBtnClass = vm.schedulerIsPaused ? 'fa-play' : 'fa-pause';
             }).catch(function (error) {
-                console.log(error);
-            });
-        };
-
-        vm.toggleSchedulerResourceLevel = function (value) {
-            var schedulerData = {
-                resource_level: value
-            };
-            schedulerService.updateScheduler(schedulerData).then(function () {
-                vm.schedulerResourceLevel = value;
-                vm.toggleBtnClass = value === 'LOW' ? 'btn-danger' : value === 'HIGH' ? 'btn-warning' : 'btn-primary';
-            }).catch(function (error) {
-                vm.schedulerResourceLevel = null;
                 console.log(error);
             });
         };
@@ -143,22 +129,12 @@
             });
         };
 
-        var getScheduler = function () {
-            schedulerService.getScheduler().then(function (data) {
-                vm.schedulerResourceLevel = data.resource_level;
-                vm.toggleBtnClass = data.resource_level === 'LOW' ? 'btn-danger' : data.resource_level === 'HIGH' ? 'btn-warning' : 'btn-primary';
-            }, function (err) {
-                console.log(err);
-            });
-        };
-
         $rootScope.$on('jobTypeStatus', function (event, data) {
             vm.jobData.status = data;
             redrawGrid();
         });
 
         var initialize = function () {
-            getScheduler();
             getJobTypes();
             getStatus();
             getNodeStatus();

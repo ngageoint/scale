@@ -3,13 +3,15 @@ from __future__ import unicode_literals
 
 import logging
 
+from ingest.triggers.configuration import ingest_trigger_rule_1_0 as previous_ingest_trigger_config
+from ingest.triggers.ingest_trigger_condition import IngestTriggerCondition
+from job.configuration.data.job_connection import JobConnection
+from job.data.job_connection import SeedJobConnection
+from job.deprecation import JobConnectionSunset
+from job.seed.manifest import SeedManifest
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
-
-from ingest.triggers.ingest_trigger_condition import IngestTriggerCondition
-from ingest.triggers.configuration import ingest_trigger_rule_1_0 as previous_ingest_trigger_config
-from job.configuration.data.job_connection import JobConnection
-from recipe.configuration.data.recipe_connection import RecipeConnection
+from recipe.configuration.data.recipe_connection import LegacyRecipeConnection
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
@@ -176,7 +178,7 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         media_type = self.get_condition().get_media_type()
         media_types = [media_type] if media_type else None
 
-        connection = JobConnection()
+        connection = JobConnectionSunset.create(job_interface)
         connection.add_input_file(input_file_name, False, media_types, False, False)
         connection.add_workspace()
 
@@ -191,7 +193,7 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         media_type = self.get_condition().get_media_type()
         media_types = [media_type] if media_type else None
 
-        connection = RecipeConnection()
+        connection = LegacyRecipeConnection()
         connection.add_input_file(input_file_name, False, media_types, False)
         connection.add_workspace()
 

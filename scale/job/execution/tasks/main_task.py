@@ -24,7 +24,7 @@ class MainTask(JobExecutionTask):
         :param job_type: The job type model
         :type job_type: :class:`job.models.JobType`
         :param configuration: The job execution configuration, including secret values
-        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :type configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         """
 
         super(MainTask, self).__init__(configuration.get_task_id('main'), agent_id, job_exe, job_type)
@@ -36,7 +36,7 @@ class MainTask(JobExecutionTask):
             if self._is_system:
                 self._docker_image = self._create_scale_image_name()
             else:
-                self._docker_image = job_type.docker_image
+                self._docker_image = job_type.get_tagged_docker_image()
             self._docker_params = configuration.get_docker_params('main')
             self._is_docker_privileged = job_type.docker_privileged
         self._command_arguments = configuration.get_args('main')
@@ -54,7 +54,7 @@ class MainTask(JobExecutionTask):
             self.timeout_error_name = 'system-timeout' if self._is_system else 'timeout'
 
         # Private fields for this class
-        self._error_mapping = job_type.get_error_interface()
+        self._error_mapping = job_type.get_error_mapping()
         self._resources = configuration.get_resources('main')
 
     def determine_error(self, task_update):

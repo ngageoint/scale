@@ -8,13 +8,19 @@ from django.test import TestCase
 from django.utils.timezone import utc
 from rest_framework import status
 
+import batch.test.utils as batch_test_utils
+import job.test.utils as job_test_utils
+import product.test.utils as product_test_utils
+import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from storage.models import Workspace
 
 
-class TestFilesView(TestCase):
+class TestFilesViewV5(TestCase):
 
+    api = 'v5'
+    
     def setUp(self):
         django.setup()
 
@@ -37,7 +43,7 @@ class TestFilesView(TestCase):
     def test_file_name_successful(self):
         """Tests successfully calling the get files by name view"""
 
-        url = rest_util.get_url('/files/?file_name=%s' % (self.f1_file_name))
+        url = '/%s/files/?file_name=%s' % (self.api, self.f1_file_name)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -52,7 +58,7 @@ class TestFilesView(TestCase):
     def test_bad_file_name(self):
         """Tests unsuccessfully calling the get files by name view"""
 
-        url = rest_util.get_url('/files/?file_name=%s' % ('not_a.file'))
+        url = '/%s/files/?file_name=%s' % (self.api, 'not_a.file')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -63,9 +69,10 @@ class TestFilesView(TestCase):
     def test_time_successful(self):
         """Tests unsuccessfully calling the get files by name view"""
 
-        url = rest_util.get_url('/files/?started=%s&ended=%s&time_field=%s' % ('2016-01-01T00:00:00Z',
-                                                                               '2016-01-03T00:00:00Z',
-                                                                               'source'))
+        url = '/%s/files/?started=%s&ended=%s&time_field=%s' % ( self.api, 
+                                                                 '2016-01-01T00:00:00Z',
+                                                                 '2016-01-03T00:00:00Z',
+                                                                 'source')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -74,6 +81,201 @@ class TestFilesView(TestCase):
         self.assertEqual(len(results), 2)
         for result in results:
             self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+            
+class TestFilesViewV6(TestCase):
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.country = storage_test_utils.create_country()
+        self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1)
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        self.file1 = storage_test_utils.create_file(job_exe=self.job_exe1, job_output='out_name',
+                                                          file_name='test.txt', countries=[self.country],
+                                                          recipe_node='test-recipe-node')
+
+        self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2)
+        self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
+        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country])
+
+
+    def test_invalid_started(self):
+        """Tests calling the files view when the started parameter is invalid."""
+
+        url = '/%s/files/?started=hello' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_missing_tz_started(self):
+        """Tests calling the files view when the started parameter is missing timezone."""
+
+        url = '/%s/files/?started=1970-01-01T00:00:00' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_ended(self):
+        """Tests calling the files view when the ended parameter is invalid."""
+
+        url = '/%s/files/?started=1970-01-01T00:00:00Z&ended=hello' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_missing_tz_ended(self):
+        """Tests calling the files view when the ended parameter is missing timezone."""
+
+        url = '/%s/files/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_negative_time_range(self):
+        """Tests calling the files view with a negative time range."""
+
+        url = '/%s/files/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_job_type_id(self):
+        """Tests successfully calling the files view filtered by job type identifier."""
+
+        url = '/%s/files/?job_type_id=%s' % (self.api, self.job_type1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job_type1.id)
+
+    def test_job_type_name(self):
+        """Tests successfully calling the files view filtered by job type name."""
+
+        url = '/%s/files/?job_type_name=%s' % (self.api, self.job_type1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
+
+    def test_file_name(self):
+        """Tests successfully calling the files view filtered by file name."""
+
+        url = '/%s/files/?file_name=test.txt' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['file_name'], self.file1.file_name)
+        
+    def test_job_output(self):
+        """Tests successfully calling the files view filtered by job output."""
+
+        url = '/%s/files/?job_output=out_name' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_output'], self.file1.job_output)
+        
+    def test_recipe_node(self):
+        """Tests successfully calling the files view filtered by recipe job."""
+
+        url = '/%s/files/?recipe_node=test-recipe-node' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['recipe_node'], self.file1.recipe_node)
+
+    def test_successful(self):
+        """Tests successfully calling the files view."""
+
+        url = '/%s/files/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+
+        for entry in result['results']:
+            # Make sure country info is included
+            self.assertEqual(entry['countries'][0], self.country.iso3)
+
+class TestFileDetailsViewV6(TestCase):
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.workspace1 = storage_test_utils.create_workspace(name='ws1')
+        self.country = storage_test_utils.create_country()
+        self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1)
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        self.recipe_type1 = recipe_test_utils.create_recipe_type()
+        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
+        self.batch1 = batch_test_utils.create_batch(recipe_type=self.recipe_type1, is_creation_done=True)
+        self.file = storage_test_utils.create_file( file_name='test.txt', file_type='SOURCE', media_type='image/png', 
+                                                    file_size=1000, data_type='png',  file_path='/test/path', 
+                                                    workspace=self.workspace1, is_deleted=False, last_modified='', 
+                                                    data_started='2017-01-01T00:00:00Z', data_ended='2017-01-01T00:00:00Z', 
+                                                    source_started='2017-01-01T00:00:00Z', source_ended='2017-01-01T00:00:00Z', 
+                                                    geometry='', center_point='', meta_data='', countries=[self.country], 
+                                                    job_exe=self.job_exe1, job_output='output_name_1', recipe=self.recipe1, 
+                                                    recipe_node='my-recipe', batch=self.batch1, 
+                                                    is_superseded=True, superseded='2017-01-01T00:00:00Z')
+
+    def test_id(self):
+        """Tests successfully calling the files detail view by id"""
+        
+        url = '/%s/files/%i/' % (self.api, self.file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertFalse('ancestors' in result)
+        self.assertFalse('descendants' in result)
+        self.assertFalse('sources' in result)
+        self.assertEqual(result['id'], self.file.id)
+        self.assertEqual(result['file_name'], self.file.file_name)
+        self.assertEqual(result['file_type'], self.file.file_type)
+        self.assertEqual(result['media_type'], self.file.media_type)
+        self.assertEqual(result['file_size'], self.file.file_size)
+        self.assertEqual(result['file_path'], self.file.file_path)
+        self.assertEqual(result['workspace']['id'], self.file.workspace.id)
+        self.assertFalse(result['is_deleted'])
+        self.assertEqual(result['data_started'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['data_ended'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['source_started'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['source_ended'], '2017-01-01T00:00:00Z')
+        self.assertEqual(result['countries'][0], self.country.iso3)
+        self.assertEqual(result['job']['id'], self.job1.id)
+        self.assertEqual(result['job_exe']['id'], self.job_exe1.id)
+        self.assertEqual(result['job_output'], self.file.job_output)
+        self.assertEqual(result['recipe']['id'], self.recipe1.id)
+        self.assertEqual(result['recipe_node'], self.file.recipe_node)
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
+        self.assertEqual(result['batch']['title'], self.batch1.title)
+        self.assertTrue(result['is_superseded'])
+        self.assertEqual(result['superseded'], '2017-01-01T00:00:00Z')
+
+    def test_missing(self):
+        """Tests calling the file details view with an invalid id"""
+
+        url = '/%s/files/12345/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
 
 
 class TestWorkspacesView(TestCase):

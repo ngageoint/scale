@@ -11,85 +11,10 @@ from jsonschema.exceptions import ValidationError
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
-from ingest.strike.configuration.strike_configuration_1_0 import StrikeConfiguration as StrikeConfiguration_1_0
 from ingest.strike.monitors import factory
 from storage.models import Workspace
 
 logger = logging.getLogger(__name__)
-
-CURRENT_VERSION = '2.0'
-
-STRIKE_CONFIGURATION_SCHEMA = {
-    'type': 'object',
-    'required': ['workspace', 'monitor', 'files_to_ingest'],
-    'additionalProperties': False,
-    'properties': {
-        'version': {
-            'description': 'Version of the Strike configuration schema',
-            'type': 'string'
-        },
-        'workspace': {
-            'type': 'string',
-            'minLength': 1
-        },
-        'monitor': {
-            'type': 'object',
-            'required': ['type'],
-            'additionalProperties': True,
-            'properties': {
-                'type': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-            }
-        },
-        'files_to_ingest': {
-            'type': 'array',
-            'minItems': 1,
-            'items': {'$ref': '#/definitions/file_item'}
-        }
-    },
-    'definitions': {
-        'file_item': {
-            'type': 'object',
-            'required': ['filename_regex'],
-            'additionalProperties': False,
-            'properties': {
-                'filename_regex': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'data_types': {
-                    'type': 'array',
-                    'items': {'type': 'string', 'minLength': 1}
-                },
-                'new_workspace': {
-                    'type': 'string',
-                    'minLength': 1
-                },
-                'new_file_path': {
-                    'type': 'string',
-                    'minLength': 1
-                }
-            }
-        }
-    }
-}
-
-
-class ValidationWarning(object):
-    """Tracks Strike configuration warnings during validation that may prevent the process from working."""
-
-    def __init__(self, key, details):
-        """Constructor sets basic attributes.
-
-        :param key: A unique identifier clients can use to recognize the warning.
-        :type key: string
-        :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: string
-        """
-        self.key = key
-        self.details = details
 
 
 class StrikeConfiguration(object):
@@ -98,7 +23,7 @@ class StrikeConfiguration(object):
     identify files to ingest and how to store them.
     """
 
-    def __init__(self, configuration):
+    def __init__(self):
         """Creates a Strike configuration object from the given dictionary. The general format is checked for
         correctness, but the specified workspace(s) are not checked.
 
@@ -107,40 +32,9 @@ class StrikeConfiguration(object):
         :raises InvalidStrikeConfiguration: If the given configuration is invalid
         """
 
-        self._configuration = configuration
-
-        # Convert old versions
-        if 'version' in self._configuration and self._configuration['version'] != CURRENT_VERSION:
-            self._configuration = self._convert_schema(configuration)
-
-        try:
-            validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
-        except ValidationError as ex:
-            raise InvalidStrikeConfiguration('Invalid Strike configuration: %s' % unicode(ex))
-
-        self._populate_default_values()
-        if self._configuration['version'] != CURRENT_VERSION:
-            msg = 'Invalid Strike configuration: %s is an unsupported version number'
-            raise InvalidStrikeConfiguration(msg % self._configuration['version'])
-
-        self._file_handler = FileHandler()
-        for file_dict in self._configuration['files_to_ingest']:
-            try:
-                regex_pattern = re.compile(file_dict['filename_regex'])
-            except re.error:
-                raise InvalidStrikeConfiguration('Invalid file name regex: %s' % file_dict['filename_regex'])
-            new_workspace = None
-            if 'new_workspace' in file_dict:
-                new_workspace = file_dict['new_workspace']
-            new_file_path = None
-            if 'new_file_path' in file_dict:
-                if os.path.isabs(file_dict['new_file_path']):
-                    msg = 'Invalid Strike configuration: new_file_path may not be an absolute path'
-                    raise InvalidStrikeConfiguration(msg)
-                file_dict['new_file_path'] = os.path.normpath(file_dict['new_file_path'])
-                new_file_path = file_dict['new_file_path']
-            rule = FileRule(regex_pattern, file_dict['data_types'], new_workspace, new_file_path)
-            self._file_handler.add_rule(rule)
+        self.configuration = {}
+        
+        self.file_handler = FileHandler()
 
     def get_dict(self):
         """Returns the internal dictionary that represents this Strike process configuration.
@@ -149,7 +43,7 @@ class StrikeConfiguration(object):
         :rtype: dict
         """
 
-        return self._configuration
+        return self.configuration
 
     def get_monitor(self):
         """Returns the configured monitor for this Strike configuration
@@ -158,7 +52,7 @@ class StrikeConfiguration(object):
         :rtype: :class:`ingest.strike.monitors.monitor.Monitor`
         """
 
-        monitor_type = self._configuration['monitor']['type']
+        monitor_type = self.configuration['monitor']['type']
         monitor = factory.get_monitor(monitor_type)
         self.load_monitor_configuration(monitor)
         return monitor
@@ -170,7 +64,7 @@ class StrikeConfiguration(object):
         :rtype: string
         """
 
-        return self._configuration['workspace']
+        return self.configuration['workspace']
 
     def load_monitor_configuration(self, monitor):
         """Loads the configuration into the given monitor
@@ -179,13 +73,13 @@ class StrikeConfiguration(object):
         :type monitor: :class:`ingest.strike.monitors.monitor.Monitor`
         """
 
-        monitor_dict = self._configuration['monitor']
+        monitor_dict = self.configuration['monitor']
         monitor_type = monitor_dict['type']
-        workspace = self._configuration['workspace']
+        workspace = self.configuration['workspace']
 
         # Only load configuration if monitor type is unchanged
         if monitor_type == monitor.monitor_type:
-            monitor.setup_workspaces(workspace, self._file_handler)
+            monitor.setup_workspaces(workspace, self.file_handler)
             monitor.load_configuration(monitor_dict)
         else:
             msg = 'Strike monitor type has been changed from %s to %s. Cannot reload configuration.'
@@ -195,7 +89,7 @@ class StrikeConfiguration(object):
         """Validates the Strike configuration
 
         :returns: A list of warnings discovered during validation
-        :rtype: list[:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+        :rtype: list[:class:`util.validation.ValidationWarning`]
 
         :raises :class:`ingest.strike.configuration.exceptions.InvalidStrikeConfiguration`: If the configuration is
             invalid.
@@ -203,13 +97,13 @@ class StrikeConfiguration(object):
 
         warnings = []
 
-        monitor_type = self._configuration['monitor']['type']
+        monitor_type = self.configuration['monitor']['type']
         if monitor_type not in factory.get_monitor_types():
             raise InvalidStrikeConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
 
-        monitored_workspace_name = self._configuration['workspace']
+        monitored_workspace_name = self.configuration['workspace']
         workspace_names = {monitored_workspace_name}
-        for rule in self._file_handler.rules:
+        for rule in self.file_handler.rules:
             if rule.new_workspace:
                 workspace_names.add(rule.new_workspace)
 
@@ -228,56 +122,3 @@ class StrikeConfiguration(object):
             raise InvalidStrikeConfiguration('Unknown workspace name: %s' % workspace_names.pop())
 
         return warnings
-
-    def _convert_schema(self, configuration):
-        """Tries to validate the configuration as version 1.0 and convert it to version 2.0
-
-        :param configuration: The Strike configuration
-        :type configuration: dict
-        :returns: The converted configuration
-        :rtype: dict
-        """
-
-        # Try converting from 1.0
-        converted_configuration = StrikeConfiguration_1_0(configuration).get_dict()
-        converted_configuration['version'] = CURRENT_VERSION
-
-        mount = converted_configuration['mount']
-        mount_path = mount.split(':')[1]
-        transfer_suffix = converted_configuration['transfer_suffix']
-        del converted_configuration['mount']
-        del converted_configuration['transfer_suffix']
-        auto_workspace_name = 'auto_wksp_for_%s' % mount.replace(':', '_').replace('/', '_')
-        auto_workspace_name = auto_workspace_name[:50]  # Truncate to max name length of 50 chars
-        title = 'Auto Workspace for %s' % mount
-        title = title[:50]  # Truncate to max title length of 50 chars
-        try:
-            Workspace.objects.get(name=auto_workspace_name)
-        except Workspace.DoesNotExist:
-            workspace = Workspace()
-            workspace.name = auto_workspace_name
-            workspace.title = title
-            desc = 'This workspace was automatically created for mount %s to support converting Strike from 1.0 to 2.0'
-            workspace.description = desc % mount
-            workspace.json_config = {'version': '1.0', 'broker': {'type': 'host', 'host_path': mount_path}}
-            workspace.save()
-
-        converted_configuration['workspace'] = auto_workspace_name
-        converted_configuration['monitor'] = {'type': 'dir-watcher', 'transfer_suffix': transfer_suffix}
-        for file_dict in converted_configuration['files_to_ingest']:
-            file_dict['new_workspace'] = file_dict['workspace_name']
-            file_dict['new_file_path'] = file_dict['workspace_path']
-            del file_dict['workspace_name']
-            del file_dict['workspace_path']
-
-        return converted_configuration
-
-    def _populate_default_values(self):
-        """Goes through the configuration and populates any missing values with defaults."""
-
-        if 'version' not in self._configuration:
-            self._configuration['version'] = CURRENT_VERSION
-
-        for file_dict in self._configuration['files_to_ingest']:
-            if 'data_types' not in file_dict:
-                file_dict['data_types'] = []

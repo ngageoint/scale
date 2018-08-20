@@ -44,27 +44,20 @@ class ProductDataFileStore(AbstractDataFileStore):
             for workspace in workspaces:
                 file_list = data_files[workspace.id]
                 files_to_store = []
-                for file_tuple in file_list:
-                    local_path = file_tuple[0]
-                    media_type = file_tuple[1]
-                    output_name = file_tuple[2]
+                for file_metadata in file_list:
+                    local_path = file_metadata.local_path
                     if local_path.startswith(SCALE_JOB_EXE_OUTPUT_PATH):
                         rel_local_path = os.path.relpath(local_path, SCALE_JOB_EXE_OUTPUT_PATH)
                     else:
                         rel_local_path = os.path.basename(local_path)
-                    remote_file_path = os.path.join(remote_path, rel_local_path)
+                    file_metadata.remote_path = os.path.join(remote_path, rel_local_path)
 
-                    # Pass along geospatial information if available
-                    if len(file_tuple) > 3:
-                        file_to_store = (local_path, remote_file_path, media_type, output_name, file_tuple[3])
-                    else:
-                        file_to_store = (local_path, remote_file_path, media_type, output_name)
-                    files_to_store.append(file_to_store)
+                    files_to_store.append(file_metadata)
 
                 product_files = ProductFile.objects.upload_files(files_to_store, input_file_ids, job_exe, workspace)
 
                 for i in range(len(product_files)):
-                    full_local_path = file_list[i][0]
+                    full_local_path = file_list[i].local_path
                     product_file = product_files[i]
                     results[full_local_path] = product_file.id
 

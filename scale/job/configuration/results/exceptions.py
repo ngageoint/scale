@@ -44,3 +44,24 @@ class MissingRequiredOutput(ScaleError):
         """
 
         return '%s is a required output, but the algorithm did not provide it' % self.output
+
+
+class OutputCaptureError(ScaleError):
+    """Error class indicating that an error was encountered processing the output of Seed job
+    """
+
+    def __init__(self, msg):
+        """Constructor
+
+        :param msg: Details of error encountered
+        :type msg: string
+        """
+
+        super(OutputCaptureError, self).__init__(20, 'output-capture-error')
+        self.msg = msg
+
+    def get_log_message(self):
+        """See :meth:`error.exceptions.ScaleError.get_log_message`
+        """
+
+        return self.msg

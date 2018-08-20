@@ -4,10 +4,14 @@ import django
 from django.test import TestCase
 from mock import MagicMock
 
+from data.data.data import Data
+from data.data.value import FileValue, JsonValue
 from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnection
 from data.interface.interface import Interface
+from data.interface.parameter import FileParameter, JsonParameter
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.exceptions import InvalidDefinition
+from recipe.models import RecipeNodeOutput
 
 
 class TestRecipeDefinition(TestCase):
@@ -140,6 +144,43 @@ class TestRecipeDefinition(TestCase):
         definition.add_job_node('node_1', 'job_type_1', '1.0', 1)
 
         definition.add_recipe_input_connection('node_1', 'input_1', 'recipe_input_1')
+
+    def test_generate_node_input_data(self):
+        """Tests calling RecipeDefinition.generate_node_input_data()"""
+
+        input_interface = Interface()
+        input_interface.add_parameter(FileParameter('recipe_input_1', ['image/gif'], multiple=True))
+        input_interface.add_parameter(JsonParameter('recipe_input_2', 'string'))
+        definition = RecipeDefinition(input_interface)
+        definition.add_job_node('node_a', 'job_type_1', '1.0', 1)
+        definition.add_job_node('node_b', 'job_type_2', '1.0', 1)
+        definition.add_job_node('node_c', 'job_type_3', '1.0', 1)
+        definition.add_dependency('node_c', 'node_b')
+        definition.add_dependency('node_c', 'node_a')
+        definition.add_recipe_input_connection('node_c', 'input_1', 'recipe_input_1')
+        definition.add_recipe_input_connection('node_c', 'input_2', 'recipe_input_2')
+        definition.add_dependency_input_connection('node_c', 'input_3', 'node_a', 'output_a_1')
+        definition.add_dependency_input_connection('node_c', 'input_4', 'node_a', 'output_a_2')
+        definition.add_dependency_input_connection('node_c', 'input_5', 'node_b', 'output_b_1')
+
+        recipe_data = Data()
+        recipe_data.add_value(FileValue('recipe_input_1', [1, 2, 3, 4, 5]))
+        recipe_data.add_value(JsonValue('recipe_input_2', 'Scale is awesome!'))
+        a_output_data = Data()
+        a_output_data.add_value(FileValue('output_a_1', [1234]))
+        a_output_data.add_value(JsonValue('output_a_2', {'foo': 'bar'}))
+        b_output_data = Data()
+        b_output_data.add_value(JsonValue('output_b_1', 12.34))
+        node_outputs = {'node_a': RecipeNodeOutput('node_a', 'job', 1, a_output_data),
+                        'node_b': RecipeNodeOutput('node_b', 'job', 1, b_output_data)}
+
+        node_data = definition.generate_node_input_data('node_c', recipe_data, node_outputs)
+        self.assertSetEqual(set(node_data.values.keys()), {'input_1', 'input_2', 'input_3', 'input_4', 'input_5'})
+        self.assertListEqual(node_data.values['input_1'].file_ids, [1, 2, 3, 4, 5])
+        self.assertEqual(node_data.values['input_2'].value, 'Scale is awesome!')
+        self.assertListEqual(node_data.values['input_3'].file_ids, [1234])
+        self.assertDictEqual(node_data.values['input_4'].value, {'foo': 'bar'})
+        self.assertEqual(node_data.values['input_5'].value, 12.34)
 
     def test_topological_order_circular(self):
         """Tests calling RecipeDefinition.get_topological_order() with a circular dependency"""

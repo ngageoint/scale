@@ -10,7 +10,7 @@ from ingest.triggers.ingest_trigger_handler import INGEST_TYPE
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.interface.job_interface import JobInterface
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
-from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from storage.test import utils as storage_utils
 from trigger.configuration.exceptions import InvalidTriggerRule
 

@@ -6,10 +6,17 @@ Source File Services
 
 These services provide access to information about source files that Scale has ingested.
 
+**DEPRECATED**
+This documentation describes the API **v5** version of Source File services. These services will be removed in API **v6**.
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Source File List**                                                                                                    |
 +=========================================================================================================================+
 | Returns a list of all source files                                                                                      |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Source File List response.  Starting with API |
+|                **v6** this endpoint will be removed.                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/                                                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -153,6 +160,7 @@ These services provide access to information about source files that Scale has i
 |                This table describes the current v4 version of the source file details API, which is now deprecated.     |
 |                The new v5 version of this API does not include the *ingests* and *products* arrays in the response.     |
 |                The new v5 version also does not support the use of *file_name* in the URL (only source ID supported).   |
+|                Starting with API **v6** this endpoint will be removed.                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -334,6 +342,10 @@ These services provide access to information about source files that Scale has i
 | **Source File Ingest List**                                                                                             |
 +=========================================================================================================================+
 | Returns a list of all ingests related to the source file with the given ID.                                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Source File Ingest List response.  Starting   |
+|                with API **v6** this endpoint will be removed.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/ingests/                                                                                          |
 |         Where {id} is the unique identifier of an existing source file                                                  |
@@ -542,6 +554,10 @@ These services provide access to information about source files that Scale has i
 | Returns a list of all jobs related to the source file with the given ID. Jobs marked as superseded are excluded by      |
 | default.                                                                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Source File Job List response.  Starting with |
+|                API **v6** this endpoint will be removed.                                                                |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/jobs/                                                                                             |
 |         Where {id} is the unique identifier of an existing source file                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -732,6 +748,10 @@ These services provide access to information about source files that Scale has i
 | **Source File Product List**                                                                                            |
 +=========================================================================================================================+
 | Returns a list of all products that were produced by the given source file ID                                           |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Source File Product List response.  Starting  |
+|                with API **v6** this endpoint will be removed.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/products/                                                                                         |
 |         Where {id} is the unique identifier of an existing source file                                                  |
@@ -976,6 +996,10 @@ These services provide access to information about source files that Scale has i
 | **Source File Updates**                                                                                                 |
 +=========================================================================================================================+
 | Returns the source file updates (created, parsed, and deleted sources) that have occurred in the given time range.      |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Source File Updates response.  Starting with  |
+|                API **v6** this endpoint will be removed.                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/updates/                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+

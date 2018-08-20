@@ -1,0 +1,272 @@
+openapi: "3.0.0"
+info:
+  title: Strike Services
+  version: v6
+paths:
+  /v6/strikes:
+    get:
+      operationId: _rest_v6_strike_list
+      summary: Strike List
+      description: Returns a list of all strike processes
+      parameters:
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: name
+          schema:
+            type: string
+          description: Return only Strike processes with a given name. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: order
+          schema:
+            type: string
+          description: One or more fields to use when ordering the results. |
+            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+            Nested objects require a delimiter (ex: order=source_file__created)
+            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/strike_list'
+    post:
+      operationId: _rest_v6_strike_create
+      summary: Create Strike
+      description: Creates a new Strike process and places it onto the queue.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/strike_post'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful request 
+            
+  /v6/strikes/{id}/:
+    get:
+      operationId: _rest_v6_strike_details
+      summary: Strike Details
+      description: Returns a specific strike process and all its related model information
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing strike process
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/strike_details'
+
+  /v6/strikes/validation/:
+    post:
+      operationId: _rest_v6_strike_validate
+      summary: Validate Strike
+      description: Validates a new Strike process configuration without actually saving it.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/strike_post'
+      responses:
+        '200':
+          description: |-
+            The 200 OK response indicates a valid strike configuration 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/validation'
+            
+  /v6/strikes/{id}/:
+    patch:
+      operationId: _rest_v6_strike_edit
+      summary: Edit Strike
+      description: Edits an existing Strike process with associated configuration. 
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing strike process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/strike_post'
+      responses:
+        '204':
+          description: |-
+            The 204 No content response indicates a successful edit 
+
+components:
+  schemas:
+    strike_list:
+      title: Strike List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters 
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/strike_base'
+          description: List of strike process objects
+          
+    strike_base:
+      title: Strike Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+        name:
+          type: string
+          description: The identifying name of the Strike process used for queries.  
+          example: my-strike-process
+        title:
+          type: string
+          description: The human readable display name of the Strike process.  
+          example: My Strike Process
+        description:
+          type: string
+          description: A longer description of the Strike process. 
+          example: This is my Strike process for detecting my favorite files!
+        job:
+          $ref: '#/components/schemas/job_base'
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        last_modified:
+          type: string
+          format: date-time
+          description: When the associated database model was last saved.
+          example: 2015-09-10T15:24:53.987Z
+          
+    strike_post:
+      title: Strike Post
+      type: object
+      properties:
+        title:
+          type: string
+          description: The human readable display name of the Strike process. |
+            This will be used to generate the name field
+          example: My Strike Process
+        description:
+          type: string
+          description: A longer description of the Strike process. 
+          example: This is my Strike process for detecting my favorite files!
+        configuration:
+          $ref: '#/components/schemas/strike_config'
+
+    strike_details:
+      allof:
+        - ref: '#/components/schemas/strike_base'
+        - title: Strike Details
+        - type: object
+        properties: 
+          configuration:
+            $ref: '#/components/schemas/strike_config'          
+          
+    strike_config:
+      title: Strike Configuration
+      type: object
+      properties:
+        workspace:
+          type: string
+          description: The workspace field is a required string that specifies the name of the |
+            workspace that is being scanned. The type of the workspace (its broker type) will determine which types of monitor can be used.
+          example: my-host-workspace
+        monitor:
+          oneOf:
+          - $ref: '#/components/schemas/dir_monitor'
+          - $ref: '#/components/schemas/s3_monitor'
+        files_to_ingest:
+          type: array
+          items:
+            $ref: '#/components/schemas/ingest_file'
+          description: List of ingest objects
+          
+    validation:
+      title: Validation
+      type: object
+      properties:
+        is_valid:
+          type: boolean
+          description: The given element is valid
+          example: true
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_error'
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_warning'
+            
+    validation_error:
+      title: Validation Error
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the error
+        description:
+          type: string
+          description: A description of the validation error
+          
+    validation_warning:
+      title: Validation Warning
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the warning
+        description:
+          type: string
+          description: A description of the warning

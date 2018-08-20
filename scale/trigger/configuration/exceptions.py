@@ -13,3 +13,9 @@ class InvalidTriggerType(Exception):
     """
 
     pass
+
+class InvalidTriggerMissingConfiguration(Exception):
+    """Exception indicating that the provided trigger rule was missing an associated configuration
+    """
+
+    pass

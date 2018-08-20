@@ -20,11 +20,11 @@ class BatchSerializerV6(BatchBaseSerializerV6):
     """Serializer for a list of batches"""
 
     from recipe.serializers import RecipeTypeBaseSerializerV6, RecipeTypeRevisionBaseSerializerV6
-    from trigger.serializers import TriggerEventBaseSerializer
+    from trigger.serializers import TriggerEventBaseSerializerV6
 
     recipe_type = RecipeTypeBaseSerializerV6()
     recipe_type_rev = RecipeTypeRevisionBaseSerializerV6()
-    event = TriggerEventBaseSerializer()
+    event = TriggerEventBaseSerializerV6()
 
     is_superseded = serializers.BooleanField()
     root_batch = BatchBaseSerializerV6()
@@ -51,10 +51,10 @@ class BatchDetailsSerializerV6(BatchSerializerV6):
     """Detailed serializer for a single batch"""
 
     from recipe.serializers import RecipeTypeRevisionSerializerV6
-    from trigger.serializers import TriggerEventDetailsSerializer
+    from trigger.serializers import TriggerEventDetailsSerializerV6
 
     recipe_type_rev = RecipeTypeRevisionSerializerV6()
-    event = TriggerEventDetailsSerializer()
+    event = TriggerEventDetailsSerializerV6()
 
     definition = serializers.JSONField(source='get_v6_definition_json')
     configuration = serializers.JSONField(source='get_v6_configuration_json')
@@ -75,13 +75,13 @@ class BatchBaseSerializerV5(ModelIdSerializer):
 
 class BatchSerializerV5(BatchBaseSerializerV5):
     """Converts batch model fields to REST output."""
-    from job.serializers import JobBaseSerializer
-    from recipe.serializers import RecipeTypeBaseSerializer
-    from trigger.serializers import TriggerEventBaseSerializer
+    from job.serializers import JobBaseSerializerV5
+    from recipe.serializers import RecipeTypeBaseSerializerV5
+    from trigger.serializers import TriggerEventBaseSerializerV5
 
-    recipe_type = RecipeTypeBaseSerializer()
-    event = TriggerEventBaseSerializer()
-    creator_job = JobBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializerV5()
+    event = TriggerEventBaseSerializerV5()
+    creator_job = JobBaseSerializerV5()
 
     created_count = serializers.IntegerField()
     failed_count = serializers.IntegerField()
@@ -95,12 +95,12 @@ class BatchSerializerV5(BatchBaseSerializerV5):
 
 class BatchDetailsSerializerV5(BatchSerializerV5):
     """Converts batch model fields to REST output."""
-    from job.serializers import JobSerializer
-    from recipe.serializers import RecipeTypeSerializer
-    from trigger.serializers import TriggerEventDetailsSerializer
+    from job.serializers import JobSerializerV5
+    from recipe.serializers import RecipeTypeSerializerV5
+    from trigger.serializers import TriggerEventDetailsSerializerV5
 
-    recipe_type = RecipeTypeSerializer()
-    event = TriggerEventDetailsSerializer()
-    creator_job = JobSerializer()
+    recipe_type = RecipeTypeSerializerV5()
+    event = TriggerEventDetailsSerializerV5()
+    creator_job = JobSerializerV5()
 
     definition = serializers.JSONField(source='get_old_definition_json')
