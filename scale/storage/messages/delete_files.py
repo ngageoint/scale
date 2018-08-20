@@ -106,11 +106,7 @@ class DeleteFiles(CommandMessage):
 
             # Send messages to purge jobs
             from job.messages.purge_jobs import create_purge_jobs_messages
-            try:
-                self.new_messages.extend(create_purge_jobs_messages(jobs_to_purge, when))
-            except:
-                pass
-
+            self.new_messages.extend(create_purge_jobs_messages(jobs_to_purge, when))
         else:
             files_to_delete.update(is_deleted=True, deleted=when, is_published=False, unpublished=when)
 
