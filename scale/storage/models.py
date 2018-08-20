@@ -607,6 +607,11 @@ class ScaleFile(models.Model):
     source_collection = models.TextField(blank=True, null=True, db_index=True)
     source_task = models.TextField(blank=True, null=True, db_index=True)
 
+    # Job metadata
+    job_name = models.TextField(blank=True, null=True, db_index=True)
+    job_version = models.TextField(blank=True, null=True, db_index=True)
+    package_version = models.TextField(blank=True, null=True, db_index=True)
+
     # Source file fields
     is_parsed = models.BooleanField(default=False)
     parsed = models.DateTimeField(blank=True, null=True)

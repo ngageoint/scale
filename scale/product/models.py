@@ -606,6 +606,11 @@ class ProductFileManager(models.GeoManager):
             product.source_collection = entry.source_collection
             product.source_task = entry.source_task
 
+            # Update product model with details derived from the job_type
+            product.job_name = job_exe.job_type.name
+            product.job_version = job_exe.job_type.get_job_version()
+            product.package_version = job_exe.job_type.get_package_version()
+
             products_to_save.append(FileUpload(product, entry.local_path))
 
         return ScaleFile.objects.upload_files(workspace, products_to_save)
