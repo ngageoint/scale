@@ -102,7 +102,7 @@ class DeleteFiles(CommandMessage):
 
         if self.purge:
             files_to_delete.delete()
-            jobs_to_purge = set(files_to_delete.values_list('job__id', flat=True))
+            jobs_to_purge = set(files_to_delete.values_list('job_id', flat=True))
 
             # Send messages to purge jobs
             from job.messages.purge_jobs import create_purge_jobs_messages
