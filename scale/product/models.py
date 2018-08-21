@@ -607,9 +607,10 @@ class ProductFileManager(models.GeoManager):
             product.source_task = entry.source_task
 
             # Update product model with details derived from the job_type
-            product.job_name = job_exe.job_type.name
-            product.job_version = job_exe.job_type.get_job_version()
-            product.package_version = job_exe.job_type.get_package_version()
+            product.meta_data['url'] = product.url
+            product.meta_data['job_name'] = job_exe.job_type.name
+            product.meta_data['job_version'] = job_exe.job_type.get_job_version()
+            product.meta_data['package_version'] = job_exe.job_type.get_package_version()
 
             products_to_save.append(FileUpload(product, entry.local_path))
 

@@ -607,11 +607,6 @@ class ScaleFile(models.Model):
     source_collection = models.TextField(blank=True, null=True, db_index=True)
     source_task = models.TextField(blank=True, null=True, db_index=True)
 
-    # Job metadata
-    job_name = models.TextField(blank=True, null=True, db_index=True)
-    job_version = models.TextField(blank=True, null=True, db_index=True)
-    package_version = models.TextField(blank=True, null=True, db_index=True)
-
     # Source file fields
     is_parsed = models.BooleanField(default=False)
     parsed = models.DateTimeField(blank=True, null=True)
@@ -751,19 +746,23 @@ class ScaleFile(models.Model):
         :rtype: string
         """
 
-        # Make sure a valid path can be created
-        if self.workspace.base_url and self.file_path:
+        try:
+            # Make sure a valid path can be created
+            if self.workspace.base_url and self.file_path:
 
-            # Make sure there are no duplicate slashes
-            base_url = self.workspace.base_url
-            if base_url.endswith('/'):
-                base_url = base_url[:-1]
-            relative_url = self.file_path
-            if relative_url.startswith('/'):
-                relative_url = relative_url[1:]
+                # Make sure there are no duplicate slashes
+                base_url = self.workspace.base_url
+                if base_url.endswith('/'):
+                    base_url = base_url[:-1]
+                relative_url = self.file_path
+                if relative_url.startswith('/'):
+                    relative_url = relative_url[1:]
 
-            # Combine the workspace and file path
-            return '%s/%s' % (base_url, relative_url)
+                # Combine the workspace and file path
+                return '%s/%s' % (base_url, relative_url)
+        except Workspace.DoesNotExist:
+            # No-op for when Workspace is not set
+            pass
 
     url = property(_get_url)
 
