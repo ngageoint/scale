@@ -615,9 +615,19 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job.test.seed.html">job.test.seed package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="job.test.seed.results.html">job.test.seed.results package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="job.test.seed.results.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.seed.results.html#module-job.test.seed.results.test_job_results">job.test.seed.results.test_job_results module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.seed.results.html#module-job.test.seed.results">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_job_data">job.test.seed.test_job_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_manifest">job.test.seed.test_manifest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_metadata">job.test.seed.test_metadata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#module-job.test.seed.test_types">job.test.seed.test_types module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.seed.html#module-job.test.seed">Module contents</a></li>
 </ul>
@@ -4777,6 +4787,14 @@ This is merely a placeholder for the short term to minimize changes associate wi
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobType.get_job_version">
+<code class="descname">get_job_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_job_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the Job version either from field or manifest
+:return: the version
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobType.get_mem_const_required">
 <code class="descname">get_mem_const_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_mem_const_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>Either returns field value or pulls from Seed resources</p>
@@ -4819,6 +4837,23 @@ This is merely a placeholder for the short term to minimize changes associate wi
 <dt id="job.models.JobType.get_next_by_last_modified">
 <code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobType.get_package_version">
+<code class="descname">get_package_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_package_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the package version from manifest</p>
+<p>This value is None in legacy job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the version</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.JobType.get_previous_by_created">

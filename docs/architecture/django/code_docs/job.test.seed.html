@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="job.test.tasks package" href="job.test.tasks.html" />
+    <link rel="next" title="job.test.seed.results package" href="job.test.seed.results.html" />
     <link rel="prev" title="job.test.messages package" href="job.test.messages.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -223,6 +223,19 @@
             
   <div class="section" id="job-test-seed-package">
 <h1>job.test.seed package<a class="headerlink" href="#job-test-seed-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.test.seed.results.html">job.test.seed.results package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.results.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.results.html#module-job.test.seed.results.test_job_results">job.test.seed.results.test_job_results module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.seed.results.html#module-job.test.seed.results">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -268,16 +281,6 @@
 <dl class="method">
 <dt id="job.test.seed.test_job_data.TestJobData.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_job_data.TestJobData.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.seed.test_job_data.TestJobData.test_capture_output_files_missing">
-<code class="descname">test_capture_output_files_missing</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_job_data.TestJobData.test_capture_output_files_missing" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.seed.test_job_data.TestJobData.test_capture_output_files_multiple">
-<code class="descname">test_capture_output_files_multiple</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_job_data.TestJobData.test_capture_output_files_multiple" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -333,6 +336,81 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.test.seed.test_metadata">
+<span id="job-test-seed-test-metadata-module"></span><h2>job.test.seed.test_metadata module<a class="headerlink" href="#module-job.test.seed.test_metadata" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata">
+<em class="property">class </em><code class="descclassname">job.test.seed.test_metadata.</code><code class="descname">TestSeedMetadata</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests functions in the manifest module.</p>
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_get_data_copy_by_value">
+<code class="descname">test_get_data_copy_by_value</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_get_data_copy_by_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_empty_dict">
+<code class="descname">test_get_properties_empty_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_empty_dict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_null">
+<code class="descname">test_get_properties_null</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_null" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_values">
+<code class="descname">test_get_properties_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_get_properties_values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_feature">
+<code class="descname">test_metadata_from_json_feature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_feature" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_feature_collection">
+<code class="descname">test_metadata_from_json_feature_collection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_feature_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_geometry">
+<code class="descname">test_metadata_from_json_geometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_geometry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_geometry_collection">
+<code class="descname">test_metadata_from_json_geometry_collection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_geometry_collection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_invalid_geojson">
+<code class="descname">test_metadata_from_json_invalid_geojson</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_metadata_from_json_invalid_geojson" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_empty_properties">
+<code class="descname">test_set_properties_empty_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_empty_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_existing_properties">
+<code class="descname">test_set_properties_existing_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_existing_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_null_properties">
+<code class="descname">test_set_properties_null_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_metadata.TestSeedMetadata.test_set_properties_null_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.seed.test_types">
 <span id="job-test-seed-test-types-module"></span><h2>job.test.seed.test_types module<a class="headerlink" href="#module-job.test.seed.test_types" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -342,6 +420,27 @@
 <dl class="method">
 <dt id="job.test.seed.test_types.TestSeedInputsJson.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_types.TestSeedInputsJson.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.seed.test_types.TestSeedOutputsFiles">
+<em class="property">class </em><code class="descclassname">job.test.seed.test_types.</code><code class="descname">TestSeedOutputsFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_types.TestSeedOutputsFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="job.test.seed.test_types.TestSeedOutputsFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_types.TestSeedOutputsFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_types.TestSeedOutputsFiles.test_get_files">
+<code class="descname">test_get_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_types.TestSeedOutputsFiles.test_get_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.seed.test_types.TestSeedOutputsFiles.test_get_files_multiple">
+<code class="descname">test_get_files_multiple</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.seed.test_types.TestSeedOutputsFiles.test_get_files_multiple" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -386,7 +485,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.test.tasks.html" class="btn btn-neutral float-right" title="job.test.tasks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.seed.results.html" class="btn btn-neutral float-right" title="job.test.seed.results package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.test.messages.html" class="btn btn-neutral" title="job.test.messages package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

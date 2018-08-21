@@ -1,6 +1,13 @@
 job\.test\.seed package
 =======================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    job.test.seed.results
+
 Submodules
 ----------
 
@@ -16,6 +23,14 @@ job\.test\.seed\.test\_manifest module
 --------------------------------------
 
 .. automodule:: job.test.seed.test_manifest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.seed\.test\_metadata module
+--------------------------------------
+
+.. automodule:: job.test.seed.test_metadata
     :members:
     :undoc-members:
     :show-inheritance:

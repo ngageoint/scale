@@ -785,40 +785,64 @@ with this interface</p>
 <p>Defines the interface for executing a job</p>
 <dl class="class">
 <dt id="job.seed.metadata.SeedMetadata">
-<em class="property">class </em><code class="descclassname">job.seed.metadata.</code><code class="descname">SeedMetadata</code><span class="sig-paren">(</span><em>definition</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.seed.metadata.</code><code class="descname">SeedMetadata</code><a class="headerlink" href="#job.seed.metadata.SeedMetadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the extended metadata for a single file captured from a Seed job</p>
+<p>Represents the extended metadata for a single file in Seed job.</p>
+<p>Object instantiation from existing JSON should be accomplished via the metadata_from json helper.
+This will safeguard us from having to deal with FeatureCollection and GeometryCollection objects.</p>
+<dl class="attribute">
+<dt id="job.seed.metadata.SeedMetadata.data">
+<code class="descname">data</code><a class="headerlink" href="#job.seed.metadata.SeedMetadata.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the internal dictionary of GeoJSON</p>
+</dd></dl>
+
 <dl class="method">
-<dt id="job.seed.metadata.SeedMetadata.get_geometry">
-<code class="descname">get_geometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.get_geometry" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves GeoJSON geometry if it is available in metadata object</p>
+<dt id="job.seed.metadata.SeedMetadata.get_property">
+<code class="descname">get_property</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.get_property" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.seed.metadata.SeedMetadata.metadata_from_json">
+<em class="property">static </em><code class="descname">metadata_from_json</code><span class="sig-paren">(</span><em>metadata</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.metadata_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a metadata object from the given definition. If the definition is invalid, a
+<a class="reference internal" href="#job.seed.exceptions.InvalidSeedMetadataDefinition" title="job.seed.exceptions.InvalidSeedMetadataDefinition"><code class="xref py py-class docutils literal"><span class="pre">job.seed.exceptions.InvalidSeedMetadataDefinition</span></code></a> exception will be thrown.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Geometry as defined by GeoJSON specification, possibly None if unset</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>metadata</strong> (<em>dict</em>) &#8211; The metadata definition</li>
+<li><strong>do_validate</strong> (<em>bool</em>) &#8211; Whether to perform validation on the JSON schema</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict or None</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.seed.exceptions.InvalidSeedMetadataDefinition" title="job.seed.exceptions.InvalidSeedMetadataDefinition"><strong>InvalidSeedMetadataDefinition</strong></a> &#8211; If schema validation fails</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.seed.metadata.SeedMetadata.properties">
+<code class="descname">properties</code><a class="headerlink" href="#job.seed.metadata.SeedMetadata.properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a valid properties dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Properties found within metadata file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.seed.metadata.SeedMetadata.get_time">
-<code class="descname">get_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.get_time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves Timestamp of data if it is available in metadata object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Timestamp as defined in ISO8601 string format, possibly None if unset</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict or None</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
+<dt id="job.seed.metadata.SeedMetadata.set_property">
+<code class="descname">set_property</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#job.seed.metadata.SeedMetadata.set_property" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 

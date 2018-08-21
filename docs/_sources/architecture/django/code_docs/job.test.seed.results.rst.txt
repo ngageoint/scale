@@ -1,0 +1,22 @@
+job\.test\.seed\.results package
+================================
+
+Submodules
+----------
+
+job\.test\.seed\.results\.test\_job\_results module
+---------------------------------------------------
+
+.. automodule:: job.test.seed.results.test_job_results
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.test.seed.results
+    :members:
+    :undoc-members:
+    :show-inheritance:

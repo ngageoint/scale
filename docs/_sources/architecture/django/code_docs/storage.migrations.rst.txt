@@ -84,6 +84,14 @@ storage\.migrations\.0010\_auto\_20180613\_1947 module
     :undoc-members:
     :show-inheritance:
 
+storage\.migrations\.0011\_auto\_20180821\_1439 module
+------------------------------------------------------
+
+.. automodule:: storage.migrations.0011_auto_20180821_1439
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
