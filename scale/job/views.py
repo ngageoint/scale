@@ -329,7 +329,7 @@ class JobTypesView(ListCreateAPIView):
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
             except InvalidSeedManifestDefinition as ex:
-                message = 'Job type interface invalid'
+                message = 'Job type manifest invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
             except InvalidJobConfiguration as ex:
@@ -345,6 +345,14 @@ class JobTypesView(ListCreateAPIView):
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
                 logger.exception('Unable to update job type: %i', existing_job_type.id)
                 raise BadParameter(unicode(ex))
+            except InvalidSeedManifestDefinition as ex:
+                message = 'Job type manifest invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
+            except InvalidJobConfiguration as ex:
+                message = 'Job type configuration invalid'
+                logger.exception(message)
+                raise BadParameter('%s: %s' % (message, unicode(ex)))
 
         # Fetch the full job type with details
         try:
