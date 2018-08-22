@@ -778,32 +778,13 @@ class TestJobDetailsViewV6(TestCase):
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
 
-    def test_cancel_successful(self):
-        """Tests successfully cancelling a job."""
+    def test_remove_v6_patch(self):
+        """Tests that the patch endpoint is removed in v6"""
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['status'], 'CANCELED')
-
-    def test_cancel_bad_param(self):
-        """Tests cancelling a job with invalid arguments."""
-
-        url = '/%s/jobs/%i/' % (self.api, self.job.id)
-        data = {'foo': 'bar'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_cancel_bad_value(self):
-        """Tests cancelling a job with an incorrect status."""
-
-        url = '/%s/jobs/%i/' % (self.api, self.job.id)
-        data = {'status': 'COMPLETED'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 class TestJobsUpdateView(TestCase):
