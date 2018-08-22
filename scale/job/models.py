@@ -448,8 +448,9 @@ class JobManager(models.Manager):
 
         # Attempt to fetch the requested job
         job = Job.objects.select_related(
-            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
-            'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job', 'superseded_job__job_type',
+            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'error',
+            'batch', 'node',
+            'superseded_job', 'superseded_job__job_type',
             'superseded_by_job', 'superseded_by_job__job_type'
         ).get(pk=job_id)
 
@@ -468,8 +469,7 @@ class JobManager(models.Manager):
             from recipe.models import RecipeNode
 
             recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                           'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                           'recipe__event__rule').get(job=job, 
+                                                           'recipe__recipe_type_rev__recipe_type').get(job=job, 
                                                                                       recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
         except RecipeNode.DoesNotExist:
@@ -1412,7 +1412,7 @@ class Job(models.Model):
         :rtype: :class:`data.data.data.Data`
         """
 
-        return rest_utils.strip_schema_version(DataV6(data=self.output, do_validate=False).get_dict())
+        return rest_utils.strip_schema_version(DataV6(data=self.input, do_validate=False).get_dict())
 
     # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
@@ -2129,6 +2129,15 @@ class JobExecution(models.Model):
                                                                           self.resources))
 
         return Resources(self.resources, do_validate=False).get_node_resources()
+        
+    def get_v6_resources_json(self):
+        """Returns the resources allocated to this job execution in v6 of the JSON schema
+
+        :returns: The job resources in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(self.get_resources().get_json().get_dict())
 
     def get_status(self):
         """Returns the status of this job execution
