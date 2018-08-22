@@ -300,8 +300,8 @@ class JobDetailsSerializerV6(JobSerializerV6):
     resources = serializers.JSONField(source='get_v6_resources_json')
     
     execution = JobExecutionDetailsSerializerV6()
-    #input = serializers.JSONField(default=dict) #TODO: update to v6 json
-    #output = serializers.JSONField(default=dict) #TODO: update to v6 json
+    input = serializers.JSONField(source='get_v6_input_data_json')
+    output = serializers.JSONField(source='get_v6_output_data_json')
 
 class JobExecutionLogSerializerV5(JobExecutionSerializerV5):
     """Converts job execution model fields to REST output"""
