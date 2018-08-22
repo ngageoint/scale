@@ -29,6 +29,19 @@ class Command(BaseCommand):
 
     help = 'Perform a file destruction operation on a file'
 
+<<<<<<< HEAD
+=======
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--file', nargs='+', type=json.loads, required=True,
+                            help='File path, workspace and ID in a JSON string.  Submit multiple if needed.' +
+                            ' e.g: "{"file_path":"some.file", "id":"399", "workspace":"baz_zab"}"')
+        parser.add_argument('-w', '--workspace', action='append', type=eval_input, required=True,
+                            help='Named workspace configuration in a JSON string. Submit multiple if needed.' +
+                            ' e.g: "{"baz_zab": {...} }"')
+        parser.add_argument('-p', '--purge', action='store', type=bool, required=True,
+                            help='Purge all records for the given file')
+
+>>>>>>> modified args handling for consistency
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
