@@ -2727,7 +2727,6 @@ class JobTypeManager(models.Manager):
             if manifest or icon_code or is_active or max_scheduled or configuration:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
-        currentManifest = SeedManifest(job_type.manifest)
         if manifest:
             currentManifest = manifest
             job_type.manifest = manifest.get_dict()
@@ -2742,6 +2741,8 @@ class JobTypeManager(models.Manager):
             job_type.author_name = manifest.get_maintainer()['name']
             job_type.author_url = manifest.get_maintainer()['url']
             job_type.save()
+        else:
+            currentManifest = SeedManifest(job_type.manifest)
 
         if not configuration:
             configuration = JobConfiguration()
