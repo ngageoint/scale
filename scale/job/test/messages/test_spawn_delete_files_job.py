@@ -18,22 +18,22 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
     def test_json(self):
         """Tests coverting a PurgeJobs message to and from JSON"""
 
-        job_exe = job_test_utils.create_job_exe(status='COMPLETED')
+        job = job_test_utils.create_job()
+        job_exe = job_test_utils.create_job_exe(status='COMPLETED', job=job)
         wp1 = storage_test_utils.create_workspace()
         wp2 = storage_test_utils.create_workspace()
-        prod1 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp1)
-        prod2 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp1)
-        prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp2)
-        job = job_exe.job
+        prod1 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp1, job_exe=job_exe)
+        prod2 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp1, job_exe=job_exe)
+        prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=wp2, job_exe=job_exe)
 
         # Add job to message
         message = SpawnDeleteFilesJob()
-        message.job_id = job.id
+        message.job_id = job.pk
         message.purge = True
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
-        new_message = PurgeJobs.from_json(message_json_dict)
+        new_message = SpawnDeleteFilesJob.from_json(message_json_dict)
         result = new_message.execute()
         self.assertTrue(result)
 

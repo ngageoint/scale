@@ -71,30 +71,16 @@ class SpawnDeleteFilesJob(CommandMessage):
         files_to_delete = ScaleFile.objects.filter_files(job_ids=[self.job_id])
         # data.data.~ -> JobData -> dict -> create_job message
         if files_to_delete:
-            mappings = self._build_mappings(files_to_delete)
-            
             # Construct input data list
-            input_data = [JsonValue('job_id', self.job_id),
-                          JsonValue('purge', self.purge)]
-            for f in mappings['files']:
-                input_data.append(JsonValue('file', f))
-            for w in mappings['workspaces']:
-                input_data.append(JsonValue('workspaces', w))
+            workspaces = []
+            inputs = [JsonValue('job_id', self.job_id),
+                      JsonValue('purge', self.purge)]
+            for f in files_to_delete:
+                inputs.append(JsonValue('file', {'id': f.id, 'file_path': f.file_path, 'workspace': f.workspace.name}))
+                if f.workspace.name not in workspaces:
+                    inputs.append(JsonValue('workspace', {f.workspace.name: f.workspace.json_config}))
+                    workspaces.append(f.workspace.name)
 
-            print input_data
+            print inputs
+
         return True
-
-    def _build_mappings(self, files_to_delete):
-        """Parses the files that are to be deleted and builds a mapping for
-        files and workspaces that will be used as the job input.
-
-        :param files_to_delete: The files to be deleted
-        :type files_to_delete: :class:`django.db.models.QuerySet`
-        :return: A mapping of the files and workspaces
-        :rtype: dict
-        """
-
-        files = [{'id': f.id, 'file_path': f.file_path, 'workspace': f.workspace.name} for f in files_to_delete]
-        workspaces = set([{f.workspace.name: f.workspace} for f in files_to_delete])
-
-        return {'files': files, 'workspaces': workspaces}
