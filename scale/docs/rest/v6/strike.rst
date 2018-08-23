@@ -31,6 +31,7 @@ Response: 200 OK
                     "job_type": { 
                         "id": 2, 
                         "name": "scale-strike", 
+                        "version": "1.0.0",
                         "title": "Scale Strike", 
                         "description": "Monitors a directory for incoming source files to ingest", 
                         "revision_num": 1,
@@ -146,6 +147,7 @@ Location http://.../v6/strikes/105/
             "job_type": { 
                 "id": 2, 
                 "name": "scale-strike", 
+                "version": "1.0.0",
                 "title": "Scale Strike", 
                 "description": "Monitors a directory for incoming source files to ingest", 
                 "revision_num": 1,
@@ -219,6 +221,7 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-strike", 
+               "version": "1.0.0",
                "title": "Scale Strike", 
                "description": "Monitors a directory for incoming source files to ingest", 
                "revision_num": 1,

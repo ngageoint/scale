@@ -313,6 +313,7 @@ Response: 200 OK
           "id": 3,
           "job_type": {
             "name": "my-job",
+            "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
             "icon_code": "012F",
@@ -385,6 +386,7 @@ Response: 200 OK
       "id": 3,
       "job_type": {
         "name": "my-job",
+        "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
         "icon_code": "012F",

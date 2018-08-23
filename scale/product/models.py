@@ -596,8 +596,21 @@ class ProductFileManager(models.GeoManager):
                 except BatchJob.DoesNotExist:
                     product.batch_id = None
 
-            product.source_started = source_started
-            product.source_ended = source_ended
+            # Allow override, if set via side-car metadata, otherwise take derived values from above
+            product.source_started = entry.source_started if entry.source_started else source_started
+            product.source_ended = entry.source_ended if entry.source_ended else source_ended
+
+            # Supplemental source metadata
+            product.source_sensor_class = entry.source_sensor_class
+            product.source_sensor = entry.source_sensor
+            product.source_collection = entry.source_collection
+            product.source_task = entry.source_task
+
+            # Update product model with details derived from the job_type
+            product.meta_data['url'] = product.url
+            product.meta_data['job_name'] = job_exe.job_type.name
+            product.meta_data['job_version'] = job_exe.job_type.get_job_version()
+            product.meta_data['package_version'] = job_exe.job_type.get_package_version()
 
             products_to_save.append(FileUpload(product, entry.local_path))
 

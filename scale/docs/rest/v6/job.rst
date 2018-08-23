@@ -29,6 +29,7 @@ Response: 200 OK
           "job_type": {
             "id": 1,
             "name": "scale-ingest",
+            "version": "1.0.0",
             "title": "Scale Ingest",
             "description": "Ingests a source file into a workspace",
             "revision_num": 1,
@@ -215,19 +216,162 @@ Response: 200 OK
 | .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 
-.. _rest_job_details:
+.. _rest_v6_job_details:
+
+v6 Job Details
+--------------
+
+**Example GET /v6/jobs/{id}/ API call**
+
+Request: GET http://.../v6/jobs/{id}/
+
+Response: 200 OK
+
+ .. code-block:: javascript 
+
+    {
+      "id": 3,
+      "job_type": {
+        "id": 1,
+        "name": "scale-ingest",
+        "version": "1.0.0",
+        "title": "Scale Ingest",
+        "description": "Ingests a source file into a workspace",
+        "revision_num": 1,
+        "icon_code": "f013"
+      },
+      "job_type_rev": {
+        "id": 5,
+        "job_type": {
+          "name": "scale-ingest",
+          "version": "1.0.0",
+          "title": "Scale Ingest",
+          "description": "Ingests a source file into a workspace",
+          "icon_code": "f013",
+          "num_versions": 1,
+          "latest_version": "1.0.0"
+        },
+        "revision_num": 1,
+        "docker_image": "scale-ingest-1.0.0-seed:1.0.0",
+        "created": "2015-08-28T17:55:41.005Z",
+        "manifest": {...}
+      },
+      "event": {
+        "id": 3,
+        "type": "STRIKE_TRANSFER",
+        "occurred": "2015-08-28T17:57:24.261Z"
+      },
+      "recipe": { 
+        "id": 1,
+        "recipe_type": {
+          "id": 208,
+          "name": "my-recipe-type",
+          "title": "My Recipe Type",
+          "description": "My Recipe Type Description",
+          "revision_num": 1
+        }
+        "recipe_type_rev": {
+          "id": 1
+        },
+        "event": {
+          "id": 1
+        }
+      },
+      "batch": {
+        "id": 1,
+        "title": "My Batch",
+        "description": "My batch of recipes",
+        "created": "2015-08-28T17:55:41.005Z"
+      },
+      "is_superseded": false,
+      "superseded_job": null,
+      "superseded_by_job": null,
+      "status": "COMPLETED",
+      "node": { 
+        "id": 1,
+        "hostname": "my-host.example.domain" 
+      },
+      "resources": {
+        "resources": { 
+          "mem": 128.0,
+          "disk": 11.0,
+          "cpus": 1.0
+        }      
+      },
+      "error": null,
+      "num_exes": 1,
+      "execution": {
+        "id": 3,
+         "status": "COMPLETED",
+         "exe_num": 1,
+         "cluster_id": "scale_job_1234_263x0",
+         "created": "2015-08-28T17:57:41.033Z",
+         "queued": "2015-08-28T17:57:41.010Z",
+         "started": "2015-08-28T17:57:44.494Z",
+         "ended": "2015-08-28T17:57:45.906Z",
+         "job": {
+             "id": 3,
+         },
+         "node": {
+             "id": 1,
+             "hostname": "machine.com"
+         },
+         "error": null,
+         "job_type": {
+            "id": 1,
+            "name": "scale-ingest",
+            "version": "1.0.0",
+            "title": "Scale Ingest",
+            "description": "Ingests a source file into a workspace",
+            "revision_num": 1,
+            "icon_code": "f013"
+         },
+         "timeout": 1800,
+         "input_file_size": 64.0,
+         "task_results": null,
+         "resources": {
+             "resources": {
+                 "mem": 128.0,
+                 "disk": 11.0,
+                 "cpus": 1.0
+             }
+         },
+         "configuration": {
+             "tasks": [...],
+         },
+         "output": {
+             "output_data": [
+                 {
+                     "name": "output_file",
+                     "file_id": 3
+                 }
+             ]
+         }
+      },
+      "input": {
+        "files": {'input_a': [1234], 'input_b': [1235, 1236]},
+        "json": {'input_c': 999, 'input_d': {'hello'}}
+      },
+      "input_file_size": 64,
+      "output": {
+        "files": {'output_a': [456]},
+        "json": {'output_b': 'success'}
+      },
+      "source_started": "2015-08-28T17:55:41.005Z",
+      "source_ended": "2015-08-28T17:56:41.005Z",
+      "created": "2015-08-28T17:55:41.005Z",
+      "queued": "2015-08-28T17:56:41.005Z",
+      "started": "2015-08-28T17:57:41.005Z",
+      "ended": "2015-08-28T17:58:41.005Z",
+      "last_status_change": "2015-08-28T17:58:45.906Z",
+      "superseded": null,
+      "last_modified": "2015-08-28T17:58:46.001Z"
+    }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Details**                                                                                                         |
 +=========================================================================================================================+
 | Returns a specific job and all its related model information including executions, recipes, and products.               |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **DEPRECATED**                                                                                                          |
-|                This documentation describes the API **v5** version of the Job Details endpoint response.  Starting with |
-|                API **v6** the following fields will be removed: *cpus_required*, *mem_required*, *disk_out_required*,   |
-|                *inputs*, *outputs*, *job_exes*, *recipes*.  The following fields will be added: *resources*,            |
-|                *execution*, *recipe*.  Additionally, *disk_in_required* is renamed to *input_file_size*, *data* is      |
-|                renamed to *input*, and *results* is renamed to *output*.                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/{id}/                                                                                                     |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -242,50 +386,55 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | id                 | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_type           | JSON Object       | The job type that is associated with the count.                                |
-|                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+| job_type           | JSON Object       | The job type that is associated with the job.                                  |
+|                    |                   | (See :ref:`Job Type Details <rest__v6_job_type_details>`)                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .job_type_rev      | JSON Object       | The job type revision that is associated with the job.                         |
+| job_type_rev       | JSON Object       | The job type revision that is associated with the job.                         |
 |                    |                   | This represents the definition at the time the job was scheduled.              |
-|                    |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)             |
+|                    |                   | (See :ref:`Job Type Revision Details <rest_v6_job_type_rev_details>`)          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| event              | JSON Object       | The trigger event that is associated with the count.                           |
+| event              | JSON Object       | The trigger event that is associated with the job.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .node              | JSON Object       | The node that the job is/was running on.                                       |
+| recipe             | JSON Object       | The recipe instance associated with this job.                                  |
+|                    |                   | (See :ref:`Recipe Details <rest_v6_recipe_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| error              | JSON Object       | The error that is associated with the count.                                   |
-|                    |                   | (See :ref:`Error Details <rest_error_details>`)                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| status             | String            | The current status of the job.                                                 |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| priority           | Integer           | The priority of the job.                                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| num_exes           | Integer           | The number of executions this job has had.                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| cpus_required      | Decimal           | The number of CPUs needed for a job of this type.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| mem_required       | Decimal           | The amount of RAM in MiB needed for a job of this type.                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_in_required   | Decimal           | The amount of disk space in MiB required for input files for this job.         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.        |
+| batch              | JSON Object       | The batch instance associated with this job                                    |
+|                    |                   | (See :ref:`Batch Details <rest_v6_batch_details>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                         |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
 | superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                 |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                            |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.    |
+| status             | String            | The current status of the job.                                                 |
+|                    |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| node               | JSON Object       | The node that the job is/was running on.                                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| resources          | JSON Object       | JSON description describing the resources required for this job.               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| error              | JSON Object       | The error that is associated with the job.                                     |
+|                    |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| num_exes           | Integer           | The number of executions this job has had.                                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| execution          | JSON Object       | The most recent execution of the job.                                          |
+|                    |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| input              | JSON Object       | The input data for the job.                                                    |
+|                    |                   | (See :ref:`Data <rest_v6_data_data>`)                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| input_file_size    | Decimal           | The amount of disk space in MiB required for input files for this job.         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| output             | JSON Object       | The output data for the job.                                                   |
+|                    |                   | (See :ref:`Data <rest_v6_data_data>`)                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_started     | ISO-8601 Datetime | When collection of the source file started.                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -301,284 +450,7 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data               | JSON Object       | An interface description for all the job input and output files.               |
-|                    |                   | (See :ref:`architecture_jobs_job_data_spec`)                                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| results            | JSON Object       | An interface description for all the job results meta-data.                    |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| recipes            | Array             | A list of all recipes associated with the job.                                 |
-|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| job_exes           | Array             | A list of all job executions associated with the job.                          |
-|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| inputs             | Array             | A list of job interface inputs merged with their respective job data values.   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The name of the input as defined by the job type interface.                    |
-|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the input as defined by the job type interface.                    |
-|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .value             | Various           | The actual value of the input, which can vary depending on the type. Simple    |
-|                    |                   | property inputs will include primitive values, whereas the file or files type  |
-|                    |                   | will include a full JSON representation of a Scale file object.                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| outputs            | Array             | A list of job interface outputs merged with their respective job result values.|
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .name              | String            | The name of the output as defined by the job type interface.                   |
-|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the output as defined by the job type interface.                   |
-|                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .value             | Various           | The actual value of the output, which can vary depending on the type. A file or|
-|                    |                   | files type will include a full JSON representation of a Product file object.   |
-|                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "id": 15096,                                                                                                     |
-|        "job_type": {                                                                                                    |
-|            "id": 8,                                                                                                     |
-|            "name": "kml-footprint",                                                                                     |
-|            "version": "1.0.0",                                                                                          |
-|            "title": "KML Footprint",                                                                                    |
-|            "description": "Creates a KML representation of the data",                                                   |
-|            "is_system": false,                                                                                          |
-|            "is_long_running": false,                                                                                    |
-|            "is_active": true,                                                                                           |
-|            "is_operational": true,                                                                                      |
-|            "is_paused": false,                                                                                          |
-|            "icon_code": "f0ac",                                                                                         |
-|            "uses_docker": false,                                                                                        |
-|            "docker_privileged": false,                                                                                  |
-|            "docker_image": null,                                                                                        |
-|            "priority": 2,                                                                                               |
-|            "timeout": 600,                                                                                              |
-|            "max_tries": 1,                                                                                              |
-|            "cpus_required": 0.5,                                                                                        |
-|            "mem_required": 128.0,                                                                                       |
-|            "shared_mem_required": 0.0,                                                                                  |
-|            "disk_out_const_required": 0.0,                                                                              |
-|            "disk_out_mult_required": 0.0,                                                                               |
-|            "created": "2015-06-01T00:00:00Z",                                                                           |
-|            "archived": null,                                                                                            |
-|            "paused": null,                                                                                              |
-|            "last_modified": "2015-06-01T00:00:00Z"                                                                      |
-|        },                                                                                                               |
-|        "job_type_rev": {                                                                                                |
-|            "id": 5,                                                                                                     |
-|            "job_type": {                                                                                                |
-|                "id": 8                                                                                                  |
-|            },                                                                                                           |
-|            "revision_num": 1,                                                                                           |
-|            "interface": {                                                                                               |
-|                "input_data": [                                                                                          |
-|                    {                                                                                                    |
-|                        "type": "file",                                                                                  |
-|                        "name": "input_file"                                                                             |
-|                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "output_data": [                                                                                         |
-|                    {                                                                                                    |
-|                        "media_type": "application/vnd.google-earth.kml+xml",                                            |
-|                        "type": "file",                                                                                  |
-|                        "name": "output_file"                                                                            |
-|                    }                                                                                                    |
-|                ],                                                                                                       |
-|                "version": "1.1",                                                                                        |
-|                "command": "/usr/local/bin/python2.7 /app/parser/manage.py create_footprint_kml",                        |
-|                "command_arguments": "${input_file} ${job_output_dir}"                                                   |
-|            },                                                                                                           |
-|            "created": "2015-11-06T00:00:00Z"                                                                            |
-|        },                                                                                                               |
-|        "event": {                                                                                                       |
-|            "id": 10278,                                                                                                 |
-|            "type": "PARSE",                                                                                             |
-|            "rule": {                                                                                                    |
-|                "id": 8,                                                                                                 |
-|                "type": "PARSE",                                                                                         |
-|                "is_active": true,                                                                                       |
-|                "created": "2015-08-28T18:31:29.282Z",                                                                   |
-|                "archived": null,                                                                                        |
-|                "last_modified": "2015-08-28T18:31:29.282Z"                                                              |
-|            },                                                                                                           |
-|            "occurred": "2015-09-01T17:27:31.467Z"                                                                       |
-|        },                                                                                                               |
-|        "node": {                                                                                                        |
-|            "id": 1,                                                                                                     |
-|            "hostname": "my-host.example.domain"                                                                         |
-|        },                                                                                                               |
-|        "error": null,                                                                                                   |
-|        "status": "COMPLETED",                                                                                           |
-|        "priority": 210,                                                                                                 |
-|        "num_exes": 1,                                                                                                   | 
-|        "timeout": 1800,                                                                                                 |
-|        "max_tries": 3,                                                                                                  |
-|        "cpus_required": 1.0,                                                                                            |
-|        "mem_required": 15360.0,                                                                                         |
-|        "disk_in_required": 2.0,                                                                                         |
-|        "disk_out_required": 16.0,                                                                                       |
-|        "is_superseded": false,                                                                                          |
-|        "root_superseded_job": null,                                                                                     |
-|        "superseded_job": null,                                                                                          |
-|        "superseded_by_job": null,                                                                                       |
-|        "delete_superseded": true,                                                                                       |
-|        "created": "2015-08-28T17:55:41.005Z",                                                                           |
-|        "queued": "2015-08-28T17:56:41.005Z",                                                                            |
-|        "started": "2015-08-28T17:57:41.005Z",                                                                           |
-|        "ended": "2015-08-28T17:58:41.005Z",                                                                             |
-|        "last_status_change": "2015-08-28T17:58:45.906Z",                                                                |
-|        "superseded": null,                                                                                              |
-|        "last_modified": "2015-08-28T17:58:46.001Z",                                                                     |
-|        "data": {                                                                                                        |
-|            "input_data": [                                                                                              |
-|                {                                                                                                        |
-|                    "name": "input_file",                                                                                |
-|                    "file_id": 8480                                                                                      |
-|                }                                                                                                        |
-|            ],                                                                                                           |
-|            "version": "1.1",                                                                                            |
-|            "output_data": [                                                                                             |
-|                {                                                                                                        |
-|                    "name": "output_file",                                                                               |
-|                    "workspace_id": 2                                                                                    |
-|                }                                                                                                        |
-|            ]                                                                                                            |
-|        },                                                                                                               |
-|        "results": {                                                                                                     |
-|            "output_data": [                                                                                             |
-|                {                                                                                                        |
-|                    "name": "output_file",                                                                               |
-|                    "file_id": 8484                                                                                      |
-|                }                                                                                                        |
-|            ],                                                                                                           |
-|            "version": "1.0"                                                                                             |
-|        },                                                                                                               |
-|        "recipes": [                                                                                                     |
-|            {                                                                                                            |
-|                "id": 4832,                                                                                              |
-|                "recipe_type": {                                                                                         |
-|                    "id": 6,                                                                                             |
-|                    "name": "Recipe",                                                                                    |
-|                    "version": "1.0.0",                                                                                  |
-|                    "description": "Recipe description"                                                                  |
-|                },                                                                                                       |
-|                "event": {                                                                                               |
-|                    "id": 7,                                                                                             |
-|                    "type": "PARSE",                                                                                     |
-|                    "rule": {                                                                                            |
-|                        "id": 2                                                                                          |
-|                    },                                                                                                   |
-|                    "occurred": "2015-08-28T17:58:45.280Z"                                                               |
-|                },                                                                                                       |
-|                "created": "2015-09-01T20:32:20.912Z",                                                                   |
-|                "completed": "2015-09-01T20:35:20.912Z",                                                                 |
-|                "last_modified": "2015-09-01T20:35:20.912Z"                                                              |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "job_exes": [                                                                                                    |
-|            {                                                                                                            |
-|                "id": 14552,                                                                                             |
-|                "status": "COMPLETED",                                                                                   |
-|                "command_arguments": "${input_file} ${job_output_dir}",                                                  |
-|                "timeout": 1800,                                                                                         |
-|                "pre_started": "2015-09-01T17:27:32.435Z",                                                               |
-|                "pre_completed": "2015-09-01T17:27:34.346Z",                                                             |
-|                "pre_exit_code": null,                                                                                   |
-|                "job_started": "2015-09-01T17:27:42.437Z",                                                               |
-|                "job_completed": "2015-09-01T17:27:46.762Z",                                                             |
-|                "job_exit_code": null,                                                                                   |
-|                "post_started": "2015-09-01T17:27:47.246Z",                                                              |
-|                "post_completed": "2015-09-01T17:27:49.461Z",                                                            |
-|                "post_exit_code": null,                                                                                  |
-|                "created": "2015-09-01T17:27:31.753Z",                                                                   |
-|                "queued": "2015-09-01T17:27:31.716Z",                                                                    |
-|                "started": "2015-09-01T17:27:32.022Z",                                                                   |
-|                "ended": "2015-09-01T17:27:49.461Z",                                                                     |
-|                "last_modified": "2015-09-01T17:27:49.606Z",                                                             |
-|                "job": {                                                                                                 |
-|                    "id": 15586                                                                                          |
-|                },                                                                                                       |
-|                "node": {                                                                                                |
-|                    "id": 1                                                                                              |
-|                },                                                                                                       |
-|                "error": null                                                                                            |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "inputs": [                                                                                                      |
-|            {                                                                                                            |
-|                "name": "input_file",                                                                                    |
-|                "type": "file",                                                                                          |
-|                "value": {                                                                                               |
-|                    "id": 2,                                                                                             |
-|                    "workspace": {                                                                                       |
-|                        "id": 1,                                                                                         |
-|                        "name": "Raw Source"                                                                             |
-|                    },                                                                                                   |
-|                    "file_name": "input_file.txt",                                                                       |
-|                    "media_type": "text/plain",                                                                          |
-|                    "file_size": 1234,                                                                                   |
-|                    "data_type": [],                                                                                     |
-|                    "is_deleted": false,                                                                                 |
-|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
-|                    "url": "http://host.com/input_file.txt",                                                             |
-|                    "created": "2015-09-10T15:24:53.962Z",                                                               |
-|                    "deleted": null,                                                                                     |
-|                    "data_started": "2015-09-10T14:50:49Z",                                                              |
-|                    "data_ended": "2015-09-10T14:51:05Z",                                                                |
-|                    "geometry": null,                                                                                    |
-|                    "center_point": null,                                                                                |
-|                    "meta_data": {...}                                                                                   |
-|                    "last_modified": "2015-09-10T15:25:02.808Z"                                                          |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        ],                                                                                                               |
-|        "outputs": [                                                                                                     |
-|            {                                                                                                            |
-|                "name": "output_file",                                                                                   |
-|                "type": "file",                                                                                          |
-|                "value": {                                                                                               |
-|                    "id": 8484,                                                                                          |
-|                    "workspace": {                                                                                       |
-|                        "id": 2,                                                                                         |
-|                        "name": "Products"                                                                               |
-|                    },                                                                                                   |
-|                    "file_name": "file.kml",                                                                             |
-|                    "media_type": "application/vnd.google-earth.kml+xml",                                                |
-|                    "file_size": 1234,                                                                                   |
-|                    "data_type": [],                                                                                     |
-|                    "is_deleted": false,                                                                                 |
-|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
-|                    "url": "http://host.com/file/path/my_file.kml",                                                      |
-|                    "created": "2015-09-01T17:27:48.477Z",                                                               |
-|                    "deleted": null,                                                                                     |
-|                    "data_started": null,                                                                                |
-|                    "data_ended": null,                                                                                  |
-|                    "geometry": null,                                                                                    |
-|                    "center_point": null,                                                                                |
-|                    "meta_data": {},                                                                                     |
-|                    "last_modified": "2015-09-01T17:27:49.639Z",                                                         |
-|                    "is_operational": true,                                                                              |
-|                    "is_published": true,                                                                                |
-|                    "published": "2015-09-01T17:27:49.461Z",                                                             |
-|                    "unpublished": null,                                                                                 |
-|                    "job_type": {                                                                                        |
-|                        "id": 8                                                                                          |
-|                    },                                                                                                   |
-|                    "job": {                                                                                             |
-|                        "id": 35                                                                                         |
-|                    },                                                                                                   |
-|                    "job_exe": {                                                                                         |
-|                        "id": 19                                                                                         |
-|                    }                                                                                                    |
-|                }                                                                                                        |
-|            }                                                                                                            |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
+
 
 .. _rest_job_update:
 

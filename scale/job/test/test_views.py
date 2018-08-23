@@ -778,32 +778,13 @@ class TestJobDetailsViewV6(TestCase):
         self.assertEqual(result['superseded_job']['id'], self.job.id)
         self.assertIsNone(result['superseded'])
 
-    def test_cancel_successful(self):
-        """Tests successfully cancelling a job."""
+    def test_remove_v6_patch(self):
+        """Tests that the patch endpoint is removed in v6"""
 
         url = '/%s/jobs/%i/' % (self.api, self.job.id)
         data = {'status': 'CANCELED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['status'], 'CANCELED')
-
-    def test_cancel_bad_param(self):
-        """Tests cancelling a job with invalid arguments."""
-
-        url = '/%s/jobs/%i/' % (self.api, self.job.id)
-        data = {'foo': 'bar'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    def test_cancel_bad_value(self):
-        """Tests cancelling a job with an incorrect status."""
-
-        url = '/%s/jobs/%i/' % (self.api, self.job.id)
-        data = {'status': 'COMPLETED'}
-        response = self.client.patch(url, json.dumps(data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
 class TestJobsUpdateView(TestCase):
@@ -1719,7 +1700,28 @@ class TestJobTypesPostViewV6(TestCase):
         django.setup()
         
         self.manifest = job_test_utils.COMPLETE_MANIFEST
-
+        
+        self.interface = {
+            'version': '1.4',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'env_vars': [],
+            'mounts': [{
+                'name': 'dted',
+                'path': '/some/path',
+                'required': True,
+                'mode': 'ro'
+            }],
+            'settings': [{
+                'name': 'DB_HOST',
+                'required': True,
+                'secret': False,
+            }],
+            'input_data': [],
+            'output_data': [],
+            'shared_resources': [],
+        }
+        
         self.configuration = {
             'version': '6',
             'mounts': {
@@ -1748,6 +1750,18 @@ class TestJobTypesPostViewV6(TestCase):
                                                                    configuration=self.trigger_config)
 
         self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest, 
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
+        
+        self.error = error_test_utils.create_error(category='ALGORITHM')
+        self.error_mapping = {
+            'version': '1.0',
+            'exit_codes': {
+                '1': self.error.name,
+            }
+        }
+        self.old_job_type = job_test_utils.create_job_type(name='old-job-type', version='1.0.0',
+                                                       interface=self.interface, error_mapping=self.error_mapping,
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
         
@@ -1835,6 +1849,40 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
 
         job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['name'], job_type.name)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 2)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+        
+    def test_edit_old_job_type(self):
+        """Tests editing an existing seed job type and updating it to a seed-compliant one."""
+        
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        name = self.old_job_type.name
+        version = self.old_job_type.version
+        manifest['job']['name'] = name
+        manifest['job']['jobVersion'] = version
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': '%s-%s-seed:1.0.0' % (name, version),
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/%s/%s/' % (self.api, name, version) in response['location'])
+
+        job_type = JobType.objects.filter(name=name, version=version).first()
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)

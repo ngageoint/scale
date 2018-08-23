@@ -448,8 +448,9 @@ class JobManager(models.Manager):
 
         # Attempt to fetch the requested job
         job = Job.objects.select_related(
-            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
-            'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job', 'superseded_job__job_type',
+            'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'error',
+            'batch', 'node',
+            'superseded_job', 'superseded_job__job_type',
             'superseded_by_job', 'superseded_by_job__job_type'
         ).get(pk=job_id)
 
@@ -468,8 +469,7 @@ class JobManager(models.Manager):
             from recipe.models import RecipeNode
 
             recipe_job = RecipeNode.objects.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
-                                                           'recipe__recipe_type_rev__recipe_type', 'recipe__event',
-                                                           'recipe__event__rule').get(job=job, 
+                                                           'recipe__recipe_type_rev__recipe_type').get(job=job, 
                                                                                       recipe__is_superseded=False)
             job.recipe = recipe_job.recipe
         except RecipeNode.DoesNotExist:
@@ -1404,6 +1404,15 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.input, do_validate=False).get_data()
+        
+    def get_v6_input_data_json(self):
+        """Returns the input data for this job as v6 json with the version stripped
+
+        :returns: The input data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return rest_utils.strip_schema_version(DataV6(data=self.input, do_validate=False).get_dict())
 
     # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
@@ -1460,7 +1469,16 @@ class Job(models.Model):
         """
 
         return DataV6(data=self.output, do_validate=False).get_data()
+        
+    def get_v6_output_data_json(self):
+        """Returns the output data for this job as v6 json with the version stripped
 
+        :returns: The output data for this job
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return rest_utils.strip_schema_version(DataV6(data=self.output, do_validate=False).get_dict())
+        
     def get_resources(self):
         """Returns the resources required for this job
 
@@ -1523,6 +1541,15 @@ class Job(models.Model):
         """
 
         return self.get_resources().get_json().get_dict()
+        
+    def get_v6_resources_json(self):
+        """Returns the job resources in v6 of the JSON schema
+
+        :returns: The job resources in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(self.get_resources_dict())
 
     def has_been_queued(self):
         """Indicates whether this job has been queued at least once
@@ -2102,6 +2129,15 @@ class JobExecution(models.Model):
                                                                           self.resources))
 
         return Resources(self.resources, do_validate=False).get_node_resources()
+        
+    def get_v6_resources_json(self):
+        """Returns the resources allocated to this job execution in v6 of the JSON schema
+
+        :returns: The job resources in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(self.get_resources().get_json().get_dict())
 
     def get_status(self):
         """Returns the status of this job execution
@@ -2563,8 +2599,8 @@ class JobTypeManager(models.Manager):
         job_type.version = manifest.get_job_version()
         job_type.title = manifest.get_title()
         job_type.description = manifest.get_description()
-        job_type.author_name = manifest.get_maintainer()['name']
-        job_type.author_url = manifest.get_maintainer()['url']
+        job_type.author_name = manifest.get_maintainer().get('name')
+        job_type.author_url = manifest.get_maintainer().get('url')
         job_type.manifest = manifest.get_dict()
         job_type.docker_image = docker_image
 
@@ -2727,7 +2763,6 @@ class JobTypeManager(models.Manager):
             if manifest or icon_code or is_active or max_scheduled or configuration:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
-        currentManifest = SeedManifest(job_type.manifest)
         if manifest:
             currentManifest = manifest
             job_type.manifest = manifest.get_dict()
@@ -2742,6 +2777,8 @@ class JobTypeManager(models.Manager):
             job_type.author_name = manifest.get_maintainer()['name']
             job_type.author_url = manifest.get_maintainer()['url']
             job_type.save()
+        else:
+            currentManifest = SeedManifest(job_type.manifest)
 
         if not configuration:
             configuration = JobConfiguration()
@@ -3476,6 +3513,39 @@ class JobType(models.Model):
         """
 
         return JobInterfaceSunset.create(self.manifest)
+
+    def get_job_version(self):
+        """Gets the Job version either from field or manifest
+        :return: the version
+        :rtype: str
+        """
+
+        interface = self.get_job_interface()
+
+        version = self.version
+        # TODO: Make this the only code path when legacy job types are removed
+        if isinstance(interface, SeedManifest):
+            version = interface.get_job_version()
+
+        return version
+
+    def get_package_version(self):
+        """Gets the package version from manifest
+
+        This value is None in legacy job type
+
+        :return: the version
+        :rtype: str
+        """
+
+        interface = self.get_job_interface()
+
+        version = None
+        # TODO: Make this the only code path when legacy job types are removed
+        if isinstance(interface, SeedManifest):
+            version = interface.get_package_version()
+
+        return version
 
     def get_category(self):
         """Returns the category for this job type
