@@ -33,6 +33,7 @@ class JobTypeBaseSerializerV5(ModelIdSerializer):
 class JobTypeBaseSerializerV6(ModelIdSerializer):
     """Converts job type model fields to REST output"""
     name = serializers.CharField()
+    version = serializers.CharField() 
     title = serializers.CharField()
     description = serializers.CharField()
     icon_code = serializers.CharField()
@@ -40,6 +41,7 @@ class JobTypeBaseSerializerV6(ModelIdSerializer):
 class JobTypeListSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
     id = None
+    version = None
     num_versions = serializers.IntegerField(source='revision_num')
     latest_version = serializers.CharField(source='version')
 
