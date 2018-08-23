@@ -349,11 +349,13 @@
         vm.initialize();
 
         $scope.$watch('vm.selectedJobType', function (value) {
+            vm.jobTypeVersionValues = [jobTypeVersionViewAll];
+            vm.selectedJobTypeVersion = _.clone(jobTypeVersionViewAll);
+            vm.jobsParams.job_type_version = vm.selectedJobTypeVersion.value;
             if (parseInt(value)) {
                 value = _.find(vm.jobTypeValues, {id: parseInt(value)});
             }
             if (value) {
-                vm.jobTypeVersionValues = [jobTypeVersionViewAll];
                 var filteredJobTypes = _.filter(vm.allJobTypes, function (d) {
                     return d.name === value.name && d.name !== 'VIEW ALL';
                 });
