@@ -4798,6 +4798,16 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_v6_definition_json">get_v6_definition_json() (batch.models.Batch method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_v6_input_data_json">get_v6_input_data_json() (job.models.Job method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_v6_output_data_json">get_v6_output_data_json() (job.models.Job method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_v6_resources_json">get_v6_resources_json() (job.models.Job method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_v6_resources_json">(job.models.JobExecution method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.seed.results.html#job.seed.results.outputs_json.SeedOutputsJson.get_values">get_values() (job.seed.results.outputs_json.SeedOutputsJson method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.get_versioned_urls">get_versioned_urls() (in module util.rest)</a>
@@ -12715,23 +12725,11 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestCancelJobsView.test_cancel">test_cancel() (job.test.test_views.TestCancelJobsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_cancel_bad_param">test_cancel_bad_param() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsViewV6.test_cancel_bad_param">(job.test.test_views.TestJobDetailsViewV6 method)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_cancel_bad_value">test_cancel_bad_value() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsViewV6.test_cancel_bad_value">(job.test.test_views.TestJobDetailsViewV6 method)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.OldTestJobDetailsViewV5.test_cancel_successful">test_cancel_successful() (job.test.test_views.OldTestJobDetailsViewV5 method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsViewV6.test_cancel_successful">(job.test.test_views.TestJobDetailsViewV6 method)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_canceled_job_execution">test_canceled_job_execution() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_canceled_queue_model">test_canceled_queue_model() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
@@ -15062,12 +15060,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_accepted_none">test_parse_float_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_default">test_parse_float_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_invalid">test_parse_float_invalid() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_missing">test_parse_float_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_optional">test_parse_float_optional() (util.test.test_rest.TestRest method)</a>
@@ -15344,6 +15342,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeTypeManagerEditRecipeType.test_remove_trigger_rule">(recipe.test.test_models.TestRecipeTypeManagerEditRecipeType method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsViewV6.test_remove_v6_patch">test_remove_v6_patch() (job.test.test_views.TestJobDetailsViewV6 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta.test_reprocess_identical_node">test_reprocess_identical_node() (recipe.test.handlers.test_graph_delta.TestRecipeGraphDelta method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_reprocess_superseded_recipe">test_reprocess_superseded_recipe() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
@@ -18238,6 +18238,8 @@
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV5.version">(ingest.test.test_views.TestStrikesViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikesViewV6.version">(ingest.test.test_views.TestStrikesViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.job_type_serializers.JobTypeListSerializerV6.version">(job.job_type_serializers.JobTypeListSerializerV6 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.version">(job.models.JobType attribute)</a>
 </li>

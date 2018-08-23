@@ -32,6 +32,7 @@ Response: 200 OK
                     "job_type": { 
                         "id": 2, 
                         "name": "scale-scan", 
+                        "version": "1.0.0",
                         "title": "Scale Scan", 
                         "description": "Scans a workspace for existing source files to ingest", 
                         "revision_num": 1,
@@ -47,6 +48,7 @@ Response: 200 OK
                     "job_type": { 
                         "id": 2, 
                         "name": "scale-scan", 
+                        "version": "1.0.0",
                         "title": "Scale scan", 
                         "description": "Scans a workspace for existing source files to ingest", 
                         "revision_num": 1,
@@ -168,6 +170,7 @@ Location http://.../v6/scans/105/
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
@@ -180,6 +183,7 @@ Location http://.../v6/scans/105/
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
@@ -254,6 +258,7 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
@@ -266,6 +271,7 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
@@ -477,6 +483,7 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,
@@ -489,6 +496,7 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-scan", 
+               "version": "1.0.0",
                "title": "Scale Scan", 
                "description": "Scans a workspace for existing source files to ingest", 
                "revision_num": 1,

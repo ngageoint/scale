@@ -56,6 +56,7 @@ Response: 200 OK
                 "job_type": { 
                     "id": 8, 
                     "name": "kml-footprint", 
+                    "version": "1.0.0",
                     "title": "KML Footprint", 
                     "description": "Creates a KML file.",
                     "revision_num": 1, 
@@ -275,6 +276,7 @@ Response: 200 OK
         "job_type": { 
             "id": 4, 
             "name": "png-filter", 
+            "version": "1.0.0",
             "title": "PNG Filter", 
             "description": "Filters PNG images into a new PNG image", 
             "revision_num": 1, 
