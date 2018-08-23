@@ -1,38 +1,27 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').factory('Status', function (StatusMaster, StatusScheduler, StatusResources) {
-        var Status = function ($resolved, master, scheduler, queue_depth, resources) {
+    angular.module('scaleApp').factory('Status', function () {
+        var Status = function ($resolved, timestamp, scheduler, system, num_offers, resources, job_types, nodes) {
             this.$resolved = $resolved;
-            this.master = StatusMaster.transformer(master);
-            this.scheduler = StatusScheduler.transformer(scheduler);
-            this.queue_depth = queue_depth;
-            this.resources = StatusResources.transformer(resources);
+            this.timestamp = timestamp;
+            this.scheduler = scheduler;
+            this.system = system;
+            this.num_offers = num_offers;
+            this.resources = resources;
+            this.job_types = job_types;
+            this.nodes = nodes;
         };
 
         // public methods
         Status.prototype = {
-            getCpuUsage: function () {
-                if (this.resources.scheduled.cpus && this.resources.total.cpus) {
-                    if (this.resources.total.cpus > 0) {
-                        return ((this.resources.scheduled.cpus / this.resources.total.cpus) * 100).toFixed(2);
+            getUsage: function (metric) {
+                if (metric) {
+                    var adjustedTotal = metric.total - metric.unavailable;
+                    if (adjustedTotal > 0 && metric.running > 0) {
+                        return +((metric.running / adjustedTotal) * 100).toFixed(2);
                     }
-                }
-                return 0.00;
-            },
-            getMemUsage: function () {
-                if (this.resources.scheduled.mem && this.resources.total.mem) {
-                    if (this.resources.total.mem > 0) {
-                        return ((this.resources.scheduled.mem / this.resources.total.mem) * 100).toFixed(2);
-                    }
-                }
-                return 0.00;
-            },
-            getDiskUsage: function () {
-                if (this.resources.scheduled.disk && this.resources.total.disk) {
-                    if (this.resources.total.disk > 0) {
-                        return ((this.resources.scheduled.disk / this.resources.total.disk) * 100).toFixed(2);
-                    }
+                    return 0.00;
                 }
                 return 0.00;
             }
@@ -43,10 +32,13 @@
             if (data) {
                 return new Status(
                     data.$resolved,
-                    data.master,
+                    data.timestamp,
                     data.scheduler,
-                    data.queue_depth,
-                    data.resources
+                    data.system,
+                    data.num_offers,
+                    data.resources,
+                    data.job_types,
+                    data.nodes
                 );
             }
             return new Status();

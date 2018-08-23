@@ -26,6 +26,7 @@
         vm.masterStatusClass = 'alert-success';
         vm.schedulerStatus = '';
         vm.schedulerStatusClass = 'alert-success';
+        vm.cpuCalc = '';
         vm.memCalc = '';
         vm.diskCalc = '';
         vm.schedulerIsPaused = false;
@@ -77,27 +78,21 @@
                 if (result.$resolved) {
                     vm.statusError = null;
                     vm.status = result;
-                    cpuGauge.redraw(result.getCpuUsage());
-                    memGauge.redraw(result.getMemUsage());
-                    diskGauge.redraw(result.getDiskUsage());
-                    vm.masterStatus = result.master.is_online ? 'Master is Online' : 'Master is Offline';
-                    vm.masterStatusClass = result.master.is_online ? 'alert-success' : 'alert-danger';
-                    if (result.scheduler.is_online) {
-                        vm.schedulerStatus = result.scheduler.is_paused ? 'Scheduler is Paused' : 'Scheduler is Running';
-                        vm.schedulerStatusClass = result.scheduler.is_paused ? 'alert-warning' : 'alert-success';
-                        vm.schedulerIsPaused = result.scheduler.is_paused;
-                        vm.schedulerBtnClass = result.scheduler.is_paused ? 'fa-play' : 'fa-pause';
-                    } else {
-                        vm.schedulerStatus = result.scheduler.is_paused ? 'Scheduler is Offline; Paused' : 'Scheduler is Offline';
-                        vm.schedulerStatusClass = 'alert-danger';
-                        vm.schedulerIsPaused = result.scheduler.is_paused;
-                        vm.schedulerBtnClass = result.scheduler.is_paused ? 'fa-play' : 'fa-pause';
+                    cpuGauge.redraw(result.getUsage(result.resources.cpus));
+                    memGauge.redraw(result.getUsage(result.resources.mem));
+                    diskGauge.redraw(result.getUsage(result.resources.disk));
+                    vm.schedulerStatus = result.scheduler.state.name === 'PAUSED' ? 'Scheduler is Paused' : 'Scheduler is Running';
+                    vm.schedulerStatusClass = result.scheduler.state.name === 'PAUSED' ? 'alert-warning' : 'alert-success';
+                    vm.schedulerIsPaused = result.scheduler.state.name === 'PAUSED';
+                    vm.schedulerBtnClass = result.scheduler.state.name === 'PAUSED' ? 'fa-play' : 'fa-pause';
+                    if (result.resources.cpus) {
+                        vm.cpuCalc = result.resources.cpus.running + ' / ' + (result.resources.cpus.total - result.resources.cpus.unavailable);
                     }
-                    if (result.resources.scheduled.mem && result.resources.total.mem) {
-                        vm.memCalc = scaleService.calculateFileSizeFromMib(result.resources.scheduled.mem) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.total.mem);
+                    if (result.resources.mem) {
+                        vm.memCalc = scaleService.calculateFileSizeFromMib(result.resources.mem.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.mem.total - result.resources.mem.unavailable);
                     }
-                    if (result.resources.scheduled.disk && result.resources.total.disk) {
-                        vm.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.scheduled.disk) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.total.disk);
+                    if (result.resources.disk) {
+                        vm.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.disk.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.disk.total - result.resources.disk.unavailable);
                     }
                 } else {
                     vm.statusError = result.statusText && result.statusText !== '' ? result.statusText : 'Unable to retrieve cluster status.';

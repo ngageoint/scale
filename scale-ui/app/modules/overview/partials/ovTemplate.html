@@ -12,14 +12,7 @@
         <div ng-show="!vm.loadingStatus">
             <div class="widget-label-left">Cluster status and resource utilization</div>
             <div class="row overview-alert">
-                <div class="col-xs-6 text-center">
-                    <div class="alert" ng-class="vm.masterStatusClass">
-                        <h4>{{ vm.masterStatus }}</h4>
-                        <div ng-show="!vm.statusError">{{ vm.status.master.hostname }}</div>
-                        <div ng-show="vm.statusError">{{ vm.statusError }}</div>
-                    </div>
-                </div>
-                <div class="col-xs-6 text-center">
+                <div class="col-xs-12 text-center">
                     <div class="alert" ng-class="vm.schedulerStatusClass">
                         <div class="row">
                             <div ng-class="vm.schedulerContainerClass">
@@ -37,7 +30,7 @@
             <div class="row">
                 <div class="col-xs-4 text-center">
                     <span id="cpuGaugeContainer"></span>
-                    <div ng-show="!vm.statusError"><strong>{{ vm.status.resources.scheduled.cpus }} / {{ vm.status.resources.total.cpus }}</strong></div>
+                    <div ng-show="!vm.statusError"><strong>{{ vm.cpuCalc }}</strong></div>
                 </div>
                 <div class="col-xs-4 text-center">
                     <span id="memoryGaugeContainer"></span>
