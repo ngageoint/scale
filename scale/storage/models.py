@@ -350,7 +350,7 @@ class ScaleFileManager(models.Manager):
         if job_type_names:
             files = files.filter(job_type__name__in=job_type_names)
         if job_ids:
-            files = files.filter(job_id__in=job_type_ids)
+            files = files.filter(job_id__in=job_ids)
         if is_published is not None:
             files = files.filter(is_published=is_published)
         if is_superseded is not None:
