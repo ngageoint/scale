@@ -61,11 +61,43 @@
                                 <dt ng-if="vm.activeJobTypeDetails.archived">Archived:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.archived">{{ vm.activeJobTypeDetails.archived }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.cpus_required">CPUs:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.cpus_required">{{ vm.activeJobTypeDetails.cpus_required }}</dd>
+                                <dd ng-if="vm.activeJobTypeDetails.cpus_required">
+                                    <span ng-if="!vm.editCpu">
+                                        {{ vm.activeJobTypeDetails.cpus_required }}
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('cpus_required')" uib-tooltip="Edit CPU">
+                                            <i class="fa fa-edit"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="vm.editCpu">
+                                        <span class="input-group input-group-sm">
+                                            <input id="cpus_required" type="number" step="0.1" class="form-control" value="{{vm.activeJobTypeDetails.cpus_required}}"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('cpus_required')"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('cpus_required')"><i class="fa fa-remove"></i></button>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </dd>
                                 <dt ng-if="vm.activeJobTypeDetails.mem_required">Memory:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.mem_required_formatted }}</dd>
-                                <dt ng-if="vm.activeJobTypeDetails.mem_required">Shared Memory:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.shared_mem_required_formatted }}</dd>
+                                <dd ng-if="vm.activeJobTypeDetails.mem_required">
+                                    <span ng-if="!vm.editMem">
+                                        {{ vm.activeJobTypeDetails.mem_required_formatted }}
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('mem_required')" uib-tooltip="Edit Memory">
+                                            <i class="fa fa-edit"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="vm.editMem">
+                                        <span class="input-group input-group-sm">
+                                            <input id="mem_required" type="number" step="1" class="form-control" value="{{vm.activeJobTypeDetails.mem_required}}"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('mem_required')"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('mem_required')"><i class="fa fa-remove"></i></button>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </dd>
+                                <dt ng-if="vm.activeJobTypeDetails.shared_mem_required">Shared Memory:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.shared_mem_required">{{ vm.activeJobTypeDetails.shared_mem_required_formatted }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">Disk:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">{{ vm.activeJobTypeDetails.disk_out_const_required_formatted }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.disk_out_mult_required">Input Size Multiplier:</dt>
@@ -73,7 +105,23 @@
                                 <dt ng-if="vm.activeJobTypeDetails.docker_image">Docker Image:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.docker_image">{{ vm.activeJobTypeDetails.docker_image }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.max_tries">Max Tries:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.max_tries">{{ vm.activeJobTypeDetails.max_tries }}</dd>
+                                <dd ng-if="vm.activeJobTypeDetails.max_tries">
+                                    <span ng-if="!vm.editMaxTries">
+                                        {{ vm.activeJobTypeDetails.max_tries }}
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('max_tries')" uib-tooltip="Edit Max Tries">
+                                            <i class="fa fa-edit"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="vm.editMaxTries">
+                                        <span class="input-group input-group-sm">
+                                            <input id="max_tries" type="number" step="1" class="form-control" value="{{vm.activeJobTypeDetails.max_tries}}"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('max_tries')"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('max_tries')"><i class="fa fa-remove"></i></button>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </dd>
                                 <dt ng-if="vm.activeJobTypeDetails.priority">Priority:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.priority">{{ vm.activeJobTypeDetails.priority }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.timeout">Timeout:</dt>
