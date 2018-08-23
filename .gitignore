@@ -13,4 +13,8 @@ output.txt
 scale/local_settings.py
 scale/db.sqlite3
 redoc-static.html
+<<<<<<< HEAD
 .python-version
+=======
+.python-version
+>>>>>>> added ignore for pyenv
