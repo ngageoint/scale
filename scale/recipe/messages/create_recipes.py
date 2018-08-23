@@ -2,14 +2,27 @@
 from __future__ import unicode_literals
 
 import logging
+from collections import namedtuple
 
 from django.db import transaction
 
-from data.data.json.data_v6 import DataV6
 from data.data.exceptions import InvalidData
+from data.data.json.data_v6 import DataV6
 from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
+
+
+REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
+SUB_RECIPE_TYPE = 'sub-recipes'  # Message type for creating sub-recipes of another recipe
+# TODO: when data sets have been implemented, create a message type for creating recipes from data set members
+
+# This is the maximum number of recipe models that can fit in one message. This maximum ensures that every message of
+# this type is less than 25 KiB long and that each message can be processed quickly.
+MAX_NUM = 100
+
+
+SubRecipe = namedtuple('SubRecipe', ['recipe_type_name', 'recipe_type_rev_num', 'node_name', 'process_input'])
 
 
 logger = logging.getLogger(__name__)
@@ -80,7 +93,7 @@ def create_jobs_message_for_recipe(recipe, node_name, job_type_name, job_type_ve
 
 
 class CreateRecipes(CommandMessage):
-    """Command message that creates job models
+    """Command message that creates recipe models
     """
 
     def __init__(self):
@@ -89,23 +102,37 @@ class CreateRecipes(CommandMessage):
 
         super(CreateRecipes, self).__init__('create_recipes')
 
-        self.count = 1  # TODO: determine this from superseded_recipes (reprocess) or 1 (sub-recipes)
-        self.event_id = None
+        # TODO: Cases: 
+        # - Reprocess (top-level)
+        #   - lock on root_superseded_recipes
+        #   - not used: recipe_node_name, root_recipe_id, superseded_recipe_id, recipe_id, process_input
+        #   - single fields: recipe_type_name, recipe_type_rev_num, batch_id, event_id, forced_nodes
+        #   - multiple fields: superseded (root) recipes
+        # - From update_recipes
+        #   - lock on higher level recipe
+        #   - not used: None
+        #   - single fields: root_recipe_id, superseded_recipe_id, recipe_id, batch_id, event_id, forced_nodes
+        #   - multiple fields: recipe_type_name, recipe_type_rev_num, node_name, process_input
+        # - New recipes with data - implement in future
 
-        # TODO: group fields so we could do multiple recipe types
-        # recipe_type_name, recipe_type_rev_num, recipe_node_name
+        # Fields applicable to all message types
+        self.batch_id = None
+        self.event_id = None
+        self.forced_nodes = None
+
+        # The message type for how to create the recipes
+        self.create_recipes_type = None
+
+        # Fields applicable for reprocessing
         self.recipe_type_name = None
         self.recipe_type_rev_num = None
-        self.recipe_node_name = None
-        self.process_input = False
+        self.root_recipe_ids = []
 
-        # These fields are related to the recipe containing the new created recipe(s)
+        # Fields applicable for sub-recipes
+        self.recipe_id = None
         self.root_recipe_id = None
         self.superseded_recipe_id = None
-        self.recipe_id = None
-        self.batch_id = None
-
-        # TODO: figure out all_jobs and job_names functionality
+        self.sub_recipes = []
 
     # TODO:
     def to_json(self):
@@ -165,24 +192,28 @@ class CreateRecipes(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # TODO:
-        #  - lock superseded recipes to make sure a recipe isn't reprocessed twice
-        #  - look for existing recipes to see if message has already run, if not go to next step
-        #  - superseded recipe can be provided or found from containing recipe's superseded recipe (two cases, one from
-        #    top level reprocess/batch and the other from update_recipes)
-        #  - bulk create new recipe models
-        #  - bulk create new recipe_node models if new recipes are sub-recipes
-        #  - if new recipe is superseding another recipe, then it is a reprocess, flag indicates to do diff
-        #   - if flag is set
-        #       - if superseded recipe has data, copy data from it
-        #       - supersede/cancel/unpublish deleted jobs and sub-recipes (message for sub-recipes to s/c/u)
-        #       - supersede/cancel changed jobs and sub-recipes (message for sub-recipes to s/c)
-        #       - copy identical jobs and sub-recipes from superseded recipe
-        #   - if has data or in a recipe and process_input flag, send message to process_recipe_input
-        #  - send messages for canceling and unpublishing
+        # TODO: - copy this back into issue
+        #  - do locking
+        #  - get superseded recipe models
+        #  - if superseded recipe models, get their recipe type revisions (and make diffs)
+        #  - query node_name and job/sub-recipe IDs for the superseded recipes
+        #  - look for existing recipes to see if message has already run, if not do the following in db transaction:
+        #    - bulk create new recipe models
+        #      - if this is a reprocess type, copy data from superseded recipe model
+        #      - bulk create new recipe_node models if new recipes are sub-recipes
+        #      - if new recipe is superseding another recipe, then it is a reprocess, use forced_nodes
+        #        - supercede jobs and sub-recipes in superseded recipe (for deleted/changed nodes)
+        #        - copy jobs and sub-recipes from superseded recipe (for identical nodes)
+        #  - db transaction is over, now send messages
+        #  - if new recipe is superseding another recipe, then it is a reprocess
+        #    - send unpublish messages for job nodes that are deleted
+        #    - send cancel messages for job nodes that are deleted or changed
+        #    - send new supersede_recipes message with unpublish flag = True for sub-recipes nodes that are deleted
+        #    - send new supersede_recipes message with unpublish flag = False for sub-recipes nodes that are completely
+        #      changed
+        #  - for each new recipe, if it has data or in a recipe and process_input flag, send message to
+        #    process_recipe_input (need to send forced_nodes info along to send to update_recipes message)
         #  - send update_recipe_metrics message if in a recipe
-
-        # TODO: figure out how to handle two re-processes over top of each other
 
         # TODO: move this to _create_recipes()?
         recipe_type_rev = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.recipe_type_rev_num)
@@ -248,6 +279,7 @@ class CreateRecipes(CommandMessage):
 
         return recipes
 
+    # TODO:
     def _find_existing_recipes(self):
         """Searches to determine if this message already ran and the recipes already exist
 
