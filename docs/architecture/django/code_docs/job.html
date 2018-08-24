@@ -5263,6 +5263,20 @@ combination of name and version</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.JobType.populate_from_manifest">
+<code class="descname">populate_from_manifest</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.populate_from_manifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set job type fields with values from given seed manifest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed Manifest defining the interface for running a job of this type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.JobType.priority">
 <code class="descname">priority</code><a class="headerlink" href="#job.models.JobType.priority" title="Permalink to this definition">¶</a></dt>
