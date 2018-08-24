@@ -385,13 +385,13 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     return job_exe
 
 
-def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
-                         is_operational=True, trigger_rule=None, configuration=None):
+def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max_tries=3, max_scheduled=None,
+                         is_active=True, is_operational=True, trigger_rule=None, configuration=None):
     if not manifest:
         manifest = {
             'seedVersion': '1.0.0',
             'job': {
-                'name': 'image-watermark',
+                'name': name,
                 'jobVersion': '0.1.0',
                 'packageVersion': '0.1.0',
                 'title': 'Image Watermarker',

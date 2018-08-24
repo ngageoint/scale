@@ -316,9 +316,7 @@ Response: 200 OK
             "version": "1.0.0",
             "title": "My first job",
             "description": "My very first job",
-            "icon_code": "012F",
-            "num_versions": 1,
-            "latest_version": "1.0.0"
+            "icon_code": "012F"
           },
           "revision_num": 1,
           "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -360,7 +358,7 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .id                      | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .job_type                | JSON Object       | The revised job type. See :ref:`rest_v6_job_type_list`)                  |
+| .job_type                | JSON Object       | The job type                                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .revision_num            | Ingeger           | The number for this revision of the job type.                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -389,9 +387,7 @@ Response: 200 OK
         "version": "1.0.0",
         "title": "My first job",
         "description": "My very first job",
-        "icon_code": "012F",
-        "num_versions": 1,
-        "latest_version": "1.0.0"
+        "icon_code": "012F"
       },
       "revision_num": 1,
       "docker_image": "my-job-1.0.0-seed:1.0.0",
@@ -417,7 +413,7 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | id                       | Integer           | The unique identifier of the model.                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .job_type                | JSON Object       | The revised job type. See :ref:`rest_v6_job_type_list`)                  |
+| .job_type                | JSON Object       | The job type                                                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | revision_num             | Ingeger           | The number for this revision of the job type.                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
