@@ -340,6 +340,22 @@ job\.migrations\.0042\_auto\_20180802\_1830 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0043\_remove\_jobtypetag\_job\_type module
+-----------------------------------------------------------
+
+.. automodule:: job.migrations.0043_remove_jobtypetag_job_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0044\_jobtypetag\_job\_type module
+---------------------------------------------------
+
+.. automodule:: job.migrations.0044_jobtypetag_job_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

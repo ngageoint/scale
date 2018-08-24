@@ -2165,6 +2165,10 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0042_auto_20180802_1830.Migration.dependencies">(job.migrations.0042_auto_20180802_1830.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0043_remove_jobtypetag_job_type.Migration.dependencies">(job.migrations.0043_remove_jobtypetag_job_type.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration.dependencies">(job.migrations.0044_jobtypetag_job_type.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.dependencies">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -3930,8 +3934,6 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_matched_recipes">get_matched_recipes() (batch.models.BatchManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager.get_matching_job_types">get_matching_job_types() (job.models.JobTypeTagManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/batch.definition.json.old.html#batch.definition.json.old.batch_definition.BatchTriggerCondition.get_media_type">get_media_type() (batch.definition.json.old.batch_definition.BatchTriggerCondition method)</a>
 
       <ul>
@@ -4680,14 +4682,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_tagged_docker_image">(job.models.JobTypeRevision method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager.get_tagged_job_types">get_tagged_job_types() (job.models.JobTypeTagManager method)</a>
+      <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_tags">get_tags() (job.seed.manifest.SeedManifest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager.get_tags">get_tags() (job.models.JobTypeTagManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_tags">(job.seed.manifest.SeedManifest method)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_task">get_task() (job.tasks.manager.TaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.json.results.html#job.execution.tasks.json.results.task_results.TaskResults.get_task_ended">get_task_ended() (job.execution.tasks.json.results.task_results.TaskResults method)</a>
@@ -6060,6 +6056,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0042_auto_20180802_1830">job.migrations.0042_auto_20180802_1830 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0043_remove_jobtypetag_job_type">job.migrations.0043_remove_jobtypetag_job_type (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0044_jobtypetag_job_type">job.migrations.0044_jobtypetag_job_type (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
@@ -6382,6 +6382,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionOutput.job_type_id">(job.models.JobExecutionOutput attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.job_type_id">(job.models.JobTypeRevision attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTag.job_type_id">(job.models.JobTypeTag attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.job_type_id">(metrics.models.MetricsJobType attribute)</a>
 </li>
@@ -6815,6 +6817,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTag.DoesNotExist">JobTypeTag.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTag.MultipleObjectsReturned">JobTypeTag.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.jobtypetag_set">jobtypetag_set (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager">JobTypeTagManager (class in job.models)</a>
 </li>
@@ -7622,6 +7626,10 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0041_jobtypetag.Migration">(class in job.migrations.0041_jobtypetag)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0042_auto_20180802_1830.Migration">(class in job.migrations.0042_auto_20180802_1830)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0043_remove_jobtypetag_job_type.Migration">(class in job.migrations.0043_remove_jobtypetag_job_type)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration">(class in job.migrations.0044_jobtypetag_job_type)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
@@ -8456,6 +8464,10 @@
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0041_jobtypetag.Migration.operations">(job.migrations.0041_jobtypetag.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0042_auto_20180802_1830.Migration.operations">(job.migrations.0042_auto_20180802_1830.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0043_remove_jobtypetag_job_type.Migration.operations">(job.migrations.0043_remove_jobtypetag_job_type.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration.operations">(job.migrations.0044_jobtypetag_job_type.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -13676,8 +13688,6 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys.test_get_job_type_keys_unique">test_get_job_type_keys_unique() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeKeys method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeTagManager.test_get_job_type_tags">test_get_job_type_tags() (job.test.test_models.TestJobTypeTagManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_empty">test_get_job_types_empty() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes.test_get_job_types_multi">test_get_job_types_multi() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypes method)</a>
@@ -13725,8 +13735,6 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_from_seed_interface">test_get_legacy_sharedmem_resource_from_seed_interface() (job.test.test_models.TestJobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_multiplier_from_seed_interface">test_get_legacy_sharedmem_resource_multiplier_from_seed_interface() (job.test.test_models.TestJobType method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeTagManager.test_get_matching_job_types">test_get_matching_job_types() (job.test.test_models.TestJobTypeTagManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_backends.TestBackendsFactory.test_get_message_backends">test_get_message_backends() (messaging.test.test_backends.TestBackendsFactory method)</a>
 
@@ -13825,8 +13833,6 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_tagged_image">test_get_tagged_docker_image_from_tagged_image() (job.test.test_models.TestJobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_untagged_image">test_get_tagged_docker_image_from_untagged_image() (job.test.test_models.TestJobType method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeTagManager.test_get_tagged_job_types">test_get_tagged_job_types() (job.test.test_models.TestJobTypeTagManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_kill">test_get_tasks_to_kill() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
@@ -15066,12 +15072,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_invalid">test_parse_float_invalid() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_missing">test_parse_float_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_optional">test_parse_float_optional() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_post">test_parse_float_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_valid">test_parse_float_valid() (util.test.test_rest.TestRest method)</a>
@@ -17713,6 +17719,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.update_from_model">update_from_model() (scheduler.node.node_class.Node method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeTagManager.update_job_type_tags">update_job_type_tags() (job.models.JobTypeTagManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.update_jobs_node">update_jobs_node() (job.models.JobManager method)</a>
 </li>

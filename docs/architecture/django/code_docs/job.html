@@ -452,6 +452,8 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0040_auto_20180709_1807">job.migrations.0040_auto_20180709_1807 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0041_jobtypetag">job.migrations.0041_jobtypetag module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0042_auto_20180802_1830">job.migrations.0042_auto_20180802_1830 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0043_remove_jobtypetag_job_type">job.migrations.0043_remove_jobtypetag_job_type module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0044_jobtypetag_job_type">job.migrations.0044_jobtypetag_job_type module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -5171,6 +5173,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="job.models.JobType.jobtypetag_set">
+<code class="descname">jobtypetag_set</code><a class="headerlink" href="#job.models.JobType.jobtypetag_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="job.models.JobType.last_modified">
 <code class="descname">last_modified</code><a class="headerlink" href="#job.models.JobType.last_modified" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -5704,14 +5721,14 @@ count of associated jobs and the last status change of a running job.</p>
 <li><strong>keyword</strong> (<em>string</em>) &#8211; Query jobs with name, title, description or tag matching the keyword</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
 <li><strong>is_system</strong> &#8211; Query job types that are system job types.</li>
-<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of latest version of job types that match the given parameters.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
 </td>
 </tr>
 </tbody>
@@ -6302,8 +6319,8 @@ populated for types of ERROR status values.</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>type</strong> (<a class="reference internal" href="#module-job" title="job"><em>job</em></a>) &#8211; The identifying name of the job type used by clients for queries, should be equivalent to the seed image name</li>
-<li><strong>tag</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The seed image tag, aka package version</li>
+<li><strong>type</strong> (<a class="reference internal" href="#module-job" title="job"><em>job</em></a>) &#8211; The job type</li>
+<li><strong>tag</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The tag associated with the job type</li>
 </ul>
 </td>
 </tr>
@@ -6331,6 +6348,19 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.JobTypeTag.job_type">
 <code class="descname">job_type</code><a class="headerlink" href="#job.models.JobTypeTag.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobTypeTag.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#job.models.JobTypeTag.job_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -6356,14 +6386,14 @@ object the first time, the query is executed.</p>
 <p>Provides additional methods for handling job type tags</p>
 <dl class="method">
 <dt id="job.models.JobTypeTagManager.clear_job_type_tags">
-<code class="descname">clear_job_type_tags</code><span class="sig-paren">(</span><em>job_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.clear_job_type_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes all job type tag objects for the specified job type.
-Useful when updating the revision and repopulating with new tags</p>
+<code class="descname">clear_job_type_tags</code><span class="sig-paren">(</span><em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.clear_job_type_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all job type tag objects for the specified job type. Useful when updating the revision and
+repopulating with new tags</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type</strong> (<em>string</em>) &#8211; The job type to remove tags for</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type_id</strong> (<em>int</em>) &#8211; The job type ID to remove tags for</td>
 </tr>
 </tbody>
 </table>
@@ -6372,14 +6402,13 @@ Useful when updating the revision and repopulating with new tags</p>
 <dl class="method">
 <dt id="job.models.JobTypeTagManager.create_job_type_tags">
 <code class="descname">create_job_type_tags</code><span class="sig-paren">(</span><em>job_type</em>, <em>tags</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.create_job_type_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a set of job type tags and saves them in the database. All database changes occur in an atomic
-transaction.</p>
+<dd><p>Creates a set of job type tags and saves them in the database</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type</strong> (<em>string</em>) &#8211; The identifying name of the job type used by clients for queries</li>
+<li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type</li>
 <li><strong>tag</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The tags of the job type image</li>
 </ul>
 </td>
@@ -6387,7 +6416,7 @@ transaction.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new job type tags</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobTypeTag" title="job.models.JobTypeTag"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeTag</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
 </td>
 </tr>
 </tbody>
@@ -6395,54 +6424,18 @@ transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobTypeTagManager.get_matching_job_types">
-<code class="descname">get_matching_job_types</code><span class="sig-paren">(</span><em>keyword</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.get_matching_job_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the job types whose tags match the given keyword</p>
+<dt id="job.models.JobTypeTagManager.update_job_type_tags">
+<code class="descname">update_job_type_tags</code><span class="sig-paren">(</span><em>job_type</em>, <em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.update_job_type_tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the tags for the given job type</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>keyword</strong> (<em>string</em>) &#8211; The keyword to match tags</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of job_type names</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeTagManager.get_tagged_job_types">
-<code class="descname">get_tagged_job_types</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.get_tagged_job_types" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the job types for the given tags</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; The tags to find job types</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of job_type names</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeTagManager.get_tags">
-<code class="descname">get_tags</code><span class="sig-paren">(</span><em>job_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeTagManager.get_tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the tags for a given job_type</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_type</strong> (<em>string</em>) &#8211; The job type name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of strings representing the tags for the job type</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type</strong> (<a class="reference internal" href="#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type</li>
+<li><strong>manifest</strong> (<a class="reference internal" href="job.seed.html#job.seed.manifest.SeedManifest" title="job.seed.manifest.SeedManifest"><code class="xref py py-class docutils literal"><span class="pre">job.seed.manifest.SeedManifest</span></code></a>) &#8211; The Seed manifest for the job type</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
