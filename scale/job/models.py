@@ -2620,6 +2620,8 @@ class JobTypeManager(models.Manager):
         # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
 
+        JobTypeTag.objects.update_job_type_tags(job_type, manifest)
+
         return job_type
 
 
@@ -2770,6 +2772,7 @@ class JobTypeManager(models.Manager):
 
             job_type.populate_from_manifest(manifest)
             job_type.save()
+            JobTypeTag.objects.update_job_type_tags(job_type, manifest)
         else:
             currentManifest = SeedManifest(job_type.manifest)
 
