@@ -77,7 +77,7 @@ class Command(BaseCommand):
             self.run_scheduler(mesos_master)
 
     def run_scheduler(self, mesos_master):
-        logger.info("I am the leader")
+        logger.info("I am the leader...")
         self.scheduler = ScaleScheduler()
         self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
@@ -85,8 +85,8 @@ class Command(BaseCommand):
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.
         framework.name = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'Scale')
-        capability = framework.capabilities.add()
-        capability.type = 3
+        cap = framework.capabilities.add()
+        framework.capabilities[0].type = 1  #mesos_pb2.FrameworkInfo.Capability.Type.GPU_RESOURCES
         webserver_address = os.getenv('SCALE_WEBSERVER_ADDRESS')
 
         if webserver_address:
