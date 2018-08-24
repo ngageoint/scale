@@ -64,13 +64,13 @@
                                 <dd ng-if="vm.activeJobTypeDetails.cpus_required">
                                     <span ng-if="!vm.editCpu">
                                         {{ vm.activeJobTypeDetails.cpus_required }}
-                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('cpus_required')" uib-tooltip="Edit CPU">
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('cpus_required')" uib-tooltip="Edit CPU" ng-if="!vm.readonly">
                                             <i class="fa fa-edit"></i>
                                         </span>
                                     </span>
                                     <span ng-if="vm.editCpu">
                                         <span class="input-group input-group-sm">
-                                            <input id="cpus_required" type="number" step="0.1" class="form-control" value="{{vm.activeJobTypeDetails.cpus_required}}"/>
+                                            <input id="cpus_required" type="number" step="0.1" class="form-control" ng-value="vm.activeJobTypeDetails.cpus_required"/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('cpus_required')"><i class="fa fa-save"></i></button>
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('cpus_required')"><i class="fa fa-remove"></i></button>
@@ -82,13 +82,13 @@
                                 <dd ng-if="vm.activeJobTypeDetails.mem_required">
                                     <span ng-if="!vm.editMem">
                                         {{ vm.activeJobTypeDetails.mem_required_formatted }}
-                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('mem_required')" uib-tooltip="Edit Memory">
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('mem_required')" uib-tooltip="Edit Memory" ng-if="!vm.readonly">
                                             <i class="fa fa-edit"></i>
                                         </span>
                                     </span>
                                     <span ng-if="vm.editMem">
                                         <span class="input-group input-group-sm">
-                                            <input id="mem_required" type="number" step="1" class="form-control" value="{{vm.activeJobTypeDetails.mem_required}}"/>
+                                            <input id="mem_required" type="number" step="1" class="form-control" ng-value="vm.activeJobTypeDetails.mem_required"/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('mem_required')"><i class="fa fa-save"></i></button>
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('mem_required')"><i class="fa fa-remove"></i></button>
@@ -108,13 +108,13 @@
                                 <dd ng-if="vm.activeJobTypeDetails.max_tries">
                                     <span ng-if="!vm.editMaxTries">
                                         {{ vm.activeJobTypeDetails.max_tries }}
-                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('max_tries')" uib-tooltip="Edit Max Tries">
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('max_tries')" uib-tooltip="Edit Max Tries" ng-if="!vm.readonly">
                                             <i class="fa fa-edit"></i>
                                         </span>
                                     </span>
                                     <span ng-if="vm.editMaxTries">
                                         <span class="input-group input-group-sm">
-                                            <input id="max_tries" type="number" step="1" class="form-control" value="{{vm.activeJobTypeDetails.max_tries}}"/>
+                                            <input id="max_tries" type="number" step="1" class="form-control" ng-value="vm.activeJobTypeDetails.max_tries"/>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('max_tries')"><i class="fa fa-save"></i></button>
                                                 <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('max_tries')"><i class="fa fa-remove"></i></button>
