@@ -1489,13 +1489,13 @@ class TestJobTypeTagManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = "test-type1"
+        self.job_type1 = job_test_utils.create_seed_job_type(name="test-type1")
         self.tag_set1 = ["tag1", "tag2", "oneandfour"]
-        self.job_type2 = "test-type2"
+        self.job_type2 = job_test_utils.create_seed_job_type(name="test-type2")
         self.tag_set2 = ["tag3", "tag4"]
-        self.job_type3 = "test-type3"
+        self.job_type3 = job_test_utils.create_seed_job_type(name="test-type3")
         self.tag_set3 = ["tag5", "tag6"]
-        self.job_type4 = "test-type4"
+        self.job_type4 = job_test_utils.create_seed_job_type(name="test-type4")
         self.tag_set4 = ["tag7", "tag8", "oneandfour"]
         JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
         JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)
@@ -1510,42 +1510,13 @@ class TestJobTypeTagManager(TransactionTestCase):
         
     def test_clear_job_type_tags(self):
         """Tests calling JobTypeManager.clear_job_type_tags()"""
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type3)
-        
-        self.assertEqual(tags, self.tag_set3)
-        
-        JobTypeTag.objects.clear_job_type_tags(self.job_type3)
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type3)
-        
-        self.assertEqual(len(tags), 0)
-        
-    def test_get_job_type_tags(self):
-        """Tests calling JobTypeManager.clear_job_type_tags()"""
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type1)
-        
-        self.assertEqual(tags, self.tag_set1)
-        
-    def test_get_tagged_job_types(self):
-        """Tests calling JobTypeManager.get_tagged_job_types()"""
-        
-        job_types = JobTypeTag.objects.get_tagged_job_types(["tag1", "tag2"])
-        
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(job_types[0], self.job_type1)
 
-    def test_get_matching_job_types(self):
-        """Tests calling JobTypeManager.get_matching_job_types()"""
-      
-        job_types = JobTypeTag.objects.get_matching_job_types("no-match")
-        self.assertEqual(len(job_types), 0)
-        
-        job_types = JobTypeTag.objects.get_matching_job_types("one")
-        self.assertEqual(len(job_types), 2)
-        self.assertEqual(job_types[0], self.job_type1)
-        
-        job_types = JobTypeTag.objects.get_matching_job_types("tag1")
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(job_types[0], self.job_type1)
+        tags = [jt_tag.tag for jt_tag in JobTypeTag.objects.filter(job_type_id=self.job_type3.id)]
+
+        self.assertListEqual(tags, self.tag_set3)
+
+        JobTypeTag.objects.clear_job_type_tags(self.job_type3.id)
+
+        tags = [jt_tag.tag for jt_tag in JobTypeTag.objects.filter(job_type_id=self.job_type3.id)]
+
+        self.assertEqual(len(tags), 0)

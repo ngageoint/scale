@@ -2620,6 +2620,8 @@ class JobTypeManager(models.Manager):
         # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
 
+        JobTypeTag.objects.update_job_type_tags(job_type, manifest)
+
         return job_type
 
 
@@ -2770,6 +2772,7 @@ class JobTypeManager(models.Manager):
 
             job_type.populate_from_manifest(manifest)
             job_type.save()
+            JobTypeTag.objects.update_job_type_tags(job_type, manifest)
         else:
             currentManifest = SeedManifest(job_type.manifest)
 
@@ -2881,37 +2884,50 @@ class JobTypeManager(models.Manager):
         :param is_system: Query job types that are system job types.
         :type is_operational: bool
         :param order: A list of fields to control the sort order.
-        :type order: [string]
+        :type order: list
         :returns: The list of latest version of job types that match the given parameters.
-        :rtype: [:class:`job.models.JobType`]
+        :rtype: list
         """
 
-        # Fetch a list of job types
-        job_types = JobType.objects.all()
-
-        # Apply additional filters
+        # Execute a sub-query that returns distinct job type names that match the provided filter arguments
+        sub_query = self.all()
         if keyword: # TODO: Revisit passing multiple keywords
-            names = JobTypeTag.objects.get_matching_job_types(keyword)
-            job_types = job_types.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) | Q(description__icontains=keyword) | Q(name__in=names))
+            sub_query = sub_query.filter(Q(name__icontains=keyword) | Q(title__icontains=keyword) |
+                                         Q(description__icontains=keyword) | Q(jobtypetag__tag__icontains=keyword))
         if is_active is not None:
-            job_types = job_types.filter(is_active=is_active)
+            sub_query = sub_query.filter(is_active=is_active)
         if is_system is not None:
-            job_types = job_types.filter(is_system=is_system)
-        
+            sub_query = sub_query.filter(is_system=is_system)
+        job_type_names = [result['name'] for result in sub_query.values('name').distinct('name')]
+
+        if not job_type_names:
+            return []
+
+        num_versions_by_id = {}
+        # Execute main query to find job type IDs and their matching num_versions
+        qry = 'SELECT DISTINCT ON (jt.name) jt.id, nv.num_versions FROM job_type jt '
+        qry += 'JOIN (SELECT name, count(*) AS num_versions FROM job_type GROUP BY name) nv ON jt.name = nv.name '
+        qry += 'WHERE jt.name IN %s '
+        qry += 'ORDER BY jt.name, jt.version DESC'
+        with connection.cursor() as cursor:
+            cursor.execute(qry, [tuple(job_type_names)])
+            for row in cursor.fetchall():
+                num_versions_by_id[row[0]] = row[1]
+
+        # Retrieve job types by ID
+        job_types = self.filter(id__in=num_versions_by_id.keys())
         # Apply sorting
         if order:
             job_types = job_types.order_by(*order)
         else:
             job_types = job_types.order_by('last_modified')
-        
-        # Get the latest version of each job type    
-        names = []
-        return_job_types = []
-        for jt in job_types:
-            if jt.name not in names:
-                names.append(jt.name)
-                return_job_types.append(JobType.objects.all().filter(name=jt.name).order_by("-revision_num")[0])
-        return return_job_types
+
+        # Add num_versions to each job type
+        results = []
+        for job_type in job_types:
+            job_type.num_versions = num_versions_by_id[job_type.id]
+            results.append(job_type)
+        return results
 
     def get_job_type_versions_v6(self, name, is_active=None, order=None):
         """Returns a list of the versions of the job type with the given name
@@ -3996,17 +4012,16 @@ class JobTypeTagManager(models.Manager):
     """
 
     def create_job_type_tags(self, job_type, tags):
-        """Creates a set of job type tags and saves them in the database. All database changes occur in an atomic
-        transaction.
+        """Creates a set of job type tags and saves them in the database
 
-        :param job_type: The identifying name of the job type used by clients for queries
-        :type job_type: string
+        :param job_type: The job type
+        :type job_type: :class:`job.models.JobType`
         :param tag: The tags of the job type image
         :type tag: list
         :returns: The new job type tags
-        :rtype: [:class:`job.models.JobTypeTag`]
+        :rtype: list
         """
-        
+
         job_type_tags = []
         for tag in tags:
             # Create the new job type tag
@@ -4014,86 +4029,48 @@ class JobTypeTagManager(models.Manager):
             job_type_tag.job_type = job_type
             job_type_tag.tag = tag
             job_type_tags.append(job_type_tag)
-            
+
         self.bulk_create(job_type_tags)
 
         return job_type_tags
 
-    def clear_job_type_tags(self, job_type):
-        """Removes all job type tag objects for the specified job type.
-        Useful when updating the revision and repopulating with new tags
+    def clear_job_type_tags(self, job_type_id):
+        """Removes all job type tag objects for the specified job type. Useful when updating the revision and
+        repopulating with new tags
 
-        :param job_type: The job type to remove tags for
-        :type job_type: string
+        :param job_type_id: The job type ID to remove tags for
+        :type job_type_id: int
         """
 
-        self.filter(job_type=job_type).delete()
+        self.filter(job_type_id=job_type_id).delete()
 
-    def get_tags(self, job_type):
-        """Get the tags for a given job_type
+    def update_job_type_tags(self, job_type, manifest):
+        """Updates the tags for the given job type
 
-        :param job_type: The job type name
-        :type job_type: string
-        :returns: A list of strings representing the tags for the job type
-        :rtype: [string]
+        :param job_type: The job type
+        :type job_type: :class:`job.models.JobType`
+        :param manifest: The Seed manifest for the job type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
         """
-        
-        tags = []
-        
-        job_type_tags = self.filter(job_type=job_type)
-        
-        for tag in job_type_tags:
-            tags.append(tag.tag)
-            
-        return tags
-        
-    def get_tagged_job_types(self, tags):
-        """Get the job types for the given tags
 
-        :param tags: The tags to find job types
-        :type tags: [string]
-        :returns: A list of job_type names
-        :rtype: [string]
-        """
-        
-        job_types = []
-        
-        qs = self.filter(tag__in=tags)
-        for type in qs:
-            if type.job_type not in job_types:
-                job_types.append(type.job_type)
-            
-        return job_types
-        
-    def get_matching_job_types(self, keyword):
-        """Get the job types whose tags match the given keyword
+        tags = manifest.get_tags()
+        if tags is None:
+            tags = []
 
-        :param keyword: The keyword to match tags
-        :type keyword: string
-        :returns: A list of job_type names
-        :rtype: [string]
-        """
-        
-        job_types = []
-        
-        qs = self.filter(tag__icontains=keyword)
-        for type in qs:
-            if type.job_type not in job_types:
-                job_types.append(type.job_type)
-            
-        return job_types
+        self.clear_job_type_tags(job_type.id)
+        self.create_job_type_tags(job_type, tags)
 
 
 class JobTypeTag(models.Model):
     """Stores a job type and tag combination
 
-    :keyword job type: The identifying name of the job type used by clients for queries, should be equivalent to the seed image name
-    :type name: :class:`django.db.models.CharField`
-    :keyword tag: The seed image tag, aka package version
+    :keyword job type: The job type
+    :type name: :class:`django.db.models.ForeignKey`
+    :keyword tag: The tag associated with the job type
     :type tag: :class:`django.db.models.CharField`
     """
 
-    job_type = models.CharField(db_index=True, max_length=50)
+    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     tag = models.CharField(db_index=True, max_length=50)
 
     objects = JobTypeTagManager()

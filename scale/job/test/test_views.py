@@ -1600,7 +1600,10 @@ class TestJobTypesViewV6(TestCase):
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['title'], expected.title)
             self.assertEqual(entry['description'], expected.description)
-            self.assertEqual(entry['num_versions'], expected.revision_num)
+            if entry['name'] == 'job-type-for-view-test':
+                self.assertEqual(entry['num_versions'], 2)
+            else:
+                self.assertEqual(entry['num_versions'], 1)
             self.assertEqual(entry['latest_version'], expected.version)
 
     def test_keyword(self):
