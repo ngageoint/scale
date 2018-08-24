@@ -2595,13 +2595,10 @@ class JobTypeManager(models.Manager):
         # Create the new job type
         job_type = JobType()
 
+        job_type.populate_from_manifest(manifest)
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
-        job_type.title = manifest.get_title()
-        job_type.description = manifest.get_description()
-        job_type.author_name = manifest.get_maintainer().get('name')
-        job_type.author_url = manifest.get_maintainer().get('url')
-        job_type.manifest = manifest.get_dict()
+
         job_type.docker_image = docker_image
 
         if not configuration:
@@ -2765,17 +2762,13 @@ class JobTypeManager(models.Manager):
 
         if manifest:
             currentManifest = manifest
-            job_type.manifest = manifest.get_dict()
             job_type.revision_num += 1
 
             # Create/update any errors defined in manifest
             error_mapping = manifest.get_error_mapping()
             error_mapping.save_models()
 
-            job_type.title = manifest.get_title()
-            job_type.description = manifest.get_description()
-            job_type.author_name = manifest.get_maintainer()['name']
-            job_type.author_url = manifest.get_maintainer()['url']
+            job_type.populate_from_manifest(manifest)
             job_type.save()
         else:
             currentManifest = SeedManifest(job_type.manifest)
@@ -3722,6 +3715,19 @@ class JobType(models.Model):
         """
 
         return self._get_legacy_resource('disk', self.disk_out_mult_required, False)
+        
+    def populate_from_manifest(self, manifest):
+        """Set job type fields with values from given seed manifest
+
+        :param manifest: The Seed Manifest defining the interface for running a job of this type
+        :type manifest: :class:`job.seed.manifest.SeedManifest`
+        """
+
+        self.title = manifest.get_title()
+        self.description = manifest.get_description()
+        self.author_name = manifest.get_maintainer().get('name')
+        self.author_url = manifest.get_maintainer().get('url')
+        self.manifest = manifest.get_dict()
 
     def _get_legacy_resource(self, key, legacy_field, is_value):
         """Helper function to support bridging v5 / v6 storage of resources
