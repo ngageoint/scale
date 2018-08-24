@@ -42,7 +42,7 @@ class JobTypeListSerializerV6(JobTypeBaseSerializerV6):
     """Converts job type model fields to REST output"""
     id = None
     version = None
-    num_versions = serializers.IntegerField(source='revision_num')
+    num_versions = serializers.IntegerField()
     latest_version = serializers.CharField(source='version')
 
 # TODO: remove this function when REST API v5 is removed
@@ -165,11 +165,11 @@ class JobTypeRevisionSerializerV5(JobTypeRevisionBaseSerializer):
     
 class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    job_type = JobTypeListSerializerV6()
+    job_type = JobTypeBaseSerializerV6()
     docker_image = serializers.CharField(source='get_tagged_docker_image')
     created = serializers.DateTimeField()
     
 class JobTypeRevisionDetailsSerializerV6(JobTypeRevisionSerializerV6):
     """Converts job type revision model fields to REST output."""
-    job_type = JobTypeListSerializerV6()
+    job_type = JobTypeBaseSerializerV6()
     manifest = serializers.JSONField(default=dict)

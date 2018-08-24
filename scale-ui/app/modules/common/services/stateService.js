@@ -56,6 +56,7 @@
                 error_category: data.error_category ? data.error_category : null,
                 job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
                 job_type_name: data.job_type_name ? data.job_type_name : null,
+                job_type_version: data.job_type_version ? data.job_type_version : null,
                 job_type_category: data.job_type_category ? data.job_type_category : null,
                 include_superseded: data.include_superseded ? data.include_superseded === 'false' ? false : data.include_superseded : false,
                 url: null
