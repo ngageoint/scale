@@ -1863,6 +1863,26 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
         
+        manifest['job']['maintainer'].pop('url')
+        
+        json_data = {
+            'icon_code': 'BEEF',
+            'max_scheduled': 1,
+            'docker_image': 'my-job-1.0.0-seed:1.0.2',
+            'manifest': manifest,
+            'configuration': self.configuration
+        }
+        
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-job/1.0.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-job', version='1.0.0').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertIsNone(results['manifest']['job']['maintainer'].get('url'))
+        
     def test_edit_old_job_type(self):
         """Tests editing an existing seed job type and updating it to a seed-compliant one."""
         
