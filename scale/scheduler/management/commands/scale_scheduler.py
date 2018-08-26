@@ -85,8 +85,8 @@ class Command(BaseCommand):
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.
         framework.name = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'Scale')
-        cap = framework.capabilities.add()
-        framework.capabilities[0].type = 1  #mesos_pb2.FrameworkInfo.Capability.Type.GPU_RESOURCES
+        capability = framework.capabilities.add()
+        capability.type = mesos_pb2.FrameworkInfo.Capability.GPU_RESOURCES
         webserver_address = os.getenv('SCALE_WEBSERVER_ADDRESS')
 
         if webserver_address:
