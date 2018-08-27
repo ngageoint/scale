@@ -681,7 +681,7 @@ Response: 200 OK
 
  .. code-block:: javascript
 
-<
+See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Input Files**                                                                                                     |
@@ -730,7 +730,7 @@ Response: 200 OK
 | previous           | URL               | A URL to the previous page of results.                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
-|                    |                   | See :ref:`Scale Files <rest_v6_scale_file_list>`)                              |
+|                    |                   | (See :ref:`Scale Files <rest_v6_scale_file_list>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_job_execution_list_v6:
