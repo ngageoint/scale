@@ -139,7 +139,7 @@
                 vm.gridOptions.paginationCurrentPage = params.page;
                 vm.gridOptions.paginationPageSize = params.page_size;
             } else {
-                jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
+                jobService.getJobs(params).then(null, null, function (data) {
                     vm.loading = false;
                     if (data.$resolved) {
                         vm.gridOptions.totalItems = data.count;
@@ -349,9 +349,11 @@
         vm.initialize();
 
         $scope.$watch('vm.selectedJobType', function (value) {
-            vm.jobTypeVersionValues = [jobTypeVersionViewAll];
-            vm.selectedJobTypeVersion = _.clone(jobTypeVersionViewAll);
-            vm.jobsParams.job_type_version = vm.selectedJobTypeVersion.value;
+            if (!vm.loading) {
+                vm.jobTypeVersionValues = [jobTypeVersionViewAll];
+                vm.selectedJobTypeVersion = _.clone(jobTypeVersionViewAll);
+                vm.jobsParams.job_type_version = vm.selectedJobTypeVersion.value;
+            }
             if (parseInt(value)) {
                 value = _.find(vm.jobTypeValues, {id: parseInt(value)});
             }
