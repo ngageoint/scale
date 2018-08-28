@@ -5,7 +5,7 @@ import job.test.utils as job_test_utils
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from queue.models import JobLoad, Queue
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem, Gpus
 
 
 def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=0, running_count=0):
@@ -27,7 +27,7 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
 
 
 def create_queue(job_type=None, priority=1, timeout=3600, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
-                 disk_out_required=100.0, disk_total_required=300.0, queued=timezone.now()):
+                 disk_out_required=100.0, disk_total_required=300.0, gpus_required=0, queued=timezone.now()):
     """Creates a queue model for unit testing
 
     :param job_type: The job type
@@ -36,7 +36,7 @@ def create_queue(job_type=None, priority=1, timeout=3600, cpus_required=1.0, mem
     :type priority: int
     :param timeout: The timeout
     :type timeout: int
-    :param cpus_required: The CPUs required in MiB
+    :param cpus_required: The number of CPUs required
     :type cpus_required: float
     :param mem_required: The memory required in MiB
     :type mem_required: float
@@ -46,12 +46,14 @@ def create_queue(job_type=None, priority=1, timeout=3600, cpus_required=1.0, mem
     :type disk_out_required: float
     :param disk_total_required: The total disk space required in MiB
     :type disk_total_required: float
+    :param gpus_required: The number of GPUs required
+    :type gpus_required: float
     :param queued: The time the execution was queued
     :type queued: :class:`datetime.datetime`
     """
 
     job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
-    resources = NodeResources([Cpus(cpus_required), Mem(mem_required), Disk(disk_total_required)])
+    resources = NodeResources([Cpus(cpus_required), Mem(mem_required), Disk(disk_total_required), Gpus(gpus_required)])
 
     return Queue.objects.create(job_type=job.job_type, job=job, exe_num=job.num_exes, priority=priority,
                                 timeout=timeout, input_file_size=disk_in_required,

@@ -12,7 +12,7 @@ from job.execution.job_exe import RunningJobExecution
 from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem, Gpus
 from queue.job_exe import QueuedJobExecution
 from scheduler.resources.agent import ResourceSet
 from scheduler.resources.offer import ResourceOffer
@@ -161,6 +161,84 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0)])))
         self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
         self.assertEqual(job_exe._scheduled_node_id, node.id)
+
+    def test_accept_new_job_exe_gpu_full_node(self):
+        """Tests successfully calling accept_new_job_exe() when job requires all GPUs per node"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0), Gpus(1.0)])
+        task_resources = NodeResources()
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0), Gpus(1.0)])
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+
+        queue_model = queue_test_utils.create_queue(cpus_required=1.0, mem_required=10.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0, gpus_required=1.0)
+        job_exe = QueuedJobExecution(queue_model)
+
+        accepted = scheduling_node.accept_new_job_exe(job_exe)
+        self.assertTrue(accepted)
+        self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0), Gpus(1.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
+        self.assertEqual(job_exe._scheduled_node_id, node.id)
+
+    def test_accept_new_job_exe_gpu_partial_node(self):
+        """Tests successfully calling accept_new_job_exe() when job requires less GPUs than available"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0), Gpus(4.0)])
+        task_resources = NodeResources()
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0), Gpus(4.0)])
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+
+        queue_model = queue_test_utils.create_queue(cpus_required=1.0, mem_required=10.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0, gpus_required=1)
+        job_exe = QueuedJobExecution(queue_model)
+
+        accepted = scheduling_node.accept_new_job_exe(job_exe)
+        self.assertTrue(accepted)
+        self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
+        # Verify that our greedy GPU allocation logic is working
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0), Gpus(4.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
+        self.assertEqual(job_exe._scheduled_node_id, node.id)
+
+    def test_accept_new_job_exe_gpu_partial_node_other_task(self):
+        """Tests successfully calling accept_new_job_exe() when job requires less GPUs than available"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0), Gpus(4.0)])
+        task_resources = NodeResources([Gpus(1.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0), Gpus(4.0)])
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+
+        queue_model = queue_test_utils.create_queue(cpus_required=1.0, mem_required=10.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0, gpus_required=1)
+        job_exe = QueuedJobExecution(queue_model)
+
+        accepted = scheduling_node.accept_new_job_exe(job_exe)
+        self.assertFalse(accepted)
 
     def test_accept_new_job_exe_insufficient_resources(self):
         """Tests calling accept_new_job_exe() when there are not enough resources"""
