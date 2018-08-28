@@ -155,6 +155,22 @@ COMPLETE_MANIFEST = {
       }
     }
 
+MINIMUM_MANIFEST = {
+    'seedVersion': '1.0.0',
+    'job': {
+        'name': 'my-job',
+        'jobVersion': '1.0.0',
+        'packageVersion': '1.0.0',
+        'title': 'My first job',
+        'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
+        'maintainer': {
+            'name': 'John Doe',
+            'email': 'jdoe@example.com'
+        },
+        'timeout': 3600
+    }
+}
+
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
     """Mock trigger rule configuration for testing

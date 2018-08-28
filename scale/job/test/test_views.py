@@ -1802,7 +1802,33 @@ class TestJobTypesPostViewV6(TestCase):
         self.assertEqual(results['revision_num'], 1)
         self.assertIsNone(results['max_scheduled'])
         self.assertEqual(results['configuration']['settings'], good_setting)
-        
+
+    def test_add_seed_job_type_minimum_manifest(self):
+        """Tests adding a Seed image with a minimum Seed manifest"""
+
+        url = '/%s/job-types/' % self.api
+        manifest = copy.deepcopy(job_test_utils.MINIMUM_MANIFEST)
+        manifest['job']['name'] = 'my-new-job'
+
+        json_data = {
+            'icon_code': 'BEEF',
+            'docker_image': 'my-new-job-1.0.0-seed:1.0.0',
+            'manifest': manifest
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertTrue('/%s/job-types/my-new-job/1.0.0/' % self.api in response['location'])
+
+        job_type = JobType.objects.filter(name='my-new-job').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['version'], job_type.version)
+        self.assertEqual(results['title'], job_type.title)
+        self.assertEqual(results['revision_num'], job_type.revision_num)
+        self.assertEqual(results['revision_num'], 1)
+
     def test_add_seed_version_job_type(self):
         """Tests adding a new version of a seed image."""
         
