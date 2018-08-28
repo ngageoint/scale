@@ -94,3 +94,16 @@ class Disk(ScalarResource):
         """
 
         super(Disk, self).__init__('disk', value)
+
+class Gpus(ScalarResource):
+    """A scalar resource representing the number of GPUs
+    """
+
+    def __init__(self, value):
+        """Constructor
+
+        :param value: The number of GPUs
+        :type value: float
+        """
+
+        super(Gpus, self).__init__('gpus', value)

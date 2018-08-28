@@ -93,7 +93,7 @@ class Command(BaseCommand):
             framework.webui_url = webserver_address
 
         logger.info('Connecting to Mesos master at %s', mesos_master)
-
+    
         # TODO(vinod): Make checkpointing the default when it is default on the slave.
         if MESOS_CHECKPOINT:
             logger.info('Enabling checkpoint for the framework')
