@@ -4030,7 +4030,8 @@ class JobTypeTagManager(models.Manager):
             job_type_tag.tag = tag
             job_type_tags.append(job_type_tag)
 
-        self.bulk_create(job_type_tags)
+        if job_type_tags:
+            self.bulk_create(job_type_tags)
 
         return job_type_tags
 
