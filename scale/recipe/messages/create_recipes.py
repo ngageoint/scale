@@ -10,6 +10,7 @@ from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
 
 
@@ -23,6 +24,11 @@ MAX_NUM = 100
 
 
 SubRecipe = namedtuple('SubRecipe', ['recipe_type_name', 'recipe_type_rev_num', 'node_name', 'process_input'])
+
+
+# Private named tuples for this message's use only
+# The superseded_node_dict is a dict where the superseded node names map to their respective job/sub-recipe ID
+_ReprocessRecipe = namedtuple('_ReprocessRecipe', ['superseded_recipe', 'superseded_node_dict', 'new_recipe', 'diff'])
 
 
 logger = logging.getLogger(__name__)
@@ -194,8 +200,8 @@ class CreateRecipes(CommandMessage):
 
         # TODO: - copy this back into issue
         #  - do locking
-        #  - get superseded recipe models
-        #  - if superseded recipe models, get their recipe type revisions (and make diffs)
+        #  - get superseded recipe models and supersede them
+        #  - if superseded recipe models, get their recipe type revisions (and make diffs using forced_nodes)
         #  - query node_name and job/sub-recipe IDs for the superseded recipes
         #  - look for existing recipes to see if message has already run, if not do the following in db transaction:
         #    - bulk create new recipe models
@@ -213,6 +219,7 @@ class CreateRecipes(CommandMessage):
         #      changed
         #  - for each new recipe, if it has data or in a recipe and process_input flag, send message to
         #    process_recipe_input (need to send forced_nodes info along to send to update_recipes message)
+        #    - if not, send update_recipe message?
         #  - send update_recipe_metrics message if in a recipe
 
         # TODO: move this to _create_recipes()?
@@ -300,3 +307,31 @@ class CreateRecipes(CommandMessage):
             recipes = list(qry)
 
         return recipes
+
+    def _reprocess_recipes(self, reprocess_recipes):
+        """Reprocess the given recipes. This compares each new recipe to the recipe it is superseding and handles
+        (supersedes or copies) all of the nodes in each superseded recipe.
+
+        :param reprocess_recipes: A list of _ReprocessRecipe tuples
+        :type reprocess_recipes: list
+        """
+
+        supersede_job_ids = []
+        supersede_recipe_ids = []
+
+        for reprocess_recipe in reprocess_recipes:
+            superseded_recipe = reprocess_recipe.superseded_recipe
+            superseded_node_dict = reprocess_recipe.superseded_node_dict
+
+            for node_diff in reprocess_recipe.diff.get_nodes_to_supersede().values():
+                if node_diff.name in superseded_node_dict:
+                    the_id = superseded_node_dict[node_diff.name]
+                    if node_diff.node_type == JobNodeDefinition.NODE_TYPE:
+                        supersede_job_ids.append(the_id)
+                    elif node_diff.node_type == RecipeNodeDefinition.NODE_TYPE:
+                        supersede_recipe_ids.append(the_id)
+            # TODO: collect info for copying nodes from superseded recipe (for identical nodes)
+
+        # TODO: supersede jobs - consider update query that does not rely on IDs
+        # TODO: supersede recipes - consider update query that does not rely on IDs
+        # TODO: copy nodes
