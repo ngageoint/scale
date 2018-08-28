@@ -49,7 +49,7 @@ class SeedManifest(object):
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating againsg schema: %s' % validation_error)
+            raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
 
         self._populate_default_values()
 
@@ -574,7 +574,7 @@ class SeedManifest(object):
         for input_file in self.get_input_files():
             if 'required' not in input_file:
                 input_file['required'] = True
-            if 'mediaType' not in input_file:
+            if 'mediaTypes' not in input_file:
                 input_file['mediaTypes'] = []
             if 'multiple' not in input_file:
                 input_file['multiple'] = False
@@ -590,7 +590,7 @@ class SeedManifest(object):
         for output_file in self.get_output_files():
             if 'mediaType' not in output_file:
                 output_file['mediaType'] = UNKNOWN_MEDIA_TYPE
-            if 'count' not in output_file:
+            if 'multiple' not in output_file:
                 output_file['multiple'] = False
             if 'required' not in output_file:
                 output_file['required'] = True
