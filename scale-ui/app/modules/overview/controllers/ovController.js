@@ -3,6 +3,76 @@
 
     angular.module('scaleApp').controller('ovController', function($rootScope, $scope, navService, nodeService, jobService, jobTypeService, statusService, gaugeFactory, scaleConfig, scaleService, schedulerService, userService) {
         var vm = this;
+        var chartWidth = 190;
+        var chartHeight = 210;
+        var memChartOptions = {
+            bindto: '#memChart',
+            data: {
+                columns: [],
+                type: 'pie'
+            },
+            legend: {
+                hide: true
+            },
+            size: {
+                height: chartHeight,
+                width: chartWidth
+            },
+            color: {
+                pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
+            }
+        };
+        var diskChartOptions = {
+            bindto: '#diskChart',
+            data: {
+                columns: [],
+                type: 'pie'
+            },
+            legend: {
+                hide: true
+            },
+            size: {
+                height: chartHeight,
+                width: chartWidth
+            },
+            color: {
+                pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
+            }
+        };
+        var cpuChartOptions = {
+            bindto: '#cpuChart',
+            data: {
+                columns: [],
+                type: 'pie'
+            },
+            legend: {
+                hide: true
+            },
+            size: {
+                height: chartHeight,
+                width: chartWidth
+            },
+            color: {
+                pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
+            }
+        };
+        var gpuChartOptions = {
+            bindto: '#gpuChart',
+            data: {
+                columns: [],
+                type: 'pie'
+            },
+            legend: {
+                hide: true
+            },
+            size: {
+                height: chartHeight,
+                width: chartWidth
+            },
+            color: {
+                pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
+            }
+        };
 
         vm.date = new Date();
         vm.jobError = null;
@@ -22,8 +92,6 @@
         vm.status = null;
         vm.statusError = null;
         vm.loadingStatus = true;
-        vm.masterStatus = '';
-        vm.masterStatusClass = 'alert-success';
         vm.schedulerStatus = '';
         vm.schedulerStatusClass = 'alert-success';
         vm.cpuCalc = '';
@@ -34,6 +102,10 @@
         vm.schedulerContainerClass = vm.user ? vm.user.is_admin ? 'col-xs-8 col-lg-10' : 'col-xs-12' : 'col-xs-12';
         vm.schedulerBtnClass = 'fa-pause';
         vm.toggleBtnClass = null;
+        vm.memChart = null;
+        vm.diskChart = null;
+        vm.cpuChart = null;
+        vm.gpuChart = null;
 
         vm.toggleScheduler = function () {
             vm.schedulerIsPaused = !vm.schedulerIsPaused;
@@ -85,22 +157,48 @@
                     vm.schedulerStatusClass = result.scheduler.state.name === 'PAUSED' ? 'alert-warning' : 'alert-success';
                     vm.schedulerIsPaused = result.scheduler.state.name === 'PAUSED';
                     vm.schedulerBtnClass = result.scheduler.state.name === 'PAUSED' ? 'fa-play' : 'fa-pause';
-                    if (result.resources.cpus) {
-                        vm.cpuCalc = result.resources.cpus.running + ' / ' + (result.resources.cpus.total - result.resources.cpus.unavailable);
-                    }
-                    if (result.resources.mem) {
-                        vm.memCalc = scaleService.calculateFileSizeFromMib(result.resources.mem.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.mem.total - result.resources.mem.unavailable);
-                    }
-                    if (result.resources.disk) {
-                        vm.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.disk.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.disk.total - result.resources.disk.unavailable);
-                    }
+                    memChartOptions.data.columns = [
+                        ['Offered', result.resources.mem.offered],
+                        ['Running', result.resources.mem.running],
+                        ['Free', result.resources.mem.free],
+                        ['Unavailable', result.resources.mem.unavailable]
+                    ];
+                    cpuChartOptions.data.columns = [
+                        ['Offered', result.resources.cpus.offered],
+                        ['Running', result.resources.cpus.running],
+                        ['Free', result.resources.cpus.free],
+                        ['Unavailable', result.resources.cpus.unavailable]
+                    ];
+                    diskChartOptions.data.columns = [
+                        ['Offered', result.resources.disk.offered],
+                        ['Running', result.resources.disk.running],
+                        ['Free', result.resources.disk.free],
+                        ['Unavailable', result.resources.disk.unavailable]
+                    ];
+                    gpuChartOptions.data.columns = [
+                        ['Offered', result.resources.gpus.offered],
+                        ['Running', result.resources.gpus.running],
+                        ['Free', result.resources.gpus.free],
+                        ['Unavailable', result.resources.gpus.unavailable]
+                    ];
+                    vm.memChart = c3.generate(memChartOptions);
+                    vm.cpuChart = c3.generate(cpuChartOptions);
+                    vm.diskChart = c3.generate(diskChartOptions);
+                    vm.gpuChart = c3.generate(gpuChartOptions);
+                    // if (result.resources.cpus) {
+                    //     vm.cpuCalc = result.resources.cpus.running + ' / ' + (result.resources.cpus.total - result.resources.cpus.unavailable);
+                    // }
+                    // if (result.resources.mem) {
+                    //     vm.memCalc = scaleService.calculateFileSizeFromMib(result.resources.mem.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.mem.total - result.resources.mem.unavailable);
+                    // }
+                    // if (result.resources.disk) {
+                    //     vm.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.disk.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.disk.total - result.resources.disk.unavailable);
+                    // }
                 } else {
                     vm.statusError = result.statusText && result.statusText !== '' ? result.statusText : 'Unable to retrieve cluster status.';
                     cpuGauge.redraw(-1);
                     memGauge.redraw(-1);
                     diskGauge.redraw(-1);
-                    vm.masterStatus = 'Master Status is Unknown';
-                    vm.masterStatusClass = 'alert-danger';
                     vm.schedulerContainerClass = 'col-xs-12';
                     vm.schedulerStatus = 'Scheduler Status is Unknown';
                     vm.schedulerStatusClass = 'alert-danger';

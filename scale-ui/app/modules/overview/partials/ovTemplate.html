@@ -2,22 +2,35 @@
 
 <div class="row">
     <div id="ov-status" class="col-xs-12 col-md-6">
-        <h2>Status</h2>
-        <div ng-show="vm.loadingStatus" class="loading-component">
-            <h4>
-                <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
-                Loading
-            </h4>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <h2>Status</h2>
+                <div ng-show="vm.loadingStatus" class="loading-component">
+                    <h4>
+                        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+                        Loading
+                    </h4>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <h2>Metrics</h2>
+            </div>
         </div>
         <div ng-show="!vm.loadingStatus">
             <div class="widget-label-left">Cluster status and resource utilization</div>
             <div class="row overview-alert">
-                <div class="col-xs-12 text-center">
+                <div class="col-xs-12 col-md-6 text-center">
                     <div class="alert" ng-class="vm.schedulerStatusClass">
                         <div class="row">
                             <div ng-class="vm.schedulerContainerClass">
                                 <h4>{{ vm.schedulerStatus }}</h4>
-                                <div ng-show="!vm.statusError">{{ vm.status.scheduler.hostname }}</div>
+                                <div ng-show="!vm.statusError">
+                                    <ul class="list-unstyled">
+                                        <li>{{ vm.status.scheduler.hostname }}</li>
+                                        <li>{{ vm.status.scheduler.mesos.master_hostname}}</li>
+                                        <li>{{ vm.status.scheduler.mesos.framework_id}}</li>
+                                    </ul>
+                                </div>
                                 <div ng-show="vm.statusError">{{ vm.statusError }}</div>
                             </div>
                             <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="vm.user.is_admin && !vm.statusError">
@@ -26,19 +39,42 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xs-12 col-md-6">
+                    <table class="table table-condensed">
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Jobs</th>
+                            <th>Tasks</th>
+                        </tr>
+                        <tr>
+                            <th>Launched</th>
+                            <td>{{ vm.status.scheduler.metrics.jobs_launched_per_sec }}/s</td>
+                            <td>{{ vm.status.scheduler.metrics.tasks_launched_per_sec }}/s</td>
+                        </tr>
+                        <tr>
+                            <th>Finished</th>
+                            <td>{{ vm.status.scheduler.metrics.jobs_finished_per_sec }}/s</td>
+                            <td>{{ vm.status.scheduler.metrics.tasks_finished_per_sec }}/s</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-xs-4 text-center">
-                    <span id="cpuGaugeContainer"></span>
-                    <div ng-show="!vm.statusError"><strong>{{ vm.cpuCalc }}</strong></div>
+            <div id="resources" class="row">
+                <div class="col-xs-3 text-center">
+                    <h4>CPU</h4>
+                    <div id="cpuChart"></div>
                 </div>
-                <div class="col-xs-4 text-center">
-                    <span id="memoryGaugeContainer"></span>
-                    <div ng-show="!vm.statusError"><strong>{{ vm.memCalc }}</strong></div>
+                <div class="col-xs-3 text-center">
+                    <h4>Memory</h4>
+                    <div id="memChart"></div>
                 </div>
-                <div class="col-xs-4 text-center">
-                    <span id="diskGaugeContainer"></span>
-                    <div ng-show="!vm.statusError"><strong>{{ vm.diskCalc }}</strong></div>
+                <div class="col-xs-3 text-center">
+                    <h4>Disk</h4>
+                    <div id="diskChart"></div>
+                </div>
+                <div class="col-xs-3 text-center">
+                    <h4>GPU</h4>
+                    <div id="gpuChart"></div>
                 </div>
             </div>
             <div class="text-center" ng-show="vm.statusError">

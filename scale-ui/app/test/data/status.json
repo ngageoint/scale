@@ -4,11 +4,11 @@
         "metrics": {
             "task_updates_per_sec": 0.0,
             "new_offers_per_sec": 0.0,
-            "jobs_finished_per_sec": 0.0,
-            "jobs_launched_per_sec": 0.0,
-            "tasks_launched_per_sec": 0.0,
+            "jobs_finished_per_sec": 2.0,
+            "jobs_launched_per_sec": 5.0,
+            "tasks_launched_per_sec": 28.0,
             "offers_launched_per_sec": 0.0,
-            "tasks_finished_per_sec": 0.0
+            "tasks_finished_per_sec": 12.0
         },
         "hostname": "scheduler-host.com",
         "mesos": {
