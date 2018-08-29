@@ -5,7 +5,9 @@ import logging
 
 from django.db import transaction
 
+from data.data.data import Data
 from data.data.value import JsonValue
+from job.data.job_data import JobData
 from job.messages.create_jobs import create_jobs_message
 from messaging.messages.message import CommandMessage
 from storage.models import ScaleFile
@@ -64,23 +66,34 @@ class SpawnDeleteFilesJob(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # This message will look at the job's files and create and 
-        # queue a system job to delete those files in the workspace 
-        # (passing along the purge flag). This messages does not affect 
-        # any database models.
         files_to_delete = ScaleFile.objects.filter_files(job_ids=[self.job_id])
         # data.data.~ -> JobData -> dict -> create_job message
         if files_to_delete:
             # Construct input data list
             workspaces = []
-            inputs = [JsonValue('job_id', self.job_id),
-                      JsonValue('purge', self.purge)]
+            # inputs = Data()
+            # inputs.add_value(JsonValue('job_id', self.job_id))
+            # inputs.add_value(JsonValue('purge', self.purge))
+
+            # for f in files_to_delete:
+            #     inputs.add_value(JsonValue('file', {'id': f.id, 
+            #                                         'file_path': f.file_path, 
+            #                                         'workspace': f.workspace.name}))
+                
+            #     if f.workspace.name not in workspaces:
+            #         inputs.add_value(JsonValue('workspace', {f.workspace.name: f.workspace.json_config}))
+            #         workspaces.append(f.workspace.name)
+
+            inputs = {'job_id': self.job_id,
+                      'purge': self.purge}
+
             for f in files_to_delete:
-                inputs.append(JsonValue('file', {'id': f.id, 'file_path': f.file_path, 'workspace': f.workspace.name}))
+                inputs['file'] = {'id': f.id, 'file_path': f.file_path, 'workspace': f.workspace.name}
+                
                 if f.workspace.name not in workspaces:
-                    inputs.append(JsonValue('workspace', {f.workspace.name: f.workspace.json_config}))
+                    inputs['workspace'] = {f.workspace.name: f.workspace.json_config}
                     workspaces.append(f.workspace.name)
 
-            print inputs
-
+            # 
+            JobData(inputs)
         return True
