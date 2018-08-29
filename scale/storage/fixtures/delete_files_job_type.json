@@ -4,7 +4,7 @@
 		"pk": null,
 		"fields": {
 			"name": "scale-delete-files",
-			"version": "1.0",
+			"version": "1.0.0",
 			"title": "Scale Delete Files",
 			"description": "Deletes a given file from a storage system.",
             "category": "system",
@@ -16,13 +16,52 @@
 			"docker_privileged": false,
 			"docker_image": "scale",
 			"manifest": {
-			     "version": "1.4",
-                 "command": "",
 			     "command_arguments": "scale_delete_files ${-f :file_paths} ${-j :job_id} ${-w :workspace} ${-p :purge}",
                  "input_data": [ { "name": "file_paths", "type": "property" },
 								 { "name": "job_id", "type": "property" },
 								 { "name": "workspace", "type": "property" },
 								 { "name": "purge", "type": "property" } ]
+			},
+			{
+				"seedVersion": "1.0.0",
+				"job": {
+					"name": "scale-delete-files",
+					"jobVersion": "1.0.0",
+					"packageVersion": "1.0.0",
+					"title": "Scale Delete Files",
+					"description": "Deletes a given file from a storage system.",
+					"maintainer": {
+						"name": "Scale D. Veloper",
+						"email": "jdoe@example.com"
+					},
+					"timeout": 3600,
+					"interface": {
+						"command": "${INPUT_IMAGE} ${JSON_FILES} ${OUTPUT_DIR}",
+						"inputs": {
+							"files": [{"name": "INPUT_IMAGE"},
+									  {"name": "JSON_FILES", "mediaTypes": ["application/json"], "multiple": True,
+									   "partial": True, "required": False}]
+						},
+						"outputs": {
+							"files": [{"name": "OUTPUT_IMAGE_A", "pattern": "*.tif"},
+									  {"name": "OUTPUT_IMAGE_B", "pattern": "*.tif", "mediaType": "image/tiff",
+									   "multiple": True, "required": False}]
+						}
+					},
+					"resources": {
+						"scalar": [
+							{
+								"name": "cpus",
+								"value": 0.5
+							},
+							{
+								"name": "mem",
+								"value": 1024
+							}
+						]
+					},
+					"errors": []
+				}
 			},
 			"revision_num": 1,
             "error_mapping": {
