@@ -371,9 +371,9 @@ Response: 200 OK
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Details**                                                                                                         |
 +=========================================================================================================================+
-| Returns a specific job and all its related model information including executions, recipes, and products.               |
+| Returns a specific job and all its related model information.                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /jobs/{id}/                                                                                                     |
+| **GET** /v6/jobs/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -387,7 +387,7 @@ Response: 200 OK
 | id                 | Integer           | The unique identifier of the model.                                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type           | JSON Object       | The job type that is associated with the job.                                  |
-|                    |                   | (See :ref:`Job Type Details <rest__v6_job_type_details>`)                      |
+|                    |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type_rev       | JSON Object       | The job type revision that is associated with the job.                         |
 |                    |                   | This represents the definition at the time the job was scheduled.              |
@@ -688,10 +688,15 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 +=========================================================================================================================+
 | Returns detailed information about input files associated with a given Job ID.                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /jobs/{id}/input_files/                                                                                         |
+| **GET** /v6/jobs/{id}/input_files/                                                                                      |
 |         Where {id} is the unique identifier of an existing job.                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |

@@ -98,6 +98,85 @@ paths:
               schema:
                 $ref: '#/components/schemas/job_list'
 
+  /v6/jobs/{id}/:
+    get:
+      operationId: _rest_v6_job_details
+      summary: Job Details
+      description: Returns a specific job and all its related model information.  
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing job
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_details'
+                
+  /v6/jobs/{id}/input_files/:
+    get:
+      operationId: _rest_v6_job_input_files
+      summary: Job Input Files
+      description: Returns detailed information about input files associated with a given Job ID.  
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing job
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the time range to query
+        -in: query
+          name: ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the time range to query, defaults to the current time
+        -in: query
+          name: time_field
+          schema:
+            type: string
+          description: Indicates the time field(s) that *started* and *ended* | 
+            will use for time filtering. Valid values are: *last_modified*, |
+            *data* and *source*. The default value is *last_modified*.
+        -in: query
+          name: file_name
+          schema:
+            type: string
+          description: Returns only input files with this file name.
+        -in: query
+          name: job_input
+          schema:
+            type: string
+          description: Returns files for this job input.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/file_list'
 
 components:
   schemas:
@@ -222,3 +301,27 @@ components:
             format: date-time
             description: When the associated database model was last saved.
             example: 2015-09-10T15:24:53.987Z
+
+    job_details:
+      allof:
+        - ref: '#/components/schemas/job_details'
+        - title: Job Details
+        - type: object
+        properties:      
+          job_type_rev:
+            $ref: '#/components/schemas/job_type_revision_detail'
+          superseded_by_job:
+            description: The next job in the chain that superseded this job.
+            $ref: '#/components/schemas/job_base'
+          resources:
+            description: JSON description describing the resources required for this job.
+            $ref: '#/components/schemas/resources'
+          execution:
+            description: The most recent execution of the job.
+            $ref: '#/components/schemas/execution_details'
+          input:
+            description:The input data for the job.
+            $ref: '#/components/schemas/data'
+          output:
+            description: The output data for the job.
+            $ref: '#/components/schemas/data'
