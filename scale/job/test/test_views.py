@@ -4175,7 +4175,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         self.assertEqual(response.accepted_media_type, 'application/json')
 
 
-class TestJobInputFilesView(TestCase):
+class TestJobInputFilesViewV5(TestCase):
 
     api = 'v5'
     
@@ -4351,6 +4351,185 @@ class TestJobInputFilesView(TestCase):
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
+
+class TestJobInputFilesViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+
+        # Create legacy test files
+        self.f1_file_name = 'legacy_foo.bar'
+        self.f1_last_modified = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f1_source_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
+                                                    source_ended=self.f1_source_ended,
+                                                    last_modified=self.f1_last_modified)
+
+        self.f2_file_name = 'legacy_qaz.bar'
+        self.f2_job_input = 'legacy_input_1'
+        self.f2_last_modified = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.f2_source_started = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
+                                                    source_ended=self.f2_source_ended,
+                                                    last_modified=self.f2_last_modified)
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'property',
+                'name': 'input_field',
+            }, {
+                'type': 'file',
+                'name': 'input_file',
+            }, {
+                'type': 'file',
+                'name': 'other_input_file',
+            }],
+            'output_data': [{
+                'type': 'file',
+                'name': 'output_file',
+            }, {
+                'type': 'files',
+                'name': 'output_files',
+            }],
+            'shared_resources': [],
+        }
+
+        self.manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['interface']['files']
+
+        job_data = {
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': self.file1.id,
+            }, {
+                'name': self.f2_job_input,
+                'file_id': self.file2.id,
+            }]
+        }
+        job_results = {
+            'output_data': []
+        }
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest)
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
+        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
+        self.job = job_test_utils.create_job(job_type=self.job_type)
+
+        # Create JobInputFile entry files
+        self.f3_file_name = 'foo.bar'
+        self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f3_source_started = datetime.datetime(2016, 1, 10, tzinfo=utc)
+        self.f3_source_ended = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.file3 = job_test_utils.create_input_file(file_name=self.f3_file_name,
+                                                      source_started=self.f3_source_started,
+                                                      source_ended=self.f3_source_ended, job=self.job,
+                                                      last_modified=self.f3_last_modified)
+
+        self.f4_file_name = 'qaz.bar'
+        self.f4_job_input = 'input_1'
+        self.f4_last_modified = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.f4_source_started = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f4_source_ended = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.file4 = job_test_utils.create_input_file(file_name=self.f4_file_name,
+                                                      source_started=self.f4_source_started,
+                                                      source_ended=self.f4_source_ended, job=self.job,
+                                                      last_modified=self.f4_last_modified, job_input=self.f4_job_input)
+
+    def test_successful_file(self):
+        """Tests successfully calling the job input files view"""
+
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+
+    def test_legacy_successful_file(self):
+        """Tests successfully calling the job input files view for legacy files with job_data"""
+
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.legacy_job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+
+    def test_filter_job_input(self):
+        """Tests successfully calling the job inputs files view with job_input string filtering"""
+
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.job.id, self.f4_job_input)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file4.id)
+
+    def test_legacy_filter_job_input(self):
+        """Tests successfully calling the job inputs files view for legacy files with job_input string filtering"""
+
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.legacy_job.id, self.f2_job_input)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file2.id)
+
+    def test_file_name_successful(self):
+        """Tests successfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, self.f3_file_name)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 1)
+
+        self.assertEqual(self.f3_file_name, result[0]['file_name'])
+        self.assertEqual('2016-01-10T00:00:00Z', result[0]['source_started'])
+        self.assertEqual(self.file3.id, result[0]['id'])
+
+    def test_bad_file_name(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, 'not_a.file')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 0)
+
+    def test_time_successful(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?started=%s&ended=%s&time_field=%s' % (self.api, self.job.id,
+                                                                              '2016-01-10T00:00:00Z',
+                                                                              '2016-01-13T00:00:00Z',
+                                                                              'source')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
 class TestCancelJobsView(TestCase):
 

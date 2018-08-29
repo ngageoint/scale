@@ -45,7 +45,7 @@ from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializerV5
+from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -1285,6 +1285,14 @@ class JobInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a job."""
     queryset = JobInputFile.objects.all()
     serializer_class = ScaleFileSerializerV5
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScaleFileSerializerV6
+        else:
+            return ScaleFileSerializerV5
 
     def get(self, request, job_id):
         """Retrieve detailed information about the input files for a job
