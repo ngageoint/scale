@@ -18,7 +18,7 @@ ARG BUILD_DOCS=1
 RUN useradd --uid 7498 -M -d /opt/scale scale
 
 # install required packages for scale execution
-COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
+COPY mesos/bindings/centos/7/python /tmp/
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
@@ -43,8 +43,8 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gcc \
          wget \
          python-devel \
- && pip install marathon==0.9.1 mesos.interface==0.25.0 protobuf==2.5.0 requests \
- && easy_install /tmp/*.egg \
+ && pip install marathon==0.9.1 protobuf requests \
+ && easy_install --no-find-links --no-deps /tmp/*.egg \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
