@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from util.exceptions import ScaleLogicBug
 
-from node.resources.resource import Cpus, Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem, Gpus
 
 
 class NodeResources(object):
@@ -31,6 +31,8 @@ class NodeResources(object):
             self._resources['mem'] = Mem(0.0)
         if 'disk' not in self._resources:
             self._resources['disk'] = Disk(0.0)
+        if 'gpus' not in self._resources:
+            self._resources['gpus'] = Gpus(0.0)
 
     def __str__(self):
         """Converts the resource to a readable logging string
@@ -71,6 +73,16 @@ class NodeResources(object):
         """
 
         return self._resources['mem'].value
+
+    @property
+    def gpus(self):
+        """The number of GPUs
+
+        :returns: The amount of GPUs
+        :rtype: float
+        """
+
+        return self._resources['gpus'].value
 
     @property
     def resources(self):

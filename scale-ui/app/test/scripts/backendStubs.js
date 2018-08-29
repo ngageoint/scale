@@ -247,6 +247,13 @@
                 jobs.results = _.sortByOrder(jobs.results, fields, orders);
             }
 
+            if (urlParams.job_type_name) {
+                jobs.results = _.filter(jobs.results, function (job) {
+                    // return job.job_type_name === urlParams.job_type_name;
+                    return _.contains(urlParams.job_type_name, job.job_type.name);
+                });
+            }
+
             if (urlParams.status) {
                 jobs.results = _.filter(jobs.results, function (job) {
                     return job.status === urlParams.status[0];
