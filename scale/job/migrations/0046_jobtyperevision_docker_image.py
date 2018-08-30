@@ -25,7 +25,7 @@ def get_tagged_docker_image(manifest, docker_image):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('job', '0045_jobtyperevision_docker_image'),
+        ('job', '0045_auto_20180830_1812'),
     ]
 
     def populate_job_type_revision_docker_image(apps, schema_editor):
