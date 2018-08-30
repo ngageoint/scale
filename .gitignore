@@ -13,3 +13,4 @@ output.txt
 scale/local_settings.py
 scale/db.sqlite3
 redoc-static.html
+.python-version

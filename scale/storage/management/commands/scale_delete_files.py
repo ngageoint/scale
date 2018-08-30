@@ -23,28 +23,11 @@ logger = logging.getLogger(__name__)
 GENERAL_FAIL_EXIT_CODE = 1
 
 
-def eval_input(string):
-    """Evaluates the input string
-    """
-
-    return ast.literal_eval(string.lstrip())
-
-
 class Command(BaseCommand):
     """Command that executes the delete file process for a given file
     """
 
     help = 'Perform a file destruction operation on a file'
-
-    def add_arguments(self, parser):
-        parser.add_argument('-f', '--files', nargs='+', type=json.loads, required=True,
-                            help='File path and ID in a JSON string.  Submit multiple if needed.' +
-                            ' e.g: "{"file_path":"some.file", "id":"399", "workspace":"cool_workspace_name"}"')
-        parser.add_argument('-w', '--workspace', action='append', type=eval_input, required=True,
-                            help='Named workspace configuration in a JSON string. Submit multiple if needed.' +
-                            ' e.g: "{"cool_workspace_name": {...} }"')
-        parser.add_argument('-p', '--purge', action='store', type=bool, required=True,
-                            help='Purge all records for the given file')
 
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
@@ -55,12 +38,13 @@ class Command(BaseCommand):
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
-        files = options.get('files')
-        workspace_list = options.get('workspace')
-        purge = options.get('purge')
+        files_list = json.loads(os.environ.get('FILES'))
+        workspaces_list = json.loads(os.environ.get('WORKSPACES'))
+        job_id = int(os.environ.get('JOB_ID'))
+        purge = os.environ.get('PURGE', 'true').lower() in ('yes', 'true', 't', '1')
 
-        workspaces = self._detect_workspaces(workspace_list)
-        files = self._configure_files(files, workspaces)
+        workspaces = self._configure_workspaces(workspaces_list)
+        files = self._configure_files(files_list, workspaces)
 
         logger.info('Command starting: scale_delete_files')
         logger.info('File IDs: %s', [x.id for x in files])
@@ -69,18 +53,18 @@ class Command(BaseCommand):
             delete_files_job.delete_files(files=[f for f in files if f.workspace == wrkspc_name],
                                           broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
 
-        messages = create_delete_files_messages(files=files, purge=purge)
+        messages = create_delete_files_messages(files=files, purge=purge, job_id=job_id)
         CommandMessageManager().send_messages(messages)
 
         logger.info('Command completed: scale_delete_files')
 
         sys.exit(0)
 
-    def _configure_files(self, file_list, workspaces):
+    def _configure_files(self, files_list, workspaces):
         """Parses and returns files associated with their respective workspace.
 
-        :param file_list: The file list that was given
-        :type file_list: [dict]
+        :param files_list: The file list that was given
+        :type files_list: [dict]
         :return: All workspaces by given name with associated broker and volume_path
         :rtype: dict
         """
@@ -88,7 +72,7 @@ class Command(BaseCommand):
         scale_file = namedtuple('ScaleFile', ['id', 'file_path', 'workspace'])
 
         files = []
-        for f in file_list:
+        for f in files_list:
             try:
                 wrkspc = workspaces[f['workspace']]
             except KeyError:
@@ -99,10 +83,10 @@ class Command(BaseCommand):
             files.append(scale_file(id=int(f['id']), file_path=f['file_path'], workspace=f['workspace']))
         return files
 
-    def _detect_workspaces(self, workspace_list):
+    def _configure_workspaces(self, workspace_list):
         """Parses, validates, and returns workspace information for the given workspaces
 
-        :param workspace_list: The workspace list that was given
+        :param workspace_list: The workspace list
         :type workspace_list: [dict]
         :return: All workspaces by given name with associated broker and volume_path
         :rtype: dict
