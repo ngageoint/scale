@@ -1,5 +1,4 @@
 <ais-header name="'System Overview'"></ais-header>
-
 <div class="row">
     <div id="ov-status" class="col-xs-12 col-md-6">
         <div class="row">
@@ -11,75 +10,88 @@
                         Loading
                     </h4>
                 </div>
-            </div>
-            <div class="col-xs-12 col-md-6">
-                <h2>Metrics</h2>
-            </div>
-        </div>
-        <div>
-            <div class="widget-label-left">Cluster status and resource utilization</div>
-            <div class="row overview-alert">
-                <div class="col-xs-12 col-md-6 text-center">
-                    <div class="alert" ng-class="vm.schedulerStatusClass">
-                        <div class="row">
-                            <div ng-class="vm.schedulerContainerClass">
-                                <h4>{{ vm.schedulerStatus }}</h4>
-                                <div ng-show="!vm.statusError">
-                                    <ul class="list-unstyled">
-                                        <li>{{ vm.status.scheduler.hostname }}</li>
-                                        <li>{{ vm.status.scheduler.mesos.master_hostname}}</li>
-                                        <li>{{ vm.status.scheduler.mesos.framework_id}}</li>
-                                    </ul>
+                <div ng-show="!vm.loadingStatus">
+                    <div class="widget-label-left">Cluster status and resource utilization</div>
+                    <div class="overview-alert text-center">
+                        <div class="alert" ng-class="vm.schedulerStatusClass">
+                            <div class="row">
+                                <div ng-class="vm.schedulerContainerClass">
+                                    <h4>{{ vm.schedulerStatus }}</h4>
+                                    <div ng-show="!vm.statusError">
+                                        <ul class="list-unstyled">
+                                            <li>{{ vm.status.scheduler.hostname }}</li>
+                                            <li>{{ vm.status.scheduler.mesos.master_hostname}}</li>
+                                            <li>{{ vm.status.scheduler.mesos.framework_id}}</li>
+                                        </ul>
+                                    </div>
+                                    <div ng-show="vm.statusError">{{ vm.statusError }}</div>
                                 </div>
-                                <div ng-show="vm.statusError">{{ vm.statusError }}</div>
-                            </div>
-                            <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="vm.user.is_admin && !vm.statusError">
-                                <button class="btn btn-default margin-top-sm" ng-click="vm.toggleScheduler()"><i class="fa" ng-class="vm.schedulerBtnClass"></i></button>
+                                <div id="scheduler" class="col-xs-4 col-lg-2" ng-show="vm.user.is_admin && !vm.statusError">
+                                    <button class="btn btn-default margin-top-sm" ng-click="vm.toggleScheduler()"><i class="fa" ng-class="vm.schedulerBtnClass"></i></button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
-                    <table class="table table-condensed">
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>Jobs</th>
-                            <th>Tasks</th>
-                        </tr>
-                        <tr>
-                            <th>Launched</th>
-                            <td>{{ vm.status.scheduler.metrics.jobs_launched_per_sec }}/s</td>
-                            <td>{{ vm.status.scheduler.metrics.tasks_launched_per_sec }}/s</td>
-                        </tr>
-                        <tr>
-                            <th>Finished</th>
-                            <td>{{ vm.status.scheduler.metrics.jobs_finished_per_sec }}/s</td>
-                            <td>{{ vm.status.scheduler.metrics.tasks_finished_per_sec }}/s</td>
-                        </tr>
-                    </table>
-                </div>
             </div>
-            <div id="resources">
-                <div class="text-center">
-                    <h4>CPU</h4>
-                    <div id="cpuChart"></div>
-                </div>
-                <div class="text-center">
-                    <h4>Memory</h4>
-                    <div id="memChart"></div>
-                </div>
-                <div class="text-center">
-                    <h4>Disk</h4>
-                    <div id="diskChart"></div>
-                </div>
-                <div class="text-center">
-                    <h4>GPU</h4>
-                    <div id="gpuChart"></div>
-                </div>
+            <div class="col-xs-12 col-md-6">
+                <h2>Metrics</h2>
+                <div class="widget-label-left">Job and Task Rates</div>
+                <table class="table table-condensed">
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Jobs</th>
+                        <th>Tasks</th>
+                    </tr>
+                    <tr>
+                        <th>Launched</th>
+                        <td>{{ vm.status.scheduler.metrics.jobs_launched_per_sec }}/s</td>
+                        <td>{{ vm.status.scheduler.metrics.tasks_launched_per_sec }}/s</td>
+                    </tr>
+                    <tr>
+                        <th>Finished</th>
+                        <td>{{ vm.status.scheduler.metrics.jobs_finished_per_sec }}/s</td>
+                        <td>{{ vm.status.scheduler.metrics.tasks_finished_per_sec }}/s</td>
+                    </tr>
+                </table>
             </div>
-            <div class="text-center" ng-show="vm.statusError">
-                <strong>{{ vm.statusError }}</strong>
+        </div>
+        <h2>Resource Allocation</h2>
+        <div class="widget-label-left">Percentage of resournces that are offered, free, running, and unavailable</div>
+        <div class="chart-container" ng-show="!vm.statusError">
+            <div class="chart text-center">
+                <h4>CPU</h4>
+                <div id="cpuChart"></div>
             </div>
+            <div class="chart text-center">
+                <h4>Memory</h4>
+                <div id="memChart"></div>
+            </div>
+            <div class="chart text-center">
+                <h4>Disk</h4>
+                <div id="diskChart"></div>
+            </div>
+            <div class="chart text-center">
+                <h4>GPU</h4>
+                <div id="gpuChart"></div>
+            </div>
+        </div>
+        <div class="chart-container chart-values" ng-show="!vm.statusError">
+            <div class="chart text-center">
+                Total: {{ vm.cpuValue }}
+            </div>
+            <div class="chart text-center">
+                Total: {{ vm.memValue }}
+            </div>
+            <div class="chart text-center">
+                Total: {{ vm.diskValue }}
+            </div>
+            <div class="chart text-center">
+                Total: {{ vm.gpuValue }}
+            </div>
+        </div>
+        <div class="text-center" ng-show="vm.statusError">
+            <strong>{{ vm.statusError }}</strong>
         </div>
     </div>
     <div id="ov-health" class="col-xs-12 col-md-6">

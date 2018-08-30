@@ -45,17 +45,23 @@ h2 {
     }
 }
 
-#resources {
+.chart-container {
     display: flex;
 
     h4 {
         margin: 0;
         padding: 0;
+        font-size: 1.2em;
+        font-weight: bold;
     }
 
-    div {
-        width: 25%;
+    .chart {
+        min-width: 25%;
     }
+}
+
+.chart-values {
+    margin-top: -20px;
 }
 
 @media screen and (max-width:992px) {

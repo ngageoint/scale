@@ -3,8 +3,12 @@
 
     angular.module('scaleApp').controller('ovController', function($rootScope, $scope, navService, nodeService, jobService, jobTypeService, statusService, gaugeFactory, scaleConfig, scaleService, schedulerService, userService) {
         var vm = this;
-        var chartWidth = 180;
-        var chartHeight = 180;
+        var memChart = null;
+        var diskChart = null;
+        var cpuChart = null;
+        var gpuChart = null;
+        var viewport = scaleService.getViewportSize();
+        var chartHeight = viewport.height * 0.3;
         var memChartOptions = {
             bindto: '#memChart',
             data: {
@@ -15,8 +19,7 @@
                 hide: true
             },
             size: {
-                height: chartHeight,
-                width: chartWidth
+                height: chartHeight
             },
             color: {
                 pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
@@ -32,8 +35,7 @@
                 hide: true
             },
             size: {
-                height: chartHeight,
-                width: chartWidth
+                height: chartHeight
             },
             color: {
                 pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
@@ -49,8 +51,7 @@
                 hide: true
             },
             size: {
-                height: chartHeight,
-                width: chartWidth
+                height: chartHeight
             },
             color: {
                 pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
@@ -66,8 +67,7 @@
                 hide: true
             },
             size: {
-                height: chartHeight,
-                width: chartWidth
+                height: chartHeight
             },
             color: {
                 pattern: [scaleConfig.colors.chart_blue, scaleConfig.colors.chart_green, scaleConfig.colors.chart_blue_light, scaleConfig.colors.chart_gray_dark]
@@ -102,10 +102,10 @@
         vm.schedulerContainerClass = vm.user ? vm.user.is_admin ? 'col-xs-8 col-lg-10' : 'col-xs-12' : 'col-xs-12';
         vm.schedulerBtnClass = 'fa-pause';
         vm.toggleBtnClass = null;
-        vm.memChart = null;
-        vm.diskChart = null;
-        vm.cpuChart = null;
-        vm.gpuChart = null;
+        vm.memValue = null;
+        vm.cpuValue = null;
+        vm.diskValue = null;
+        vm.gpuValue = null;
 
         vm.toggleScheduler = function () {
             vm.schedulerIsPaused = !vm.schedulerIsPaused;
@@ -181,19 +181,14 @@
                         ['Free', result.resources.gpus.free],
                         ['Unavailable', result.resources.gpus.unavailable]
                     ];
-                    vm.memChart = c3.generate(memChartOptions);
-                    vm.cpuChart = c3.generate(cpuChartOptions);
-                    vm.diskChart = c3.generate(diskChartOptions);
-                    vm.gpuChart = c3.generate(gpuChartOptions);
-                    // if (result.resources.cpus) {
-                    //     vm.cpuCalc = result.resources.cpus.running + ' / ' + (result.resources.cpus.total - result.resources.cpus.unavailable);
-                    // }
-                    // if (result.resources.mem) {
-                    //     vm.memCalc = scaleService.calculateFileSizeFromMib(result.resources.mem.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.mem.total - result.resources.mem.unavailable);
-                    // }
-                    // if (result.resources.disk) {
-                    //     vm.diskCalc = scaleService.calculateFileSizeFromMib(result.resources.disk.running) + ' / ' + scaleService.calculateFileSizeFromMib(result.resources.disk.total - result.resources.disk.unavailable);
-                    // }
+                    memChart = c3.generate(memChartOptions);
+                    cpuChart = c3.generate(cpuChartOptions);
+                    diskChart = c3.generate(diskChartOptions);
+                    gpuChart = c3.generate(gpuChartOptions);
+                    vm.memValue = scaleService.calculateFileSizeFromMib(result.resources.mem.total);
+                    vm.cpuValue = result.resources.cpus.total;
+                    vm.diskValue = scaleService.calculateFileSizeFromMib(result.resources.disk.total);
+                    vm.gpuValue = result.resources.gpus.total;
                 } else {
                     vm.statusError = result.statusText && result.statusText !== '' ? result.statusText : 'Unable to retrieve cluster status.';
                     cpuGauge.redraw(-1);

@@ -46,7 +46,7 @@
         <tr>
             <td class="left">Running Jobs:</td>
             <td class="right">
-                <div class="label label-success" ng-repeat="job in vm.runningJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}">
+                <div class="label label-primary" ng-repeat="job in vm.runningJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}">
                     <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
                 </div>
             </td>
@@ -54,7 +54,7 @@
         <tr>
             <td class="left">Completed Jobs:</td>
             <td class="right">
-                <div class="label label-primary" ng-repeat="job in vm.completedJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}">
+                <div class="label label-success" ng-repeat="job in vm.completedJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}">
                     <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
                 </div>
             </td>
@@ -86,7 +86,8 @@
         <tr><td class="left">Paused:</td><td class="right">{{ vm.node.is_paused }}</td></tr>
         <tr><td class="left">Paused Reason:</td><td class="right">{{ vm.node.pause_reason }}</td></tr>
         <tr><td class="left">Active:</td><td class="right">{{ vm.node.is_active }}</td></tr>
-        <tr><td class="left">Deprecated:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.deprecated).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.deprecated).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
+        <tr ng-if="vm.node.deprecated"><td class="left">Deprecated:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.deprecated).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.deprecated).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
+        <tr ng-if="!vm.node.deprecated"><td class="left">Deprecated:</td><td class="right"></td></tr>
         <tr><td class="left">Created:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.created).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.created).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
         <tr><td class="left">Last Modified:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.last_modified).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.last_modified).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
         </tbody>
