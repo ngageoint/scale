@@ -16,7 +16,7 @@
                 <h2>Metrics</h2>
             </div>
         </div>
-        <div ng-show="!vm.loadingStatus">
+        <div>
             <div class="widget-label-left">Cluster status and resource utilization</div>
             <div class="row overview-alert">
                 <div class="col-xs-12 col-md-6 text-center">
@@ -59,20 +59,20 @@
                     </table>
                 </div>
             </div>
-            <div id="resources" class="row">
-                <div class="col-xs-3 text-center">
+            <div id="resources">
+                <div class="text-center">
                     <h4>CPU</h4>
                     <div id="cpuChart"></div>
                 </div>
-                <div class="col-xs-3 text-center">
+                <div class="text-center">
                     <h4>Memory</h4>
                     <div id="memChart"></div>
                 </div>
-                <div class="col-xs-3 text-center">
+                <div class="text-center">
                     <h4>Disk</h4>
                     <div id="diskChart"></div>
                 </div>
-                <div class="col-xs-3 text-center">
+                <div class="text-center">
                     <h4>GPU</h4>
                     <div id="gpuChart"></div>
                 </div>

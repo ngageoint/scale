@@ -3,8 +3,8 @@
 
     angular.module('scaleApp').controller('ovController', function($rootScope, $scope, navService, nodeService, jobService, jobTypeService, statusService, gaugeFactory, scaleConfig, scaleService, schedulerService, userService) {
         var vm = this;
-        var chartWidth = 190;
-        var chartHeight = 210;
+        var chartWidth = 180;
+        var chartHeight = 180;
         var memChartOptions = {
             bindto: '#memChart',
             data: {
