@@ -1351,6 +1351,42 @@ class RecipeNodeManager(models.Manager):
         qry = self.filter(recipe_id=recipe_id, node_name=node_name, sub_recipe__is_superseded=True)
         return [rn.sub_recipe for rn in qry]
 
+    def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
+        """Supersedes the jobs for the given recipe IDs and node names
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :param when: The time that the jobs were superseded
+        :type when: :class:`datetime.datetime`
+        :param node_names: The node names of the jobs to supersede
+        :type node_names: list
+        :param all_nodes: Whether all nodes should be superseded
+        :type all_nodes: bool
+        """
+
+        qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids)
+        if not all_nodes:
+            qry.filter(recipenode__node_name__in=node_names)
+        qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
+
+    def supersede_subrecipes(self, recipe_ids, when, node_names, all_nodes=False):
+        """Supersedes the sub-recipes for the given recipe IDs and node names
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :param when: The time that the sub-recipes were superseded
+        :type when: :class:`datetime.datetime`
+        :param node_names: The node names of the sub-recipes to supersede
+        :type node_names: list
+        :param all_nodes: Whether all nodes should be superseded
+        :type all_nodes: bool
+        """
+
+        qry = Recipe.objects.filter(recipenode__recipe_id__in=recipe_ids)
+        if not all_nodes:
+            qry.filter(recipenode__node_name__in=node_names)
+        qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
+
 
 class RecipeNode(models.Model):
     """Links a recipe with a node within that recipe. Nodes within a recipe may represent either a job or another

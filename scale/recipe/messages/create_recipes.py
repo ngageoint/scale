@@ -121,6 +121,9 @@ class CreateRecipes(CommandMessage):
         #   - multiple fields: recipe_type_name, recipe_type_rev_num, node_name, process_input
         # - New recipes with data - implement in future
 
+        # TODO: make a forced_nodes class:
+        # {'node_name_a': {}, 'node_name_b': {'node_name_ba': {}}, 'node_name_c': '*'}
+
         # Fields applicable to all message types
         self.batch_id = None
         self.event_id = None
@@ -198,9 +201,12 @@ class CreateRecipes(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        # TODO: figure out copying of recipe nodes
+        # TODO: figure out supersede_recipe_nodes message and adapt this message to it
+
         # TODO: - copy this back into issue
         #  - do locking
-        #  - get superseded recipe models and supersede them
+        #  - get superseded recipe models and supersede them (if reprocess type)
         #  - if superseded recipe models, get their recipe type revisions (and make diffs using forced_nodes)
         #  - query node_name and job/sub-recipe IDs for the superseded recipes
         #  - look for existing recipes to see if message has already run, if not do the following in db transaction:
@@ -335,3 +341,10 @@ class CreateRecipes(CommandMessage):
         # TODO: supersede jobs - consider update query that does not rely on IDs
         # TODO: supersede recipes - consider update query that does not rely on IDs
         # TODO: copy nodes
+
+        # TODO: copy nodes SQL:
+        # INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id)
+        # SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
+        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
+        # UNION ALL SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
+        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
