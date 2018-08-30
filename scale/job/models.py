@@ -3447,8 +3447,8 @@ class JobType(models.Model):
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
     revision_num = models.IntegerField(default=1)
-    docker_image = models.CharField(blank=True, null=True, max_length=500)
-    manifest = django.contrib.postgres.fields.JSONField(default=dict) 
+    docker_image = models.CharField(default='', max_length=500)
+    manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
