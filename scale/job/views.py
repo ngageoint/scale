@@ -1146,6 +1146,21 @@ class CancelJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def _post_v5(self, request):
+        """Submit command message to cancel jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -1489,6 +1504,9 @@ class JobExecutionsView(ListAPIView):
         if request.version == 'v5':
             return self.list_v5(request, job_id)
         elif request.version == 'v6':
+            # TODO: remove this check when REST API v5 is removed
+            if not job_id:
+                raise Http404
             return self.list_v6(request, job_id)
         else:
             raise Http404
@@ -1575,13 +1593,36 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version == 'v5':
+            return self._retrieve_v5(request, job_id, exe_num)
+        elif request.version == 'v6':
+            # TODO: remove this check when REST API v5 is removed
+            if not exe_num:
+                raise Http404
+            return self._retrieve_v6(request, job_id, exe_num)
+        else:
+            raise Http404
 
-        # TODO: remove this check when REST API v5 is removed
+    # TODO: remove when REST API v5 is removed
+    def _retrieve_v5(self, request, job_id, exe_num=None):
+        """Gets job execution and associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :param exe_num: the execution number
+        :type exe_num: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
         if not exe_num:
-            if request.version != 'v6':
-                job_exe_id = job_id
-                return self.retrieve_v5(request, job_exe_id)
-            else:
+            job_exe_id = job_id
+            try:
+                job_exe = JobExecution.objects.get_details(job_exe_id)
+            except JobExecution.DoesNotExist:
                 raise Http404
         else:
             try:
@@ -1589,22 +1630,24 @@ class JobExecutionDetailsView(RetrieveAPIView):
             except JobExecution.DoesNotExist:
                 raise Http404
 
-            serializer = self.get_serializer(job_exe)
-            return Response(serializer.data)
-
-    # TODO: remove when REST API v5 is removed
-    def retrieve_v5(self, request, job_exe_id):
+        serializer = self.get_serializer(job_exe)
+        return Response(serializer.data)
+        
+    def _retrieve_v6(self, request, job_id, exe_num):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param job_exe_id: the job execution id
-        :type job_exe_id: int encoded as a str
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :param exe_num: the execution number
+        :type exe_num: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
         try:
-            job_exe = JobExecution.objects.get_details(job_exe_id)
+            job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
         except JobExecution.DoesNotExist:
             raise Http404
 
