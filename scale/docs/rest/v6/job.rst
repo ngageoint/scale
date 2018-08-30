@@ -740,17 +740,59 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 
 .. _rest_job_execution_list_v6:
 
-.. TODO: un-version this rST table link and remove the note when API REST v5 is removed
+v6 Job Executions List
+----------------------
+
+**Example GET /v6/jobs/{id}/executions/ API call**
+
+Request: GET http://.../v6/jobs/{id}/executions/
+
+Response: 200 OK
+
+ .. code-block:: javascript
+
+    {
+      "count": 57,
+      "next": null,
+      "previous": null,
+      "results": [
+        {
+          "id": 3,
+          "status": "COMPLETED",
+          "exe_num": 1,
+          "cluster_id": "scale_job_1234_263x0",
+          "created": "2015-08-28T17:57:41.033Z",
+          "queued": "2015-08-28T17:57:41.010Z",
+          "started": "2015-08-28T17:57:44.494Z",
+          "ended": "2015-08-28T17:57:45.906Z",
+          "job": {
+            "id": 3
+          },
+          "node": {
+            "id": 1,
+            "hostname": "machine.com"
+          },
+          "error": null,
+          "job_type": {
+            "id": 1,
+            "name": "scale-ingest",
+            "version": "1.0.0",
+            "title": "Scale Ingest",
+            "description": "Ingests a source file into a workspace",
+            "revision_num": 1,
+            "icon_code": "f013"
+          },
+          "timeout": 1800,
+          "input_file_size": 10
+        }
+      ]
+    }
 
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Executions List**                                                                                                   |
 +===========================================================================================================================+
 | Returns a list of job executions associated with a given Job ID.  Returned job executions are ordered by exe_num          |
 | descending (most recent first)                                                                                            |
-+---------------------------------------------------------------------------------------------------------------------------+
-| **NOTE**                                                                                                                  |
-|                This API endpoint is available starting with API **v6**.  It replaces a very similar API endpoint which    |
-|                you can see described here: :ref:`Job Execution List <rest_job_execution_list>`.                           |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/{id}/executions/                                                                                            |
 |         Where {id} is the unique identifier of an existing job.                                                           |
@@ -762,19 +804,17 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 | page_size            | Integer           | Optional | The size of the page to use for pagination of results.              |
 |                      |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
-| started              | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
-|                      |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                      |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+----------------------+-------------------+----------+---------------------------------------------------------------------+
-| ended                | ISO-8601 Datetime | Optional | The end of the time range to query.                                 |
-|                      |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                      |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+----------------------+-------------------+----------+---------------------------------------------------------------------+
 | status               | String            | Optional | Return only executions with a status matching this string.          |
 |                      |                   |          | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                    |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
 | node_id              | Integer           | Optional | Return only executions that ran on a given node.                    |
+|                      |                   |          | Duplicate it to filter by multiple values.                          |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_id             | Integer           | Optional | Return only executions that had the given error.                    |
+|                      |                   |          | Duplicate it to filter by multiple values.                          |
++----------------------+-------------------+----------+---------------------------------------------------------------------+
+| error_category       | Integer           | Optional | Return only executions that had an error in the given category.     |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                   |
@@ -812,67 +852,21 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 | .ended               | ISO-8601 Datetime | When the job execution ended. (FAILED, COMPLETED, or CANCELED)                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job                 | JSON Object       | The job that is associated with the execution.                                 |
-|                      |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                      |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .node                | JSON Object       | The node that ran the execution.                                               |
-|                      |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
+|                      |                   | (See :ref:`Node Details <rest_v6_node_details>`)                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .error               | JSON Object       | The last error that was recorded for the execution.                            |
-|                      |                   | (See :ref:`Error Details <rest_error_details>`)                                |
+|                      |                   | (See :ref:`Error Details <rest_v6_error_details>`)                             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type            | JSON Object       | The job type that is associated with the execution.                            |
-|                      |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
+|                      |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                       |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .timeout             | Integer           | The maximum amount of time this job can run before being killed (in seconds).  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .input_file_size     | Float             | The total amount of disk space in MiB for all input files for this execution.  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                                |
-|                                                                                                                           |
-|    {                                                                                                                      |
-|        "count": 57,                                                                                                       |
-|        "next": null,                                                                                                      |
-|        "previous": null,                                                                                                  |
-|        "results": [                                                                                                       |
-|            {                                                                                                              |
-|                "id": 3,                                                                                                   |
-|                "status": "COMPLETED",                                                                                     |
-|                "exe_num": 1,                                                                                              |
-|                "cluster_id": "scale_job_1234_263x0",                                                                      |
-|                "created": "2015-08-28T17:57:41.033Z",                                                                     |
-|                "queued": "2015-08-28T17:57:41.010Z",                                                                      |
-|                "started": "2015-08-28T17:57:44.494Z",                                                                     |
-|                "ended": "2015-08-28T17:57:45.906Z",                                                                       |
-|                "job": {                                                                                                   |
-|                    "id": 3,                                                                                               |
-|                },                                                                                                         |
-|                "node": {                                                                                                  |
-|                    "id": 1,                                                                                               |
-|                    "hostname": "machine.com"                                                                              |
-|                },                                                                                                         |
-|                "error": null,                                                                                             |
-|                "job_type": {                                                                                              |
-|                    "id": 1,                                                                                               |
-|                    "name": "scale-ingest",                                                                                |
-|                    "version": "1.0",                                                                                      |
-|                    "title": "Scale Ingest",                                                                               |
-|                    "description": "Ingests a source file into a workspace",                                               |
-|                    "category": "system",                                                                                  |
-|                    "author_name": null,                                                                                   |
-|                    "author_url": null,                                                                                    |
-|                    "is_system": true,                                                                                     |
-|                    "is_long_running": false,                                                                              |
-|                    "is_active": true,                                                                                     |
-|                    "is_operational": true,                                                                                |
-|                    "is_paused": false,                                                                                    |
-|                    "icon_code": "f013"                                                                                    |
-|                },                                                                                                         |
-|                "timeout": 1800,                                                                                           |
-|                "input_file_size": 10.0                                                                                    |
-|            }                                                                                                              |
-|        ]                                                                                                                  |
-|    }                                                                                                                      |
-+---------------------------------------------------------------------------------------------------------------------------+
 
 .. _rest_job_execution_details_v6:
 

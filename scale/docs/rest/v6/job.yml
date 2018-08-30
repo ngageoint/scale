@@ -177,6 +177,61 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_list'
+  /v6/jobs/{id}/executions/:
+    get:
+      operationId: _rest_v6_job_executions
+      summary: Job Executions
+      description: Returns a list of job executions associated with a given Job ID
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing job
+        -in: query
+          name: page
+          schema:
+            type: integer
+          description: The page of the results to return. Defaults to 1.
+        -in: query
+          name: page_size
+          schema:
+            type: integer
+          description: The size of the page to use for pagination of results. |
+            Defaults to 100, and can be anywhere from 1-1000.
+        -in: query
+          name: status
+          schema:
+            type: string
+          description: Return only executions with a status matching this string. |
+            Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: node_id
+          schema:
+            type: integer
+          description: Return only executions run on the given node. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: error_id
+          schema:
+            type: integer
+          description: Return only excutions with the given error. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: error_category
+          schema:
+            type: string
+          description: Return only excutions with errors of the given category. |
+            Duplicate it to filter by multiple values.
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/job_execution_list'
 
 components:
   schemas:
@@ -274,7 +329,7 @@ components:
           queued:
             type: string
             format: date-time
-            description: When the job type was deprecated (previously known as archived).
+            description: When the job was added to the queue to be run when resources are available.
             example: 2015-09-10T15:24:53.987Z
           started:
             type: string
@@ -304,7 +359,7 @@ components:
 
     job_details:
       allof:
-        - ref: '#/components/schemas/job_details'
+        - ref: '#/components/schemas/job'
         - title: Job Details
         - type: object
         properties:      
@@ -325,3 +380,169 @@ components:
           output:
             description: The output data for the job.
             $ref: '#/components/schemas/data'
+
+    job_execution_list:
+      title: Job Execution List
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The total number of results that match the query parameters
+          example: 10
+        next:
+          type: string
+          format: uri
+          description: A URL to the next page of results.
+          example: null
+        previous:
+          type: string
+          format: uri
+          description: A URL to the previous page of results.
+          example: null
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/job_execution'
+          description: List of Job Execution objects
+
+    job_execution_base:
+      title: Job Execution Base
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call.
+          example: 10
+        status:
+          type: string
+          description: The status of the job execution. (RUNNING,FAILED,COMPLETED,CANCELED)
+          example: RUNNING
+        exe_num:
+          type: integer
+          description: The unique job execution number for the job identifer.
+          example: 1
+        cluster_id:
+          type: string
+          description: The Scale cluster identifier.
+          example: scale_job_1234_263x0
+        created:
+          type: string
+          format: date-time
+          description: When the associated database model was initially created.
+          example: 2015-09-10T15:24:53.503Z
+        queued:
+          type: string
+          format: date-time
+          description: When the job was added to the queue for this run and went to QUEUED status.
+          example: 2015-09-10T15:24:53.987Z
+        started:
+          type: string
+          format: date-time
+          description: When the job was scheduled and went to RUNNING status.
+          example: 2015-09-10T15:24:53.987Z
+        ended:
+          type: string
+          format: date-time
+          description: When the job execution ended. (FAILED, COMPLETED, or CANCELED)
+          example: 2015-09-10T15:24:53.987Z
+        job:
+          description: The job that is associated with the execution.
+          $ref: '#/components/schemas/model'
+        node:
+          description: The node that ran the execution.
+          $ref: '#/components/schemas/model'
+        error:
+          description: The last error that was recorded for the execution.
+          $ref: '#/components/schemas/model'
+        job_type:
+          description: The job type that is associated with the execution.
+          $ref: '#/components/schemas/model'
+    job_execution:
+      allof:
+        - ref: '#/components/schemas/job_execution_base'
+        - title: Job Execution
+        - type: object
+        properties:
+          node:
+            description: The node that ran the execution.
+            $ref: '#/components/schemas/node_base'
+          error:
+            description: The last error that was recorded for the execution.
+            $ref: '#/components/schemas/error_base'
+          job_type:
+            description: The job type that is associated with the execution.
+            $ref: '#/components/schemas/job_type_base'
+          timeout:
+            type: integer
+            description: The maximum amount of time this job can run before being killed (in seconds).
+            example: 1800
+          input_file_size:
+            type: number
+            format: float
+            description: The total amount of disk space in MiB for all input files for this execution.
+            example: 10.0
+    job_execution_details:
+      allof:
+        - ref: '#/components/schemas/job_execution'
+        - title: Job Execution Details
+        - type: object
+        properties:
+          task_results:
+            description: JSON description of the task results for this execution.
+            $ref: '#/components/schemas/exe_task_results'
+          resources:
+            description: JSON description describing the resources allocated to this execution.
+            $ref: '#/components/schemas/exe_resources'
+          configuration:
+            description: JSON description of the configuration for running the job
+            $ref: '#/components/schemas/exe_config'
+          output:
+            description: JSON description of the job output.
+            $ref: '#/components/schemas/exe_output'
+    exe_task_results:
+      title: Task Results
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: The unique identifier of the model. Can be passed to the details API call.
+          example: 10
+        type:
+          type: string
+          description: type of the task (“pull”, “pre”, “main”, or “post”)
+          example: pull
+        was_launched:
+          type: boolean
+          description: whether the task was launched
+          example: true
+        launched:
+          type: string
+          format: date-time
+          description: when the task was launched
+          example: 2015-09-10T15:24:53.987Z
+        was_started:
+          type: boolean
+          description: wether the task was started
+          example: true
+        started:
+          type: string
+          format: date-time
+          description: when the task was started
+          example: 2015-09-10T15:24:53.987Z
+        was_timed_out:
+          type: boolean
+          description: whether the task timed out
+          example: false
+        ended:
+          type: string
+          format: date-time
+          description: when the task finished
+          example: 2015-09-10T15:24:53.987Z
+        status:
+          type: string
+          description: final status of the task (FAILED/COMPLETED/CANCELED)
+          example: COMPLETED
+        exit_code:
+          type: integer
+          description: exit code returned by the task execution
+          example: 0

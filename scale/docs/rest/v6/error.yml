@@ -67,7 +67,7 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/error_detail'
+                $ref: '#/components/schemas/error_details'
 
 components:
   schemas:
@@ -94,8 +94,8 @@ components:
           items:
             $ref: '#/components/schemas/error_details'
           description: List of Error objects
-    error_details:
-      title: Error Details
+    error_base:
+      title: Error Base
       type: object
       properties:
         id:
@@ -121,13 +121,19 @@ components:
           type: boolean
           description: Whether the error was loaded during the installation process.
           example: true
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-          example: 2015-09-10T15:24:53.503Z
-        last_modified:
-          type: string
-          format: date-time
-          description: When the associated database model was last saved.
-          example: 2015-09-10T15:24:53.987Z
+    error_details:
+      allof:
+        - ref: '#/components/schemas/error_details'
+        - title: Error Details
+        - type: object
+        properties:
+          created:
+            type: string
+            format: date-time
+            description: When the associated database model was initially created.
+            example: 2015-09-10T15:24:53.503Z
+          last_modified:
+            type: string
+            format: date-time
+            description: When the associated database model was last saved.
+            example: 2015-09-10T15:24:53.987Z
