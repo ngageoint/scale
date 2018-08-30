@@ -492,7 +492,7 @@ components:
             $ref: '#/components/schemas/exe_task_results'
           resources:
             description: JSON description describing the resources allocated to this execution.
-            $ref: '#/components/schemas/exe_resources'
+            $ref: '#/components/schemas/resources_obj'
           configuration:
             description: JSON description of the configuration for running the job
             $ref: '#/components/schemas/exe_config'
@@ -546,3 +546,11 @@ components:
           type: integer
           description: exit code returned by the task execution
           example: 0
+    resources_obj:
+      title: Resources
+      type: object
+      properties:
+        resources:
+          type: object
+          additionalProperties:
+            type: string
