@@ -1486,30 +1486,15 @@ class JobExecutionsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO: remove this check when REST API v5 is removed
-        if not job_id:
-            if request.version != 'v6':
-                return self.list_v5(request)
-            else:
-                raise Http404
+        if request.version == 'v5':
+            return self.list_v5(request, job_id)
+        elif request.version == 'v6':
+            return self.list_v6(request, job_id)
         else:
-            started = rest_util.parse_timestamp(request, 'started', required=False)
-            ended = rest_util.parse_timestamp(request, 'ended', required=False)
-            rest_util.check_time_range(started, ended)
-
-            statuses = rest_util.parse_string_list(request, 'status', required=False)
-            node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
-
-
-            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
-                                                         statuses=statuses, node_ids=node_ids)
-
-            page = self.paginate_queryset(job_exes)
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            raise Http404
 
     # TODO: remove when REST API v5 is removed
-    def list_v5(self, request):
+    def list_v5(self, request, job_id):
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request
@@ -1530,8 +1515,34 @@ class JobExecutionsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, job_type_names,
-                                                 job_type_categories, node_ids, order)
+        job_exes = None
+        if not job_id:
+            job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, 
+                                             job_type_names, job_type_categories, node_ids, order)
+        else:
+            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended, 
+                                                         statuses=job_statuses, node_ids=node_ids)
+
+        page = self.paginate_queryset(job_exes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+        
+    def list_v6(self, request, job_id):
+        """Gets job executions and their associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        statuses = rest_util.parse_string_list(request, 'status', required=False)
+        node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_id', required=False)
+        error_cats = rest_util.parse_int_list(request, 'error_category', required=False)
+
+        job_exes = JobExecution.objects.get_job_exes(job_id=job_id, statuses=statuses, node_ids=node_ids,
+                                                     error_ids=error_ids, error_categories=error_cats)
 
         page = self.paginate_queryset(job_exes)
         serializer = self.get_serializer(page, many=True)
@@ -1599,7 +1610,6 @@ class JobExecutionDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
-
 
 class JobExecutionSpecificLogView(RetrieveAPIView):
     """This view is the endpoint for viewing the text of specific job execution logs"""
