@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.test.configuration package &mdash; Scale 5.6.0-snapshot documentation</title>
+  <title>storage.test.fixtures package &mdash; Scale 5.6.0-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="storage.test.fixtures package" href="storage.test.fixtures.html" />
-    <link rel="prev" title="storage.test.brokers package" href="storage.test.brokers.html" />
+    <link rel="next" title="storage.test.management package" href="storage.test.management.html" />
+    <link rel="prev" title="storage.test.configuration package" href="storage.test.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -203,13 +203,13 @@
         
           <li><a href="storage.test.html">storage.test package</a> &raquo;</li>
         
-      <li>storage.test.configuration package</li>
+      <li>storage.test.fixtures package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/storage.test.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.test.fixtures.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -222,57 +222,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="storage-test-configuration-package">
-<h1>storage.test.configuration package<a class="headerlink" href="#storage-test-configuration-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="storage-test-fixtures-package">
+<h1>storage.test.fixtures package<a class="headerlink" href="#storage-test-fixtures-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-storage.test.configuration.test_workspace_configuration">
-<span id="storage-test-configuration-test-workspace-configuration-module"></span><h2>storage.test.configuration.test_workspace_configuration module<a class="headerlink" href="#module-storage.test.configuration.test_workspace_configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-storage.test.fixtures.test_delete_files_job_type">
+<span id="storage-test-fixtures-test-delete-files-job-type-module"></span><h2>storage.test.fixtures.test_delete_files_job_type module<a class="headerlink" href="#module-storage.test.fixtures.test_delete_files_job_type" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit">
-<em class="property">class </em><code class="descclassname">storage.test.configuration.test_workspace_configuration.</code><code class="descname">TestWorkspaceConfigurationInit</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.fixtures.test_delete_files_job_type.TestSeedManifest">
+<em class="property">class </em><code class="descclassname">storage.test.fixtures.test_delete_files_job_type.</code><code class="descname">TestSeedManifest</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Validate the seed manifest for a Scale fixture.</p>
 <dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_host_config">
-<code class="descname">test_bad_host_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_host_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling WorkspaceConfiguration constructor with bad host broker configuration.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_type">
-<code class="descname">test_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling WorkspaceConfiguration constructor with bad broker type.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_version">
-<code class="descname">test_bad_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bad_version" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling WorkspaceConfiguration constructor with bad version number.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bare_min">
-<code class="descname">test_bare_min</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bare_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling WorkspaceConfiguration constructor with bare minimum JSON.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling WorkspaceConfiguration constructor successfully with all information.</p>
+<dt id="storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.test_validation">
+<code class="descname">test_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.test_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating and validating the Seed manifest in delete_files_job_type.json</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-storage.test.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.test.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-storage.test.fixtures">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.test.fixtures" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -284,10 +261,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="storage.test.fixtures.html" class="btn btn-neutral float-right" title="storage.test.fixtures package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="storage.test.management.html" class="btn btn-neutral float-right" title="storage.test.management package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="storage.test.brokers.html" class="btn btn-neutral" title="storage.test.brokers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="storage.test.configuration.html" class="btn btn-neutral" title="storage.test.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

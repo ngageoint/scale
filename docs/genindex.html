@@ -235,8 +235,6 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command.add_arguments">(storage.management.commands.scale_delete_file.Command method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_files.Command.add_arguments">(storage.management.commands.scale_delete_files.Command method)</a>
-</li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command.add_arguments">(storage.management.commands.scale_download_file.Command method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.add_arguments">(storage.management.commands.scale_list_files.Command method)</a>
@@ -2719,8 +2717,6 @@
       <li><a href="architecture/django/code_docs/error.html#error.serializers.ErrorSerializerV6">ErrorSerializerV6 (class in error.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView">ErrorsView (class in error.views)</a>
-</li>
-      <li><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_files.eval_input">eval_input() (in module storage.management.commands.scale_delete_files)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.event">event (batch.models.Batch attribute)</a>
 
@@ -11659,6 +11655,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.setUp">(storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.fixtures.html#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.setUp">(storage.test.fixtures.test_delete_files_job_type.TestSeedManifest method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.management.commands.html#storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles.setUp">(storage.test.management.commands.test_scale_delete_files.TestCallScaleDeleteFiles method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.setUp">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
@@ -12109,6 +12107,10 @@
       <li><a href="architecture/django/code_docs/storage.test.configuration.html#module-storage.test.configuration">storage.test.configuration (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.configuration.html#module-storage.test.configuration.test_workspace_configuration">storage.test.configuration.test_workspace_configuration (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.fixtures.html#module-storage.test.fixtures">storage.test.fixtures (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.fixtures.html#module-storage.test.fixtures.test_delete_files_job_type">storage.test.fixtures.test_delete_files_job_type (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.management.html#module-storage.test.management">storage.test.management (module)</a>
 </li>
@@ -13095,6 +13097,8 @@
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeTagManager.test_create_job_type_tags">test_create_job_type_tags() (job.test.test_models.TestJobTypeTagManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV5.test_create_max_scheduled">test_create_max_scheduled() (job.test.test_views.TestJobTypesViewV5 method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_create_message">test_create_message() (storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationViewV6.test_create_mismatched_recipe_types">test_create_mismatched_recipe_types() (batch.test.test_views.TestBatchesValidationViewV6 method)</a>
 </li>
@@ -16574,6 +16578,8 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_workspace_not_active_v6">test_validate_workspace_not_active_v6() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.fixtures.html#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest.test_validation">test_validation() (storage.test.fixtures.test_delete_files_job_type.TestSeedManifest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_value_not_string">test_value_not_string() (job.test.configuration.data.test_job_data.TestJobDataValidateProperties method)</a>
 
       <ul>
@@ -17295,7 +17301,11 @@
       <li><a href="architecture/django/code_docs/job.test.seed.results.html#job.test.seed.results.test_job_results.TestSeedJobResults">TestSeedJobResults (class in job.test.seed.results.test_job_results)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.seed.html#job.test.seed.test_manifest.TestSeedManifest">TestSeedManifest (class in job.test.seed.test_manifest)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.test.fixtures.html#storage.test.fixtures.test_delete_files_job_type.TestSeedManifest">(class in storage.test.fixtures.test_delete_files_job_type)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.seed.html#job.test.seed.test_metadata.TestSeedMetadata">TestSeedMetadata (class in job.test.seed.test_metadata)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.seed.html#job.test.seed.test_types.TestSeedOutputsFiles">TestSeedOutputsFiles (class in job.test.seed.test_types)</a>
