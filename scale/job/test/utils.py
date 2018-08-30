@@ -402,7 +402,7 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
 
 
 def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max_tries=3, max_scheduled=None,
-                         is_active=True, is_operational=True, trigger_rule=None, configuration=None):
+                         is_active=True, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
     if not manifest:
         manifest = {
             'seedVersion': '1.0.0',
@@ -457,7 +457,7 @@ def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max
                                       manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
                                       max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule,
-                                      configuration=configuration)
+                                      configuration=configuration, docker_image=docker_image)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
@@ -478,7 +478,7 @@ def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
-                    is_system=False, is_operational=True, trigger_rule=None, configuration=None):
+                    is_system=False, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
     """Creates a job type model for unit testing
 
     :returns: The job type model
@@ -531,7 +531,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
                                       is_system=is_system, is_operational=is_operational, trigger_rule=trigger_rule,
-                                      configuration=configuration)
+                                      configuration=configuration, docker_image=docker_image)
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
