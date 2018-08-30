@@ -554,3 +554,45 @@ components:
           type: object
           additionalProperties:
             type: string
+
+    exe_config:
+      title: Execution Configuration
+      type: object
+      properties:
+        input_files:
+          type: array
+          items:
+            $ref: '#/components/schemas/input_file'
+        output_workspaces:
+          type: object
+          additionalProperties:
+            type: string
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/task'
+
+    input_file:
+      title: Input File
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          description: type of the input file (SOURCE or PRODUCT)
+        workspace_name:
+          type: string
+          description: name of the workspace holding the input file
+        workspace_path:
+          type: string
+          description: path of the input file within the workspace
+        local_file_name:
+          type: string
+          description: Alternate file name to use when passing the |
+            input file to the executing container. This is used to |
+            deconflict identical input file names when multiple |
+            files with the same name are passed to the same input.
+        is_deleted:
+          type: boolean
+          description: Whether the input file has been deleted or not.
