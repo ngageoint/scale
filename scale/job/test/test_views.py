@@ -4400,7 +4400,15 @@ class TestJobInputFilesViewV6(TestCase):
         }
 
         self.manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        manifest['job']['interface']['files']
+        self.manifest['job']['interface']['inputs']['files'] = {
+            [{'name': 'input_file'},{'name': 'other_input_file'}]
+        }
+        self.manifest['job']['interface']['inputs']['json'] = {
+            [{'name': 'input_field', 'type': 'string'}]
+        }
+        self.manifest['job']['interface']['outputs']['files'] = {
+            [{'name': 'output_file'},{'name': 'output_files', 'multiple': True}]
+        }
 
         job_data = {
             'input_data': [{
