@@ -22,7 +22,7 @@ class TestDeleteFiles(TestCase):
 
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
-        
+
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file.json')
 
@@ -48,8 +48,8 @@ class TestDeleteFiles(TestCase):
         self.assertEqual(ScaleFile.objects.filter(id=file_1.id).count(), 0)
         self.assertEqual(ScaleFile.objects.filter(id=file_2.id).count(), 0)
 
-        # No new messages
-        self.assertEqual(len(new_message.new_messages), 0)
+        # One new job for create_purge_jobs_messages
+        self.assertEqual(len(new_message.new_messages), 1)
 
     def test_execute(self):
         """Tests calling DeleteFile.execute() successfully"""
