@@ -19,7 +19,6 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
-import util.rest as rest_util
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import JobType
@@ -4400,15 +4399,12 @@ class TestJobInputFilesViewV6(TestCase):
         }
 
         self.manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
-        self.manifest['job']['interface']['inputs']['files'] = {
-            [{'name': 'input_file'},{'name': 'other_input_file'}]
-        }
-        self.manifest['job']['interface']['inputs']['json'] = {
-            [{'name': 'input_field', 'type': 'string'}]
-        }
-        self.manifest['job']['interface']['outputs']['files'] = {
-            [{'name': 'output_file'},{'name': 'output_files', 'multiple': True}]
-        }
+
+        self.manifest['job']['interface']['inputs']['files'] = [{'name': 'input_file'},{'name': 'other_input_file'}]
+
+        self.manifest['job']['interface']['inputs']['json'] =  [{'name': 'input_field', 'type': 'string'}]
+
+        self.manifest['job']['interface']['outputs']['files'] = [{'name': 'output_file'},{'name': 'output_files', 'multiple': True}]
 
         job_data = {
             'input_data': [{
@@ -4459,6 +4455,35 @@ class TestJobInputFilesViewV6(TestCase):
         self.assertEqual(len(results), 2)
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+            self.assertIn('file_name', result)
+            self.assertIn('workspace', result)
+            self.assertIn('media_type', result)
+            self.assertIn('file_type', result)
+            self.assertIn('file_size', result)
+            self.assertIn('file_path', result)
+            self.assertIn('is_deleted', result)
+            self.assertIn('url', result)
+            self.assertIn('created', result)
+            self.assertIn('deleted', result)
+            self.assertIn('data_started', result)
+            self.assertIn('data_ended', result)
+            self.assertIn('source_started', result)
+            self.assertIn('source_ended', result)
+            self.assertIn('last_modified', result)
+            self.assertIn('geometry', result)
+            self.assertIn('center_point', result)
+            self.assertIn('countries', result)
+            self.assertIn('job_type', result)
+            self.assertIn('job', result)
+            self.assertIn('job_exe', result)
+            self.assertIn('job_output', result)
+            self.assertIn('recipe_type', result)
+            self.assertIn('recipe', result)
+            self.assertIn('recipe_node', result)
+            self.assertIn('batch', result)
+            self.assertFalse(result['is_superseded'])
+            self.assertIn('superseded', result)
+
 
     def test_legacy_successful_file(self):
         """Tests successfully calling the job input files view for legacy files with job_data"""
