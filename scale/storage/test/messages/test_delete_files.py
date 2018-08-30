@@ -138,4 +138,5 @@ class TestDeleteFiles(TestCase):
 
         files = [file_1, file_2, file_3, file_4]
 
+        # No exception is success
         create_delete_files_messages(files=files, job_id=job.id, purge=True)
