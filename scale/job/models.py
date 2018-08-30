@@ -3497,22 +3497,6 @@ class JobType(models.Model):
 
         return Resources(self.custom_resources)
 
-    def get_tagged_docker_image(self):
-        """Constructs a complete Docker image and tag with the correct packageVersion value
-
-        :return: The complete Docker image and tag
-        :rtype: str
-        """
-        interface = self.get_job_interface()
-        docker_image = self.docker_image
-        if isinstance(interface, SeedManifest):
-            if ':' in docker_image:
-                docker_image = docker_image.split(':', 1)[0]
-            return '%s:%s' % (docker_image, interface.get_package_version())
-
-        else:
-            return docker_image
-
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
 
@@ -3789,6 +3773,7 @@ class JobTypeRevisionManager(models.Manager):
         new_rev.job_type = job_type
         new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
+        new_rev.docker_image = job_type.docker_image
         new_rev.save()
 
     def get_by_natural_key(self, job_type, revision_num):
@@ -3902,6 +3887,7 @@ class JobTypeRevision(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
+    docker_image = models.TextField(default='not-a-real-image')
     created = models.DateTimeField(auto_now_add=True)
 
     objects = JobTypeRevisionManager()
@@ -3939,19 +3925,6 @@ class JobTypeRevision(models.Model):
         """
 
         return JobInterfaceSunset.create(self.manifest)
-        
-    def get_tagged_docker_image(self):
-        """Constructs a complete Docker image and tag with the correct packageVersion value
-
-        :return: The complete Docker image and tag
-        :rtype: str
-        """
-        interface = self.get_job_interface()
-        docker_image = None
-        if isinstance(interface, SeedManifest):
-            return '%s-%s-seed:%s' % (interface.get_name(), interface.get_job_version(), interface.get_package_version())
-        else:
-            return docker_image
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision
