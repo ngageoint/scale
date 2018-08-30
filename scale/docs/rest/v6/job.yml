@@ -492,7 +492,7 @@ components:
             $ref: '#/components/schemas/exe_task_results'
           resources:
             description: JSON description describing the resources allocated to this execution.
-            $ref: '#/components/schemas/resources_obj'
+            $ref: '#/components/schemas/resources_wrapper'
           configuration:
             description: JSON description of the configuration for running the job
             $ref: '#/components/schemas/exe_config'
@@ -546,14 +546,19 @@ components:
           type: integer
           description: exit code returned by the task execution
           example: 0
-    resources_obj:
-      title: Resources
+    resources_wrapper:
+      title: Resources Wrapper
       type: object
       properties:
         resources:
           type: object
           additionalProperties:
             type: string
+    resources_obj:
+      title: Resources Object
+      type: object
+      additionalProperties:
+        type: string
 
     exe_config:
       title: Execution Configuration
@@ -596,3 +601,131 @@ components:
         is_deleted:
           type: boolean
           description: Whether the input file has been deleted or not.
+    task:
+      title: Task
+      type: object
+      properties:
+        task_id:
+          type: integer
+        type:
+          type: string
+          description: type of the task (“pull”, “pre”, “main”, or “post”)
+        resources:
+          $ref: '#/components/schemas/resources_obj'
+        args:
+          type: string
+          description: command arguments that will be passed to the task
+        env_vars:
+          type: object
+          description: optional object where each key is the name of an environment |
+            variable and each corresponding value is the value passed to that environment variable
+          additionalProperties:
+            type: string
+        workspaces:
+          type: object
+          additionalProperties:
+            $ref:'#/components/schemas/task_workspace'
+        mounts:
+          type: object
+          description: Optional object where each key is the name of a mount |
+            variable and each corresponding value is the name of the docker  |
+            volume that will be mounted into the task's container. A null value |
+            indicates a required mount that was not provided.
+          additionalProperties:
+            type: string
+        settings:
+          type: object
+          description: optional object where each key is the name of a setting |
+            variable and each corresponding value is the value passed to that |
+            setting. A null value indicates a required setting that was not provided.
+          additionalProperties:
+            type: string
+        volumes:
+          type: object
+          description: Optional object where each key is the name of a Docker |
+            volume being mounted into the task.
+          additionalProperties:
+            $ref:'#/components/schemas/task_volume'
+        docker_params:
+          type: array
+          description: Objects that describe each Docker parameter to pass to the container
+          items:
+            $ref:'#/components/schemas/docker_param'
+            type: string
+    task_workspace:
+      title: Task Workspace
+      type: object
+      properties:
+        mode:
+          type: string
+          description: Mode to use for the workspace. There are two valid |
+            values: “ro” for read-only mode and “rw” for read-write mode.
+        volume_name:
+          type: string
+          description: The name of Docker volume that will be mounted into the |
+            task’s container in order to make the workspace available.
+      required:
+      - mode
+    task_volume:
+      title: Task Volume
+      type: object
+      properties:
+        mode:
+          type: string
+          description: Mode to use for mounting the volume. There are two valid |
+            values: “ro” for read-only mode and “rw” for read-write mode.
+        type:
+          type: string
+          description: The type of the volume: “volume” for normal Docker volume |
+            mounts and “host” for Docker host path mounts.
+        host_path:
+          type: string
+          description: The path on the host machine that should be mounted into |
+            the container. This field should only be specified when type is “host”.
+        driver:
+          type: string
+          description: Custom Docker volume driver to use for the volume. This |
+            field should only be specified when type is “volume”.
+        driver_opts:
+          type: object
+          description: Name and value of a Docker volume driver argument option |
+            that should be passed to the volume driver. This field should only |
+            be specified when type is “volume”.
+          additionalPropterties:
+            type: string
+      required:
+      - type
+      - mode
+
+    docker_param:
+      title: Docker Parameter
+      type: object
+      properties:
+        flag:
+          type: string
+          description: The command line flag (long form) to use for passing the |
+            parameter without the preceding dashes (e.g. use “volume” for passing|
+            “–volume=...”).
+          example: volume
+        value:
+          type: string
+          description: The value to pass to the parameter on the Docker command line.
+          
+    exe_output:
+      title: Execution Output
+      type: object
+      properties:
+        output_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/output_file'
+    output_file:
+      title: Output File
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the output file
+        file_id:
+          type: integer
+          description: Unique ID of the file in the Scale system
