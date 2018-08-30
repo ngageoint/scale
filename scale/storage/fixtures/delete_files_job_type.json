@@ -1,5 +1,4 @@
 [
-<<<<<<< HEAD
     {
         "model": "job.JobType",
         "pk": null,
@@ -79,52 +78,4 @@
             "icon_code": "f1c3"
         }
     }
-=======
-	{
-		"model": "job.JobType",
-		"pk": null,
-		"fields": {
-			"name": "scale-delete-files",
-			"version": "1.0",
-			"title": "Scale Delete Files",
-			"description": "Deletes a given file from a storage system.",
-			"category": "system",
-			"is_system": true,
-			"is_long_running": false,
-			"is_active": true,
-			"is_paused": false,
-			"uses_docker": true,
-			"docker_privileged": false,
-			"docker_image": "scale",
-			"manifest": {
-				"version": "1.4",
-				"command": "",
-				"command_arguments": "scale_delete_files ${-f :file} ${-j :job_id} ${-w :workspace} ${-p :purge}",
-				"input_data": [ { "name": "file", "type": "property" },
-								{ "name": "job_id", "type": "property" },
-								{ "name": "workspace", "type": "property" },
-								{ "name": "purge", "type": "property" } ]
-			},
-			"revision_num": 1,
-			"error_mapping": {
-				"version": "1.0",
-				"exit_codes": {
-					"10": "filesystem-io"
-				}
-			},
-			"priority": 10,
-			"max_scheduled": 100,
-			"timeout": 3600,
-			"max_tries": 3,
-			"cpus_required": 0.5,
-			"mem_const_required": 128.0,
-			"shared_mem_required": 0.0,
-			"disk_out_const_required": 0.0,
-			"disk_out_mult_required": 0.0,
-			"created": "2018-03-01T00:00:00.0Z",
-			"last_modified": "2018-03-01T00:00:00.0Z",
-			"icon_code": "f1c3"
-		}
-		}
->>>>>>> modified args handling for consistency
 ]
