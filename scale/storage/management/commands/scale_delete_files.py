@@ -94,11 +94,12 @@ class Command(BaseCommand):
 
         workspaces = {}
         for workspace in workspace_list:
-            wrkspc = WorkspaceConfiguration(workspace)
+            name = workspace.keys()[0]
+            wrkspc = WorkspaceConfiguration(workspace[name])
             wrkspc.validate_broker()
             valid_wrkspc = wrkspc.get_dict()
 
-            workspaces[workspace['name']] = {
+            workspaces[name] = {
                 'broker': get_broker(valid_wrkspc['broker']['type']),
                 'volume_path' : valid_wrkspc['broker']['host_path']
             }
