@@ -2784,7 +2784,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertTrue(isinstance(result[0], dict), 'result  must be a dictionary')
         self.assertEqual(result[0]['job_type']['name'], self.job_type.name)
         self.assertEqual(result[0]['revision_num'], 2)
-        self.assertEqual(result[0]['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+        self.assertEqual(result[0]['docker_image'], 'fake')
 
     def test_details_not_found(self):
         """Tests successfully calling the get job type revision details view with a job type revision that does not exist."""
@@ -2805,7 +2805,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['job_type']['name'], self.job_type.name)
         self.assertEqual(result['revision_num'], 1)
-        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.0')
+        self.assertEqual(result['docker_image'], 'fake')
         self.assertIsNotNone(result['manifest'])
 
 

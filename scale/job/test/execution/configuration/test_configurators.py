@@ -492,7 +492,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
                               'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk, 'gpus': resources.gpus},
-                              'args': create_pull_command(job_type.get_tagged_docker_image()),
+                              'args': create_pull_command(job_type.docker_image),
                               'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
                                            'ALLOCATED_MEM': unicode(resources.mem),
                                            'ALLOCATED_DISK': unicode(resources.disk),

@@ -45,6 +45,7 @@ class QueuedJobExecution(object):
         job_exe.batch_id = self._queue.batch_id
         job_exe.exe_num = self._queue.exe_num
         job_exe.timeout = self._queue.timeout
+        job_exe.docker_image = self._queue.docker_image
         job_exe.input_file_size = self._queue.input_file_size
         job_exe.configuration = self.configuration.get_dict()
         job_exe.queued = self._queue.queued
