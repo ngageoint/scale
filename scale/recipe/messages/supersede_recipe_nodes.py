@@ -69,7 +69,7 @@ def create_supersede_recipe_nodes_messages(recipe_ids, when, supersede_jobs, sup
     return messages
 
 
-def create_recursive_supersede_messages(recipe_ids, when):
+def _create_recursive_supersede_messages(recipe_ids, when):
     """Creates messages to recursively supersede all nodes in the given recipes
 
     :param recipe_ids: The recipe IDs
@@ -102,7 +102,7 @@ def create_recursive_supersede_messages(recipe_ids, when):
     return messages
 
 
-def create_recursive_unpublish_messages(recipe_ids, when):
+def _create_recursive_unpublish_messages(recipe_ids, when):
     """Creates messages to recursively supersede/unpublish all nodes in the given recipes
 
     :param recipe_ids: The recipe IDs
@@ -251,7 +251,7 @@ class SupersedeRecipeNodes(CommandMessage):
         self.new_messages.extend(create_unpublish_jobs_messages(unpublish_job_ids, self.when))
 
         # Create messages to recursively handle sub-recipes
-        self.new_messages.extend(create_recursive_supersede_messages(supersede_recursive_recipe_ids, self.when))
-        self.new_messages.extend(create_recursive_unpublish_messages(unpublish_recursive_recipe_ids, self.when))
+        self.new_messages.extend(_create_recursive_supersede_messages(supersede_recursive_recipe_ids, self.when))
+        self.new_messages.extend(_create_recursive_unpublish_messages(unpublish_recursive_recipe_ids, self.when))
 
         return True
