@@ -76,18 +76,24 @@ class SpawnDeleteFilesJob(CommandMessage):
             workspaces = []
 
             for f in files_to_delete:
-                files.append({'id': f.id, 
-                              'file_path': f.file_path, 
+                files.append({'id': f.id,
+                              'file_path': f.file_path,
                               'workspace': f.workspace.name})
                 if f.workspace.name not in [k for wrkspc in workspaces for k in wrkspc.keys()]:
                     workspaces.append({f.workspace.name: f.workspace.json_config})
-            
+
             inputs = Data()
             inputs.add_value(JsonValue('JOB_ID', self.job_id))
             inputs.add_value(JsonValue('PURGE', self.purge))
             inputs.add_value(JsonValue('FILES', files))
             inputs.add_value(JsonValue('WORKSPACES', workspaces))
-
             inputs_json = convert_data_to_v6_json(inputs)
-            JobData(inputs_json)
+
+            # TODO: Need to get trigger event id. 
+            # Consider reworking create_jobs_message to generate a generic trigger event for this type of thing
+            # TODO: Need to augment seed manifest with mounts
+            # Consider appending needed workspaces to manifest and creating a new version of the job with correct mounts
+            call = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0", event_id=1,
+                                       job_type_rev_num="1", count=1, input_data_dict=inputs_json.get_dict())
+
         return True
