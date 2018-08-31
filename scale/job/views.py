@@ -27,16 +27,17 @@ from job.deprecation import JobInterfaceSunset
 from job.error.mapping import create_legacy_error_mapping
 from job.exceptions import InvalidJobField
 from job.messages.cancel_jobs_bulk import create_cancel_jobs_bulk_message
-from job.serializers import (JobSerializerV5, JobSerializerV6, 
-                             JobDetailsSerializerV5, JobDetailsSerializerV6, 
+from job.serializers import (JobSerializerV5, JobSerializerV6,
+                             JobDetailsSerializerV5, JobDetailsSerializerV6,
                              JobExecutionSerializerV5, JobExecutionSerializerV6,
                              JobExecutionDetailsSerializerV5, JobExecutionDetailsSerializerV6,
                              JobWithExecutionSerializerV5, JobUpdateSerializerV5)
 from job.job_type_serializers import (JobTypeSerializerV5, JobTypeSerializerV6,
-                             JobTypeListSerializerV6, JobTypeRevisionSerializerV6, JobTypeRevisionDetailsSerializerV6,
-                             JobTypeDetailsSerializerV5, JobTypeDetailsSerializerV6, 
-                             JobTypePendingStatusSerializer, JobTypeRunningStatusSerializer,
-                             JobTypeFailedStatusSerializer, JobTypeStatusSerializer)
+                                      JobTypeListSerializerV6, JobTypeRevisionSerializerV6,
+                                      JobTypeRevisionDetailsSerializerV6, JobTypeDetailsSerializerV5,
+                                      JobTypeDetailsSerializerV6, JobTypePendingStatusSerializer,
+                                      JobTypeRunningStatusSerializer, JobTypeFailedStatusSerializer,
+                                      JobTypeStatusSerializer)
 from messaging.manager import CommandMessageManager
 from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.exceptions import InvalidResources
@@ -126,7 +127,8 @@ class JobTypesView(ListCreateAPIView):
         is_system = rest_util.parse_bool(request, 'is_system', required=False)
         order = ['name']
 
-        job_types = JobType.objects.get_job_types_v6(keyword=keyword, is_active=is_active, is_system=is_system, order=order)
+        job_types = JobType.objects.get_job_types_v6(keyword=keyword, is_active=is_active,
+                                                     is_system=is_system, order=order)
 
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
@@ -272,19 +274,19 @@ class JobTypesView(ListCreateAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         # Require docker image value
         icon_code = rest_util.parse_string(request, 'icon_code', required=False)
 
         # Require docker image value
         max_scheduled = rest_util.parse_int(request, 'max_scheduled', required=False)
-        
+
         # Require docker image value
         docker_image = rest_util.parse_string(request, 'docker_image', required=True)
-        
+
         # Validate the job interface / manifest
         manifest_dict = rest_util.parse_dict(request, 'manifest', required=True)
-        
+
         manifest = None
         try:
             manifest = SeedManifest(manifest_dict, do_validate=True)
@@ -295,7 +297,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
-        
+
         configuration = None
         if configuration_dict:
             try:
@@ -304,7 +306,7 @@ class JobTypesView(ListCreateAPIView):
                 message = 'Job type configuration invalid'
                 logger.exception(message)
                 raise BadParameter('%s: %s' % (message, unicode(ex)))
-        
+
         # Check for invalid fields
         fields = {'icon_code', 'max_scheduled', 'docker_image', 'configuration', 'manifest'}
         for key, value in request.data.iteritems():
@@ -313,7 +315,7 @@ class JobTypesView(ListCreateAPIView):
 
         name = manifest_dict['job']['name']
         version = manifest_dict['job']['jobVersion']
-        
+
         existing_job_type = JobType.objects.filter(name=name, version=version).first()
         if not existing_job_type:
             try:
@@ -323,7 +325,7 @@ class JobTypesView(ListCreateAPIView):
                                                               docker_image=docker_image,
                                                               manifest=manifest,
                                                               configuration=configuration)
-    
+
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError) as ex:
                 message = 'Unable to create new job type'
                 logger.exception(message)
@@ -339,7 +341,7 @@ class JobTypesView(ListCreateAPIView):
         else:
             try:
                 JobType.objects.edit_job_type_v6(job_type_id=existing_job_type.id, manifest=manifest,
-                                                 docker_image=docker_image,  icon_code=icon_code, is_active=None,
+                                                 docker_image=docker_image, icon_code=icon_code, is_active=None,
                                                  is_paused=None, max_scheduled=max_scheduled,
                                                  configuration=configuration)
             except (InvalidJobField, InvalidSecretsConfiguration, ValueError, InvalidInterfaceDefinition) as ex:
@@ -371,7 +373,7 @@ class JobTypeIDDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a job type."""
     queryset = JobType.objects.all()
 
-    serializer_class =     JobTypeDetailsSerializerV5
+    serializer_class = JobTypeDetailsSerializerV5
 
     def get(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
@@ -387,7 +389,7 @@ class JobTypeIDDetailsView(GenericAPIView):
             return self.get_v5(request, job_type_id)
         else:
             raise Http404
-        
+
     def get_v5(self, request, job_type_id):
         """Retrieves the details for a job type and return them in JSON form
 
@@ -551,7 +553,7 @@ class JobTypeVersionsView(ListAPIView):
     """This view is the endpoint for retrieving versions of a job type."""
     queryset = JobType.objects.all()
 
-    serializer_class =     JobTypeSerializerV6
+    serializer_class = JobTypeSerializerV6
 
     def list(self, request, name):
         """Determine api version and call specific method
@@ -567,7 +569,7 @@ class JobTypeVersionsView(ListAPIView):
             return self.list_v6(request, name)
         else:
             raise Http404
-        
+
     def list_v6(self, request, name):
         """Retrieves the list of versions for a job type with the given name and return them in JSON form
 
@@ -580,7 +582,7 @@ class JobTypeVersionsView(ListAPIView):
         """
         is_active = rest_util.parse_bool(request, 'is_active', required=False)
         order = ['-version']
-        
+
         job_types = JobType.objects.get_job_type_versions_v6(name, is_active, order)
 
         page = self.paginate_queryset(job_types)
@@ -591,7 +593,7 @@ class JobTypeDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving/updating details of a version of a job type."""
     queryset = JobType.objects.all()
 
-    serializer_class =     JobTypeDetailsSerializerV6
+    serializer_class = JobTypeDetailsSerializerV6
 
     def get(self, request, name, version):
         """Retrieves the details for a job type version and return them in JSON form
@@ -610,7 +612,7 @@ class JobTypeDetailsView(GenericAPIView):
             return self.get_v6(request, name, version)
         else:
             raise Http404
-        
+
     def get_v6(self, request, name, version):
         """Retrieves the details for a job type version and return them in JSON form
 
@@ -623,7 +625,7 @@ class JobTypeDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         try:
             job_type = JobType.objects.get_details_v6(name, version)
         except JobType.DoesNotExist:
@@ -688,11 +690,11 @@ class JobTypeDetailsView(GenericAPIView):
             with transaction.atomic():
                 # Edit the job type
                 JobType.objects.edit_job_type_v6(job_type_id=job_type.id, manifest=None,
-                                                 docker_image=None,  icon_code=icon_code, is_active=is_active,
+                                                 docker_image=None, icon_code=icon_code, is_active=is_active,
                                                  is_paused=is_paused, max_scheduled=max_scheduled,
-                                                 configuration=configuration)        
-        except (InvalidJobField, InvalidSecretsConfiguration, ValueError, 
-                InvalidJobConfiguration,InvalidInterfaceDefinition) as ex:
+                                                 configuration=configuration)
+        except (InvalidJobField, InvalidSecretsConfiguration, ValueError,
+                InvalidJobConfiguration, InvalidInterfaceDefinition) as ex:
             logger.exception('Unable to update job type: %i', job_type.id)
             raise BadParameter(unicode(ex))
 
@@ -721,7 +723,7 @@ class JobTypeRevisionsView(ListAPIView):
             return self.list_v6(request, name, version)
         else:
             raise Http404
-        
+
     def list_v6(self, request, name, version):
         """Retrieves the list of versions for a job type with the given name and return them in JSON form
 
@@ -736,12 +738,12 @@ class JobTypeRevisionsView(ListAPIView):
         """
 
         order = ['-revision_num']
-        
+
         try:
             job_type_revisions = JobTypeRevision.objects.get_job_type_revisions_v6(name, version, order)
         except JobType.DoesNotExist:
             raise Http404
-            
+
 
         page = self.paginate_queryset(job_type_revisions)
         serializer = self.get_serializer(page, many=True)
@@ -772,7 +774,7 @@ class JobTypeRevisionDetailsView(GenericAPIView):
             return self.get_v6(request, name, version, revision_num)
         else:
             raise Http404
-        
+
     def get_v6(self, request, name, version, revision_num):
         """Retrieves the details for a job type version and return them in JSON form
 
@@ -787,7 +789,7 @@ class JobTypeRevisionDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        
+
         try:
             job_type_rev = JobTypeRevision.objects.get_details_v6(name, version, revision_num)
         except JobType.DoesNotExist:
@@ -929,12 +931,12 @@ class JobTypesValidationView(APIView):
 
         # Validate the job type
         validation = JobType.objects.validate_job_type_v6(manifest_dict=manifest_dict,
-                                                            configuration_dict=configuration_dict)
+                                                          configuration_dict=configuration_dict)
 
         resp_dict = {'is_valid': validation.is_valid, 'errors': [e.to_dict() for e in validation.errors],
                      'warnings': [w.to_dict() for w in validation.warnings]}
         return Response(resp_dict)
-        
+
 
 class JobTypesPendingView(ListAPIView):
     """This view is the endpoint for retrieving the status of all currently pending job types."""
@@ -1044,7 +1046,7 @@ class JobsView(ListAPIView):
             return JobSerializerV6
         else:
             return JobSerializerV5
-    
+
     def list(self, request):
         """Retrieves jobs and returns it in JSON form
 
@@ -1060,7 +1062,7 @@ class JobsView(ListAPIView):
             return self._list_v5(request)
 
         raise Http404()
-        
+
     def _list_v5(self, request):
         """Retrieves jobs and returns it in JSON form
 
@@ -1086,16 +1088,16 @@ class JobsView(ListAPIView):
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         jobs = Job.objects.get_jobs_v5(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                    job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                    job_type_categories=job_type_categories, batch_ids=batch_ids,
-                                    error_categories=error_categories, include_superseded=include_superseded,
-                                    order=order)
+                                       job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                       job_type_categories=job_type_categories, batch_ids=batch_ids,
+                                       error_categories=error_categories, include_superseded=include_superseded,
+                                       order=order)
 
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)
-        
+
     def _list_v6(self, request):
         """Retrieves jobs and returns it in JSON form
 
@@ -1122,10 +1124,10 @@ class JobsView(ListAPIView):
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         jobs = Job.objects.get_jobs_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                    job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                    batch_ids=batch_ids, recipe_ids=recipe_ids,
-                                    error_categories=error_categories, error_ids=error_ids,
-                                    is_superseded=is_superseded, order=order)
+                                       job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                       batch_ids=batch_ids, recipe_ids=recipe_ids,
+                                       error_categories=error_categories, error_ids=error_ids,
+                                       is_superseded=is_superseded, order=order)
 
         page = self.paginate_queryset(jobs)
         serializer = self.get_serializer(page, many=True)
@@ -1213,7 +1215,7 @@ class JobDetailsView(GenericAPIView):
             return JobDetailsSerializerV6
         else:
             return JobDetailsSerializerV5
-    
+
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
 
@@ -1252,7 +1254,7 @@ class JobDetailsView(GenericAPIView):
             return self._patch_v5(request, job_id)
 
         raise Http404()
-        
+
     def _patch_v5(self, request, job_id):
         """Modify job info with a subset of fields
 
@@ -1355,7 +1357,7 @@ class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""
     queryset = Job.objects.all()
     serializer_class = JobUpdateSerializerV5
-        
+
     def get(self, request):
         """Retrieves the job updates for a given time range and returns it in JSON form
 
@@ -1440,9 +1442,9 @@ class JobsWithExecutionView(ListAPIView):
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         jobs = Job.objects.get_jobs_v5(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                    job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                    job_type_categories=job_type_categories, error_categories=error_categories,
-                                    include_superseded=include_superseded, order=order)
+                                       job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                       job_type_categories=job_type_categories, error_categories=error_categories,
+                                       include_superseded=include_superseded, order=order)
 
         # Add the latest execution for each matching job
         page = self.paginate_queryset(jobs)
@@ -1466,7 +1468,7 @@ class JobExecutionsView(ListAPIView):
             return JobExecutionSerializerV6
         else:
             return JobExecutionSerializerV5
-    
+
     def list(self, request, job_id=None):
         """Gets job executions and their associated job_type id, name, and version
 
@@ -1543,7 +1545,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
             return JobExecutionDetailsSerializerV6
         else:
             return JobExecutionDetailsSerializerV5
-    
+
     def retrieve(self, request, job_id, exe_num=None):
         """Gets job execution and associated job_type id, name, and version
 

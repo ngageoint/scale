@@ -1,48 +1,81 @@
 [
-	{
-		"model": "job.JobType",
-		"pk": null,
-		"fields": {
-			"name": "scale-delete-files",
-			"version": "1.0",
-			"title": "Scale Delete Files",
-			"description": "Deletes a given file from a storage system.",
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-delete-files",
+            "version": "1.0.0",
+            "title": "Scale Delete Files",
+            "description": "Deletes a given file from a storage system.",
             "category": "system",
-			"is_system": true,
-			"is_long_running": false,
-			"is_active": true,
-			"is_paused": false,
-			"uses_docker": true,
-			"docker_privileged": false,
-			"docker_image": "scale",
-			"manifest": {
-			     "version": "1.4",
-                 "command": "",
-			     "command_arguments": "scale_delete_files ${-f :file_paths} ${-j :job_id} ${-w :workspace} ${-p :purge}",
-                 "input_data": [ { "name": "file_paths", "type": "property" },
-								 { "name": "job_id", "type": "property" },
-								 { "name": "workspace", "type": "property" },
-								 { "name": "purge", "type": "property" } ]
-			},
-			"revision_num": 1,
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "uses_docker": true,
+            "docker_privileged": false,
+            "docker_image": "scale",
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-delete-files",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Delete Files",
+                    "description": "Deletes a given file from a storage system.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 3600,
+                    "interface": {
+                        "command": "python manage.py scale_delete_files",
+                        "inputs": {
+                            "json": [ 
+                                {
+                                    "name": "files",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "workspaces",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "job_id",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "purge",
+                                    "type": "string", 
+                                    "required": true 
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "revision_num": 1,
             "error_mapping": {
-				"version": "1.0",
-				"exit_codes": {
-					"10": "filesystem-io"
-				}
-			},
-			"priority": 10,
+                "version": "1.0",
+                "exit_codes": {
+                    "10": "filesystem-io"
+                }
+            },
+            "priority": 10,
             "max_scheduled": 100,
-			"timeout": 3600,
-			"max_tries": 3,
-			"cpus_required": 0.5,
-			"mem_const_required": 128.0,
+            "timeout": 3600,
+            "max_tries": 3,
+            "cpus_required": 0.5,
+            "mem_const_required": 128.0,
             "shared_mem_required": 0.0,
-			"disk_out_const_required": 0.0,
-			"disk_out_mult_required": 0.0,
-			"created": "2018-03-01T00:00:00.0Z",
-			"last_modified": "2018-03-01T00:00:00.0Z",
-			"icon_code": "f1c3"
-		}
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2018-03-01T00:00:00.0Z",
+            "last_modified": "2018-09-01T00:00:00.0Z",
+            "icon_code": "f1c3"
+        }
     }
 ]
