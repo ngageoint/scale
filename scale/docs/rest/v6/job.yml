@@ -274,6 +274,23 @@ paths:
         '202':
           description: |-
             202 ACCEPTED response
+  /v6/jobs/requeue/:
+    post:
+      operationId: _rest_v6_job_requeue
+      summary: Requeue Jobs
+      description: Re-queues the jobs that fit the given filter criteria. |
+        The re-queuing will be done asynchronously, so the response will just |
+        indicate that the re-queue request has been accepted.
+      requestBody:
+        required: false
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_requeue_post'
+      responses:
+        '202':
+          description: |-
+            202 ACCEPTED response
 
 components:
   schemas:
@@ -828,3 +845,13 @@ components:
           is_superseded: 
             type: boolean
             description: Cancel only jobs with matching is_superseded flag.
+    job_requeue_post:
+      allof:
+        - ref: '#/components/schemas/job_cancel_post'
+        - title: Requeue Jobs Post
+        - type: object
+        properties:
+          priority:
+            type: integer
+            description: Change the priority of matching jobs when adding them |
+              to the queue. Defaults to jobs current priority; lower number is higher priority.

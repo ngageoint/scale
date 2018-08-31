@@ -4738,14 +4738,14 @@ class TestCancelJobsViewV6(TestCase):
         json_data = {
             'started': datetime_to_string(started),
             'ended': datetime_to_string(ended),
-            'error_categories': error_categories,
-            'error_ids': error_ids,
-            'job_ids': job_ids,
             'status': job_status,
+            'job_ids': job_ids,
             'job_type_ids': job_type_ids,
             'job_type_names': job_type_names,
             'batch_ids': batch_ids,
             'recipe_ids': recipe_ids,
+            'error_categories': error_categories,
+            'error_ids': error_ids,
             'is_superseded': is_superseded
         }
 
