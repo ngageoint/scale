@@ -8,6 +8,7 @@
         vm.editCpu = false;
         vm.editMem = false;
         vm.editMaxTries = false;
+        vm.editPriority = false;
         vm.containerStyle = '';
         vm.requestedJobTypeId = parseInt($routeParams.id);
         vm.jobTypes = [];
@@ -87,6 +88,10 @@
                 if (!vm.readonly && !vm.editMaxTries) {
                     vm.editMaxTries = true;
                 }
+            } else if (value === 'priority') {
+                if (!vm.readonly && !vm.editPriority) {
+                    vm.editPriority = true;
+                }
             }
         };
 
@@ -106,6 +111,9 @@
                     }
                     if (vm.editMaxTries) {
                         vm.editMaxTries = false;
+                    }
+                    if (vm.editPriority) {
+                        vm.editPriority = false;
                     }
                 }).catch(function (error) {
                     console.log(error);
@@ -127,6 +135,10 @@
             } else if (value === 'max_tries') {
                 if (!vm.readonly && vm.editMaxTries) {
                     vm.editMaxTries = false;
+                }
+            } else if (value === 'priority') {
+                if (!vm.readonly && vm.editPriority) {
+                    vm.editPriority = false;
                 }
             }
         };

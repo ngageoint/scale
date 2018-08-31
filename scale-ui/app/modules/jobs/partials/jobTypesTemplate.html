@@ -123,7 +123,23 @@
                                     </span>
                                 </dd>
                                 <dt ng-if="vm.activeJobTypeDetails.priority">Priority:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.priority">{{ vm.activeJobTypeDetails.priority }}</dd>
+                                <dd ng-if="vm.activeJobTypeDetails.priority">
+                                    <span ng-if="!vm.editPriority">
+                                        {{ vm.activeJobTypeDetails.priority }}
+                                        <span class="btn btn-primary btn-xs" ng-click="vm.editValue('priority')" uib-tooltip="Edit Priority" ng-if="!vm.readonly">
+                                            <i class="fa fa-edit"></i>
+                                        </span>
+                                    </span>
+                                    <span ng-if="vm.editPriority">
+                                        <span class="input-group input-group-sm">
+                                            <input id="priority" type="number" step="1" class="form-control" ng-value="vm.activeJobTypeDetails.priority"/>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.saveValue('priority')"><i class="fa fa-save"></i></button>
+                                                <button class="btn btn-default btn-sm" type="button" ng-click="vm.cancelEdit('priority')"><i class="fa fa-remove"></i></button>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </dd>
                                 <dt ng-if="vm.activeJobTypeDetails.timeout">Timeout:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.timeout">{{ vm.activeJobTypeDetails.timeout }} seconds</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.category">Category:</dt>
