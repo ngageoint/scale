@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='jobtyperevision',
             name='docker_image',
-            field=models.TextField(default='not-a-real-image'),
+            field=models.TextField(default=''),
         ),
         migrations.AlterField(
             model_name='jobtype',

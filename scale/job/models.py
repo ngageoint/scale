@@ -3888,7 +3888,7 @@ class JobTypeRevision(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
-    docker_image = models.TextField(default='not-a-real-image')
+    docker_image = models.TextField(default='')
     created = models.DateTimeField(auto_now_add=True)
 
     objects = JobTypeRevisionManager()
