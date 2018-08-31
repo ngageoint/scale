@@ -1291,7 +1291,7 @@ class RequeueJobsView(GenericAPIView):
                                                error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                                priority=priority, status=job_status, job_type_names=job_type_names,
                                                batch_ids=batch_ids, recipe_ids=recipe_ids,
-                                               is_superseded=is_superseded))
+                                               is_superseded=is_superseded)
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -1741,6 +1741,26 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
     renderer_classes = (JSONRenderer, rest_util.PlainTextRenderer, StaticHTMLRenderer)
 
     def retrieve(self, request, job_exe_id, log_id):
+        """Gets job execution log specified.
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_exe_id: the job execution id
+        :type job_exe_id: int
+        :param log_id: the log name to get (stdout, stderr, or combined)
+        :type log_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v5':
+            return self._retrieve_impl(request, job_exe_id, log_id)
+        elif request.version == 'v6':
+            return self._retrieve_impl(request, job_exe_id, log_id)
+        else:
+            raise Http404
+
+    def _retrieve_impl(self, request, job_exe_id, log_id):
         """Gets job execution log specified.
 
         :param request: the HTTP GET request

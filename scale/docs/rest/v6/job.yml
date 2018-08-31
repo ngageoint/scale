@@ -291,6 +291,30 @@ paths:
         '202':
           description: |-
             202 ACCEPTED response
+  /v6/job-executions/{job_exe_id}/logs/{log_name}:
+    get:
+      operationId: _rest_v6_job_execution_logs
+      summary: Job Execution Logs
+      description: Returns a specific job execution log
+      parameters:
+        -in: path
+          name: job_exe_id
+          schema:
+            type: integer
+          description: id of a job execution
+        -in: path
+          name: log_name
+          schema:
+            type: string
+          description: Name of the log to get (stdout, stderr, or combined)
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/job_execution_log'
 
 components:
   schemas:
@@ -855,3 +879,17 @@ components:
             type: integer
             description: Change the priority of matching jobs when adding them |
               to the queue. Defaults to jobs current priority; lower number is higher priority.
+              
+    job_execution_log:
+      title: Job Execution Log
+      type: object
+      properties:
+        flag:
+          type: string
+          description: The command line flag (long form) to use for passing the |
+            parameter without the preceding dashes (e.g. use “volume” for passing|
+            “–volume=...”).
+          example: volume
+        value:
+          type: string
+          description: The value to pass to the parameter on the Docker command line.
