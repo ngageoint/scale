@@ -257,6 +257,23 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/job_execution_details'
+  /v6/jobs/cancel/:
+    post:
+      operationId: _rest_v6_job_cancel
+      summary: Cancel Jobs
+      description: Cancels the jobs that fit the given filter criteria. |
+        The canceling will be done asynchronously, so the response will just |
+        indicate that the cancel request has been accepted.
+      requestBody:
+        required: false
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_cancel_post'
+      responses:
+        '202':
+          description: |-
+            202 ACCEPTED response
 
 components:
   schemas:
@@ -754,3 +771,60 @@ components:
         file_id:
           type: integer
           description: Unique ID of the file in the Scale system
+          
+    job_cancel_post:
+      title: Cancel Jobs Post
+      type: object
+      properties:
+          started:
+            type: string
+            format: date-time
+            description: Cancel only jobs that ran after this datetime
+            example: 2015-09-10T15:24:53.503Z
+          ended:
+            type: string
+            format: date-time
+            description: Cancel only jobs that ran before this datetime
+            example: 2015-09-10T15:24:53.503Z
+          status:
+            type: string
+            description: Cancel only jobs with this status. |
+              Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. 
+          job_ids:
+            description: Cancel only jobs with these ids
+            type: array
+            items:
+              type: integer
+          job_type_ids:
+            description: Cancel only jobs with these job type ids
+            type: array
+            items:
+              type: integer
+          job_type_names:
+            description: Cancel only jobs with these job type names
+            type: array
+            items:
+              type: string
+          batch_ids:
+            description: Cancel only jobs with these batch ids
+            type: array
+            items:
+              type: integer
+          recipe_ids:
+            description: Cancel only jobs with these recipe ids
+            type: array
+            items:
+              type: integer
+          error_categories:
+            description: Cancel only jobs with an error in these categories
+            type: array
+            items:
+              type: string
+          error_ids:
+            description: Cancel only jobs with an error with one of these ids
+            type: array
+            items:
+              type: integer
+          is_superseded: 
+            type: boolean
+            description: Cancel only jobs with matching is_superseded flag.

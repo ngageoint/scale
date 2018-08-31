@@ -777,13 +777,38 @@ Response: 200 OK
 
 .. _rest_v6_job_cancel:
 
+v6 Cancel Jobs
+--------------
+
+**Example POST /v6/jobs/cancel/ API call**
+
+Request: POST http://.../v6/jobs/cancel/
+
+ .. code-block:: javascript
+ 
+  {
+    "started": "2016-01-01T00:00:00Z",
+    "ended": "2016-01-02T00:00:00Z",
+    "status": "FAILED",
+    "job_ids": [ 101, 102, 103 ],
+    "job_type_ids": [ 1, 2, 3 ],
+    "job_type_names": [ 'test-job-type' ],
+    "batch_ids": [ 201, 202, 203 ],
+    "recipe_ids": [ 301, 302, 303 ],
+    "error_categories": [ "SYSTEM" ],
+    "error_ids": [ 11, 22, 33 ],
+    "is_superseded": true
+  }
+    
+Response: 202 ACCEPTED
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Cancel Jobs**                                                                                                         |
 +=========================================================================================================================+
 | Cancels the jobs that fit the given filter criteria. The canceling will be done asynchronously, so the response will    |
 | just indicate that the cancel request has been accepted.                                                                |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /jobs/cancel/                                                                                                  |
+| **POST** /v6/jobs/cancel/                                                                                               |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -797,26 +822,22 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| status             | String            | Optional | Cancel only jobs with this status                                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_ids            | Array[Integer]    | Optional | Cancel only jobs with these IDs                                     |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_ids       | Array[Integer]    | Optional | Cancel only jobs with these job types                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_names     | Array[String]     | Optional | Cancel only jobs with these job type names                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_ids          | Array[Integer]    | Optional | Cancel only jobs that were part of these batches                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_ids         | Array[Integer]    | Optional | Cancel only jobs that were part of these recipes                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | error_categories   | Array[String]     | Optional | Cancel only jobs that failed with these error categories            |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | error_ids          | Array[String]     | Optional | Cancel only jobs that failed with these errors                      |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_ids            | Array[Integer]    | Optional | Cancel only jobs with these IDs                                     |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| status             | String            | Optional | Cancel only jobs with this status                                   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_ids       | Array[Integer]    | Optional | Cancel only jobs with these job types                               |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|         "started": "2016-01-01T00:00:00Z",                                                                              |
-|         "ended": "2016-01-02T00:00:00Z",                                                                                |
-|         "status": "FAILED",                                                                                             |
-|         "job_type_ids": [1, 2, 3],                                                                                      |
-|         "error_categories": ["SYSTEM"]                                                                                  |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 202 Accepted                                                                                       |
