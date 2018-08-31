@@ -1766,7 +1766,8 @@ class JobExecutionManager(models.Manager):
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
+                                                             'jobexecutionend__error')
         job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply job filtering
@@ -1793,9 +1794,9 @@ class JobExecutionManager(models.Manager):
         if node_ids:
             job_exes = job_exes.filter(node_id__in=node_ids)
         if error_ids:
-            job_exes = job_exes.filter(error_id__in=error_ids)
+            job_exes = job_exes.filter(jobexecutionend__error_id__in=error_ids)
         if error_categories:
-            job_exes = job_exes.filter(error__category__in=error_categories)
+            job_exes = job_exes.filter(jobexecutionend__error__category__in=error_categories)
             
         # Apply sorting
         if order:

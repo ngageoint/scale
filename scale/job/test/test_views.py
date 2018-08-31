@@ -3878,7 +3878,7 @@ class TestJobExecutionsViewV5(TransactionTestCase):
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 4)
         #check that we order by descending exe_num
-        self.assertEqual(results['results'][0]['exe_num'], 4)
+        self.assertEqual(results['results'][0]['status'], 'RUNNING')
 
     def test_get_job_execution_bad_id(self):
         url = '/%s/jobs/999999999/executions/' % self.api
@@ -3921,11 +3921,10 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         django.setup()
 
         self.job_type_1 = job_test_utils.create_job_type()
-        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
+        self.error = error_test_utils.create_error()
+        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED', error=self.error)
         self.node_1 = node_test_utils.create_node()
         self.node_2 = node_test_utils.create_node()
-        self.error = error_test_utils.create_error()
-
         self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=1, status='FAILED', node=self.node_1,
                                                         started='2017-01-02T00:00:00Z', ended='2017-01-02T01:00:00Z',
                                                         error=self.error)
@@ -3981,7 +3980,7 @@ class TestJobExecutionsViewV6(TransactionTestCase):
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 1)
         
-        url = '/%s/jobs/%d/executions/?error_category=%s' % (self.api, self.error.category)
+        url = '/%s/jobs/%d/executions/?error_category=%s' % (self.api, self.job_1.id, self.error.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

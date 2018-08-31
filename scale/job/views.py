@@ -1180,7 +1180,7 @@ class CancelJobsView(GenericAPIView):
 
         return Response(status=status.HTTP_202_ACCEPTED)
         
-    def _post_v5(self, request):
+    def _post_v6(self, request):
         """Submit command message to cancel jobs that fit the given filter criteria
 
         :param request: the HTTP GET request
@@ -1197,21 +1197,18 @@ class CancelJobsView(GenericAPIView):
         job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
         job_status = rest_util.parse_string(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
-        
-        statuses = rest_util.parse_string_list(request, 'status', required=False)
-        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
-        job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
+
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
-        error_categories = rest_util.parse_string_list(request, 'error_category', required=False)
-        error_ids = rest_util.parse_int_list(request, 'error_id', required=False)
         is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
 
         # Create and send message
         msg = create_cancel_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
-                                              status=job_status)
+                                              status=job_status, job_type_names=job_type_names,
+                                              batch_ids=batch_ids, recipe_ids=recipe_ids,
+                                              is_superseded=is_superseded)
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -1593,7 +1590,7 @@ class JobExecutionsView(ListAPIView):
         statuses = rest_util.parse_string_list(request, 'status', required=False)
         node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
         error_ids = rest_util.parse_int_list(request, 'error_id', required=False)
-        error_cats = rest_util.parse_int_list(request, 'error_category', required=False)
+        error_cats = rest_util.parse_string_list(request, 'error_category', required=False)
 
         job_exes = JobExecution.objects.get_job_exes(job_id=job_id, statuses=statuses, node_ids=node_ids,
                                                      error_ids=error_ids, error_categories=error_cats)
