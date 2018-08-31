@@ -1198,9 +1198,9 @@ class CancelJobsView(GenericAPIView):
         job_status = rest_util.parse_string(request, 'status', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
 
-        job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
-        batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
-        recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
+        job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_ids', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
         is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
 
         # Create and send message

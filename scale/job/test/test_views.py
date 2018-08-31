@@ -4669,7 +4669,7 @@ class TestJobInputFilesViewV6(TestCase):
         for result in results:
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
-class TestCancelJobsView(TestCase):
+class TestCancelJobsViewV5(TestCase):
 
     api = 'v5'
     
@@ -4709,6 +4709,54 @@ class TestCancelJobsView(TestCase):
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        status=job_status)
 
+class TestCancelJobsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_cancel_jobs_bulk_message')
+    def test_cancel(self, mock_create, mock_msg_mgr):
+        """Tests calling the job cancel view successfully"""
+
+        msg = CancelJobsBulk()
+        mock_create.return_value = msg
+
+        started = now()
+        ended = started + datetime.timedelta(minutes=1)
+        error_categories = ['SYSTEM']
+        error_ids = [1, 2]
+        job_ids = [3, 4]
+        job_status = 'FAILED'
+        job_type_ids = [5, 6]
+        job_type_names = ['name']
+        batch_ids = [7, 8]
+        recipe_ids = [9, 10]
+        is_superseded = False
+        json_data = {
+            'started': datetime_to_string(started),
+            'ended': datetime_to_string(ended),
+            'error_categories': error_categories,
+            'error_ids': error_ids,
+            'job_ids': job_ids,
+            'status': job_status,
+            'job_type_ids': job_type_ids,
+            'job_type_names': job_type_names,
+            'batch_ids': batch_ids,
+            'recipe_ids': recipe_ids,
+            'is_superseded': is_superseded
+        }
+
+        url = '/%s/jobs/cancel/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
+                                       error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                       status=job_status, job_type_names=job_type_names, 
+                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
 
 class TestRequeueJobsView(TestCase):
 
