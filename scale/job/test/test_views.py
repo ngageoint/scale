@@ -4758,7 +4758,7 @@ class TestCancelJobsViewV6(TestCase):
                                        status=job_status, job_type_names=job_type_names, 
                                        batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
 
-class TestRequeueJobsView(TestCase):
+class TestRequeueJobsViewV5(TestCase):
 
     api = 'v5'
     
@@ -4799,3 +4799,54 @@ class TestRequeueJobsView(TestCase):
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        priority=priority, status=job_status)
+
+class TestRequeueJobsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_requeue_jobs_bulk_message')
+    def test_requeue(self, mock_create, mock_msg_mgr):
+        """Tests calling the requeue view successfully"""
+
+        msg = RequeueJobsBulk()
+        mock_create.return_value = msg
+
+        started = now()
+        ended = started + datetime.timedelta(minutes=1)
+        error_categories = ['SYSTEM']
+        error_ids = [1, 2]
+        job_ids = [3, 4]
+        job_status = 'FAILED'
+        job_type_ids = [5, 6]
+        job_type_names = ['name']
+        batch_ids = [7, 8]
+        recipe_ids = [9, 10]
+        is_superseded = False
+        priority = 101
+        json_data = {
+            'started': datetime_to_string(started),
+            'ended': datetime_to_string(ended),
+            'status': job_status,
+            'job_ids': job_ids,
+            'job_type_ids': job_type_ids,
+            'job_type_names': job_type_names,
+            'batch_ids': batch_ids,
+            'recipe_ids': recipe_ids,
+            'error_categories': error_categories,
+            'error_ids': error_ids,
+            'is_superseded': is_superseded,
+            'priority': priority
+        }
+
+        url = '/%s/jobs/requeue/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
+                                       error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                       priority=priority, status=job_status, job_type_names=job_type_names, 
+                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
