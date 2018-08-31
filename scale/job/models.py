@@ -1933,7 +1933,7 @@ class JobExecution(models.Model):
     exe_num = models.IntegerField(blank=True, null=True)
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
-    docker_image = models.TextField(default='')
+    docker_image = models.TextField(null=True)
 
     timeout = models.IntegerField()
     input_file_size = models.FloatField(blank=True, null=True)

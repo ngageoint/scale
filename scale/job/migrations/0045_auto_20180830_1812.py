@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='jobexecution',
             name='docker_image',
-            field=models.TextField(default=''),
+            field=models.TextField(null=True),
         ),
         migrations.AddField(
             model_name='jobtyperevision',
