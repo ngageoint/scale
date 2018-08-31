@@ -22,7 +22,6 @@ Response: 200 OK
    { 
        "is_paused": False, 
        "num_message_handlers": 2, 
-       "resource_level": 'GOOD',
        "system_logging_level": 'INFO' 
    }
 
@@ -46,11 +45,6 @@ Response: 200 OK
 |                      |                   | results in the previous individual node pause state.                         |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | The number of message handlers to have scheduled                             |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| resource_level       | String            | Describes the current resource level of scale. There are three valid values: |
-|                      |                   | TOO HIGH : Scale has more resources than required and can be scaled down     |
-|                      |                   | TOO LOW : Scale needs more resources and should be scaled up                 |
-|                      |                   | GOOD : Scale has a good amount of resources                                  |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | system_logging_level | String            | The logging level for all scale system components                            |
 +----------------------+-------------------+------------------------------------------------------------------------------+
@@ -82,11 +76,6 @@ Response: 204 No content
 | is_paused            | Boolean           | (Optional) True if the scheduler should be paused, false to resume           |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled                  |
-+----------------------+-------------------+------------------------------------------------------------------------------+
-| resource_level       | String            | (Optional) The current resource level of scale. There are three valid values:|
-|                      |                   | TOO HIGH : Scale has more resources than required and can be scaled down     |
-|                      |                   | TOO LOW : Scale needs more resources and should be scaled up                 |
-|                      |                   | GOOD : Scale has a good amount of resources                                  |
 +----------------------+-------------------+------------------------------------------------------------------------------+
 | system_logging_level | String            | (Optional) The logging level sent to all scale system components.            |
 |                      |                   | Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.              |
