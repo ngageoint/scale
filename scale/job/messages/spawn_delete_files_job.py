@@ -6,8 +6,10 @@ import logging
 from django.db import transaction
 
 from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import JsonValue
 from job.data.job_data import JobData
+
 from job.messages.create_jobs import create_jobs_message
 from messaging.messages.message import CommandMessage
 from storage.models import ScaleFile
@@ -70,30 +72,22 @@ class SpawnDeleteFilesJob(CommandMessage):
         # data.data.~ -> JobData -> dict -> create_job message
         if files_to_delete:
             # Construct input data list
+            files = []
             workspaces = []
-            # inputs = Data()
-            # inputs.add_value(JsonValue('job_id', self.job_id))
-            # inputs.add_value(JsonValue('purge', self.purge))
-
-            # for f in files_to_delete:
-            #     inputs.add_value(JsonValue('file', {'id': f.id, 
-            #                                         'file_path': f.file_path, 
-            #                                         'workspace': f.workspace.name}))
-                
-            #     if f.workspace.name not in workspaces:
-            #         inputs.add_value(JsonValue('workspace', {f.workspace.name: f.workspace.json_config}))
-            #         workspaces.append(f.workspace.name)
-
-            inputs = {'job_id': self.job_id,
-                      'purge': self.purge}
 
             for f in files_to_delete:
-                inputs['file'] = {'id': f.id, 'file_path': f.file_path, 'workspace': f.workspace.name}
-                
-                if f.workspace.name not in workspaces:
-                    inputs['workspace'] = {f.workspace.name: f.workspace.json_config}
-                    workspaces.append(f.workspace.name)
+                files.append({'id': f.id, 
+                              'file_path': f.file_path, 
+                              'workspace': f.workspace.name})
+                if f.workspace.name not in [k for wrkspc in workspaces for k in wrkspc.keys()]:
+                    workspaces.append({f.workspace.name: f.workspace.json_config})
+            
+            inputs = Data()
+            inputs.add_value(JsonValue('JOB_ID', self.job_id))
+            inputs.add_value(JsonValue('PURGE', self.purge))
+            inputs.add_value(JsonValue('FILES', files))
+            inputs.add_value(JsonValue('WORKSPACES', workspaces))
 
-            # 
-            JobData(inputs)
+            inputs_json = convert_data_to_v6_json(inputs)
+            JobData(inputs_json)
         return True
