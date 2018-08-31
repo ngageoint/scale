@@ -2167,6 +2167,10 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration.dependencies">(job.migrations.0044_jobtypetag_job_type.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0045_auto_20180830_1812.Migration.dependencies">(job.migrations.0045_auto_20180830_1812.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.Migration.dependencies">(job.migrations.0046_jobtyperevision_docker_image.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.dependencies">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -2240,6 +2244,10 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.Migration.dependencies">(queue.migrations.0015_auto_20170731_1527.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0016_auto_20180123_2037.Migration.dependencies">(queue.migrations.0016_auto_20180123_2037.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0017_queue_docker_image.Migration.dependencies">(queue.migrations.0017_queue_docker_image.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0018_queue_docker_image_populate.Migration.dependencies">(queue.migrations.0018_queue_docker_image_populate.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration.dependencies">(recipe.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -2484,10 +2492,16 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.disk_total_scheduled">disk_total_scheduled (job.models.JobExecution attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.docker_image">docker_image (job.models.JobType attribute)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.docker_image">docker_image (job.models.JobExecution attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobType.docker_image">(job.models.JobType attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.docker_image">(job.models.JobTypeRevision attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.docker_image">(job.tasks.base_task.Task attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.docker_image">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.docker_params">docker_params (job.models.JobType attribute)</a>
@@ -4672,12 +4686,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeNodeManager.get_superseded_recipe_jobs">get_superseded_recipe_jobs() (recipe.models.RecipeNodeManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_tagged_docker_image">get_tagged_docker_image() (job.models.JobType method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_tagged_docker_image">(job.models.JobTypeRevision method)</a>
+      <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.get_tagged_docker_image">get_tagged_docker_image() (in module job.migrations.0046_jobtyperevision_docker_image)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.get_tags">get_tags() (job.seed.manifest.SeedManifest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_task">get_task() (job.tasks.manager.TaskManager method)</a>
@@ -6060,6 +6070,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0044_jobtypetag_job_type">job.migrations.0044_jobtypetag_job_type (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0045_auto_20180830_1812">job.migrations.0045_auto_20180830_1812 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0046_jobtyperevision_docker_image">job.migrations.0046_jobtyperevision_docker_image (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
@@ -6276,10 +6290,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.job_file_links">job_file_links (job.models.Job attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_job_interface">job_get_job_interface() (in module queue.migrations.0015_auto_20170731_1527)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_job_interface">job_get_job_interface() (in module queue.migrations.0015_auto_20170731_1527)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.job_get_resources">job_get_resources() (in module queue.migrations.0015_auto_20170731_1527)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchJob.job_id">job_id (batch.models.BatchJob attribute)</a>
@@ -7631,6 +7645,10 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration">(class in job.migrations.0044_jobtypetag_job_type)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0045_auto_20180830_1812.Migration">(class in job.migrations.0045_auto_20180830_1812)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.Migration">(class in job.migrations.0046_jobtyperevision_docker_image)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration">(class in metrics.migrations.0002_auto_20151007_1352)</a>
@@ -7704,6 +7722,10 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.Migration">(class in queue.migrations.0015_auto_20170731_1527)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0016_auto_20180123_2037.Migration">(class in queue.migrations.0016_auto_20180123_2037)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0017_queue_docker_image.Migration">(class in queue.migrations.0017_queue_docker_image)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0018_queue_docker_image_populate.Migration">(class in queue.migrations.0018_queue_docker_image_populate)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration">(class in recipe.migrations.0001_initial)</a>
 </li>
@@ -8469,6 +8491,10 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0044_jobtypetag_job_type.Migration.operations">(job.migrations.0044_jobtypetag_job_type.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0045_auto_20180830_1812.Migration.operations">(job.migrations.0045_auto_20180830_1812.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.Migration.operations">(job.migrations.0046_jobtyperevision_docker_image.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.operations">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -8542,6 +8568,10 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.Migration.operations">(queue.migrations.0015_auto_20170731_1527.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0016_auto_20180123_2037.Migration.operations">(queue.migrations.0016_auto_20180123_2037.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0017_queue_docker_image.Migration.operations">(queue.migrations.0017_queue_docker_image.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0018_queue_docker_image_populate.Migration.operations">(queue.migrations.0018_queue_docker_image_populate.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration.operations">(recipe.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -8910,11 +8940,15 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.populate_job_data">populate_job_data() (job.models.JobManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0046_jobtyperevision_docker_image.Migration.populate_job_type_revision_docker_image">populate_job_type_revision_docker_image() (job.migrations.0046_jobtyperevision_docker_image.Migration method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0004_auto_20160711_1058.Migration.populate_new_workspace">populate_new_workspace() (ingest.migrations.0004_auto_20160711_1058.Migration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0015_auto_20170731_1527.Migration.populate_queue">populate_queue() (queue.migrations.0015_auto_20170731_1527.Migration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0011_auto_20170616_1052.Migration.populate_queue_resources">populate_queue_resources() (queue.migrations.0011_auto_20170616_1052.Migration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0018_queue_docker_image_populate.Migration.populate_queue_with_docker_image">populate_queue_with_docker_image() (queue.migrations.0018_queue_docker_image_populate.Migration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0016_recipefile_data.Migration.populate_recipe_file">populate_recipe_file() (recipe.migrations.0016_recipefile_data.Migration method)</a>
 </li>
@@ -9388,10 +9422,10 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.DoesNotExist">Queue.DoesNotExist</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_exe">queue.job_exe (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.job_load">queue.job_load (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#module-queue.messages">queue.messages (module)</a>
@@ -9435,6 +9469,10 @@
       <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0015_auto_20170731_1527">queue.migrations.0015_auto_20170731_1527 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0016_auto_20180123_2037">queue.migrations.0016_auto_20180123_2037 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0017_queue_docker_image">queue.migrations.0017_queue_docker_image (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0018_queue_docker_image_populate">queue.migrations.0018_queue_docker_image_populate (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.models">queue.models (module)</a>
 </li>
@@ -13844,12 +13882,6 @@
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_sources_data_time">test_get_sources_data_time() (source.test.test_models.TestSourceFileManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_docker_image_legacy_job_type">test_get_tagged_docker_image_from_docker_image_legacy_job_type() (job.test.test_models.TestJobType method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_tagged_image">test_get_tagged_docker_image_from_tagged_image() (job.test.test_models.TestJobType method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_untagged_image">test_get_tagged_docker_image_from_untagged_image() (job.test.test_models.TestJobType method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_kill">test_get_tasks_to_kill() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_schedule">test_get_tasks_to_schedule() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
@@ -15090,12 +15122,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_default">test_parse_float_default() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_invalid">test_parse_float_invalid() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_missing">test_parse_float_missing() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_optional">test_parse_float_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_post">test_parse_float_post() (util.test.test_rest.TestRest method)</a>

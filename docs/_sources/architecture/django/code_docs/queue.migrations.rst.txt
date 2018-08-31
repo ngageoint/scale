@@ -132,6 +132,22 @@ queue\.migrations\.0016\_auto\_20180123\_2037 module
     :undoc-members:
     :show-inheritance:
 
+queue\.migrations\.0017\_queue\_docker\_image module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0017_queue_docker_image
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0018\_queue\_docker\_image\_populate module
+--------------------------------------------------------------
+
+.. automodule:: queue.migrations.0018_queue_docker_image_populate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

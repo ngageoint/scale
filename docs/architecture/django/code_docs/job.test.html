@@ -780,21 +780,6 @@
 <code class="descname">test_get_legacy_sharedmem_resource_multiplier_from_seed_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_legacy_sharedmem_resource_multiplier_from_seed_interface" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="job.test.test_models.TestJobType.test_get_tagged_docker_image_from_docker_image_legacy_job_type">
-<code class="descname">test_get_tagged_docker_image_from_docker_image_legacy_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_docker_image_legacy_job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobType.test_get_tagged_docker_image_from_tagged_image">
-<code class="descname">test_get_tagged_docker_image_from_tagged_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_tagged_image" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobType.test_get_tagged_docker_image_from_untagged_image">
-<code class="descname">test_get_tagged_docker_image_from_untagged_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobType.test_get_tagged_docker_image_from_untagged_image" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -2590,7 +2575,7 @@ status</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_job_type">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job_type</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>category=None</em>, <em>interface=None</em>, <em>priority=50</em>, <em>timeout=3600</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>cpus=1.0</em>, <em>mem=1.0</em>, <em>disk=1.0</em>, <em>error_mapping=None</em>, <em>is_active=True</em>, <em>is_system=False</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_type</code><span class="sig-paren">(</span><em>name=None</em>, <em>version=None</em>, <em>category=None</em>, <em>interface=None</em>, <em>priority=50</em>, <em>timeout=3600</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>cpus=1.0</em>, <em>mem=1.0</em>, <em>disk=1.0</em>, <em>error_mapping=None</em>, <em>is_active=True</em>, <em>is_system=False</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em>, <em>configuration=None</em>, <em>docker_image=u'fake'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job type model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2622,7 +2607,7 @@ status</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_seed_job_type">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_seed_job_type</code><span class="sig-paren">(</span><em>name=u'image-watermark'</em>, <em>manifest=None</em>, <em>priority=50</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>is_active=True</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_seed_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_seed_job_type</code><span class="sig-paren">(</span><em>name=u'image-watermark'</em>, <em>manifest=None</em>, <em>priority=50</em>, <em>max_tries=3</em>, <em>max_scheduled=None</em>, <em>is_active=True</em>, <em>is_operational=True</em>, <em>trigger_rule=None</em>, <em>configuration=None</em>, <em>docker_image=u'fake'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_seed_job_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">

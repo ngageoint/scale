@@ -356,6 +356,22 @@ job\.migrations\.0044\_jobtypetag\_job\_type module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0045\_auto\_20180830\_1812 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0045_auto_20180830_1812
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0046\_jobtyperevision\_docker\_image module
+------------------------------------------------------------
+
+.. automodule:: job.migrations.0046_jobtyperevision_docker_image
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

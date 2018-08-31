@@ -246,6 +246,8 @@
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0014_queue">queue.migrations.0014_queue module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0015_auto_20170731_1527">queue.migrations.0015_auto_20170731_1527 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0016_auto_20180123_2037">queue.migrations.0016_auto_20180123_2037 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0017_queue_docker_image">queue.migrations.0017_queue_docker_image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0018_queue_docker_image_populate">queue.migrations.0018_queue_docker_image_populate module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -600,6 +602,7 @@ object the first time, the query is executed.</p>
 <li><strong>resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the resources required for this job</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was created</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job was placed onto the queue</li>
+<li><strong>docker_image</strong> (<em>str</em>) &#8211; The docker image to be retrieved for job that is retrieved from job_type_rev.docker_image</li>
 </ul>
 </td>
 </tr>
@@ -647,6 +650,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="queue.models.Queue.created">
 <code class="descname">created</code><a class="headerlink" href="#queue.models.Queue.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.docker_image">
+<code class="descname">docker_image</code><a class="headerlink" href="#queue.models.Queue.docker_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
