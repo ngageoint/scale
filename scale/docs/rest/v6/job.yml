@@ -232,6 +232,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/job_execution_list'
+  /v6/jobs/{id}/executions/{exe_num}:
+    get:
+      operationId: _rest_v6_job_execution_details
+      summary: Job Execution Details
+      description: Returns a specific job execution and all its related model |
+        information including job, node, environment, and results.
+      parameters:
+        -in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing job
+        -in: path
+          name: exe_num
+          schema:
+            type: integer
+          description: execution number of a job execution
+      responses:
+        '200':
+          description: |-
+            200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/job_execution_details'
 
 components:
   schemas:

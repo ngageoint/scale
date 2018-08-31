@@ -451,223 +451,6 @@ Response: 200 OK
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
-
-.. _rest_job_updates:
-
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Job Updates**                                                                                                         |
-+=========================================================================================================================+
-| Returns a list of jobs with associated input files that changed status in the given time range. Jobs marked as          |
-| superseded are excluded by default.                                                                                     |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /jobs/updates/                                                                                                  |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Query Parameters**                                                                                                    |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
-|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
-|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
-|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| order              | String            | Optional | One or more fields to use when ordering the results.                |
-|                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
-|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| status             | String            | Optional | Return only jobs with a status matching this string.                |
-|                    |                   |          | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].            |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_id        | Integer           | Optional | Return only jobs with a given job type identifier.                  |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_name      | String            | Optional | Return only jobs with a given job type name.                        |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| include_superseded | Boolean           | Optional | Whether to include superseded job instances. Defaults to false.     |
-+--------------------+-------------------+----------+---------------------------------------------------------------------+
-| **Successful Response**                                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 200 OK                                                                                             |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| count               | Integer           | The total number of results that match the query parameters.                  |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| next                | URL               | A URL to the next page of results.                                            |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| previous            | URL               | A URL to the previous page of results.                                        |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| results             | Array             | List of result JSON objects that match the query parameters.                  |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.    |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .job_type           | JSON Object       | The job type that is associated with the job.                                 |
-|                     |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                         |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
-|                     |                   | This represents the definition at the time the job was scheduled.             |
-|                     |                   | (See :ref:`Job Type Revision Details <rest_job_type_rev_details>`)            |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .event              | JSON Object       | The trigger event that is associated with the job.                            |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .node               | JSON Object       | The node that the job is/was running on.                                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .error              | JSON Object       | The error that is associated with the job.                                    |
-|                     |                   | (See :ref:`Error Details <rest_error_details>`)                               |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .status             | String            | The current status of the job.                                                |
-|                     |                   | Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .priority           | Integer           | The priority of the job.                                                      |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .num_exes           | Integer           | The number of executions this job has had.                                    |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .timeout            | Integer           | The maximum amount of time this job can run before being killed (in seconds). |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .max_tries          | Integer           | The maximum number of times to attempt this job when failed (minimum one).    |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .cpus_required      | Decimal           | The number of CPUs needed for a job of this type.                             |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .mem_required       | Decimal           | The amount of RAM in MiB needed for a job of this type.                       |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .disk_in_required   | Decimal           | The amount of disk space in MiB required for input files for this job.        |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .disk_out_required  | Decimal           | The amount of disk space in MiB required for output files for this job.       |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .is_superseded      | Boolean           | Whether this job has been replaced and is now obsolete.                       |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .root_superseded_job| JSON Object       | The first job in the current chain of superseded jobs.                        |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .superseded_job     | JSON Object       | The previous job in the chain that was superseded by this job.                |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .superseded_by_job  | JSON Object       | The next job in the chain that superseded this job.                           |
-|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .delete_superseded  | Boolean           | Whether the products of the previous job should be deleted when superseded.   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .queued             | ISO-8601 Datetime | When the job was added to the queue to be run when resources are available.   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .started            | ISO-8601 Datetime | When the job started running.                                                 |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .ended              | ISO-8601 Datetime | When the job stopped running, which could be due to success or failure.       |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .last_status_change | ISO-8601 Datetime | When the status of the job was last changed.                                  |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .superseded         | ISO-8601 Datetime | When the the job became superseded by another job.                            |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                            |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .input_files        | JSON Object       | A list of files that the job used as input.                                   |
-+---------------------+-------------------+-------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "count": 68,                                                                                                     |
-|        "next": null,                                                                                                    |
-|        "previous": null,                                                                                                |
-|        "results": [                                                                                                     |
-|            {                                                                                                            |
-|                "id": 3,                                                                                                 |
-|                "job_type": {                                                                                            |
-|                    "id": 1,                                                                                             |
-|                    "name": "scale-ingest",                                                                              |
-|                    "version": "1.0",                                                                                    |
-|                    "title": "Scale Ingest",                                                                             |
-|                    "description": "Ingests a source file into a workspace",                                             |
-|                    "is_system": true,                                                                                   |
-|                    "is_long_running": false,                                                                            |
-|                    "is_active": true,                                                                                   |
-|                    "is_operational": true,                                                                              |
-|                    "is_paused": false,                                                                                  |
-|                    "icon_code": "f013"                                                                                  |
-|                },                                                                                                       |
-|                "job_type_rev": {                                                                                        |
-|                    "id": 5,                                                                                             |
-|                    "job_type": {                                                                                        |
-|                        "id": 1                                                                                          |
-|                    },                                                                                                   |
-|                    "revision_num": 1                                                                                    |
-|                },                                                                                                       |
-|                "event": {                                                                                               |
-|                    "id": 3,                                                                                             |
-|                    "type": "STRIKE_TRANSFER",                                                                           |
-|                    "rule": null,                                                                                        |
-|                    "occurred": "2015-08-28T17:57:24.261Z"                                                               |
-|                },                                                                                                       |
-|                "node": {                                                                                                |
-|                    "id": 1,                                                                                             |
-|                    "hostname": "my-host.example.domain"                                                                 |
-|                },                                                                                                       |
-|                "error": null,                                                                                           |
-|                "status": "COMPLETED",                                                                                   |
-|                "priority": 10,                                                                                          |
-|                "num_exes": 1,                                                                                           |
-|                "timeout": 1800,                                                                                         |
-|                "max_tries": 3,                                                                                          |
-|                "cpus_required": 1.0,                                                                                    |
-|                "mem_required": 64.0,                                                                                    |
-|                "disk_in_required": 0.0,                                                                                 |
-|                "disk_out_required": 64.0,                                                                               |
-|                "is_superseded": false,                                                                                  |
-|                "root_superseded_job": null,                                                                             |
-|                "superseded_job": null,                                                                                  |
-|                "superseded_by_job": null,                                                                               |
-|                "delete_superseded": true,                                                                               |
-|                "created": "2015-08-28T17:55:41.005Z",                                                                   |
-|                "queued": "2015-08-28T17:56:41.005Z",                                                                    |
-|                "started": "2015-08-28T17:57:41.005Z",                                                                   |
-|                "ended": "2015-08-28T17:58:41.005Z",                                                                     |
-|                "last_status_change": "2015-08-28T17:58:45.906Z",                                                        |
-|                "superseded": null,                                                                                      |
-|                "last_modified": "2015-08-28T17:58:46.001Z",                                                             |
-|                "input_files": [                                                                                         |
-|                    {                                                                                                    |
-|                        "id": 2,                                                                                         |
-|                        "workspace": {                                                                                   |
-|                            "id": 1,                                                                                     |
-|                            "name": "Raw Source"                                                                         |
-|                        },                                                                                               |
-|                        "file_name": "input_file.txt",                                                                   | 
-|                        "media_type": "text/plain",                                                                      |
-|                        "file_size": 1234,                                                                               |
-|                        "data_type": [],                                                                                 | 
-|                        "is_deleted": false,                                                                             |
-|                        "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                      |
-|                        "url": "http://host.com/input_file.txt",                                                         |
-|                        "created": "2015-09-10T15:24:53.962Z",                                                           |
-|                        "deleted": null,                                                                                 |
-|                        "data_started": "2015-09-10T14:50:49Z",                                                          |
-|                        "data_ended": "2015-09-10T14:51:05Z",                                                            |
-|                        "geometry": null,                                                                                |
-|                        "center_point": null,                                                                            |
-|                        "meta_data": {...}                                                                               |
-|                        "last_modified": "2015-09-10T15:25:02.808Z"                                                      |
-|                    }                                                                                                    |
-|                ]                                                                                                        |
-|            },                                                                                                           |
-|            ...                                                                                                          |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
-
 .. _rest_v6_job_input_files:
 
 v6 Job Input File List
@@ -738,7 +521,7 @@ See :ref:`Scale Files <rest_v6_scale_file_list>` for an example response
 |                    |                   | (See :ref:`Scale Files <rest_v6_scale_file_list>`)                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_job_execution_list_v6:
+.. _rest_v6_job_execution_list:
 
 v6 Job Executions List
 ----------------------
@@ -794,7 +577,7 @@ Response: 200 OK
 | Returns a list of job executions associated with a given Job ID.  Returned job executions are ordered by exe_num          |
 | descending (most recent first)                                                                                            |
 +---------------------------------------------------------------------------------------------------------------------------+
-| **GET** /jobs/{id}/executions/                                                                                            |
+| **GET** /v6/jobs/{id}/executions/                                                                                         |
 |         Where {id} is the unique identifier of an existing job.                                                           |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                      |
@@ -834,7 +617,7 @@ Response: 200 OK
 | results              | Array             | List of result JSON objects that match the query parameters.                   |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                  | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                      |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | .status              | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
@@ -868,20 +651,74 @@ Response: 200 OK
 | .input_file_size     | Float             | The total amount of disk space in MiB for all input files for this execution.  |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_job_execution_details_v6:
+.. _rest_v6_job_execution_details:
 
-.. TODO: un-version this rst table link and remove the note when API REST v5 is removed
+v6 Job Execution Details
+------------------------
+
+**Example GET /v6/jobs/{id}/executions/{exe_num}/ API call**
+
+Request: GET http://.../v6/jobs/{id}/executions/{exe_num}/
+
+Response: 200 OK
+
+ .. code-block:: javascript
+
+  {
+    "id": 3,
+    "status": "COMPLETED",
+    "exe_num": 1,
+    "cluster_id": "scale_job_1234_263x0",
+    "created": "2015-08-28T17:57:41.033Z",
+    "queued": "2015-08-28T17:57:41.010Z",
+    "started": "2015-08-28T17:57:44.494Z",
+    "ended": "2015-08-28T17:57:45.906Z",
+    "job": {
+      "id": 3
+    },
+    "node": {
+      "id": 1,
+      "hostname": "machine.com"
+    },
+    "error": null,
+    "job_type": {
+      "id": 1,
+      "name": "scale-ingest",
+      "version": "1.0.0",
+      "title": "Scale Ingest",
+      "description": "Ingests a source file into a workspace",
+      "revision_num": 1,
+      "icon_code": "f013"
+    },
+    "timeout": 1800,
+    "input_file_size": 10,
+    "task_results": null,
+    "resources": {
+      "resources": {
+        "mem": 128,
+        "disk": 11,
+        "cpus": 1
+      }
+    },
+    "configuration": {
+      <architecture_jobs_exe_configuration>
+    },
+    "output": {
+      "output_data": [
+        {
+          "name": "output_file",
+          "file_id": 3
+        }
+      ]
+    }
+  }
 
 +---------------------------------------------------------------------------------------------------------------------------+
 | **Job Execution Details**                                                                                                 |
 +===========================================================================================================================+
 | Returns a specific job execution and all its related model information including job, node, environment, and results.     |
 +---------------------------------------------------------------------------------------------------------------------------+
-| **NOTE**                                                                                                                  |
-|                This API endpoint is available starting with API **v6**.  It replaces a very similar API endpoint which    |
-|                you can see described here: :ref:`Job Execution List <rest_job_execution_details>`.                        |
-+---------------------------------------------------------------------------------------------------------------------------+
-| **GET** /jobs/{id}/executions/{exe_num}                                                                                   |
+| **GET** /v6/jobs/{id}/executions/{exe_num}                                                                                |
 |         Where {id} is the unique identifier of an existing job and {exe_num} is the execution number of a job execution   |
 |         as it relates to the job.                                                                                         |
 +----------------------+----------------------------------------------------------------------------------------------------+
@@ -894,7 +731,7 @@ Response: 200 OK
 | **JSON Fields**                                                                                                           |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | id                   | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
-|                      |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                      |                   | (See :ref:`Job Execution Details <rest_v6_job_execution_details>`)             |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | status               | String            | The status of the job execution.                                               |
 |                      |                   | Choices: [RUNNING, FAILED, COMPLETED, CANCELED].                               |
@@ -937,68 +774,8 @@ Response: 200 OK
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | output               | JSON Object       | JSON description of the job output.                                            |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                                |
-|                                                                                                                           |
-|  {                                                                                                                        |
-|      "id": 3,                                                                                                             |
-|      "status": "COMPLETED",                                                                                               |
-|      "exe_num": 1,                                                                                                        |
-|      "cluster_id": "scale_job_1234_263x0",                                                                                |
-|      "created": "2015-08-28T17:57:41.033Z",                                                                               |
-|      "queued": "2015-08-28T17:57:41.010Z",                                                                                |
-|      "started": "2015-08-28T17:57:44.494Z",                                                                               |
-|      "ended": "2015-08-28T17:57:45.906Z",                                                                                 |
-|      "job": {                                                                                                             |
-|          "id": 3,                                                                                                         |
-|      },                                                                                                                   |
-|      "node": {                                                                                                            |
-|          "id": 1,                                                                                                         |
-|          "hostname": "machine.com"                                                                                        |
-|      },                                                                                                                   |
-|      "error": null,                                                                                                       |
-|      "job_type": {                                                                                                        |
-|          "id": 1,                                                                                                         |
-|          "name": "scale-ingest",                                                                                          |
-|          "version": "1.0",                                                                                                |
-|          "title": "Scale Ingest",                                                                                         |
-|          "description": "Ingests a source file into a workspace",                                                         |
-|          "category": "system",                                                                                            |
-|          "author_name": null,                                                                                             |
-|          "author_url": null,                                                                                              |
-|          "is_system": true,                                                                                               |
-|          "is_long_running": false,                                                                                        |
-|          "is_active": true,                                                                                               |
-|          "is_operational": true,                                                                                          |
-|          "is_paused": false,                                                                                              |
-|          "icon_code": "f013"                                                                                              |
-|      },                                                                                                                   |
-|      "timeout": 1800,                                                                                                     |
-|      "input_file_size": 10.0,                                                                                             |
-|      "task_results": null,                                                                                                |
-|      "resources": {                                                                                                       |
-|          "version": "1.0",                                                                                                |
-|          "resources": {                                                                                                   |
-|              "mem": 128.0,                                                                                                |
-|              "disk": 11.0,                                                                                                |
-|              "cpus": 1.0                                                                                                  |
-|          }                                                                                                                |
-|      },                                                                                                                   |
-|      "configuration": {                                                                                                   |
-|          "tasks": [...],                                                                                                  |
-|          "version": "2.0"}                                                                                                |
-|      "output": {                                                                                                          |
-|          "output_data": [                                                                                                 |
-|              {                                                                                                            |
-|                  "name": "output_file",                                                                                   |
-|                  "file_id": 3                                                                                             |
-|              }                                                                                                            |
-|          ],                                                                                                               |
-|          "version": "1.0"                                                                                                 |
-|      }                                                                                                                    |
-|  }                                                                                                                        |
-+---------------------------------------------------------------------------------------------------------------------------+
 
-.. _rest_job_cancel:
+.. _rest_v6_job_cancel:
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Cancel Jobs**                                                                                                         |
