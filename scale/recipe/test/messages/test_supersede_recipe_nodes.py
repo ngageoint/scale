@@ -216,86 +216,231 @@ class TestSupersedeRecipeNodes(TestCase):
                                                           sub_recipe=recipe_1_h_3, save=False)
         node_1_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_4',
                                                           sub_recipe=recipe_1_h_4, save=False)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_a = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_b = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_c = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_d = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_e_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_e_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_e_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=False)
+        node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=False)
+        node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=False)
+        node_2_d = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_d', job=job_2_d, save=False)
+        node_2_e = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_e', sub_recipe=recipe_2_e,
+                                                        save=False)
+        node_2_f = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_f', sub_recipe=recipe_2_f,
+                                                        save=False)
+        node_2_g = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_g', sub_recipe=recipe_2_g,
+                                                        save=False)
+        node_2_h = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_h', sub_recipe=recipe_2_h,
+                                                        save=False)
+        node_2_e_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_1', job=job_2_e_1,
+                                                          save=False)
+        node_2_e_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_2', job=job_2_e_2,
+                                                          save=False)
+        node_2_f_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_1', job=job_2_f_1,
+                                                          save=False)
+        node_2_f_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_2', job=job_2_f_2,
+                                                          save=False)
+        node_2_g_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_1', job=job_2_g_1,
+                                                          save=False)
+        node_2_g_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_2', job=job_2_g_2,
+                                                          save=False)
+        node_2_h_1 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_1', job=job_2_h_1,
+                                                          save=False)
+        node_2_h_2 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_2', job=job_2_h_2,
+                                                          save=False)
+        node_2_e_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_3',
+                                                          sub_recipe=recipe_2_e_3, save=False)
+        node_2_e_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_e, node_name='node_4',
+                                                          sub_recipe=recipe_2_e_4, save=False)
+        node_2_f_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_3',
+                                                          sub_recipe=recipe_2_f_3, save=False)
+        node_2_f_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_f, node_name='node_4',
+                                                          sub_recipe=recipe_2_f_4, save=False)
+        node_2_g_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_3',
+                                                          sub_recipe=recipe_2_g_3, save=False)
+        node_2_g_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_g, node_name='node_4',
+                                                          sub_recipe=recipe_2_g_4, save=False)
+        node_2_h_3 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_3',
+                                                          sub_recipe=recipe_2_h_3, save=False)
+        node_2_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_4',
+                                                          sub_recipe=recipe_2_h_4, save=False)
+        Recipe.objects.bulk_create([recipe_1, recipe_1_e, recipe_1_f, recipe_1_g, recipe_1_h, recipe_1_e_3,
+                                    recipe_1_e_4, recipe_1_f_3, recipe_1_f_4, recipe_1_g_3, recipe_1_g_4, recipe_1_h_3,
+                                    recipe_1_h_4, recipe_2, recipe_2_e, recipe_2_f, recipe_2_g, recipe_2_h,
+                                    recipe_2_e_3, recipe_2_e_4, recipe_2_f_3, recipe_2_f_4, recipe_2_g_3, recipe_2_g_4,
+                                    recipe_2_h_3, recipe_2_h_4])
+        Job.objects.bulk_create([job_1_a, job_1_b, job_1_c, job_1_d, job_1_e_1, job_1_e_2, job_1_f_1, job_1_f_2,
+                                 job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
+                                 job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
+                                 job_2_h_2])
+        RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
+                                        node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
+                                        node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
+                                        node_1_g_3, node_1_g_4, node_1_h_3, node_1_h_4, node_2_a, node_2_b, node_2_c,
+                                        node_2_d, node_2_e, node_2_f, node_2_g, node_2_h, node_2_e_1, node_2_e_2,
+                                        node_2_f_1, node_2_f_2, node_2_g_1, node_2_g_2, node_2_h_1, node_2_h_2,
+                                        node_2_e_3, node_2_e_4, node_2_f_3, node_2_f_4, node_2_g_3, node_2_g_4,
+                                        node_2_h_3, node_2_h_4])
 
+        when = now()
+        supersede_jobs = {'node_c', 'node_d'}
+        supersede_subrecipes = {'node_f', 'node_g', 'node_h'}
+        unpublish_jobs = {'node_d'}
+        supersede_recursive = {'node_g'}
+        unpublish_recursive = {'node_h'}
 
-        # batch = batch_test_utils.create_batch()
-        # event = trigger_test_utils.create_trigger_event()
+        # Create message
+        message = create_supersede_recipe_nodes_messages([recipe_1.id, recipe_2.id], when, supersede_jobs,
+                                                         supersede_subrecipes, unpublish_jobs, supersede_recursive,
+                                                         unpublish_recursive)[0]
 
-        # # Create message
-        # message = create_reprocess_recipes_messages(self.old_recipe_ids, self.recipe_1.recipe_type_rev_id, event.id,
-        #                                             all_jobs=False, job_names=['Job 2'], batch_id=batch.id)[0]
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
 
-        # # Execute message
-        # result = message.execute()
-        # self.assertTrue(result)
+        # Ensure jobs for node_c and node_d are superseded
+        qry = Job.objects.filter(id__in=[job_1_c.id, job_1_d.id, job_2_c.id, job_2_d.id], is_superseded=True)
+        self.assertEqual(qry.count(), 4)
+        # Ensure sub-recipes for node_f, node_g, and node_h are superseded
+        recipe_ids = [recipe_1_f.id, recipe_1_g.id, recipe_1_h.id, recipe_2_f.id, recipe_2_g.id, recipe_2_h.id]
+        qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=True)
+        self.assertEqual(qry.count(), 8)
+        # Ensure jobs for node_a and node_b are NOT superseded
+        qry = Job.objects.filter(id__in=[job_1_a.id, job_1_b.id, job_2_a.id, job_2_b.id], is_superseded=False)
+        self.assertEqual(qry.count(), 4)
+        # Ensure sub-recipes for node_e are NOT superseded
+        recipe_ids = [recipe_1_e.id, recipe_2_e.id]
+        qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=False)
+        self.assertEqual(qry.count(), 2)
 
-        # # Make sure new recipes supersede the old ones
-        # for recipe in Recipe.objects.filter(id__in=self.old_recipe_ids):
-        #     self.assertTrue(recipe.is_superseded)
-        # new_recipe_1 = Recipe.objects.get(superseded_recipe_id=self.recipe_1.id)
-        # self.assertEqual(new_recipe_1.batch_id, batch.id)
-        # self.assertEqual(new_recipe_1.event_id, event.id)
-        # self.assertEqual(new_recipe_1.root_superseded_recipe_id, self.recipe_1.id)
-        # self.assertDictEqual(new_recipe_1.input, self.recipe_1.input)
-        # new_recipe_2 = Recipe.objects.get(superseded_recipe_id=self.recipe_2.id)
-        # self.assertEqual(new_recipe_2.batch_id, batch.id)
-        # self.assertEqual(new_recipe_2.event_id, event.id)
-        # self.assertEqual(new_recipe_2.root_superseded_recipe_id, self.recipe_2.id)
-        # self.assertDictEqual(new_recipe_2.input, self.recipe_2.input)
-        # # Make sure identical jobs (Job 1) are NOT superseded
-        # for job in Job.objects.filter(id__in=self.old_job_1_ids):
-        #     self.assertFalse(job.is_superseded)
-        # # Make sure old jobs (Job 2) are superseded
-        # for job in Job.objects.filter(id__in=self.old_job_2_ids):
-        #     self.assertTrue(job.is_superseded)
-        # # Make sure identical jobs (Job 1) were copied to new recipes
-        # recipe_job_1 = RecipeNode.objects.get(recipe=new_recipe_1.id)
-        # self.assertEqual(recipe_job_1.node_name, 'Job 1')
-        # self.assertEqual(recipe_job_1.job_id, self.job_1_1.id)
-        # recipe_job_2 = RecipeNode.objects.get(recipe=new_recipe_2.id)
-        # self.assertEqual(recipe_job_2.node_name, 'Job 1')
-        # self.assertEqual(recipe_job_2.job_id, self.job_2_1.id)
-        # # Should be three messages, two for processing new recipe input and one for canceling superseded jobs
-        # self.assertEqual(len(message.new_messages), 3)
-        # found_process_recipe_input_1 = False
-        # found_process_recipe_input_2 = False
-        # found_cancel_jobs = False
-        # for msg in message.new_messages:
-        #     if msg.type == 'process_recipe_input':
-        #         if msg.recipe_id == new_recipe_1.id:
-        #             found_process_recipe_input_1 = True
-        #         elif msg.recipe_id == new_recipe_2.id:
-        #             found_process_recipe_input_2 = True
-        #     elif msg.type == 'cancel_jobs':
-        #         found_cancel_jobs = True
-        #         self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        # self.assertTrue(found_process_recipe_input_1)
-        # self.assertTrue(found_process_recipe_input_2)
-        # self.assertTrue(found_cancel_jobs)
+        # Should be four messages
+        # 1. Canceling jobs for node_c and node_d
+        # 2. Unpublishing jobs for node_d
+        # 3. Recursively supersede sub-recipes for node_g
+        # 4. Recursively supersede/unpublish sub-recipes for node_h
+        self.assertEqual(len(message.new_messages), 4)
+        msg_cancel_jobs = None
+        msg_unpublish_jobs = None
+        msg_recur_supersede = None
+        msg_recur_unpublish = None
+        for msg in message.new_messages:
+            if msg.type == 'cancel_jobs':
+                msg_cancel_jobs = msg
+            elif msg.type == 'unpublish_jobs':
+                msg_unpublish_jobs = msg
+            elif msg.type == 'supersede_recipe_nodes':
+                if msg.unpublish_recursive_all:
+                    msg_recur_unpublish = msg
+                else:
+                    msg_recur_supersede = msg
 
-        # # Test executing message again
-        # message_json_dict = message.to_json()
-        # message = ReprocessRecipes.from_json(message_json_dict)
-        # result = message.execute()
-        # self.assertTrue(result)
+        self.assertIsNotNone(msg_cancel_jobs)
+        self.assertSetEqual(set(msg_cancel_jobs._job_ids), {job_1_c.id, job_1_d.id, job_2_c.id, job_2_d.id})
+        self.assertEqual(msg_cancel_jobs.when, when)
 
-        # # Make sure we don't reprocess twice
-        # for new_recipe in Recipe.objects.filter(id__in=[new_recipe_1.id, new_recipe_2.id]):
-        #     self.assertFalse(new_recipe.is_superseded)
-        # # Should get same messages
-        # self.assertEqual(len(message.new_messages), 3)
-        # found_process_recipe_input_1 = False
-        # found_process_recipe_input_2 = False
-        # found_cancel_jobs = False
-        # for msg in message.new_messages:
-        #     if msg.type == 'process_recipe_input':
-        #         if msg.recipe_id == new_recipe_1.id:
-        #             found_process_recipe_input_1 = True
-        #         elif msg.recipe_id == new_recipe_2.id:
-        #             found_process_recipe_input_2 = True
-        #     elif msg.type == 'cancel_jobs':
-        #         found_cancel_jobs = True
-        #         self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        # self.assertTrue(found_process_recipe_input_1)
-        # self.assertTrue(found_process_recipe_input_2)
-        # self.assertTrue(found_cancel_jobs)
+        self.assertIsNotNone(msg_unpublish_jobs)
+        self.assertSetEqual(set(msg_unpublish_jobs._job_ids), {job_1_d.id, job_2_d.id})
+        self.assertEqual(msg_unpublish_jobs.when, when)
+
+        self.assertIsNotNone(msg_recur_supersede)
+        self.assertSetEqual(set(msg_recur_supersede._recipe_ids), {recipe_1_g.id, recipe_2_g.id})
+        self.assertEqual(msg_recur_supersede.when, when)
+        self.assertTrue(msg_recur_supersede.supersede_all)
+        self.assertFalse(msg_recur_supersede.unpublish_all)
+        self.assertTrue(msg_recur_supersede.supersede_recursive_all)
+        self.assertFalse(msg_recur_supersede.unpublish_recursive_all)
+
+        self.assertIsNotNone(msg_recur_unpublish)
+        self.assertSetEqual(set(msg_recur_unpublish._recipe_ids), {recipe_1_h.id, recipe_2_h.id})
+        self.assertEqual(msg_recur_unpublish.when, when)
+        self.assertTrue(msg_recur_unpublish.supersede_all)
+        self.assertTrue(msg_recur_unpublish.unpublish_all)
+        self.assertTrue(msg_recur_unpublish.supersede_recursive_all)
+        self.assertTrue(msg_recur_unpublish.unpublish_recursive_all)
+
+        # Test executing message again
+        message.new_messages = []
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Check for same results and messages
+        # Ensure jobs for node_c and node_d are superseded
+        qry = Job.objects.filter(id__in=[job_1_c.id, job_1_d.id, job_2_c.id, job_2_d.id], is_superseded=True)
+        self.assertEqual(qry.count(), 4)
+        # Ensure sub-recipes for node_f, node_g, and node_h are superseded
+        recipe_ids = [recipe_1_f.id, recipe_1_g.id, recipe_1_h.id, recipe_2_f.id, recipe_2_g.id, recipe_2_h.id]
+        qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=True)
+        self.assertEqual(qry.count(), 8)
+        # Ensure jobs for node_a and node_b are NOT superseded
+        qry = Job.objects.filter(id__in=[job_1_a.id, job_1_b.id, job_2_a.id, job_2_b.id], is_superseded=False)
+        self.assertEqual(qry.count(), 4)
+        # Ensure sub-recipes for node_e are NOT superseded
+        recipe_ids = [recipe_1_e.id, recipe_2_e.id]
+        qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=False)
+        self.assertEqual(qry.count(), 2)
+
+        # Should be four messages
+        # 1. Canceling jobs for node_c and node_d
+        # 2. Unpublishing jobs for node_d
+        # 3. Recursively supersede sub-recipes for node_g
+        # 4. Recursively supersede/unpublish sub-recipes for node_h
+        self.assertEqual(len(message.new_messages), 4)
+        msg_cancel_jobs = None
+        msg_unpublish_jobs = None
+        msg_recur_supersede = None
+        msg_recur_unpublish = None
+        for msg in message.new_messages:
+            if msg.type == 'cancel_jobs':
+                msg_cancel_jobs = msg
+            elif msg.type == 'unpublish_jobs':
+                msg_unpublish_jobs = msg
+            elif msg.type == 'supersede_recipe_nodes':
+                if msg.unpublish_recursive_all:
+                    msg_recur_unpublish = msg
+                else:
+                    msg_recur_supersede = msg
+
+        self.assertIsNotNone(msg_cancel_jobs)
+        self.assertSetEqual(set(msg_cancel_jobs._job_ids), {job_1_c.id, job_1_d.id, job_2_c.id, job_2_d.id})
+        self.assertEqual(msg_cancel_jobs.when, when)
+
+        self.assertIsNotNone(msg_unpublish_jobs)
+        self.assertSetEqual(set(msg_unpublish_jobs._job_ids), {job_1_d.id, job_2_d.id})
+        self.assertEqual(msg_unpublish_jobs.when, when)
+
+        self.assertIsNotNone(msg_recur_supersede)
+        self.assertSetEqual(set(msg_recur_supersede._recipe_ids), {recipe_1_g.id, recipe_2_g.id})
+        self.assertEqual(msg_recur_supersede.when, when)
+        self.assertTrue(msg_recur_supersede.supersede_all)
+        self.assertFalse(msg_recur_supersede.unpublish_all)
+        self.assertTrue(msg_recur_supersede.supersede_recursive_all)
+        self.assertFalse(msg_recur_supersede.unpublish_recursive_all)
+
+        self.assertIsNotNone(msg_recur_unpublish)
+        self.assertSetEqual(set(msg_recur_unpublish._recipe_ids), {recipe_1_h.id, recipe_2_h.id})
+        self.assertEqual(msg_recur_unpublish.when, when)
+        self.assertTrue(msg_recur_unpublish.supersede_all)
+        self.assertTrue(msg_recur_unpublish.unpublish_all)
+        self.assertTrue(msg_recur_unpublish.supersede_recursive_all)
+        self.assertTrue(msg_recur_unpublish.unpublish_recursive_all)
