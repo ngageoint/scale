@@ -30,6 +30,9 @@ class TestRequeueJobsBulk(TestCase):
         job_type = job_test_utils.create_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
                                           input=data.get_dict())
+        job_1.batch_id = batch.id
+        job_1.recipe_id = recipe.id
+        job_1.save()
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='CANCELED', error=sys_err,
                                           input=data.get_dict())
 
