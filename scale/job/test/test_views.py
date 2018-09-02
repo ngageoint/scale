@@ -4155,7 +4155,7 @@ class TestOldJobExecutionsViewV5(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestJobExecutionSpecificLogView(TestCase):
+class TestJobExecutionSpecificLogViewV5(TestCase):
 
     api = 'v5'
     
@@ -4270,6 +4270,136 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stderr)
             self.assertEqual(since, started)
             return {}, now()
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'application/json')
+
+
+class TestJobExecutionSpecificLogViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    def test_bad_job_exe_id(self):
+        url = '/%s/job-executions/999999/logs/combined/' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_time(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return {}, now()
+
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'application/json')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_text_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertFalse(html)
+            return 'hello', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/combined/?format=txt' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/plain')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/combined/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_content(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return None, now()
+
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stdout_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertFalse(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/stdout/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stderr_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertFalse(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/stderr/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_with_time(self, mock_get_logs):
+        started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertEqual(since, started)
+            return {}, now()
+
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = '/%s/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json' % self.api
@@ -4850,3 +4980,5 @@ class TestRequeueJobsViewV6(TestCase):
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        priority=priority, status=job_status, job_type_names=job_type_names, 
                                        batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+
+
