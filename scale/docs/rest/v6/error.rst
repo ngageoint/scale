@@ -1,8 +1,8 @@
 
 .. _rest_v6_error:
 
-Error Services
-==============
+v6 Error Services
+=================
 
 These services provide access to information about registered errors and error mappings.
 

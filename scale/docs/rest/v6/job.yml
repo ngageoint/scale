@@ -884,12 +884,33 @@ components:
       title: Job Execution Log
       type: object
       properties:
-        flag:
+        message:
           type: string
-          description: The command line flag (long form) to use for passing the |
-            parameter without the preceding dashes (e.g. use “volume” for passing|
-            “–volume=...”).
-          example: volume
-        value:
+          description: The log message
+          example: INFO - Starting job execution
+        @timestamp:
           type: string
-          description: The value to pass to the parameter on the Docker command line.
+          format: date-time
+          description: The ISO-8601 timestamp marking when the message was logged.
+          example: 2015-08-28T17:57:41.033Z
+        scale_order_num:
+          type: integer
+          description: A sequence number used to indicate correct log message |
+            order when multiple messages share the same @timestamp value.
+          example: 1
+        scale_task:
+          type: integer
+          description: The ID of the Scale task that produced this log message.
+          example: 123
+        scale_job_exe:
+          type: string
+          description: The unique cluster ID of the Scale job execution that produced this log message
+          example: scale_job_1234_263x0
+        scale_node:
+          type: string
+          description: The host name of the Scale node that executed the Scale task 
+          example: machine.com
+        stream:
+          type: string
+          description: Indicates which stream produced the log message, either “stdout” or “stderr”
+          example: stdout
