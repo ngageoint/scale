@@ -420,7 +420,7 @@
 
 <dl class="function">
 <dt id="job.messages.cancel_jobs_bulk.create_cancel_jobs_bulk_message">
-<code class="descclassname">job.messages.cancel_jobs_bulk.</code><code class="descname">create_cancel_jobs_bulk_message</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>error_categories=None</em>, <em>error_ids=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>status=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs_bulk.create_cancel_jobs_bulk_message" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.messages.cancel_jobs_bulk.</code><code class="descname">create_cancel_jobs_bulk_message</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>error_categories=None</em>, <em>error_ids=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>status=None</em>, <em>job_type_names=None</em>, <em>batch_ids=None</em>, <em>recipe_ids=None</em>, <em>is_superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.cancel_jobs_bulk.create_cancel_jobs_bulk_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a message to perform a bulk job cancel operation. The parameters are applied as filters to the jobs
 affected by the cancel.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -435,6 +435,10 @@ affected by the cancel.</p>
 <li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job IDs</li>
 <li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job type IDs</li>
 <li><strong>status</strong> (<em>str</em>) &#8211; The job status</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of job type names</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of batch IDs</li>
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of recipe IDs</li>
+<li><strong>is_superseded</strong> (<em>boolean</em>) &#8211; Whether the jobs are superseded or not</li>
 </ul>
 </td>
 </tr>

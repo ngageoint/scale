@@ -271,6 +271,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0009_scheduler_debugging_level">scheduler.migrations.0009_scheduler_debugging_level module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0010_scheduler_resource_level">scheduler.migrations.0010_scheduler_resource_level module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0011_auto_20180517_1559">scheduler.migrations.0011_auto_20180517_1559 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0012_remove_scheduler_resource_level">scheduler.migrations.0012_remove_scheduler_resource_level module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -670,7 +671,6 @@ cluster-wide state related to scheduling in mesos.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the entire cluster is currently paused and should not accept new jobs</li>
 <li><strong>num_message_handlers</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of message handlers to have scheduled</li>
-<li><strong>resource_level</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; Describes the current resource level of scale for scaling purposes. There are three valid values:TOO HIGH, TOO LOW and GOOD.</li>
 <li><strong>system_logging_level</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The logging level for all scale system components</li>
 <li><strong>master_hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the Mesos master</li>
 <li><strong>master_port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the Mesos master REST API</li>
@@ -696,19 +696,9 @@ cluster-wide state related to scheduling in mesos.</p>
 <code class="descname">QUEUE_MODES</code><em class="property"> = ((u'FIFO', u'FIFO'), (u'LIFO', u'LIFO'))</em><a class="headerlink" href="#scheduler.models.Scheduler.QUEUE_MODES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="scheduler.models.Scheduler.RESOURCE_LEVELS">
-<code class="descname">RESOURCE_LEVELS</code><em class="property"> = ((u'TOO HIGH', u'TOO HIGH'), (u'TOO LOW', u'TOO LOW'), (u'GOOD', u'GOOD'))</em><a class="headerlink" href="#scheduler.models.Scheduler.RESOURCE_LEVELS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="scheduler.models.Scheduler.get_queue_mode_display">
 <code class="descname">get_queue_mode_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_queue_mode_display" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="scheduler.models.Scheduler.get_resource_level_display">
-<code class="descname">get_resource_level_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_resource_level_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -754,13 +744,6 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.queue_mode">
 <code class="descname">queue_mode</code><a class="headerlink" href="#scheduler.models.Scheduler.queue_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.models.Scheduler.resource_level">
-<code class="descname">resource_level</code><a class="headerlink" href="#scheduler.models.Scheduler.resource_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -873,11 +856,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>
-
-<dl class="function">
-<dt id="scheduler.models.validate_resource_level">
-<code class="descclassname">scheduler.models.</code><code class="descname">validate_resource_level</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.validate_resource_level" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </div>
 <div class="section" id="module-scheduler.scale_scheduler">
@@ -1055,7 +1033,7 @@ fails during that time.</p>
 <p>Meta class used to define what is serialized and how</p>
 <dl class="attribute">
 <dt id="scheduler.serializers.SchedulerSerializerV6.Meta.fields">
-<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'resource_level', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializerV6.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1238,7 +1216,7 @@ fails during that time.</p>
 
 <dl class="attribute">
 <dt id="scheduler.views.SchedulerView.update_fields">
-<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'resource_level', u'system_logging_level')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers', u'system_logging_level')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

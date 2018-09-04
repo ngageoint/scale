@@ -3280,7 +3280,7 @@ job_exe, job_type, and error models will be populated.</p>
 
 <dl class="method">
 <dt id="job.models.JobExecutionManager.get_job_exes">
-<code class="descname">get_job_exes</code><span class="sig-paren">(</span><em>job_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>node_ids=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_exes</code><span class="sig-paren">(</span><em>job_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>node_ids=None</em>, <em>error_ids=None</em>, <em>error_categories=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.get_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job executions for the given job.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3292,6 +3292,9 @@ job_exe, job_type, and error models will be populated.</p>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
 <li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions with the a specific status.</li>
 <li><strong>node_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
+<li><strong>error_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions that had an error with the identifier.</li>
+<li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions that had an error with the given category.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -7046,30 +7049,6 @@ object the first time, the query is executed.</p>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="job.views.JobExecutionDetailsView.retrieve_v5">
-<code class="descname">retrieve_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionDetailsView.retrieve_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets job execution and associated job_type id, name, and version</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_exe_id</strong> (<em>int encoded as a str</em>) &#8211; the job execution id</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -7146,7 +7125,25 @@ object the first time, the query is executed.</p>
 
 <dl class="method">
 <dt id="job.views.JobExecutionsView.list_v5">
-<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list_v5" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list_v5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets job executions and their associated job_type id, name, and version</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobExecutionsView.list_v6">
+<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionsView.list_v6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets job executions and their associated job_type id, name, and version</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -7250,6 +7247,12 @@ example: input_1</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.views.JobInputFilesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobInputFilesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API.</p>
 </dd></dl>
 
 <dl class="attribute">

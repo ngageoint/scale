@@ -92,6 +92,14 @@ scheduler\.migrations\.0011\_auto\_20180517\_1559 module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.migrations\.0012\_remove\_scheduler\_resource\_level module
+----------------------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0012_remove_scheduler_resource_level
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

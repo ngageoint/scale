@@ -101,7 +101,7 @@
 <li class="toctree-l3"><a class="reference internal" href="batch.html">v6 Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="data.html">v6 Data Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">v6 Diagnostic Services</a></li>
-<li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">v6 Error Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">v6 Ingest Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">v6 Job Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">v6 Job Type Services</a></li>
@@ -201,7 +201,6 @@
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
     <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;resource_level&quot;</span><span class="o">:</span> <span class="s1">&#39;GOOD&#39;</span><span class="p">,</span>
     <span class="s2">&quot;system_logging_level&quot;</span><span class="o">:</span> <span class="s1">&#39;INFO&#39;</span>
 <span class="p">}</span>
 </pre></div>
@@ -243,14 +242,7 @@ results in the previous individual node pause state.</td>
 <td>Integer</td>
 <td>The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="2">resource_level</td>
-<td>String</td>
-<td>Describes the current resource level of scale. There are three valid values:
-TOO HIGH : Scale has more resources than required and can be scaled down
-TOO LOW : Scale needs more resources and should be scaled up
-GOOD : Scale has a good amount of resources</td>
-</tr>
-<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<tr class="row-even"><td colspan="2">system_logging_level</td>
 <td>String</td>
 <td>The logging level for all scale system components</td>
 </tr>
@@ -295,22 +287,15 @@ GOOD : Scale has a good amount of resources</td>
 <td>Integer</td>
 <td>(Optional) The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td colspan="2">resource_level</td>
-<td>String</td>
-<td>(Optional) The current resource level of scale. There are three valid values:
-TOO HIGH : Scale has more resources than required and can be scaled down
-TOO LOW : Scale needs more resources and should be scaled up
-GOOD : Scale has a good amount of resources</td>
-</tr>
-<tr class="row-odd"><td colspan="2">system_logging_level</td>
+<tr class="row-even"><td colspan="2">system_logging_level</td>
 <td>String</td>
 <td>(Optional) The logging level sent to all scale system components.
 Acceptable levels are DEBUG, INFO, WARNING, ERROR and CRITICAL.
 Anything else will default to INFO</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="3">204 No content</td>
 </tr>
 </tbody>
