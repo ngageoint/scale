@@ -12,7 +12,7 @@
 
         var getIngestRecordDetails = function () {
             vm.loading = true;
-            feedService.getSourceDetails($routeParams.id).then(function (data) {
+            feedService.getIngestDetails($routeParams.id).then(function (data) {
                 vm.ingestRecord = data;
             }).catch(function (error) {
                 console.log(error);

@@ -86,6 +86,13 @@
             return [200, data, {}];
         });
 
+        // Ingest details
+        var ingestDetailsOverrideUrl = 'test/data/ingestDetails.json';
+        var ingestDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('ingests') + 'ingests/.*/', 'i');
+        $httpBackend.whenGET(ingestDetailsRegex).respond(function (method, url) {
+            return getSync(ingestDetailsOverrideUrl);
+        });
+
         // Ingests
         var ingestsOverrideUrl = 'test/data/ingests.json';
         var ingestsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('ingests') + 'ingests/', 'i');
@@ -142,6 +149,7 @@
 
             return returnObj;
         });
+
 
         // Source details
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';

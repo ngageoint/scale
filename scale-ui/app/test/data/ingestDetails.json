@@ -1,0 +1,135 @@
+{
+    "id": 14,
+    "file_name": "file_name.txt",
+    "scan": null,
+    "strike": {
+        "id": 1,
+        "name": "landsat",
+        "title": "Landsat",
+        "description": "Landsat strike process",
+        "job": {
+            "id": 7,
+            "job_type": {
+                "id": 2,
+                "name": "scale-strike",
+                "version": "1.0",
+                "title": "Scale Strike",
+                "description": "Monitors a directory for incoming source files to ingest",
+                "category": "system",
+                "author_name": null,
+                "author_url": null,
+                "is_system": true,
+                "is_long_running": true,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": "f0e7"
+            },
+            "job_type_rev": {
+                "id": 2
+            },
+            "event": {
+                "id": 1
+            },
+            "status": "RUNNING",
+            "priority": 10,
+            "num_exes": 1
+        },
+        "configuration": {
+            "transfer_suffix": "_tmp",
+            "mount": "host:/transfer",
+            "version": "1.0",
+            "mount_on": "/mounts/transfer",
+            "files_to_ingest": [
+                {
+                    "workspace_path": "/workspace",
+                    "data_types": [],
+                    "filename_regex": "*.txt",
+                    "workspace_name": "raw"
+                }
+            ]
+        },
+        "created": "2015-09-10T15:24:42.896Z",
+        "last_modified": "2015-09-10T15:24:42.935Z"
+    },
+    "status": "INGESTED",
+    "bytes_transferred": 1234,
+    "transfer_started": "2015-09-10T14:48:08.920Z",
+    "transfer_ended": "2015-09-10T14:48:08.956Z",
+    "media_type": "text/plain",
+    "file_size": 1234,
+    "data_type": [],
+    "file_path": "the/current/path/file_name.txt",
+    "workspace": {
+        "id": 1,
+        "name": "rs",
+        "title": "Raw Source",
+        "description": "Raw Source Data Workspace",
+        "base_url": "http://host.com/rs",
+        "is_active": true,
+        "used_size": 0,
+        "total_size": 0,
+        "created": "2015-10-05T21:26:04.876Z",
+        "archived": null,
+        "last_modified": "2015-10-05T21:26:04.876Z",
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/dev"
+            }
+        }
+    },
+    "new_file_path": "the/new/path/file_name.txt",
+    "new_workspace": {
+        "id": 1,
+        "name": "my-new-workspace",
+        "title": "My New Workspace",
+        "description": "My New Workspace",
+        "base_url": "http://host.com/new-wk",
+        "is_active": true,
+        "used_size": 0,
+        "total_size": 0,
+        "created": "2015-10-05T21:26:04.855Z",
+        "archived": null,
+        "last_modified": "2015-10-05T21:26:04.855Z",
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    },
+    "job": {
+        "id": 1234
+    },
+    "ingest_started": "2015-09-10T15:24:53.503Z",
+    "ingest_ended": "2015-09-10T15:24:53.987Z",
+    "source_file": {
+        "id": 1,
+        "workspace": {
+            "id": 1,
+            "name": "Raw Source"
+        },
+        "file_name": "file_name.txt",
+        "media_type": "text/plain",
+        "file_size": 1234,
+        "data_type": [],
+        "is_deleted": false,
+        "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+        "url": "http://host.com/file_name.txt",
+        "created": "2015-09-10T15:24:53.962Z",
+        "deleted": null,
+        "data_started": "2015-09-10T14:36:56Z",
+        "data_ended": "2015-09-10T14:37:01Z",
+        "geometry": null,
+        "center_point": null,
+        "meta_data": {},
+        "last_modified": "2015-09-10T15:25:03.797Z",
+        "is_parsed": true,
+        "parsed": "2015-09-10T15:25:03.796Z"
+    },
+    "data_started": "2015-09-10T15:24:53.503Z",
+    "data_ended": "2015-09-10T15:24:53.987Z",
+    "created": "2015-09-10T15:24:47.412Z",
+    "last_modified": "2015-09-10T15:24:53.987Z"
+}
