@@ -1741,7 +1741,8 @@ class JobExecutionManager(models.Manager):
             job_exes = job_exes.order_by('created')
         return job_exes
 
-    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None):
+    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None, error_ids=None,
+                 error_categories=None, order=None):
         """Returns a list of job executions for the given job.
 
         :param job_id: Query job executions associated with the job identifier.
@@ -1754,12 +1755,19 @@ class JobExecutionManager(models.Manager):
         :type statuses: [string]
         :param node_ids: Query job executions that ran on a node with the identifier.
         :type node_ids: [int]
+        :param error_ids: Query job executions that had an error with the identifier.
+        :type error_ids: [int]
+        :param error_categories: Query job executions that had an error with the given category.
+        :type error_categories: [string]
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
         :returns: The list of job executions that match the job identifier.
         :rtype: [:class:`job.models.JobExecution`]
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
+                                                             'jobexecutionend__error')
         job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply job filtering
@@ -1785,9 +1793,16 @@ class JobExecutionManager(models.Manager):
                 job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if node_ids:
             job_exes = job_exes.filter(node_id__in=node_ids)
-
+        if error_ids:
+            job_exes = job_exes.filter(jobexecutionend__error_id__in=error_ids)
+        if error_categories:
+            job_exes = job_exes.filter(jobexecutionend__error__category__in=error_categories)
+            
         # Apply sorting
-        job_exes = job_exes.order_by('exe_num')
+        if order:
+            job_exes = job_exes.order_by(*order)
+        else:
+            job_exes = job_exes.order_by('-exe_num')
 
         return job_exes
 

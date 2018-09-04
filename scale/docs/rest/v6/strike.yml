@@ -245,7 +245,7 @@ components:
         errors:
           type: array
             $ref: '#/components/schemas/validation_error'
-        errors:
+        warnings:
           type: array
             $ref: '#/components/schemas/validation_warning'
             
