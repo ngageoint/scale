@@ -67,7 +67,7 @@ class TestFilesViewV5(TestCase):
         self.assertEqual(len(result), 0)
 
     def test_time_successful(self):
-        """Tests unsuccessfully calling the get files by name view"""
+        """Tests successfully calling the get files by time"""
 
         url = '/%s/files/?started=%s&ended=%s&time_field=%s' % ( self.api, 
                                                                  '2016-01-01T00:00:00Z',
@@ -92,20 +92,36 @@ class TestFilesViewV6(TestCase):
         self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
         self.job1 = job_test_utils.create_job(job_type=self.job_type1)
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        self.f1_source_started = dt.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = dt.datetime(2016, 1, 2, tzinfo=utc)
+        self.source_sensor_class = 'classA'
+        self.source_sensor = '1'
+        self.source_collection = '12345'
+        self.source_task = 'test-task'
         self.file1 = storage_test_utils.create_file(job_exe=self.job_exe1, job_output='out_name',
                                                           file_name='test.txt', countries=[self.country],
-                                                          recipe_node='test-recipe-node')
+                                                          recipe_node='test-recipe-node',
+                                                          source_started=self.f1_source_started,
+                                                          source_ended=self.f1_source_ended,
+                                                          source_sensor_class=self.source_sensor_class,
+                                                          source_sensor=self.source_sensor,
+                                                          source_collection=self.source_collection,
+                                                          source_task=self.source_task)
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', category='test-2', is_operational=False)
         self.job2 = job_test_utils.create_job(job_type=self.job_type2)
         self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
-        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country])
+        self.f2_source_started = dt.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = dt.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(job_exe=self.job_exe2, countries=[self.country],
+                                                          source_started=self.f2_source_started,
+                                                          source_ended=self.f2_source_ended)
 
 
     def test_invalid_started(self):
         """Tests calling the files view when the started parameter is invalid."""
 
-        url = '/%s/files/?started=hello' % self.api
+        url = '/%s/files/?data_started=hello' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -113,7 +129,7 @@ class TestFilesViewV6(TestCase):
     def test_missing_tz_started(self):
         """Tests calling the files view when the started parameter is missing timezone."""
 
-        url = '/%s/files/?started=1970-01-01T00:00:00' % self.api
+        url = '/%s/files/?data_started=1970-01-01T00:00:00' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -121,7 +137,7 @@ class TestFilesViewV6(TestCase):
     def test_invalid_ended(self):
         """Tests calling the files view when the ended parameter is invalid."""
 
-        url = '/%s/files/?started=1970-01-01T00:00:00Z&ended=hello' % self.api
+        url = '/%s/files/?started=1970-01-01T00:00:00Z&data_ended=hello' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -129,7 +145,7 @@ class TestFilesViewV6(TestCase):
     def test_missing_tz_ended(self):
         """Tests calling the files view when the ended parameter is missing timezone."""
 
-        url = '/%s/files/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00' % self.api
+        url = '/%s/files/?data_started=1970-01-01T00:00:00Z&data_ended=1970-01-02T00:00:00' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -137,11 +153,70 @@ class TestFilesViewV6(TestCase):
     def test_negative_time_range(self):
         """Tests calling the files view with a negative time range."""
 
-        url = '/%s/files/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00' % self.api
+        url = '/%s/files/?data_started=1970-01-02T00:00:00Z&data_ended=1970-01-01T00:00:00' % self.api
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    def test_source_time_successful(self):
+        """Tests successfully calling the get files by source time"""
 
+        url = '/%s/files/?source_started=%s&source_ended=%s' % ( self.api, 
+                                                                 '2016-01-01T00:00:00Z',
+                                                                 '2016-01-03T00:00:00Z')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+
+    def test_source_sensor_class(self):
+        """Tests successfully calling the files view filtered by source sensor class."""
+
+        url = '/%s/files/?source_sensor_class=%s' % (self.api, self.source_sensor_class)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor_class'], self.source_sensor_class)
+        
+    def test_source_sensor(self):
+        """Tests successfully calling the files view filtered by source sensor."""
+
+        url = '/%s/files/?source_sensor=%s' % (self.api, self.source_sensor)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor'], self.source_sensor)
+        
+    def test_source_collection(self):
+        """Tests successfully calling the files view filtered by source collection."""
+
+        url = '/%s/files/?source_collection=%s' % (self.api, self.source_collection)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_collection'], self.source_collection)
+        
+    def test_source_task(self):
+        """Tests successfully calling the files view filtered by source task."""
+
+        url = '/%s/files/?source_task=%s' % (self.api, self.source_task)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_task'], self.source_task)
+        
     def test_job_type_id(self):
         """Tests successfully calling the files view filtered by job type identifier."""
 

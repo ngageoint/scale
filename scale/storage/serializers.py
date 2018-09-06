@@ -148,6 +148,10 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     data_ended = serializers.DateTimeField()
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
     last_modified = serializers.DateTimeField()
     # TODO: update to use GeoJson instead of WKT
     geometry = WktField()
