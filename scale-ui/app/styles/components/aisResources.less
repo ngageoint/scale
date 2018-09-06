@@ -1,0 +1,56 @@
+.chart-container {
+    display: flex;
+
+    h4 {
+        margin: 0;
+        padding: 0;
+        font-size: 1.2em;
+        font-weight: bold;
+    }
+
+    .chart {
+        min-width: 25%;
+    }
+}
+
+.chart-values {
+    margin-top: -20px;
+}
+
+.status-legend {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+    .status-offered {
+        margin-right: 20px;
+
+        i {
+            color: @chart_blue;
+        }
+    }
+
+    .status-free {
+        margin-right: 20px;
+
+        i {
+            color: @chart_green;
+        }
+    }
+
+    .status-running {
+        margin-right: 20px;
+
+        i {
+            color: @chart_blue_light;
+        }
+    }
+
+    .status-unavailable {
+        margin-right: 20px;
+
+        i {
+            color: @chart_gray_dark;
+        }
+    }
+}

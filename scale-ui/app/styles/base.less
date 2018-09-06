@@ -70,7 +70,7 @@ hr {
 .panel-sm {
     .panel-heading {
         padding: 5px;
-        
+
         .panel-title {
             font-size: 14px;
         }
@@ -380,6 +380,34 @@ ol.breadcrumb {
         display: inline-block;
         width: 50px;
     }
+}
+
+.label-deprecated {
+    background-color: @chart_gray_dark;
+}
+
+.label-offline {
+    background-color: @failure_system;
+}
+
+.label-scheduler_stopped {
+    background-color: @chart_orange;
+}
+
+.label-degraded {
+    background-color: @failure_algorithm;
+}
+
+.label-initial_cleanup {
+    background-color: @chart_blue;
+}
+
+.label-image_pull {
+    background-color: @chart_purple;
+}
+
+.label-ready {
+    background-color: @chart_green;
 }
 
 .label-running {

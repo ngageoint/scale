@@ -1,30 +1,210 @@
 {
-    "queue_depth": 1234,
-    "master": {
-        "hostname": "localhost",
-        "port": 5050,
-        "is_online": true
-    },
-    "resources": {
-        "scheduled": {
-            "mem": 307200.0,
-            "disk": 209715200.0,
-            "cpus": 64.0
+    "timestamp": "1970-01-01T00:00:00Z",
+    "scheduler": {
+        "metrics": {
+            "task_updates_per_sec": 0.0,
+            "new_offers_per_sec": 0.0,
+            "jobs_finished_per_sec": 2.0,
+            "jobs_launched_per_sec": 5.0,
+            "tasks_launched_per_sec": 28.0,
+            "offers_launched_per_sec": 0.0,
+            "tasks_finished_per_sec": 12.0
         },
-        "total": {
-            "mem": 1048576.0,
-            "disk": 1073741824.0,
-            "cpus": 128.0
+        "hostname": "scheduler-host.com",
+        "mesos": {
+            "framework_id": "framework-1234",
+            "master_hostname": "192.168.1.1",
+            "master_port": 5050
         },
-        "used": {
-            "mem": 307200.0,
-            "disk": 209715200.0,
-            "cpus": 64.0
+        "state": {
+            "name": "READY",
+            "title": "Ready",
+            "description": "Scheduler is ready to run new jobs."
         }
     },
-    "scheduler": {
-        "is_paused": false,
-        "hostname": "localhost",
-        "is_online": true
-    }
+    "system": {
+        "database_update": {
+            "is_completed": true,
+            "completed": "1970-01-01T00:00:00Z"
+        },
+        "services": [
+            {
+                "name": "messaging",
+                "title": "Messaging",
+                "description": "Processes the backend messaging system",
+                "actual_count": 1,
+                "desired_count": 1
+            }
+        ]
+    },
+    "num_offers": 4,
+    "resources": {
+        "mem": {
+            "offered": 91445.0,
+            "total": 177501.0,
+            "running": 140296.0,
+            "free": 72744.0,
+            "unavailable": 12288.0
+        },
+        "gpus": {
+            "offered": 10.0,
+            "total": 20.0,
+            "running": 1.0,
+            "free": 9.0,
+            "unavailable": 10.0
+        },
+        "disk": {
+            "offered": 383051.0,
+            "total": 676101.0,
+            "running": 412894.0,
+            "free": 289722.0,
+            "unavailable": 3328.0
+        },
+        "cpus": {
+            "offered": 7.3,
+            "total": 28.0,
+            "running": 10.0,
+            "free": 11.0,
+            "unavailable": 8.7
+        }
+    },
+    "job_types": [
+        {
+            "id": 1,
+            "name": "my-job",
+            "version": "1.0",
+            "title": "My Job",
+            "description": "My Job Description",
+            "is_system": false,
+            "icon_code": "f186"
+        }
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "hostname": "my-host",
+            "agent_id": "my-agent",
+            "is_active": true,
+            "state": {
+                "name": "READY",
+                "title": "Ready",
+                "description": "Node is ready to run new jobs."
+            },
+            "errors": [
+                {
+                    "name": "my-error",
+                    "title": "My Error",
+                    "description": "My Error Description",
+                    "started": "1970-01-01T00:00:00Z",
+                    "last_updated": "1970-01-01T00:00:00Z"
+                }
+            ],
+            "warnings": [
+                {
+                    "name": "my-warning",
+                    "title": "My Warning",
+                    "description": "My Warning Description",
+                    "started": "1970-01-01T00:00:00Z",
+                    "last_updated": "1970-01-01T00:00:00Z"
+                }
+            ],
+            "node_tasks": [
+                {
+                    "type": "cleanup",
+                    "title": "Node Cleanup",
+                    "description": "Performs Docker container and volume cleanup on the node",
+                    "count": 1
+                }
+            ],
+            "system_tasks": [
+                {
+                    "type": "message-handler",
+                    "title": "Message Handler",
+                    "description": "Processes messages from Scale's backend messaging system",
+                    "count": 1
+                }
+            ],
+            "num_offers": 1,
+            "resources": {
+                "mem": {
+                    "offered": 26893.0,
+                    "total": 29965.0,
+                    "running": 0.0,
+                    "free": 0.0,
+                    "unavailable": 3072.0
+                },
+                "gpus": {
+                    "offered": 0.0,
+                    "total": 0.0,
+                    "running": 0.0,
+                    "free": 0.0,
+                    "unavailable": 0.0
+                },
+                "disk": {
+                    "offered": 95553.0,
+                    "total": 96577.0,
+                    "running": 0.0,
+                    "free": 0.0,
+                    "unavailable": 1024.0
+                },
+                "cpus": {
+                    "offered": 1.0,
+                    "total": 4.0,
+                    "running": 0.0,
+                    "free": 0.0,
+                    "unavailable": 3.0
+                }
+            },
+            "job_executions": {
+                "running": {
+                    "total": 3,
+                    "by_job_type": [
+                        {
+                            "job_type_id": 1,
+                            "count": 3
+                        }
+                    ]
+                },
+                "completed": {
+                    "total": 3,
+                    "by_job_type": [
+                        {
+                            "job_type_id": 1,
+                            "count": 3
+                        }
+                    ]
+                },
+                "failed": {
+                    "total": 9,
+                    "data": {
+                        "total": 3,
+                        "by_job_type": [
+                            {
+                                "job_type_id": 1,
+                                "count": 3
+                            }
+                        ]
+                    },
+                    "algorithm": {
+                        "total": 3,
+                        "by_job_type": [
+                            {
+                                "job_type_id": 1,
+                                "count": 3
+                            }
+                        ]
+                    },
+                    "system": {
+                        "total": 3,
+                        "by_job_type": [
+                            {
+                                "job_type_id": 1,
+                                "count": 3
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    ]
 }
