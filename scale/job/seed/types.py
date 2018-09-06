@@ -83,7 +83,7 @@ class SeedOutputFiles(SeedFiles):
         path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, self.pattern)
         results = glob.glob(path_pattern)
 
-        logger.debug('Results found in post-step pattern match for output %s: %s' % (self.name, results))
+        logger.info('Results found in post-step pattern match for output %s: %s' % (self.name, results))
 
         # Remove any metadata.json and special json files from results
         purged_results = []
