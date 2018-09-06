@@ -48,6 +48,19 @@ class TestSeedOutputsFiles(TestCase):
         files = seed_output_file.get_files()
 
         self.assertEqual(['outputs1.txt', 'outputs2.txt'], files)
+        
+    @patch('glob.glob', return_value=['something.json', 'seed.outputs.json', 'results_manifest.json'])
+    def test_get_files_single_output_file_with_metadata_files_to_exclude(self, glob):
+        seed_output_file = SeedOutputFiles({
+                'name': 'OUTPUT_FILES',
+                'pattern': '*.json',
+                'multiple': False,
+                'required': True
+            })
+
+        files = seed_output_file.get_files()
+
+        self.assertEqual(['something.json'], files)
 
 
 class TestSeedOutputsJson(TestCase):
