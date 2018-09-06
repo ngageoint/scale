@@ -10,6 +10,7 @@ from job.seed.metadata import METADATA_SUFFIX
 from job.seed.results.outputs_json import SEED_OUPUTS_JSON_FILENAME
 
 LEGACY_RESULTS_MANIFEST = 'results_manifest.json'
+SPECIAL_FILES = [METADATA_SUFFIX, SEED_OUPUTS_JSON_FILENAME, LEGACY_RESULTS_MANIFEST]
 
 logger = logging.getLogger(__name__)
 
@@ -84,15 +85,15 @@ class SeedOutputFiles(SeedFiles):
 
         logger.debug('Results found in post-step pattern match for output %s: %s' % (self.name, results))
 
-        special_files = [METADATA_SUFFIX, SEED_OUPUTS_JSON_FILENAME, LEGACY_RESULTS_MANIFEST]
         # Remove any metadata.json and special json files from results
         purged_results = []
         for x in results:
-            for file_name in special_files:
+            for file_name in SPECIAL_FILES:
                 if file_name in x:
                     break
             else:
                 purged_results.append(x)
+        results = purged_results
 
         # Handle required validation
         if self.required and len(results) == 0:
