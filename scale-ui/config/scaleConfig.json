@@ -204,7 +204,8 @@
         "urls": {
             "apiPrefix": "./api/v5/",
             "overrides": {
-                "scheduler": "./api/v6/"
+                "scheduler": "./api/v6/",
+                "sources": "./api/v4/"
             },
             "documentation": "./docs"
         },

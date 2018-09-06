@@ -153,7 +153,7 @@
 
         // Source details
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
-        var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('data') + 'sources/.*/', 'i');
+        var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/.*/', 'i');
         $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
             if (_.contains(url, 'jobs')) {
                 return getSync('test/data/jobs.json');

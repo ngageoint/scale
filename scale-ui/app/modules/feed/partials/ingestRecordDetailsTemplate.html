@@ -1,28 +1,26 @@
 <ais-header name="'Ingest Details'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
 
-<div class="form-inline">
-    <div ng-if="vm.ingestRecord">
-        <h2 class="margin-top-sm margin-bottom-md">{{ vm.ingestRecord.file_name }}</h2>
-        <div class="row">
-            <div class="col-xs-6">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-inline">
+            <div ng-if="vm.ingestRecord">
+                <h2 class="margin-top-sm margin-bottom-md">{{ vm.ingestRecord.file_name }} <a href="{{ vm.ingestRecord.url }}"><i class="fa fa-download"></i></a></h2>
                 <table class="table table-hover table-condensed table-striped">
                     <tbody>
-                    <tr><td class="col-xs-2">Job:</td> <td><a href="#/jobs/job/{{ vm.ingestRecord.job.id }}">{{ vm.ingestRecord.job.id }}</a></td></tr>
-                    <tr><td class="col-xs-2">Status:</td> <td>{{ vm.ingestRecord.status }}</td></tr>
-                    <tr><td class="col-xs-2">Media Type:</td> <td>{{ vm.ingestRecord.media_type }}</td></tr>
-                    <tr><td class="col-xs-2">Workspace:</td> <td><a href="#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.title }}</a></td></tr>
-                    <tr><td class="col-xs-2">Strike:</td> <td><a href="#/feed/strikes/{{ vm.ingestRecord.strike.id }}">{{ vm.ingestRecord.strike.title }}</a></td></tr>
-                    <tr ng-if="vm.ingestRecord.scan"><td class="col-xs-2">Scan:</td> <td>{{ vm.ingestRecord.scan.title }}</d></tr>
-                    <tr><td class="col-xs-2">Ingest Started:</td> <td>{{ vm.ingestRecord.ingest_started_formatted }}</td></tr>
-                    <tr><td class="col-xs-2">Ingest Ended:</td> <td>{{ vm.ingestRecord.ingest_ended_formatted }}</td></tr>
-                    <tr><td class="col-xs-2">Bytes Transferred:</td> <td>{{ vm.ingestRecord.bytes_transferred_formatted }}</td></tr>
-                    <tr><td class="col-xs-2">File Size:</td> <td>{{ vm.scaleService.calculateFileSizeFromBytes(vm.ingestRecord.file_size) }}</td></tr>
-                    <tr><td class="col-xs-2">Created:</td> <td>{{ vm.moment.utc(vm.ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
-                    <tr><td class="col-xs-2">Last Modified:</td> <td>{{ vm.moment.utc(vm.ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
-                    <tr ng-if="vm.ingestRecord.parsed"><td>Parsed:</td> <td>{{ vm.moment.utc(vm.ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                    <tr><td class="col-xs-3">Media Type:</td> <td>{{ vm.ingestRecord.media_type }}</td></tr>
+                    <tr><td class="col-xs-3">File Size:</td> <td>{{ vm.scaleService.calculateFileSizeFromBytes(vm.ingestRecord.file_size) }}</td></tr>
+                    <tr><td class="col-xs-3">Workspace:</td> <td><a href="#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.name }}</a></td></tr>
+                    <tr><td class="col-xs-3">Created:</td> <td>{{ vm.moment.utc(vm.ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                    <tr><td class="col-xs-3">Last Modified:</td> <td>{{ vm.moment.utc(vm.ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
+                    <tr ng-if="vm.ingestRecord.parsed"><td class="col-xs-3">Parsed:</td> <td>{{ vm.moment.utc(vm.ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12" class="file-ancestry-tree">
+        <div ng-if="vm.ingestRecord.products && vm.ingestRecord.products.length > 0"><scale-file-ancestry-tree source="vm.ingestRecord"></scale-file-ancestry-tree></div>
     </div>
 </div>

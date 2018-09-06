@@ -1,9 +1,9 @@
 (function () {
     'use strict';
-    
+
     angular.module('scaleApp').controller('ingestRecordDetailsController', function ($scope, $routeParams, scaleConfig, scaleService, navService, subnavService, feedService) {
         var vm = this;
-        
+
         vm.loading = false;
         vm.subnavLinks = scaleConfig.subnavLinks.feed;
         vm.scaleService = scaleService;
@@ -12,7 +12,7 @@
 
         var getIngestRecordDetails = function () {
             vm.loading = true;
-            feedService.getIngestDetails($routeParams.id).then(function (data) {
+            feedService.getSourceDetails($routeParams.id).then(function (data) {
                 vm.ingestRecord = data;
             }).catch(function (error) {
                 console.log(error);

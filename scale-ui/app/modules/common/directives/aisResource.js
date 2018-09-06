@@ -113,6 +113,11 @@
                 memChart = c3.generate(memChartOptions);
                 diskChart = c3.generate(diskChartOptions);
                 gpuChart = c3.generate(gpuChartOptions);
+
+                if ($scope.data.resources.gpus.total === 0) {
+                    var chartEl = angular.element('.chart-container .chart');
+                    chartEl.css({'min-width': '33%'});
+                }
             }
         });
     }).directive('aisResource', function () {
