@@ -1535,7 +1535,7 @@ workspace field populated.</p>
 
 <dl class="method">
 <dt id="storage.models.ScaleFileManager.filter_files">
-<code class="descname">filter_files</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_ids=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_names=None</em>, <em>job_outputs=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_nodes=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_files</code><span class="sig-paren">(</span><em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>mod_started=None</em>, <em>mod_ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_ids=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_names=None</em>, <em>job_outputs=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_nodes=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.filter_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for product models that filters on the given fields. The returned query includes the related
 workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
 to be pre-fetched as part of the query.</p>
@@ -1544,9 +1544,16 @@ to be pre-fetched as part of the query.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files updated after this amount of time.</li>
-<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files updated before this amount of time.</li>
-<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
+<li><strong>data_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where data started after this time.</li>
+<li><strong>data_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where data ended before this time.</li>
+<li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where source collection started after this time.</li>
+<li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where source collection ended before this time.</li>
+<li><strong>source_sensor_classes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source sensor class.</li>
+<li><strong>source_sensor</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source sensor.</li>
+<li><strong>source_collection</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source class.</li>
+<li><strong>source_task</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with the given source task.</li>
+<li><strong>mod_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where the last modified date is after this time.</li>
+<li><strong>mod_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query files where the last modified date is before this time.</li>
 <li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type identifier.</li>
 <li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with jobs with the given type name.</li>
 <li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query files with a given job id</li>

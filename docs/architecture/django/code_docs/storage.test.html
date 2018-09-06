@@ -713,7 +713,7 @@
 <dl class="method">
 <dt id="storage.test.test_views.TestFilesViewV5.test_time_successful">
 <code class="descname">test_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV5.test_time_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests unsuccessfully calling the get files by name view</p>
+<dd><p>Tests successfully calling the get files by time</p>
 </dd></dl>
 
 </dd></dl>
@@ -790,6 +790,36 @@
 <dt id="storage.test.test_views.TestFilesViewV6.test_recipe_node">
 <code class="descname">test_recipe_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_recipe_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the files view filtered by recipe job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_source_collection">
+<code class="descname">test_source_collection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_source_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by source collection.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_source_sensor">
+<code class="descname">test_source_sensor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_source_sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by source sensor.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_source_sensor_class">
+<code class="descname">test_source_sensor_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_source_sensor_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by source sensor class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_source_task">
+<code class="descname">test_source_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_source_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the files view filtered by source task.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.test_views.TestFilesViewV6.test_source_time_successful">
+<code class="descname">test_source_time_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.test_views.TestFilesViewV6.test_source_time_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get files by source time</p>
 </dd></dl>
 
 <dl class="method">
@@ -975,7 +1005,7 @@
 
 <dl class="function">
 <dt id="storage.test.utils.create_file">
-<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data=u''</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.test.utils.</code><code class="descname">create_file</code><span class="sig-paren">(</span><em>file_name=u'my_test_file.txt'</em>, <em>file_type=u'SOURCE'</em>, <em>media_type=u'text/plain'</em>, <em>file_size=100</em>, <em>data_type=u''</em>, <em>file_path=None</em>, <em>workspace=None</em>, <em>is_deleted=False</em>, <em>uuid=u''</em>, <em>last_modified=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_class=None</em>, <em>source_sensor=None</em>, <em>source_collection=None</em>, <em>source_task=None</em>, <em>geometry=None</em>, <em>center_point=None</em>, <em>meta_data=u''</em>, <em>countries=None</em>, <em>job_exe=None</em>, <em>job_output=None</em>, <em>recipe=None</em>, <em>recipe_node=None</em>, <em>batch=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.utils.create_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Scale file model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
