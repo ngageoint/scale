@@ -35,9 +35,10 @@ def create_country(name=None, fips='TT', gmi='TT', iso2='TT', iso3='TST', iso_nu
 
 def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='text/plain', file_size=100, 
                 data_type='', file_path=None, workspace=None, is_deleted=False, uuid='', last_modified=None,
-                data_started=None, data_ended=None, source_started=None, source_ended=None, geometry=None, 
-                center_point=None, meta_data='', countries=None,job_exe=None,job_output=None, recipe=None,
-                recipe_node=None, batch=None, is_superseded=False, superseded=None):
+                data_started=None, data_ended=None, source_started=None, source_ended=None, 
+                source_sensor_class=None, source_sensor=None, source_collection=None, source_task=None,
+                geometry=None, center_point=None, meta_data='', countries=None, job_exe=None, job_output=None,
+                recipe=None, recipe_node=None, batch=None, is_superseded=False, superseded=None):
     """Creates a Scale file model for unit testing
 
     :returns: The file model
@@ -65,7 +66,9 @@ def create_file(file_name='my_test_file.txt', file_type='SOURCE', media_type='te
                                           data_type=data_type, file_path=file_path or 'file/path/' + file_name, workspace=workspace,
                                           is_deleted=is_deleted, deleted=deleted, uuid=uuid, last_modified=last_modified, 
                                           data_started=data_started, data_ended=data_ended, source_started=source_started, 
-                                          source_ended=source_ended, geometry=geometry, center_point=center_point, meta_data=meta_data,
+                                          source_ended=source_ended, source_sensor_class=source_sensor_class,  
+                                          source_sensor=source_sensor, source_collection=source_collection, source_task=source_task,
+                                          geometry=geometry, center_point=center_point, meta_data=meta_data,
                                           job_exe=job_exe, job=job, job_type=job_type, job_output=job_output,
                                           recipe=recipe, recipe_node=recipe_node, recipe_type=recipe_type, batch=batch,
                                           is_superseded=is_superseded, superseded=superseded)

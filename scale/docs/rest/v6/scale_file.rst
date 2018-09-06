@@ -46,6 +46,10 @@ Response: 200 OK
                 "file_path": "path/to/the/file.png",
                 "source_started": "1970-01-01T00:00:00Z", 
                 "source_ended": "1970-01-02T00:00:00Z", 
+                "source_sensor_class": "classA", 
+                "source_sensor": "1", 
+                "source_collection": "12345", 
+                "source_task": "my-task", 
                 "job": { 
                     "id": 47 
                 }, 
@@ -293,6 +297,10 @@ Response: 200 OK
         "file_path": "path/to/the/file.png",
         "source_started": "1970-01-01T00:00:00Z", 
         "source_ended": "1970-01-02T00:00:00Z", 
+        "source_sensor_class": "classA", 
+        "source_sensor": "1", 
+        "source_collection": "12345", 
+        "source_task": "my-task", 
         "job": { 
             "id": 4 
         }, 
