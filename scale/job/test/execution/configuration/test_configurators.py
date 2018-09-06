@@ -521,7 +521,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
-                                          'SCALE_BROKER_URL': 'mock://broker-url'
+                                          'SCALE_BROKER_URL': 'mock://broker-url',
+                                          'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
                              'mounts': {input_mnt_name: input_vol_name, output_mnt_name: output_vol_name},
@@ -548,6 +549,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                               {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                {'flag': 'volume',
@@ -568,7 +570,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
                                           'SCALE_JOB_ID': unicode(job.id), 'SCALE_EXE_NUM': unicode(job.num_exes),
                                           'SCALE_RECIPE_ID': unicode(recipe.id), 'SCALE_BATCH_ID': unicode(batch.id),
-                                          'SCALE_BROKER_URL': 'mock://broker-url'
+                                          'SCALE_BROKER_URL': 'mock://broker-url',
+                                          'SYSTEM_LOGGING_LEVEL': 'INFO'
                              },
                              'workspaces': {input_workspace.name: {'mode': 'rw', 'volume_name': input_wksp_vol_name},
                                             output_workspace.name: {'mode': 'rw', 'volume_name': output_wksp_vol_name}},
@@ -598,6 +601,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%s' % unicode(job.num_exes)},
                                                {'flag': 'env', 'value': 'SCALE_RECIPE_ID=%s' % unicode(recipe.id)},
                                                {'flag': 'env', 'value': 'SCALE_BATCH_ID=%s' % unicode(batch.id)},
+                                               {'flag': 'env', 'value': 'SYSTEM_LOGGING_LEVEL=INFO'},
                                                {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                {'flag': 'volume',
