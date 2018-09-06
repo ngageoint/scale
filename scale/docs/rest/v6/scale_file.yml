@@ -21,24 +21,65 @@ paths:
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
         -in: query
-          name: started
+          name: data_started
           schema:
             type: string
             format: date-time
-          description: The start of the time range to query
+          description: The start of the data time range to query
         -in: query
-          name: ended
+          name: data_ended
           schema:
             type: string
             format: date-time
-          description: End of the time range to query, defaults to the current time
+          description: End of the data time range to query, defaults to the current time
         -in: query
-          name: time_field
+          name: source_started
           schema:
             type: string
-          description: Indicates the time field(s) that *started* and *ended* | 
-            will use for time filtering. Valid values are: *last_modified*, |
-            *data* and *source*. The default value is *last_modified*.
+            format: date-time
+          description: The start of the source time range to query
+        -in: query
+          name: source_ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the source time range to query, defaults to the current time
+        -in: query
+          name: source_sensor_class
+          schema:
+            type: string
+          description: Return only files for the given source sensor class. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: source_sensor
+          schema:
+            type: string
+          description: Return only files for the given source sensor. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: source_collection
+          schema:
+            type: string
+          description: Return only files for the given source collection. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: job_output
+          schema:
+            type: string
+          description: Return only files for the given source task. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: modified_started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the last modified time range to query
+        -in: query
+          name: modified_ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the last modified time range to query, defaults to the current time
         -in: query
           name: order
           schema:
@@ -246,6 +287,22 @@ components:
           format: date-time
           description: When collection of the underlying source file ended. 
           example: 2015-09-10T15:24:53.987Z
+        source_sensor_class:
+          type: string
+          description: The class of sensor used to produce the source file
+          example: ABC
+        source_sensor:
+          type: string
+          description: The specific identifier of the sensor used to produce the source file
+          example: 1
+        source_collection:
+          type: string
+          description: The collection of the source file
+          example: 113394955
+        source_task:
+          type: string
+          description: The task that produced the source file.
+          example: my-task
         job:
           $ref: '#/components/schemas/job'
         job_exe:
