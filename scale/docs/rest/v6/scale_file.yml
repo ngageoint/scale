@@ -209,12 +209,12 @@ components:
         data_started:
           type: string
           format: date-time
-          description: When collection of the underlying data file started.
+          description: The start time of the source data being ingested.
           example: 2015-09-10T15:24:53.503Z
         data_ended:
           type: string
           format: date-time
-          description: When collection of the underlying data file ended.
+          description: The ended time of the source data being ingested.
           example: 2015-09-10T15:24:53.987Z
         geometry:
           type: string

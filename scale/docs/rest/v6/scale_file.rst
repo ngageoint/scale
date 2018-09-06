@@ -185,9 +185,9 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .deleted           | ISO-8601 Datetime | When the file was deleted.                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_started      | ISO-8601 Datetime | When collection of the underlying data file started.                           |
+| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .data_ended        | ISO-8601 Datetime | When collection of the underlying data file ended.                             |
+| .data_ended        | ISO-8601 Datetime | The ended time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .geometry          | WKT String        | The full geospatial geometry footprint of the file.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -339,9 +339,9 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | deleted            | ISO-8601 Datetime | When the file was deleted.                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_started       | ISO-8601 Datetime | When collection of the underlying data file started.                           |
+| data_started       | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_ended         | ISO-8601 Datetime | When collection of the underlying data file ended.                             |
+| data_ended         | ISO-8601 Datetime | The ended time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | geometry           | WKT String        | The full geospatial geometry footprint of the file.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
