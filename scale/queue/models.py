@@ -325,6 +325,8 @@ class QueueManager(models.Manager):
                 queued_priority = job.job_type.get_job_configuration().priority
 
             queue = Queue()
+            # select_related from get_jobs_with_related above will only make a single query
+            queue.docker_image = job.job_type_rev.docker_image
             queue.job_type_id = job.job_type_id
             queue.job_id = job.id
             queue.recipe_id = job.recipe_id
@@ -570,6 +572,8 @@ class Queue(models.Model):
     :type created: :class:`django.db.models.DateTimeField`
     :keyword queued: When the job was placed onto the queue
     :type queued: :class:`django.db.models.DateTimeField`
+    :keyword docker_image: The docker image to be retrieved for job that is retrieved from job_type_rev.docker_image
+    :type docker_image: str
     """
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
@@ -589,6 +593,8 @@ class Queue(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
+
+    docker_image = models.TextField(default='')
 
     objects = QueueManager()
 

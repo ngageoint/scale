@@ -19,7 +19,6 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
-import util.rest as rest_util
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
 from job.models import JobType
@@ -2784,7 +2783,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertTrue(isinstance(result[0], dict), 'result  must be a dictionary')
         self.assertEqual(result[0]['job_type']['name'], self.job_type.name)
         self.assertEqual(result[0]['revision_num'], 2)
-        self.assertEqual(result[0]['docker_image'], 'my-job-1.0.0-seed:1.0.1')
+        self.assertEqual(result[0]['docker_image'], 'fake')
 
     def test_details_not_found(self):
         """Tests successfully calling the get job type revision details view with a job type revision that does not exist."""
@@ -2805,7 +2804,7 @@ class TestJobTypeRevisionsViewV6(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['job_type']['name'], self.job_type.name)
         self.assertEqual(result['revision_num'], 1)
-        self.assertEqual(result['docker_image'], 'my-job-1.0.0-seed:1.0.0')
+        self.assertEqual(result['docker_image'], 'fake')
         self.assertIsNotNone(result['manifest'])
 
 
@@ -3874,7 +3873,7 @@ class TestJobsWithExecutionViewV5(TransactionTestCase):
         self.assertEqual(len(result['results']), 5)
 
 
-class TestJobExecutionsView(TransactionTestCase):
+class TestJobExecutionsViewV5(TransactionTestCase):
 
     api = 'v5'
     
@@ -3904,6 +3903,8 @@ class TestJobExecutionsView(TransactionTestCase):
         results = json.loads(response.content)
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 4)
+        #check that we order by descending exe_num
+        self.assertEqual(results['results'][0]['status'], 'RUNNING')
 
     def test_get_job_execution_bad_id(self):
         url = '/%s/jobs/999999999/executions/' % self.api
@@ -3938,8 +3939,82 @@ class TestJobExecutionsView(TransactionTestCase):
         job_exe_count = results['count']
         self.assertEqual(job_exe_count, 2)
 
+class TestJobExecutionsViewV6(TransactionTestCase):
 
-class TestJobExecutionDetailsView(TransactionTestCase):
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.job_type_1 = job_test_utils.create_job_type()
+        self.error = error_test_utils.create_error()
+        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED', error=self.error)
+        self.node_1 = node_test_utils.create_node()
+        self.node_2 = node_test_utils.create_node()
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=1, status='FAILED', node=self.node_1,
+                                                        started='2017-01-02T00:00:00Z', ended='2017-01-02T01:00:00Z',
+                                                        error=self.error)
+        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, exe_num=2, status='COMPLETED', node=self.node_2,
+                                                        started='2017-01-01T00:00:00Z', ended='2017-01-01T01:00:00Z')
+        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, exe_num=3, status='COMPLETED', node=self.node_2,
+                                                        started='2017-01-01T00:00:00Z', ended='2017-01-01T01:00:00Z')
+        self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, exe_num=4, status='RUNNING', node=self.node_2,
+                                                        started='2017-01-03T00:00:00Z', ended='2017-01-03T01:00:00Z')
+
+    def test_get_job_executions(self):
+        """This test checks to make sure there are 4 job executions."""
+        url = '/%s/jobs/%d/executions/' % (self.api, self.job_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 4)
+        #check that we order by descending exe_num
+        self.assertEqual(results['results'][0]['exe_num'], 4)
+
+    def test_get_job_execution_bad_id(self):
+        url = '/%s/jobs/999999999/executions/' % self.api
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+        self.assertEqual(result['results'], [])
+
+    def test_get_job_execution_filter_node(self):
+        url = '/%s/jobs/%d/executions/?node_id=%d' % (self.api, self.job_1.id, self.node_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 1)
+
+    def test_get_job_execution_filter_status(self):
+        url = '/%s/jobs/%d/executions/?status=COMPLETED' % (self.api, self.job_1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 2)
+
+    def test_get_job_execution_filter_error(self):
+        url = '/%s/jobs/%d/executions/?error_id=%d' % (self.api, self.job_1.id, self.error.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 1)
+        
+        url = '/%s/jobs/%d/executions/?error_category=%s' % (self.api, self.job_1.id, self.error.category)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        job_exe_count = results['count']
+        self.assertEqual(job_exe_count, 1)
+
+class TestJobExecutionDetailsViewV5(TransactionTestCase):
 
     api = 'v5'
     
@@ -3958,6 +4033,35 @@ class TestJobExecutionDetailsView(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['id'], self.job_exe_1a.id)
+
+    def test_get_job_execution_bad_exe_num(self):
+        url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, 999999999)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+class TestJobExecutionDetailsViewV6(TransactionTestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+        self.job_type_1 = job_test_utils.create_job_type()
+        self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
+
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=9999, status='COMPLETED')
+
+    def test_get_job_execution_for_job_exe_id(self):
+        url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, self.job_exe_1a.exe_num)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], self.job_exe_1a.id)
+        self.assertIn('task_results', results)
+        self.assertIn('resources', results)
+        self.assertIn('configuration', results)
+        self.assertIn('output', results)
 
     def test_get_job_execution_bad_exe_num(self):
         url = '/%s/jobs/%d/executions/%d/' % (self.api, self.job_1.id, 999999999)
@@ -4077,7 +4181,7 @@ class TestOldJobExecutionsViewV5(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestJobExecutionSpecificLogView(TestCase):
+class TestJobExecutionSpecificLogViewV5(TestCase):
 
     api = 'v5'
     
@@ -4201,7 +4305,137 @@ class TestJobExecutionSpecificLogView(TestCase):
         self.assertEqual(response.accepted_media_type, 'application/json')
 
 
-class TestJobInputFilesView(TestCase):
+class TestJobExecutionSpecificLogViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    def test_bad_job_exe_id(self):
+        url = '/%s/job-executions/999999/logs/combined/' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_time(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return {}, now()
+
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'application/json')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_text_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertFalse(html)
+            return 'hello', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/combined/?format=txt' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/plain')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/combined/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_content(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return None, now()
+
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stdout_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertFalse(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/stdout/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stderr_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertFalse(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', now()
+
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/%s/job-executions/999999/logs/stderr/?format=html' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_with_time(self, mock_get_logs):
+        started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertEqual(since, started)
+            return {}, now()
+
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/%s/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json' % self.api
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        self.assertEqual(response.accepted_media_type, 'application/json')
+
+
+class TestJobInputFilesViewV5(TestCase):
 
     api = 'v5'
     
@@ -4378,7 +4612,220 @@ class TestJobInputFilesView(TestCase):
             self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
 
 
-class TestCancelJobsView(TestCase):
+class TestJobInputFilesViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+
+        # Create legacy test files
+        self.f1_file_name = 'legacy_foo.bar'
+        self.f1_last_modified = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f1_source_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.f1_source_ended = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.file1 = storage_test_utils.create_file(file_name=self.f1_file_name, source_started=self.f1_source_started,
+                                                    source_ended=self.f1_source_ended,
+                                                    last_modified=self.f1_last_modified)
+
+        self.f2_file_name = 'legacy_qaz.bar'
+        self.f2_job_input = 'legacy_input_1'
+        self.f2_last_modified = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.f2_source_started = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.f2_source_ended = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.file2 = storage_test_utils.create_file(file_name=self.f2_file_name, source_started=self.f2_source_started,
+                                                    source_ended=self.f2_source_ended,
+                                                    last_modified=self.f2_last_modified)
+
+        job_interface = {
+            'version': '1.0',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'type': 'property',
+                'name': 'input_field',
+            }, {
+                'type': 'file',
+                'name': 'input_file',
+            }, {
+                'type': 'file',
+                'name': 'other_input_file',
+            }],
+            'output_data': [{
+                'type': 'file',
+                'name': 'output_file',
+            }, {
+                'type': 'files',
+                'name': 'output_files',
+            }],
+            'shared_resources': [],
+        }
+
+        self.manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+
+        self.manifest['job']['interface']['inputs']['files'] = [{'name': 'input_file'},{'name': 'other_input_file'}]
+
+        self.manifest['job']['interface']['inputs']['json'] =  [{'name': 'input_field', 'type': 'string'}]
+
+        self.manifest['job']['interface']['outputs']['files'] = [{'name': 'output_file'},{'name': 'output_files', 'multiple': True}]
+
+        job_data = {
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': self.file1.id,
+            }, {
+                'name': self.f2_job_input,
+                'file_id': self.file2.id,
+            }]
+        }
+        job_results = {
+            'output_data': []
+        }
+        self.job_type = job_test_utils.create_seed_job_type(manifest=self.manifest)
+        self.job_type = job_test_utils.create_job_type(interface=job_interface)
+        self.legacy_job = job_test_utils.create_job(job_type=self.job_type, input=job_data, output=job_results)
+        self.job = job_test_utils.create_job(job_type=self.job_type)
+
+        # Create JobInputFile entry files
+        self.f3_file_name = 'foo.bar'
+        self.f3_last_modified = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f3_source_started = datetime.datetime(2016, 1, 10, tzinfo=utc)
+        self.f3_source_ended = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.file3 = job_test_utils.create_input_file(file_name=self.f3_file_name,
+                                                      source_started=self.f3_source_started,
+                                                      source_ended=self.f3_source_ended, job=self.job,
+                                                      last_modified=self.f3_last_modified)
+
+        self.f4_file_name = 'qaz.bar'
+        self.f4_job_input = 'input_1'
+        self.f4_last_modified = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.f4_source_started = datetime.datetime(2016, 1, 11, tzinfo=utc)
+        self.f4_source_ended = datetime.datetime(2016, 1, 12, tzinfo=utc)
+        self.file4 = job_test_utils.create_input_file(file_name=self.f4_file_name,
+                                                      source_started=self.f4_source_started,
+                                                      source_ended=self.f4_source_ended, job=self.job,
+                                                      last_modified=self.f4_last_modified, job_input=self.f4_job_input)
+
+    def test_successful_file(self):
+        """Tests successfully calling the job input files view"""
+
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+            self.assertIn('file_name', result)
+            self.assertIn('workspace', result)
+            self.assertIn('media_type', result)
+            self.assertIn('file_type', result)
+            self.assertIn('file_size', result)
+            self.assertIn('file_path', result)
+            self.assertIn('is_deleted', result)
+            self.assertIn('url', result)
+            self.assertIn('created', result)
+            self.assertIn('deleted', result)
+            self.assertIn('data_started', result)
+            self.assertIn('data_ended', result)
+            self.assertIn('source_started', result)
+            self.assertIn('source_ended', result)
+            self.assertIn('last_modified', result)
+            self.assertIn('geometry', result)
+            self.assertIn('center_point', result)
+            self.assertIn('countries', result)
+            self.assertIn('job_type', result)
+            self.assertIn('job', result)
+            self.assertIn('job_exe', result)
+            self.assertIn('job_output', result)
+            self.assertIn('recipe_type', result)
+            self.assertIn('recipe', result)
+            self.assertIn('recipe_node', result)
+            self.assertIn('batch', result)
+            self.assertFalse(result['is_superseded'])
+            self.assertIn('superseded', result)
+
+
+    def test_legacy_successful_file(self):
+        """Tests successfully calling the job input files view for legacy files with job_data"""
+
+        url = '/%s/jobs/%i/input_files/' % (self.api, self.legacy_job.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file1.id, self.file2.id])
+
+    def test_filter_job_input(self):
+        """Tests successfully calling the job inputs files view with job_input string filtering"""
+
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.job.id, self.f4_job_input)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file4.id)
+
+    def test_legacy_filter_job_input(self):
+        """Tests successfully calling the job inputs files view for legacy files with job_input string filtering"""
+
+        url = '/%s/jobs/%i/input_files/?job_input=%s' % (self.api, self.legacy_job.id, self.f2_job_input)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0]['id'], self.file2.id)
+
+    def test_file_name_successful(self):
+        """Tests successfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, self.f3_file_name)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 1)
+
+        self.assertEqual(self.f3_file_name, result[0]['file_name'])
+        self.assertEqual('2016-01-10T00:00:00Z', result[0]['source_started'])
+        self.assertEqual(self.file3.id, result[0]['id'])
+
+    def test_bad_file_name(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?file_name=%s' % (self.api, self.job.id, 'not_a.file')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        result = results['results']
+        self.assertEqual(len(result), 0)
+
+    def test_time_successful(self):
+        """Tests unsuccessfully calling the get files by name view"""
+
+        url = '/%s/jobs/%i/input_files/?started=%s&ended=%s&time_field=%s' % (self.api, self.job.id,
+                                                                              '2016-01-10T00:00:00Z',
+                                                                              '2016-01-13T00:00:00Z',
+                                                                              'source')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 2)
+        for result in results:
+            self.assertTrue(result['id'] in [self.file3.id, self.file4.id])
+
+class TestCancelJobsViewV5(TestCase):
 
     api = 'v5'
     
@@ -4418,8 +4865,56 @@ class TestCancelJobsView(TestCase):
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        status=job_status)
 
+class TestCancelJobsViewV6(TestCase):
 
-class TestRequeueJobsView(TestCase):
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_cancel_jobs_bulk_message')
+    def test_cancel(self, mock_create, mock_msg_mgr):
+        """Tests calling the job cancel view successfully"""
+
+        msg = CancelJobsBulk()
+        mock_create.return_value = msg
+
+        started = now()
+        ended = started + datetime.timedelta(minutes=1)
+        error_categories = ['SYSTEM']
+        error_ids = [1, 2]
+        job_ids = [3, 4]
+        job_status = 'FAILED'
+        job_type_ids = [5, 6]
+        job_type_names = ['name']
+        batch_ids = [7, 8]
+        recipe_ids = [9, 10]
+        is_superseded = False
+        json_data = {
+            'started': datetime_to_string(started),
+            'ended': datetime_to_string(ended),
+            'status': job_status,
+            'job_ids': job_ids,
+            'job_type_ids': job_type_ids,
+            'job_type_names': job_type_names,
+            'batch_ids': batch_ids,
+            'recipe_ids': recipe_ids,
+            'error_categories': error_categories,
+            'error_ids': error_ids,
+            'is_superseded': is_superseded
+        }
+
+        url = '/%s/jobs/cancel/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
+                                       error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                       status=job_status, job_type_names=job_type_names, 
+                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+
+class TestRequeueJobsViewV5(TestCase):
 
     api = 'v5'
     
@@ -4460,3 +4955,56 @@ class TestRequeueJobsView(TestCase):
         mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
                                        error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                        priority=priority, status=job_status)
+
+class TestRequeueJobsViewV6(TestCase):
+
+    api = 'v6'
+    
+    def setUp(self):
+        django.setup()
+
+    @patch('job.views.CommandMessageManager')
+    @patch('job.views.create_requeue_jobs_bulk_message')
+    def test_requeue(self, mock_create, mock_msg_mgr):
+        """Tests calling the requeue view successfully"""
+
+        msg = RequeueJobsBulk()
+        mock_create.return_value = msg
+
+        started = now()
+        ended = started + datetime.timedelta(minutes=1)
+        error_categories = ['SYSTEM']
+        error_ids = [1, 2]
+        job_ids = [3, 4]
+        job_status = 'FAILED'
+        job_type_ids = [5, 6]
+        job_type_names = ['name']
+        batch_ids = [7, 8]
+        recipe_ids = [9, 10]
+        is_superseded = False
+        priority = 101
+        json_data = {
+            'started': datetime_to_string(started),
+            'ended': datetime_to_string(ended),
+            'status': job_status,
+            'job_ids': job_ids,
+            'job_type_ids': job_type_ids,
+            'job_type_names': job_type_names,
+            'batch_ids': batch_ids,
+            'recipe_ids': recipe_ids,
+            'error_categories': error_categories,
+            'error_ids': error_ids,
+            'is_superseded': is_superseded,
+            'priority': priority
+        }
+
+        url = '/%s/jobs/requeue/' % self.api
+        response = self.client.post(url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED, response.content)
+        mock_create.assert_called_with(started=started, ended=ended, error_categories=error_categories,
+                                       error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                       priority=priority, status=job_status, job_type_names=job_type_names, 
+                                       batch_ids=batch_ids, recipe_ids=recipe_ids, is_superseded=is_superseded)
+
+

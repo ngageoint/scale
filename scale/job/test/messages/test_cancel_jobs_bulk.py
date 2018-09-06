@@ -5,6 +5,8 @@ from datetime import timedelta
 import django
 from django.test import TestCase
 
+import batch.test.utils as batch_test_utils
+import recipe.test.utils as recipe_test_utils
 from error.test import utils as error_test_utils
 from job.configuration.data.job_data import JobData
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
@@ -22,9 +24,14 @@ class TestCancelJobsBulk(TestCase):
         sys_err = error_test_utils.create_error(category='SYSTEM')
 
         data = JobData()
+        batch = batch_test_utils.create_batch()
+        recipe = recipe_test_utils.create_recipe()
         job_type = job_test_utils.create_job_type()
         job_1 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
                                           input=data.get_dict())
+        job_1.batch_id = batch.id
+        job_1.recipe_id = recipe.id
+        job_1.save()
         job_2 = job_test_utils.create_job(job_type=job_type, num_exes=3, status='FAILED', error=sys_err,
                                           input=data.get_dict())
 
@@ -37,6 +44,10 @@ class TestCancelJobsBulk(TestCase):
         message.job_ids = [job_1.id]
         message.job_type_ids = [job_type.id]
         message.status = 'FAILED'
+        message.job_type_names = [job_type.name]
+        message.batch_ids = [batch.id]
+        message.recipe_ids = [recipe.id]
+        message.is_superseded = False
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()

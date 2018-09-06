@@ -1141,7 +1141,7 @@ class TestConfigurationViewImportV5(TestCase):
 
     def test_job_types_null_fields(self):
         """Tests importing job types with null values for optional fields."""
-        fields = ['author_name', 'author_url', 'category', 'description', 'docker_image', 'icon_code', 'max_scheduled',
+        fields = ['author_name', 'author_url', 'category', 'description', 'icon_code', 'max_scheduled',
                   'title', 'trigger_rule']
         job_type_dict = {
             'name': 'test-job',

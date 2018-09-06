@@ -1741,7 +1741,8 @@ class JobExecutionManager(models.Manager):
             job_exes = job_exes.order_by('created')
         return job_exes
 
-    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None):
+    def get_job_exes(self, job_id, started=None, ended=None, statuses=None, node_ids=None, error_ids=None,
+                 error_categories=None, order=None):
         """Returns a list of job executions for the given job.
 
         :param job_id: Query job executions associated with the job identifier.
@@ -1754,12 +1755,19 @@ class JobExecutionManager(models.Manager):
         :type statuses: [string]
         :param node_ids: Query job executions that ran on a node with the identifier.
         :type node_ids: [int]
+        :param error_ids: Query job executions that had an error with the identifier.
+        :type error_ids: [int]
+        :param error_categories: Query job executions that had an error with the given category.
+        :type error_categories: [string]
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
         :returns: The list of job executions that match the job identifier.
         :rtype: [:class:`job.models.JobExecution`]
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend',
+                                                             'jobexecutionend__error')
         job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply job filtering
@@ -1785,9 +1793,16 @@ class JobExecutionManager(models.Manager):
                 job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if node_ids:
             job_exes = job_exes.filter(node_id__in=node_ids)
-
+        if error_ids:
+            job_exes = job_exes.filter(jobexecutionend__error_id__in=error_ids)
+        if error_categories:
+            job_exes = job_exes.filter(jobexecutionend__error__category__in=error_categories)
+            
         # Apply sorting
-        job_exes = job_exes.order_by('exe_num')
+        if order:
+            job_exes = job_exes.order_by(*order)
+        else:
+            job_exes = job_exes.order_by('-exe_num')
 
         return job_exes
 
@@ -1933,6 +1948,7 @@ class JobExecution(models.Model):
     exe_num = models.IntegerField(blank=True, null=True)
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
+    docker_image = models.TextField(null=True)
 
     timeout = models.IntegerField()
     input_file_size = models.FloatField(blank=True, null=True)
@@ -3447,8 +3463,8 @@ class JobType(models.Model):
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
     revision_num = models.IntegerField(default=1)
-    docker_image = models.CharField(blank=True, null=True, max_length=500)
-    manifest = django.contrib.postgres.fields.JSONField(default=dict) 
+    docker_image = models.CharField(default='', max_length=500)
+    manifest = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -3496,22 +3512,6 @@ class JobType(models.Model):
         """
 
         return Resources(self.custom_resources)
-
-    def get_tagged_docker_image(self):
-        """Constructs a complete Docker image and tag with the correct packageVersion value
-
-        :return: The complete Docker image and tag
-        :rtype: str
-        """
-        interface = self.get_job_interface()
-        docker_image = self.docker_image
-        if isinstance(interface, SeedManifest):
-            if ':' in docker_image:
-                docker_image = docker_image.split(':', 1)[0]
-            return '%s:%s' % (docker_image, interface.get_package_version())
-
-        else:
-            return docker_image
 
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
@@ -3789,6 +3789,7 @@ class JobTypeRevisionManager(models.Manager):
         new_rev.job_type = job_type
         new_rev.revision_num = job_type.revision_num
         new_rev.manifest = job_type.manifest
+        new_rev.docker_image = job_type.docker_image
         new_rev.save()
 
     def get_by_natural_key(self, job_type, revision_num):
@@ -3902,6 +3903,7 @@ class JobTypeRevision(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
     manifest = django.contrib.postgres.fields.JSONField(default=dict)
+    docker_image = models.TextField(default='')
     created = models.DateTimeField(auto_now_add=True)
 
     objects = JobTypeRevisionManager()
@@ -3939,19 +3941,6 @@ class JobTypeRevision(models.Model):
         """
 
         return JobInterfaceSunset.create(self.manifest)
-        
-    def get_tagged_docker_image(self):
-        """Constructs a complete Docker image and tag with the correct packageVersion value
-
-        :return: The complete Docker image and tag
-        :rtype: str
-        """
-        interface = self.get_job_interface()
-        docker_image = None
-        if isinstance(interface, SeedManifest):
-            return '%s-%s-seed:%s' % (interface.get_name(), interface.get_job_version(), interface.get_package_version())
-        else:
-            return docker_image
 
     def natural_key(self):
         """Django method to define the natural key for a job type revision as the combination of job type and revision

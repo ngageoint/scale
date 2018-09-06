@@ -166,7 +166,7 @@ class JobTypeRevisionSerializerV5(JobTypeRevisionBaseSerializer):
 class JobTypeRevisionSerializerV6(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
     job_type = JobTypeBaseSerializerV6()
-    docker_image = serializers.CharField(source='get_tagged_docker_image')
+    docker_image = serializers.CharField()
     created = serializers.DateTimeField()
     
 class JobTypeRevisionDetailsSerializerV6(JobTypeRevisionSerializerV6):

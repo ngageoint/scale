@@ -56,13 +56,6 @@ components:
           type: integer
           description: The number of message handlers to have scheduled 
           example: 2
-        resource_level:
-          type: string
-          description: Describes the current resource level of scale. There are three valid values: |
-            TOO HIGH : Scale has more resources than required and can be scaled down     |
-            TOO LOW : Scale needs more resources and should be scaled up
-            GOOD : Scale has a good amount of resources
-          example: GOOD
         system_logging_level:
           type: string
           description: The logging level for all scale system components

@@ -70,7 +70,7 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: '#/components/schemas/node_details'
+                $ref: '#/components/schemas/node_object'
     patch:
       operationId: _rest_v6_node_update
       summary: Node Update
@@ -115,46 +115,52 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/node_details'
+            $ref: '#/components/schemas/node_object'
           description: List of node objects
-    node_details:
-      title: Node Details
+    node_base:
+      title: Node Base
       type: object
       properties:
         id:
           type: integer
-          description: The unique identifier of the model. Can be passed to the details API call 
+          description: The unique identifier of the model. Can be passed to the details API call
           example: 4
         host_name:
           type: string
           description: The full domain-qualified hostname of the node
           example: host.com
-        pause_reason:
-          type: string
-          description: The reason this node is paused if is_paused is true. |
-            This is a descriptive field for presentation to the user
-          example: Node is undergoing scheduled maintenance
-        is_paused:
-          type: boolean
-          description: True if the node is paused and will not accept new jobs for execution. |
-            Remaining tasks for a previously executing job will complete.
-          example: False
-        is_active:
-          type: string
-          description: True if the node is actively participating in the cluster.
-          example: True
-        deprecated:
-          type: string
-          format: date-time
-          description: When the node was removed (is_active == False) from the cluster.
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-        last_modified:
-          type: string
-          format: date-time
-          description: When the associated database model was last saved.
+    node_object:
+      allof:
+        - ref: '#/components/schemas/node_base'
+        - title: Node
+        - type: object
+        properties:
+          pause_reason:
+            type: string
+            description: The reason this node is paused if is_paused is true. |
+              This is a descriptive field for presentation to the user
+            example: Node is undergoing scheduled maintenance
+          is_paused:
+            type: boolean
+            description: True if the node is paused and will not accept new jobs for execution. |
+              Remaining tasks for a previously executing job will complete.
+            example: False
+          is_active:
+            type: string
+            description: True if the node is actively participating in the cluster.
+            example: True
+          deprecated:
+            type: string
+            format: date-time
+            description: When the node was removed (is_active == False) from the cluster.
+          created:
+            type: string
+            format: date-time
+            description: When the associated database model was initially created.
+          last_modified:
+            type: string
+            format: date-time
+            description: When the associated database model was last saved.
     node_update:
       title: Node Update
       type: object

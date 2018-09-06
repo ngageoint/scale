@@ -46,7 +46,7 @@ from queue.messages.requeue_jobs_bulk import create_requeue_jobs_bulk_message
 from queue.models import Queue
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from storage.models import ScaleFile
-from storage.serializers import ScaleFileSerializerV5
+from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType, InvalidTriggerMissingConfiguration
 import util.rest as rest_util
 from util.rest import BadParameter
@@ -1148,6 +1148,21 @@ class CancelJobsView(GenericAPIView):
         :type request: :class:`rest_framework.request.Request`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def _post_v5(self, request):
+        """Submit command message to cancel jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
 
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
@@ -1166,6 +1181,39 @@ class CancelJobsView(GenericAPIView):
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
+        
+    def _post_v6(self, request):
+        """Submit command message to cancel jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
+        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
+
+        job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_ids', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
+        is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
+
+        # Create and send message
+        msg = create_cancel_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
+                                              error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                              status=job_status, job_type_names=job_type_names,
+                                              batch_ids=batch_ids, recipe_ids=recipe_ids,
+                                              is_superseded=is_superseded)
+        CommandMessageManager().send_messages([msg])
+
+        return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class RequeueJobsView(GenericAPIView):
@@ -1173,8 +1221,23 @@ class RequeueJobsView(GenericAPIView):
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
     serializer_class = JobSerializerV5
-
+    
     def post(self, request):
+        """Submit command message to re-queue jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v6':
+            return self._post_v6(request)
+        elif request.version == 'v5':
+            return self._post_v5(request)
+
+        raise Http404()
+
+    def _post_v5(self, request):
         """Submit command message to re-queue jobs that fit the given filter criteria
 
         :param request: the HTTP GET request
@@ -1197,6 +1260,40 @@ class RequeueJobsView(GenericAPIView):
         msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
                                                error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
                                                priority=priority, status=job_status)
+        CommandMessageManager().send_messages([msg])
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+        
+    def _post_v6(self, request):
+        """Submit command message to re-queue jobs that fit the given filter criteria
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        error_categories = rest_util.parse_string_list(request, 'error_categories', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_ids', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_ids', required=False)
+        job_status = rest_util.parse_string(request, 'status', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_ids', required=False)
+        priority = rest_util.parse_int(request, 'priority', required=False)
+        
+        job_type_names = rest_util.parse_string_list(request, 'job_type_names', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_ids', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_ids', required=False)
+        is_superseded = rest_util.parse_bool(request, 'is_superseded', required=False)
+
+        # Create and send message
+        msg = create_requeue_jobs_bulk_message(started=started, ended=ended, error_categories=error_categories,
+                                               error_ids=error_ids, job_ids=job_ids, job_type_ids=job_type_ids,
+                                               priority=priority, status=job_status, job_type_names=job_type_names,
+                                               batch_ids=batch_ids, recipe_ids=recipe_ids,
+                                               is_superseded=is_superseded)
         CommandMessageManager().send_messages([msg])
 
         return Response(status=status.HTTP_202_ACCEPTED)
@@ -1287,6 +1384,14 @@ class JobInputFilesView(ListAPIView):
     """This is the endpoint for retrieving details about input files associated with a job."""
     queryset = JobInputFile.objects.all()
     serializer_class = ScaleFileSerializerV5
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API. """
+
+        if self.request.version == 'v6':
+            return ScaleFileSerializerV6
+        else:
+            return ScaleFileSerializerV5
 
     def get(self, request, job_id):
         """Retrieve detailed information about the input files for a job
@@ -1480,30 +1585,18 @@ class JobExecutionsView(ListAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # TODO: remove this check when REST API v5 is removed
-        if not job_id:
-            if request.version != 'v6':
-                return self.list_v5(request)
-            else:
+        if request.version == 'v5':
+            return self.list_v5(request, job_id)
+        elif request.version == 'v6':
+            # TODO: remove this check when REST API v5 is removed
+            if not job_id:
                 raise Http404
+            return self.list_v6(request, job_id)
         else:
-            started = rest_util.parse_timestamp(request, 'started', required=False)
-            ended = rest_util.parse_timestamp(request, 'ended', required=False)
-            rest_util.check_time_range(started, ended)
-
-            statuses = rest_util.parse_string_list(request, 'status', required=False)
-            node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
-
-
-            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended,
-                                                         statuses=statuses, node_ids=node_ids)
-
-            page = self.paginate_queryset(job_exes)
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+            raise Http404
 
     # TODO: remove when REST API v5 is removed
-    def list_v5(self, request):
+    def list_v5(self, request, job_id):
         """Gets job executions and their associated job_type id, name, and version
 
         :param request: the HTTP GET request
@@ -1524,8 +1617,34 @@ class JobExecutionsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, job_type_names,
-                                                 job_type_categories, node_ids, order)
+        job_exes = None
+        if not job_id:
+            job_exes = JobExecution.objects.get_exes(started, ended, job_statuses, job_type_ids, 
+                                             job_type_names, job_type_categories, node_ids, order)
+        else:
+            job_exes = JobExecution.objects.get_job_exes(job_id=job_id, started=started, ended=ended, 
+                                                         statuses=job_statuses, node_ids=node_ids)
+
+        page = self.paginate_queryset(job_exes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+        
+    def list_v6(self, request, job_id):
+        """Gets job executions and their associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        statuses = rest_util.parse_string_list(request, 'status', required=False)
+        node_ids = rest_util.parse_int_list(request, 'node_id', required=False)
+        error_ids = rest_util.parse_int_list(request, 'error_id', required=False)
+        error_cats = rest_util.parse_string_list(request, 'error_category', required=False)
+
+        job_exes = JobExecution.objects.get_job_exes(job_id=job_id, statuses=statuses, node_ids=node_ids,
+                                                     error_ids=error_ids, error_categories=error_cats)
 
         page = self.paginate_queryset(job_exes)
         serializer = self.get_serializer(page, many=True)
@@ -1558,13 +1677,36 @@ class JobExecutionDetailsView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
+        if request.version == 'v5':
+            return self._retrieve_v5(request, job_id, exe_num)
+        elif request.version == 'v6':
+            # TODO: remove this check when REST API v5 is removed
+            if not exe_num:
+                raise Http404
+            return self._retrieve_v6(request, job_id, exe_num)
+        else:
+            raise Http404
 
-        # TODO: remove this check when REST API v5 is removed
+    # TODO: remove when REST API v5 is removed
+    def _retrieve_v5(self, request, job_id, exe_num=None):
+        """Gets job execution and associated job_type id, name, and version
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :param exe_num: the execution number
+        :type exe_num: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
         if not exe_num:
-            if request.version != 'v6':
-                job_exe_id = job_id
-                return self.retrieve_v5(request, job_exe_id)
-            else:
+            job_exe_id = job_id
+            try:
+                job_exe = JobExecution.objects.get_details(job_exe_id)
+            except JobExecution.DoesNotExist:
                 raise Http404
         else:
             try:
@@ -1572,34 +1714,55 @@ class JobExecutionDetailsView(RetrieveAPIView):
             except JobExecution.DoesNotExist:
                 raise Http404
 
-            serializer = self.get_serializer(job_exe)
-            return Response(serializer.data)
-
-    # TODO: remove when REST API v5 is removed
-    def retrieve_v5(self, request, job_exe_id):
+        serializer = self.get_serializer(job_exe)
+        return Response(serializer.data)
+        
+    def _retrieve_v6(self, request, job_id, exe_num):
         """Gets job execution and associated job_type id, name, and version
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param job_exe_id: the job execution id
-        :type job_exe_id: int encoded as a str
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :param exe_num: the execution number
+        :type exe_num: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        
         try:
-            job_exe = JobExecution.objects.get_details(job_exe_id)
+            job_exe = JobExecution.objects.get_job_exe_details(job_id=job_id, exe_num=exe_num)
         except JobExecution.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
 
-
 class JobExecutionSpecificLogView(RetrieveAPIView):
     """This view is the endpoint for viewing the text of specific job execution logs"""
     renderer_classes = (JSONRenderer, rest_util.PlainTextRenderer, StaticHTMLRenderer)
 
     def retrieve(self, request, job_exe_id, log_id):
+        """Gets job execution log specified.
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_exe_id: the job execution id
+        :type job_exe_id: int
+        :param log_id: the log name to get (stdout, stderr, or combined)
+        :type log_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        
+        if request.version == 'v5':
+            return self._retrieve_impl(request, job_exe_id, log_id)
+        elif request.version == 'v6':
+            return self._retrieve_impl(request, job_exe_id, log_id)
+        else:
+            raise Http404
+
+    def _retrieve_impl(self, request, job_exe_id, log_id):
         """Gets job execution log specified.
 
         :param request: the HTTP GET request

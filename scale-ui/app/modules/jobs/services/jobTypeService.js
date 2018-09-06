@@ -169,12 +169,16 @@
                 });
                 return d.promise;
             },
-            updateJobType: function (data){
-                var updatedJobType = function(data){
-                    return {
+            updateJobType: function (data) {
+                var updatedJobType = function (data) {
+                    var returnObj = {
                         error_mappings: data.error_mappings,
-                        is_paused: data.is_paused
+                        is_paused: data.is_paused,
+                        cpus_required: data.cpus_required,
+                        mem_required: data.mem_required,
+                        max_tries: data.max_tries
                     };
+                    return _.pick(returnObj, _.identity);
                 };
                 var updatedData = updatedJobType(data);
                 var d = $q.defer();
