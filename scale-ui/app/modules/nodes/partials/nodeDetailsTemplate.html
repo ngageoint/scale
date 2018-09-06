@@ -3,7 +3,6 @@
     {{ vm.node.hostname }}
     <small>{{ vm.nodeStatus.agent_id }}</small>
 </h3>
-{{ vm.nodeStatus.state.name }}
 <h4 class="margin-bottom-lg"><span class="label" ng-class="'label-' + vm.nodeStatus.state.name.toLowerCase()">{{ vm.nodeStatus.state.title }}: {{ vm.nodeStatus.state.description }}</span></h4>
 <div class="node-details-container">
     <div class="row">
