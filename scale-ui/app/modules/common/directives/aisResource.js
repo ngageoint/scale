@@ -87,26 +87,26 @@
                 vm.gpuValue = $scope.data.resources.gpus.total;
                 cpuChartOptions.data.columns = [
                     ['Offered', $scope.data.resources.cpus.offered],
-                    ['Running', $scope.data.resources.cpus.running],
                     ['Free', $scope.data.resources.cpus.free],
+                    ['Running', $scope.data.resources.cpus.running],
                     ['Unavailable', $scope.data.resources.cpus.unavailable]
                 ];
                 memChartOptions.data.columns = [
                     ['Offered', $scope.data.resources.mem.offered],
-                    ['Running', $scope.data.resources.mem.running],
                     ['Free', $scope.data.resources.mem.free],
+                    ['Running', $scope.data.resources.mem.running],
                     ['Unavailable', $scope.data.resources.mem.unavailable]
                 ];
                 diskChartOptions.data.columns = [
                     ['Offered', $scope.data.resources.disk.offered],
-                    ['Running', $scope.data.resources.disk.running],
                     ['Free', $scope.data.resources.disk.free],
+                    ['Running', $scope.data.resources.disk.running],
                     ['Unavailable', $scope.data.resources.disk.unavailable]
                 ];
                 gpuChartOptions.data.columns = [
                     ['Offered', $scope.data.resources.gpus.offered],
-                    ['Running', $scope.data.resources.gpus.running],
                     ['Free', $scope.data.resources.gpus.free],
+                    ['Running', $scope.data.resources.gpus.running],
                     ['Unavailable', $scope.data.resources.gpus.unavailable]
                 ];
                 cpuChart = c3.generate(cpuChartOptions);
