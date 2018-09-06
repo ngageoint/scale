@@ -57,60 +57,9 @@
             </div>
         </div>
         <h2>Resource Allocation</h2>
-        <div class="widget-label-left">Percentage of resournces that are offered, free, running, and unavailable</div>
-        <div class="chart-container" ng-show="!vm.statusError">
-            <div class="chart text-center">
-                <div ng-show="vm.status.resources.cpus.total > 0">
-                    <h4>CPU</h4>
-                    <div id="cpuChart"></div>
-                </div>
-            </div>
-            <div class="chart text-center">
-                <div ng-show="vm.status.resources.mem.total > 0">
-                    <h4>Memory</h4>
-                    <div id="memChart"></div>
-                </div>
-            </div>
-            <div class="chart text-center">
-                <div ng-show="vm.status.resources.disk.total > 0">
-                    <h4>Disk</h4>
-                    <div id="diskChart"></div>
-                </div>
-            </div>
-            <div class="chart text-center">
-                <div ng-show="vm.status.resources.gpus.total > 0">
-                    <h4>GPU</h4>
-                    <div id="gpuChart"></div>
-                </div>
-            </div>
-        </div>
-        <div class="chart-container chart-values" ng-show="!vm.statusError">
-            <div class="chart text-center">
-                <span ng-show="vm.status.resources.cpus.total > 0">
-                    Total: {{ vm.cpuValue }}
-                </span>
-            </div>
-            <div class="chart text-center">
-                <span ng-show="vm.status.resources.mem.total > 0">
-                    Total: {{ vm.memValue }}
-                </span>
-            </div>
-            <div class="chart text-center">
-                <span ng-show="vm.status.resources.disk.total > 0">
-                    Total: {{ vm.diskValue }}
-                </span>
-            </div>
-            <div class="chart text-center">
-                <span ng-show="vm.status.resources.gpus.total > 0">
-                    Total: {{ vm.gpuValue }}
-                </span>
-            </div>
-        </div>
-        <div class="status-legend" ng-show="!vm.statusError">
-            <div class="status-offered"><i class="fa fa-square"></i> Offered</div>
-            <div class="status-free"><i class="fa fa-square"></i> Free</div>
-            <div class="status-running"><i class="fa fa-square"></i> Running</div>
-            <div class="status-unavailable"><i class="fa fa-square"></i> Unavailable</div>
+        <div class="widget-label-left">Percentage of resources that are offered, free, running, and unavailable</div>
+        <div ng-show="!vm.statusError">
+            <ais-resource data="vm.status"></ais-resource>
         </div>
         <div class="text-center" ng-show="vm.statusError">
             <strong>{{ vm.statusError }}</strong>

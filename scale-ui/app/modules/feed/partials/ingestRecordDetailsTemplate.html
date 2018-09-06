@@ -2,7 +2,7 @@
 
 <div class="form-inline">
     <div ng-if="vm.ingestRecord">
-        <h2 class="margin-top-sm margin-bottom-md">{{ vm.ingestRecord.file_name }} <a href="{{ vm.ingestRecord.url }}"><i class="fa fa-download"></i></a></h2>
+        <h2 class="margin-top-sm margin-bottom-md">{{ vm.ingestRecord.file_name }}</h2>
         <div class="row">
             <div class="col-xs-6">
                 <table class="table table-hover table-condensed table-striped">
@@ -12,7 +12,7 @@
                     <tr><td class="col-xs-2">Media Type:</td> <td>{{ vm.ingestRecord.media_type }}</td></tr>
                     <tr><td class="col-xs-2">Workspace:</td> <td><a href="#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.title }}</a></td></tr>
                     <tr><td class="col-xs-2">Strike:</td> <td><a href="#/feed/strikes/{{ vm.ingestRecord.strike.id }}">{{ vm.ingestRecord.strike.title }}</a></td></tr>
-                    <tr><td class="col-xs-2">Scan:</td> <td>{{ vm.ingestRecord.scan.title || '' }}</d></tr>
+                    <tr ng-if="vm.ingestRecord.scan"><td class="col-xs-2">Scan:</td> <td>{{ vm.ingestRecord.scan.title }}</d></tr>
                     <tr><td class="col-xs-2">Ingest Started:</td> <td>{{ vm.ingestRecord.ingest_started_formatted }}</td></tr>
                     <tr><td class="col-xs-2">Ingest Ended:</td> <td>{{ vm.ingestRecord.ingest_ended_formatted }}</td></tr>
                     <tr><td class="col-xs-2">Bytes Transferred:</td> <td>{{ vm.ingestRecord.bytes_transferred_formatted }}</td></tr>

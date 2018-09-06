@@ -3,7 +3,8 @@
     {{ vm.node.hostname }}
     <small>{{ vm.nodeStatus.agent_id }}</small>
 </h3>
-<h4 class="margin-bottom-lg"><span class="label label-info">{{ vm.nodeStatus.state.title }}: {{ vm.nodeStatus.state.description }}</span></h4>
+{{ vm.nodeStatus.state.name }}
+<h4 class="margin-bottom-lg"><span class="label" ng-class="'label-' + vm.nodeStatus.state.name.toLowerCase()">{{ vm.nodeStatus.state.title }}: {{ vm.nodeStatus.state.description }}</span></h4>
 <div class="node-details-container">
     <div class="row">
         <div class="col-xs-6" ng-if="vm.nodeStatus.errors.length > 0">
@@ -41,6 +42,7 @@
             </div>
         </div>
     </div>
+    <ais-resource data="vm.nodeStatus"></ais-resource>
     <table class="table table-hover table-condensed table-striped">
         <tbody>
         <tr>

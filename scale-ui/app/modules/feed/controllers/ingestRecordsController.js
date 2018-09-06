@@ -191,12 +191,7 @@
                 vm.filterResults();
             });
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                if(row.entity.source_file && row.entity.source_file.id){
-                    $location.path('/feed/ingests/' + row.entity.source_file.id).search('');
-                } else {
-                    toastr["info"]('Source file is undefined for ' + row.entity.file_name);
-                }
-
+                $location.path('/feed/ingests/' + row.entity.id).search('');
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {
