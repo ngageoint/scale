@@ -77,5 +77,56 @@
             "last_modified": "2018-09-01T00:00:00.0Z",
             "icon_code": "f1c3"
         }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-delete-files", "1.0.0"],
+            "revision_num": 1,
+            "manifest": {
+                "seedVersion": "1.0.0",
+                "job": {
+                    "name": "scale-delete-files",
+                    "jobVersion": "1.0.0",
+                    "packageVersion": "1.0.0",
+                    "title": "Scale Delete Files",
+                    "description": "Deletes a given file from a storage system.",
+                    "maintainer": {
+                        "name": "Scale D. Veloper",
+                        "email": "jdoe@example.com"
+                    },
+                    "timeout": 3600,
+                    "interface": {
+                        "command": "python manage.py scale_delete_files",
+                        "inputs": {
+                            "json": [ 
+                                {
+                                    "name": "files",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "workspaces",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "job_id",
+                                    "type": "string", 
+                                    "required": true 
+                                },
+                                {
+                                    "name": "purge",
+                                    "type": "string", 
+                                    "required": true 
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "created": "2018-03-01T00:00:00.0Z"
+        }
     }
 ]
