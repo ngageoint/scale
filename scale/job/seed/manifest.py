@@ -207,7 +207,7 @@ class SeedManifest(object):
         """
 
         input_dict = self.get_inputs()
-        for file_dict in input_dict['files']:
+        for file_dict in self.get_input_files():
             if 'partial' in file_dict:
                 del file_dict['partial']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
