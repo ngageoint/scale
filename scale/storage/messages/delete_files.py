@@ -91,7 +91,7 @@ class DeleteFiles(CommandMessage):
         """
 
         message = DeleteFiles()
-        message.job_id = int(json_dict['job_id'])
+        message.job_id = json_dict['job_id']
         message.purge = bool(json_dict['purge'])
         for file_id in json_dict['file_ids']:
             message.add_file(file_id)
