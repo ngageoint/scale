@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.db import transaction
-
 from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import JsonValue
@@ -18,19 +16,22 @@ from storage.models import ScaleFile
 logger = logging.getLogger(__name__)
 
 
-def create_spawn_delete_files_job(job_id, purge):
+def create_spawn_delete_files_job(job_id, trigger_id, purge):
     """Creates a spawn delete files job message
 
     :param job_id: The job ID whose files will be deleted
     :type job_id: int
     :param purge: Boolean value to determine if the files should be purged
     :type purge: bool
+    :param trigger_id: The trigger event id for the purge operation
+    :type trigger_id: int
     :return: The spawn delete files job message
     :rtype: :class:`job.messages.spawn_delete_files_job.SpawnDeleteFilesJob`
     """
 
     message = SpawnDeleteFilesJob()
     message.job_id = job_id
+    message.trigger_id = trigger_id
     message.purge = purge
     return message
 
@@ -46,13 +47,14 @@ class SpawnDeleteFilesJob(CommandMessage):
         super(SpawnDeleteFilesJob, self).__init__('spawn_delete_files_job')
 
         self.job_id = None
+        self.trigger_id = None
         self.purge = False
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'job_id': self.job_id, 'purge': str(self.purge)}
+        return {'job_id': self.job_id, 'trigger_id': self.trigger_id, 'purge': str(self.purge)}
 
     @staticmethod
     def from_json(json_dict):
@@ -61,6 +63,7 @@ class SpawnDeleteFilesJob(CommandMessage):
 
         message = SpawnDeleteFilesJob()
         message.job_id = json_dict['job_id']
+        message.trigger_id = json_dict['job_id']
         message.purge = bool(json_dict['purge'])
         return message
 
@@ -89,11 +92,8 @@ class SpawnDeleteFilesJob(CommandMessage):
             inputs.add_value(JsonValue('WORKSPACES', workspaces))
             inputs_json = convert_data_to_v6_json(inputs)
 
-            # TODO: Need to get trigger event id. 
-            # Consider reworking create_jobs_message to generate a generic trigger event for this type of thing
-            # TODO: Need to augment seed manifest with mounts
-            # Consider appending needed workspaces to manifest and creating a new version of the job with correct mounts
-            call = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0", event_id=1,
-                                       job_type_rev_num="1", count=1, input_data_dict=inputs_json.get_dict())
+            call = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0",
+                                       event_id=self.trigger_id, job_type_rev_num="1", count=1,
+                                       input_data_dict=inputs_json.get_dict())
 
         return True
