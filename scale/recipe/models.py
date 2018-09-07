@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import copy
-import math
 from collections import namedtuple
 
 import django.contrib.postgres.fields
@@ -25,6 +24,8 @@ from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
 
+
+RecipeNodeCopy = namedtuple('RecipeNodeCopy', ['superseded_recipe_id', 'recipe_id', 'node_names'])
 
 RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id', 'output_data'])
 
@@ -52,106 +53,55 @@ class RecipeManager(models.Manager):
 
         self.filter(id__in=recipe_ids).update(is_completed=True, completed=when, last_modified=now())
 
-    def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
-        """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
+    def create_recipe_v6(self, recipe_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None,
+                         batch_id=None, superseded_recipe=None, copy_superseded_input=False):
+        """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
 
-        :param recipe_type: The type of the recipe to create
-        :type recipe_type: :class:`recipe.models.RecipeType`
-        :param revision: The recipe type revision
-        :type revision: :class:`recipe.models.RecipeTypeRevision`
-        :param event_id: The ID of the event that triggered the creation of this recipe
+        :param recipe_type_rev: The recipe type revision (with populated recipe_type model) of the recipe to create
+        :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
+        :param event_id: The event ID that triggered the creation of this recipe
         :type event_id: int
-        :param input: The recipe input to run on, should be None if superseded_recipe is provided
-        :type input: :class:`recipe.data.recipe_data.RecipeData`
-        :param batch_id: The ID of the batch that contains this recipe
+        :param input_data: The recipe's input data, possibly None
+        :type input_data: :class:`data.data.data.Data`
+        :param root_recipe_id: The ID of the root recipe that contains this sub-recipe, possibly None
+        :type root_recipe_id: int
+        :param recipe_id: The ID of the original recipe that created this sub-recipe, possibly None
+        :type recipe_id: int
+        :param batch_id: The ID of the batch that contains this recipe, possibly None
         :type batch_id: int
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
-        :returns: A handler for the new recipe
+        :param copy_superseded_input: Whether to copy the input data from the superseded recipe
+        :type copy_superseded_input: bool
+        :returns: The new recipe model
         :rtype: :class:`recipe.models.Recipe`
-
-        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe input is invalid
-        """
-
-        recipe = Recipe()
-        recipe.recipe_type = recipe_type
-        recipe.recipe_type_rev = revision
-        recipe.event_id = event_id
-        recipe.batch_id = batch_id
-        recipe_definition = recipe.get_recipe_definition()
-
-        if superseded_recipe:
-            # Use input from superseded recipe
-            input = superseded_recipe.get_recipe_data()
-
-            # New recipe references superseded recipe
-            root_id = superseded_recipe.root_superseded_recipe_id
-            if root_id is None:
-                root_id = superseded_recipe.id
-            recipe.root_superseded_recipe_id = root_id
-            recipe.superseded_recipe = superseded_recipe
-
-        # Validate recipe input and save recipe
-        recipe_definition.validate_data(input)
-        recipe.input = input.get_dict()
-
-        return recipe
-
-    def create_recipe_v6(self, job_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None, batch_id=None,
-                      superseded_job=None):
-        """Creates a new job for the given job type revision and returns the (unsaved) job model
-
-        :param job_type_rev: The job type revision (with populated job_type model) of the job to create
-        :type job_type_rev: :class:`job.models.JobTypeRevision`
-        :param event_id: The event ID that triggered the creation of this job
-        :type event_id: int
-        :param input_data: The job's input data (optional)
-        :type input_data: :class:`data.data.data.Data`
-        :param root_recipe_id: The ID of the root recipe that contains this job
-        :type root_recipe_id: int
-        :param recipe_id: The ID of the original recipe that created this job
-        :type recipe_id: int
-        :param batch_id: The ID of the batch that contains this job
-        :type batch_id: int
-        :param superseded_job: The job that the created job is superseding, possibly None
-        :type superseded_job: :class:`job.models.Job`
-        :returns: The new job model
-        :rtype: :class:`job.models.Job`
 
         :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
         """
 
-        # TODO: doc and signature
-        # TODO: create recipe model
-        # TODO: create recipe node models for copied jobs/sub-recipes
-        # TODO: supersede/cancel jobs/sub-recipes?
-        # TODO: unpublish jobs?
-        job = Job()
-        job.job_type = job_type_rev.job_type
-        job.job_type_rev = job_type_rev
-        job.event_id = event_id
-        job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
-        job.recipe_id = recipe_id
-        job.batch_id = batch_id
-        job.max_tries = job_type_rev.job_type.max_tries
+        recipe = Recipe()
+        recipe.recipe_type = recipe_type_rev.recipe_type
+        recipe.recipe_type_rev = recipe_type_rev
+        recipe.event_id = event_id
+        recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        recipe.recipe_id = recipe_id
+        recipe.batch_id = batch_id
+
+        if superseded_recipe:
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if not root_id:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
+
+            if copy_superseded_input:
+                input_data = superseded_recipe.get_input_data()
 
         if input_data:
-            input_data.validate(job_type_rev.get_input_interface())
-            job.input = convert_data_to_v6_json(input_data).get_dict()
+            input_data.validate(recipe_type_rev.get_input_interface())
+            recipe.input = convert_data_to_v6_json(input_data).get_dict()
 
-        # TODO: remove this legacy job types are removed
-        if not JobInterfaceSunset.is_seed_dict(job_type_rev.manifest):
-            job.priority = job_type_rev.job_type.priority
-            job.timeout = job_type_rev.job_type.timeout
-
-        if superseded_job:
-            root_id = superseded_job.root_superseded_job_id
-            if not root_id:
-                root_id = superseded_job.id
-            job.root_superseded_job_id = root_id
-            job.superseded_job = superseded_job
-
-        return job
+        return recipe
 
     # TODO: remove this once old recipe creation is removed
     @transaction.atomic
@@ -1190,6 +1140,33 @@ class RecipeNodeManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
+    def copy_recipe_nodes(self, recipe_copies):
+        """Copies the given nodes from the superseded recipes to the new recipes
+
+        :param recipe_copies: A list of RecipeNodeCopy tuples
+        :type recipe_copies: list
+        """
+
+        if not recipe_copies:
+            return
+
+        sub_queries = []
+        for recipe_copy in recipe_copies:
+            superseded_recipe_id = recipe_copy.superseded_recipe_id
+            recipe_id = recipe_copy.recipe_id
+            node_names = recipe_copy.node_names
+            sub_qry = 'SELECT node_name, false, %d, job_id, sub_recipe_id FROM recipe_node WHERE recipe_id = %d'
+            sub_qry = sub_qry % (recipe_id, superseded_recipe_id)
+            if node_names:
+                node_sub_qry = ', '.join('\'%s\'' % node_name for node_name in node_names)
+                sub_qry = '%s AND node_name IN (%s)' % (sub_qry, node_sub_qry)
+            sub_queries.append(sub_qry)
+        union_sub_qry = ' UNION ALL '.join(sub_queries)
+        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id) %s' % union_sub_qry
+
+        with connection.cursor() as cursor:
+            cursor.execute(qry)
+
     def create_recipe_job_nodes(self, recipe_id, node_name, jobs):
         """Creates and returns the recipe node models (unsaved) for the given recipe and jobs
 
@@ -1862,6 +1839,16 @@ class RecipeTypeRevision(models.Model):
 
         return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
 
+    def get_input_interface(self):
+        """Returns the input interface for this revision
+
+        :returns: The input interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        return self.get_definition().input_interface
+
+    # TODO: this is deprecated
     def get_recipe_definition(self):
         """Returns the recipe type definition for this revision
 

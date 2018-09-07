@@ -5,13 +5,17 @@ import logging
 from collections import namedtuple
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from data.data.exceptions import InvalidData
 from data.data.json.data_v6 import DataV6
 from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
-from recipe.models import Recipe, RecipeNode, RecipeTypeRevision
+from recipe.messages.process_recipe_input import create_process_recipe_input_messages
+from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes_messages
+from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
+from recipe.models import Recipe, RecipeNode, RecipeNodeCopy, RecipeTypeRevision
 
 
 REPROCESS_TYPE = 'reprocess'  # Message type for creating recipes that are reprocessing another set of recipes
@@ -23,12 +27,12 @@ SUB_RECIPE_TYPE = 'sub-recipes'  # Message type for creating sub-recipes of anot
 MAX_NUM = 100
 
 
+# Tuple for specifying each sub-recipe to create for SUB_RECIPE_TYPE messages
 SubRecipe = namedtuple('SubRecipe', ['recipe_type_name', 'recipe_type_rev_num', 'node_name', 'process_input'])
 
 
 # Private named tuples for this message's use only
-# The superseded_node_dict is a dict where the superseded node names map to their respective job/sub-recipe ID
-_ReprocessRecipe = namedtuple('_ReprocessRecipe', ['superseded_recipe', 'superseded_node_dict', 'new_recipe', 'diff'])
+_RecipeDiff = namedtuple('_RecipeDiff', ['superseded_recipe', 'new_recipe', 'diff'])
 
 
 logger = logging.getLogger(__name__)
@@ -143,6 +147,11 @@ class CreateRecipes(CommandMessage):
         self.superseded_recipe_id = None
         self.sub_recipes = []
 
+        # Private work fields
+        self._when = None
+        self._process_input = {}  # process_input flags stored by new recipe ID
+        self._recipe_diffs = []  # List of _RecipeDiff tuples if new recipes are superseding old recipes
+
     # TODO:
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
@@ -196,33 +205,36 @@ class CreateRecipes(CommandMessage):
 
         return message
 
-    # TODO:
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # TODO: figure out copying of recipe nodes
-        # TODO: figure out supersede_recipe_nodes message and adapt this message to it
+        self._when = now()
+
+        # TODO: move this snippet into the unit tests for this message as a placeholder until node copying is tested
+        # INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id)
+        # SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
+        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
+        # UNION ALL SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
+        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
 
         # TODO: - copy this back into issue
-        #  - do locking
-        #  - get superseded recipe models and supersede them (if reprocess type)
-        #  - if superseded recipe models, get their recipe type revisions (and make diffs using forced_nodes)
-        #  - query node_name and job/sub-recipe IDs for the superseded recipes
-        #  - look for existing recipes to see if message has already run, if not do the following in db transaction:
-        #    - bulk create new recipe models
-        #      - if this is a reprocess type, copy data from superseded recipe model
-        #      - bulk create new recipe_node models if new recipes are sub-recipes
-        #      - if new recipe is superseding another recipe, then it is a reprocess, use forced_nodes
-        #        - supercede jobs and sub-recipes in superseded recipe (for deleted/changed nodes)
-        #        - copy jobs and sub-recipes from superseded recipe (for identical nodes)
+        #  - do locking in a db transaction:
+        #    - get superseded recipe models and supersede them (if reprocess type)
+        #    - if superseded recipe models, get their recipe type revisions (and make diffs using forced_nodes)
+        #    - look for existing recipes to see if message has already run, if not do the following:
+        #      - bulk create new recipe models
+        #        - if this is a reprocess type, copy data from superseded recipe model
+        #        - bulk create new recipe_node models if new recipes are sub-recipes
+        #        - if new recipe is superseding another recipe, then it is a reprocess
+        #          - copy jobs and sub-recipes from superseded recipe (for identical nodes)
         #  - db transaction is over, now send messages
         #  - if new recipe is superseding another recipe, then it is a reprocess
-        #    - send unpublish messages for job nodes that are deleted
-        #    - send cancel messages for job nodes that are deleted or changed
-        #    - send new supersede_recipes message with unpublish flag = True for sub-recipes nodes that are deleted
-        #    - send new supersede_recipes message with unpublish flag = False for sub-recipes nodes that are completely
-        #      changed
+        #    - create supersede_recipe_nodes messages
+        #      - unpublish job nodes that are deleted
+        #      - supercede job and sub-recipe nodes that are deleted/changed
+        #      - recursively handle sub-recipe nodes with unpublish for nodes that are deleted
+        #      - recursively handle sub-recipe nodes without unpublish for nodes that are completely changed
         #  - for each new recipe, if it has data or in a recipe and process_input flag, send message to
         #    process_recipe_input (need to send forced_nodes info along to send to update_recipes message)
         #    - if not, send update_recipe message?
@@ -244,6 +256,72 @@ class CreateRecipes(CommandMessage):
 
         return True
 
+    def _copy_recipe_nodes(self):
+        """Copies recipe nodes from the superseded recipes to the new recipes that are identical
+        """
+
+        recipe_node_copies = []
+
+        for recipe_diff in self._recipe_diffs:
+            superseded_recipe = recipe_diff.superseded_recipe
+            new_recipe = recipe_diff.new_recipe
+            node_names = set(recipe_diff.diff.get_nodes_to_copy().keys())
+            recipe_node_copy = RecipeNodeCopy(superseded_recipe.id, new_recipe.id, node_names)
+            recipe_node_copies.append(recipe_node_copy)
+
+        RecipeNode.objects.copy_recipe_nodes(recipe_node_copies)
+
+    def _create_messages(self, new_recipes):
+        """Creates any messages resulting from the new recipes
+
+        :param new_recipes: The list of new recipe models
+        :type new_recipes: list
+        """
+
+        #  - if new recipe is superseding another recipe, then it is a reprocess
+        #    - create supersede_recipe_nodes messages
+        #      - unpublish job nodes that are deleted
+        #      - supercede job and sub-recipe nodes that are deleted/changed
+        #      - recursively handle sub-recipe nodes with unpublish for nodes that are deleted
+        #      - recursively handle sub-recipe nodes without unpublish for nodes that are completely changed
+        #  - for each new recipe, if it has data or in a recipe and process_input flag, send message to
+        #    process_recipe_input (need to send forced_nodes info along to send to update_recipes message)
+        #    - if not, send update_recipe message?
+        #  - send update_recipe_metrics message if in a recipe
+
+        if self._recipe_diffs:
+            # New recipes are superseding old recipes, send supersede_recipe_nodes messages
+            recipe_ids = []
+            supersede_jobs = set()
+            supersede_subrecipes = set()
+            unpublish_jobs = set()
+            supersede_recursive = set()
+            unpublish_recursive = set()
+            for recipe_diff in self._recipe_diffs:
+                recipe_ids.append(recipe_diff.superseded_recipe.id)
+                # TODO: calculate out the sets
+            msgs = create_supersede_recipe_nodes_messages(recipe_ids, self._when, supersede_jobs, supersede_subrecipes,
+                                                          unpublish_jobs, supersede_recursive, unpublish_recursive)
+            self.new_messages.extend(msgs)
+
+        process_input_recipe_ids = []
+        update_recipe_ids = []
+        for new_recipe in new_recipes:
+            # process_input indicates if new_recipe is a sub-recipe and ready to get its input from its dependencies
+            process_input = self.recipe_id and self._process_input.get(new_recipe.id, False)
+            if new_recipe.has_input() or process_input:
+                # This new recipe is all ready to have its input processed
+                process_input_recipe_ids.append(new_recipe.id)
+            else:
+                # Recipe not ready for its input yet, but send update_recipe for it to create its nodes awhile
+                update_recipe_ids.append(new_recipe.id)
+        self.new_messages.extend(create_process_recipe_input_messages(process_input_recipe_ids))
+        # TODO: create messages to update recipes after new update_recipe message is created
+
+        if self.recipe_id:
+            # Update the metrics for the recipe containing the new sub-recipes we just created
+            self.new_messages.extend(create_update_recipe_metrics_messages([self.recipe_id]))
+
     # TODO:
     def _create_recipes(self, recipe_type_rev):
         """Creates the recipe models for the message
@@ -255,10 +333,8 @@ class CreateRecipes(CommandMessage):
         """
 
         recipes = []
-
-        # TODO: superseded jobs and sub-recipes all the way down
-        # TODO: create messages to cancel superseded jobs all the way down
-        # TODO: create messages to unpublish deleted jobs all the way down
+        
+        # TODO: after creating recipe_node models, populate self._process_input
 
         # If this new sub-recipe(s) is in a recipe that supersedes another recipe, find the corresponding superseded
         # sub-recipe(s)
@@ -313,38 +389,3 @@ class CreateRecipes(CommandMessage):
             recipes = list(qry)
 
         return recipes
-
-    def _reprocess_recipes(self, reprocess_recipes):
-        """Reprocess the given recipes. This compares each new recipe to the recipe it is superseding and handles
-        (supersedes or copies) all of the nodes in each superseded recipe.
-
-        :param reprocess_recipes: A list of _ReprocessRecipe tuples
-        :type reprocess_recipes: list
-        """
-
-        supersede_job_ids = []
-        supersede_recipe_ids = []
-
-        for reprocess_recipe in reprocess_recipes:
-            superseded_recipe = reprocess_recipe.superseded_recipe
-            superseded_node_dict = reprocess_recipe.superseded_node_dict
-
-            for node_diff in reprocess_recipe.diff.get_nodes_to_supersede().values():
-                if node_diff.name in superseded_node_dict:
-                    the_id = superseded_node_dict[node_diff.name]
-                    if node_diff.node_type == JobNodeDefinition.NODE_TYPE:
-                        supersede_job_ids.append(the_id)
-                    elif node_diff.node_type == RecipeNodeDefinition.NODE_TYPE:
-                        supersede_recipe_ids.append(the_id)
-            # TODO: collect info for copying nodes from superseded recipe (for identical nodes)
-
-        # TODO: supersede jobs - consider update query that does not rely on IDs
-        # TODO: supersede recipes - consider update query that does not rely on IDs
-        # TODO: copy nodes
-
-        # TODO: copy nodes SQL:
-        # INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id)
-        # SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
-        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
-        # UNION ALL SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
-        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
