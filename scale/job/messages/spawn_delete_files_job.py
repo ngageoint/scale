@@ -92,8 +92,9 @@ class SpawnDeleteFilesJob(CommandMessage):
             inputs.add_value(JsonValue('WORKSPACES', workspaces))
             inputs_json = convert_data_to_v6_json(inputs)
 
-            call = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0",
-                                       event_id=self.trigger_id, job_type_rev_num="1", count=1,
-                                       input_data_dict=inputs_json.get_dict())
+            # Send message to create system job
+            self.new_messages.extend(create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0",
+                                                         event_id=self.trigger_id, job_type_rev_num="1",
+                                                         input_data_dict=inputs_json.get_dict()))
 
         return True
