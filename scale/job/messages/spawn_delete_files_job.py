@@ -1,6 +1,7 @@
 """Defines a command message that creates and queues a system job for deleting files"""
 from __future__ import unicode_literals
 
+import json
 import logging
 
 from data.data.data import Data
@@ -85,10 +86,10 @@ class SpawnDeleteFilesJob(CommandMessage):
                     workspaces.append({f.workspace.name: f.workspace.json_config})
 
             inputs = Data()
-            inputs.add_value(JsonValue('JOB_ID', self.job_id))
-            inputs.add_value(JsonValue('PURGE', self.purge))
-            inputs.add_value(JsonValue('FILES', files))
-            inputs.add_value(JsonValue('WORKSPACES', workspaces))
+            inputs.add_value(JsonValue('job_id', str(self.job_id)))
+            inputs.add_value(JsonValue('purge', str(self.purge)))
+            inputs.add_value(JsonValue('files', json.dumps(files)))
+            inputs.add_value(JsonValue('workspaces', json.dumps(workspaces)))
             inputs_json = convert_data_to_v6_json(inputs)
 
             # Send message to create system job
