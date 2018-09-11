@@ -140,6 +140,16 @@ class NodeDiff(object):
         # Should be copied if node is not deleted from previous recipe and not being created in new recipe
         return self.status != NodeDiff.DELETED and not self.reprocess_new_node
 
+    def should_be_recursively_superseded(self):
+        """Indicates whether this node should be completely, recursively superseded in the previous recipe during a
+        reprocess
+
+        :returns: Whether this node should be completely, recursively superseded
+        :rtype: bool
+        """
+
+        return False
+
     def should_be_superseded(self):
         """Indicates whether this node should be superseded in the previous recipe during a reprocess
 
@@ -331,6 +341,20 @@ class RecipeNodeDiff(NodeDiff):
         # Grab sub-node names to force reprocess within this recipe
         if self.name in reprocess_nodes:
             self.force_reprocess_nodes = reprocess_nodes[self.name]
+
+    def should_be_recursively_superseded(self):
+        """See :meth:`recipe.diff.node.NodeDiff.should_be_recursively_superseded`
+        """
+
+        for change in self.changes:
+            # If there has been an upstream change (dependency or input change), then this sub-recipe must be completely
+            # reprocessed and should be recursively superseded
+            if change.name not in ['RECIPE_TYPE_CHANGE', 'RECIPE_TYPE_REVISION_CHANGE']:
+                return True
+
+        # If the only changes to this sub-recipe are type or revision changes, then it doesn't need to be completely
+        # reprocessed (some of the sub-recipe's nodes might be identical and be copied to the new sub-recipe)
+        return False
 
     def _compare_node_type(self, prev_node):
         """See :meth:`recipe.diff.node.NodeDiff._compare_node_type`

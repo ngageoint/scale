@@ -66,7 +66,7 @@ class TestSupersedeRecipeNodes(TestCase):
         supersede_jobs = {'node_a', 'node_b'}
         supersede_subrecipes = {'node_c', 'node_d'}
         unpublish_jobs = {'node_b'}
-        supersede_recursive = {'node_c'}
+        supersede_recursive = {'node_c', 'node_d'}
         unpublish_recursive = {'node_d'}
 
         # Create message
@@ -172,6 +172,40 @@ class TestSupersedeRecipeNodes(TestCase):
         recipe_1_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         recipe_1_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         recipe_1_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_a = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_b = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_c = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_d = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_e_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_e_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_e_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        Recipe.objects.bulk_create([recipe_1, recipe_1_e, recipe_1_f, recipe_1_g, recipe_1_h, recipe_1_e_3,
+                                    recipe_1_e_4, recipe_1_f_3, recipe_1_f_4, recipe_1_g_3, recipe_1_g_4, recipe_1_h_3,
+                                    recipe_1_h_4, recipe_2, recipe_2_e, recipe_2_f, recipe_2_g, recipe_2_h,
+                                    recipe_2_e_3, recipe_2_e_4, recipe_2_f_3, recipe_2_f_4, recipe_2_g_3, recipe_2_g_4,
+                                    recipe_2_h_3, recipe_2_h_4])
+        Job.objects.bulk_create([job_1_a, job_1_b, job_1_c, job_1_d, job_1_e_1, job_1_e_2, job_1_f_1, job_1_f_2,
+                                 job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
+                                 job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
+                                 job_2_h_2])
         node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=False)
         node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=False)
         node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=False)
@@ -216,31 +250,6 @@ class TestSupersedeRecipeNodes(TestCase):
                                                           sub_recipe=recipe_1_h_3, save=False)
         node_1_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_4',
                                                           sub_recipe=recipe_1_h_4, save=False)
-        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        job_2_a = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_b = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_c = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_d = job_test_utils.create_job(job_type=job_type, save=False)
-        recipe_2_e = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        job_2_e_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_e_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_f_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_f_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_g_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_g_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_h_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_h_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        recipe_2_e_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_e_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=False)
         node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=False)
         node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=False)
@@ -285,15 +294,6 @@ class TestSupersedeRecipeNodes(TestCase):
                                                           sub_recipe=recipe_2_h_3, save=False)
         node_2_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_4',
                                                           sub_recipe=recipe_2_h_4, save=False)
-        Recipe.objects.bulk_create([recipe_1, recipe_1_e, recipe_1_f, recipe_1_g, recipe_1_h, recipe_1_e_3,
-                                    recipe_1_e_4, recipe_1_f_3, recipe_1_f_4, recipe_1_g_3, recipe_1_g_4, recipe_1_h_3,
-                                    recipe_1_h_4, recipe_2, recipe_2_e, recipe_2_f, recipe_2_g, recipe_2_h,
-                                    recipe_2_e_3, recipe_2_e_4, recipe_2_f_3, recipe_2_f_4, recipe_2_g_3, recipe_2_g_4,
-                                    recipe_2_h_3, recipe_2_h_4])
-        Job.objects.bulk_create([job_1_a, job_1_b, job_1_c, job_1_d, job_1_e_1, job_1_e_2, job_1_f_1, job_1_f_2,
-                                 job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
-                                 job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
-                                 job_2_h_2])
         RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
                                         node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
                                         node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
@@ -307,7 +307,7 @@ class TestSupersedeRecipeNodes(TestCase):
         supersede_jobs = {'node_c', 'node_d'}
         supersede_subrecipes = {'node_f', 'node_g', 'node_h'}
         unpublish_jobs = {'node_d'}
-        supersede_recursive = {'node_g'}
+        supersede_recursive = {'node_g', 'node_h'}
         unpublish_recursive = {'node_h'}
 
         # Create message
@@ -325,7 +325,7 @@ class TestSupersedeRecipeNodes(TestCase):
         # Ensure sub-recipes for node_f, node_g, and node_h are superseded
         recipe_ids = [recipe_1_f.id, recipe_1_g.id, recipe_1_h.id, recipe_2_f.id, recipe_2_g.id, recipe_2_h.id]
         qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=True)
-        self.assertEqual(qry.count(), 8)
+        self.assertEqual(qry.count(), 6)
         # Ensure jobs for node_a and node_b are NOT superseded
         qry = Job.objects.filter(id__in=[job_1_a.id, job_1_b.id, job_2_a.id, job_2_b.id], is_superseded=False)
         self.assertEqual(qry.count(), 4)
@@ -391,7 +391,7 @@ class TestSupersedeRecipeNodes(TestCase):
         # Ensure sub-recipes for node_f, node_g, and node_h are superseded
         recipe_ids = [recipe_1_f.id, recipe_1_g.id, recipe_1_h.id, recipe_2_f.id, recipe_2_g.id, recipe_2_h.id]
         qry = Recipe.objects.filter(id__in=recipe_ids, is_superseded=True)
-        self.assertEqual(qry.count(), 8)
+        self.assertEqual(qry.count(), 6)
         # Ensure jobs for node_a and node_b are NOT superseded
         qry = Job.objects.filter(id__in=[job_1_a.id, job_1_b.id, job_2_a.id, job_2_b.id], is_superseded=False)
         self.assertEqual(qry.count(), 4)
@@ -478,6 +478,40 @@ class TestSupersedeRecipeNodes(TestCase):
         recipe_1_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         recipe_1_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         recipe_1_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_a = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_b = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_c = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_d = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        job_2_e_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_e_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_f_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_g_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_1 = job_test_utils.create_job(job_type=job_type, save=False)
+        job_2_h_2 = job_test_utils.create_job(job_type=job_type, save=False)
+        recipe_2_e_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_e_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_f_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        recipe_2_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
+        Recipe.objects.bulk_create([recipe_1, recipe_1_e, recipe_1_f, recipe_1_g, recipe_1_h, recipe_1_e_3,
+                                    recipe_1_e_4, recipe_1_f_3, recipe_1_f_4, recipe_1_g_3, recipe_1_g_4, recipe_1_h_3,
+                                    recipe_1_h_4, recipe_2, recipe_2_e, recipe_2_f, recipe_2_g, recipe_2_h,
+                                    recipe_2_e_3, recipe_2_e_4, recipe_2_f_3, recipe_2_f_4, recipe_2_g_3, recipe_2_g_4,
+                                    recipe_2_h_3, recipe_2_h_4])
+        Job.objects.bulk_create([job_1_a, job_1_b, job_1_c, job_1_d, job_1_e_1, job_1_e_2, job_1_f_1, job_1_f_2,
+                                 job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
+                                 job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
+                                 job_2_h_2])
         node_1_a = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_a', job=job_1_a, save=False)
         node_1_b = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_b', job=job_1_b, save=False)
         node_1_c = recipe_test_utils.create_recipe_node(recipe=recipe_1, node_name='node_c', job=job_1_c, save=False)
@@ -522,31 +556,6 @@ class TestSupersedeRecipeNodes(TestCase):
                                                           sub_recipe=recipe_1_h_3, save=False)
         node_1_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_1_h, node_name='node_4',
                                                           sub_recipe=recipe_1_h_4, save=False)
-        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        job_2_a = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_b = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_c = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_d = job_test_utils.create_job(job_type=job_type, save=False)
-        recipe_2_e = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        job_2_e_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_e_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_f_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_f_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_g_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_g_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_h_1 = job_test_utils.create_job(job_type=job_type, save=False)
-        job_2_h_2 = job_test_utils.create_job(job_type=job_type, save=False)
-        recipe_2_e_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_e_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_f_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_g_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h_3 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
-        recipe_2_h_4 = recipe_test_utils.create_recipe(recipe_type=recipe_type, save=False)
         node_2_a = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_a', job=job_2_a, save=False)
         node_2_b = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_b', job=job_2_b, save=False)
         node_2_c = recipe_test_utils.create_recipe_node(recipe=recipe_2, node_name='node_c', job=job_2_c, save=False)
@@ -591,15 +600,6 @@ class TestSupersedeRecipeNodes(TestCase):
                                                           sub_recipe=recipe_2_h_3, save=False)
         node_2_h_4 = recipe_test_utils.create_recipe_node(recipe=recipe_2_h, node_name='node_4',
                                                           sub_recipe=recipe_2_h_4, save=False)
-        Recipe.objects.bulk_create([recipe_1, recipe_1_e, recipe_1_f, recipe_1_g, recipe_1_h, recipe_1_e_3,
-                                    recipe_1_e_4, recipe_1_f_3, recipe_1_f_4, recipe_1_g_3, recipe_1_g_4, recipe_1_h_3,
-                                    recipe_1_h_4, recipe_2, recipe_2_e, recipe_2_f, recipe_2_g, recipe_2_h,
-                                    recipe_2_e_3, recipe_2_e_4, recipe_2_f_3, recipe_2_f_4, recipe_2_g_3, recipe_2_g_4,
-                                    recipe_2_h_3, recipe_2_h_4])
-        Job.objects.bulk_create([job_1_a, job_1_b, job_1_c, job_1_d, job_1_e_1, job_1_e_2, job_1_f_1, job_1_f_2,
-                                 job_1_g_1, job_1_g_2, job_1_h_1, job_1_h_2, job_2_a, job_2_b, job_2_c, job_2_d,
-                                 job_2_e_1, job_2_e_2, job_2_f_1, job_2_f_2, job_2_g_1, job_2_g_2, job_2_h_1,
-                                 job_2_h_2])
         RecipeNode.objects.bulk_create([node_1_a, node_1_b, node_1_c, node_1_d, node_1_e, node_1_f, node_1_g, node_1_h,
                                         node_1_e_1, node_1_e_2, node_1_f_1, node_1_f_2, node_1_g_1, node_1_g_2,
                                         node_1_h_1, node_1_h_2, node_1_e_3, node_1_e_4, node_1_f_3, node_1_f_4,
@@ -613,7 +613,7 @@ class TestSupersedeRecipeNodes(TestCase):
         supersede_jobs = {'node_c', 'node_d'}
         supersede_subrecipes = {'node_f', 'node_g', 'node_h'}
         unpublish_jobs = {'node_d'}
-        supersede_recursive = {'node_g'}
+        supersede_recursive = {'node_g', 'node_h'}
         unpublish_recursive = {'node_h'}
 
         # Create original message

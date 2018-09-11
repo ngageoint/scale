@@ -53,6 +53,49 @@ class RecipeManager(models.Manager):
 
         self.filter(id__in=recipe_ids).update(is_completed=True, completed=when, last_modified=now())
 
+    def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
+        """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
+        :param recipe_type: The type of the recipe to create
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param revision: The recipe type revision
+        :type revision: :class:`recipe.models.RecipeTypeRevision`
+        :param event_id: The ID of the event that triggered the creation of this recipe
+        :type event_id: int
+        :param input: The recipe input to run on, should be None if superseded_recipe is provided
+        :type input: :class:`recipe.data.recipe_data.RecipeData`
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.models.Recipe`
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe input is invalid
+        """
+
+        recipe = Recipe()
+        recipe.recipe_type = recipe_type
+        recipe.recipe_type_rev = revision
+        recipe.event_id = event_id
+        recipe.batch_id = batch_id
+        recipe_definition = recipe.get_recipe_definition()
+
+        if superseded_recipe:
+            # Use input from superseded recipe
+            input = superseded_recipe.get_recipe_data()
+
+            # New recipe references superseded recipe
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if root_id is None:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
+
+        # Validate recipe input and save recipe
+        recipe_definition.validate_data(input)
+        recipe.input = input.get_dict()
+
+        return recipe
+
     def create_recipe_v6(self, recipe_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None,
                          batch_id=None, superseded_recipe=None, copy_superseded_input=False):
         """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
@@ -1341,9 +1384,10 @@ class RecipeNodeManager(models.Manager):
         :type all_nodes: bool
         """
 
-        qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids)
-        if not all_nodes:
-            qry.filter(recipenode__node_name__in=node_names)
+        if all_nodes:
+            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids)
+        else:
+            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids, recipenode__node_name__in=node_names)
         qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
 
     def supersede_subrecipes(self, recipe_ids, when, node_names, all_nodes=False):
@@ -1359,9 +1403,10 @@ class RecipeNodeManager(models.Manager):
         :type all_nodes: bool
         """
 
-        qry = Recipe.objects.filter(recipenode__recipe_id__in=recipe_ids)
-        if not all_nodes:
-            qry.filter(recipenode__node_name__in=node_names)
+        if all_nodes:
+            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids)
+        else:
+            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids, contained_by__node_name__in=node_names)
         qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
 
 

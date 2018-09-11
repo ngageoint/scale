@@ -240,11 +240,11 @@ class SupersedeRecipeNodes(CommandMessage):
                     cancel_job_ids.append(recipe_node.job_id)
                 if self.unpublish_all or recipe_node.node_name in self.unpublish_jobs:
                     unpublish_job_ids.append(recipe_node.job_id)
-            elif recipe_node.recipe_id:
+            elif recipe_node.sub_recipe_id:
                 if self.unpublish_recursive_all or recipe_node.node_name in self.unpublish_recursive:
-                    unpublish_recursive_recipe_ids.append(recipe_node.recipe_id)
+                    unpublish_recursive_recipe_ids.append(recipe_node.sub_recipe_id)
                 elif self.supersede_recursive_all or recipe_node.node_name in self.supersede_recursive:
-                    supersede_recursive_recipe_ids.append(recipe_node.recipe_id)
+                    supersede_recursive_recipe_ids.append(recipe_node.sub_recipe_id)
 
         # Create messages to cancel and unpublish appropriate jobs
         self.new_messages.extend(create_cancel_jobs_messages(cancel_job_ids, self.when))

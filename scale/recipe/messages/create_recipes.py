@@ -32,7 +32,8 @@ SubRecipe = namedtuple('SubRecipe', ['recipe_type_name', 'recipe_type_rev_num', 
 
 
 # Private named tuples for this message's use only
-_RecipeDiff = namedtuple('_RecipeDiff', ['superseded_recipe', 'new_recipe', 'diff'])
+_RecipeDiff = namedtuple('_RecipeDiff', ['diff', 'recipe_pairs'])
+_RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 
 
 logger = logging.getLogger(__name__)
@@ -263,11 +264,12 @@ class CreateRecipes(CommandMessage):
         recipe_node_copies = []
 
         for recipe_diff in self._recipe_diffs:
-            superseded_recipe = recipe_diff.superseded_recipe
-            new_recipe = recipe_diff.new_recipe
             node_names = set(recipe_diff.diff.get_nodes_to_copy().keys())
-            recipe_node_copy = RecipeNodeCopy(superseded_recipe.id, new_recipe.id, node_names)
-            recipe_node_copies.append(recipe_node_copy)
+            for recipe_pair in recipe_diff.recipe_pairs:
+                superseded_recipe = recipe_pair.superseded_recipe
+                new_recipe = recipe_pair.new_recipe
+                recipe_node_copy = RecipeNodeCopy(superseded_recipe.id, new_recipe.id, node_names)
+                recipe_node_copies.append(recipe_node_copy)
 
         RecipeNode.objects.copy_recipe_nodes(recipe_node_copies)
 
@@ -278,28 +280,33 @@ class CreateRecipes(CommandMessage):
         :type new_recipes: list
         """
 
-        #  - if new recipe is superseding another recipe, then it is a reprocess
-        #    - create supersede_recipe_nodes messages
-        #      - unpublish job nodes that are deleted
-        #      - supercede job and sub-recipe nodes that are deleted/changed
-        #      - recursively handle sub-recipe nodes with unpublish for nodes that are deleted
-        #      - recursively handle sub-recipe nodes without unpublish for nodes that are completely changed
-        #  - for each new recipe, if it has data or in a recipe and process_input flag, send message to
-        #    process_recipe_input (need to send forced_nodes info along to send to update_recipes message)
-        #    - if not, send update_recipe message?
-        #  - send update_recipe_metrics message if in a recipe
-
-        if self._recipe_diffs:
-            # New recipes are superseding old recipes, send supersede_recipe_nodes messages
+        # Send supersede_recipe_nodes messages if new recipes are superseding old ones
+        for recipe_diff in self._recipe_diffs:
             recipe_ids = []
             supersede_jobs = set()
             supersede_subrecipes = set()
             unpublish_jobs = set()
             supersede_recursive = set()
             unpublish_recursive = set()
-            for recipe_diff in self._recipe_diffs:
-                recipe_ids.append(recipe_diff.superseded_recipe.id)
-                # TODO: calculate out the sets
+            # Gather up superseded recipe IDs for this diff
+            for recipe_pair in recipe_diff.recipe_pairs:
+                recipe_ids.append(recipe_pair.superseded_recipe.id)
+            # Supersede applicable jobs and sub-recipes
+            for node_diff in recipe_diff.diff.get_nodes_to_supersede().values():
+                if node_diff.node_type == JobNodeDefinition.NODE_TYPE:
+                    supersede_jobs.add(node_diff.name)
+                elif node_diff.node_type == RecipeNodeDefinition.NODE_TYPE:
+                    supersede_subrecipes.add(node_diff.name)
+            # Recursively supersede applicable sub-recipes
+            for node_diff in recipe_diff.diff.get_nodes_to_recursively_supersede().values():
+                if node_diff.node_type == RecipeNodeDefinition.NODE_TYPE:
+                    supersede_recursive.add(node_diff.name)
+            # Unpublish applicable jobs and recursively unpublish applicable sub-recipes
+            for node_diff in recipe_diff.diff.get_nodes_to_unpublish().values():
+                if node_diff.node_type == JobNodeDefinition.NODE_TYPE:
+                    unpublish_jobs.add(node_diff.name)
+                elif node_diff.node_type == RecipeNodeDefinition.NODE_TYPE:
+                    unpublish_recursive.add(node_diff.name)
             msgs = create_supersede_recipe_nodes_messages(recipe_ids, self._when, supersede_jobs, supersede_subrecipes,
                                                           unpublish_jobs, supersede_recursive, unpublish_recursive)
             self.new_messages.extend(msgs)
@@ -323,18 +330,17 @@ class CreateRecipes(CommandMessage):
             self.new_messages.extend(create_update_recipe_metrics_messages([self.recipe_id]))
 
     # TODO:
-    def _create_recipes(self, recipe_type_rev):
+    def _create_recipes(self):
         """Creates the recipe models for the message
 
-        :param recipe_type_rev: The recipe type revision with populated recipe_type model
-        :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
         :returns: The list of recipe models created
         :rtype: list
         """
 
         recipes = []
-        
+
         # TODO: after creating recipe_node models, populate self._process_input
+        # TODO: after creating recipe_node models, populate self._recipe_diffs
 
         # If this new sub-recipe(s) is in a recipe that supersedes another recipe, find the corresponding superseded
         # sub-recipe(s)

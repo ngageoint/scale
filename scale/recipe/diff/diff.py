@@ -46,6 +46,23 @@ class RecipeDiff(object):
 
         return nodes_to_copy
 
+    def get_nodes_to_recursively_supersede(self):
+        """Returns a dict of node diffs for the sub-recipe nodes that should be completely, recursively superseded as a
+        result of a reprocess
+
+        :returns: Dict of node diffs stored by node name
+        :rtype: dict
+        """
+
+        nodes_to_recursively_supersede = {}
+
+        if self.can_be_reprocessed:
+            for node_diff in self.graph.values():
+                if node_diff.should_be_recursively_superseded():
+                    nodes_to_recursively_supersede[node_diff.name] = node_diff
+
+        return nodes_to_recursively_supersede
+
     def get_nodes_to_supersede(self):
         """Returns a dict of node diffs for the nodes that should be superseded during a reprocess
 
