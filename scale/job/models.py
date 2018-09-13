@@ -2558,6 +2558,7 @@ class JobTypeManager(models.Manager):
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
+        job_type.versionArray = job_type.get_job_version_array()
         job_type.manifest = interface.get_dict()
         job_type.trigger_rule = trigger_rule
         if configuration:
@@ -2615,6 +2616,7 @@ class JobTypeManager(models.Manager):
         job_type.populate_from_manifest(manifest)
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
+        job_type.versionArray = job_type.get_job_version_array()
 
         job_type.docker_image = docker_image
 
