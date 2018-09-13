@@ -1,7 +1,6 @@
 """Defines the command line method for running a delete files task"""
 from __future__ import unicode_literals
 
-import ast
 import json
 import logging
 import os
@@ -11,11 +10,10 @@ from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 
-from error.exceptions import ScaleError, get_error_by_exception
-from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from messaging.manager import CommandMessageManager
 from storage import delete_files_job
+from storage.brokers.factory import get_broker
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.messages.delete_files import create_delete_files_messages
 
 logger = logging.getLogger(__name__)
@@ -28,7 +26,6 @@ class Command(BaseCommand):
     """
 
     help = 'Perform a file destruction operation on a file'
-
 
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
