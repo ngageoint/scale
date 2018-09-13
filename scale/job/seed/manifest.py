@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import copy
 import json
 import logging
 import os
@@ -206,10 +207,11 @@ class SeedManifest(object):
         :rtype: :class:`data.interface.interface.Interface`
         """
 
-        input_dict = self.get_inputs()
-        for file_dict in input_dict['files']:
-            if 'partial' in file_dict:
-                del file_dict['partial']
+        input_dict = copy.deepcopy(self.get_inputs())
+        if 'files' in input_dict:
+            for file_dict in self.get_input_files():
+                if 'partial' in file_dict:
+                    del file_dict['partial']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
     def get_inputs(self):

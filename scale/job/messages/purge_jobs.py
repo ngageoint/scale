@@ -7,6 +7,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from batch.models import BatchJob
+from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
 from product.models import FileAncestryLink
 from queue.models import Queue
@@ -39,11 +40,10 @@ def create_purge_jobs_messages(purge_job_ids, when):
     for job_id in purge_job_ids:
         if not message:
             message = PurgeJobs()
-            message.status_change = when
         elif not message.can_fit_more():
             messages.append(message)
             message = PurgeJobs()
-            message.status_change = when
+        message.status_change = when
         message.add_job(job_id)
     if message:
         messages.append(message)
