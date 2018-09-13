@@ -6,6 +6,7 @@ import copy
 import datetime
 import logging
 import math
+import re
 import semver
 from collections import namedtuple
 
@@ -2558,7 +2559,7 @@ class JobTypeManager(models.Manager):
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
-        job_type.versionArray = job_type.get_job_version_array()
+        job_type.version_array = job_type.get_job_version_array(version)
         job_type.manifest = interface.get_dict()
         job_type.trigger_rule = trigger_rule
         if configuration:
@@ -2616,7 +2617,7 @@ class JobTypeManager(models.Manager):
         job_type.populate_from_manifest(manifest)
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
-        job_type.versionArray = job_type.get_job_version_array()
+        job_type.version_array = job_type.get_job_version_array(job_type.version)
 
         job_type.docker_image = docker_image
 
@@ -2927,7 +2928,7 @@ class JobTypeManager(models.Manager):
         qry = 'SELECT DISTINCT ON (jt.name) jt.id, nv.num_versions FROM job_type jt '
         qry += 'JOIN (SELECT name, count(*) AS num_versions FROM job_type GROUP BY name) nv ON jt.name = nv.name '
         qry += 'WHERE jt.name IN %s '
-        qry += 'ORDER BY jt.name, jt.versionArray DESC'
+        qry += 'ORDER BY jt.name, jt.version_array DESC'
         with connection.cursor() as cursor:
             cursor.execute(qry, [tuple(job_type_names)])
             for row in cursor.fetchall():
@@ -3350,6 +3351,8 @@ class JobType(models.Model):
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
+    :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
+    :type version_array: list
     :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of the job type. Deprecated - remove with v5.
@@ -3453,7 +3456,7 @@ class JobType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
-    versionArray = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
+    version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
