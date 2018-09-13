@@ -1183,9 +1183,63 @@ time)</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>running_job_exes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The running job executions</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The runnin job messages</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The running job messages</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.messages.spawn_delete_files_job">
+<span id="job-messages-spawn-delete-files-job-module"></span><h2>job.messages.spawn_delete_files_job module<a class="headerlink" href="#module-job.messages.spawn_delete_files_job" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that creates and queues a system job for deleting files</p>
+<dl class="class">
+<dt id="job.messages.spawn_delete_files_job.SpawnDeleteFilesJob">
+<em class="property">class </em><code class="descclassname">job.messages.spawn_delete_files_job.</code><code class="descname">SpawnDeleteFilesJob</code><a class="headerlink" href="#job.messages.spawn_delete_files_job.SpawnDeleteFilesJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that spawns a delete files system job</p>
+<dl class="method">
+<dt id="job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.SpawnDeleteFilesJob.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.messages.spawn_delete_files_job.create_spawn_delete_files_job">
+<code class="descclassname">job.messages.spawn_delete_files_job.</code><code class="descname">create_spawn_delete_files_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>trigger_id</em>, <em>purge</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.create_spawn_delete_files_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a spawn delete files job message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_id</strong> (<em>int</em>) &#8211; The job ID whose files will be deleted</li>
+<li><strong>purge</strong> (<em>bool</em>) &#8211; Boolean value to determine if the files should be purged</li>
+<li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event id for the purge operation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The spawn delete files job message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.messages.spawn_delete_files_job.SpawnDeleteFilesJob" title="job.messages.spawn_delete_files_job.SpawnDeleteFilesJob"><code class="xref py py-class docutils literal"><span class="pre">job.messages.spawn_delete_files_job.SpawnDeleteFilesJob</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>

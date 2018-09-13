@@ -100,6 +100,14 @@ job\.test\.messages\.test\_running\_jobs module
     :undoc-members:
     :show-inheritance:
 
+job\.test\.messages\.test\_spawn\_delete\_files\_job module
+-----------------------------------------------------------
+
+.. automodule:: job.test.messages.test_spawn_delete_files_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.test\.messages\.test\_uncancel\_jobs module
 ------------------------------------------------
 

@@ -567,6 +567,43 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.test.messages.test_spawn_delete_files_job">
+<span id="job-test-messages-test-spawn-delete-files-job-module"></span><h2>job.test.messages.test_spawn_delete_files_job module<a class="headerlink" href="#module-job.test.messages.test_spawn_delete_files_job" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob">
+<em class="property">class </em><code class="descclassname">job.test.messages.test_spawn_delete_files_job.</code><code class="descname">TestSpawnDeleteFilesJob</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'delete_files_job_type.json']</em><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling SpawnDeleteFilesJob.execute successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_no_job">
+<code class="descname">test_execute_no_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_no_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling SpawnDeleteFilesJob.execute with the id of a job that does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a SpawnDeleteFilesJob message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.messages.test_uncancel_jobs">
 <span id="job-test-messages-test-uncancel-jobs-module"></span><h2>job.test.messages.test_uncancel_jobs module<a class="headerlink" href="#module-job.test.messages.test_uncancel_jobs" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
