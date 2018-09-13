@@ -13,7 +13,7 @@
             this.transfer_started = transfer_started;
             this.transfer_started_formatted = moment.utc(transfer_started).format(scaleConfig.dateFormats.day_second_utc_nolabel);
             this.transfer_ended = transfer_ended;
-            this.transfer_ended_formatted = moment.utc(transfer_ended).format(scaleConfig.dateFormats.day_second_utc_nolabel);
+            this.transfer_ended_formatted = transfer_ended ? moment.utc(transfer_ended).format(scaleConfig.dateFormats.day_second_utc_nolabel) : '';
             this.media_type = media_type;
             this.file_size = file_size;
             this.file_size_formatted = scaleService.calculateFileSizeFromBytes(file_size);
@@ -38,7 +38,7 @@
 
         // public methods
         Ingest.prototype = {
-            
+
         };
 
         // static methods, assigned to class
