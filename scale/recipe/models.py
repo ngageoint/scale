@@ -5,7 +5,7 @@ import copy
 from collections import namedtuple
 
 import django.contrib.postgres.fields
-from django.db import connection, models, transaction
+from django.db import connection, models, transaction, Q
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -394,15 +394,12 @@ class RecipeManager(models.Manager):
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=recipe_ids).order_by('id').iterator())
 
-    def get_locked_recipes_from_root(self, root_recipe_ids, event_id=None):
+    def get_locked_recipes_from_root(self, root_recipe_ids):
         """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
-        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
-        optional event ID ensures that recipes are not reprocessed multiple times due to one event.
+        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction.
 
         :param root_recipe_ids: The root recipe IDs
         :type root_recipe_ids: list
-        :param event_id: The event ID
-        :type event_id: int
         :returns: The recipe models
         :rtype: list
         """
@@ -411,8 +408,6 @@ class RecipeManager(models.Manager):
         qry = self.select_for_update()
         qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
         qry = qry.filter(is_superseded=False)
-        if event_id is not None:
-            qry = qry.exclude(event_id=event_id)  # Do not return recipes with this event ID
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(qry.order_by('id').iterator())
 
@@ -854,7 +849,8 @@ class RecipeManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=recipe_ids).update(is_superseded=True, superseded=when, last_modified=now())
+        qry = self.filter(id__in=recipe_ids, is_superseded=False)
+        qry.update(is_superseded=True, superseded=when, last_modified=now())
 
     def update_recipe_metrics(self, recipe_ids):
         """Updates the metrics for the recipes with the given IDs
@@ -1234,6 +1230,28 @@ class RecipeNodeManager(models.Manager):
 
         return node_models
 
+    def create_subrecipe_nodes(self, recipe_id, sub_recipes):
+        """Creates and returns the recipe node models (unsaved) for the given recipe and sub-recipes
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param sub_recipes: A dict of recipe models stored by node name
+        :type sub_recipes: dict
+        :returns: The list of recipe_node models
+        :rtype: list
+        """
+
+        node_models = []
+
+        for node_name, sub_recipe in sub_recipes:
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.sub_recipe = sub_recipe
+            node_models.append(recipe_node)
+
+        return node_models
+
     # TODO: remove once old reprocess_recipes is removed
     def get_recipe_job_ids(self, recipe_ids):
         """Returns a dict where each given recipe ID maps to another dict that maps job_name for the recipe to a list of
@@ -1344,6 +1362,18 @@ class RecipeNodeManager(models.Manager):
 
         return node_outputs
 
+    def get_subrecipes(self, recipe_id):
+        """Returns the sub-recipe models that belong to the given recipe
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: A dict of recipe models stored by node name
+        :rtype: dict
+        """
+
+        qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
+        return {rn.node_name: rn.sub_recipe for rn in qry}
+
     def get_superseded_recipe_jobs(self, recipe_id, node_name):
         """Returns the superseded job models that belong to the given superseded recipe with the given node name
 
@@ -1356,20 +1386,6 @@ class RecipeNodeManager(models.Manager):
         """
 
         return [rn.job for rn in self.filter(recipe_id=recipe_id, node_name=node_name, job__is_superseded=True)]
-
-    def get_superseded_subrecipes(self, recipe_id, node_name):
-        """Returns the superseded sub-recipe models that belong to the given superseded recipe with the given node name
-
-        :param recipe_id: The superseded recipe ID
-        :type recipe_id: int
-        :param node_name: The node name
-        :type node_name: string
-        :returns: The superseded recipe models for the recipe
-        :rtype: list
-        """
-
-        qry = self.filter(recipe_id=recipe_id, node_name=node_name, sub_recipe__is_superseded=True)
-        return [rn.sub_recipe for rn in qry]
 
     def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
         """Supersedes the jobs for the given recipe IDs and node names
@@ -1832,7 +1848,49 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return RecipeTypeRevision.objects.get(recipe_type_id=recipe_type_id, revision_num=revision_num)
 
-    def get_revisions_for_reprocess(self, recipes_to_reprocess, new_rev_id):
+    def get_revisions(self, revision_ids, revision_tuples):
+        """Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
+        given values. Each revision model will have its related recipe type model populated.
+
+        :param revision_ids: A list of revision IDs to return
+        :type revision_ids: list
+        :param revision_tuples: A list of tuples (recipe type name, revision num) for additional revisions to return
+        :type revision_tuples: list
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        revisions = {}
+        qry_filter = Q(id__in=revision_ids)
+        for revision_tuple in revision_tuples:
+            qry_filter = qry_filter | Q(recipe_type__name=revision_tuple[0], revision_num=revision_tuple[1])
+        for rev in self.select_related('recipe_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
+    def get_revisions_for_reprocess(self, recipes_to_reprocess, new_recipe_type_name, new_recipe_type_rev_num):
+        """Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
+        given new revision ID. Each revision model will have its related recipe type model populated.
+
+        :param recipes_to_reprocess: The recipe models to reprocess
+        :type recipes_to_reprocess: list
+        :param new_recipe_type_name: The recipe type name for the new recipes
+        :type new_recipe_type_name: string
+        :param new_recipe_type_rev_num: The recipe type revision number for the new recipes
+        :type new_recipe_type_rev_num: int
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        rev_ids = {recipe.recipe_type_rev_id for recipe in recipes_to_reprocess}
+
+        revisions = {}
+        qry_filter = Q(id__in=rev_ids) | Q(recipe_type__name=new_recipe_type_name, revision_num=new_recipe_type_rev_num)
+        for rev in self.select_related('recipe_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
+    def get_revisions_for_reprocess_old(self, recipes_to_reprocess, new_rev_id):
         """Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
         given new revision ID. Each revision model will have its related recipe type model populated.
 

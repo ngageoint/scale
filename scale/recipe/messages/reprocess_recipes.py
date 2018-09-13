@@ -144,8 +144,7 @@ class ReprocessRecipes(CommandMessage):
 
         with transaction.atomic():
             # Lock recipes
-            superseded_recipes = Recipe.objects.get_locked_recipes_from_root(self._root_recipe_ids,
-                                                                             event_id=self.event_id)
+            superseded_recipes = Recipe.objects.get_locked_recipes_from_root(self._root_recipe_ids)
 
             if not superseded_recipes:
                 # The database transaction has already been completed, just need to resend messages
@@ -156,7 +155,7 @@ class ReprocessRecipes(CommandMessage):
                 superseded_recipes = Recipe.objects.get_locked_recipes([r.superseded_recipe_id for r in recipes])
 
             # Get revisions and filter out invalid recipes (wrong recipe type)
-            revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess(superseded_recipes, self.revision_id)
+            revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess_old(superseded_recipes, self.revision_id)
             recipe_type = revisions.values()[0].recipe_type
             superseded_recipes = [recipe for recipe in superseded_recipes if recipe.recipe_type_id == recipe_type.id]
             if len(superseded_recipes) < len(self._root_recipe_ids):
