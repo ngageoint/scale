@@ -39,6 +39,8 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         new_message = SpawnDeleteFilesJob.from_json(message_json_dict)
         result = new_message.execute()
         self.assertTrue(result)
+        self.assertEqual(new_message.job_id, self.job.pk)
+        self.assertEqual(new_message.trigger_id, self.event.id)
 
         # Check for create_jobs messages
         self.assertEqual(len(new_message.new_messages), self.count)

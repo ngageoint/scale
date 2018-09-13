@@ -63,7 +63,7 @@ class SpawnDeleteFilesJob(CommandMessage):
 
         message = SpawnDeleteFilesJob()
         message.job_id = json_dict['job_id']
-        message.trigger_id = json_dict['job_id']
+        message.trigger_id = json_dict['trigger_id']
         message.purge = bool(json_dict['purge'])
         return message
 
