@@ -22,9 +22,7 @@ These services provide access to information about workspaces that Scale uses to
                 "title": "Products", 
                 "description": "Products Workspace", 
                 "base_url": "http://host.com/products", 
-                "is_active": true, 
-                "used_size": 0, 
-                "total_size": 0, 
+                "is_active": true,
                 "created": "2015-10-05T21:26:04.876Z", 
                 "archived": null, 
                 "last_modified": "2015-10-05T21:26:04.876Z" 
@@ -35,9 +33,7 @@ These services provide access to information about workspaces that Scale uses to
                 "title": "Raw Source", 
                 "description": "Raw Source Workspace", 
                 "base_url": "http://host.com/rs", 
-                "is_active": true, 
-                "used_size": 0, 
-                "total_size": 0, 
+                "is_active": true,
                 "created": "2015-10-05T21:26:04.855Z", 
                 "archived": null, 
                 "last_modified": "2015-10-05T21:26:04.855Z" 
@@ -105,12 +101,6 @@ These services provide access to information about workspaces that Scale uses to
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_active               | Boolean           | Whether the workspace is active (false once workspace is archived).      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .used_size               | Decimal           | The amount of disk space currently being used by the workspace in bytes. |
-|                          |                   | This field can be null if the disk space is unknown.                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
-| .total_size              | Decimal           | The total amount of disk space provided by the workspace in bytes.       |
-|                          |                   | This field can be null if the disk space is unknown.                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
 | .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .archived                | ISO-8601 Datetime | When the workspace was archived (no longer active).                      |
@@ -142,7 +132,26 @@ Request: POST http://.../v6/workspaces/
  
 Response: 201 Created
 Headers:
-Location http://.../v6/workspaces/105/|
+Location http://.../v6/workspaces/105/
+
+ .. code-block:: javascript  
+    { 
+        "id": 1, 
+        "name": "raw", 
+        "title": "Raw Source", 
+        "description": "Raw Source Workspace", 
+        "base_url": "http://host.com/rs", 
+        "is_active": true,
+        "created": "2015-10-05T21:26:04.855Z", 
+        "archived": null, 
+        "last_modified": "2015-10-05T21:26:04.855Z" 
+        "json_config": { 
+            "broker": { 
+                "type": "host", 
+                "host_path": "/host/path" 
+            } 
+        } 
+    } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Create Workspace**                                                                                                    |
@@ -181,30 +190,9 @@ Location http://.../v6/workspaces/105/|
 |                    | JSON Object       | All fields are the same as the workspace details model.                        |
 |                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "id": 1,                                                                                                         |
-|        "name": "raw",                                                                                                   |
-|        "title": "Raw Source",                                                                                           |
-|        "description": "Raw Source Workspace",                                                                           |
-|        "base_url": "http://host.com/rs",                                                                                |
-|        "is_active": true,                                                                                               |
-|        "used_size": 0,                                                                                                  |
-|        "total_size": 0,                                                                                                 |
-|        "created": "2015-10-05T21:26:04.855Z",                                                                           |
-|        "archived": null,                                                                                                |
-|        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
-|        "json_config": {                                                                                                 |
-|            "broker": {                                                                                                  |
-|                "type": "host",                                                                                          |
-|                "host_path": "/host/path"                                                                                |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 
-.. _rest_workspace_details:
+
+.. _rest_v6_workspace_details:
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Workspace Details**                                                                                                   |
@@ -235,12 +223,6 @@ Location http://.../v6/workspaces/105/|
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | is_active                | Boolean           | Whether the workspace is active (false once workspace is archived).      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| used_size                | Decimal           | The amount of disk space currently being used by the workspace in bytes. |
-|                          |                   | This field can be null if the disk space is unknown.                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
-| total_size               | Decimal           | The total amount of disk space provided by the workspace in bytes.       |
-|                          |                   | This field can be null if the disk space is unknown.                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | archived                 | ISO-8601 Datetime | When the workspace was archived (no longer active).                      |
@@ -259,8 +241,6 @@ Location http://.../v6/workspaces/105/|
 |        "description": "Raw Source Workspace",                                                                           |
 |        "base_url": "http://host.com/rs",                                                                                |
 |        "is_active": true,                                                                                               |
-|        "used_size": 0,                                                                                                  |
-|        "total_size": 0,                                                                                                 |
 |        "created": "2015-10-05T21:26:04.855Z",                                                                           |
 |        "archived": null,                                                                                                |
 |        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
@@ -403,8 +383,6 @@ Location http://.../v6/workspaces/105/|
 |        "description": "Raw Source Workspace",                                                                           |
 |        "base_url": "http://host.com/rs",                                                                                |
 |        "is_active": true,                                                                                               |
-|        "used_size": 0,                                                                                                  |
-|        "total_size": 0,                                                                                                 |
 |        "created": "2015-10-05T21:26:04.855Z",                                                                           |
 |        "archived": null,                                                                                                |
 |        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |

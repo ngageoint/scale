@@ -69,25 +69,40 @@ class WorkspaceBaseSerializer(ModelIdSerializer):
     name = serializers.CharField()
 
 
-class WorkspaceSerializer(WorkspaceBaseSerializer):
+class WorkspaceSerializerV5(WorkspaceBaseSerializer):
     """Converts workspace model fields to REST output"""
     title = serializers.CharField()
     description = serializers.CharField()
     base_url = serializers.URLField()
     is_active = serializers.BooleanField()
 
-    used_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    total_size = serializers.IntegerField()  # TODO: BigIntegerField?
+    used_size = serializers.IntegerField()
+    total_size = serializers.IntegerField()
 
     created = serializers.DateTimeField()
     archived = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
 
-class WorkspaceDetailsSerializer(WorkspaceSerializer):
+class WorkspaceDetailsSerializerV5(WorkspaceSerializerV5):
     """Converts workspace model fields to REST output"""
     json_config = serializers.JSONField(default=dict)
 
+class WorkspaceSerializerV6(WorkspaceBaseSerializer):
+    """Converts workspace model fields to REST output"""
+    title = serializers.CharField()
+    description = serializers.CharField()
+    base_url = serializers.URLField()
+    is_active = serializers.BooleanField()
+
+    created = serializers.DateTimeField()
+    archived = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+
+class WorkspaceDetailsSerializerV6(WorkspaceSerializerV6):
+    """Converts workspace model fields to REST output"""
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
 
 class ScaleFileBaseSerializerV5(ModelIdSerializer):
     """Converts Scale file model fields to REST output"""
