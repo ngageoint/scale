@@ -8,6 +8,9 @@ These services allow a user to create, view, and manage Scan processes.
 
 .. _rest_v6_scan_list:
 
+v6 Scan List
+------------
+
 **Example GET /v6/scans/ API call**
 
 Request: GET http://.../v6/scans/
@@ -132,6 +135,9 @@ Response: 200 OK
 
 .. _rest_v6_scan_create:
 
+v6 Create Scan
+--------------
+
 **Example POST /v6/scans/ API call**
 
 Request: POST http://.../v6/scans/
@@ -239,6 +245,9 @@ Location http://.../v6/scans/105/
 
 .. _rest_v6_scan_details:
 
+v6 Scan Details
+---------------
+
 **Example GET /v6/scans/{id}/ API call**
 
 Request: GET http://.../v6/scans/{id}/
@@ -336,6 +345,9 @@ Response: 200 OK
 
 .. _rest_v6_scan_validate:
 
+v6 Validate Scan
+----------------
+
 **Example POST /v6/scans/validation/ API call**
 
 Request: POST http://.../v6/scans/validation/
@@ -409,6 +421,9 @@ Response: 200 OK
 
 .. _rest_v6_scan_edit:
 
+v6 Edit Scan
+------------
+
 **Example PATCH /v6/scans/{id}/ API call**
 
 Request: PATCH http://.../v6/scans/{id}/
@@ -457,6 +472,9 @@ Response: 204 NO CONTENT
 +--------------------+----------------------------------------------------------------------------------------------------+
 
 .. _rest_v6_scan_process:
+
+v6 Process Scan
+---------------
 
 **Example POST /v6/scans/{id}/process/ API call**
 
