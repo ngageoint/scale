@@ -4,7 +4,7 @@ from abc import ABCMeta
 import logging
 import os
 
-from job.configuration.results.exceptions import OutputCaptureError
+from job.configuration.results.exceptions import OutputCaptureError, MissingRequiredOutput
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.seed.metadata import METADATA_SUFFIX
 from job.seed.results.outputs_json import SEED_OUPUTS_JSON_FILENAME
@@ -97,7 +97,7 @@ class SeedOutputFiles(SeedFiles):
 
         # Handle required validation
         if self.required and len(results) == 0:
-            raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
+            raise MissingRequiredOutput("No glob match for pattern '%s' defined for required output files"
                                      " key '%s'." % (self.pattern, self.name))
 
         # Check against multiple to verify we are matching the files as defined.

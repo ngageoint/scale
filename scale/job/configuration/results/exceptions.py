@@ -65,3 +65,22 @@ class OutputCaptureError(ScaleError):
         """
 
         return self.msg
+
+class UnexpectedMultipleOutputs(ScaleError):
+    """Error class indicating that an multiple output was found for an output value not marked as multiple
+    """
+    
+    def __init__(self, msg):
+        """Constructor
+        
+        :param msg Details of the error encountered
+        :type msg: string
+        """
+        super(UnexpectedMultipleOutputs, self).__init__(8, 'unexpected-multiple-outputs')
+        self.msg = msg
+        
+    def get_log_message(self):
+        """See :meth: `error.exceptions.ScaleError.get_log_message`
+        """
+        
+        return self.msg
