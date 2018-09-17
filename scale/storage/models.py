@@ -18,6 +18,7 @@ from storage.configuration.workspace_configuration import ValidationWarning, Wor
 from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
+from util.os_helper import makedirs
 
 logger = logging.getLogger(__name__)
 
@@ -1070,7 +1071,7 @@ class Workspace(models.Model):
             file_download_dir = os.path.dirname(file_download.local_path)
             if not os.path.exists(file_download_dir):
                 logger.info('Creating %s', file_download_dir)
-                os.makedirs(file_download_dir, mode=0755)
+                makedirs(file_download_dir, mode=0755)
 
         self.get_broker().download_files(volume_path, file_downloads)
 

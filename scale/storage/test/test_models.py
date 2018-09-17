@@ -387,7 +387,7 @@ class TestScaleFileManagerUploadFiles(TestCase):
         self.assertEqual(workspace.id, models[1].workspace_id)
 
     @patch('storage.models.os.path.getsize')
-    @patch('storage.models.os.makedirs')
+    @patch('storage.models.makedirs')
     def test_fails(self, mock_makedirs, mock_getsize):
         """Tests calling ScaleFileManager.upload_files() when Workspace.upload_files() fails"""
         def new_getsize(path):

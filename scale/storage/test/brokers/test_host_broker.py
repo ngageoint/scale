@@ -234,7 +234,7 @@ class TestHostBrokerMoveFiles(TestCase):
         self.broker = HostBroker()
         self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.host_broker.os.makedirs')
+    @patch('storage.brokers.host_broker.makedirs')
     @patch('storage.brokers.host_broker.os.path.exists')
     @patch('storage.brokers.host_broker.os.chmod')
     @patch('storage.brokers.host_broker.shutil.move')
@@ -287,7 +287,7 @@ class TestHostBrokerUploadFiles(TestCase):
         self.broker = HostBroker()
         self.broker.load_configuration({'type': HostBroker().broker_type, 'host_path': '/host/path'})
 
-    @patch('storage.brokers.host_broker.os.makedirs')
+    @patch('storage.brokers.host_broker.makedirs')
     @patch('storage.brokers.host_broker.os.path.exists')
     @patch('storage.brokers.host_broker.os.chmod')
     @patch('storage.brokers.host_broker.shutil.copy')

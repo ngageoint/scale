@@ -9,6 +9,7 @@ from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.exceptions import MissingFile
 from util.command import execute_command_line
+from util.os_helper import makedirs
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class NfsBroker(Broker):
 
             if not os.path.exists(full_new_path_dir):
                 logger.info('Creating %s', full_new_path_dir)
-                os.makedirs(full_new_path_dir, mode=0755)
+                makedirs(full_new_path_dir, mode=0755)
 
             logger.info('Moving %s to %s', full_old_path, full_new_path)
             shutil.move(full_old_path, full_new_path)
@@ -105,7 +106,7 @@ class NfsBroker(Broker):
 
             if not os.path.exists(path_to_upload_dir):
                 logger.info('Creating %s', path_to_upload_dir)
-                os.makedirs(path_to_upload_dir, mode=0755)
+                makedirs(path_to_upload_dir, mode=0755)
 
             logger.info('Copying %s to %s', file_upload.local_path, path_to_upload)
             self._copy_file(file_upload.local_path, path_to_upload)
