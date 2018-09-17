@@ -55,7 +55,7 @@ Response: 200 OK
 +=========================================================================================================================+
 | Returns a list of all workspaces.                                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /v6/workspaces/                                                                                                    |
+| **GET** /v6/workspaces/                                                                                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -133,7 +133,7 @@ Request: POST http://.../v6/workspaces/
         "description": "Raw Source Workspace",
         "base_url": "http://host.com/rs",
         "is_active": true,
-        "json_config": {
+        "configuration": {
             "broker": {
                 "type": "host",
                 "host_path": "/host/path"
@@ -157,7 +157,7 @@ Location http://.../v6/workspaces/105/
         "created": "2015-10-05T21:26:04.855Z", 
         "archived": null, 
         "last_modified": "2015-10-05T21:26:04.855Z" 
-        "json_config": { 
+        "configuration": { 
             "broker": { 
                 "type": "host", 
                 "host_path": "/host/path" 
@@ -186,8 +186,8 @@ Location http://.../v6/workspaces/105/
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
 |                         |                   |          | Becomes false once a workspace is archived.                    |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| json_config             | JSON Object       | Required | JSON description of the configuration for the workspace.       |
-|                         |                   |          | (See :ref:`architecture_workspaces_spec`)                      |
+| configuration           | JSON Object       | Required | JSON description of the configuration for the workspace.       |
+|                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -227,7 +227,7 @@ Response: 200 OK
         "created": "2015-10-05T21:26:04.855Z",
         "archived": null,
         "last_modified": "2015-10-05T21:26:04.855Z"
-        "json_config": {
+        "configuration": {
             "broker": {
                 "type": "host",
                 "host_path": "/host/path"
@@ -270,8 +270,8 @@ Response: 200 OK
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | last_modified            | ISO-8601 Datetime | When the associated database model was last saved.                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| json_config              | JSON Object       | JSON configuration with attributes specific to the type of workspace.    |
-|                          |                   | (See :ref:`architecture_workspaces`)                                     |
+| configuration            | JSON Object       | JSON configuration with attributes specific to the type of workspace.    |
+|                          |                   | (See :ref:`rest_v6_workspace_configuration`)                             |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 
 .. _rest_v6_workspace_validate:
@@ -290,7 +290,7 @@ Request: POST http://.../v6/workspaces/validation/
         "description": "Raw Source Workspace",
         "base_url": "http://host.com/rs",
         "is_active": true,
-        "json_config": {
+        "configuration": {
             "broker": {
                 "type": "host",
                 "host_path": "/host/path"
@@ -329,8 +329,8 @@ Response: 200 OK
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
 |                         |                   |          | Becomes false once a workspace is archived.                    |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| json_config             | JSON Object       | Required | JSON description of the configuration for the workspace.       |
-|                         |                   |          | (See :ref:`architecture_workspaces_spec`)                      |
+| configuration           | JSON Object       | Required | JSON description of the configuration for the workspace.       |
+|                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -371,7 +371,7 @@ Request: POST http://.../v6/workspaces/{id}/
         "description": "Raw Source Workspace",
         "base_url": "http://host.com/rs",
         "is_active": true,
-        "json_config": {
+        "configuration": {
             "broker": {
                 "type": "host",
                 "host_path": "/host/path"
@@ -403,10 +403,106 @@ Response: 204 NO CONTENT
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
 |                         |                   |          | Becomes false once a workspace is archived.                    |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| json_config             | JSON Object       | Optional | JSON description of the configuration for the workspace.       |
-|                         |                   |          | (See :ref:`architecture_workspaces_spec`)                      |
+| configuration           | JSON Object       | Optional | JSON description of the configuration for the workspace.       |
+|                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 204 NO CONTENT                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
+.. _rest_v6_workspace_configuration:
+
+Workspace Configuration JSON
+----------------------------
+
+A workspace configuration JSON describes a set of configuration settings for a workspace.
+
+**Example host configuration:**
+
+.. code-block:: javascript
+
+    {
+       "broker": {
+          "type": "host",
+          "host_path": "/the/absolute/host/path"
+       }
+    }
+    
+**Example NFS configuration:**
+
+.. code-block:: javascript
+
+    {
+       "broker": {
+          "type": "nfs",
+          "nfs_path": "host:/my/path"
+       }
+    }
+    
+**Example S3 configuration:**
+
+.. code-block:: javascript
+
+    {
+       "broker": {
+          "type": "s3",
+          "bucket_name": "my_bucket.domain.com",
+          "credentials": {
+             "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+             "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+          },
+          "host_path": "/my_bucket",
+          "region_name": "us-east-1"
+       }
+    }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Workspace Configuration**                                                                                                 |
++============================+================+==========+====================================================================+
+| workspace                  | String         | Required | String that specifies the name of the workspace that is being      |
+|                            |                |          | scanned. The type of the workspace (its broker type) will determine|
+|                            |                |          | which types of scanner can be used.                                |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| broker                     | JSON Object    | Required | JSON object representing the type and configuration of the broker  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .type                      | String         | Required | The type of the broker. Choices are 'host', 'nfs' or 's3'          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .host_path                 | String         | Required | (host) Specifies the absolute path of the host’s local directory   |
+|                            |                |          | that should be mounted into a job’s container in order to access   |
+|                            |                |          | the workspace’s files.                                             |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .nfs_path                  | String         | Required | (nfs) Specifies the remote NFS path to use for storing and gettting|
+|                            |                |          | the workspace files. It should be in the format host:/path.        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .bucket_name               | String         | Required | (s3) Specifies the globally unique name of a storage bucket within |
+|                            |                |          | S3. The bucket should be created before attempting to use it here. |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .credentials               | JSON Object    | Optional | (s3) JSON object that provides the necessary information to access |
+|                            |                |          | the bucket. This attribute should be omitted when using IAM        |
+|                            |                |          | role-based security. If it is included for key-based security, then|
+|                            |                |          | both sub-attributes must be included. An IAM account should be     |
+|                            |                |          | created and granted the appropriate permissions to the bucket      |
+|                            |                |          | before attempting to use it here.                                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..access_key_id            | String         | Optional | (s3) Unique identifier for the user account in IAM that will be    |
+|                            |                |          | used as a proxy for read and write operations within Scale.        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..secret_access_key        | String         | Required | (s3) Generated token that the system can use to prove it should be |
+|                            |                |          | able to make requests on behalf of the associated IAM account      |
+|                            |                |          | without requiring the actual password used by that account.        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .host_path                 | String         | Optional | Adds S3 workspace support for locally mounted buckets and partial  |   
+|                            |                |          | file read-only access. If a FUSE file system (such as s3fs or      |
+|                            |                |          | goofys) mounts the S3 bucket at the host_path location on all      | 
+|                            |                |          | nodes, an alternative to downloading large files is available to   |
+|                            |                |          | jobs that use only portions of a file. The job interface must      |
+|                            |                |          | indicate partial equal to true for any input files to take         |
+|                            |                |          | advantage of host_path. Only read operations are performed using   |
+|                            |                |          | the mount, all write operations will use the S3 REST API.          |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .region_name               | String         | Optional | (s3) AWS region where the SQS Queue is located. This is not always |
+|                            |                |          | required, as environment variables or configuration files could    |
+|                            |                |          | set the default region, but it is a highly recommended setting for |
+|                            |                |          | explicitly indicating the SQS region.                              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
