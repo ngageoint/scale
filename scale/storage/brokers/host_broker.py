@@ -151,7 +151,7 @@ class HostBroker(Broker):
         """
 
         if 'host_path' not in config or not config['host_path']:
-            raise InvalidBrokerConfiguration('Host broker requires "host_path" to be populated')
+            raise InvalidBrokerConfiguration('INVALID_BROKER', 'Host broker requires "host_path" to be populated')
 
         # TODO: include checks against obvious 'bad' host mounts such as '/'
         return []

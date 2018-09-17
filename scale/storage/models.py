@@ -5,6 +5,7 @@ import hashlib
 import logging
 import os
 import re
+from collections import namedtuple
 
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
@@ -14,11 +15,15 @@ from django.db import transaction
 
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import ValidationWarning, WorkspaceConfiguration
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.exceptions import InvalidWorkspaceConfiguration
+from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
 from util.os_helper import makedirs
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
@@ -796,12 +801,13 @@ class ScaleFile(models.Model):
         """meta information for the db"""
         db_table = 'scale_file'
 
+WorkspaceValidation = namedtuple('WorkspaceValidation', ['is_valid', 'errors', 'warnings'])
 
 class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
     @transaction.atomic
-    def create_workspace(self, name, title, description, json_config, base_url=None, is_active=True):
+    def create_workspace(self, name, title, description, configuration, base_url=None, is_active=True):
         """Creates a new Workspace with the given configuration and returns the new Workspace model.
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
@@ -812,8 +818,8 @@ class WorkspaceManager(models.Manager):
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
+        :param configuration: The Workspace configuration
+        :type configuration: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
         :param base_url: The URL prefix used to download files stored in the Workspace.
         :type base_url: string
         :param is_active: Whether or not the Workspace is available for use.
@@ -825,21 +831,20 @@ class WorkspaceManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        config = WorkspaceConfiguration(json_config)
-        config.validate_broker()
+        configuration.validate_broker()
 
         workspace = Workspace()
         workspace.name = name
         workspace.title = title
         workspace.description = description
-        workspace.json_config = config.get_dict()
+        workspace.json_config = configuration.get_dict()
         workspace.base_url = base_url
         workspace.is_active = is_active
         workspace.save()
         return workspace
 
     @transaction.atomic
-    def edit_workspace(self, workspace_id, title=None, description=None, json_config=None, base_url=None,
+    def edit_workspace(self, workspace_id, title=None, description=None, configuration=None, base_url=None,
                        is_active=None):
         """Edits the given Workspace and saves the changes in the database. All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.
@@ -850,8 +855,8 @@ class WorkspaceManager(models.Manager):
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
+        :param configuration: The Workspace configuration
+        :type configuration: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
         :param base_url: The URL prefix used to download files stored in the Workspace.
         :type base_url: string
         :param is_active: Whether or not the Workspace is available for use.
@@ -863,10 +868,9 @@ class WorkspaceManager(models.Manager):
         workspace = Workspace.objects.get(pk=workspace_id)
 
         # Validate the configuration, no exception is success
-        if json_config:
-            config = WorkspaceConfiguration(json_config)
-            config.validate_broker()
-            workspace.json_config = config.get_dict()
+        if configuration:
+            configuration.validate_broker()
+            workspace.json_config = configuration.get_dict()
 
         # Update editable fields
         if title:
@@ -930,7 +934,7 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
-    def validate_workspace(self, name, json_config):
+    def validate_workspace_v5(self, name, json_config):
         """Validates a new workspace prior to attempting a save
 
         :param name: The identifying name of a Workspace to validate
@@ -945,7 +949,7 @@ class WorkspaceManager(models.Manager):
         warnings = []
 
         # Validate the configuration, no exception is success
-        config = WorkspaceConfiguration(json_config)
+        config = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
 
         # Check for issues when changing an existing workspace configuration
         try:
@@ -964,6 +968,52 @@ class WorkspaceManager(models.Manager):
         # Add broker-specific warnings
         warnings.extend(config.validate_broker())
         return warnings
+        
+    def validate_workspace_v6(self, name, json_config):
+        """Validates a new workspace prior to attempting a save
+
+        :param name: The identifying name of a Workspace to validate
+        :type name: string
+        :param json_config: The Workspace configuration
+        :type json_config: dict
+        :returns: The workspace validation.
+        :rtype: :class:`storage.models.WorkspaceValidation`
+        """
+        
+        is_valid = True
+        errors = []
+        warnings = []
+        
+        config = None
+
+        # Validate the configuration, no exception is success
+        try:
+            config = WorkspaceConfigurationV6(json_config, do_validate=True).get_configuration()
+            # Add broker-specific warnings
+            warnings.extend(config.validate_broker())
+        except InvalidWorkspaceConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Workspace configuration invalid'
+            logger.exception(message)
+            pass
+
+        # Check for issues when changing an existing workspace configuration
+        try:
+            workspace = Workspace.objects.get(name=name)
+
+            # Assign to short names in the interest of single-line conditional
+            old_conf = workspace.json_config
+            new_conf = json_config
+
+            if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
+                warnings.append(ValidationWarning('broker_type',
+                                                  'Changing the broker type may disrupt queued/running jobs.'))
+        except Workspace.DoesNotExist:
+            pass
+
+        return WorkspaceValidation(is_valid, errors, warnings)
+
 
 
 class Workspace(models.Model):

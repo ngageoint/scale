@@ -121,7 +121,7 @@ class NfsBroker(Broker):
         """
 
         if 'nfs_path' not in config or not config['nfs_path']:
-            raise InvalidBrokerConfiguration('NFS broker requires "nfs_path" to be populated')
+            raise InvalidBrokerConfiguration('INVALID_BROKER', 'NFS broker requires "nfs_path" to be populated')
         return []
 
     def _copy_file(self, src_path, dest_path):

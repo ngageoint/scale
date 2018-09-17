@@ -128,7 +128,7 @@ class S3Broker(Broker):
 
         warnings = []
         if 'bucket_name' not in config or not config['bucket_name']:
-            raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
+            raise InvalidBrokerConfiguration('INVALID_BROKER', 'S3 broker requires "bucket_name" to be populated')
         region_name = config.get('region_name')
 
         credentials = AWSClient.instantiate_credentials_from_config(config)
