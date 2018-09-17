@@ -458,6 +458,9 @@ def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max
                                       max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration, docker_image=docker_image)
+    version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
+    job_type.version_array = version_array
+    job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
@@ -532,6 +535,9 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
                                       is_system=is_system, is_operational=is_operational, trigger_rule=trigger_rule,
                                       configuration=configuration, docker_image=docker_image)
+    version_array = job_type.get_job_version_array(version)
+    job_type.version_array = version_array
+    job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 

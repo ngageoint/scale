@@ -6,6 +6,8 @@ import copy
 import datetime
 import logging
 import math
+import re
+import semver
 from collections import namedtuple
 
 import django.contrib.postgres.fields
@@ -2557,6 +2559,7 @@ class JobTypeManager(models.Manager):
         job_type = JobType(**kwargs)
         job_type.name = name
         job_type.version = version
+        job_type.version_array = job_type.get_job_version_array(version)
         job_type.manifest = interface.get_dict()
         job_type.trigger_rule = trigger_rule
         if configuration:
@@ -2614,6 +2617,7 @@ class JobTypeManager(models.Manager):
         job_type.populate_from_manifest(manifest)
         job_type.name = manifest.get_name()
         job_type.version = manifest.get_job_version()
+        job_type.version_array = job_type.get_job_version_array(job_type.version)
 
         job_type.docker_image = docker_image
 
@@ -2924,7 +2928,7 @@ class JobTypeManager(models.Manager):
         qry = 'SELECT DISTINCT ON (jt.name) jt.id, nv.num_versions FROM job_type jt '
         qry += 'JOIN (SELECT name, count(*) AS num_versions FROM job_type GROUP BY name) nv ON jt.name = nv.name '
         qry += 'WHERE jt.name IN %s '
-        qry += 'ORDER BY jt.name, jt.version DESC'
+        qry += 'ORDER BY jt.name, jt.version_array DESC'
         with connection.cursor() as cursor:
             cursor.execute(qry, [tuple(job_type_names)])
             for row in cursor.fetchall():
@@ -3347,6 +3351,8 @@ class JobType(models.Model):
     :type name: :class:`django.db.models.CharField`
     :keyword version: The version of the job type
     :type version: :class:`django.db.models.CharField`
+    :keyword version_array: The version of the job type split into SemVer integer components (major,minor,patch,prerelease)
+    :type version_array: list
     :keyword title: The human-readable name of the job type. Deprecated - remove with v5.
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of the job type. Deprecated - remove with v5.
@@ -3450,6 +3456,7 @@ class JobType(models.Model):
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
+    version_array = django.contrib.postgres.fields.ArrayField(models.IntegerField(null=True),default=list([None]*4),size=4)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
@@ -3537,6 +3544,38 @@ class JobType(models.Model):
             version = interface.get_job_version()
 
         return version
+
+
+    def get_job_version_array(self, version):
+        """Gets the Job version either from field or manifest as an array of integers
+           for sorting using the semver package. The result will be an array of length
+           4 with the first three being integers containing major,minor and patch version
+           numbers. The fourth will be either a None value or if a prerelease value is
+           present this function will attempt to convert it into an integer for sorting.
+        :keyword version: The version of the job type
+        :type version: :class:`django.db.models.CharField`
+        :return: the version array
+        :rtype: array
+        """
+        parts = None
+        try:
+            parts = semver.parse(version)
+        except:
+            return [0,0,0,0]
+        prerelease = None
+        if parts['prerelease']:
+            # attempt to convert pre-release field to a number for sorting
+            # we want a non-null value if there is a pre-release field in version as
+            # null values come first when sorting by descending order so we want
+            # any prerelease versions to have a non-null value
+            prerelease = re.sub("[^0-9]", "", parts['prerelease'])
+            try:
+                prerelease = int(prerelease)
+            except ValueError:
+                prerelease = ord(parts['prerelease'][0])
+        version_array = [parts['major'], parts['minor'], parts['patch'], prerelease]
+
+        return version_array
 
     def get_package_version(self):
         """Gets the package version from manifest

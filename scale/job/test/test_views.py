@@ -1573,7 +1573,8 @@ class TestJobTypesViewV6(TestCase):
         self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_system=True)
         self.job_type3 = job_test_utils.create_job_type(priority=1, mem=2.0, is_active=False)
         self.job_type4 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.0.0", is_active=False)
-        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.1.0", is_active=True)
+        self.job_type5 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.2.0", is_active=True)
+        self.job_type6 = job_test_utils.create_job_type(name="job-type-for-view-test", version="1.10.0", is_active=True)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -1592,15 +1593,15 @@ class TestJobTypesViewV6(TestCase):
                 expected = self.job_type2
             elif entry['name'] == self.job_type3.name:
                 expected = self.job_type3
-            elif entry['name'] == self.job_type5.name:
-                expected = self.job_type5
+            elif entry['name'] == self.job_type6.name:
+                expected = self.job_type6
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)
             self.assertEqual(entry['title'], expected.title)
             self.assertEqual(entry['description'], expected.description)
             if entry['name'] == 'job-type-for-view-test':
-                self.assertEqual(entry['num_versions'], 2)
+                self.assertEqual(entry['num_versions'], 3)
             else:
                 self.assertEqual(entry['num_versions'], 1)
             self.assertEqual(entry['latest_version'], expected.version)
@@ -1627,6 +1628,7 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['latest_version'], '1.10.0')
 
     def test_is_active(self):
         """Tests successfully calling the job types view filtered by inactive state."""
@@ -1663,13 +1665,15 @@ class TestJobTypesViewV6(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
-        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(len(result['results']), 3)
         for entry in result['results']:
             expected = None
             if entry['id'] == self.job_type4.id:
                 expected = self.job_type4
             elif entry['id'] == self.job_type5.id:
                 expected = self.job_type5
+            elif entry['id'] == self.job_type6.id:
+                expected = self.job_type6
             else:
                 self.fail('Found unexpected result: %s' % entry['id'])
             self.assertEqual(entry['name'], expected.name)

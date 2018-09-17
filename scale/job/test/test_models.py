@@ -762,6 +762,23 @@ class TestJobType(TransactionTestCase):
 
         self.assertEqual(4.0, value)
 
+    def test_get_job_version_array(self):
+        job_type = self.seed_job_type
+        version = '1.0.0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,None], value)
+
+        version = '1.0.0-0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,0], value)
+
+        version = '1.0.0-alpha'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,97], value)
+
+        version = '1.0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([0,0,0,0], value)
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
