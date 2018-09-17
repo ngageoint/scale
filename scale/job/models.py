@@ -3550,7 +3550,7 @@ class JobType(models.Model):
         """Gets the Job version either from field or manifest as an array of integers
            for sorting using the semver package. The result will be an array of length
            4 with the first three being integers containing major,minor and patch version
-           numbers. Thefourth will be either a None value or if a prerelease value is
+           numbers. The fourth will be either a None value or if a prerelease value is
            present this function will attempt to convert it into an integer for sorting.
         :keyword version: The version of the job type
         :type version: :class:`django.db.models.CharField`
@@ -3564,10 +3564,10 @@ class JobType(models.Model):
             return [0,0,0,0]
         prerelease = None
         if parts['prerelease']:
-            #attempt to convert pre-release field to a number for sorting
-            #we want a non-null value if there is a pre-release field in version as
-            #null values come first when sorting by descending order so we want
-            #any prerelease versions to have a non-null value
+            # attempt to convert pre-release field to a number for sorting
+            # we want a non-null value if there is a pre-release field in version as
+            # null values come first when sorting by descending order so we want
+            # any prerelease versions to have a non-null value
             prerelease = re.sub("[^0-9]", "", parts['prerelease'])
             try:
                 prerelease = int(prerelease)
