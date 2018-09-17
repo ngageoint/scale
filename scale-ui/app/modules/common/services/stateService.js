@@ -49,7 +49,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: isParent ? null : data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 status: data.status ? data.status : null,
@@ -67,7 +67,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 status: data.status ? data.status : null,
@@ -103,7 +103,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 type_id: data.type_id ? parseInt(data.type_id) : null,
@@ -116,7 +116,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: isParent ? null : data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: isParent ? null : data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null,
@@ -129,7 +129,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 name: data.name ? data.name : null,
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified']
@@ -151,7 +151,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 status: data.status ? data.status : null,
@@ -165,7 +165,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 time_field: data.time_field ? data.time_field : 'data',
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
@@ -178,7 +178,7 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                started: data.started ? data.started : moment.utc().subtract(1, 'days').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 batch_id: data.batch_id || null,
