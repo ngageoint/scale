@@ -17,25 +17,26 @@ Request: GET http://.../v6/errors/
 
 Response: 200 OK
 
- .. code-block:: javascript  
-    { 
-        "count": 1, 
-        "next": null, 
-        "previous": null, 
-        "results": [ 
-            { 
-                "id": 1, 
-                "name": "unknown", 
-                "title": "Unknown", 
-                "description": "The error that caused the failure is unknown.", 
+ .. code-block:: javascript
+
+    {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "id": 1,
+                "name": "unknown",
+                "title": "Unknown",
+                "description": "The error that caused the failure is unknown.",
                 "job_type_name": "job-type",
-                "category": "SYSTEM", 
-                "is_builtin": true, 
-                "created": "2015-03-11T00:00:00Z", 
-                "last_modified": "2015-03-11T00:00:00Z" 
+                "category": "SYSTEM",
+                "is_builtin": true,
+                "created": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
             }
-        ] 
-    } 
+        ]
+    }
 
 +------------------------------------------------------------------------------------------------------------------------------+
 | **Error List**                                                                                                               |
@@ -110,19 +111,20 @@ Request: GET http://.../v6/errors/{id}/
 
 Response: 200 OK
 
- .. code-block:: javascript  
-    { 
-        "id": 1, 
-        "name": "unknown", 
-        "title": "Unknown", 
-        "description": "The error that caused the failure is unknown.", 
+ .. code-block:: javascript
+
+    {
+        "id": 1,
+        "name": "unknown",
+        "title": "Unknown",
+        "description": "The error that caused the failure is unknown.",
         "job_type_name": "job-type",
-        "category": "SYSTEM", 
-        "is_builtin": true, 
-        "created": "2015-03-11T00:00:00Z", 
-        "last_modified": "2015-03-11T00:00:00Z" 
-    } 
-    
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z"
+    }
+
 +------------------------------------------------------------------------------------------------------------------------------+
 | **Error Details**                                                                                                            |
 +==============================================================================================================================+

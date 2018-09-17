@@ -457,6 +457,8 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0044_jobtypetag_job_type">job.migrations.0044_jobtypetag_job_type module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0045_auto_20180830_1812">job.migrations.0045_auto_20180830_1812 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0046_jobtyperevision_docker_image">job.migrations.0046_jobtyperevision_docker_image module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0047_jobtype_versionarray">job.migrations.0047_jobtype_versionarray module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0048_auto_20180913_1632">job.migrations.0048_auto_20180913_1632 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -4530,6 +4532,7 @@ lock on the model using select_for_update().</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the job type used by clients for queries</li>
 <li><strong>version</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The version of the job type</li>
+<li><strong>version_array</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The version of the job type split into SemVer integer components (major,minor,patch,prerelease)</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the job type. Deprecated - remove with v5.</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of the job type. Deprecated - remove with v5.</li>
 <li><strong>is_system</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this is a system type</li>
@@ -4877,6 +4880,30 @@ This is merely a placeholder for the short term to minimize changes associate wi
 <dd><p>Gets the Job version either from field or manifest
 :return: the version
 :rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobType.get_job_version_array">
+<code class="descname">get_job_version_array</code><span class="sig-paren">(</span><em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_job_version_array" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Gets the Job version either from field or manifest as an array of integers</dt>
+<dd>for sorting using the semver package. The result will be an array of length
+4 with the first three being integers containing major,minor and patch version
+numbers. The fourth will be either a None value or if a prerelease value is
+present this function will attempt to convert it into an integer for sorting.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>version</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The version of the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the version array</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -5387,6 +5414,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.JobType.version">
 <code class="descname">version</code><a class="headerlink" href="#job.models.JobType.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobType.version_array">
+<code class="descname">version_array</code><a class="headerlink" href="#job.models.JobType.version_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

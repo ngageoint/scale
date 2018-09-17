@@ -1114,6 +1114,55 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.migrations.0047_jobtype_versionarray">
+<span id="job-migrations-0047-jobtype-versionarray-module"></span><h2>job.migrations.0047_jobtype_versionarray module<a class="headerlink" href="#module-job.migrations.0047_jobtype_versionarray" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0047_jobtype_versionarray.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0047_jobtype_versionarray.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0047_jobtype_versionarray.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0047_jobtype_versionarray.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0046_jobtyperevision_docker_image')]</em><a class="headerlink" href="#job.migrations.0047_jobtype_versionarray.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0047_jobtype_versionarray.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.contrib.postgres.fields.array.ArrayField&gt;, name=u'version_array', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0047_jobtype_versionarray.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0048_auto_20180913_1632">
+<span id="job-migrations-0048-auto-20180913-1632-module"></span><h2>job.migrations.0048_auto_20180913_1632 module<a class="headerlink" href="#module-job.migrations.0048_auto_20180913_1632" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0048_auto_20180913_1632.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0048_auto_20180913_1632.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0048_auto_20180913_1632.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0048_auto_20180913_1632.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0047_jobtype_versionarray')]</em><a class="headerlink" href="#job.migrations.0048_auto_20180913_1632.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0048_auto_20180913_1632.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_type_version_array&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0048_auto_20180913_1632.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.migrations.0048_auto_20180913_1632.Migration.populate_job_type_version_array">
+<code class="descname">populate_job_type_version_array</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0048_auto_20180913_1632.Migration.populate_job_type_version_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="job.migrations.0048_auto_20180913_1632.get_version_array">
+<code class="descclassname">job.migrations.0048_auto_20180913_1632.</code><code class="descname">get_version_array</code><span class="sig-paren">(</span><em>version</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0048_auto_20180913_1632.get_version_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a complete Docker image and tag with the correct packageVersion value</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

@@ -372,6 +372,22 @@ job\.migrations\.0046\_jobtyperevision\_docker\_image module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0047\_jobtype\_versionarray module
+---------------------------------------------------
+
+.. automodule:: job.migrations.0047_jobtype_versionarray
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0048\_auto\_20180913\_1632 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0048_auto_20180913_1632
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -198,7 +198,27 @@
 <p>Request: GET <a class="reference external" href="http://.../v6/errors/">http://.../v6/errors/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="16%" />
@@ -327,7 +347,20 @@ Prefix the field with a dash &#8216;-&#8216; to reverse the order, (ex: order=-n
 <p>Request: GET <a class="reference external" href="http://.../v6/errors">http://.../v6/errors</a>/{id}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
-<div></div></blockquote>
+<div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Unknown&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;The error that caused the failure is unknown.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;SYSTEM&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_builtin&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
 <table border="1" class="docutils">
 <colgroup>
 <col width="16%" />

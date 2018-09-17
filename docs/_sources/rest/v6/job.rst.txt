@@ -166,7 +166,7 @@ Response: 200 OK
 |                     |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .job_type           | JSON Object       | The job type that is associated with the job.                                 |
-|                     |                   | (See :ref:`Job Type Details <rest__v6_job_type_details>`)                     |
+|                     |                   | (See :ref:`Job Type Details <rest_v6_job_type_details>`)                      |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .job_type_rev       | JSON Object       | The job type revision that is associated with the job.                        |
 |                     |                   | This represents the definition at the time the job was scheduled.             |
