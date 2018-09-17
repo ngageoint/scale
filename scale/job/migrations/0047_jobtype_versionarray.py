@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='jobtype',
-            name='versionArray',
+            name='version_array',
             field=django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(null=True), default=[None, None, None, None], size=4),
         ),
     ]

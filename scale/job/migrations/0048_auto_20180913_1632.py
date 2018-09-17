@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         JobType = apps.get_model('job', 'JobType')
 
         for job_type in JobType.objects.all().iterator():
-            job_type.versionArray = get_version_array(job_type.version)
+            job_type.version_array = get_version_array(job_type.version)
             job_type.save()
 
     operations = [
