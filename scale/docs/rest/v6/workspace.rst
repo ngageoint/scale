@@ -8,6 +8,14 @@ These services provide access to information about workspaces that Scale uses to
 
 .. _rest_v6_workspace_list:
 
+v6 Workspace List
+-----------------
+
+**Example GET /v6/workspaces/ API call**
+
+Request: GET http://.../v6/workspaces/
+
+Response: 200 OK
 
  .. code-block:: javascript 
  
@@ -111,33 +119,37 @@ These services provide access to information about workspaces that Scale uses to
 
 .. _rest_v6_workspace_create:
 
+v6 Create Workspace
+-------------------
+
 **Example POST /v6/workspaces/ API call**
 
 Request: POST http://.../v6/workspaces/
 
  .. code-block:: javascript  
-    { 
-        "name": "raw",  
-        "title": "Raw Source",  
-        "description": "Raw Source Workspace",  
-        "base_url": "http://host.com/rs",  
-        "is_active": true,  
-        "json_config": {  
-            "broker": {  
-                "type": "host",  
-                "host_path": "/host/path"  
-            }  
-        }  
-    } 
+ 
+    {
+        "title": "Raw Source",
+        "description": "Raw Source Workspace",
+        "base_url": "http://host.com/rs",
+        "is_active": true,
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    }
  
 Response: 201 Created
 Headers:
 Location http://.../v6/workspaces/105/
 
  .. code-block:: javascript  
+ 
     { 
         "id": 1, 
-        "name": "raw", 
+        "name": "raw-source", 
         "title": "Raw Source", 
         "description": "Raw Source Workspace", 
         "base_url": "http://host.com/rs", 
@@ -158,7 +170,7 @@ Location http://.../v6/workspaces/105/
 +=========================================================================================================================+
 | Creates a new workspace with associated configuration                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /v6/workspaces/                                                                                                   |
+| **POST** /v6/workspaces/                                                                                                |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **Content Type**        | *application/json*                                                                            |
 +-------------------------+-----------------------------------------------------------------------------------------------+
@@ -194,12 +206,41 @@ Location http://.../v6/workspaces/105/
 
 .. _rest_v6_workspace_details:
 
+v6 Workspace Details
+--------------------
+
+**Example GET /v6/workspaces/{id}/ API call**
+
+Request: GET http://.../v6/workspaces/{id}/
+
+Response: 200 OK
+
+ .. code-block:: javascript  
+ 
+    {
+        "id": 1,
+        "name": "raw",
+        "title": "Raw Source",
+        "description": "Raw Source Workspace",
+        "base_url": "http://host.com/rs",
+        "is_active": true,
+        "created": "2015-10-05T21:26:04.855Z",
+        "archived": null,
+        "last_modified": "2015-10-05T21:26:04.855Z"
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    }
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Workspace Details**                                                                                                   |
 +=========================================================================================================================+
 | Returns workspace details                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **GET** /workspaces/{id}/                                                                                               |
+| **GET** /v6/workspaces/{id}/                                                                                            |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
@@ -232,43 +273,53 @@ Location http://.../v6/workspaces/105/
 | json_config              | JSON Object       | JSON configuration with attributes specific to the type of workspace.    |
 |                          |                   | (See :ref:`architecture_workspaces`)                                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "id": 1,                                                                                                         |
-|        "name": "raw",                                                                                                   |
-|        "title": "Raw Source",                                                                                           |
-|        "description": "Raw Source Workspace",                                                                           |
-|        "base_url": "http://host.com/rs",                                                                                |
-|        "is_active": true,                                                                                               |
-|        "created": "2015-10-05T21:26:04.855Z",                                                                           |
-|        "archived": null,                                                                                                |
-|        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
-|        "json_config": {                                                                                                 |
-|            "broker": {                                                                                                  |
-|                "type": "host",                                                                                          |
-|                "host_path": "/host/path"                                                                                |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 
-.. _rest_workspace_validate:
+.. _rest_v6_workspace_validate:
+
+v6 Validate Workspace
+---------------------
+
+**Example POST /v6/workspaces/validation/ API call**
+
+Request: POST http://.../v6/workspaces/validation/
+
+ .. code-block:: javascript 
+
+    {
+        "title": "Raw Source",
+        "description": "Raw Source Workspace",
+        "base_url": "http://host.com/rs",
+        "is_active": true,
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    }
+
+Response: 200 OK
+
+.. code-block:: javascript 
+ 
+   {
+      "is_valid": true,
+      "errors": [],
+      "warnings": [{"name": "broker_type", "description": "Changing the broker type may disrupt queued/running jobs."}],
+   }
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Validate Workspace**                                                                                                  |
 +=========================================================================================================================+
 | Validates a new workspace configuration without actually saving it                                                      |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /workspaces/validation/                                                                                        |
+| **POST** /v6/workspaces/validation/                                                                                     |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **Content Type**        | *application/json*                                                                            |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| name                    | String            | Required | The identifying name of the workspace used for queries.        |
-+-------------------------+-------------------+----------+----------------------------------------------------------------+
-| title                   | String            | Optional | The human-readable name of the workspace.                      |
+| title                   | String            | Required | The human-readable name of the workspace.                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | description             | String            | Optional | An optional description of the workspace.                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -281,22 +332,6 @@ Location http://.../v6/workspaces/105/
 | json_config             | JSON Object       | Required | JSON description of the configuration for the workspace.       |
 |                         |                   |          | (See :ref:`architecture_workspaces_spec`)                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "name": "raw",                                                                                                   |
-|        "title": "Raw Source",                                                                                           |
-|        "description": "Raw Source Workspace",                                                                           |
-|        "base_url": "http://host.com/rs",                                                                                |
-|        "is_active": true,                                                                                               |
-|        "json_config": {                                                                                                 |
-|            "broker": {                                                                                                  |
-|                "type": "host",                                                                                          |
-|                "host_path": "/host/path"                                                                                |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -305,30 +340,53 @@ Location http://.../v6/workspaces/105/
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+---------------------+------------------------------------------------------------------------------+
-| warnings           | Array               | A list of warnings discovered during validation.                             |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .id                | String              | An identifier for the warning.                                               |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .details           | String              | A human-readable description of the problem.                                 |
-+--------------------+---------------------+------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "warnings": [                                                                                                    |
-|            "id": "broker_type",                                                                                         |
-|            "details": "Changing the broker type may disrupt queued/running jobs."                                       |
-|        ]                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new workspace. If this |
+|                    |                   | is true, then submitting the same fields to the /workspaces/ API will          |
+|                    |                   | successfully create a new workspace.                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
+|                    |                   | with *name* and *description* string fields.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| warnings           | Array             | A list of warnings discovered during validation.                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .id                | String            | An identifier for the warning.                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .details           | String            | A human-readable description of the problem.                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
-.. _rest_workspace_edit:
 
+.. _rest_v6_workspace_edit:
+
+v6 Edit Workspace
+-----------------
+
+**Example POST /v6/workspaces/{id}/ API call**
+
+Request: POST http://.../v6/workspaces/{id}/
+
+ .. code-block:: javascript 
+
+    {
+        "title": "Raw Source",
+        "description": "Raw Source Workspace",
+        "base_url": "http://host.com/rs",
+        "is_active": true,
+        "json_config": {
+            "broker": {
+                "type": "host",
+                "host_path": "/host/path"
+            }
+        }
+    }
+
+Response: 204 NO CONTENT
+   
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Edit Workspace**                                                                                                      |
 +=========================================================================================================================+
 | Edits an existing workspace with associated configuration                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /workspaces/{id}/                                                                                             |
+| **PATCH** /v6/workspaces/{id}/                                                                                          |
 |           Where {id} is the unique identifier of an existing model.                                                     |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **Content Type**        | *application/json*                                                                            |
@@ -348,49 +406,7 @@ Location http://.../v6/workspaces/105/
 | json_config             | JSON Object       | Optional | JSON description of the configuration for the workspace.       |
 |                         |                   |          | (See :ref:`architecture_workspaces_spec`)                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "title": "Raw Source",                                                                                           |
-|        "description": "Raw Source Workspace",                                                                           |
-|        "base_url": "http://host.com/rs",                                                                                |
-|        "is_active": true,                                                                                               |
-|        "json_config": {                                                                                                 |
-|            "broker": {                                                                                                  |
-|                "type": "host",                                                                                          |
-|                "host_path": "/host/path"                                                                                |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 200 OK                                                                                             |
+| **Status**         | 204 NO CONTENT                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | JSON Object       | All fields are the same as the workspace details model.                        |
-|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| .. code-block:: javascript                                                                                              |
-|                                                                                                                         |
-|    {                                                                                                                    |
-|        "id": 1,                                                                                                         |
-|        "name": "raw",                                                                                                   |
-|        "title": "Raw Source",                                                                                           |
-|        "description": "Raw Source Workspace",                                                                           |
-|        "base_url": "http://host.com/rs",                                                                                |
-|        "is_active": true,                                                                                               |
-|        "created": "2015-10-05T21:26:04.855Z",                                                                           |
-|        "archived": null,                                                                                                |
-|        "last_modified": "2015-10-05T21:26:04.855Z"                                                                      |
-|        "json_config": {                                                                                                 |
-|            "broker": {                                                                                                  |
-|                "type": "host",                                                                                          |
-|                "host_path": "/host/path"                                                                                |
-|            }                                                                                                            |
-|        }                                                                                                                |
-|    }                                                                                                                    |
-+-------------------------------------------------------------------------------------------------------------------------+

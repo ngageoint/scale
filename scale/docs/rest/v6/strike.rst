@@ -351,9 +351,9 @@ Response: 200 OK
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new batch. If this is  |
-|                    |                   | true, then submitting the same fields to the /batches/ API will successfully   |
-|                    |                   | create a new batch.                                                            |
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new strike. If this is |
+|                    |                   | true, then submitting the same fields to the /strikes/ API will successfully   |
+|                    |                   | create a new strike.                                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
 |                    |                   | with *name* and *description* string fields.                                   |
