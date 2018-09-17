@@ -263,9 +263,6 @@ class Error(models.Model):
         """
 
         return (self.job_type_name, self.name)
-    
-    def create(self):
-        return super.create()
 
     class Meta(object):
         """Meta information for the db"""

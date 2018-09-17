@@ -76,7 +76,7 @@ class UnexpectedMultipleOutputs(ScaleError):
         :param msg Details of the error encountered
         :type msg: string
         """
-        super(UnexpectedMultipleOutputs, self).__init__(8, 'unexpected-multiple-outputs')
+        super(UnexpectedMultipleOutputs, self).__init__(26, 'unexpected-multiple-outputs')
         self.msg = msg
         
     def get_log_message(self):

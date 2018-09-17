@@ -8,7 +8,7 @@ import job.test.utils as job_test_utils
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
 from error.models import reset_error_cache
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
-from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput, UnexpectedMultipleOutputs
 from job.execution.tasks.post_task import PostTask
 from job.tasks.update import TaskStatusUpdate
 
@@ -30,7 +30,7 @@ class TestPostTask(TestCase):
         """Tests that a post-task successfully determines the correct error"""
 
         scale_errors = [ScaleDatabaseError(), ScaleIOError(), ScaleOperationalError(), InvalidResultsManifest(''),
-                        MissingRequiredOutput('')]
+                        MissingRequiredOutput(''), UnexpectedMultipleOutputs('')]
 
         for scale_error in scale_errors:
             config = ExecutionConfiguration()

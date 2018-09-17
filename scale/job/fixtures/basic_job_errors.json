@@ -213,20 +213,6 @@
         "model": "error.Error",
         "pk": null,
         "fields": {
-            "name": "unexpected-multiple-outputs",
-            "title": "Multiple outputs found for a non-multiple output",
-            "description": "The algorithm produced more than one output for a single output. Please see the job log for more information.",
-            "category": "ALGORITHM",
-            "is_builtin": true,
-            "should_be_retried": false,
-            "create": "2018-09-13T00:00:00.0Z",
-            "last_modified": "2018-09-13T00:00:00.0Z"
-        }
-    },
-    {
-        "model": "error.Error",
-        "pk": null,
-        "fields": {
             "name": "missing-setting",
             "title": "Missing Setting",
             "description": "The job is missing a required settings value. Please define default values for all settings required by this job type.",
@@ -249,6 +235,20 @@
             "should_be_retried": false,
             "created": "2017-03-24T00:00:00.0Z",
             "last_modified": "2017-03-24T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "unexpected-multiple-outputs",
+            "title": "Unexpected Multiple Outputs",
+            "description": "The algorithm produced more than one output for a single output. Please see the job log for more information.",
+            "category": "ALGORITHM",
+            "is_builtin": true,
+            "should_be_retried": false,
+            "created": "2018-09-17T00:00:00.0Z",
+            "last_modified": "2019-09-17T00:00:00.0Z"
         }
     }
 ]
