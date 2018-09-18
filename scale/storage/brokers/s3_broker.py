@@ -11,11 +11,11 @@ from botocore.exceptions import ClientError, NoCredentialsError
 import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
-from storage.configuration.workspace_configuration import ValidationWarning
 from storage.exceptions import MissingFile
 from util.aws import S3Client, AWSClient
 from util.command import execute_command_line
 from util.exceptions import FileDoesNotExist
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 

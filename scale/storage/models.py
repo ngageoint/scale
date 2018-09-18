@@ -1133,7 +1133,7 @@ class Workspace(models.Model):
         """
 
         if not hasattr(self, '_broker'):
-            ws_config = WorkspaceConfiguration(self.json_config)
+            ws_config = WorkspaceConfigurationV6(self.json_config).get_configuration()
             ws_config.validate_broker()
 
             broker_config = self.json_config['broker']

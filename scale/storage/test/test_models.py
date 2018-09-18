@@ -16,6 +16,7 @@ from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
 from storage.models import CountryData, ScaleFile, Workspace
 from storage.brokers.exceptions import InvalidBrokerConfiguration
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 
 
 class TestScaleFileUpdateUUID(TestCase):
@@ -527,13 +528,15 @@ class TestWorkspaceManager(TransactionTestCase):
     def test_successful(self):
         """Tests calling WorkspaceManager.create_workspace() successfully"""
 
-        config = {
+        config_dict = {
             'version': '1.0',
             'broker': {
                 'type': 'host',
                 'host_path': '/host/path'
             },
         }
+
+        config = WorkspaceConfigurationV6(config_dict, do_validate=True).get_configuration()
 
         workspace = Workspace.objects.create_workspace('my_name', 'my_title', 'my_description', config)
         self.assertEqual(workspace.name, 'my_name')

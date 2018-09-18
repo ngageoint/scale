@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 import util.rest as rest_util
 from ingest.models import Ingest
-from ingest.serializers import IngestSerializer
+from ingest.serializers import IngestSerializerV5, IngestSerializerV6
 from job.models import Job
 from job.serializers import JobSerializerV5
 from product.models import ProductFile
@@ -142,7 +142,16 @@ class SourceDetailsView(RetrieveAPIView):
 class SourceIngestsView(ListAPIView):
     """This view is the endpoint for retrieving a list of all ingests related to a source file."""
     queryset = Ingest.objects.all()
-    serializer_class = IngestSerializer
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return IngestSerializerV6
+        elif self.request.version == 'v5':
+            return IngestSerializerV5
+        elif self.request.version == 'v4':
+            return IngestSerializerV5
 
     def list(self, request, source_id=None):
         """Determine api version and call specific method
