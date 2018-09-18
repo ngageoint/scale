@@ -386,7 +386,7 @@ class WorkspaceDetailsView(GenericAPIView):
         if self.request.version == 'v6':
             return WorkspaceSerializerV6
         elif self.request.version == 'v5':
-            return WorkspaceSerializerV6
+            return WorkspaceSerializerV5
         elif self.request.version == 'v4':
             return WorkspaceSerializerV5
 
@@ -589,7 +589,7 @@ class WorkspacesValidationView(APIView):
             logger.exception('Unable to validate new workspace: %s', name)
             raise BadParameter(unicode(ex))
 
-        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        results = [{'id': w.name, 'details': w.description} for w in warnings]
         return Response({'warnings': results})
 
     def _post_v6(self, request):

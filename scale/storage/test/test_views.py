@@ -355,6 +355,8 @@ class TestFileDetailsViewV6(TestCase):
 
 class TestWorkspacesView(TestCase):
 
+    api = 'v5'
+
     def setUp(self):
         django.setup()
 
@@ -364,7 +366,7 @@ class TestWorkspacesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all workspaces view."""
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -384,7 +386,7 @@ class TestWorkspacesView(TestCase):
     def test_name(self):
         """Tests successfully calling the workspaces view filtered by workspace name."""
 
-        url = rest_util.get_url('/workspaces/?name=%s' % self.workspace1.name)
+        url = '/%s/workspaces/?name=%s' % (self.api, self.workspace1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -395,7 +397,7 @@ class TestWorkspacesView(TestCase):
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = rest_util.get_url('/workspaces/?order=name')
+        url = '/%s/workspaces/?order=name' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -407,7 +409,7 @@ class TestWorkspacesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_util.get_url('/workspaces/?order=-name')
+        url = '/%s/workspaces/?order=-name' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -418,6 +420,7 @@ class TestWorkspacesView(TestCase):
 
 
 class TestWorkspaceCreateView(TestCase):
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -431,7 +434,7 @@ class TestWorkspaceCreateView(TestCase):
             'description': 'Workspace description',
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -446,7 +449,7 @@ class TestWorkspaceCreateView(TestCase):
             'json_config': 123,
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -463,7 +466,7 @@ class TestWorkspaceCreateView(TestCase):
             }
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -485,7 +488,7 @@ class TestWorkspaceCreateView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -501,7 +504,8 @@ class TestWorkspaceCreateView(TestCase):
         self.assertFalse(workspaces[0].is_active)
 
 
-class TestWorkspaceDetailsView(TestCase):
+class TestWorkspaceDetailsViewV5(TestCase):
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -518,7 +522,7 @@ class TestWorkspaceDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
 
-        url = rest_util.get_url('/workspaces/999999/')
+        url = '/%s/workspaces/999999/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -526,7 +530,7 @@ class TestWorkspaceDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get workspace details view."""
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -545,7 +549,7 @@ class TestWorkspaceDetailsView(TestCase):
             'is_active': False,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -577,7 +581,7 @@ class TestWorkspaceDetailsView(TestCase):
             'json_config': config,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -605,7 +609,7 @@ class TestWorkspaceDetailsView(TestCase):
             'json_config': config,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -613,6 +617,8 @@ class TestWorkspaceDetailsView(TestCase):
 
 class TestWorkspacesValidationView(TestCase):
     """Tests related to the workspaces validation endpoint"""
+
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -633,7 +639,7 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -649,7 +655,7 @@ class TestWorkspacesValidationView(TestCase):
             'description': 'Workspace description',
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -664,7 +670,7 @@ class TestWorkspacesValidationView(TestCase):
             'json_config': 123,
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -681,7 +687,7 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -707,7 +713,7 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
