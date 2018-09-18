@@ -384,11 +384,11 @@ class WorkspaceDetailsView(GenericAPIView):
         """Returns the appropriate serializer based off the requests version of the REST API"""
     
         if self.request.version == 'v6':
-            return WorkspaceSerializerV6
+            return WorkspaceDetailsSerializerV6
         elif self.request.version == 'v5':
-            return WorkspaceSerializerV5
+            return WorkspaceDetailsSerializerV5
         elif self.request.version == 'v4':
-            return WorkspaceSerializerV5
+            return WorkspaceDetailsSerializerV5
 
     def get(self, request, workspace_id):
         """Retrieves the details for a workspace and return them in JSON form

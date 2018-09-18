@@ -4,7 +4,8 @@ import django
 from django.test import TestCase
 
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 
 
 class TestWorkspaceConfigurationInit(TestCase):
@@ -16,12 +17,20 @@ class TestWorkspaceConfigurationInit(TestCase):
         """Tests calling WorkspaceConfiguration constructor with bare minimum JSON."""
 
         # No exception is success
-        config = WorkspaceConfiguration({
+        config = WorkspaceConfigurationV1({
             'broker': {
                 'type': 'host',
                 'host_path': '/the/path',
             },
-        })
+        }, do_validate=True).get_configuration()
+        config.validate_broker()
+
+        config = WorkspaceConfigurationV6({
+            'broker': {
+                'type': 'host',
+                'host_path': '/the/path',
+            },
+        }, do_validate=True).get_configuration()
         config.validate_broker()
 
     def test_bad_version(self):
@@ -33,7 +42,9 @@ class TestWorkspaceConfigurationInit(TestCase):
                 'type': 'host',
             },
         }
-        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
+        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfigurationV1, config)
+
+        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfigurationV6, config)
 
     def test_bad_type(self):
         """Tests calling WorkspaceConfiguration constructor with bad broker type."""
@@ -43,26 +54,43 @@ class TestWorkspaceConfigurationInit(TestCase):
                 'type': 'BAD',
             },
         }
-        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfiguration, config)
+        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfigurationV1, config, True)
+
+        self.assertRaises(InvalidWorkspaceConfiguration, WorkspaceConfigurationV6, config, True)
 
     def test_bad_host_config(self):
         """Tests calling WorkspaceConfiguration constructor with bad host broker configuration."""
 
-        config = WorkspaceConfiguration({
+        config = WorkspaceConfigurationV1({
             'broker': {
                 'type': 'host',
             },
-        })
+        }).get_configuration()
+        self.assertRaises(InvalidWorkspaceConfiguration, config.validate_broker)
+
+        config = WorkspaceConfigurationV6({
+            'broker': {
+                'type': 'host',
+            },
+        }).get_configuration()
         self.assertRaises(InvalidWorkspaceConfiguration, config.validate_broker)
 
     def test_successful(self):
         """Tests calling WorkspaceConfiguration constructor successfully with all information."""
 
         # No exception is success
-        config = WorkspaceConfiguration({
+        config = WorkspaceConfigurationV1({
             'broker': {
                 'type': 'host',
                 'host_path': '/host/path',
             },
-        })
+        }, do_validate=True).get_configuration()
+        config.validate_broker()
+
+        config = WorkspaceConfigurationV6({
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path',
+            },
+        }, do_validate = True).get_configuration()
         config.validate_broker()

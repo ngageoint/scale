@@ -18,11 +18,12 @@ from storage.brokers.factory import get_broker
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
 from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
-from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
+from storage.configuration.json.workspace_config_v6 import convert_config_to_v6_json, WorkspaceConfigurationV6
 from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
 from util.os_helper import makedirs
+from util import rest as rest_utils
 from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
@@ -1156,6 +1157,24 @@ class Workspace(models.Model):
 
         volume_path = self._get_volume_path()
         return self.get_broker().get_file_system_paths(volume_path, files)
+
+    def get_configuration(self):
+        """Returns the workspace configuration object
+
+        :returns: The configuration in v2 of the JSON schema
+        :rtype: dict
+        """
+
+        return WorkspaceConfigurationV6(self.json_config).get_configuration()
+
+    def get_v6_configuration_json(self):
+        """Returns the workspace configuration in v6 of the JSON schema
+
+        :returns: The workspace configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
 
     def list_files(self, recursive):
         """Lists files within a workspace, with optional full tree recursion.

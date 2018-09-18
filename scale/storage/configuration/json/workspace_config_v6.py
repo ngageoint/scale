@@ -40,11 +40,11 @@ def convert_config_to_v6_json(config):
 
     :param config: The workspace configuration
     :type config: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
-    :returns: The v6 job configuration JSON
-    :rtype: :class:`job.configuration.json.job_config_v6.JobConfigurationV6`
+    :returns: The v6 workspace configuration JSON
+    :rtype: :class:`workspace.configuration.json.workspace_config_v6.WorkspaceConfigurationV6`
     """
 
-    return WorkspaceConfigurationV6(config=config, do_validate=False)
+    return WorkspaceConfigurationV6(config=config.get_dict(), do_validate=False)
 
 class WorkspaceConfigurationV6(object):
     """Represents the schema for a workspace configuration"""
