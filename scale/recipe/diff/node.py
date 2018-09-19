@@ -344,6 +344,12 @@ class RecipeNodeDiff(NodeDiff):
         """See :meth:`recipe.diff.node.NodeDiff.should_be_recursively_superseded`
         """
 
+        for parent_node_diff in self.parents.values():
+            # If any of this sub-recipe's dependencies are going to be reprocessed, then this sub-recipe must be
+            # completely reprocessed and should be recursively superseded
+            if parent_node_diff.reprocess_new_node:
+                return True
+
         for change in self.changes:
             # If there has been an upstream change (dependency or input change), then this sub-recipe must be completely
             # reprocessed and should be recursively superseded

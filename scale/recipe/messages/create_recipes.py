@@ -302,6 +302,8 @@ class CreateRecipes(CommandMessage):
                 update_recipe_ids.append(new_recipe.id)
         self.new_messages.extend(create_process_recipe_input_messages(process_input_recipe_ids))
         # TODO: create messages to update recipes after new update_recipe message is created
+        # TODO: use get_nodes_to_recursively_supersede() to affect forced nodes passed to process_input_recipe and
+        # update_recipe messages
 
         if self.recipe_id:
             # Update the metrics for the recipe containing the new sub-recipes we just created
@@ -391,6 +393,7 @@ class CreateRecipes(CommandMessage):
 
         sub_recipes = {}  # {Node name: recipe model}
 
+        superseded_sub_recipes = []
         superseded_recipe_ids = []
         # Get superseded sub-recipes from superseded recipe
         if self.superseded_recipe_id:
