@@ -77,9 +77,9 @@ class MetricsPlotMultiSerializer(MetricsPlotSerializer):
 
 class MetricsErrorDetailsSerializer(MetricsTypeDetailsSerializer):
     """Converts ingest metrics details model fields to REST output"""
-    from error.serializers import ErrorBaseSerializer
+    from error.serializers import ErrorBaseSerializerV6
 
-    choices = ErrorBaseSerializer(many=True)
+    choices = ErrorBaseSerializerV6(many=True)
 
 
 class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):
@@ -91,6 +91,6 @@ class MetricsIngestDetailsSerializer(MetricsTypeDetailsSerializer):
 
 class MetricsJobTypeDetailsSerializer(MetricsTypeDetailsSerializer):
     """Converts job type metrics details model fields to REST output"""
-    from job.serializers import JobTypeBaseSerializerV5
+    from job.job_type_serializers import JobTypeBaseSerializerV5
 
     choices = JobTypeBaseSerializerV5(many=True)

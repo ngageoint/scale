@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 
 
 def create_requeue_jobs_bulk_message(started=None, ended=None, error_categories=None, error_ids=None, job_ids=None,
-                                     job_type_ids=None, priority=None, status=None):
+                                     job_type_ids=None, priority=None, status=None, job_type_names=None, 
+                                     batch_ids=None, recipe_ids=None, is_superseded=None):
     """Creates a message to perform a bulk job re-queue operation. The parameters are applied as filters to the jobs
     affected by the re-queue.
 
@@ -37,6 +38,14 @@ def create_requeue_jobs_bulk_message(started=None, ended=None, error_categories=
     :type priority: int
     :param status: The job status
     :type status: str
+    :param job_type_names: A list of job type names
+    :type job_type_names: list
+    :param batch_ids: A list of batch IDs
+    :type batch_ids: list
+    :param recipe_ids: A list of recipe IDs
+    :type recipe_ids: list
+    :param is_superseded: Whether the jobs are superseded or not
+    :type is_superseded: boolean
     :return: The message
     :rtype: :class:`queue.messages.requeue_jobs_bulk.RequeueJobsBulk`
     """
@@ -50,6 +59,10 @@ def create_requeue_jobs_bulk_message(started=None, ended=None, error_categories=
     message.job_type_ids = job_type_ids
     message.priority = priority
     message.status = status
+    message.job_type_names = job_type_names
+    message.batch_ids = batch_ids
+    message.recipe_ids = recipe_ids
+    message.is_superseded = is_superseded
 
     return message
 
@@ -73,6 +86,10 @@ class RequeueJobsBulk(CommandMessage):
         self.job_type_ids = None
         self.priority = None
         self.status = None
+        self.job_type_names = None
+        self.batch_ids = None
+        self.recipe_ids = None
+        self.is_superseded = None
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
@@ -97,6 +114,14 @@ class RequeueJobsBulk(CommandMessage):
             json_dict['priority'] = self.priority
         if self.status is not None:
             json_dict['status'] = self.status
+        if self.job_type_names is not None:
+            json_dict['job_type_names'] = self.job_type_names
+        if self.batch_ids is not None:
+            json_dict['batch_ids'] = self.batch_ids
+        if self.recipe_ids is not None:
+            json_dict['recipe_ids'] = self.recipe_ids
+        if self.is_superseded is not None:
+            json_dict['is_superseded'] = self.is_superseded
 
         return json_dict
 
@@ -124,6 +149,14 @@ class RequeueJobsBulk(CommandMessage):
             message.priority = json_dict['priority']
         if 'status' in json_dict:
             message.status = json_dict['status']
+        if 'job_type_names' in json_dict:
+            message.job_type_names = json_dict['job_type_names']
+        if 'batch_ids' in json_dict:
+            message.batch_ids = json_dict['batch_ids']
+        if 'recipe_ids' in json_dict:
+            message.recipe_ids = json_dict['recipe_ids']
+        if 'is_superseded' in json_dict:
+            message.is_superseded = json_dict['is_superseded']
 
         return message
 
@@ -138,6 +171,8 @@ class RequeueJobsBulk(CommandMessage):
         job_qry = Job.objects.filter_jobs(started=self.started, ended=self.ended, statuses=statuses,
                                           job_ids=self.job_ids, job_type_ids=self.job_type_ids,
                                           error_categories=self.error_categories, error_ids=self.error_ids,
+                                          job_type_names=self.job_type_names, batch_ids=self.batch_ids,
+                                          recipe_ids=self.recipe_ids, is_superseded=self.is_superseded,
                                           order=['-id'])
         if self.current_job_id:
             job_qry = job_qry.filter(id__lt=self.current_job_id)

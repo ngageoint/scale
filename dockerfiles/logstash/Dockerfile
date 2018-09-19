@@ -1,4 +1,4 @@
-ARG IMAGE=logstash:5.6-alpine
+ARG IMAGE=logstash:2.4-alpine
 FROM $IMAGE
 MAINTAINER Scale Developers "https://github.com/ngageoint/scale"
 

@@ -11,6 +11,7 @@ from data.data.value import FileValue, JsonValue
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from job.configuration.data.data_file import DATA_FILE_STORE
 from job.configuration.data.job_data import JobData
+from job.seed.exceptions import InvalidSeedMetadataDefinition
 from job.seed.metadata import METADATA_SUFFIX, SeedMetadata
 from job.seed.results.outputs_json import SeedOutputsJson
 from product.types import ProductFileMetadata
@@ -184,32 +185,33 @@ class JobResults(object):
             # For files obj that are detected, handle results (may be multiple)
             product_files = []
             for matched_file in output_file.get_files():
+                logger.info('File detected for output capture: %s' % matched_file)
 
                 product_file_meta = ProductFileMetadata(output_file.name, matched_file, output_file.media_type)
 
-                # check to see if there is side-car metadata files
-                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
+                # check to see if there is a side-car metadata file
+                metadata_file = matched_file + METADATA_SUFFIX
 
                 # If metadata is found, attempt to grab any Scale relevant data and place in ProductFileMetadata tuple
                 if os.path.isfile(metadata_file):
+                    logger.info('Capturing metadata from detected side-car file: %s' % metadata_file)
                     with open(metadata_file) as metadata_file_handle:
-                        metadata = SeedMetadata(json.load(metadata_file_handle))
+                        try:
+                            metadata = SeedMetadata.metadata_from_json(json.load(metadata_file_handle))
 
-                        # Create a GeoJSON object, as the present Seed Metadata schema only uses the Geometry fragment
-                        # TODO: Update if Seed schema updates.  Ref: https://github.com/ngageoint/seed/issues/95
-                        product_file_meta.geojson = \
-                            {
-                                'type': 'Feature',
-                                'geometry': metadata.get_geometry()
-                            }
+                            # Property keys per #1160
+                            product_file_meta.geojson = metadata.data
+                            product_file_meta.data_start = metadata.get_property('dataStarted')
+                            product_file_meta.data_end = metadata.get_property('dataEnded')
 
-                        timestamp = metadata.get_time()
-
-                        # Seed Metadata Schema defines start / end as required
-                        # so we do not need to check here.
-                        if timestamp:
-                            product_file_meta.data_start = timestamp['start']
-                            product_file_meta.data_end = timestamp['end']
+                            product_file_meta.source_started = metadata.get_property('sourceStarted')
+                            product_file_meta.source_ended = metadata.get_property('sourceEnded')
+                            product_file_meta.source_sensor_class = metadata.get_property('sourceSensorClass')
+                            product_file_meta.source_sensor = metadata.get_property('sourceSensor')
+                            product_file_meta.source_collection = metadata.get_property('sourceCollection')
+                            product_file_meta.source_task = metadata.get_property('sourceTask')
+                        except InvalidSeedMetadataDefinition:
+                            logger.exception()
 
                 product_files.append(product_file_meta)
 

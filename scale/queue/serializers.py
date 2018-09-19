@@ -13,7 +13,7 @@ class JobLoadGroupSerializer(serializers.Serializer):
 
 class QueueStatusSerializer(serializers.Serializer):
     """Converts queue status model fields to REST output"""
-    from job.serializers import JobTypeBaseSerializerV5
+    from job.job_type_serializers import JobTypeBaseSerializerV5
 
     job_type = JobTypeBaseSerializerV5()
     count = serializers.IntegerField()

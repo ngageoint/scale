@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import copy
 import json
 import logging
 import os
@@ -49,7 +50,7 @@ class SeedManifest(object):
             if do_validate:
                 validate(definition, SEED_MANIFEST_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidSeedManifestDefinition(validation_error)
+            raise InvalidSeedManifestDefinition('JSON_VALIDATION_ERROR', 'Error validating against schema: %s' % validation_error)
 
         self._populate_default_values()
 
@@ -122,7 +123,7 @@ class SeedManifest(object):
         :rtype: [str]
         """
 
-        return self.get_job()['tags']
+        return self.get_job().get('tags', [])
 
     def get_job(self):
         """Gets the Job object within the Seed manifest
@@ -206,10 +207,11 @@ class SeedManifest(object):
         :rtype: :class:`data.interface.interface.Interface`
         """
 
-        input_dict = self.get_inputs()
-        for file_dict in input_dict['files']:
-            if 'partial' in file_dict:
-                del file_dict['partial']
+        input_dict = copy.deepcopy(self.get_inputs())
+        if 'files' in input_dict:
+            for file_dict in self.get_input_files():
+                if 'partial' in file_dict:
+                    del file_dict['partial']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
     def get_inputs(self):
@@ -451,7 +453,7 @@ class SeedManifest(object):
                      self.get_scalar_resources()]
 
         if len(env_vars) != len(set(env_vars)):
-            raise InvalidSeedManifestDefinition('Collisions are not allowed between reserved keywords, resources, settings'
+            raise InvalidSeedManifestDefinition('NAME_COLLISION_ERROR','Collisions are not allowed between reserved keywords, resources, settings'
                                                 'and input names.')
 
     def _check_mount_name_uniqueness(self):
@@ -464,7 +466,7 @@ class SeedManifest(object):
             mounts.append(mount['name'])
 
         if len(mounts) != len(set(mounts)):
-            raise InvalidSeedManifestDefinition('Mount names must be unique.')
+            raise InvalidSeedManifestDefinition('DUPLICATE_MOUNT_NAMES','Mount names must be unique.')
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
@@ -574,7 +576,7 @@ class SeedManifest(object):
         for input_file in self.get_input_files():
             if 'required' not in input_file:
                 input_file['required'] = True
-            if 'mediaType' not in input_file:
+            if 'mediaTypes' not in input_file:
                 input_file['mediaTypes'] = []
             if 'multiple' not in input_file:
                 input_file['multiple'] = False
@@ -590,7 +592,7 @@ class SeedManifest(object):
         for output_file in self.get_output_files():
             if 'mediaType' not in output_file:
                 output_file['mediaType'] = UNKNOWN_MEDIA_TYPE
-            if 'count' not in output_file:
+            if 'multiple' not in output_file:
                 output_file['multiple'] = False
             if 'required' not in output_file:
                 output_file['required'] = True
@@ -623,4 +625,4 @@ class SeedManifest(object):
             name = mount['name']
             path = mount['path']
             if not os.path.isabs(path):
-                raise InvalidSeedManifestDefinition('%s mount must have an absolute path' % name)
+                raise InvalidSeedManifestDefinition('INVALID_MOUNT_PATH','%s mount must have an absolute path' % name)

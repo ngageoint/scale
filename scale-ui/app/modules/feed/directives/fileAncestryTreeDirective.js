@@ -60,7 +60,7 @@
                 g.setGraph({
                     nodesep: 30,
                     ranksep: 70,
-                    rankdir: 'LR',
+                    rankdir: 'TB',
                     marginx: 20,
                     marginy: 0
                 });
@@ -98,21 +98,21 @@
                     });
 
 
-                    var html = getNodeHtml(prod);
-                    g.setNode('file-' + prod.id, {
-                        labelType: 'html',
-                        label: html,
-                        rx: 10,
-                        ry: 10,
-                        padding: 10,
-                        width: 250,
-                        height: 20
-                    });
-                    g.setEdge('job-'+prod.job.id, 'file-'+prod.id, {
-                        //labelType: 'html',
-                        //label: '<a href='#/jobs/job/' + prod.job.id + ''>' + prod.job_type.name + '</a>'
-                        //width: 40
-                    });
+                    // var html = getNodeHtml(prod);
+                    // g.setNode('file-' + prod.id, {
+                    //     labelType: 'html',
+                    //     label: html,
+                    //     rx: 10,
+                    //     ry: 10,
+                    //     padding: 10,
+                    //     width: 250,
+                    //     height: 20
+                    // });
+                    // g.setEdge('job-'+prod.job.id, 'file-'+prod.id, {
+                    //     //labelType: 'html',
+                    //     //label: '<a href='#/jobs/job/' + prod.job.id + ''>' + prod.job_type.name + '</a>'
+                    //     //width: 40
+                    // });
 
                 }
 

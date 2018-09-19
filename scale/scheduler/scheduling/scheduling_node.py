@@ -4,6 +4,11 @@ from __future__ import unicode_literals
 
 from job.execution.tasks.exe_task import JobExecutionTask
 from node.resources.node_resources import NodeResources
+from node.resources.resource import Gpus
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class SchedulingNode(object):
@@ -92,6 +97,19 @@ class SchedulingNode(object):
 
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
+            # If the job execution requires GPUs, we are going to consume ALL of the available GPU node resources
+            # TODO: Once we are capable of proper GPU isolation with UCR we can remove this logic
+            if resources.gpus > 0:
+                # If other GPU tasks are present, cowardly abandon attempt to schedule
+                # We are doing this to avoid any contention for un-isolated GPU cores
+                if self._task_resources.gpus > 0:
+                    return False
+
+                original_gpus = resources.gpus
+                resources.increase_up_to(NodeResources([Gpus(self._remaining_resources.gpus)]))
+                logger.info('GPU resource required by Job Execution. '
+                            'Greedy resource logic scaling up from %i to %s GPUs.' %
+                            (original_gpus, resources.gpus))
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)

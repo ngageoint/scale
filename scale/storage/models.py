@@ -277,19 +277,35 @@ class ScaleFileManager(models.Manager):
         files = files.order_by('last_modified')
         return files
         
-    def filter_files(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
+    def filter_files(self, data_started=None, data_ended=None, source_started=None, source_ended=None,
+                        source_sensor_classes=None, source_sensors=None, source_collections=None,
+                        source_tasks=None, mod_started=None, mod_ended=None, job_type_ids=None, job_type_names=None,
                         job_ids=None, is_published=None, is_superseded=None, file_names=None, job_outputs=None, 
                         recipe_ids=None, recipe_type_ids=None, recipe_nodes=None, batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
 
-        :param started: Query files updated after this amount of time.
-        :type started: :class:`datetime.datetime`
-        :param ended: Query files updated before this amount of time.
-        :type ended: :class:`datetime.datetime`
-        :keyword time_field: The time field to use for filtering.
-        :type time_field: string
+        :param data_started: Query files where data started after this time.
+        :type data_started: :class:`datetime.datetime`
+        :param data_ended: Query files where data ended before this time.
+        :type data_ended: :class:`datetime.datetime`
+        :param source_started: Query files where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query files where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query files with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query files with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query files with the given source class.
+        :type source_collection: list
+        :param source_task: Query files with the given source task.
+        :type source_task: list
+        :param mod_started: Query files where the last modified date is after this time.
+        :type mod_started: :class:`datetime.datetime`
+        :param mod_ended: Query files where the last modified date is before this time.
+        :type mod_ended: :class:`datetime.datetime`
         :param job_type_ids: Query files with jobs with the given type identifier.
         :type job_type_ids: list
         :param job_type_names: Query files with jobs with the given type name.
@@ -330,27 +346,36 @@ class ScaleFileManager(models.Manager):
         files = files.prefetch_related('countries')
 
         # Apply time range filtering
-        if started:
-            if time_field == 'source':
-                files = files.filter(source_started__gte=started)
-            elif time_field == 'data':
-                files = files.filter(data_started__gte=started)
-            else:
-                files = files.filter(last_modified__gte=started)
-        if ended:
-            if time_field == 'source':
-                files = files.filter(source_ended__lte=ended)
-            elif time_field == 'data':
-                files = files.filter(data_ended__lte=ended)
-            else:
-                files = files.filter(last_modified__lte=ended)
+        if data_started:
+            files = files.filter(data_started__gte=data_started)
+        if data_ended:
+            files = files.filter(data_ended__lte=data_ended)
+
+        if source_started:
+            files = files.filter(source_started__gte=source_started)
+        if source_ended:
+            files = files.filter(source_ended__lte=source_ended)
+
+        if source_sensor_classes:
+            files = files.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            files = files.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            files = files.filter(source_collection__in=source_collections)
+        if source_tasks:
+            files = files.filter(source_task__in=source_tasks)
+
+        if mod_started:
+            files = files.filter(last_modified__gte=mod_started)
+        if mod_ended:
+            files = files.filter(last_modified__lte=mod_ended)
 
         if job_type_ids:
             files = files.filter(job_type_id__in=job_type_ids)
         if job_type_names:
             files = files.filter(job_type__name__in=job_type_names)
         if job_ids:
-            files = files.filter(job_id__in=job_type_ids)
+            files = files.filter(job_id__in=job_ids)
         if is_published is not None:
             files = files.filter(is_published=is_published)
         if is_superseded is not None:
@@ -588,15 +613,24 @@ class ScaleFile(models.Model):
     deleted = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
+    meta_data = django.contrib.postgres.fields.JSONField(default=dict)
+
     # Optional geospatial fields
-    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
-    meta_data = django.contrib.postgres.fields.JSONField(default=dict)
     countries = models.ManyToManyField(CountryData)
+
+    # Optional temporal fields
+    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
 
     # Source file fields
     is_parsed = models.BooleanField(default=False)
@@ -737,19 +771,23 @@ class ScaleFile(models.Model):
         :rtype: string
         """
 
-        # Make sure a valid path can be created
-        if self.workspace.base_url and self.file_path:
+        try:
+            # Make sure a valid path can be created
+            if self.workspace.base_url and self.file_path:
 
-            # Make sure there are no duplicate slashes
-            base_url = self.workspace.base_url
-            if base_url.endswith('/'):
-                base_url = base_url[:-1]
-            relative_url = self.file_path
-            if relative_url.startswith('/'):
-                relative_url = relative_url[1:]
+                # Make sure there are no duplicate slashes
+                base_url = self.workspace.base_url
+                if base_url.endswith('/'):
+                    base_url = base_url[:-1]
+                relative_url = self.file_path
+                if relative_url.startswith('/'):
+                    relative_url = relative_url[1:]
 
-            # Combine the workspace and file path
-            return '%s/%s' % (base_url, relative_url)
+                # Combine the workspace and file path
+                return '%s/%s' % (base_url, relative_url)
+        except Workspace.DoesNotExist:
+            # No-op for when Workspace is not set
+            pass
 
     url = property(_get_url)
 

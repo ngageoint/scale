@@ -34,7 +34,7 @@ class TestStrikeConfigurationV6(TestCase):
             'files_to_ingest': [{
                 'filename_regex': '.*txt'
             }],
-        })
+        }, do_validate=True)
 
     def test_bad_version(self):
         """Tests calling StrikeConfigurationV6 constructor with bad version number."""
@@ -50,7 +50,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
     def test_missing_workspace(self):
         """Tests calling StrikeConfigurationV6 constructor with missing workspace"""
@@ -64,7 +64,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
     def test_missing_monitor(self):
         """Tests calling StrikeConfigurationV6 constructor with missing monitor"""
@@ -75,7 +75,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': '.*txt'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
     def test_blank_filename_regex(self):
         """Tests calling StrikeConfigurationV6 constructor with blank filename_regex"""
@@ -90,7 +90,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'filename_regex': ''
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
     def test_absolute_workspace_path(self):
         """Tests calling StrikeConfigurationV6 constructor with absolute new_file_path."""
@@ -107,7 +107,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'new_file_path': '/absolute/path'
             }],
         }
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config)
+        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6, config, True)
 
     def test_successful_all(self):
         """Tests calling StrikeConfigurationV6 constructor successfully with all information"""
@@ -142,7 +142,8 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6(config).validate)
+        configuration = StrikeConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
 
     def test_validate_mismatched_monitor_type(self):
         """Tests calling StrikeConfigurationV6.validate() with a monitor type that does not match the broker type"""
@@ -158,7 +159,8 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6(config).validate)
+        configuration = StrikeConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
 
     def test_validate_bad_workspace(self):
         """Tests calling StrikeConfigurationV6.validate() with a bad workspace"""
@@ -175,8 +177,9 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6(config).validate)
-
+        configuration = StrikeConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
+        
     def test_validate_workspace_not_active(self):
         """Tests calling StrikeConfigurationV6.validate() with a new workspace that is not active"""
 
@@ -192,8 +195,9 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        self.assertRaises(InvalidStrikeConfiguration, StrikeConfigurationV6(config).validate)
-
+        configuration = StrikeConfigurationV6(config).get_configuration()
+        self.assertRaises(InvalidStrikeConfiguration, configuration.validate)
+        
     def test_validate_successful_all(self):
         """Tests calling StrikeConfiguration.validate() successfully with all information"""
 
@@ -212,7 +216,7 @@ class TestStrikeConfigurationV6(TestCase):
         }
 
         # No exception is success
-        StrikeConfigurationV6(config).validate()
+        StrikeConfigurationV6(config).get_configuration().validate()
 
     def test_conversion_from_1_0(self):
         """Tests calling StrikeConfigurationV6.validate() after converting from schema version 1.0"""
@@ -229,7 +233,7 @@ class TestStrikeConfigurationV6(TestCase):
             }],
         }
 
-        strike_config = StrikeConfigurationV6(old_config)
+        strike_config = StrikeConfigurationV6(old_config).get_configuration()
         strike_config.validate()
 
         auto_workspace = Workspace.objects.get(name__contains='auto')
@@ -247,7 +251,7 @@ class TestStrikeConfigurationV6(TestCase):
                 'new_workspace': self.new_workspace.name,
             }]
         }
-        self.assertDictEqual(strike_config._configuration, new_config)
+        self.assertDictEqual(strike_config.configuration, new_config)
 
         auto_workspace_config = {
             'version': '1.0',

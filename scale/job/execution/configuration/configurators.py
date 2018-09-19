@@ -1,6 +1,7 @@
 """Defines the classes that handle processing job and execution configuration"""
 from __future__ import unicode_literals
 
+import json
 import logging
 import math
 
@@ -195,6 +196,11 @@ class QueuedExecutionConfigurator(object):
             workspace_name = scan.get_scan_configuration().get_workspace()
             workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
 
+        # Configure Scale Delete Files workspaces based on input workspaces
+        if job.job_type.name == 'scale-delete-files':
+            wrkspc_list = json.loads(data.get_property_values(['workspaces'])['workspaces'])
+            workspaces = {w_name: TaskWorkspace(w_name, MODE_RW) for d in wrkspc_list for w_name, _v in d.items()}
+
         return workspaces
 
 
@@ -245,7 +251,7 @@ class ScheduledExecutionConfigurator(object):
         if job_type.is_system:
             ScheduledExecutionConfigurator._configure_system_job(config, job_exe, system_logging_level)
         else:
-            ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type)
+            ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type, system_logging_level)
 
         # Configure items that apply to all tasks
         self._configure_all_tasks(config, job_exe, job_type)
@@ -373,7 +379,7 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('main', mount_volumes=mount_volumes)
 
     @staticmethod
-    def _configure_regular_job(config, job_exe, job_type):
+    def _configure_regular_job(config, job_exe, job_type, system_logging_level):
         """Configures the given execution as a regular (non-system) job by adding pre and post tasks,
         input/output mounts, etc
 
@@ -383,10 +389,12 @@ class ScheduledExecutionConfigurator(object):
         :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
         :type job_type: :class:`job.models.JobType`
+        :param system_logging_level: The logging level to be passed in through environment
+        :type system_logging_level: str
         """
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
-        config.add_to_task('pull', args=create_pull_command(job_type.get_tagged_docker_image()))
+        config.add_to_task('pull', args=create_pull_command(job_exe.docker_image))
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS)
         config.add_to_task('post', args=POST_TASK_COMMAND_ARGS)
 
@@ -416,9 +424,12 @@ class ScheduledExecutionConfigurator(object):
         input_vol_rw = Volume(input_vol_name, SCALE_JOB_EXE_INPUT_PATH, MODE_RW, is_host=False)
         output_vol_ro = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RO, is_host=False)
         output_vol_rw = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RW, is_host=False)
-        config.add_to_task('pre', mount_volumes={input_mnt_name: input_vol_rw, output_mnt_name: output_vol_rw})
+
+        config.add_to_task('pre', mount_volumes={input_mnt_name: input_vol_rw, output_mnt_name: output_vol_rw},
+                           env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
         config.add_to_task('main', mount_volumes={input_mnt_name: input_vol_ro, output_mnt_name: output_vol_rw})
-        config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro})
+        config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro},
+                           env_vars={'SYSTEM_LOGGING_LEVEL': system_logging_level})
 
         # Configure output directory
         # TODO: original output dir and command arg replacement can be removed when Scale no longer supports old-style
@@ -542,6 +553,8 @@ class ScheduledExecutionConfigurator(object):
         :type config: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
+        :param system_logging_level: The logging level to be passed in through environment
+        :type system_logging_level: str
         """
         logging_env_vars = {'SYSTEM_LOGGING_LEVEL': system_logging_level}
         config.add_to_task('main', env_vars=logging_env_vars, resources=job_exe.get_resources())

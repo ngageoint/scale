@@ -58,6 +58,18 @@
                 });
                 return d.promise;
             },
+            getIngestDetails: function (id) {
+                var d = $q.defer();
+                $http({
+                    url: scaleConfig.getUrlPrefix('ingests') + 'ingests/' + id + '/',
+                    method: 'GET'
+                }).success(function (data) {
+                    d.resolve(Ingest.transformer(data));
+                }).error(function (error) {
+                    d.reject(error);
+                });
+                return d.promise;
+            },
             getSources: function (params) {
                 params = params || getSourceParams();
                 var d = $q.defer();

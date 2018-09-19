@@ -762,26 +762,23 @@ class TestJobType(TransactionTestCase):
 
         self.assertEqual(4.0, value)
 
-    def test_get_tagged_docker_image_from_tagged_image(self):
+    def test_get_job_version_array(self):
         job_type = self.seed_job_type
-        job_type.docker_image = 'image:tag'
+        version = '1.0.0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,None], value)
 
-        # Should pull from packageVersion of Seed Manifest
-        self.assertEqual('image:1.0.0', job_type.get_tagged_docker_image())
+        version = '1.0.0-0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,0], value)
 
-    def test_get_tagged_docker_image_from_untagged_image(self):
-        job_type = self.seed_job_type
-        job_type.docker_image = 'image'
+        version = '1.0.0-alpha'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([1,0,0,97], value)
 
-        # Should pull from packageVersion of Seed Manifest
-        self.assertEqual('image:1.0.0', job_type.get_tagged_docker_image())
-
-    def test_get_tagged_docker_image_from_docker_image_legacy_job_type(self):
-        job_type = self.legacy_job_type
-        job_type.docker_image = 'image:tag'
-
-        # Should ONLY use docker_image field with legacy job type
-        self.assertEqual('image:tag', job_type.get_tagged_docker_image())
+        version = '1.0'
+        value = job_type.get_job_version_array(version)
+        self.assertEqual([0,0,0,0], value)
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
@@ -1489,13 +1486,13 @@ class TestJobTypeTagManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = "test-type1"
+        self.job_type1 = job_test_utils.create_seed_job_type(name="test-type1")
         self.tag_set1 = ["tag1", "tag2", "oneandfour"]
-        self.job_type2 = "test-type2"
+        self.job_type2 = job_test_utils.create_seed_job_type(name="test-type2")
         self.tag_set2 = ["tag3", "tag4"]
-        self.job_type3 = "test-type3"
+        self.job_type3 = job_test_utils.create_seed_job_type(name="test-type3")
         self.tag_set3 = ["tag5", "tag6"]
-        self.job_type4 = "test-type4"
+        self.job_type4 = job_test_utils.create_seed_job_type(name="test-type4")
         self.tag_set4 = ["tag7", "tag8", "oneandfour"]
         JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
         JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)
@@ -1510,42 +1507,13 @@ class TestJobTypeTagManager(TransactionTestCase):
         
     def test_clear_job_type_tags(self):
         """Tests calling JobTypeManager.clear_job_type_tags()"""
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type3)
-        
-        self.assertEqual(tags, self.tag_set3)
-        
-        JobTypeTag.objects.clear_job_type_tags(self.job_type3)
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type3)
-        
-        self.assertEqual(len(tags), 0)
-        
-    def test_get_job_type_tags(self):
-        """Tests calling JobTypeManager.clear_job_type_tags()"""
-        
-        tags = JobTypeTag.objects.get_tags(self.job_type1)
-        
-        self.assertEqual(tags, self.tag_set1)
-        
-    def test_get_tagged_job_types(self):
-        """Tests calling JobTypeManager.get_tagged_job_types()"""
-        
-        job_types = JobTypeTag.objects.get_tagged_job_types(["tag1", "tag2"])
-        
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(job_types[0], self.job_type1)
 
-    def test_get_matching_job_types(self):
-        """Tests calling JobTypeManager.get_matching_job_types()"""
-      
-        job_types = JobTypeTag.objects.get_matching_job_types("no-match")
-        self.assertEqual(len(job_types), 0)
-        
-        job_types = JobTypeTag.objects.get_matching_job_types("one")
-        self.assertEqual(len(job_types), 2)
-        self.assertEqual(job_types[0], self.job_type1)
-        
-        job_types = JobTypeTag.objects.get_matching_job_types("tag1")
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(job_types[0], self.job_type1)
+        tags = [jt_tag.tag for jt_tag in JobTypeTag.objects.filter(job_type_id=self.job_type3.id)]
+
+        self.assertListEqual(tags, self.tag_set3)
+
+        JobTypeTag.objects.clear_job_type_tags(self.job_type3.id)
+
+        tags = [jt_tag.tag for jt_tag in JobTypeTag.objects.filter(job_type_id=self.job_type3.id)]
+
+        self.assertEqual(len(tags), 0)

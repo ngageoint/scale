@@ -4,6 +4,11 @@
     angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, stateService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
         var vm = this;
 
+        vm.readonly = true;
+        vm.editCpu = false;
+        vm.editMem = false;
+        vm.editMaxTries = false;
+        vm.editPriority = false;
         vm.containerStyle = '';
         vm.requestedJobTypeId = parseInt($routeParams.id);
         vm.jobTypes = [];
@@ -68,6 +73,74 @@
 
         vm.toggleRd = function (value) {
             vm.jobTypesParams.show_rd = value === 'rd';
+        };
+
+        vm.editValue = function (value) {
+            if (value === 'cpus_required') {
+                if (!vm.readonly && !vm.editCpu) {
+                    vm.editCpu = true;
+                }
+            } else if (value === 'mem_required') {
+                if (!vm.readonly && !vm.editMem) {
+                    vm.editMem = true;
+                }
+            } else if (value === 'max_tries') {
+                if (!vm.readonly && !vm.editMaxTries) {
+                    vm.editMaxTries = true;
+                }
+            } else if (value === 'priority') {
+                if (!vm.readonly && !vm.editPriority) {
+                    vm.editPriority = true;
+                }
+            }
+        };
+
+        vm.saveValue = function (value) {
+            if (!vm.readonly) {
+                var updateObj = _.clone(vm.activeJobTypeDetails);
+                updateObj[value] = parseFloat(angular.element('#' + value)[0].value);
+                vm.loading = true;
+                jobTypeService.updateJobType(updateObj).then(function (data) {
+                    vm.activeJobTypeDetails = data;
+                    vm.loading = false;
+                    if (vm.editCpu) {
+                        vm.editCpu = false;
+                    }
+                    if (vm.editMem) {
+                        vm.editMem = false;
+                    }
+                    if (vm.editMaxTries) {
+                        vm.editMaxTries = false;
+                    }
+                    if (vm.editPriority) {
+                        vm.editPriority = false;
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                    toastr['error'](error);
+                    vm.loading = false;
+                });
+            }
+        };
+
+        vm.cancelEdit = function (value) {
+            if (value === 'cpus_required') {
+                if (!vm.readonly && vm.editCpu) {
+                    vm.editCpu = false;
+                }
+            } else if (value === 'mem_required') {
+                if (!vm.readonly && vm.editMem) {
+                    vm.editMem = false;
+                }
+            } else if (value === 'max_tries') {
+                if (!vm.readonly && vm.editMaxTries) {
+                    vm.editMaxTries = false;
+                }
+            } else if (value === 'priority') {
+                if (!vm.readonly && vm.editPriority) {
+                    vm.editPriority = false;
+                }
+            }
         };
 
         var formatDateTime = function (dt) {
@@ -157,6 +230,7 @@
         };
 
         var initialize = function () {
+            vm.readonly = !(vm.user && vm.user.is_admin);
             vm.jobTypesParams = stateService.getJobTypesParams();
             getJobTypes();
             navService.updateLocation('jobs');

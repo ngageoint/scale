@@ -31,27 +31,16 @@ Response: 200 OK
                     "job_type": { 
                         "id": 2, 
                         "name": "scale-strike", 
+                        "version": "1.0.0",
                         "title": "Scale Strike", 
                         "description": "Monitors a directory for incoming source files to ingest", 
                         "revision_num": 1,
                         "icon_code": "f0e7" 
                     }, 
-                    "job_type_rev": { 
-                        "id": 2 
-                    }, 
-                    "event": { 
-                        "id": 1 
-                    }, 
-                    "node": { 
-                        "id": 1 
-                    }, 
-                    "error": { 
-                        "id": 1 
-                    }, 
-                    "status": "RUNNING", 
-                    "priority": 10, 
-                    "num_exes": 1 
-                } 
+                    "status": "RUNNING"
+                },
+                "created": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
             }, 
             ... 
         ] 
@@ -103,7 +92,7 @@ Response: 200 OK
 | results            | Array             | List of result JSON objects that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .id                | Integer           | The unique identifier of the model. Can be passed to the details API.          |
-|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
+|                    |                   | (See :ref:`Strike Details <rest_v6_strike_details>`)                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .name              | String            | The identifying name of the Strike process used for queries.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -112,7 +101,7 @@ Response: 200 OK
 | .description       | String            | A longer description of the Strike process.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job               | JSON Object       | The job that is associated with the Strike process.                            |
-|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
+|                    |                   | (See :ref:`Job Details <rest_v6_job_details>`)                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -158,27 +147,16 @@ Location http://.../v6/strikes/105/
             "job_type": { 
                 "id": 2, 
                 "name": "scale-strike", 
+                "version": "1.0.0",
                 "title": "Scale Strike", 
                 "description": "Monitors a directory for incoming source files to ingest", 
                 "revision_num": 1,
                 "icon_code": "f0e7" 
             }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-            "status": "RUNNING", 
-            "priority": 10, 
-            "num_exes": 1 
+            "status": "RUNNING"
         }, 
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z",
         "configuration": { 
             "workspace": "my-workspace", 
             "monitor": { 
@@ -188,7 +166,7 @@ Location http://.../v6/strikes/105/
             "files_to_ingest": [{ 
                 "filename_regex": ".*txt" 
             }] 
-        } 
+        }
     } 
 
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -207,7 +185,7 @@ Location http://.../v6/strikes/105/
 | description        | String            | Optional | A longer description of the Strike process.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
+|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -243,27 +221,16 @@ Response: 200 OK
            "job_type": { 
                "id": 2, 
                "name": "scale-strike", 
+               "version": "1.0.0",
                "title": "Scale Strike", 
                "description": "Monitors a directory for incoming source files to ingest", 
                "revision_num": 1,
                "icon_code": "f0e7" 
            }, 
-            "job_type_rev": { 
-                "id": 2 
-            }, 
-            "event": { 
-                "id": 1 
-            }, 
-            "node": { 
-                "id": 1 
-            }, 
-            "error": { 
-                "id": 1 
-            }, 
-           "status": "RUNNING", 
-           "priority": 10, 
-           "num_exes": 1 
-       }, 
+           "status": "RUNNING"
+       },
+       "created": "2015-03-11T00:00:00Z",
+       "last_modified": "2015-03-11T00:00:00Z",
        "configuration": { 
            "workspace": "my-workspace", 
            "monitor": { 
@@ -309,7 +276,7 @@ Response: 200 OK
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | configuration      | JSON Object       | JSON defining the Strike configuration.                                        |
-|                    |                   | (See :ref:`architecture_strike_spec`)                                          |
+|                    |                   | (See :ref:`rest_v6_strike_configuration`)                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_strike_validate:
@@ -362,7 +329,7 @@ Response: 200 OK
 | description        | String            | Optional | A longer description of the Strike process.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Required | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
+|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -428,9 +395,133 @@ Response: 204 NO CONTENT
 | description        | String            | Optional | A longer description of the Strike process.                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | configuration      | JSON Object       | Optional | JSON defining the Strike configuration.                             |
-|                    |                   |          | (See :ref:`architecture_strike_spec`)                               |
+|                    |                   |          | (See :ref:`rest_v6_strike_configuration`)                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 204 No Content                                                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
+
+.. _rest_v6_strike_configuration:
+
+Strike Configuration JSON
+-------------------------
+
+A strike configuration JSON describes a set of configuration settings that affect how a strike job executes.
+
+**Example dir-watcher interface:**
+
+.. code-block:: javascript
+
+    {
+      "workspace" : "workspace_name",
+      "monitor" : {
+        "type" : "dir-watcher",
+        "transfer_suffix" : "_tmp"
+      },
+      "files_to_ingest":[
+        {
+          "filename_regex" : ".*txt",
+          "data_types": [ "type1", "type2" ],
+          "new_workspace" : "workspace_name",
+          "new_file_path" : "wksp/path"
+        }
+      ]
+    }
+    
+**Example S3 interface:**
+
+.. code-block:: javascript
+
+    {
+        "workspace": "my-host-workspace",
+        "monitor": {
+            "type": "s3",
+            "sqs_name": "my-sqs"
+            "credentials": {
+                "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+                "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+            },
+            "region_name": "us-east-1"
+        },
+        "files_to_ingest": [
+            {
+                "filename_regex": "*.h5",
+                "data_types": [
+                    "data type 1",
+                    "data type 2"
+                ],
+                "new_workspace": "my-new-workspace",
+                "new_file_path": "/new/file/path"
+            }
+        ]
+    }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Strike Configuration**                                                                                                    |
++============================+================+==========+====================================================================+
+| workspace                  | String         | Required | String that specifies the name of the workspace that is being      |
+|                            |                |          | scanned. The type of the workspace (its broker type) will determine|
+|                            |                |          | which types of scanner can be used.                                |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| monitor                    | JSON Object    | Required | JSON object representing the type and configuration of the monitor |
+|                            |                |          | that will watch *workspace* for new files.                         |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .type                      | String         | Required | The type of the monitor. Must be either 'dir-watcher' or 's3'      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .transfer_suffix           | String         | Required | (dir-watcher)Defines a suffix that is used on the file names to    |
+|                            |                |          | indicate that files are still transferring and have not yet        |
+|                            |                |          | finished being copied into the monitored directory                 |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .sqs_name                  | String         | Required | (s3) Name of the SQS queue that should be polled for object        |
+|                            |                |          | creation notifications that describe new files in the S3 bucket.   |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .credentials               | JSON Object    | Optional | (s3) JSON object that provides the necessary information to access |
+|                            |                |          | the bucket. This attribute should be omitted when using IAM        |
+|                            |                |          | role-based security. If it is included for key-based security, then|
+|                            |                |          | both sub-attributes must be included. An IAM account should be     |
+|                            |                |          | created and granted the appropriate permissions to the bucket      |
+|                            |                |          | before attempting to use it here.                                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..access_key_id            | String         | Optional | (s3) Unique identifier for the user account in IAM that will be    |
+|                            |                |          | used as a proxy for read and write operations within Scale.        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| ..secret_access_key        | String         | Required | (s3) Generated token that the system can use to prove it should be |
+|                            |                |          | able to make requests on behalf of the associated IAM account      |
+|                            |                |          | without requiring the actual password used by that account.        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .region_name               | String         | Optional | (s3) AWS region where the SQS Queue is located. This is not always |
+|                            |                |          | required, as environment variables or configuration files could set|
+|                            |                |          | the default region, but it is a highly recommended setting for     |
+|                            |                |          | explicitly indicating the SQS region.                              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| files_to_ingest            | Array          | Required | List of JSON objects that define the rules for how to handle files |
+|                            |                |          | that appear in the scanned workspace. The array must contain at    |
+|                            |                |          | least one item.                                                    |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .filename_regex            | String         | Required | Regular expression to check against the names of new files in the  |   
+|                            |                |          | scanned workspace. When a new file appears in the workspace, the   |
+|                            |                |          | file’s name is checked against each expression in order of the     | 
+|                            |                |          | files_to_ingest array. If an expression matches the new file name  |
+|                            |                |          | in the workspace, that file is ingested according to the other     |
+|                            |                |          | fields in the JSON object and all subsequent rules in the list are |
+|                            |                |          | ignored (first rule matched is applied).                           |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .data_types                | Array          | Optional | Any file that matches the corresponding file name regular          |
+|                            |                |          | expression will have these data type strings “tagged” with the     |
+|                            |                |          | file. If not provided, data_types defaults to an empty array.      |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .new_workspace             | String         | Optional | Specifies the name of a new workspace to which the file should be  |
+|                            |                |          | copied. This allows the ingest process to move files to a different|
+|                            |                |          | workspace after they appear in the scanned workspace.              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| .new_file_path             | String         | Optional | Specifies a new relative path for storing new files. If            |
+|                            |                |          | new_workspace is also specified, the file is moved to the new      |
+|                            |                |          | workspace at this new path location (instead of using the current  |
+|                            |                |          | path the new file originally came in on). If new_workspace is not  |
+|                            |                |          | specified, the file is moved to this new path location within the  |
+|                            |                |          | original scanned workspace. In either of these cases, three        |
+|                            |                |          | additional and dynamically named directories, for the current year,|
+|                            |                |          | month, and day, will be appended to the new_file_path value        |
+|                            |                |          | automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).|
++----------------------------+----------------+----------+--------------------------------------------------------------------+

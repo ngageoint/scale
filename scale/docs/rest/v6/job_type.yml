@@ -43,6 +43,29 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_list'
+    post:
+      operationId: _rest_v6_job_type_post
+      summary: Job Type Post
+      description: Creates or edits an existing job type
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_type_post'
+      responses:
+        '201':
+          description: |-
+            The 201 CREATED response indicates a successful event
+          headers:
+            location:
+              schema:
+                type: string
+              description: The url of the created/edited job type
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_detail'
   /v6/job-types/{name}/:
     get:
       operationId: _rest_v6_job_type_versions
@@ -78,7 +101,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_versions'
- /v6/ingests/job-types/{name}/{version}/:
+ /v6/job-types/{name}/{version}/:
     get:
       operationId: _rest_v6_job_type_details
       summary: Job Type Details
@@ -102,6 +125,31 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_detail'
+    patch:
+      operationId: _rest_v6_job_type_update
+      summary: Job Type Update
+      description: Update one or more fields in an existing job type
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_type_update'
+      parameters:
+        -in: path
+          name: name
+          schema:
+            type: string
+          description: name of an existing job type
+        -in: path
+          name: version
+          schema:
+            type: string
+          description: version of an existing job type
+      responses:
+        '204':
+          description: |-
+            204 no content
   /v6/job-types/{name}/{version}/revisions/:
     get:
       operationId: _rest_v6_job_type_revisions
@@ -137,7 +185,7 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_revisions'
- /v6/ingests/job-types/{name}/{version}/revisions/{revision_num}/:
+ /v6/job-types/{name}/{version}/revisions/{revision_num}/:
     get:
       operationId: _rest_v6_job_type_revision_details
       summary: Job Type Revision Details
@@ -167,6 +215,25 @@ paths:
               schema:
                 $ref: '#/components/schemas/job_type_revision_detail'
 
+  /v6/job-types/validation/:
+    post:
+      operationId: _rest_v6_job_type_validation
+      summary: Job Type Validation
+      description: Validates a job type without creating/editing it
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/job_type_validation_post'
+      responses:
+        '200':
+          description: |-
+            The 200 OK response indicates a successful event
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/job_type_validation'
 components:
   schemas:
     job_type_list:
@@ -426,27 +493,41 @@ components:
           items:
             $ref: '#/components/schemas/job_type_revision'
           description: List of Job Type Revisions
-    job_type_revision:
-      title: Job Type Revision
+    model:
+      title: Model
       type: object
-      properties:
+        id:
+          type: integer
+          description: The unique identifier of the model. Can be passed to the details API call 
+          example: 4
+    job_type_revision_base:
+      title: Job Type Revision Base
+      type: object
         id:
           type: integer
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         job_type:
-          $ref: '#/components/schemas/job_type_base'
+          $ref: '#/components/schemas/model'
         revision_num:
           type: integer
           example: 1
-        docker_image:
-          type: string
-          example: "my-job-1.0.0-seed:1.0.0"
-        created:
-          type: string
-          format: date-time
-          description: When the associated database model was initially created.
-          example: 2015-09-10T15:24:53.503Z
+    job_type_revision:
+      allof:
+        - ref: '#/components/schemas/job_type_revision_base'
+        - title: Job Type Revision
+        - type: object
+          properties:   
+          job_type:
+            $ref: '#/components/schemas/job_type_base'
+          docker_image:
+            type: string
+            example: "my-job-1.0.0-seed:1.0.0"
+          created:
+            type: string
+            format: date-time
+            description: When the associated database model was initially created.
+            example: 2015-09-10T15:24:53.503Z
     job_type_revision_detail:
       title: Job Type Revision Details
       type: object
@@ -470,3 +551,69 @@ components:
           example: 2015-09-10T15:24:53.503Z
         manifest:
           $ref: '#/components/schemas/seed_manifest'
+          
+    job_type_update:
+      title: Job Type Update
+      type: object
+      properties:
+        icon_code:
+          type: string
+          example: f186 
+        is_active:
+          type: boolean
+          example: true
+        is_paused:
+          type: boolean
+          example: false
+        max_scheduled:
+          type: integer
+          example: 1
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      
+    job_type_post:
+      title: Job Type Create/Edit
+      type: object
+      properties:
+        icon_code:
+          type: string
+          example: f186 
+        max_scheduled:
+          type: integer
+          example: 1
+        docker_image:
+          type: string
+          example: "my-job-1.0.0-seed:1.0.0"
+        manifest:
+          $ref: '#/components/schemas/seed_manifest'
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      required:
+      - docker_image
+      - manifest
+      
+    job_type_validation_post:
+      title: Job Type Validation Post
+      type: object
+      properties:      
+        manifest:
+          $ref: '#/components/schemas/seed_manifest'
+        configuration:
+          $ref: '#/components/schemas/job_type_config'
+      required:
+      - manifest
+      
+    job_type_validation:
+      title: Job Type Validation
+      type: object
+      properties:
+        is_valid:
+          type: boolean
+          description: The job type is valid
+          example: true
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_error'
+        errors:
+          type: array
+            $ref: '#/components/schemas/validation_warning'

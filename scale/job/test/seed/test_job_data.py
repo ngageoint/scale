@@ -49,37 +49,6 @@ class TestJobData(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.test_output_snippet = {
-            "name": "OUTPUT_TIFFS",
-            "mediaType": "image/tiff",
-            "pattern": "outfile*.tif",
-            "multiple": False,
-            "required": True
-        }
-
-    @patch('job.seed.types.SeedOutputFiles.get_files')
-    def test_capture_output_files_missing(self, get_files):
-        output_files = [SeedOutputFiles(self.test_output_snippet)]
-
-        get_files.side_effect = OutputCaptureError('message')
-
-        with self.assertRaises(OutputCaptureError) as exc:
-            JobResults()._capture_output_files(output_files)
-
-    @patch('job.seed.types.SeedOutputFiles.get_files')
-    def test_capture_output_files_multiple(self, get_files):
-        output_files = [SeedOutputFiles(self.test_output_snippet)]
-        name = 'OUTPUT_TIFFS'
-        get_files.return_value = ['outfile0.tif', 'outfile1.tif']
-
-        outputs = JobResults()._capture_output_files(output_files)
-
-        self.assertIn(name, outputs)
-        files = outputs[name]
-        self.assertEqual(len(files), 2)
-        self.assertEqual(files[0].__dict__, ProductFileMetadata(name, 'outfile0.tif', media_type='image/tiff').__dict__)
-        self.assertEqual(files[1].__dict__, ProductFileMetadata(name, 'outfile1.tif', media_type='image/tiff').__dict__)
-
     @patch('os.path.isfile', return_value=True)
     @patch('job.seed.results.job_results.DATA_FILE_STORE',
            new_callable=lambda: {'DATA_FILE_STORE': DummyDataFileStore()})

@@ -7,13 +7,60 @@ from django.test import TestCase
 from job.seed.results.outputs_json import SeedOutputsJson
 from mock import patch, mock_open
 
-from job.seed.types import SeedInputFiles, SeedOutputJson
+from job.seed.types import SeedInputFiles, SeedOutputJson, SeedOutputFiles
 
 
 class TestSeedInputsJson(TestCase):
 
     def setUp(self):
         django.setup()
+
+
+class TestSeedOutputsFiles(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+    @patch('glob.glob', return_value=['output.txt', 'output.txt.metadata.json'])
+    def test_get_files(self, glob):
+        seed_output_file = SeedOutputFiles({
+            'name': 'OUTPUT_FILE',
+            'pattern': 'output*',
+            'multiple': False,
+            'required': True
+        })
+
+        files = seed_output_file.get_files()
+
+        self.assertEqual(['output.txt'], files)
+
+    @patch('glob.glob', return_value=['outputs1.txt',
+                                      'outputs2.txt', 'outputs2.txt.metadata.json',
+                                      'outputs3.metadata.json'])
+    def test_get_files_multiple(self, glob):
+        seed_output_file = SeedOutputFiles({
+                'name': 'OUTPUT_FILES',
+                'pattern': 'outputs*',
+                'multiple': True,
+                'required': True
+            })
+
+        files = seed_output_file.get_files()
+
+        self.assertEqual(['outputs1.txt', 'outputs2.txt'], files)
+        
+    @patch('glob.glob', return_value=['something.json', 'seed.outputs.json', 'results_manifest.json'])
+    def test_get_files_single_output_file_with_metadata_files_to_exclude(self, glob):
+        seed_output_file = SeedOutputFiles({
+                'name': 'OUTPUT_FILES',
+                'pattern': '*.json',
+                'multiple': False,
+                'required': True
+            })
+
+        files = seed_output_file.get_files()
+
+        self.assertEqual(['something.json'], files)
 
 
 class TestSeedOutputsJson(TestCase):

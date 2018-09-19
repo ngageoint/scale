@@ -109,11 +109,22 @@ class FilesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-        started = rest_util.parse_timestamp(request, 'started', required=False)
-        ended = rest_util.parse_timestamp(request, 'ended', required=False)
-        rest_util.check_time_range(started, ended)
-        time_field = rest_util.parse_string(request, 'time_field', required=False,
-                                            accepted_values=ScaleFile.VALID_TIME_FIELDS)
+        data_started = rest_util.parse_timestamp(request, 'data_started', required=False)
+        data_ended = rest_util.parse_timestamp(request, 'data_ended', required=False)
+        rest_util.check_time_range(data_started, data_ended)
+        
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
+
+        source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
+        source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
+        source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
+        
+        mod_started = rest_util.parse_timestamp(request, 'modified_started', required=False)
+        mod_ended = rest_util.parse_timestamp(request, 'modified_ended', required=False)
+        rest_util.check_time_range(mod_started, mod_ended)
 
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
@@ -128,10 +139,15 @@ class FilesView(ListAPIView):
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         files = ScaleFile.objects.filter_files(
-            started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-            job_type_names=job_type_names, job_ids=job_ids, 
+            data_started=data_started, data_ended=data_ended,
+            source_started=source_started, source_ended=source_ended,
+            source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+            source_collections=source_collections, source_tasks=source_tasks,
+            mod_started=mod_started, mod_ended=mod_ended, job_type_ids=job_type_ids,
+            job_type_names=job_type_names, job_ids=job_ids,
             file_names=file_names, job_outputs=job_outputs, recipe_ids=recipe_ids,
-            recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids, order=order,
+            recipe_type_ids=recipe_type_ids, recipe_nodes=recipe_nodes, batch_ids=batch_ids,
+            order=order,
         )
 
         page = self.paginate_queryset(files)

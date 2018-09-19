@@ -131,7 +131,7 @@ class ScaleFileSerializerV5(ScaleFileBaseSerializerV5):
 class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     """Converts Scale file model fields to REST output"""
     from batch.serializers import BatchBaseSerializerV6
-    from job.serializers import JobTypeBaseSerializerV6
+    from job.job_type_serializers import JobTypeBaseSerializerV6
     from recipe.serializers import RecipeTypeBaseSerializerV6
 
     workspace = WorkspaceBaseSerializer()
@@ -148,6 +148,10 @@ class ScaleFileSerializerV6(ScaleFileBaseSerializerV6):
     data_ended = serializers.DateTimeField()
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
     last_modified = serializers.DateTimeField()
     # TODO: update to use GeoJson instead of WKT
     geometry = WktField()

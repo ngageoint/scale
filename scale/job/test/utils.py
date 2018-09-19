@@ -10,11 +10,13 @@ import error.test.utils as error_test_utils
 import trigger.test.utils as trigger_test_utils
 from job.execution.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.json.job_config_v6 import convert_config_to_v6_json, JobConfigurationV6
 from job.execution.configuration.json.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, JobType, JobTypeRevision, TaskUpdate
+from job.seed.manifest import SeedManifest
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
@@ -152,6 +154,22 @@ COMPLETE_MANIFEST = {
         ]
       }
     }
+
+MINIMUM_MANIFEST = {
+    'seedVersion': '1.0.0',
+    'job': {
+        'name': 'my-job',
+        'jobVersion': '1.0.0',
+        'packageVersion': '1.0.0',
+        'title': 'My first job',
+        'description': 'Reads an HDF5 file and outputs two png images, a CSV and manifest containing cell_count',
+        'maintainer': {
+            'name': 'John Doe',
+            'email': 'jdoe@example.com'
+        },
+        'timeout': 3600
+    }
+}
 
 
 class MockTriggerRuleConfiguration(JobTriggerRuleConfiguration):
@@ -383,8 +401,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     return job_exe
 
 
-def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None, is_active=True,
-                         is_operational=True, trigger_rule=None, configuration=None):
+def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max_tries=3, max_scheduled=None,
+                         is_active=True, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
     if not manifest:
         global JOB_TYPE_NAME_COUNTER
         name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
@@ -442,20 +460,31 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                                       manifest=manifest, priority=priority, timeout=manifest['job']['timeout'],
                                       max_tries=max_tries, max_scheduled=max_scheduled, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule,
-                                      configuration=configuration)
+                                      configuration=configuration, docker_image=docker_image)
+    version_array = job_type.get_job_version_array(manifest['job']['jobVersion'])
+    job_type.version_array = version_array
+    job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 
-def edit_job_type_v6(job_type, manifest_dict=None, trigger_rule_dict=None, configuration_dict=None,
-                         remove_trigger_rule=False, **kwargs):
-    """Updates the manifest of a job type, including creating a new revision for unit testing
+def edit_job_type_v6(job_type, manifest_dict=None, docker_image=None, icon_code=None, is_active=None, 
+                            is_paused=None, max_scheduled=None, configuration_dict=None):
+    """Updates a job type, including creating a new revision for unit testing
     """
-    JobType.objects.edit_job_type_v6(job_type.id, manifest_dict=manifest_dict, trigger_rule_dict=trigger_rule_dict, 
-                         configuration_dict=configuration_dict, remove_trigger_rule=remove_trigger_rule, **kwargs)
+    
+    manifest = SeedManifest(manifest_dict, do_validate=True)
+        
+    configuration = None
+    if configuration_dict:
+        configuration = JobConfigurationV6(configuration_dict, do_validate=True).get_configuration()
+
+    JobType.objects.edit_job_type_v6(job_type.id, manifest=manifest, docker_image=docker_image, 
+                         icon_code=icon_code, is_active=is_active, is_paused=is_paused, 
+                         max_scheduled=max_scheduled, configuration=configuration)
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,
-                    is_system=False, is_operational=True, trigger_rule=None, configuration=None):
+                    is_system=False, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
     """Creates a job type model for unit testing
 
     :returns: The job type model
@@ -508,7 +537,10 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
                                       max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
                                       is_system=is_system, is_operational=is_operational, trigger_rule=trigger_rule,
-                                      configuration=configuration)
+                                      configuration=configuration, docker_image=docker_image)
+    version_array = job_type.get_job_version_array(version)
+    job_type.version_array = version_array
+    job_type.save()
     JobTypeRevision.objects.create_job_type_revision(job_type)
     return job_type
 

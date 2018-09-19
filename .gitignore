@@ -8,4 +8,9 @@ bin/
 pkg/
 src/
 coverage.xml
-
+output.txt
+*.~c9*.py
+scale/local_settings.py
+scale/db.sqlite3
+redoc-static.html
+.python-version

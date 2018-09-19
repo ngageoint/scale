@@ -1,10 +1,18 @@
 import glob
 from abc import ABCMeta
 
+import logging
 import os
 
 from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
+from job.seed.metadata import METADATA_SUFFIX
+from job.seed.results.outputs_json import SEED_OUPUTS_JSON_FILENAME
+
+LEGACY_RESULTS_MANIFEST = 'results_manifest.json'
+SPECIAL_FILES = [METADATA_SUFFIX, SEED_OUPUTS_JSON_FILENAME, LEGACY_RESULTS_MANIFEST]
+
+logger = logging.getLogger(__name__)
 
 
 class SeedFiles(object):
@@ -74,6 +82,18 @@ class SeedOutputFiles(SeedFiles):
         """
         path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, self.pattern)
         results = glob.glob(path_pattern)
+
+        logger.info('Results found in post-step pattern match for output %s: %s' % (self.name, results))
+
+        # Remove any metadata.json and special json files from results
+        purged_results = []
+        for x in results:
+            for file_name in SPECIAL_FILES:
+                if file_name in x:
+                    break
+            else:
+                purged_results.append(x)
+        results = purged_results
 
         # Handle required validation
         if self.required and len(results) == 0:

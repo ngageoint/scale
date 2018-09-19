@@ -2,7 +2,7 @@
 import rest_framework.serializers as serializers
 
 from ingest.models import Ingest
-from job.serializers import JobBaseSerializerV5, JobBaseSerializerV6
+#TODO: Look at moving job serializers imports back to top of file
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
 from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
 from util.rest import ModelIdSerializer
@@ -17,9 +17,9 @@ class ScanBaseSerializer(ModelIdSerializer):
     job = ModelIdSerializer()
     dry_run_job = ModelIdSerializer()
 
-
-class ScanSerializer(ScanBaseSerializer):
+class ScanSerializerV5(ScanBaseSerializer):
     """Converts scan model fields to REST output"""
+    from job.serializers import JobBaseSerializerV5
 
     job = JobBaseSerializerV5()
     dry_run_job = JobBaseSerializerV5()
@@ -28,12 +28,29 @@ class ScanSerializer(ScanBaseSerializer):
 
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
+    
+class ScanSerializerV6(ScanBaseSerializer):
+    """Converts scan model fields to REST output"""
+    from job.serializers import JobBaseSerializerV6
 
+    job = JobBaseSerializerV6()
+    dry_run_job = JobBaseSerializerV6()
 
-class ScanDetailsSerializer(ScanSerializer):
+    file_count = serializers.IntegerField()
+
+    created = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+class ScanDetailsSerializerV5(ScanSerializerV5):
     """Converts scan model fields to REST output"""
 
-    configuration = serializers.JSONField(source='get_scan_configuration_as_dict')
+    configuration = serializers.JSONField(source='get_v1_configuration_json')
+    
+class ScanDetailsSerializerV6(ScanSerializerV6):
+    """Converts scan model fields to REST output"""
+
+    configuration = serializers.JSONField(source='get_v6_configuration_json')
+
 
 
 class StrikeBaseSerializer(ModelIdSerializer):
@@ -47,6 +64,7 @@ class StrikeBaseSerializer(ModelIdSerializer):
 
 class StrikeSerializerV5(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
+    from job.serializers import JobBaseSerializerV5
 
     job = JobBaseSerializerV5()
 
@@ -55,6 +73,7 @@ class StrikeSerializerV5(StrikeBaseSerializer):
     
 class StrikeSerializerV6(StrikeBaseSerializer):
     """Converts strike model fields to REST output"""
+    from job.serializers import JobBaseSerializerV6
 
     job = JobBaseSerializerV6()
 
@@ -122,7 +141,7 @@ class IngestSerializer(IngestBaseSerializer):
 class IngestDetailsSerializerV5(IngestSerializer):
     """Converts ingest model fields to REST output"""
 
-    scan = ScanDetailsSerializer()
+    scan = ScanDetailsSerializerV5()
     strike = StrikeDetailsSerializerV5()
 
     workspace = WorkspaceDetailsSerializer()
@@ -134,7 +153,7 @@ class IngestDetailsSerializerV5(IngestSerializer):
 class IngestDetailsSerializerV6(IngestSerializer):
     """Converts ingest model fields to REST output"""
 
-    scan = ScanDetailsSerializer()
+    scan = ScanDetailsSerializerV6()
     strike = StrikeDetailsSerializerV6()
 
     workspace = WorkspaceDetailsSerializer()

@@ -1,10 +1,14 @@
 # Environment variables that must be set in Gitlab CI/CD Pipeline variables
 # ALPINE_IMAGE
 # CENTOS_IMAGE
-# DOCKER_AUTH_CONFIG
-# DOCKER_DEV_AUTH_CONFIG
+# DOCKER_DEV_ORG
+# DOCKER_DEV_PASS
 # DOCKER_DEV_USER
+# DOCKER_ORG
+# DOCKER_PASS
 # DOCKER_USER
+# DOCKER_IMAGE
+# DIND_IMAGE
 # GOSU_URL
 # LOGSTASH_IMAGE
 # REGISTRY
@@ -14,10 +18,10 @@ variables:
   IMAGE_PREFIX: "scale"
   EPEL_INSTALL: "0"
 
-image: ${REGISTRY}/${DOCKER_DEV_USER}/docker:17
+image: ${DOCKER_IMAGE}
 
 services:
-  - ${REGISTRY}/${DOCKER_DEV_USER}/dind:17
+  - ${DIND_IMAGE}
 
 stages:
   - package

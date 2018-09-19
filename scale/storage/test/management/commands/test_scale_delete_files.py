@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
 
+import json
 import os
 
 import django
 from django.test import TestCase
 from mock import call, patch
 
+from job.test import utils as job_test_utils
 from storage.brokers.host_broker import HostBroker
 from storage.delete_files_job import delete_files
 from storage.configuration.workspace_configuration import WorkspaceConfiguration
@@ -17,7 +19,9 @@ class TestCallScaleDeleteFiles(TestCase):
     def setUp(self):
         django.setup()
 
-        self.file_1 = storage_test_utils.create_file()
+        self.job_1 = job_test_utils.create_job()
+        self.job_exe_1 = job_test_utils.create_job_exe(job=self.job_1)
+        self.file_1 = storage_test_utils.create_file(job_exe=self.job_exe_1)
         self.workspace = storage_test_utils.create_workspace()
 
     @patch('storage.management.commands.scale_delete_files.delete_files_job')
@@ -31,9 +35,11 @@ class TestCallScaleDeleteFiles(TestCase):
 
         config = WorkspaceConfiguration(self.workspace.json_config)
 
-        files_str = '-f {"file_path":"/dir/file.name", "id":"12300", "workspace":"workspace_1"}'
-        workspace_str = '-w {"workspace_1": %s}' % (config.get_dict())
-        purge_str = '-p False'
+        os.environ['FILES'] = json.dumps([{"file_path":"/dir/file.name", "id":"12300", "workspace":"workspace_1"}])
+        os.environ['WORKSPACES'] = json.dumps([{"workspace_1": config.get_dict()}])
+        os.environ['PURGE'] = str(False)
+        os.environ['JOB_ID'] = str(self.job_1.id)
+
 
         with self.assertRaises(SystemExit):
-            django.core.management.call_command('scale_delete_files', files_str, workspace_str, purge_str)
+            django.core.management.call_command('scale_delete_files')

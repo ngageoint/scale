@@ -125,8 +125,7 @@ class TestSchedulerViewV6(TestCase):
 
         json_data = {
             'is_paused': True,
-            'num_message_handlers': 10,
-            'resource_level': 'GOOD'
+            'num_message_handlers': 10
         }
         
         url = '/v6/scheduler/'
@@ -146,7 +145,7 @@ class TestSchedulerViewV6(TestCase):
         """Test calling the Update Scheduler method with invalid fields."""
 
         json_data = {
-            'resource_level': 'BAD'
+            'system_logging_level ': 'BAD'
         }
         
         url = '/v6/scheduler/'

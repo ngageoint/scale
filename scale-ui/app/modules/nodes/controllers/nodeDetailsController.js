@@ -5,7 +5,7 @@
         var vm = this,
             nodes = [],
             jobTypes = [];
-        
+
         vm.scaleConfig = scaleConfig;
         vm.moment = moment;
         vm._ = _;
