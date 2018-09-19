@@ -28,9 +28,9 @@ class RecipeInstance(object):
             node_definition = self._definition.graph[node_name]
             recipe_node_model = recipe_node_dict[node_name]
             if node_definition.node_type == JobNodeDefinition.NODE_TYPE:
-                node = JobNodeInstance(node_definition, recipe_node_model.job)
+                node = JobNodeInstance(node_definition, recipe_node_model.job, recipe_node_model.is_original)
             elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
-                node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe)
+                node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe, recipe_node_model.is_original)
             self.graph[node.name] = node
             for parent_name in node_definition.parents.keys():
                 node.add_dependency(self.graph[parent_name])
@@ -50,3 +50,6 @@ class RecipeInstance(object):
             node.get_jobs_to_update(pending_job_ids, blocked_job_ids)
 
         return {'BLOCKED': blocked_job_ids, 'PENDING': pending_job_ids}
+
+    # Function to find leaf recipes and jobs 
+    # returns leaf nodes 

@@ -93,6 +93,8 @@ class PurgeRecipe(CommandMessage):
             recipe. The same node may exist in multiple recipes due to superseding. For an original node and recipe combination,
             the is_original flag is True. When recipe B supersedes recipe A, the non-superseded nodes from recipe A that are
             being copied to recipe B will have models with is_original set to False.
+
+        Use recipe.get_recipe_instance to get the instance to traverse the recipe graph9
         """
 
         recipe = Recipe.objects.get(id=self.recipe_id)
@@ -101,18 +103,13 @@ class PurgeRecipe(CommandMessage):
         for recipe_node in recipe_nodes:
             if recipe_node.is_original == True and recipe_node.sub_recipe:
                 # Kick off a purge_recipe for sub-recipes
-                self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe,
+                self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.sub_recipe,
                                                                      trigger_id=self.trigger_id,
                                                                      when=self.when))
             # Kick off a delete files job for the node job
             self.new_messages.append(create_spawn_delete_files_job(job_id=recipe_node.job,
                                                                    trigger_id=self.trigger_id,
                                                                    purge=True))
-            # Kick off a purge recipe for the ???
-            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe,
-                                                                 trigger_id=self.trigger_id,
-                                                                 when=self.when))
-            pass
 
         # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
         BatchRecipe.objects.filter(recipe=recipe).delete()
@@ -120,14 +117,17 @@ class PurgeRecipe(CommandMessage):
         RecipeInputFile.objects.filter(recipe=recipe).delete()
         recipe.delete()
 
+
+        # -------------
         parent_recipe_nodes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
 
         if parent_recipe_nodes:
             for parent_recipe in parent_recipe_nodes:
                 # Kick off PurgeRecipe for parent recipes
-                messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe,
+                self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe,
                                                             trigger_id=self.trigger_id,
                                                             when=self.when))
         elif recipe.is_superseded:
+            pass
 
         return True
