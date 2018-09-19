@@ -286,6 +286,7 @@ Request: POST http://.../v6/workspaces/validation/
  .. code-block:: javascript 
 
     {
+        "title": "raw-source",
         "title": "Raw Source",
         "description": "Raw Source Workspace",
         "base_url": "http://host.com/rs",
@@ -318,6 +319,9 @@ Response: 200 OK
 | **Content Type**        | *application/json*                                                                            |
 +-------------------------+-----------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| name                    | String            | Optional | The identifying name of an existing workspace. Used to validate|
+|                         |                   |          | changes to existing workspaces.                                |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | title                   | String            | Required | The human-readable name of the workspace.                      |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+

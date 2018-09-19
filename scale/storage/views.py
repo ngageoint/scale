@@ -603,8 +603,10 @@ class WorkspacesValidationView(APIView):
 
         configuration = rest_util.parse_dict(request, 'configuration')
 
+        name = rest_util.parse_string(request, 'name', required=False)
         title = rest_util.parse_string(request, 'title', required=True)
-        name = title_to_name(self.queryset, title)
+        if not name:
+            name = title_to_name(self.queryset, title)
         rest_util.parse_string(request, 'description', required=False)
         rest_util.parse_string(request, 'base_url', required=False)
         rest_util.parse_string(request, 'is_active', required=False)

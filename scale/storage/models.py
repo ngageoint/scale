@@ -970,13 +970,13 @@ class WorkspaceManager(models.Manager):
         warnings.extend(config.validate_broker())
         return warnings
         
-    def validate_workspace_v6(self, name, json_config):
+    def validate_workspace_v6(self, name, configuration):
         """Validates a new workspace prior to attempting a save
 
         :param name: The identifying name of a Workspace to validate
         :type name: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
+        :param configuration: The Workspace configuration
+        :type configuration: dict
         :returns: The workspace validation.
         :rtype: :class:`storage.models.WorkspaceValidation`
         """
@@ -989,7 +989,7 @@ class WorkspaceManager(models.Manager):
 
         # Validate the configuration, no exception is success
         try:
-            config = WorkspaceConfigurationV6(json_config, do_validate=True).get_configuration()
+            config = WorkspaceConfigurationV6(configuration, do_validate=True).get_configuration()
             # Add broker-specific warnings
             warnings.extend(config.validate_broker())
         except InvalidWorkspaceConfiguration as ex:
@@ -1005,7 +1005,7 @@ class WorkspaceManager(models.Manager):
 
             # Assign to short names in the interest of single-line conditional
             old_conf = workspace.json_config
-            new_conf = json_config
+            new_conf = configuration
 
             if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
                 warnings.append(ValidationWarning('broker_type',

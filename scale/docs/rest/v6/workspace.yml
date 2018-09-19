@@ -206,15 +206,20 @@ components:
       title: Workspace Post
       type: object
       properties:
+        name:
+          type: string
+          description: The identifying name of the workspace used for queries. |
+            Used for validation of changes to existing workspace
+          example: raw-source
         title:
           type: string
-          description: The human readable display name of the Strike process. |
+          description: The human readable display name of the workspace. |
             This will be used to generate the name field
-          example: My Strike Process
+          example: Raw Source
         description:
           type: string
-          description: A longer description of the Strike process. 
-          example: This is my Strike process for detecting my favorite files!
+          description: A longer description of the workspace 
+          example: Raw source workspace
         base_url:
           type: string
           description:  The URL prefix used to access all files within the workspace. |
