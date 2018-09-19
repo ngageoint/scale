@@ -80,7 +80,7 @@ X_FRAME_OPTIONS = 'DENY'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'scale-dev-emimaesmith.c9users.io']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
