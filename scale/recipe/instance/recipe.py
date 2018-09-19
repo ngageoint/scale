@@ -51,5 +51,21 @@ class RecipeInstance(object):
 
         return {'BLOCKED': blocked_job_ids, 'PENDING': pending_job_ids}
 
-    # Function to find leaf recipes and jobs 
-    # returns leaf nodes 
+    def get_original_leaf_nodes(self):
+        """Returns a mapping of non-superseded job and recipe IDs
+
+        :returns: A dict with node mapping of recipe leafs
+        :rtype: dict
+        """
+
+        leaf_job_ids = []
+        leaf_recipe_ids = []
+
+        for node in self.graph:
+            if node.is_original:
+                if node.node_type == JobNodeDefinition.NODE_TYPE:
+                    leaf_job_ids.append(node.job.id)
+                elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
+                    leaf_recipe_ids.append(node.recipe.id)
+
+        return {'jobs': leaf_job_ids, 'recipes': leaf_recipe_ids}
