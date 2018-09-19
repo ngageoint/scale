@@ -5,7 +5,8 @@ import copy
 from collections import namedtuple
 
 import django.contrib.postgres.fields
-from django.db import connection, models, transaction, Q
+from django.db import connection, models, transaction
+from django.db.models import Q
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -408,6 +409,27 @@ class RecipeManager(models.Manager):
         qry = self.select_for_update()
         qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
         qry = qry.filter(is_superseded=False)
+        # Recipe models are always locked in order of ascending ID to prevent deadlocks
+        return list(qry.order_by('id').iterator())
+
+    def get_locked_recipes_from_root_old(self, root_recipe_ids, event_id=None):
+        """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
+        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
+        optional event ID ensures that recipes are not reprocessed multiple times due to one event.
+        :param root_recipe_ids: The root recipe IDs
+        :type root_recipe_ids: list
+        :param event_id: The event ID
+        :type event_id: int
+        :returns: The recipe models
+        :rtype: list
+        """
+
+        root_recipe_ids = set(root_recipe_ids)  # Ensure no duplicates
+        qry = self.select_for_update()
+        qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
+        qry = qry.filter(is_superseded=False)
+        if event_id is not None:
+            qry = qry.exclude(event_id=event_id)  # Do not return recipes with this event ID
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(qry.order_by('id').iterator())
 
@@ -1243,7 +1265,7 @@ class RecipeNodeManager(models.Manager):
 
         node_models = []
 
-        for node_name, sub_recipe in sub_recipes:
+        for node_name, sub_recipe in sub_recipes.items():
             recipe_node = RecipeNode()
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name

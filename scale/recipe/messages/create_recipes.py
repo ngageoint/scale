@@ -11,6 +11,7 @@ from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.diff.diff import RecipeDiff
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from recipe.messages.supersede_recipe_nodes import create_supersede_recipe_nodes_messages
 from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages
@@ -38,68 +39,56 @@ _RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 logger = logging.getLogger(__name__)
 
 
-# TODO:
-def create_jobs_message(job_type_name, job_type_version, job_type_rev_num, event_id, count=1, input_data_dict=None):
-    """Creates a message to create job(s) of the given type
+def create_subrecipes_messages(recipe_id, root_recipe_id, sub_recipes, event_id, superseded_recipe_id=None,
+                               forced_nodes=None, batch_id=None):
+    """Creates messages to create sub-recipes
 
-    :param job_type_name: The job type name
-    :type job_type_name: string
-    :param job_type_version: The job type version
-    :type job_type_version: string
-    :param job_type_rev_num: The job type revision number
-    :type job_type_rev_num: string
+    :param recipe_id: The ID of the recipe containing the sub-recipes
+    :type recipe_id: int
+    :param root_recipe_id: The root ID of the containing recipe
+    :type root_recipe_id: int
+    :param sub_recipes: The list of SubRecipe tuples describing the sub-recipes to create
+    :type sub_recipes: list
     :param event_id: The event ID
     :type event_id: int
-    :param count: The number of jobs to create
-    :type count: int
-    :param input_data_dict: The optional JSON dict of the input data for the job(s)
-    :type input_data_dict: dict
-    :return: The message for creating the job(s)
-    :rtype: :class:`job.messages.create_jobs.CreateJobs`
+    :param superseded_recipe_id: The ID of the recipe superseded by the containing recipe
+    :type superseded_recipe_id: int
+    :param forced_nodes: Describes the nodes that have been forced to reprocess
+    :type forced_nodes: dict
+    :param batch_id: The batch ID
+    :type batch_id: int
+    :return: The list of messages
+    :rtype: list
     """
 
-    message = CreateJobs()
-    message.count = count
-    message.job_type_name = job_type_name
-    message.job_type_version = job_type_version
-    message.job_type_rev_num = job_type_rev_num
-    message.event_id = event_id
-    message.input_data = input_data_dict
+    messages = []
 
-    return message
+    message = None
+    for sub_recipe in sub_recipes:
+        if not message:
+            message = CreateRecipes()
+            message.create_recipes_type = SUB_RECIPE_TYPE
+            message.recipe_id = recipe_id
+            message.root_recipe_id = root_recipe_id
+            message.event_id = event_id
+            message.superseded_recipe_id = superseded_recipe_id
+            message.forced_nodes = forced_nodes
+            message.batch_id = batch_id
+        elif not message.can_fit_more():
+            messages.append(message)
+            message = CreateRecipes()
+            message.create_recipes_type = SUB_RECIPE_TYPE
+            message.recipe_id = recipe_id
+            message.root_recipe_id = root_recipe_id
+            message.event_id = event_id
+            message.superseded_recipe_id = superseded_recipe_id
+            message.forced_nodes = forced_nodes
+            message.batch_id = batch_id
+        message.add_subrecipe(sub_recipe)
+    if message:
+        messages.append(message)
 
-
-# TODO: have methods both for reprocessing (top-level) and for sub-recipes
-def create_jobs_message_for_recipe(recipe, node_name, job_type_name, job_type_version, job_type_rev_num, count=1,
-                                   process_input=False):
-    """Creates a message to create job(s) of the given type for the given recipe
-
-    :param recipe: The recipe
-    :type recipe: :class:`recipe.models.Recipe`
-    :param node_name: The node name for the job(s) within the recipe
-    :type node_name: string
-    :param job_type_name: The job type name
-    :type job_type_name: string
-    :param job_type_version: The job type version
-    :type job_type_version: string
-    :param job_type_rev_num: The job type revision number
-    :type job_type_rev_num: string
-    :param count: The number of jobs to create
-    :type count: int
-    :return: The message for creating the job(s)
-    :rtype: :class:`job.messages.create_jobs.CreateJobs`
-    """
-
-    message = create_jobs_message(job_type_name, job_type_version, job_type_rev_num, recipe.event_id, count=count)
-
-    message.root_recipe_id = recipe.root_superseded_recipe_id
-    message.superseded_recipe_id = recipe.superseded_recipe_id
-    message.recipe_id = recipe.id
-    message.recipe_node_name = node_name
-    message.batch_id = recipe.batch_id
-    message.process_input = process_input
-
-    return message
+    return messages
 
 
 class CreateRecipes(CommandMessage):
@@ -111,9 +100,6 @@ class CreateRecipes(CommandMessage):
         """
 
         super(CreateRecipes, self).__init__('create_recipes')
-
-        # TODO: make a forced_nodes class:
-        # {'node_name_a': {}, 'node_name_b': {'node_name_ba': {}}, 'node_name_c': '*'}
 
         # Fields applicable to all message types
         self.batch_id = None
@@ -181,7 +167,7 @@ class CreateRecipes(CommandMessage):
         if self.batch_id:
             json_dict['batch_id'] = self.batch_id
         if self.forced_nodes:
-            json_dict['forced_nodes'] = self.forced_nodes
+            json_dict['forced_nodes'] = convert_forced_nodes_to_v6(self.forced_nodes).get_dict()
 
         if self.create_recipes_type == REPROCESS_TYPE:
             json_dict['recipe_type_name'] = self.recipe_type_name
@@ -195,7 +181,7 @@ class CreateRecipes(CommandMessage):
                 json_dict['superseded_recipe_id'] = self.superseded_recipe_id
             sub_recipes = []
             for sub_recipe in self.sub_recipes:
-                sub_recipes.append({'recipe_type_name': sub_recipe.recipe_type,
+                sub_recipes.append({'recipe_type_name': sub_recipe.recipe_type_name,
                                     'recipe_type_rev_num': sub_recipe.recipe_type_rev_num,
                                     'node_name': sub_recipe.node_name, 'process_input': sub_recipe.process_input})
             json_dict['sub_recipes'] = sub_recipes
@@ -213,7 +199,7 @@ class CreateRecipes(CommandMessage):
         if 'batch_id' in json_dict:
             message.batch_id = json_dict['batch_id']
         if 'forced_nodes' in json_dict:
-            message.forced_nodes = json_dict['forced_nodes']
+            message.forced_nodes = ForcedNodesV6(json_dict['forced_nodes']).get_forced_nodes()
 
         if message.create_recipes_type == REPROCESS_TYPE:
             message.recipe_type_name = json_dict['recipe_type_name']
@@ -238,13 +224,6 @@ class CreateRecipes(CommandMessage):
 
         self._when = now()
 
-        # TODO: move this snippet into the unit tests for this message as a placeholder until node copying is tested
-        # INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id)
-        # SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
-        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
-        # UNION ALL SELECT node_name, false, %new_recipe_id%, job_id, sub_recipe_id FROM recipe_node
-        #   WHERE recipe_id = %old_recipe_id% AND node_name IN ('%node_name')
-
         with transaction.atomic():
             self._perform_locking()
             recipes = self._find_existing_recipes()
@@ -263,11 +242,12 @@ class CreateRecipes(CommandMessage):
 
         for recipe_diff in self._recipe_diffs:
             node_names = set(recipe_diff.diff.get_nodes_to_copy().keys())
-            for recipe_pair in recipe_diff.recipe_pairs:
-                superseded_recipe = recipe_pair.superseded_recipe
-                new_recipe = recipe_pair.new_recipe
-                recipe_node_copy = RecipeNodeCopy(superseded_recipe.id, new_recipe.id, node_names)
-                recipe_node_copies.append(recipe_node_copy)
+            if node_names:
+                for recipe_pair in recipe_diff.recipe_pairs:
+                    superseded_recipe = recipe_pair.superseded_recipe
+                    new_recipe = recipe_pair.new_recipe
+                    recipe_node_copy = RecipeNodeCopy(superseded_recipe.id, new_recipe.id, node_names)
+                    recipe_node_copies.append(recipe_node_copy)
 
         RecipeNode.objects.copy_recipe_nodes(recipe_node_copies)
 
@@ -367,6 +347,9 @@ class CreateRecipes(CommandMessage):
                     new_rev = rev
                     break
         diffs = {rev_id: RecipeDiff(rev.get_definition(), new_rev.get_definition()) for rev_id, rev in revs.items()}
+        if self.forced_nodes:
+            for diff in diffs.values():
+                diff.set_force_reprocess(self.forced_nodes)
 
         # Create new recipe models
         cannot_reprocess_count = 0
@@ -445,12 +428,16 @@ class CreateRecipes(CommandMessage):
 
         # Set up recipe diffs
         if self.superseded_recipe_id:
-            for recipe in sub_recipes.values():
+            for node_name, recipe in sub_recipes.items():
                 pair = _RecipePair(recipe.superseded_recipe, recipe)
                 rev_id = recipe.superseded_recipe.recipe_type_rev_id
                 old_revision = revs_by_id[rev_id]
                 new_revision = revs_by_tuple[(recipe.recipe_type.name, recipe.recipe_type_rev.revision_num)]
                 diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
+                if self.forced_nodes:
+                    sub_forced_nodes = self.forced_nodes.get_forced_nodes_for_subrecipe(node_name)
+                    if sub_forced_nodes:
+                        diff.set_force_reprocess(sub_forced_nodes)
                 self._recipe_diffs.append(_RecipeDiff(diff, [pair]))
 
         return sub_recipes.values()
@@ -465,6 +452,24 @@ class CreateRecipes(CommandMessage):
         if self.create_recipes_type == REPROCESS_TYPE:
             qry = Recipe.objects.select_related('superseded_recipe')
             recipes = qry.filter(root_superseded_recipe_id__in=self.root_recipe_ids, event_id=self.event_id)
+            # Create recipe diffs
+            rev_ids = [recipe.recipe_type_rev_id for recipe in recipes]
+            rev_ids.extend([recipe.superseded_recipe.recipe_type_rev_id for recipe in recipes])
+            revs = RecipeTypeRevision.objects.get_revisions(rev_ids, [])
+            pair_dict = {}
+            for recipe in recipes:
+                rev_tuple = (recipe.superseded_recipe.recipe_type_rev_id, recipe.recipe_type_rev_id)
+                pair = _RecipePair(recipe.superseded_recipe, recipe)
+                if rev_tuple not in pair_dict:
+                    pair_dict[rev_tuple] = []
+                pair_dict[rev_tuple].append(pair)
+            for pair_tuple, pairs in pair_dict.items():
+                old_revision = revs[pair_tuple[0]]
+                new_revision = revs[pair_tuple[1]]
+                diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
+                if self.forced_nodes:
+                    diff.set_force_reprocess(self.forced_nodes)
+                self._recipe_diffs.append(_RecipeDiff(diff, pairs))
         elif self.create_recipes_type == SUB_RECIPE_TYPE:
             node_names = [sub.node_name for sub in self.sub_recipes]
             qry = RecipeNode.objects.select_related('sub_recipe__superseded_recipe')
@@ -476,26 +481,21 @@ class CreateRecipes(CommandMessage):
                 for sub_recipe in self.sub_recipes:
                     recipe = recipes_by_node[sub_recipe.node_name]
                     self._process_input[recipe.id] = sub_recipe.process_input
-
-        if recipes and recipes[0].superseded_recipe:
-            rev_ids = [recipe.recipe_type_rev_id for recipe in recipes]
-            superseded_rev_ids = [recipe.superseded_recipe.recipe_type_rev_id for recipe in recipes]
-            if superseded_rev_ids:
-                # New recipes superseded old recipes, so create recipe diffs
-                rev_ids.extend(superseded_rev_ids)
-                revs = RecipeTypeRevision.objects.get_revisions(rev_ids, [])
-                pair_dict = {}
-                for recipe in recipes:
-                    rev_tuple = (recipe.superseded_recipe.recipe_type_rev_id, recipe.recipe_type_rev_id)
-                    pair = _RecipePair(recipe.superseded_recipe, recipe)
-                    if rev_tuple not in pair_dict:
-                        pair_dict[rev_tuple] = []
-                    pair_dict[rev_tuple].append(pair)
-                for pair_tuple, pairs in pair_dict.items():
-                    old_revision = revs[pair_tuple[0]]
-                    new_revision = revs[pair_tuple[1]]
-                    diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
-                    self._recipe_diffs.append(_RecipeDiff(diff, pairs))
+                if recipes[0].superseded_recipe:
+                    # Set up recipe diffs
+                    rev_ids = [recipe.recipe_type_rev_id for recipe in recipes]
+                    rev_ids.extend([recipe.superseded_recipe.recipe_type_rev_id for recipe in recipes])
+                    revs = RecipeTypeRevision.objects.get_revisions(rev_ids, [])
+                    for node_name, recipe in recipes_by_node.items():
+                        pair = _RecipePair(recipe.superseded_recipe, recipe)
+                        old_revision = revs[recipe.superseded_recipe.recipe_type_rev_id]
+                        new_revision = revs[recipe.recipe_type_rev_id]
+                        diff = RecipeDiff(old_revision.get_definition(), new_revision.get_definition())
+                        if self.forced_nodes:
+                            sub_forced_nodes = self.forced_nodes.get_forced_nodes_for_subrecipe(node_name)
+                            if sub_forced_nodes:
+                                diff.set_force_reprocess(sub_forced_nodes)
+                        self._recipe_diffs.append(_RecipeDiff(diff, [pair]))
 
         return recipes
 

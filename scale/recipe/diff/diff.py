@@ -95,19 +95,16 @@ class RecipeDiff(object):
 
         return nodes_to_unpublish
 
-    def set_force_reprocess(self, reprocess_nodes):
-        """Provides a set of nodes to force to reprocess. The given dict contains node names as keys representing the
-        nodes to force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe
-        nodes, the dict recursively represents the node names within that recipe that should be foreced to reprocess,
-        and so on.
+    def set_force_reprocess(self, forced_nodes):
+        """Provides a set of nodes to force to reprocess
 
-        :param reprocess_nodes: Dict where each key is a node name mapping recursively to another dict of nodes
-        :type reprocess_nodes: dict
+        :param forced_nodes: Object describing which nodes should be forced to be reprocessed
+        :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
         """
 
-        for node_name in reprocess_nodes.keys():
-            if node_name in self.graph:
-                self.graph[node_name].set_force_reprocess(reprocess_nodes)
+        for node_diff in self.graph.values():
+            if forced_nodes.is_node_forced_to_reprocess(node_diff.name):
+                node_diff.set_force_reprocess(forced_nodes)
 
     def _create_diff_graph(self, prev_recipe_definition, recipe_definition):
         """Creates the graph containing the diff for each node

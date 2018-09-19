@@ -115,20 +115,19 @@ class NodeDiff(object):
 
         raise NotImplementedError()
 
-    def set_force_reprocess(self, reprocess_nodes):
-        """Sets this node to force to reprocess. The given dict contains node names as keys representing the nodes to
-        force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe nodes, the
-        dict recursively represents the node names within that recipe that should be foreced to reprocess, and so on.
+    def set_force_reprocess(self, forced_nodes):
+        """Sets this node to force to reprocess. The given object recursively describes which nodes should be forced to
+        reprocess in sub-recipes.
 
-        :param reprocess_nodes: Dict where each key is a node name mapping recursively to another dict of nodes
-        :type reprocess_nodes: dict
+        :param forced_nodes: Object describing which nodes should be forced to be reprocessed
+        :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
         """
 
         self.force_reprocess = True
         self._calculate_reprocess_new_node()
 
         for child_node_diff in self.children.values():
-            child_node_diff.set_force_reprocess(reprocess_nodes)
+            child_node_diff.set_force_reprocess(forced_nodes)
 
     def should_be_copied(self):
         """Indicates whether this node should be copied from the previous recipe during a reprocess
@@ -316,7 +315,7 @@ class RecipeNodeDiff(NodeDiff):
         self.revision_num = recipe_node.revision_num
         self.prev_recipe_type_name = None
         self.prev_revision_num = None
-        self.force_reprocess_nodes = {}  # {Node name: dict}
+        self.force_reprocess_nodes = None
 
     def get_node_type_dict(self):
         """See :meth:`recipe.diff.node.NodeDiff.get_node_type_dict`
@@ -332,15 +331,14 @@ class RecipeNodeDiff(NodeDiff):
 
         return json_dict
 
-    def set_force_reprocess(self, reprocess_nodes):
+    def set_force_reprocess(self, forced_nodes):
         """See :meth:`recipe.diff.node.NodeDiff.set_force_reprocess`
         """
 
-        super(RecipeNodeDiff, self).set_force_reprocess(reprocess_nodes)
+        super(RecipeNodeDiff, self).set_force_reprocess(forced_nodes)
 
         # Grab sub-node names to force reprocess within this recipe
-        if self.name in reprocess_nodes:
-            self.force_reprocess_nodes = reprocess_nodes[self.name]
+        self.force_reprocess_nodes = forced_nodes.get_forced_nodes_for_subrecipe(self.name)
 
     def should_be_recursively_superseded(self):
         """See :meth:`recipe.diff.node.NodeDiff.should_be_recursively_superseded`
