@@ -8,6 +8,9 @@ These services allow a user to create, view, and manage Strike processes.
 
 .. _rest_v6_strike_list:
 
+v6 Strike List
+--------------
+
 **Example GET /v6/strikes/ API call**
 
 Request: GET http://.../v6/strikes/
@@ -110,6 +113,9 @@ Response: 200 OK
 
 .. _rest_v6_strike_create:
 
+v6 Create Strike
+----------------
+
 **Example POST /v6/strikes/ API call**
 
 Request: POST http://.../v6/strikes/
@@ -203,6 +209,9 @@ Location http://.../v6/strikes/105/
 
 .. _rest_v6_strike_details:
 
+v6 Strike Details
+-----------------
+
 **Example GET /v6/strikes/{id}/ API call**
 
 Request: GET http://.../v6/strikes/{id}/
@@ -281,6 +290,9 @@ Response: 200 OK
 
 .. _rest_v6_strike_validate:
 
+v6 Validate Strike
+------------------
+
 **Example POST /v6/strikes/validation/ API call**
 
 Request: POST http://.../v6/strikes/validation/
@@ -339,9 +351,9 @@ Response: 200 OK
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new batch. If this is  |
-|                    |                   | true, then submitting the same fields to the /batches/ API will successfully   |
-|                    |                   | create a new batch.                                                            |
+| is_valid           | Boolean           | Indicates if the given fields were valid for creating a new strike. If this is |
+|                    |                   | true, then submitting the same fields to the /strikes/ API will successfully   |
+|                    |                   | create a new strike.                                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | errors             | Array             | Lists any errors causing *is_valid* to be false. The errors are JSON objects   |
 |                    |                   | with *name* and *description* string fields.                                   |
@@ -354,6 +366,9 @@ Response: 200 OK
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 
 .. _rest_v6_strike_edit:
+
+v6 Edit Strike
+--------------
 
 **Example PATCH /v6/strikes/{id}/ API call**
 

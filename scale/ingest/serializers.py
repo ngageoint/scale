@@ -4,7 +4,8 @@ import rest_framework.serializers as serializers
 from ingest.models import Ingest
 #TODO: Look at moving job serializers imports back to top of file
 from source.serializers import SourceFileBaseSerializer, SourceFileSerializer
-from storage.serializers import DataTypeField, WorkspaceSerializer, WorkspaceDetailsSerializer
+from storage.serializers import DataTypeField, WorkspaceSerializerV5, WorkspaceDetailsSerializerV5
+from storage.serializers import WorkspaceSerializerV6, WorkspaceDetailsSerializerV6
 from util.rest import ModelIdSerializer
 
 
@@ -125,39 +126,51 @@ class IngestBaseSerializer(ModelIdSerializer):
     last_modified = serializers.DateTimeField()
 
 
-class IngestSerializer(IngestBaseSerializer):
+class IngestSerializerV5(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
 
     scan = ScanBaseSerializer()
     strike = StrikeBaseSerializer()
 
-    workspace = WorkspaceSerializer()
-    new_workspace = WorkspaceSerializer()
+    workspace = WorkspaceSerializerV5()
+    new_workspace = WorkspaceSerializerV5()
+
+    job = ModelIdSerializer()
+    source_file = SourceFileBaseSerializer()
+
+class IngestSerializerV6(IngestBaseSerializer):
+    """Converts ingest model fields to REST output"""
+
+    scan = ScanBaseSerializer()
+    strike = StrikeBaseSerializer()
+
+    workspace = WorkspaceSerializerV6()
+    new_workspace = WorkspaceSerializerV6()
 
     job = ModelIdSerializer()
     source_file = SourceFileBaseSerializer()
 
 
-class IngestDetailsSerializerV5(IngestSerializer):
+class IngestDetailsSerializerV5(IngestSerializerV5):
     """Converts ingest model fields to REST output"""
 
     scan = ScanDetailsSerializerV5()
     strike = StrikeDetailsSerializerV5()
 
-    workspace = WorkspaceDetailsSerializer()
-    new_workspace = WorkspaceDetailsSerializer()
+    workspace = WorkspaceDetailsSerializerV5()
+    new_workspace = WorkspaceDetailsSerializerV5()
 
     job = ModelIdSerializer()
     source_file = SourceFileSerializer()
     
-class IngestDetailsSerializerV6(IngestSerializer):
+class IngestDetailsSerializerV6(IngestSerializerV6):
     """Converts ingest model fields to REST output"""
 
     scan = ScanDetailsSerializerV6()
     strike = StrikeDetailsSerializerV6()
 
-    workspace = WorkspaceDetailsSerializer()
-    new_workspace = WorkspaceDetailsSerializer()
+    workspace = WorkspaceDetailsSerializerV6()
+    new_workspace = WorkspaceDetailsSerializerV6()
 
     job = ModelIdSerializer()
     source_file = SourceFileSerializer()

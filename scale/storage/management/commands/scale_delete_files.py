@@ -13,7 +13,7 @@ from django.core.management.base import BaseCommand
 from messaging.manager import CommandMessageManager
 from storage import delete_files_job
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.messages.delete_files import create_delete_files_messages
 
 logger = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ class Command(BaseCommand):
         workspaces = {}
         for workspace in workspace_list:
             name = workspace.keys()[0]
-            wrkspc = WorkspaceConfiguration(workspace[name])
+            wrkspc = WorkspaceConfigurationV6(workspace[name]).get_configuration()
             wrkspc.validate_broker()
             valid_wrkspc = wrkspc.get_dict()
 

@@ -8,9 +8,7 @@ from django.test import TestCase
 from mock import call, patch
 
 from job.test import utils as job_test_utils
-from storage.brokers.host_broker import HostBroker
-from storage.delete_files_job import delete_files
-from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.test import utils as storage_test_utils
 
 
@@ -33,7 +31,7 @@ class TestCallScaleDeleteFiles(TestCase):
             return
         mock_delete.side_effect = new_delete
 
-        config = WorkspaceConfiguration(self.workspace.json_config)
+        config = WorkspaceConfigurationV6(self.workspace.json_config).get_configuration()
 
         os.environ['FILES'] = json.dumps([{"file_path":"/dir/file.name", "id":"12300", "workspace":"workspace_1"}])
         os.environ['WORKSPACES'] = json.dumps([{"workspace_1": config.get_dict()}])

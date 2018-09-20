@@ -17,7 +17,8 @@ from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.configuration.json.configuration_1_0 import ScanConfigurationV1
 from ingest.scan.configuration.json.configuration_v6 import ScanConfigurationV6
-from ingest.serializers import (IngestDetailsSerializerV5, IngestDetailsSerializerV6, IngestSerializer, IngestStatusSerializerV5, IngestStatusSerializerV6,
+from ingest.serializers import (IngestDetailsSerializerV5, IngestDetailsSerializerV6, IngestSerializerV5, IngestSerializerV6,
+                                IngestStatusSerializerV5, IngestStatusSerializerV6,
                                 ScanSerializerV5, ScanSerializerV6, ScanDetailsSerializerV5, ScanDetailsSerializerV6,
                                 StrikeSerializerV5, StrikeSerializerV6, StrikeDetailsSerializerV5, StrikeDetailsSerializerV6)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
@@ -32,7 +33,16 @@ logger = logging.getLogger(__name__)
 class IngestsView(ListAPIView):
     """This view is the endpoint for retrieving the list of all ingests."""
     queryset = Ingest.objects.all()
-    serializer_class = IngestSerializer
+
+    def get_serializer_class(self):
+        """Returns the appropriate serializer based off the requests version of the REST API"""
+
+        if self.request.version == 'v6':
+            return IngestSerializerV6
+        elif self.request.version == 'v5':
+            return IngestSerializerV5
+        elif self.request.version == 'v4':
+            return IngestSerializerV5
 
     def list(self, request):
         """Determine api version and call specific method

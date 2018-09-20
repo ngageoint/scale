@@ -12,6 +12,7 @@ from django.utils.timezone import now
 from ingest.models import Ingest
 from ingest.strike.monitors.exceptions import InvalidMonitorConfiguration
 from ingest.strike.monitors.monitor import Monitor
+from util.os_helper import makedirs
 
 logger = logging.getLogger(__name__)
 
@@ -105,10 +106,10 @@ class DirWatcherMonitor(Monitor):
 
         if not os.path.exists(self._deferred_dir):
             logger.info('Creating %s', self._deferred_dir)
-            os.makedirs(self._deferred_dir, mode=0755)
+            makedirs(self._deferred_dir, mode=0755)
         if not os.path.exists(self._ingest_dir):
             logger.info('Creating %s', self._ingest_dir)
-            os.makedirs(self._ingest_dir, mode=0755)
+            makedirs(self._ingest_dir, mode=0755)
 
     def _is_still_transferring(self, file_name):
         """ Indicates whether the given file in the Strike directory is still transferring
