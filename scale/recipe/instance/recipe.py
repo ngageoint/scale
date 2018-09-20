@@ -61,7 +61,7 @@ class RecipeInstance(object):
         leaf_job_ids = []
         leaf_recipe_ids = []
 
-        for node in self.graph:
+        for _, node in self.graph.items():
             if node.is_original:
                 if node.node_type == JobNodeDefinition.NODE_TYPE:
                     leaf_job_ids.append(node.job.id)
