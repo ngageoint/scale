@@ -32,7 +32,7 @@ Response: 200 OK
                 "base_url": "http://host.com/products", 
                 "is_active": true,
                 "created": "2015-10-05T21:26:04.876Z", 
-                "archived": null, 
+                "deprecated": null,
                 "last_modified": "2015-10-05T21:26:04.876Z" 
             }, 
             { 
@@ -43,7 +43,7 @@ Response: 200 OK
                 "base_url": "http://host.com/rs", 
                 "is_active": true,
                 "created": "2015-10-05T21:26:04.855Z", 
-                "archived": null, 
+                "deprecated": null,
                 "last_modified": "2015-10-05T21:26:04.855Z" 
             }, 
             ... 
@@ -107,11 +107,11 @@ Response: 200 OK
 | .base_url                | String            | The URL prefix used to access all files within the workspace.            |
 |                          |                   | This field can be null if the workspace is not web-accessible.           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .is_active               | Boolean           | Whether the workspace is active (false once workspace is archived).      |
+| .is_active               | Boolean           | Whether the workspace is active (false once workspace is deprecated).    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .created                 | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .archived                | ISO-8601 Datetime | When the workspace was archived (no longer active).                      |
+| .deprecated              | ISO-8601 Datetime | When the workspace was deprecated (previously known as archived).        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .last_modified           | ISO-8601 Datetime | When the associated database model was last saved.                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -155,7 +155,7 @@ Location http://.../v6/workspaces/105/
         "base_url": "http://host.com/rs", 
         "is_active": true,
         "created": "2015-10-05T21:26:04.855Z", 
-        "archived": null, 
+        "deprecated": null,
         "last_modified": "2015-10-05T21:26:04.855Z" 
         "configuration": { 
             "broker": { 
@@ -184,7 +184,7 @@ Location http://.../v6/workspaces/105/
 |                         |                   |          | This field can be null if the workspace is not web-accessible. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
-|                         |                   |          | Becomes false once a workspace is archived.                    |
+|                         |                   |          | Becomes false once a workspace is deprecated.                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Required | JSON description of the configuration for the workspace.       |
 |                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |
@@ -225,7 +225,7 @@ Response: 200 OK
         "base_url": "http://host.com/rs",
         "is_active": true,
         "created": "2015-10-05T21:26:04.855Z",
-        "archived": null,
+        "deprecated": null,
         "last_modified": "2015-10-05T21:26:04.855Z"
         "configuration": {
             "broker": {
@@ -262,11 +262,11 @@ Response: 200 OK
 | base_url                 | String            | The URL prefix used to access all files within the workspace.            |
 |                          |                   | This field can be null if the workspace is not web-accessible.           |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| is_active                | Boolean           | Whether the workspace is active (false once workspace is archived).      |
+| is_active                | Boolean           | Whether the workspace is active (false once workspace is deprecated).    |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | created                  | ISO-8601 Datetime | When the associated database model was initially created.                |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| archived                 | ISO-8601 Datetime | When the workspace was archived (no longer active).                      |
+| deprecated               | ISO-8601 Datetime | When the workspace was deprecated (previously known as archived).        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | last_modified            | ISO-8601 Datetime | When the associated database model was last saved.                       |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -286,7 +286,7 @@ Request: POST http://.../v6/workspaces/validation/
  .. code-block:: javascript 
 
     {
-        "title": "raw-source",
+        "name": "raw-source",
         "title": "Raw Source",
         "description": "Raw Source Workspace",
         "base_url": "http://host.com/rs",
@@ -331,7 +331,7 @@ Response: 200 OK
 |                         |                   |          | This field can be null if the workspace is not web-accessible. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
-|                         |                   |          | Becomes false once a workspace is archived.                    |
+|                         |                   |          | Becomes false once a workspace is deprecated.                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Required | JSON description of the configuration for the workspace.       |
 |                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |
@@ -405,7 +405,7 @@ Response: 204 NO CONTENT
 |                         |                   |          | This field can be null if the workspace is not web-accessible. |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_active               | Boolean           | Optional | Whether the workspace is available for use. Defaults to true.  |
-|                         |                   |          | Becomes false once a workspace is archived.                    |
+|                         |                   |          | Becomes false once a workspace is deprecated.                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | configuration           | JSON Object       | Optional | JSON description of the configuration for the workspace.       |
 |                         |                   |          | (See :ref:`rest_v6_workspace_configuration`)                   |

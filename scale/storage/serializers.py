@@ -76,11 +76,11 @@ class WorkspaceSerializerV5(WorkspaceBaseSerializer):
     base_url = serializers.URLField()
     is_active = serializers.BooleanField()
 
-    used_size = serializers.IntegerField()
-    total_size = serializers.IntegerField()
+    used_size = 0
+    total_size = 0
 
     created = serializers.DateTimeField()
-    archived = serializers.DateTimeField()
+    archived = serializers.DateTimeField(source='deprecated')
     last_modified = serializers.DateTimeField()
 
 
@@ -96,7 +96,7 @@ class WorkspaceSerializerV6(WorkspaceBaseSerializer):
     is_active = serializers.BooleanField()
 
     created = serializers.DateTimeField()
-    archived = serializers.DateTimeField()
+    deprecated = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
 

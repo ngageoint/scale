@@ -1037,15 +1037,10 @@ class Workspace(models.Model):
     :keyword is_move_enabled: Whether the workspace allows files to be moved within it
     :type is_move_enabled: :class:`django.db.models.BooleanField`
 
-    :keyword used_size: The number of used bytes, may be None (unknown)
-    :type used_size: :class:`django.db.models.BigIntegerField`
-    :keyword total_size: The total size of the workspace file system in bytes, may be None (unknown)
-    :type total_size: :class:`django.db.models.BigIntegerField`
-
     :keyword created: When the workspace was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the workspace was archived (no longer active)
-    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword deprecated: When the workspace was archived (no longer active)
+    :type deprecated: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the workspace was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1059,11 +1054,8 @@ class Workspace(models.Model):
     json_config = django.contrib.postgres.fields.JSONField(default=dict)
     is_move_enabled = models.BooleanField(default=True)
 
-    used_size = models.BigIntegerField(blank=True, null=True)
-    total_size = models.BigIntegerField(blank=True, null=True)
-
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    deprecated = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = WorkspaceManager()

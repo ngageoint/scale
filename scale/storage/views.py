@@ -210,7 +210,7 @@ class WorkspacesView(ListCreateAPIView):
         if self.request.version == 'v6':
             return WorkspaceSerializerV6
         elif self.request.version == 'v5':
-            return WorkspaceSerializerV6
+            return WorkspaceSerializerV5
         elif self.request.version == 'v4':
             return WorkspaceSerializerV5
         
