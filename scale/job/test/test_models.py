@@ -1486,13 +1486,13 @@ class TestJobTypeTagManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_seed_job_type(name="test-type1")
+        self.job_type1 = job_test_utils.create_seed_job_type()
         self.tag_set1 = ["tag1", "tag2", "oneandfour"]
-        self.job_type2 = job_test_utils.create_seed_job_type(name="test-type2")
+        self.job_type2 = job_test_utils.create_seed_job_type()
         self.tag_set2 = ["tag3", "tag4"]
-        self.job_type3 = job_test_utils.create_seed_job_type(name="test-type3")
+        self.job_type3 = job_test_utils.create_seed_job_type()
         self.tag_set3 = ["tag5", "tag6"]
-        self.job_type4 = job_test_utils.create_seed_job_type(name="test-type4")
+        self.job_type4 = job_test_utils.create_seed_job_type()
         self.tag_set4 = ["tag7", "tag8", "oneandfour"]
         JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
         JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)
