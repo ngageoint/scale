@@ -22,3 +22,6 @@ def get_missing_output_error():
     """
 
     return get_builtin_error('missing-required-output')
+
+def get_unexpected_multiple_error():
+    return get_builtin_error('unexpected-multiple-outputs')

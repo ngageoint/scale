@@ -5,6 +5,7 @@ import json
 import django
 from django.test import TestCase
 from job.seed.results.outputs_json import SeedOutputsJson
+from job.configuration.results.exceptions import MissingRequiredOutput, UnexpectedMultipleOutputs
 from mock import patch, mock_open
 
 from job.seed.types import SeedInputFiles, SeedOutputJson, SeedOutputFiles
@@ -61,7 +62,30 @@ class TestSeedOutputsFiles(TestCase):
         files = seed_output_file.get_files()
 
         self.assertEqual(['something.json'], files)
-
+        
+    @patch('glob.glob', return_value=[])
+    def test_missing_required_output(self, glob):
+        seed_output_file = SeedOutputFiles({
+            'name': 'OUTPUT_FILE',
+            'pattern': '*output.txt',
+            'multiple': False,
+            'required': True
+        })
+        
+        with self.assertRaises(MissingRequiredOutput):
+            files = seed_output_file.get_files()
+        
+    @patch('glob.glob', return_value=['output1.txt', 'output2.txt'])
+    def test_unexpected_multiple_outputs(self, glob):
+        seed_output_file = SeedOutputFiles({
+            'name': 'OUTPUT_FILES',
+            'pattern': '*.txt',
+            'multiple': False,
+            'required': True
+        })
+        
+        with self.assertRaises(UnexpectedMultipleOutputs):
+            files = seed_output_file.get_files()
 
 class TestSeedOutputsJson(TestCase):
 
