@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
+from django.utils.timezone import now
 from six import raise_from
 
 from messaging.messages.factory import get_message_type
@@ -116,12 +117,15 @@ class CommandMessageManager(object):
         """
 
         command = self._extract_command(message)
+        start_time = now()
         logger.info('Processing message of type %s', command.type)
         try:
             success = command.execute()
         except Exception:
             logger.exception('Message threw exception')
             success = False
+        duration = now() - start_time
+        logger.info('Message execution took %.3f seconds', duration.total_seconds())
 
         if not success:
             raise CommandMessageExecuteFailure

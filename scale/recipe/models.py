@@ -2,11 +2,11 @@
 from __future__ import unicode_literals
 
 import copy
-import math
 from collections import namedtuple
 
 import django.contrib.postgres.fields
 from django.db import connection, models, transaction
+from django.db.models import Q
 from django.utils.timezone import now
 
 from data.data.data import Data
@@ -25,6 +25,8 @@ from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerEvent, TriggerRule
 
+
+RecipeNodeCopy = namedtuple('RecipeNodeCopy', ['superseded_recipe_id', 'recipe_id', 'node_names'])
 
 RecipeNodeOutput = namedtuple('RecipeNodeOutput', ['node_name', 'node_type', 'id', 'output_data'])
 
@@ -54,7 +56,6 @@ class RecipeManager(models.Manager):
 
     def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
         """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
-
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param revision: The recipe type revision
@@ -69,7 +70,6 @@ class RecipeManager(models.Manager):
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.models.Recipe`
-
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe input is invalid
         """
 
@@ -94,6 +94,56 @@ class RecipeManager(models.Manager):
         # Validate recipe input and save recipe
         recipe_definition.validate_data(input)
         recipe.input = input.get_dict()
+
+        return recipe
+
+    def create_recipe_v6(self, recipe_type_rev, event_id, input_data=None, root_recipe_id=None, recipe_id=None,
+                         batch_id=None, superseded_recipe=None, copy_superseded_input=False):
+        """Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model
+
+        :param recipe_type_rev: The recipe type revision (with populated recipe_type model) of the recipe to create
+        :type recipe_type_rev: :class:`recipe.models.RecipeTypeRevision`
+        :param event_id: The event ID that triggered the creation of this recipe
+        :type event_id: int
+        :param input_data: The recipe's input data, possibly None
+        :type input_data: :class:`data.data.data.Data`
+        :param root_recipe_id: The ID of the root recipe that contains this sub-recipe, possibly None
+        :type root_recipe_id: int
+        :param recipe_id: The ID of the original recipe that created this sub-recipe, possibly None
+        :type recipe_id: int
+        :param batch_id: The ID of the batch that contains this recipe, possibly None
+        :type batch_id: int
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param copy_superseded_input: Whether to copy the input data from the superseded recipe
+        :type copy_superseded_input: bool
+        :returns: The new recipe model
+        :rtype: :class:`recipe.models.Recipe`
+
+        :raises :class:`data.data.exceptions.InvalidData`: If the input data is invalid
+        """
+
+        recipe = Recipe()
+        recipe.recipe_type = recipe_type_rev.recipe_type
+        recipe.recipe_type_rev = recipe_type_rev
+        recipe.event_id = event_id
+        recipe.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
+        recipe.recipe_id = recipe_id
+        recipe.batch_id = batch_id
+
+        if superseded_recipe:
+            root_id = superseded_recipe.root_superseded_recipe_id
+            if not root_id:
+                root_id = superseded_recipe.id
+            recipe.root_superseded_recipe_id = root_id
+            recipe.superseded_recipe = superseded_recipe
+
+            if copy_superseded_input:
+                input_data = superseded_recipe.get_input_data()
+
+        if input_data:
+            input_data.validate(recipe_type_rev.get_input_interface())
+            recipe.input = convert_data_to_v6_json(input_data).get_dict()
 
         return recipe
 
@@ -140,7 +190,7 @@ class RecipeManager(models.Manager):
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type
-        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
+        recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
         recipe.event = event
         recipe.batch_id = batch_id
         recipe_definition = recipe.get_recipe_definition()
@@ -345,11 +395,27 @@ class RecipeManager(models.Manager):
         # Recipe models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=recipe_ids).order_by('id').iterator())
 
-    def get_locked_recipes_from_root(self, root_recipe_ids, event_id=None):
+    def get_locked_recipes_from_root(self, root_recipe_ids):
+        """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
+        IDs. The returned models have no related fields populated. Caller must be within an atomic transaction.
+
+        :param root_recipe_ids: The root recipe IDs
+        :type root_recipe_ids: list
+        :returns: The recipe models
+        :rtype: list
+        """
+
+        root_recipe_ids = set(root_recipe_ids)  # Ensure no duplicates
+        qry = self.select_for_update()
+        qry = qry.filter(models.Q(id__in=root_recipe_ids) | models.Q(root_superseded_recipe_id__in=root_recipe_ids))
+        qry = qry.filter(is_superseded=False)
+        # Recipe models are always locked in order of ascending ID to prevent deadlocks
+        return list(qry.order_by('id').iterator())
+
+    def get_locked_recipes_from_root_old(self, root_recipe_ids, event_id=None):
         """Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
         IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
         optional event ID ensures that recipes are not reprocessed multiple times due to one event.
-
         :param root_recipe_ids: The root recipe IDs
         :type root_recipe_ids: list
         :param event_id: The event ID
@@ -805,7 +871,8 @@ class RecipeManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=recipe_ids).update(is_superseded=True, superseded=when, last_modified=now())
+        qry = self.filter(id__in=recipe_ids, is_superseded=False)
+        qry.update(is_superseded=True, superseded=when, last_modified=now())
 
     def update_recipe_metrics(self, recipe_ids):
         """Updates the metrics for the recipes with the given IDs
@@ -1134,6 +1201,33 @@ class RecipeNodeManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
 
+    def copy_recipe_nodes(self, recipe_copies):
+        """Copies the given nodes from the superseded recipes to the new recipes
+
+        :param recipe_copies: A list of RecipeNodeCopy tuples
+        :type recipe_copies: list
+        """
+
+        if not recipe_copies:
+            return
+
+        sub_queries = []
+        for recipe_copy in recipe_copies:
+            superseded_recipe_id = recipe_copy.superseded_recipe_id
+            recipe_id = recipe_copy.recipe_id
+            node_names = recipe_copy.node_names
+            sub_qry = 'SELECT node_name, false, %d, job_id, sub_recipe_id FROM recipe_node WHERE recipe_id = %d'
+            sub_qry = sub_qry % (recipe_id, superseded_recipe_id)
+            if node_names:
+                node_sub_qry = ', '.join('\'%s\'' % node_name for node_name in node_names)
+                sub_qry = '%s AND node_name IN (%s)' % (sub_qry, node_sub_qry)
+            sub_queries.append(sub_qry)
+        union_sub_qry = ' UNION ALL '.join(sub_queries)
+        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id) %s' % union_sub_qry
+
+        with connection.cursor() as cursor:
+            cursor.execute(qry)
+
     def create_recipe_job_nodes(self, recipe_id, node_name, jobs):
         """Creates and returns the recipe node models (unsaved) for the given recipe and jobs
 
@@ -1154,6 +1248,28 @@ class RecipeNodeManager(models.Manager):
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name
             recipe_node.job = job
+            node_models.append(recipe_node)
+
+        return node_models
+
+    def create_subrecipe_nodes(self, recipe_id, sub_recipes):
+        """Creates and returns the recipe node models (unsaved) for the given recipe and sub-recipes
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :param sub_recipes: A dict of recipe models stored by node name
+        :type sub_recipes: dict
+        :returns: The list of recipe_node models
+        :rtype: list
+        """
+
+        node_models = []
+
+        for node_name, sub_recipe in sub_recipes.items():
+            recipe_node = RecipeNode()
+            recipe_node.recipe_id = recipe_id
+            recipe_node.node_name = node_name
+            recipe_node.sub_recipe = sub_recipe
             node_models.append(recipe_node)
 
         return node_models
@@ -1268,6 +1384,18 @@ class RecipeNodeManager(models.Manager):
 
         return node_outputs
 
+    def get_subrecipes(self, recipe_id):
+        """Returns the sub-recipe models that belong to the given recipe
+
+        :param recipe_id: The recipe ID
+        :type recipe_id: int
+        :returns: A dict of recipe models stored by node name
+        :rtype: dict
+        """
+
+        qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
+        return {rn.node_name: rn.sub_recipe for rn in qry}
+
     def get_superseded_recipe_jobs(self, recipe_id, node_name):
         """Returns the superseded job models that belong to the given superseded recipe with the given node name
 
@@ -1280,6 +1408,44 @@ class RecipeNodeManager(models.Manager):
         """
 
         return [rn.job for rn in self.filter(recipe_id=recipe_id, node_name=node_name, job__is_superseded=True)]
+
+    def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
+        """Supersedes the jobs for the given recipe IDs and node names
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :param when: The time that the jobs were superseded
+        :type when: :class:`datetime.datetime`
+        :param node_names: The node names of the jobs to supersede
+        :type node_names: list
+        :param all_nodes: Whether all nodes should be superseded
+        :type all_nodes: bool
+        """
+
+        if all_nodes:
+            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids)
+        else:
+            qry = Job.objects.filter(recipenode__recipe_id__in=recipe_ids, recipenode__node_name__in=node_names)
+        qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
+
+    def supersede_subrecipes(self, recipe_ids, when, node_names, all_nodes=False):
+        """Supersedes the sub-recipes for the given recipe IDs and node names
+
+        :param recipe_ids: The recipe IDs
+        :type recipe_ids: list
+        :param when: The time that the sub-recipes were superseded
+        :type when: :class:`datetime.datetime`
+        :param node_names: The node names of the sub-recipes to supersede
+        :type node_names: list
+        :param all_nodes: Whether all nodes should be superseded
+        :type all_nodes: bool
+        """
+
+        if all_nodes:
+            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids)
+        else:
+            qry = Recipe.objects.filter(contained_by__recipe_id__in=recipe_ids, contained_by__node_name__in=node_names)
+        qry.filter(is_superseded=False).update(is_superseded=True, superseded=when, last_modified=now())
 
 
 class RecipeNode(models.Model):
@@ -1678,7 +1844,20 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return self.get(recipe_type_id=recipe_type.id, revision_num=revision_num)
 
-    def get_revision(self, recipe_type_id, revision_num):
+    def get_revision(self, recipe_type_name, revision_num):
+        """Returns the revision (with populated recipe_type model) for the given recipe type and revision number
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :param revision_num: The revision number
+        :type revision_num: int
+        :returns: The revision
+        :rtype: :class:`recipe.models.RecipeTypeRevision`
+        """
+
+        return self.select_related('recipe_type').get(recipe_type__name=recipe_type_name, revision_num=revision_num)
+
+    def get_revision_old(self, recipe_type_id, revision_num):
         """Returns the revision for the given recipe type and revision number
 
         :param recipe_type_id: The ID of the recipe type
@@ -1691,7 +1870,49 @@ class RecipeTypeRevisionManager(models.Manager):
 
         return RecipeTypeRevision.objects.get(recipe_type_id=recipe_type_id, revision_num=revision_num)
 
-    def get_revisions_for_reprocess(self, recipes_to_reprocess, new_rev_id):
+    def get_revisions(self, revision_ids, revision_tuples):
+        """Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
+        given values. Each revision model will have its related recipe type model populated.
+
+        :param revision_ids: A list of revision IDs to return
+        :type revision_ids: list
+        :param revision_tuples: A list of tuples (recipe type name, revision num) for additional revisions to return
+        :type revision_tuples: list
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        revisions = {}
+        qry_filter = Q(id__in=revision_ids)
+        for revision_tuple in revision_tuples:
+            qry_filter = qry_filter | Q(recipe_type__name=revision_tuple[0], revision_num=revision_tuple[1])
+        for rev in self.select_related('recipe_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
+    def get_revisions_for_reprocess(self, recipes_to_reprocess, new_recipe_type_name, new_recipe_type_rev_num):
+        """Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
+        given new revision ID. Each revision model will have its related recipe type model populated.
+
+        :param recipes_to_reprocess: The recipe models to reprocess
+        :type recipes_to_reprocess: list
+        :param new_recipe_type_name: The recipe type name for the new recipes
+        :type new_recipe_type_name: string
+        :param new_recipe_type_rev_num: The recipe type revision number for the new recipes
+        :type new_recipe_type_rev_num: int
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        rev_ids = {recipe.recipe_type_rev_id for recipe in recipes_to_reprocess}
+
+        revisions = {}
+        qry_filter = Q(id__in=rev_ids) | Q(recipe_type__name=new_recipe_type_name, revision_num=new_recipe_type_rev_num)
+        for rev in self.select_related('recipe_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
+    def get_revisions_for_reprocess_old(self, recipes_to_reprocess, new_rev_id):
         """Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
         given new revision ID. Each revision model will have its related recipe type model populated.
 
@@ -1743,6 +1964,16 @@ class RecipeTypeRevision(models.Model):
 
         return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
 
+    def get_input_interface(self):
+        """Returns the input interface for this revision
+
+        :returns: The input interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        return self.get_definition().input_interface
+
+    # TODO: this is deprecated
     def get_recipe_definition(self):
         """Returns the recipe type definition for this revision
 

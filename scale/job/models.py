@@ -3857,7 +3857,7 @@ class JobTypeRevisionManager(models.Manager):
         :rtype: :class:`job.models.JobTypeRevision`
         """
 
-        qry = JobTypeRevision.objects.select_related('job_type')
+        qry = self.select_related('job_type')
         return qry.get(job_type__name=job_type_name, job_type__version=job_type_version, revision_num=revision_num)
 
     def get_revision_old(self, job_type_id, revision_num):
