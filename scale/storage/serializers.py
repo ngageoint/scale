@@ -76,8 +76,8 @@ class WorkspaceSerializerV5(WorkspaceBaseSerializer):
     base_url = serializers.URLField()
     is_active = serializers.BooleanField()
 
-    used_size = 0
-    total_size = 0
+    used_size = serializers.IntegerField(source='zero_size')
+    total_size = serializers.IntegerField(source='zero_size')
 
     created = serializers.DateTimeField()
     archived = serializers.DateTimeField(source='deprecated')

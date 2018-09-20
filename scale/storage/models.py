@@ -1060,6 +1060,14 @@ class Workspace(models.Model):
 
     objects = WorkspaceManager()
 
+    #TODO remove with v5
+    @property
+    def zero_size(self):
+        """hack to get a zero value returned for removed total_size and used_size fields
+        """
+
+        return 0
+
     @property
     def volume(self):
         """If this workspace's broker uses a container volume, this property returns the information needed to set up a

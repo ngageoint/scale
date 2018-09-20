@@ -693,6 +693,9 @@ class TestWorkspaceDetailsViewV5(TestCase):
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+        self.assertIn('archived', result)
+        self.assertEqual(result['total_size'], 0)
+        self.assertEqual(result['used_size'], 0)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a workspace"""
@@ -804,6 +807,7 @@ class TestWorkspaceDetailsViewV6(TestCase):
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+        self.assertIn('deprecated', result)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a workspace"""
