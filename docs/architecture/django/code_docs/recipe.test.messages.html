@@ -223,6 +223,45 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-recipe.test.messages.test_create_recipes">
+<span id="recipe-test-messages-test-create-recipes-module"></span><h2>recipe.test.messages.test_create_recipes module<a class="headerlink" href="#module-recipe.test.messages.test_create_recipes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes">
+<em class="property">class </em><code class="descclassname">recipe.test.messages.test_create_recipes.</code><code class="descname">TestCreateRecipes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes">
+<code class="descname">test_execute_subrecipes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateRecipes.execute() successfully when creating sub-recipes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes_superseded">
+<code class="descname">test_execute_subrecipes_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateRecipes.execute() successfully when creating sub-recipes that supersede other sub-recipes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes">
+<code class="descname">test_json_subrecipes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateRecipes message to and from JSON when creating sub-recipes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes_superseded">
+<code class="descname">test_json_subrecipes_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateRecipes message to and from JSON when creating sub-recipes that supersede other
+sub-recipes</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.test.messages.test_process_recipe_input">
 <span id="recipe-test-messages-test-process-recipe-input-module"></span><h2>recipe.test.messages.test_process_recipe_input module<a class="headerlink" href="#module-recipe.test.messages.test_process_recipe_input" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -284,6 +323,38 @@ recipe</p>
 <dt id="recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json">
 <code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests coverting a ReprocessRecipes message to and from JSON</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.test.messages.test_supersede_recipe_nodes">
+<span id="recipe-test-messages-test-supersede-recipe-nodes-module"></span><h2>recipe.test.messages.test_supersede_recipe_nodes module<a class="headerlink" href="#module-recipe.test.messages.test_supersede_recipe_nodes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes">
+<em class="property">class </em><code class="descclassname">recipe.test.messages.test_supersede_recipe_nodes.</code><code class="descname">TestSupersedeRecipeNodes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling SupersedeRecipeNodes.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute_recursively">
+<code class="descname">test_execute_recursively</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute_recursively" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling SupersedeRecipeNodes.execute() recursively</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a SupersedeRecipeNodes message to and from JSON</p>
 </dd></dl>
 
 </dd></dl>

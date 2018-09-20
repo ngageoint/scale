@@ -4,6 +4,14 @@ recipe\.messages package
 Submodules
 ----------
 
+recipe\.messages\.create\_recipes module
+----------------------------------------
+
+.. automodule:: recipe.messages.create_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.process\_recipe\_input module
 -----------------------------------------------
 
@@ -16,6 +24,14 @@ recipe\.messages\.reprocess\_recipes module
 -------------------------------------------
 
 .. automodule:: recipe.messages.reprocess_recipes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.messages\.supersede\_recipe\_nodes module
+-------------------------------------------------
+
+.. automodule:: recipe.messages.supersede_recipe_nodes
     :members:
     :undoc-members:
     :show-inheritance:

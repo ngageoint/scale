@@ -225,6 +225,7 @@
 <li class="toctree-l1"><a class="reference internal" href="recipe.diff.json.html">recipe.diff.json package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.json.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json.diff_v6">recipe.diff.json.diff_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json.forced_nodes_v6">recipe.diff.json.forced_nodes_v6 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json">Module contents</a></li>
 </ul>
 </li>
@@ -277,6 +278,23 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.diff.diff.RecipeDiff.get_nodes_to_recursively_supersede">
+<code class="descname">get_nodes_to_recursively_supersede</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.get_nodes_to_recursively_supersede" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of node diffs for the sub-recipe nodes that should be completely, recursively superseded as a
+result of a reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict of node diffs stored by node name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.diff.diff.RecipeDiff.get_nodes_to_supersede">
 <code class="descname">get_nodes_to_supersede</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.get_nodes_to_supersede" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dict of node diffs for the nodes that should be superseded during a reprocess</p>
@@ -310,16 +328,13 @@
 
 <dl class="method">
 <dt id="recipe.diff.diff.RecipeDiff.set_force_reprocess">
-<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Provides a set of nodes to force to reprocess. The given dict contains node names as keys representing the
-nodes to force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe
-nodes, the dict recursively represents the node names within that recipe that should be foreced to reprocess,
-and so on.</p>
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.diff.RecipeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a set of nodes to force to reprocess</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reprocess_nodes</strong> (<em>dict</em>) &#8211; Dict where each key is a node name mapping recursively to another dict of nodes</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forced_nodes</strong> (<a class="reference internal" href="#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a>) &#8211; Object describing which nodes should be forced to be reprocessed</td>
 </tr>
 </tbody>
 </table>
@@ -336,6 +351,107 @@ and so on.</p>
 <em class="property">exception </em><code class="descclassname">recipe.diff.exceptions.</code><code class="descname">InvalidDiff</code><a class="headerlink" href="#recipe.diff.exceptions.InvalidDiff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that the provided recipe graph diff was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.diff.forced_nodes">
+<span id="recipe-diff-forced-nodes-module"></span><h2>recipe.diff.forced_nodes module<a class="headerlink" href="#module-recipe.diff.forced_nodes" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for representing nodes within a recipe that are being forced to reprocess</p>
+<dl class="class">
+<dt id="recipe.diff.forced_nodes.ForcedNodes">
+<em class="property">class </em><code class="descclassname">recipe.diff.forced_nodes.</code><code class="descname">ForcedNodes</code><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents nodes within a recipe that are being forced to reprocess</p>
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.add_node">
+<code class="descname">add_node</code><span class="sig-paren">(</span><em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a node to be forced to be reprocessed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_name</strong> (<em>string</em>) &#8211; The node name</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.add_subrecipe">
+<code class="descname">add_subrecipe</code><span class="sig-paren">(</span><em>node_name</em>, <em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.add_subrecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a sub-recipe node to be forced to be reprocessed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>node_name</strong> (<em>string</em>) &#8211; The node name of the sub-recipe</li>
+<li><strong>forced_nodes</strong> (<a class="reference internal" href="#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a>) &#8211; The forced nodes for the sub-recipe</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.get_forced_node_names">
+<code class="descname">get_forced_node_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.get_forced_node_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the forced node names</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The forced node names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">set</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.get_forced_nodes_for_subrecipe">
+<code class="descname">get_forced_nodes_for_subrecipe</code><span class="sig-paren">(</span><em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.get_forced_nodes_for_subrecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ForcedNodes object for the given sub-recipe, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_name</strong> (<em>string</em>) &#8211; The node name of the sub-recipe</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The forced nodes for the sub-recipe</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.is_node_forced_to_reprocess">
+<code class="descname">is_node_forced_to_reprocess</code><span class="sig-paren">(</span><em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.is_node_forced_to_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the given node is forced to reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_name</strong> (<em>string</em>) &#8211; The node name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the given node is forced to reprocess, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.forced_nodes.ForcedNodes.set_all_nodes">
+<code class="descname">set_all_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.forced_nodes.ForcedNodes.set_all_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all nodes to be forced to reprocess</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -449,15 +565,14 @@ and so on.</p>
 
 <dl class="method">
 <dt id="recipe.diff.node.NodeDiff.set_force_reprocess">
-<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets this node to force to reprocess. The given dict contains node names as keys representing the nodes to
-force to reprocess. Each node name maps to a dict, which is empty for non-recipe nodes. For recipe nodes, the
-dict recursively represents the node names within that recipe that should be foreced to reprocess, and so on.</p>
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets this node to force to reprocess. The given object recursively describes which nodes should be forced to
+reprocess in sub-recipes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>reprocess_nodes</strong> (<em>dict</em>) &#8211; Dict where each key is a node name mapping recursively to another dict of nodes</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forced_nodes</strong> (<a class="reference internal" href="#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a>) &#8211; Object describing which nodes should be forced to be reprocessed</td>
 </tr>
 </tbody>
 </table>
@@ -472,6 +587,23 @@ dict recursively represents the node names within that recipe that should be for
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node should be copied</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.NodeDiff.should_be_recursively_superseded">
+<code class="descname">should_be_recursively_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.NodeDiff.should_be_recursively_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node should be completely, recursively superseded in the previous recipe during a
+reprocess</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node should be completely, recursively superseded</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -526,8 +658,14 @@ dict recursively represents the node names within that recipe that should be for
 
 <dl class="method">
 <dt id="recipe.diff.node.RecipeNodeDiff.set_force_reprocess">
-<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>reprocess_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_force_reprocess</code><span class="sig-paren">(</span><em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff.set_force_reprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#recipe.diff.node.NodeDiff.set_force_reprocess" title="recipe.diff.node.NodeDiff.set_force_reprocess"><code class="xref py py-meth docutils literal"><span class="pre">recipe.diff.node.NodeDiff.set_force_reprocess()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.node.RecipeNodeDiff.should_be_recursively_superseded">
+<code class="descname">should_be_recursively_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.node.RecipeNodeDiff.should_be_recursively_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.diff.node.NodeDiff.should_be_recursively_superseded" title="recipe.diff.node.NodeDiff.should_be_recursively_superseded"><code class="xref py py-meth docutils literal"><span class="pre">recipe.diff.node.NodeDiff.should_be_recursively_superseded()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

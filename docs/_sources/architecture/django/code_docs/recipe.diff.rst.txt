@@ -27,6 +27,14 @@ recipe\.diff\.exceptions module
     :undoc-members:
     :show-inheritance:
 
+recipe\.diff\.forced\_nodes module
+----------------------------------
+
+.. automodule:: recipe.diff.forced_nodes
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.diff\.node module
 -------------------------
 

@@ -304,6 +304,67 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.diff.json.forced_nodes_v6">
+<span id="recipe-diff-json-forced-nodes-v6-module"></span><h2>recipe.diff.json.forced_nodes_v6 module<a class="headerlink" href="#module-recipe.diff.json.forced_nodes_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 forced nodes schema</p>
+<dl class="class">
+<dt id="recipe.diff.json.forced_nodes_v6.ForcedNodesV6">
+<em class="property">class </em><code class="descclassname">recipe.diff.json.forced_nodes_v6.</code><code class="descname">ForcedNodesV6</code><span class="sig-paren">(</span><em>forced_nodes=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.forced_nodes_v6.ForcedNodesV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a v6 forced nodes JSON for the describing which nodes in a recipe should be forced to be reprocessed</p>
+<dl class="method">
+<dt id="recipe.diff.json.forced_nodes_v6.ForcedNodesV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.forced_nodes_v6.ForcedNodesV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.diff.json.forced_nodes_v6.ForcedNodesV6.get_forced_nodes">
+<code class="descname">get_forced_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.forced_nodes_v6.ForcedNodesV6.get_forced_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the forced nodes object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The forced nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="recipe.diff.html#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.diff.json.forced_nodes_v6.convert_forced_nodes_to_v6">
+<code class="descclassname">recipe.diff.json.forced_nodes_v6.</code><code class="descname">convert_forced_nodes_to_v6</code><span class="sig-paren">(</span><em>forced_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.diff.json.forced_nodes_v6.convert_forced_nodes_to_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 forced nodes JSON for the given forced nodes object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>forced_nodes</strong> (<a class="reference internal" href="recipe.diff.html#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a>) &#8211; The forced nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 forced nodes JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.diff.json.forced_nodes_v6.ForcedNodesV6" title="recipe.diff.json.forced_nodes_v6.ForcedNodesV6"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.json.forced_nodes_v6.ForcedNodesV6</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.diff.json">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.diff.json" title="Permalink to this headline">¶</a></h2>
 </div>

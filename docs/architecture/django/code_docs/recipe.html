@@ -266,6 +266,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.diff.json.html">recipe.diff.json package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json.diff_v6">recipe.diff.json.diff_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json.forced_nodes_v6">recipe.diff.json.forced_nodes_v6 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.diff.json.html#module-recipe.diff.json">Module contents</a></li>
 </ul>
 </li>
@@ -274,6 +275,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff.diff">recipe.diff.diff module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff.exceptions">recipe.diff.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff.forced_nodes">recipe.diff.forced_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff.node">recipe.diff.node module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.diff.html#module-recipe.diff">Module contents</a></li>
 </ul>
@@ -307,8 +309,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="recipe.messages.html">recipe.messages package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.create_recipes">recipe.messages.create_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.process_recipe_input">recipe.messages.process_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.reprocess_recipes">recipe.messages.reprocess_recipes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.supersede_recipe_nodes">recipe.messages.supersede_recipe_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipe_metrics">recipe.messages.update_recipe_metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages.update_recipes">recipe.messages.update_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.messages.html#module-recipe.messages">Module contents</a></li>
@@ -431,8 +435,10 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.test.messages.html">recipe.test.messages package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_create_recipes">recipe.test.messages.test_create_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipes">recipe.test.messages.test_update_recipes module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages">Module contents</a></li>
@@ -1483,30 +1489,22 @@ object the first time, the query is executed.</p>
 <dl class="method">
 <dt id="recipe.models.RecipeManager.create_recipe">
 <code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>revision</em>, <em>event_id</em>, <em>input</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new recipe model for the given type and returns it. The model will not be saved in the database.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recipe_type</strong> (<a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of the recipe to create</li>
-<li><strong>revision</strong> (<a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a>) &#8211; The recipe type revision</li>
-<li><strong>event_id</strong> (<em>int</em>) &#8211; The ID of the event that triggered the creation of this recipe</li>
-<li><strong>input</strong> (<code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>) &#8211; The recipe input to run on, should be None if superseded_recipe is provided</li>
-<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe</li>
-<li><strong>superseded_recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe input is invalid</p>
+<dd><p>Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
+:param recipe_type: The type of the recipe to create
+:type recipe_type: <a class="reference internal" href="#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>
+:param revision: The recipe type revision
+:type revision: <a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a>
+:param event_id: The ID of the event that triggered the creation of this recipe
+:type event_id: int
+:param input: The recipe input to run on, should be None if superseded_recipe is provided
+:type input: <code class="xref py py-class docutils literal"><span class="pre">recipe.data.recipe_data.RecipeData</span></code>
+:param batch_id: The ID of the batch that contains this recipe
+:type batch_id: int
+:param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+:type superseded_recipe: <a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>
+:returns: A handler for the new recipe
+:rtype: <a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>
+:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe input is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -1546,6 +1544,37 @@ actually be replaced by the new recipe definition.</li>
 :raises <a class="reference internal" href="#recipe.exceptions.SupersedeError" title="recipe.exceptions.SupersedeError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.SupersedeError</span></code></a>: If the superseded parameters are invalid
 :raises <a class="reference internal" href="#recipe.exceptions.ReprocessError" title="recipe.exceptions.ReprocessError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.ReprocessError</span></code></a>: If recipe cannot be reprocessed
 :raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.create_recipe_v6">
+<code class="descname">create_recipe_v6</code><span class="sig-paren">(</span><em>recipe_type_rev</em>, <em>event_id</em>, <em>input_data=None</em>, <em>root_recipe_id=None</em>, <em>recipe_id=None</em>, <em>batch_id=None</em>, <em>superseded_recipe=None</em>, <em>copy_superseded_input=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.create_recipe_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new recipe for the given recipe type revision and returns the (unsaved) recipe model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_rev</strong> (<a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a>) &#8211; The recipe type revision (with populated recipe_type model) of the recipe to create</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID that triggered the creation of this recipe</li>
+<li><strong>input_data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The recipe&#8217;s input data, possibly None</li>
+<li><strong>root_recipe_id</strong> (<em>int</em>) &#8211; The ID of the root recipe that contains this sub-recipe, possibly None</li>
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The ID of the original recipe that created this sub-recipe, possibly None</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The ID of the batch that contains this recipe, possibly None</li>
+<li><strong>superseded_recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
+<li><strong>copy_superseded_input</strong> (<em>bool</em>) &#8211; Whether to copy the input data from the superseded recipe</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new recipe model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="data.data.html#data.data.exceptions.InvalidData" title="data.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">data.data.exceptions.InvalidData</span></code></a>: If the input data is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -1670,28 +1699,35 @@ transaction.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_locked_recipes_from_root">
-<code class="descname">get_locked_recipes_from_root</code><span class="sig-paren">(</span><em>root_recipe_ids</em>, <em>event_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipes_from_root" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_locked_recipes_from_root</code><span class="sig-paren">(</span><em>root_recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipes_from_root" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
-IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
-optional event ID ensures that recipes are not reprocessed multiple times due to one event.</p>
+IDs. The returned models have no related fields populated. Caller must be within an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>root_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The root recipe IDs</li>
-<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>root_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The root recipe IDs</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe models</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe models</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.get_locked_recipes_from_root_old">
+<code class="descname">get_locked_recipes_from_root_old</code><span class="sig-paren">(</span><em>root_recipe_ids</em>, <em>event_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_locked_recipes_from_root_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locks and returns the latest (non-superseded) recipe model for each recipe family with the given root recipe
+IDs. The returned models have no related fields populated. Caller must be within an atomic transaction. The
+optional event ID ensures that recipes are not reprocessed multiple times due to one event.
+:param root_recipe_ids: The root recipe IDs
+:type root_recipe_ids: list
+:param event_id: The event ID
+:type event_id: int
+:returns: The recipe models
+:rtype: list</p>
 </dd></dl>
 
 <dl class="method">
@@ -2123,10 +2159,48 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.models.RecipeNodeCopy">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeNodeCopy</code><span class="sig-paren">(</span><em>superseded_recipe_id</em>, <em>recipe_id</em>, <em>node_names</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeCopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeCopy.node_names">
+<code class="descname">node_names</code><a class="headerlink" href="#recipe.models.RecipeNodeCopy.node_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeCopy.recipe_id">
+<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.models.RecipeNodeCopy.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeNodeCopy.superseded_recipe_id">
+<code class="descname">superseded_recipe_id</code><a class="headerlink" href="#recipe.models.RecipeNodeCopy.superseded_recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.models.RecipeNodeManager">
 <em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeNodeManager</code><a class="headerlink" href="#recipe.models.RecipeNodeManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling jobs linked to a recipe</p>
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.copy_recipe_nodes">
+<code class="descname">copy_recipe_nodes</code><span class="sig-paren">(</span><em>recipe_copies</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.copy_recipe_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copies the given nodes from the superseded recipes to the new recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_copies</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of RecipeNodeCopy tuples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="recipe.models.RecipeNodeManager.create_recipe_job_nodes">
 <code class="descname">create_recipe_job_nodes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>node_name</em>, <em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.create_recipe_job_nodes" title="Permalink to this definition">¶</a></dt>
@@ -2139,6 +2213,30 @@ object the first time, the query is executed.</p>
 <li><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</li>
 <li><strong>node_name</strong> (<em>string</em>) &#8211; The recipe node name</li>
 <li><strong>jobs</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of job models</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of recipe_node models</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.create_subrecipe_nodes">
+<code class="descname">create_subrecipe_nodes</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>sub_recipes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.create_subrecipe_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns the recipe node models (unsaved) for the given recipe and sub-recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</li>
+<li><strong>sub_recipes</strong> (<em>dict</em>) &#8211; A dict of recipe models stored by node name</li>
 </ul>
 </td>
 </tr>
@@ -2246,6 +2344,24 @@ job_type_rev models for the given recipe IDs</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeNodeManager.get_subrecipes">
+<code class="descname">get_subrecipes</code><span class="sig-paren">(</span><em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sub-recipe models that belong to the given recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_id</strong> (<em>int</em>) &#8211; The recipe ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A dict of recipe models stored by node name</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeNodeManager.get_superseded_recipe_jobs">
 <code class="descname">get_superseded_recipe_jobs</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>node_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.get_superseded_recipe_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the superseded job models that belong to the given superseded recipe with the given node name</p>
@@ -2263,6 +2379,46 @@ job_type_rev models for the given recipe IDs</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.supersede_recipe_jobs">
+<code class="descname">supersede_recipe_jobs</code><span class="sig-paren">(</span><em>recipe_ids</em>, <em>when</em>, <em>node_names</em>, <em>all_nodes=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.supersede_recipe_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Supersedes the jobs for the given recipe IDs and node names</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the jobs were superseded</li>
+<li><strong>node_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The node names of the jobs to supersede</li>
+<li><strong>all_nodes</strong> (<em>bool</em>) &#8211; Whether all nodes should be superseded</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeNodeManager.supersede_subrecipes">
+<code class="descname">supersede_subrecipes</code><span class="sig-paren">(</span><em>recipe_ids</em>, <em>when</em>, <em>node_names</em>, <em>all_nodes=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeNodeManager.supersede_subrecipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Supersedes the sub-recipes for the given recipe IDs and node names</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the sub-recipes were superseded</li>
+<li><strong>node_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The node names of the sub-recipes to supersede</li>
+<li><strong>all_nodes</strong> (<em>bool</em>) &#8211; Whether all nodes should be superseded</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -2849,6 +3005,22 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeTypeRevision.get_input_interface">
+<code class="descname">get_input_interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_input_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the input interface for this revision</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input interface for this revision</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeTypeRevision.get_next_by_created">
 <code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevision.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2994,7 +3166,31 @@ model.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeTypeRevisionManager.get_revision">
-<code class="descname">get_revision</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_revision</code><span class="sig-paren">(</span><em>recipe_type_name</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revision" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the revision (with populated recipe_type model) for the given recipe type and revision number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The name of the recipe type</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revision</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.models.RecipeTypeRevision" title="recipe.models.RecipeTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeTypeRevision</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeRevisionManager.get_revision_old">
+<code class="descname">get_revision_old</code><span class="sig-paren">(</span><em>recipe_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revision_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the revision for the given recipe type and revision number</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3017,8 +3213,59 @@ model.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.models.RecipeTypeRevisionManager.get_revisions">
+<code class="descname">get_revisions</code><span class="sig-paren">(</span><em>revision_ids</em>, <em>revision_tuples</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict that maps revision ID to recipe type revision for the recipe type revisions that match the
+given values. Each revision model will have its related recipe type model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>revision_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of revision IDs to return</li>
+<li><strong>revision_tuples</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of tuples (recipe type name, revision num) for additional revisions to return</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revisions stored by revision ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.models.RecipeTypeRevisionManager.get_revisions_for_reprocess">
-<code class="descname">get_revisions_for_reprocess</code><span class="sig-paren">(</span><em>recipes_to_reprocess</em>, <em>new_rev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revisions_for_reprocess" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_revisions_for_reprocess</code><span class="sig-paren">(</span><em>recipes_to_reprocess</em>, <em>new_recipe_type_name</em>, <em>new_recipe_type_rev_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revisions_for_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
+given new revision ID. Each revision model will have its related recipe type model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipes_to_reprocess</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe models to reprocess</li>
+<li><strong>new_recipe_type_name</strong> (<em>string</em>) &#8211; The recipe type name for the new recipes</li>
+<li><strong>new_recipe_type_rev_num</strong> (<em>int</em>) &#8211; The recipe type revision number for the new recipes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revisions stored by revision ID</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeTypeRevisionManager.get_revisions_for_reprocess_old">
+<code class="descname">get_revisions_for_reprocess_old</code><span class="sig-paren">(</span><em>recipes_to_reprocess</em>, <em>new_rev_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeTypeRevisionManager.get_revisions_for_reprocess_old" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dict that maps revision ID to recipe type revision for the given recipes to reprocess and for the
 given new revision ID. Each revision model will have its related recipe type model populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
