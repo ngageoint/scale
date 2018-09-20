@@ -112,6 +112,11 @@
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Strike Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-strike-list">v6 Strike List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-strike">v6 Create Strike</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-strike-details">v6 Strike Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-validate-strike">v6 Validate Strike</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-edit-strike">v6 Edit Strike</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#strike-configuration-json">Strike Configuration JSON</a></li>
 </ul>
 </li>
@@ -191,7 +196,9 @@
   <div class="section" id="v6-strike-services">
 <span id="rest-v6-strike"></span><h1>v6 Strike Services<a class="headerlink" href="#v6-strike-services" title="Permalink to this headline">¶</a></h1>
 <p>These services allow a user to create, view, and manage Strike processes.</p>
-<p id="rest-v6-strike-list"><strong>Example GET /v6/strikes/ API call</strong></p>
+<div class="section" id="v6-strike-list">
+<span id="rest-v6-strike-list"></span><h2>v6 Strike List<a class="headerlink" href="#v6-strike-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/strikes/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/strikes/">http://.../v6/strikes/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
@@ -341,7 +348,10 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-create"><strong>Example POST /v6/strikes/ API call</strong></p>
+</div>
+<div class="section" id="v6-create-strike">
+<span id="rest-v6-strike-create"></span><h2>v6 Create Strike<a class="headerlink" href="#v6-create-strike" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/strikes/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/strikes/">http://.../v6/strikes/</a></p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -456,7 +466,10 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-details"><strong>Example GET /v6/strikes/{id}/ API call</strong></p>
+</div>
+<div class="section" id="v6-strike-details">
+<span id="rest-v6-strike-details"></span><h2>v6 Strike Details<a class="headerlink" href="#v6-strike-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/strikes/{id}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/strikes">http://.../v6/strikes</a>/{id}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
@@ -560,7 +573,10 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-validate"><strong>Example POST /v6/strikes/validation/ API call</strong></p>
+</div>
+<div class="section" id="v6-validate-strike">
+<span id="rest-v6-strike-validate"></span><h2>v6 Validate Strike<a class="headerlink" href="#v6-validate-strike" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/strikes/validation/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/strikes/validation/">http://.../v6/strikes/validation/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike-process&quot;</span><span class="p">,</span>
@@ -636,9 +652,9 @@ Location <a class="reference external" href="http://.../v6/strikes/105/">http://
 </tr>
 <tr class="row-odd"><td>is_valid</td>
 <td>Boolean</td>
-<td colspan="2">Indicates if the given fields were valid for creating a new batch. If this is
-true, then submitting the same fields to the /batches/ API will successfully
-create a new batch.</td>
+<td colspan="2">Indicates if the given fields were valid for creating a new strike. If this is
+true, then submitting the same fields to the /strikes/ API will successfully
+create a new strike.</td>
 </tr>
 <tr class="row-even"><td>errors</td>
 <td>Array</td>
@@ -659,7 +675,10 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-strike-edit"><strong>Example PATCH /v6/strikes/{id}/ API call</strong></p>
+</div>
+<div class="section" id="v6-edit-strike">
+<span id="rest-v6-strike-edit"></span><h2>v6 Edit Strike<a class="headerlink" href="#v6-edit-strike" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example PATCH /v6/strikes/{id}/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/strikes">http://.../v6/strikes</a>/{id}/</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Strike Process&quot;</span><span class="p">,</span>
@@ -726,6 +745,7 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="section" id="strike-configuration-json">
 <span id="rest-v6-strike-configuration"></span><h2>Strike Configuration JSON<a class="headerlink" href="#strike-configuration-json" title="Permalink to this headline">¶</a></h2>
 <p>A strike configuration JSON describes a set of configuration settings that affect how a strike job executes.</p>

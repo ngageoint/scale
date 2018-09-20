@@ -1,6 +1,13 @@
 storage\.configuration package
 ==============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    storage.configuration.json
+
 Submodules
 ----------
 

@@ -1,0 +1,30 @@
+storage\.configuration\.json package
+====================================
+
+Submodules
+----------
+
+storage\.configuration\.json\.workspace\_config\_1\_0 module
+------------------------------------------------------------
+
+.. automodule:: storage.configuration.json.workspace_config_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.configuration\.json\.workspace\_config\_v6 module
+----------------------------------------------------------
+
+.. automodule:: storage.configuration.json.workspace_config_v6
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

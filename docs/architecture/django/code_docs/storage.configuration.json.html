@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>storage.configuration package &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>storage.configuration.json package &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="storage.configuration.json package" href="storage.configuration.json.html" />
-    <link rel="prev" title="storage.brokers package" href="storage.brokers.html" />
+    <link rel="next" title="storage.management package" href="storage.management.html" />
+    <link rel="prev" title="storage.configuration package" href="storage.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -201,13 +201,15 @@
         
           <li><a href="storage.html">storage package</a> &raquo;</li>
         
-      <li>storage.configuration package</li>
+          <li><a href="storage.configuration.html">storage.configuration package</a> &raquo;</li>
+        
+      <li>storage.configuration.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/storage.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.configuration.json.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -220,50 +222,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="storage-configuration-package">
-<h1>storage.configuration package<a class="headerlink" href="#storage-configuration-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="storage.configuration.json.html">storage.configuration.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="storage.configuration.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json.workspace_config_1_0">storage.configuration.json.workspace_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json.workspace_config_v6">storage.configuration.json.workspace_config_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="storage-configuration-json-package">
+<h1>storage.configuration.json package<a class="headerlink" href="#storage-configuration-json-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-storage.configuration.exceptions">
-<span id="storage-configuration-exceptions-module"></span><h2>storage.configuration.exceptions module<a class="headerlink" href="#module-storage.configuration.exceptions" title="Permalink to this headline">¶</a></h2>
-<p>Defines exceptions that can occur when interacting with Workspace configuration</p>
-<dl class="exception">
-<dt id="storage.configuration.exceptions.InvalidWorkspaceConfiguration">
-<em class="property">exception </em><code class="descclassname">storage.configuration.exceptions.</code><code class="descname">InvalidWorkspaceConfiguration</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.exceptions.InvalidWorkspaceConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
-<p>Exception indicating that the provided Workspace configuration was invalid</p>
+<div class="section" id="module-storage.configuration.json.workspace_config_1_0">
+<span id="storage-configuration-json-workspace-config-1-0-module"></span><h2>storage.configuration.json.workspace_config_1_0 module<a class="headerlink" href="#module-storage.configuration.json.workspace_config_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the JSON schema for a job configuration</p>
+<dl class="class">
+<dt id="storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1">
+<em class="property">class </em><code class="descclassname">storage.configuration.json.workspace_config_1_0.</code><code class="descname">WorkspaceConfigurationV1</code><span class="sig-paren">(</span><em>configuration=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the schema for a workspace configuration</p>
+<dl class="method">
+<dt id="storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace configuration represented by this JSON</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">workspace.configuration.workspace_configuration.WorkspaceConfiguration</span></code>:</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-</div>
-<div class="section" id="module-storage.configuration.workspace_configuration">
-<span id="storage-configuration-workspace-configuration-module"></span><h2>storage.configuration.workspace_configuration module<a class="headerlink" href="#module-storage.configuration.workspace_configuration" title="Permalink to this headline">¶</a></h2>
-<p>Defines the configuration for a storage Workspace</p>
-<dl class="class">
-<dt id="storage.configuration.workspace_configuration.WorkspaceConfiguration">
-<em class="property">class </em><code class="descclassname">storage.configuration.workspace_configuration.</code><code class="descname">WorkspaceConfiguration</code><a class="headerlink" href="#storage.configuration.workspace_configuration.WorkspaceConfiguration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the configuration for a storage Workspace.
-The configuration includes details about the storage broker system required to read, write, move, or delete files
-within the workspace.</p>
 <dl class="method">
-<dt id="storage.configuration.workspace_configuration.WorkspaceConfiguration.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.workspace_configuration.WorkspaceConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary that represents this workspace configuration.</p>
+<dt id="storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_1_0.WorkspaceConfigurationV1.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this workspace configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -276,31 +267,72 @@ within the workspace.</p>
 </table>
 </dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.configuration.json.workspace_config_v6">
+<span id="storage-configuration-json-workspace-config-v6-module"></span><h2>storage.configuration.json.workspace_config_v6 module<a class="headerlink" href="#module-storage.configuration.json.workspace_config_v6" title="Permalink to this headline">¶</a></h2>
+<p>Manages the v6 job configuration schema</p>
+<dl class="class">
+<dt id="storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6">
+<em class="property">class </em><code class="descclassname">storage.configuration.json.workspace_config_v6.</code><code class="descname">WorkspaceConfigurationV6</code><span class="sig-paren">(</span><em>config=None</em>, <em>do_validate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the schema for a workspace configuration</p>
 <dl class="method">
-<dt id="storage.configuration.workspace_configuration.WorkspaceConfiguration.validate_broker">
-<code class="descname">validate_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.workspace_configuration.WorkspaceConfiguration.validate_broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the current broker-specific configuration.</p>
+<dt id="storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace configuration represented by this JSON</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace configuration</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">workspace.configuration.workspace_configuration.WorkspaceConfiguration</span></code>:</td>
 </tr>
 </tbody>
 </table>
-<dl class="docutils">
-<dt>:raises <a class="reference internal" href="#storage.configuration.exceptions.InvalidWorkspaceConfiguration" title="storage.configuration.exceptions.InvalidWorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.exceptions.InvalidWorkspaceConfiguration</span></code></a>: If there is a configuration</dt>
-<dd>problem.</dd>
-</dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_v6.WorkspaceConfigurationV6.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this workspace configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.configuration.json.workspace_config_v6.convert_config_to_v6_json">
+<code class="descclassname">storage.configuration.json.workspace_config_v6.</code><code class="descname">convert_config_to_v6_json</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.configuration.json.workspace_config_v6.convert_config_to_v6_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the v6 workspace configuration JSON for the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration" title="storage.configuration.workspace_configuration.WorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.WorkspaceConfiguration</span></code></a>) &#8211; The workspace configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The v6 workspace configuration JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">workspace.configuration.json.workspace_config_v6.WorkspaceConfigurationV6</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-storage.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-storage.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.configuration.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -312,10 +344,10 @@ within the workspace.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="storage.configuration.json.html" class="btn btn-neutral float-right" title="storage.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="storage.management.html" class="btn btn-neutral float-right" title="storage.management package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="storage.brokers.html" class="btn btn-neutral" title="storage.brokers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="storage.configuration.html" class="btn btn-neutral" title="storage.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

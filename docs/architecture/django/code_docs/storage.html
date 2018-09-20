@@ -236,6 +236,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="storage.configuration.html">storage.configuration package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="storage.configuration.json.html">storage.configuration.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="storage.configuration.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json.workspace_config_1_0">storage.configuration.json.workspace_config_1_0 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json.workspace_config_v6">storage.configuration.json.workspace_config_v6 module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.configuration.json.html#module-storage.configuration.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#module-storage.configuration.exceptions">storage.configuration.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.configuration.html#module-storage.configuration.workspace_configuration">storage.configuration.workspace_configuration module</a></li>
@@ -279,6 +289,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0009_auto_20171002_1542">storage.migrations.0009_auto_20171002_1542 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0010_auto_20180613_1947">storage.migrations.0010_auto_20180613_1947 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0011_auto_20180821_1439">storage.migrations.0011_auto_20180821_1439 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0012_auto_20180920_1320">storage.migrations.0012_auto_20180920_1320 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1730,10 +1741,8 @@ for processing</p>
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the workspace is active (can be used and displayed)</li>
 <li><strong>json_config</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration describing how to store/retrieve files for this workspace</li>
 <li><strong>is_move_enabled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the workspace allows files to be moved within it</li>
-<li><strong>used_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The number of used bytes, may be None (unknown)</li>
-<li><strong>total_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The total size of the workspace file system in bytes, may be None (unknown)</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the workspace was created</li>
-<li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the workspace was archived (no longer active)</li>
+<li><strong>deprecated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the workspace was archived (no longer active)</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the workspace was last modified</li>
 </ul>
 </td>
@@ -1750,13 +1759,6 @@ for processing</p>
 <dt id="storage.models.Workspace.MultipleObjectsReturned">
 <em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.Workspace.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="storage.models.Workspace.archived">
-<code class="descname">archived</code><a class="headerlink" href="#storage.models.Workspace.archived" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1788,6 +1790,13 @@ mounted at workspace_volume_path or an exception will be raised.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#storage.exceptions.MissingVolumeMount" title="storage.exceptions.MissingVolumeMount"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingVolumeMount</span></code></a>: If the required volume mount is missing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.deprecated">
+<code class="descname">deprecated</code><a class="headerlink" href="#storage.models.Workspace.deprecated" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1825,6 +1834,22 @@ at workspace_volume_path or an exception will be raised.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configured broker</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.brokers.html#storage.brokers.broker.Broker" title="storage.brokers.broker.Broker"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.Broker</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_configuration">
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace configuration object</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration in v2 of the JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -1869,6 +1894,22 @@ at workspace_volume_path or an exception will be raised.</p>
 <dt id="storage.models.Workspace.get_previous_by_last_modified">
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.Workspace.get_v6_configuration_json">
+<code class="descname">get_v6_configuration_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_v6_configuration_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the workspace configuration in v6 of the JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace configuration in v6 of the JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.Workspace.id">
@@ -1974,13 +2015,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 object the first time, the query is executed.</p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="storage.models.Workspace.total_size">
-<code class="descname">total_size</code><a class="headerlink" href="#storage.models.Workspace.total_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
 <dl class="method">
 <dt id="storage.models.Workspace.upload_files">
 <code class="descname">upload_files</code><span class="sig-paren">(</span><em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.upload_files" title="Permalink to this definition">¶</a></dt>
@@ -1996,13 +2030,6 @@ already be mounted at workspace_volume_path or an exception will be raised.</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="#storage.exceptions.MissingVolumeMount" title="storage.exceptions.MissingVolumeMount"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingVolumeMount</span></code></a>: If the required volume mount is missing</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="storage.models.Workspace.used_size">
-<code class="descname">used_size</code><a class="headerlink" href="#storage.models.Workspace.used_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2039,6 +2066,12 @@ this property should be None.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="storage.models.Workspace.zero_size">
+<code class="descname">zero_size</code><a class="headerlink" href="#storage.models.Workspace.zero_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>hack to get a zero value returned for removed total_size and used_size fields</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -2060,7 +2093,7 @@ transaction.</p>
 <li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Workspace</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Workspace</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Workspace</li>
-<li><strong>json_config</strong> (<em>dict</em>) &#8211; The Workspace configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration" title="storage.configuration.workspace_configuration.WorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.WorkspaceConfiguration</span></code></a>) &#8211; The Workspace configuration</li>
 <li><strong>base_url</strong> (<em>string</em>) &#8211; The URL prefix used to download files stored in the Workspace.</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Whether or not the Workspace is available for use.</li>
 </ul>
@@ -2090,7 +2123,7 @@ transaction. An argument of None for a field indicates that the field should not
 <li><strong>workspace_id</strong> (<em>int</em>) &#8211; The unique identifier of the Workspace to edit</li>
 <li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Workspace</li>
 <li><strong>description</strong> (<em>string</em>) &#8211; A description of this Workspace</li>
-<li><strong>json_config</strong> (<em>dict</em>) &#8211; The Workspace configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="storage.configuration.html#storage.configuration.workspace_configuration.WorkspaceConfiguration" title="storage.configuration.workspace_configuration.WorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.WorkspaceConfiguration</span></code></a>) &#8211; The Workspace configuration</li>
 <li><strong>base_url</strong> (<em>string</em>) &#8211; The URL prefix used to download files stored in the Workspace.</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Whether or not the Workspace is available for use.</li>
 </ul>
@@ -2147,8 +2180,8 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="method">
-<dt id="storage.models.WorkspaceManager.validate_workspace">
-<code class="descname">validate_workspace</code><span class="sig-paren">(</span><em>name</em>, <em>json_config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.WorkspaceManager.validate_workspace" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.models.WorkspaceManager.validate_workspace_v5">
+<code class="descname">validate_workspace_v5</code><span class="sig-paren">(</span><em>name</em>, <em>json_config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.WorkspaceManager.validate_workspace_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new workspace prior to attempting a save</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2163,12 +2196,60 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of warnings discovered during validation.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="storage.configuration.html#storage.configuration.workspace_configuration.ValidationWarning" title="storage.configuration.workspace_configuration.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.ValidationWarning</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<code class="xref py py-class docutils literal"><span class="pre">storage.configuration.workspace_configuration.ValidationWarning</span></code>]</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="storage.configuration.html#storage.configuration.exceptions.InvalidWorkspaceConfiguration" title="storage.configuration.exceptions.InvalidWorkspaceConfiguration"><code class="xref py py-class docutils literal"><span class="pre">storage.configuration.exceptions.InvalidWorkspaceConfiguration</span></code></a>: If the configuration is invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.WorkspaceManager.validate_workspace_v6">
+<code class="descname">validate_workspace_v6</code><span class="sig-paren">(</span><em>name</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.WorkspaceManager.validate_workspace_v6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new workspace prior to attempting a save</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of a Workspace to validate</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Workspace configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The workspace validation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#storage.models.WorkspaceValidation" title="storage.models.WorkspaceValidation"><code class="xref py py-class docutils literal"><span class="pre">storage.models.WorkspaceValidation</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.WorkspaceValidation">
+<em class="property">class </em><code class="descclassname">storage.models.</code><code class="descname">WorkspaceValidation</code><span class="sig-paren">(</span><em>is_valid</em>, <em>errors</em>, <em>warnings</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.WorkspaceValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="storage.models.WorkspaceValidation.errors">
+<code class="descname">errors</code><a class="headerlink" href="#storage.models.WorkspaceValidation.errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.WorkspaceValidation.is_valid">
+<code class="descname">is_valid</code><a class="headerlink" href="#storage.models.WorkspaceValidation.is_valid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.WorkspaceValidation.warnings">
+<code class="descname">warnings</code><a class="headerlink" href="#storage.models.WorkspaceValidation.warnings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 </dd></dl>
@@ -2346,15 +2427,29 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.WorkspaceDetailsSerializer">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializer" title="storage.serializers.WorkspaceSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializer</span></code></a></p>
+<dt id="storage.serializers.WorkspaceDetailsSerializerV5">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializerV5" title="storage.serializers.WorkspaceSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializerV5</span></code></a></p>
 <p>Converts workspace model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="storage.serializers.WorkspaceSerializer">
-<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="storage.serializers.WorkspaceDetailsSerializerV6">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceSerializerV6" title="storage.serializers.WorkspaceSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceSerializerV6</span></code></a></p>
+<p>Converts workspace model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceSerializerV5">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceBaseSerializer" title="storage.serializers.WorkspaceBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceBaseSerializer</span></code></a></p>
+<p>Converts workspace model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.serializers.WorkspaceSerializerV6">
+<em class="property">class </em><code class="descclassname">storage.serializers.</code><code class="descname">WorkspaceSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.serializers.WorkspaceSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#storage.serializers.WorkspaceBaseSerializer" title="storage.serializers.WorkspaceBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.WorkspaceBaseSerializer</span></code></a></p>
 <p>Converts workspace model fields to REST output</p>
 </dd></dl>
@@ -2466,84 +2561,6 @@ transaction. An argument of None for a field indicates that the field should not
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="storage.views.FilesView.list_v5">
-<code class="descname">list_v5</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.list_v5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves a list of files based of filters and returns it in JSON form</p>
-<p>-<em>-</em>-
-parameters:</p>
-<blockquote>
-<div><ul>
-<li><p class="first">name: started
-in: query
-description: The start time of a start/end time range
-required: false
-example: 2016-01-01T00:00:00Z</p>
-</li>
-<li><p class="first">name: ended
-in: query
-description: The end time of a start/end time range
-required: false
-example: 2016-01-02T00:00:00Z</p>
-</li>
-<li><p class="first">name: time_field
-in: query
-description: &#8216;The database time field to apply <cite>started</cite> and <cite>ended</cite> time filters</p>
-<blockquote>
-<div><p>[Valid fields: <cite>source</cite>, <cite>data</cite>, <cite>last_modified</cite>]&#8217;</p>
-</div></blockquote>
-<p>required: false
-example: source</p>
-</li>
-<li><p class="first">name: file_name
-in: query
-description: The name of a specific file in Scale
-required: false
-example: some_file_i_need_to_find.zip</p>
-</li>
-</ul>
-</div></blockquote>
-<dl class="docutils">
-<dt>responses:</dt>
-<dd><dl class="first last docutils">
-<dt>&#8216;200&#8217;:</dt>
-<dd>description: A JSON list of files with metadata</dd>
-</dl>
-</dd>
-</dl>
-<p>-<em>-</em>-</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="storage.views.FilesView.list_v6">
-<code class="descname">list_v6</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.FilesView.list_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves a list of files based on filters and returns it in JSON form</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="storage.views.FilesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#storage.views.FilesView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -2581,6 +2598,12 @@ example: some_file_i_need_to_find.zip</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.views.WorkspaceDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.WorkspaceDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.views.WorkspaceDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.WorkspaceDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edits an existing workspace and returns the updated details</p>
@@ -2590,7 +2613,7 @@ example: some_file_i_need_to_find.zip</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>workspace_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the workspace.</li>
+<li><strong>workspace_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the workspace</li>
 </ul>
 </td>
 </tr>
@@ -2608,12 +2631,6 @@ example: some_file_i_need_to_find.zip</p>
 <dt id="storage.views.WorkspaceDetailsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#storage.views.WorkspaceDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.views.WorkspaceDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#storage.views.WorkspaceDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">WorkspaceDetailsSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 
@@ -2671,6 +2688,12 @@ example: some_file_i_need_to_find.zip</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.views.WorkspacesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.WorkspacesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.views.WorkspacesView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.views.WorkspacesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all workspaces and returns it in JSON form</p>
@@ -2692,12 +2715,6 @@ example: some_file_i_need_to_find.zip</p>
 <dt id="storage.views.WorkspacesView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#storage.views.WorkspacesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.views.WorkspacesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#storage.views.WorkspacesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">WorkspaceSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

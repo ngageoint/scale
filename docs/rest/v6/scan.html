@@ -111,6 +111,12 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scan Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#v6-scan-list">v6 Scan List</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-create-scan">v6 Create Scan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-scan-details">v6 Scan Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-validate-scan">v6 Validate Scan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-edit-scan">v6 Edit Scan</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-process-scan">v6 Process Scan</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#scan-configuration-json">Scan Configuration JSON</a></li>
 </ul>
 </li>
@@ -191,7 +197,9 @@
   <div class="section" id="v6-scan-services">
 <span id="rest-v6-scan"></span><h1>v6 Scan Services<a class="headerlink" href="#v6-scan-services" title="Permalink to this headline">¶</a></h1>
 <p>These services allow a user to create, view, and manage Scan processes.</p>
-<p id="rest-v6-scan-list"><strong>Example GET /v6/scans/ API call</strong></p>
+<div class="section" id="v6-scan-list">
+<span id="rest-v6-scan-list"></span><h2>v6 Scan List<a class="headerlink" href="#v6-scan-list" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/scans/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/scans/">http://.../v6/scans/</a></p>
 <p>Response: 200 OK</p>
 <blockquote>
@@ -367,7 +375,10 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-scan-create"><strong>Example POST /v6/scans/ API call</strong></p>
+</div>
+<div class="section" id="v6-create-scan">
+<span id="rest-v6-scan-create"></span><h2>v6 Create Scan<a class="headerlink" href="#v6-create-scan" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/scans/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/scans/">http://.../v6/scans/</a></p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -496,7 +507,10 @@ Location <a class="reference external" href="http://.../v6/scans/105/">http://..
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-scan-details"><strong>Example GET /v6/scans/{id}/ API call</strong></p>
+</div>
+<div class="section" id="v6-scan-details">
+<span id="rest-v6-scan-details"></span><h2>v6 Scan Details<a class="headerlink" href="#v6-scan-details" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example GET /v6/scans/{id}/ API call</strong></p>
 <p>Request: GET <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/</p>
 <p>Response: 200 OK</p>
 <blockquote>
@@ -623,7 +637,10 @@ Location <a class="reference external" href="http://.../v6/scans/105/">http://..
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-scan-validate"><strong>Example POST /v6/scans/validation/ API call</strong></p>
+</div>
+<div class="section" id="v6-validate-scan">
+<span id="rest-v6-scan-validate"></span><h2>v6 Validate Scan<a class="headerlink" href="#v6-validate-scan" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/scans/validation/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/scans/validation/">http://.../v6/scans/validation/</a></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
@@ -698,9 +715,9 @@ Location <a class="reference external" href="http://.../v6/scans/105/">http://..
 </tr>
 <tr class="row-odd"><td>is_valid</td>
 <td>Boolean</td>
-<td colspan="2">Indicates if the given fields were valid for creating a new batch. If this is
-true, then submitting the same fields to the /batches/ API will successfully
-create a new batch.</td>
+<td colspan="2">Indicates if the given fields were valid for creating a new scan. If this is
+true, then submitting the same fields to the /scans/ API will successfully
+create a new scan.</td>
 </tr>
 <tr class="row-even"><td>errors</td>
 <td>Array</td>
@@ -721,7 +738,10 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-scan-edit"><strong>Example PATCH /v6/scans/{id}/ API call</strong></p>
+</div>
+<div class="section" id="v6-edit-scan">
+<span id="rest-v6-scan-edit"></span><h2>v6 Edit Scan<a class="headerlink" href="#v6-edit-scan" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example PATCH /v6/scans/{id}/ API call</strong></p>
 <p>Request: PATCH <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
@@ -788,7 +808,10 @@ with <em>name</em> and <em>description</em> string fields.</td>
 </tr>
 </tbody>
 </table>
-<p id="rest-v6-scan-process"><strong>Example POST /v6/scans/{id}/process/ API call</strong></p>
+</div>
+<div class="section" id="v6-process-scan">
+<span id="rest-v6-scan-process"></span><h2>v6 Process Scan<a class="headerlink" href="#v6-process-scan" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/scans/{id}/process/ API call</strong></p>
 <p>Request: POST <a class="reference external" href="http://.../v6/scans">http://.../v6/scans</a>/{id}/process/</p>
 <blockquote>
 <div><div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -934,6 +957,7 @@ Defaults to false when unset.</td>
 </tr>
 </tbody>
 </table>
+</div>
 <div class="section" id="scan-configuration-json">
 <span id="rest-v6-scan-configuration"></span><h2>Scan Configuration JSON<a class="headerlink" href="#scan-configuration-json" title="Permalink to this headline">¶</a></h2>
 <p>A scan configuration JSON describes a set of configuration settings that affect how a scanner executes.</p>

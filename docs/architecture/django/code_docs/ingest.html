@@ -1944,20 +1944,27 @@ transaction. An argument of None for a field indicates that the field should not
 <dl class="class">
 <dt id="ingest.serializers.IngestDetailsSerializerV5">
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializerV5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializerV5" title="ingest.serializers.IngestSerializerV5"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializerV5</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestDetailsSerializerV6">
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializerV6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializerV6" title="ingest.serializers.IngestSerializerV6"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializerV6</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="ingest.serializers.IngestSerializer">
-<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="ingest.serializers.IngestSerializerV5">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestSerializerV5</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializerV5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></code></a></p>
+<p>Converts ingest model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.IngestSerializerV6">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestSerializerV6</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializerV6" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
 </dd></dl>
@@ -2241,6 +2248,12 @@ transaction. An argument of None for a field indicates that the field should not
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for retrieving the list of all ingests.</p>
 <dl class="method">
+<dt id="ingest.views.IngestsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the appropriate serializer based off the requests version of the REST API</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.views.IngestsView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.IngestsView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine api version and call specific method</p>
@@ -2280,12 +2293,6 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.IngestsView.queryset">
 <code class="descname">queryset</code><a class="headerlink" href="#ingest.views.IngestsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.views.IngestsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.IngestsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">IngestSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

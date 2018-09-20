@@ -99,6 +99,14 @@ util\.middleware module
     :undoc-members:
     :show-inheritance:
 
+util\.os\_helper module
+-----------------------
+
+.. automodule:: util.os_helper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.parse module
 ------------------
 
