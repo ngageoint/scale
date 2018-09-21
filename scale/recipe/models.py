@@ -1228,22 +1228,20 @@ class RecipeNodeManager(models.Manager):
         with connection.cursor() as cursor:
             cursor.execute(qry)
 
-    def create_recipe_job_nodes(self, recipe_id, node_name, jobs):
+    def create_recipe_job_nodes(self, recipe_id, recipe_jobs):
         """Creates and returns the recipe node models (unsaved) for the given recipe and jobs
 
         :param recipe_id: The recipe ID
         :type recipe_id: int
-        :param node_name: The recipe node name
-        :type node_name: string
-        :param jobs: The list of job models
-        :type jobs: list
+        :param recipe_jobs: A dict of job models stored by node name
+        :type recipe_jobs: dict
         :returns: The list of recipe_node models
         :rtype: list
         """
 
         node_models = []
 
-        for job in jobs:
+        for node_name, job in recipe_jobs.items():
             recipe_node = RecipeNode()
             recipe_node.recipe_id = recipe_id
             recipe_node.node_name = node_name
@@ -1396,18 +1394,18 @@ class RecipeNodeManager(models.Manager):
         qry = self.select_related('sub_recipe').filter(recipe_id=recipe_id, sub_recipe__isnull=False)
         return {rn.node_name: rn.sub_recipe for rn in qry}
 
-    def get_superseded_recipe_jobs(self, recipe_id, node_name):
-        """Returns the superseded job models that belong to the given superseded recipe with the given node name
+    # TODO: rename this to get_recipe_jobs() once that method is removed
+    def get_superseded_recipe_jobs(self, recipe_id):
+        """Returns the job models that belong to the given recipe
 
-        :param recipe_id: The superseded recipe ID
+        :param recipe_id: The recipe ID
         :type recipe_id: int
-        :param node_name: The node name
-        :type node_name: string
-        :returns: The superseded job models for the recipe
-        :rtype: list
+        :returns: A dict of job models stored by node name
+        :rtype: dict
         """
 
-        return [rn.job for rn in self.filter(recipe_id=recipe_id, node_name=node_name, job__is_superseded=True)]
+        qry = self.select_related('job').filter(recipe_id=recipe_id, job__isnull=False)
+        return {rn.node_name: rn.job for rn in qry}
 
     def supersede_recipe_jobs(self, recipe_ids, when, node_names, all_nodes=False):
         """Supersedes the jobs for the given recipe IDs and node names

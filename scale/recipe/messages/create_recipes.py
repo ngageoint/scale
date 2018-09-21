@@ -39,24 +39,15 @@ _RecipePair = namedtuple('_RecipePair', ['superseded_recipe', 'new_recipe'])
 logger = logging.getLogger(__name__)
 
 
-def create_subrecipes_messages(recipe_id, root_recipe_id, sub_recipes, event_id, superseded_recipe_id=None,
-                               forced_nodes=None, batch_id=None):
-    """Creates messages to create sub-recipes
+def create_subrecipes_messages(recipe, sub_recipes, forced_nodes=None):
+    """Creates messages to create sub-recipes for the given recipe
 
-    :param recipe_id: The ID of the recipe containing the sub-recipes
-    :type recipe_id: int
-    :param root_recipe_id: The root ID of the containing recipe
-    :type root_recipe_id: int
+    :param recipe: The recipe model
+    :type recipe: :class:`recipe.models.Recipe`
     :param sub_recipes: The list of SubRecipe tuples describing the sub-recipes to create
     :type sub_recipes: list
-    :param event_id: The event ID
-    :type event_id: int
-    :param superseded_recipe_id: The ID of the recipe superseded by the containing recipe
-    :type superseded_recipe_id: int
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: dict
-    :param batch_id: The batch ID
-    :type batch_id: int
     :return: The list of messages
     :rtype: list
     """
@@ -68,22 +59,22 @@ def create_subrecipes_messages(recipe_id, root_recipe_id, sub_recipes, event_id,
         if not message:
             message = CreateRecipes()
             message.create_recipes_type = SUB_RECIPE_TYPE
-            message.recipe_id = recipe_id
-            message.root_recipe_id = root_recipe_id
-            message.event_id = event_id
-            message.superseded_recipe_id = superseded_recipe_id
+            message.recipe_id = recipe.id
+            message.root_recipe_id = recipe.root_superseded_recipe_id
+            message.event_id = recipe.event_id
+            message.superseded_recipe_id = recipe.superseded_recipe_id
             message.forced_nodes = forced_nodes
-            message.batch_id = batch_id
+            message.batch_id = recipe.batch_id
         elif not message.can_fit_more():
             messages.append(message)
             message = CreateRecipes()
             message.create_recipes_type = SUB_RECIPE_TYPE
-            message.recipe_id = recipe_id
-            message.root_recipe_id = root_recipe_id
-            message.event_id = event_id
-            message.superseded_recipe_id = superseded_recipe_id
+            message.recipe_id = recipe.id
+            message.root_recipe_id = recipe.root_superseded_recipe_id
+            message.event_id = recipe.event_id
+            message.superseded_recipe_id = recipe.superseded_recipe_id
             message.forced_nodes = forced_nodes
-            message.batch_id = batch_id
+            message.batch_id = recipe.batch_id
         message.add_subrecipe(sub_recipe)
     if message:
         messages.append(message)
@@ -214,7 +205,7 @@ class CreateRecipes(CommandMessage):
             for sub_dict in json_dict['sub_recipes']:
                 sub_recipe = SubRecipe(sub_dict['recipe_type_name'], sub_dict['recipe_type_rev_num'],
                                        sub_dict['node_name'], sub_dict['process_input'])
-                message.sub_recipes.append(sub_recipe)
+                message.add_subrecipe(sub_recipe)
 
         return message
 
@@ -393,7 +384,7 @@ class CreateRecipes(CommandMessage):
 
         sub_recipes = {}  # {Node name: recipe model}
 
-        superseded_sub_recipes = []
+        superseded_sub_recipes = {}
         superseded_recipe_ids = []
         # Get superseded sub-recipes from superseded recipe
         if self.superseded_recipe_id:

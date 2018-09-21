@@ -43,13 +43,12 @@ class TestCreateRecipes(TransactionTestCase):
         sub_definition_b.add_dependency('node_x', 'node_y')
         sub_definition_b_dict = convert_recipe_definition_to_v6_json(sub_definition_b).get_dict()
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
-        top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=True)
+        top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, event=event, save=True)
 
         # Create message to create sub-recipes A and B for top_recipe which supersedes prev_top_recipe
         sub_recipes = [SubRecipe(recipe_type_a.name, recipe_type_a.revision_num, 'node_a', True),
                        SubRecipe(recipe_type_b.name, recipe_type_b.revision_num, 'node_b', False)]
-        message = create_subrecipes_messages(top_recipe.id, top_recipe.root_superseded_recipe_id, sub_recipes,
-                                             event.id)[0]
+        message = create_subrecipes_messages(top_recipe, sub_recipes)[0]
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -121,9 +120,10 @@ class TestCreateRecipes(TransactionTestCase):
         prev_job_b_x = job_test_utils.create_job(job_type=job_type_b_x, save=False)
         prev_recipe_b_y = recipe_test_utils.create_recipe(recipe_type=recipe_type_b_y, save=False)
         prev_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=False)
-        new_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=False)
         Job.objects.bulk_create([prev_job_a_1, prev_job_a_2, prev_job_b_x])
-        Recipe.objects.bulk_create([prev_recipe_a, prev_recipe_b, prev_recipe_b_y, prev_top_recipe, new_top_recipe])
+        Recipe.objects.bulk_create([prev_recipe_a, prev_recipe_b, prev_recipe_b_y, prev_top_recipe])
+        new_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, superseded_recipe=prev_top_recipe,
+                                                         event=event, batch=batch, save=True)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=prev_top_recipe, sub_recipe=prev_recipe_a,
                                                              node_name='node_a', save=False)
         recipe_node_a_1 = recipe_test_utils.create_recipe_node(recipe=prev_recipe_a, job=prev_job_a_1,
@@ -151,9 +151,7 @@ class TestCreateRecipes(TransactionTestCase):
         sub_forced_nodes_b.add_subrecipe('node_y', sub_forced_nodes_y)
         forced_nodes.add_subrecipe('node_a', sub_forced_nodes_a)
         forced_nodes.add_subrecipe('node_b', sub_forced_nodes_b)
-        message = create_subrecipes_messages(new_top_recipe.id, new_top_recipe.root_superseded_recipe_id, sub_recipes,
-                                             event.id, superseded_recipe_id=prev_top_recipe.id,
-                                             forced_nodes=forced_nodes, batch_id=batch.id)[0]
+        message = create_subrecipes_messages(new_top_recipe, sub_recipes, forced_nodes=forced_nodes)[0]
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -259,8 +257,7 @@ class TestCreateRecipes(TransactionTestCase):
         # Create message to create sub-recipes A and B for top_recipe which supersedes prev_top_recipe
         sub_recipes = [SubRecipe(recipe_type_a.name, recipe_type_a.revision_num, 'node_a', True),
                        SubRecipe(recipe_type_b.name, recipe_type_b.revision_num, 'node_b', False)]
-        message = create_subrecipes_messages(top_recipe.id, top_recipe.root_superseded_recipe_id, sub_recipes,
-                                             event.id)[0]
+        message = create_subrecipes_messages(top_recipe, sub_recipes)[0]
 
         # Execute message
         result = message.execute()
@@ -370,9 +367,10 @@ class TestCreateRecipes(TransactionTestCase):
         prev_job_b_y = job_test_utils.create_job(job_type=job_type_b_y, save=False)
         prev_recipe_b_z = recipe_test_utils.create_recipe(recipe_type=recipe_type_b_z, save=False)
         prev_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=False)
-        new_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, save=False)
         Job.objects.bulk_create([prev_job_a_1, prev_job_a_2, prev_job_b_x, prev_job_b_y])
-        Recipe.objects.bulk_create([prev_recipe_a, prev_recipe_b, prev_recipe_b_z, prev_top_recipe, new_top_recipe])
+        Recipe.objects.bulk_create([prev_recipe_a, prev_recipe_b, prev_recipe_b_z, prev_top_recipe])
+        new_top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, superseded_recipe=prev_top_recipe,
+                                                         event=event, batch=batch, save=True)
         recipe_node_a = recipe_test_utils.create_recipe_node(recipe=prev_top_recipe, sub_recipe=prev_recipe_a,
                                                              node_name='node_a', save=False)
         recipe_node_a_1 = recipe_test_utils.create_recipe_node(recipe=prev_recipe_a, job=prev_job_a_1,
@@ -398,9 +396,7 @@ class TestCreateRecipes(TransactionTestCase):
         sub_forced_nodes_y = ForcedNodes()
         sub_forced_nodes_b.add_subrecipe('node_y', sub_forced_nodes_y)
         forced_nodes.add_subrecipe('node_b', sub_forced_nodes_b)
-        message = create_subrecipes_messages(new_top_recipe.id, new_top_recipe.root_superseded_recipe_id, sub_recipes,
-                                             event.id, superseded_recipe_id=prev_top_recipe.id,
-                                             forced_nodes=forced_nodes, batch_id=batch.id)[0]
+        message = create_subrecipes_messages(new_top_recipe, sub_recipes, forced_nodes=forced_nodes)[0]
 
         # Execute message
         result = message.execute()
