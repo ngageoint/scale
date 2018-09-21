@@ -7,7 +7,7 @@ from batch.test import utils as batch_test_utils
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.messages.purge_recipe import create_purge_recipe_message, PurgeRecipe
-from recipe.models import Recipe, RecipeNode
+from recipe.models import Recipe, RecipeInputFile, RecipeNode
 from recipe.test import utils as recipe_test_utils
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
@@ -98,6 +98,7 @@ class TestPurgeRecipe(TransactionTestCase):
             'workspace_id': self.workspace.id,
         }
         self.recipe_1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type)
+        recipe_test_utils.create_input_file(recipe=self.recipe_1)
         self.job_1_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
         recipe_test_utils.create_recipe_job(recipe=self.recipe_1, job_name='Job 1', job=self.job_1_1)
         self.job_1_2 = job_test_utils.create_job(job_type=self.job_type_2, status='COMPLETED')
@@ -138,8 +139,8 @@ class TestPurgeRecipe(TransactionTestCase):
 # Create 2 jobs, assert 2 new_messages wth msg.type == 'create_spawn_delete_files_job'
 # TODO: Assert msg.type == 'create_purge_recipe_message' for node recipe.id
 # TODO: Assert msg.type == 'create_purge_recipe_message' for parent recipe.id
-# TODO: Assert msg.type == 'create_purge_recipe_message' for superseded recipe.id
-# TODO: BatchRecipe, RecipeNode, RecipeInputFile, Recipe models have been deleted 
+# Assert msg.type == 'create_purge_recipe_message' for superseded recipe.id
+# TODO: BatchRecipe models have been deleted 
 
     def test_execute_with_jobs(self):
         """Tests calling PurgeRecipe.execute() successfully"""
@@ -156,75 +157,85 @@ class TestPurgeRecipe(TransactionTestCase):
         for msg in message.new_messages:
             self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
             self.assertEqual(msg.type, 'spawn_delete_files_job')
+            
+        # Assert models were deleted
+        self.assertEqual(Recipe.objects.filter(id=self.recipe_1.id).count(), 0)
+        self.assertEqual(RecipeInputFile.objects.filter(recipe=self.recipe_1).count(), 0)
 
-    def test_execute_with_parent_recipe(self):
+    def test_execute_with_superseded_recipe(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create recipes
-        job_type_1 = job_test_utils.create_job_type()
-        job_type_2 = job_test_utils.create_job_type()
-        definition_1 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_1',
-                'job_type': {
-                    'name': job_type_1.name,
-                    'version': job_type_1.version,
-                },
-            }, {
-                'name': 'job_2',
-                'job_type': {
-                    'name': job_type_2.name,
-                    'version': job_type_2.version,
-                },
-                'dependencies': [{
-                    'name': 'job_1',
-                }],
-            }]
-        }
-        recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
-        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_1)
-
-        job_type_3 = job_test_utils.create_job_type()
-        job_type_4 = job_test_utils.create_job_type()
-        definition_2 = {
-            'version': '1.0',
-            'input_data': [],
-            'jobs': [{
-                'name': 'job_a',
-                'job_type': {
-                    'name': job_type_3.name,
-                    'version': job_type_3.version,
-                },
-            }, {
-                'name': 'job_b',
-                'job_type': {
-                    'name': job_type_4.name,
-                    'version': job_type_4.version,
-                },
-                'dependencies': [{
-                    'name': 'job_a',
-                }],
-            }]
-        }
         superseded_recipe = recipe_test_utils.create_recipe(is_superseded=True)
-        superseded_job_a = job_test_utils.create_job(is_superseded=True)
-        superseded_job_b = job_test_utils.create_job(is_superseded=True)
-        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_a', job=superseded_job_a)
-        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_b', job=superseded_job_b)
-        recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
-        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, superseded_recipe=superseded_recipe)
+        recipe = recipe_test_utils.create_recipe(superseded_recipe=superseded_recipe)
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', save=True)
         
         # Create message
-        message = create_purge_recipe_message(recipe_id=recipe_2.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
 
         # Execute message
         result = message.execute()
         self.assertTrue(result)
 
-        # 
-        # self.assertEqual(len(message.new_messages), 2)
+        # Test to see that a message to purge the superseded recipe was sent
+        self.assertEqual(len(message.new_messages), 1)
         for msg in message.new_messages:
-            # self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
-            print msg.type
+            self.assertEqual(msg.recipe_id, superseded_recipe.id)
+            self.assertEqual(msg.type, 'purge_recipe')
+        
+        # Assert models were deleted
+        self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
+        self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
+            
+    # logic is okay, make tests good
+    def test_execute_with_parent_recipe(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
+
+        # Create recipes
+        recipe = recipe_test_utils.create_recipe()
+        parent_recipe = recipe_test_utils.create_recipe()
+        recipe_test_utils.create_recipe_node(recipe=parent_recipe, node_name='A', sub_recipe=recipe, save=True)
+        
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Test to see that a message to purge the parent recipe was sent
+        self.assertEqual(len(message.new_messages), 1)
+        for msg in message.new_messages:
+            self.assertEqual(msg.recipe_id, parent_recipe.id)
+            self.assertEqual(msg.type, 'purge_recipe')
+        
+        # Assert models were deleted
+        self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
+        self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
+        
+    # logic is okay, make tests good
+    def test_execute_with_sub_recipe(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
+
+        # Create recipes
+        recipe = recipe_test_utils.create_recipe()
+        sub_recipe = recipe_test_utils.create_recipe()
+        recipe_test_utils.create_recipe_node(recipe=recipe, node_name='sub', sub_recipe=sub_recipe, save=True)
+        
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Test to see that a message to purge the parent recipe was sent
+        self.assertEqual(len(message.new_messages), 1)
+        for msg in message.new_messages:
+            self.assertEqual(msg.recipe_id, sub_recipe.id)
+            self.assertEqual(msg.type, 'purge_recipe')
+        
+        # Assert models were deleted
+        self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
+        self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
+        
