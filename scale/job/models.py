@@ -3479,6 +3479,14 @@ class JobType(models.Model):
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
+
     # TODO: remove with v5 API and/or legacy job types
     category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
     author_name = models.CharField(blank=True, max_length=50, null=True)
