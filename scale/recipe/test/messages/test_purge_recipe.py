@@ -135,89 +135,96 @@ class TestPurgeRecipe(TransactionTestCase):
 
         self.assertTrue(result)
 
-    def test_execute(self):
+# Create 2 jobs, assert 2 new_messages wth msg.type == 'create_spawn_delete_files_job'
+# TODO: Assert msg.type == 'create_purge_recipe_message' for node recipe.id
+# TODO: Assert msg.type == 'create_purge_recipe_message' for parent recipe.id
+# TODO: Assert msg.type == 'create_purge_recipe_message' for superseded recipe.id
+# TODO: BatchRecipe, RecipeNode, RecipeInputFile, Recipe models have been deleted 
+
+    def test_execute_with_jobs(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 
-        batch = batch_test_utils.create_batch()
-        event = trigger_test_utils.create_trigger_event()
-
         # Create message
-        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger_1.id)
+        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id)
 
         # Execute message
         result = message.execute()
         self.assertTrue(result)
 
-        print len(message.new_messages)
-        print result
+        # Test to see that the two jobs in this recipe were called to be purged
+        self.assertEqual(len(message.new_messages), 2)
+        for msg in message.new_messages:
+            self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
+            self.assertEqual(msg.type, 'spawn_delete_files_job')
 
-        # # Make sure new recipes supersede the old ones
-        # for recipe in Recipe.objects.filter(id__in=self.old_recipe_ids):
-        #     self.assertTrue(recipe.is_superseded)
-        # new_recipe_1 = Recipe.objects.get(superseded_recipe_id=self.recipe_1.id)
-        # self.assertEqual(new_recipe_1.batch_id, batch.id)
-        # self.assertEqual(new_recipe_1.event_id, event.id)
-        # self.assertEqual(new_recipe_1.root_superseded_recipe_id, self.recipe_1.id)
-        # self.assertDictEqual(new_recipe_1.input, self.recipe_1.input)
-        # new_recipe_2 = Recipe.objects.get(superseded_recipe_id=self.recipe_2.id)
-        # self.assertEqual(new_recipe_2.batch_id, batch.id)
-        # self.assertEqual(new_recipe_2.event_id, event.id)
-        # self.assertEqual(new_recipe_2.root_superseded_recipe_id, self.recipe_2.id)
-        # self.assertDictEqual(new_recipe_2.input, self.recipe_2.input)
-        # # Make sure identical jobs (Job 1) are NOT superseded
-        # for job in Job.objects.filter(id__in=self.old_job_1_ids):
-        #     self.assertFalse(job.is_superseded)
-        # # Make sure old jobs (Job 2) are superseded
-        # for job in Job.objects.filter(id__in=self.old_job_2_ids):
-        #     self.assertTrue(job.is_superseded)
-        # # Make sure identical jobs (Job 1) were copied to new recipes
-        # recipe_job_1 = RecipeNode.objects.get(recipe=new_recipe_1.id)
-        # self.assertEqual(recipe_job_1.node_name, 'Job 1')
-        # self.assertEqual(recipe_job_1.job_id, self.job_1_1.id)
-        # recipe_job_2 = RecipeNode.objects.get(recipe=new_recipe_2.id)
-        # self.assertEqual(recipe_job_2.node_name, 'Job 1')
-        # self.assertEqual(recipe_job_2.job_id, self.job_2_1.id)
-        # # Should be three messages, two for processing new recipe input and one for canceling superseded jobs
-        # self.assertEqual(len(message.new_messages), 3)
-        # found_process_recipe_input_1 = False
-        # found_process_recipe_input_2 = False
-        # found_cancel_jobs = False
-        # for msg in message.new_messages:
-        #     if msg.type == 'process_recipe_input':
-        #         if msg.recipe_id == new_recipe_1.id:
-        #             found_process_recipe_input_1 = True
-        #         elif msg.recipe_id == new_recipe_2.id:
-        #             found_process_recipe_input_2 = True
-        #     elif msg.type == 'cancel_jobs':
-        #         found_cancel_jobs = True
-        #         self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        # self.assertTrue(found_process_recipe_input_1)
-        # self.assertTrue(found_process_recipe_input_2)
-        # self.assertTrue(found_cancel_jobs)
+    def test_execute_with_parent_recipe(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
 
-        # # Test executing message again
-        # message_json_dict = message.to_json()
-        # message = ReprocessRecipes.from_json(message_json_dict)
-        # result = message.execute()
-        # self.assertTrue(result)
+        # Create recipes
+        job_type_1 = job_test_utils.create_job_type()
+        job_type_2 = job_test_utils.create_job_type()
+        definition_1 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_1',
+                'job_type': {
+                    'name': job_type_1.name,
+                    'version': job_type_1.version,
+                },
+            }, {
+                'name': 'job_2',
+                'job_type': {
+                    'name': job_type_2.name,
+                    'version': job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'job_1',
+                }],
+            }]
+        }
+        recipe_type_1 = recipe_test_utils.create_recipe_type(definition=definition_1)
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_1)
 
-        # # Make sure we don't reprocess twice
-        # for new_recipe in Recipe.objects.filter(id__in=[new_recipe_1.id, new_recipe_2.id]):
-        #     self.assertFalse(new_recipe.is_superseded)
-        # # Should get same messages
-        # self.assertEqual(len(message.new_messages), 3)
-        # found_process_recipe_input_1 = False
-        # found_process_recipe_input_2 = False
-        # found_cancel_jobs = False
-        # for msg in message.new_messages:
-        #     if msg.type == 'process_recipe_input':
-        #         if msg.recipe_id == new_recipe_1.id:
-        #             found_process_recipe_input_1 = True
-        #         elif msg.recipe_id == new_recipe_2.id:
-        #             found_process_recipe_input_2 = True
-        #     elif msg.type == 'cancel_jobs':
-        #         found_cancel_jobs = True
-        #         self.assertSetEqual(set(msg._job_ids), set(self.old_job_2_ids))
-        # self.assertTrue(found_process_recipe_input_1)
-        # self.assertTrue(found_process_recipe_input_2)
-        # self.assertTrue(found_cancel_jobs)
+        job_type_3 = job_test_utils.create_job_type()
+        job_type_4 = job_test_utils.create_job_type()
+        definition_2 = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'job_a',
+                'job_type': {
+                    'name': job_type_3.name,
+                    'version': job_type_3.version,
+                },
+            }, {
+                'name': 'job_b',
+                'job_type': {
+                    'name': job_type_4.name,
+                    'version': job_type_4.version,
+                },
+                'dependencies': [{
+                    'name': 'job_a',
+                }],
+            }]
+        }
+        superseded_recipe = recipe_test_utils.create_recipe(is_superseded=True)
+        superseded_job_a = job_test_utils.create_job(is_superseded=True)
+        superseded_job_b = job_test_utils.create_job(is_superseded=True)
+        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_a', job=superseded_job_a)
+        recipe_test_utils.create_recipe_job(recipe=superseded_recipe, job_name='job_b', job=superseded_job_b)
+        recipe_type_2 = recipe_test_utils.create_recipe_type(definition=definition_2)
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_2, superseded_recipe=superseded_recipe)
+        
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe_2.id, trigger_id=self.trigger.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # 
+        # self.assertEqual(len(message.new_messages), 2)
+        for msg in message.new_messages:
+            # self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
+            print msg.type
