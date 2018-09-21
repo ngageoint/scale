@@ -64,7 +64,7 @@ class PurgeRecipe(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        recipe = Recipe.objects.get(id=self.recipe_id)
+        recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
         recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
         recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {'jobs': [j.id, j.id, ..], 'recipes': [r.id, r.id, ..]}
         parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
@@ -80,12 +80,14 @@ class PurgeRecipe(CommandMessage):
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_id,
                                                                  trigger_id=self.trigger_id))
 
-        # Purge parent recipes
+        # Kick off a purge_recipe for a parent recipe
         if parent_recipes:
-            for recipe_node in parent_recipes:
-                self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe,
+            for parent_recipe in parent_recipes:
+                self.new_messages.append(create_purge_recipe_message(recipe_id=parent_recipe.recipe.id,
                                                                      trigger_id=self.trigger_id))
-        # Purge the superseded recipe if exists
+                RecipeNode.objects.filter(sub_recipe=recipe).delete()
+                
+        # Kick off purge_recipe for a superseded recipe
         elif recipe.superseded_recipe:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.superseded_recipe.id,
                                                                  trigger_id=self.trigger_id))
