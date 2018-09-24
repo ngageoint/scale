@@ -25,7 +25,8 @@ from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
-
+from queue.models import Queue
+from data.data.json.data_v6 import DataV6
 
 logger = logging.getLogger(__name__)
 
@@ -318,6 +319,45 @@ class RecipesView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
 
+    def post(self, request):
+        """Queue a recipe and returns the new job information in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if request.version != 'v6':
+            raise Http404
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        #recipe_data = rest_util.parse_dict(request, 'recipe_data', {})
+        recipe_data = rest_util.parse_dict(request, 'input', {})
+        recipe_config = rest_util.parse_dict(request, 'config', {})
+
+        #recipe_input = DataV6(recipe_data)
+
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise Http404
+
+        # try:
+        handler = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipe_data, recipe_config)
+        # except InvalidRecipeData as err:
+        #     return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # TODO: remove this check when REST API v5 is removed
+            if request.version == 'v6':
+                recipe = Recipe.objects.get_details(handler.recipe.id)
+            else:
+                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
+            
+        serializer = self.get_serializer(recipe)
+        recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""

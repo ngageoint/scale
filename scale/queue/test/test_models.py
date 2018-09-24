@@ -16,6 +16,8 @@ import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
 from job.configuration.data.job_data import JobData
+
+from job.data.job_data import JobData as JobDataV6
 from job.configuration.results.job_results import JobResults
 from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
@@ -23,6 +25,7 @@ from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode
+from data.data.json.data_v6 import DataV6
 
 
 class TestJobLoadManager(TestCase):
@@ -343,9 +346,9 @@ class TestQueueManagerQueueNewJob(TransactionTestCase):
                 'workspace_id': workspace.id
             }]
         }
-        data = JobData(data_dict)
+        data = JobDataV6(data_dict)
 
-        job = Queue.objects.queue_new_job(job_type, data, event)
+        job = Queue.objects.queue_new_job_v6(job_type, data._new_data, event)
         self.assertEqual(job.status, 'QUEUED')
 
 

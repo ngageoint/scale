@@ -51,6 +51,8 @@ from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerT
 import util.rest as rest_util
 from util.rest import BadParameter
 from vault.exceptions import InvalidSecretsConfiguration
+from data.data.json.data_v6 import DataV6
+from job.configuration.data.exceptions import InvalidData
 
 logger = logging.getLogger(__name__)
 
@@ -1133,6 +1135,42 @@ class JobsView(ListAPIView):
         serializer = self.get_serializer(page, many=True)
 
         return self.get_paginated_response(serializer.data)
+
+    def post(self, request):
+        """Creates a new job, places it on the queue, and returns the new job information in JSON form
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        if request.version != 'v6':
+            raise Http404
+        job_type_id = rest_util.parse_int(request, 'job_type_id')
+        job_data = rest_util.parse_dict(request, 'input', {})
+        job_config = rest_util.parse_dict(request, 'config', {})
+
+        #job_input = DataV6(job_data)
+
+        try:
+            job_type = JobType.objects.get(pk=job_type_id)
+        except JobType.DoesNotExist:
+            raise Http404
+
+        try:
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type, job_data)
+        except InvalidData as err:
+            logger.exception('Invalid job data.')
+            return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            job_details = Job.objects.get_details(job_id)
+        except Job.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job_details) # mightb e getting v5?
+        job_url = reverse('job_details_view', args=[job_id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
 
 class CancelJobsView(GenericAPIView):

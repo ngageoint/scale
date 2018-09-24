@@ -25,6 +25,7 @@ from job.models import JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
+import util.rest as rest_util
 
 
 class TestJobsViewV5(TestCase):
@@ -348,6 +349,35 @@ class TestJobsViewV6(TestCase):
         self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
         self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
         self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
+
+class TestJobsPostViewV6(TestCase):
+
+    def setUp(self):
+        django.setup()
+        #self.manifest = job_test_utils.COMPLETE_MANIFEST
+        self.api = "v6"
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
+
+
+
+    def test_successful(self):
+        """Tests successfully calling POST jobs view to queue a new job"""
+        # data = Data()
+        # data.add_value(FileValue('input_a', [1234]))
+        # data.add_value(FileValue('input_b', [1235, 1236]))
+        # data.add_value(JsonValue('input_c', 'hello'))
+        # data.add_value(JsonValue('input_d', 11.9))
+        # json = convert_data_to_v6_json(data)
+        json_data = { 
+            "input" : {},
+            "job_type_id" : self.job_type1.pk
+        }
+
+        url = '/%s/jobs/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        #Response should be new v6 job detail response
+
 
 # TODO: remove when REST API v5 is removed
 class OldTestJobDetailsViewV5(TestCase):

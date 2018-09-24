@@ -218,6 +218,15 @@ class TestQueueNewJobView(TransactionTestCase):
         self.assertEqual(len(result['inputs']), 1)
         self.assertEqual(len(result['outputs']), 1)
 
+    def test_v6_404(self):
+        json_data = {
+        }
+        url = rest_util.get_url('v6/queue/new-job/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+
+
 
 class TestQueueNewRecipeView(TestCase):
 

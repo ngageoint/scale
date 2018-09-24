@@ -16,12 +16,14 @@ from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
-from job.models import JobExecution
+from job.models import JobExecution, JobTypeRevision
 from node.resources.json.resources import Resources
 from product.models import ProductFile
 from recipe.models import Recipe
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
+from data.data.json import data_v6
+
 
 logger = logging.getLogger(__name__)
 
@@ -395,8 +397,56 @@ class QueueManager(models.Manager):
 
         return job
 
+    def queue_new_job_v6(self, job_type, data, event):
+        """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
+        job_exe, and queue models are saved in the database in an atomic transaction.
+
+        :param job_type: The type of the new job to create and queue
+        :type job_type: :class:`job.models.JobType`
+        :param data: The job data to run on
+        :type data: :class:`data.data.data.data`
+        :param event: The event that triggered the creation of this job
+        :type event: :class:`trigger.models.TriggerEvent`
+        :returns: The new queued job
+        :rtype: :class:`job.models.Job`
+
+        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
+        """
+
+        job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
+        job = Job.objects.create_job_v6(job_type_rev, event.id, data)
+        job.save()
+
+        # No lock needed for this job since it doesn't exist outside this transaction yet
+        self.queue_jobs([job])
+        job = Job.objects.get(id=job.id)
+
+        return job
+
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
+    def queue_new_job_for_user_v6(self, job_type, job_input, job_configuration=None):
+        # TODO split into v5 and v6
+        """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
+        the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
+        job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
+        invalid, a :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
+
+        :param job_type: The type of the new job to create and queue
+        :type job_type: :class:`job.models.JobType`
+        :param job_input: JSON description defining the job data to run on
+        :type job_input: dict
+        :returns: The ID of the new job
+        :rtype: int
+        """
+
+        description = {'user': 'Anonymous'}
+        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
+        job_data = JobData(job_input)
+
+        job_id = self.queue_new_job_v6(job_type, job_data._new_data, event).id
+        return job_id
+
     def queue_new_job_for_user(self, job_type, data):
         """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
         the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
@@ -415,10 +465,10 @@ class QueueManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        if 'version' in data and '6' == data['version']:
-            job_data = JobData(data)
-        else:
-            job_data = JobData_1_0(data)
+        # if 'version' in data and '6' == data['version']:
+        #     job_data = JobData(data)
+        # else:
+        job_data = JobData_1_0(data)
 
         job_id = self.queue_new_job(job_type, job_data, event).id
         return job_id
@@ -470,8 +520,76 @@ class QueueManager(models.Manager):
 
         return handler
 
+    def queue_new_recipe_v6(self, recipe_type, recipe_input, recipe_config, event, batch_id=None, superseded_recipe=None, delta=None,
+                         superseded_jobs=None, priority=None):
+        """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
+        new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
+        caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
+        All database changes occur in an atomic transaction.
+
+        :param recipe_type: The type of the new recipe to create
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param event: The event that triggered the creation of this recipe
+        :type event: :class:`trigger.models.TriggerEvent`
+        :param batch_id: The ID of the batch that contains this recipe
+        :type batch_id: int
+        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
+        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
+        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
+            supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to reset the priority of associated jobs before they are queued
+        :type priority: int
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
+        """
+        #self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None)
+        handler = Recipe.objects.create_recipe(recipe_type, recipe_type.revision_num, event.pk, recipe_input)
+        jobs_to_queue = []
+        for job_tuple in handler.get_existing_jobs_to_queue():
+            job = job_tuple[0]
+            job_data = job_tuple[1]
+            try:
+                Job.objects.create_job_v6()
+                Job.objects.populate_job_data(job, job_data)
+            except InvalidData as ex:
+                raise Exception('Scale created invalid job data: %s' % str(ex))
+            jobs_to_queue.append(job)
+        if jobs_to_queue:
+            self.queue_jobs(jobs_to_queue)
+
+        return handler
+
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
+    def queue_new_recipe_for_user_v6(self, recipe_type, recipe_input, recipe_config=None):
+        """Creates a new recipe for the given type and data at the request of a user.
+
+        The new jobs in the recipe with no dependencies on other jobs are immediately placed on the queue. The given
+        event model must have already been saved in the database (it must have an ID). All database changes occur in an
+        atomic transaction.
+
+        :param recipe_type: The type of the new recipe to create
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param data: The recipe data to run on, should be None if superseded_recipe is provided
+        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+
+        :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
+        """
+
+        description = {'user': 'Anonymous'}
+        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
+
+        return self.queue_new_recipe_v6(recipe_type, recipe_input, recipe_config, event)
+
     def queue_new_recipe_for_user(self, recipe_type, data):
         """Creates a new recipe for the given type and data at the request of a user.
 

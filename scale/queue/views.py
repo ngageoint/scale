@@ -65,11 +65,7 @@ class QueueNewJobView(GenericAPIView):
     # serializer_class = JobDetailsSerializer
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
-
-        if self.request.version == 'v6':
-            return JobDetailsSerializerV6
-        else:
-            return JobDetailsSerializerV5
+        return JobDetailsSerializerV5
     
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
@@ -79,7 +75,8 @@ class QueueNewJobView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
+        if request.version == 'v6':
+            raise Http404
         job_type_id = rest_util.parse_int(request, 'job_type_id')
         job_data = rest_util.parse_dict(request, 'job_data', {})
 
@@ -95,11 +92,7 @@ class QueueNewJobView(GenericAPIView):
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # TODO: remove this check when REST API v5 is removed. 
-            if request.version == 'v6':
-                job_details = Job.objects.get_details(job_id)
-            else:
-                job_details = Job.objects.get_details_v5(job_id)
+            job_details = Job.objects.get_details_v5(job_id)
         except Job.DoesNotExist:
             raise Http404
 

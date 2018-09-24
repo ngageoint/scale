@@ -704,6 +704,110 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         self.assertIsNone(new_recipe_job_2.job.superseded_job_id)
         self.assertIsNone(new_recipe_job_2.job.root_superseded_job_id)
 
+class TestRecipeManagerCreateRecipev6(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace()
+
+        self.file = storage_test_utils.create_file()
+
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]}
+        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type_1.name,
+                    'version': self.job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
+                }]
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_type_2.name,
+                    'version': self.job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': 'Test Output 1',
+                        'input': 'Test Input 2',
+                    }]
+                }]
+            }]
+        }
+        
+        RecipeDefinition(definition).validate()
+        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+
+        self.data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': self.file.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+
+    def test_successful_v6(self):
+        """Tests calling RecipeManager.create_recipe() successfully."""
+
+        event = trigger_test_utils.create_trigger_event()
+        handler = Recipe.objects.create_recipe(self.recipe_type, self.recipe_type.revision,
+                                                                event.pk, LegacyRecipeData(self.data))
+
+        # Make sure the recipe jobs get created with the correct job types
+        recipe_job_1 = RecipeNode.objects.get(recipe_id=handler.recipe.id, node_name='Job 1')
+        recipe_job_2 = RecipeNode.objects.get(recipe_id=handler.recipe.id, node_name='Job 2')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+
+        # Make sure the recipe jobs get created in the correct order
+        self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
+
+        recipe_files = RecipeInputFile.objects.filter(recipe=handler.recipe)
+        self.assertEqual(len(recipe_files), 1)
+        self.assertEqual(recipe_files[0].input_file_id, self.file.id)
 
 class TestRecipeManagerReprocessRecipe(TransactionTestCase):
 
