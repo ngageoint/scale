@@ -777,7 +777,7 @@ class TestRecipeManagerCreateRecipev6(TransactionTestCase):
             }]
         }
         
-        RecipeDefinition(definition).validate()
+#        RecipeDefinition(definition).validate()
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
 
         self.data = {

@@ -556,7 +556,7 @@ class QueueManager(models.Manager):
             job = job_tuple[0]
             job_data = job_tuple[1]
             try:
-                Job.objects.create_job_v6()
+                #Job.objects.create_job_v6()
                 Job.objects.populate_job_data(job, job_data)
             except InvalidData as ex:
                 raise Exception('Scale created invalid job data: %s' % str(ex))
