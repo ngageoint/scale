@@ -69,13 +69,13 @@ class PurgeRecipe(CommandMessage):
         recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {'jobs': [j.id, j.id, ..], 'recipes': [r.id, r.id, ..]}
         parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
 
-        # Kick off a delete files job for the node job
+        # Kick off a delete files job node jobs
         for job_id in recipe_nodes['jobs']:
             self.new_messages.append(create_spawn_delete_files_job(job_id=job_id,
                                                                    trigger_id=self.trigger_id,
                                                                    purge=True))
 
-        # Kick off a purge_recipe for node recipes
+        # Kick off a purge_recipe for node recipes (sub-recipes)
         for recipe_id in recipe_nodes['recipes']:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_id,
                                                                  trigger_id=self.trigger_id))
@@ -86,7 +86,7 @@ class PurgeRecipe(CommandMessage):
                 self.new_messages.append(create_purge_recipe_message(recipe_id=parent_recipe.recipe.id,
                                                                      trigger_id=self.trigger_id))
                 RecipeNode.objects.filter(sub_recipe=recipe).delete()
-                
+
         # Kick off purge_recipe for a superseded recipe
         elif recipe.superseded_recipe:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.superseded_recipe.id,
