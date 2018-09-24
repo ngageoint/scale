@@ -137,12 +137,6 @@ class TestPurgeRecipe(TransactionTestCase):
 
         self.assertTrue(result)
 
-# Create 2 jobs, assert 2 new_messages wth msg.type == 'create_spawn_delete_files_job'
-# TODO: Assert msg.type == 'create_purge_recipe_message' for node recipe.id
-# TODO: Assert msg.type == 'create_purge_recipe_message' for parent recipe.id
-# Assert msg.type == 'create_purge_recipe_message' for superseded recipe.id
-# TODO: BatchRecipe models have been deleted 
-
     def test_execute_with_jobs(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 
@@ -188,7 +182,6 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
         self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
 
-    # logic is okay, make tests good
     def test_execute_with_parent_recipe(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 
@@ -214,7 +207,6 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
         self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
 
-    # logic is okay, make tests good
     def test_execute_with_sub_recipe(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 

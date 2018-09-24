@@ -17,9 +17,9 @@ def create_purge_recipe_message(recipe_id, trigger_id):
 
     :param recipe_id: The recipe ID
     :type purge_job_ids: int
-    :param trigger_id: The trigger event id for the purge operation
+    :param trigger_id: The trigger event ID for the purge operation
     :type trigger_id: int
-    :return: The list of messages
+    :return: The purge recipe message
     :rtype: :class:`recipe.messages.purge_recipe.PurgeRecipe`
     """
 
