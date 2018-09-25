@@ -8,6 +8,7 @@ from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
 
@@ -98,10 +99,7 @@ class TestRecipe(TestCase):
         definition.add_dependency('A', 'C')
         definition.add_dependency('A', 'E')
         definition.add_dependency('A', 'H')
-        definition.add_dependency('B', 'E')
-        definition.add_dependency('B', 'G')
         definition.add_dependency('C', 'D')
-        definition.add_dependency('E', 'F')
         definition.add_dependency('G', 'H')
 
         job_a = job_test_utils.create_job(job_type=job_type, status='COMPLETED', save=False, is_superseded=True)
@@ -142,10 +140,12 @@ class TestRecipe(TestCase):
         RecipeNode.objects.bulk_create([recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e,
                                         recipe_node_f, recipe_node_g, recipe_node_h])
 
-        original_jobs = [recipe_node_e.job.id, recipe_node_f.job.id, recipe_node_h.job.id]
-        original_recipes = [recipe_node_b.sub_recipe.id]
-
         recipe_instance = Recipe.objects.get_recipe_instance(recipe.id)
         results = recipe_instance.get_original_leaf_nodes()
-        self.assertListEqual(results['jobs'], original_jobs)
-        self.assertListEqual(results['recipes'], original_recipes)
+        self.assertEqual(len(results.values()), 4)
+
+        leaf_jobs = [node.job.id for node in results.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
+        leaf_recipes = [node.recipe.id for node in results.values() if node.node_type == RecipeNodeDefinition.NODE_TYPE]
+
+        self.assertItemsEqual(leaf_jobs, [recipe_node_e.job.id, recipe_node_f.job.id, recipe_node_h.job.id])
+        self.assertItemsEqual(leaf_recipes, [recipe_node_b.sub_recipe.id])

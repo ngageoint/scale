@@ -79,12 +79,9 @@ class TestPurgeRecipe(TransactionTestCase):
                     'name': self.job_type_2.name,
                     'version': self.job_type_2.version,
                 },
-                'dependencies': [{
-                    'name': 'Job 1',
-                    'connections': [{
-                        'output': 'Test Output 1',
-                        'input': 'Test Input 2',
-                    }]
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
                 }]
             }]
         }
@@ -152,10 +149,6 @@ class TestPurgeRecipe(TransactionTestCase):
         for msg in message.new_messages:
             self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
             self.assertEqual(msg.type, 'spawn_delete_files_job')
- 
-        # Assert models were deleted
-        self.assertEqual(Recipe.objects.filter(id=self.recipe_1.id).count(), 0)
-        self.assertEqual(RecipeInputFile.objects.filter(recipe=self.recipe_1).count(), 0)
 
     def test_execute_with_superseded_recipe(self):
         """Tests calling PurgeRecipe.execute() successfully"""
@@ -242,7 +235,21 @@ class TestPurgeRecipe(TransactionTestCase):
         for msg in message.new_messages:
             self.assertEqual(msg.recipe_id, recipe_node_a.sub_recipe.id)
             self.assertEqual(msg.type, 'purge_recipe')
+            
+    def test_execute_no_leaf_nodes(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
 
+        # Create recipes
+        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
+
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+        
         # Assert models were deleted
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
         self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
