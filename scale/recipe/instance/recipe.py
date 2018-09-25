@@ -58,14 +58,6 @@ class RecipeInstance(object):
         :rtype: dict
         """
 
-        leaf_job_ids = []
-        leaf_recipe_ids = []
+        leaf_nodes = {n.name: n for n in self.graph.values() if n.is_original and not n.children}  # {Name: Node}
 
-        for _, node in self.graph.items():
-            if node.is_original:
-                if node.node_type == JobNodeDefinition.NODE_TYPE:
-                    leaf_job_ids.append(node.job.id)
-                elif node.node_type == RecipeNodeDefinition.NODE_TYPE:
-                    leaf_recipe_ids.append(node.recipe.id)
-
-        return {'jobs': leaf_job_ids, 'recipes': leaf_recipe_ids}
+        return leaf_nodes
