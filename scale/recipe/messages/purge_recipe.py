@@ -3,8 +3,11 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.db.models import Q
+
 from batch.models import BatchRecipe
 from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
+from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.models import Recipe, RecipeInputFile, RecipeNode
 from messaging.messages.message import CommandMessage
 
@@ -66,36 +69,39 @@ class PurgeRecipe(CommandMessage):
 
         recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
         recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
-        recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {'jobs': [j.id, j.id, ..], 'recipes': [r.id, r.id, ..]}
+        recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
         parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
 
-        # Kick off a delete files job node jobs
-        for job_id in recipe_nodes['jobs']:
-            self.new_messages.append(create_spawn_delete_files_job(job_id=job_id,
-                                                                   trigger_id=self.trigger_id,
-                                                                   purge=True))
-
-        # Kick off a purge_recipe for node recipes (sub-recipes)
-        for recipe_id in recipe_nodes['recipes']:
-            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_id,
-                                                                 trigger_id=self.trigger_id))
-
-        # Kick off a purge_recipe for a parent recipe
-        if parent_recipes:
-            for parent_recipe in parent_recipes:
-                self.new_messages.append(create_purge_recipe_message(recipe_id=parent_recipe.recipe.id,
+        if recipe_nodes:
+            # Kick off a delete_files job for leaf node jobs
+            leaf_jobs = [node for node in recipe_nodes.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
+            for node in leaf_jobs:
+                self.new_messages.append(create_spawn_delete_files_job(job_id=node.job.id,
+                                                                       trigger_id=self.trigger_id,
+                                                                       purge=True))
+    
+            # Kick off a purge_recipe for leaf node recipes
+            leaf_recipes = [node for node in recipe_nodes.values() if node.node_type == RecipeNodeDefinition.NODE_TYPE]
+            for node in leaf_recipes:
+                self.new_messages.append(create_purge_recipe_message(recipe_id=node.recipe.id,
                                                                      trigger_id=self.trigger_id))
-                RecipeNode.objects.filter(sub_recipe=recipe).delete()
-
-        # Kick off purge_recipe for a superseded recipe
-        elif recipe.superseded_recipe:
-            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.superseded_recipe.id,
-                                                                 trigger_id=self.trigger_id))
-
-        # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
-        BatchRecipe.objects.filter(recipe=recipe).delete()
-        RecipeNode.objects.filter(recipe=recipe).delete()
-        RecipeInputFile.objects.filter(recipe=recipe).delete()
-        recipe.delete()
+        else:    
+            # Kick off a purge_recipe for a parent recipe
+            if parent_recipes:
+                for parent_recipe in parent_recipes:
+                    self.new_messages.append(create_purge_recipe_message(recipe_id=parent_recipe.recipe.id,
+                                                                         trigger_id=self.trigger_id))
+                    RecipeNode.objects.filter(sub_recipe=recipe).delete()
+    
+            # Kick off purge_recipe for a superseded recipe
+            elif recipe.superseded_recipe:
+                self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.superseded_recipe.id,
+                                                                     trigger_id=self.trigger_id))
+    
+            # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
+            BatchRecipe.objects.filter(recipe=recipe).delete()
+            RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
+            RecipeInputFile.objects.filter(recipe=recipe).delete()
+            recipe.delete()
 
         return True
