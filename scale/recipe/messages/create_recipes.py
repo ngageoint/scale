@@ -47,7 +47,7 @@ def create_subrecipes_messages(recipe, sub_recipes, forced_nodes=None):
     :param sub_recipes: The list of SubRecipe tuples describing the sub-recipes to create
     :type sub_recipes: list
     :param forced_nodes: Describes the nodes that have been forced to reprocess
-    :type forced_nodes: dict
+    :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
     :return: The list of messages
     :rtype: list
     """
