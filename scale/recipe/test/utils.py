@@ -211,7 +211,7 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     return recipe_job
 
 
-def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=False):
+def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=False, is_original=True):
     """Creates a recipe_node model for unit testing
 
     :param recipe: The recipe containing the node
@@ -224,6 +224,8 @@ def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, s
     :type sub_recipe: :class:'recipe.models.Recipe'
     :param save: Whether to save the model
     :type save: bool
+    :param is_original: Whether the recipe node is original
+    :type is_original: bool
     :returns: The recipe_node model
     :rtype: :class:`recipe.models.RecipeNode`
     """
@@ -240,6 +242,7 @@ def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, s
     recipe_node = RecipeNode()
     recipe_node.recipe = recipe
     recipe_node.node_name = node_name
+    recipe_node.is_original = is_original
     if job:
         recipe_node.job = job
     else:
