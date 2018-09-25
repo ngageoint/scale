@@ -250,7 +250,7 @@
 <p>Defines the classes for representing nodes within a recipe</p>
 <dl class="class">
 <dt id="recipe.instance.node.JobNodeInstance">
-<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">JobNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>job</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">JobNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>job</em>, <em>is_original</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
 <p>Represents a job within a recipe</p>
 <dl class="method">
@@ -302,7 +302,7 @@
 
 <dl class="class">
 <dt id="recipe.instance.node.RecipeNodeInstance">
-<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">RecipeNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">RecipeNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe</em>, <em>is_original</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
 <p>Represents a recipe within a recipe</p>
 <dl class="method">
@@ -331,6 +331,22 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with status (PENDING or BLOCKED) mapping to lists of job IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes">
+<code class="descname">get_original_leaf_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mapping of non-superseded job and recipe IDs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with node mapping of recipe leafs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>

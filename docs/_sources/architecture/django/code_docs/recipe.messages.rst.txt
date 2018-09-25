@@ -20,6 +20,14 @@ recipe\.messages\.process\_recipe\_input module
     :undoc-members:
     :show-inheritance:
 
+recipe\.messages\.purge\_recipe module
+--------------------------------------
+
+.. automodule:: recipe.messages.purge_recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.messages\.reprocess\_recipes module
 -------------------------------------------
 

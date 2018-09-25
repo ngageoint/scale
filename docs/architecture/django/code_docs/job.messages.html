@@ -1086,7 +1086,7 @@ model locks on the given jobs.</p>
 
 <dl class="function">
 <dt id="job.messages.purge_jobs.create_purge_jobs_messages">
-<code class="descclassname">job.messages.purge_jobs.</code><code class="descname">create_purge_jobs_messages</code><span class="sig-paren">(</span><em>purge_job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.create_purge_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.messages.purge_jobs.</code><code class="descname">create_purge_jobs_messages</code><span class="sig-paren">(</span><em>purge_job_ids</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.create_purge_jobs_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to remove the given job IDs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1094,7 +1094,7 @@ model locks on the given jobs.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>purge_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+<li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event id for the purge operation</li>
 </ul>
 </td>
 </tr>

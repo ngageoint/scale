@@ -299,6 +299,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_create_recipes">recipe.test.messages.test_create_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_purge_recipe">recipe.test.messages.test_purge_recipe module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.test.messages.html#module-recipe.test.messages.test_update_recipe_metrics">recipe.test.messages.test_update_recipe_metrics module</a></li>
@@ -1482,7 +1483,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe_node">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_node</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>node_name=None</em>, <em>job=None</em>, <em>sub_recipe=None</em>, <em>save=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_node</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>node_name=None</em>, <em>job=None</em>, <em>sub_recipe=None</em>, <em>save=False</em>, <em>is_original=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe_node model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1494,6 +1495,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 <li><strong>job</strong> (<em>:class:'job.models.Job'</em>) &#8211; The job in the node</li>
 <li><strong>sub_recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe in the node</li>
 <li><strong>save</strong> (<em>bool</em>) &#8211; Whether to save the model</li>
+<li><strong>is_original</strong> (<em>bool</em>) &#8211; Whether the recipe node is original</li>
 </ul>
 </td>
 </tr>

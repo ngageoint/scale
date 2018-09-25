@@ -285,7 +285,7 @@
 
 <dl class="function">
 <dt id="storage.messages.delete_files.create_delete_files_messages">
-<code class="descclassname">storage.messages.delete_files.</code><code class="descname">create_delete_files_messages</code><span class="sig-paren">(</span><em>files</em>, <em>purge</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.delete_files.create_delete_files_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">storage.messages.delete_files.</code><code class="descname">create_delete_files_messages</code><span class="sig-paren">(</span><em>files</em>, <em>purge</em>, <em>job_id</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.messages.delete_files.create_delete_files_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to delete the given files</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -295,6 +295,7 @@
 <li><strong>files</strong> (<em>[</em><em>collections.namedtuple</em><em>]</em>) &#8211; The list of file IDs to delete</li>
 <li><strong>purge</strong> (<em>bool</em>) &#8211; Boolean value to determine if the files should be purged</li>
 <li><strong>job_id</strong> (<em>int</em>) &#8211; The id of the job that produced the files</li>
+<li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event id for the purge operation</li>
 </ul>
 </td>
 </tr>

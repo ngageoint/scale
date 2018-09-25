@@ -400,6 +400,59 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-recipe.messages.purge_recipe">
+<span id="recipe-messages-purge-recipe-module"></span><h2>recipe.messages.purge_recipe module<a class="headerlink" href="#module-recipe.messages.purge_recipe" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that purges a recipe</p>
+<dl class="class">
+<dt id="recipe.messages.purge_recipe.PurgeRecipe">
+<em class="property">class </em><code class="descclassname">recipe.messages.purge_recipe.</code><code class="descname">PurgeRecipe</code><a class="headerlink" href="#recipe.messages.purge_recipe.PurgeRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that purges recipe components</p>
+<dl class="method">
+<dt id="recipe.messages.purge_recipe.PurgeRecipe.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.PurgeRecipe.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="recipe.messages.purge_recipe.PurgeRecipe.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.PurgeRecipe.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.messages.purge_recipe.PurgeRecipe.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.PurgeRecipe.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.messages.purge_recipe.create_purge_recipe_message">
+<code class="descclassname">recipe.messages.purge_recipe.</code><code class="descname">create_purge_recipe_message</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.create_purge_recipe_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to remove the given recipe by ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> &#8211; The recipe ID</li>
+<li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event ID for the purge operation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The purge recipe message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.messages.purge_recipe.PurgeRecipe" title="recipe.messages.purge_recipe.PurgeRecipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.messages.purge_recipe.PurgeRecipe</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="module-recipe.messages.reprocess_recipes">
 <span id="recipe-messages-reprocess-recipes-module"></span><h2>recipe.messages.reprocess_recipes module<a class="headerlink" href="#module-recipe.messages.reprocess_recipes" title="Permalink to this headline">¶</a></h2>
 <p>Defines a command message that reprocesses recipes</p>

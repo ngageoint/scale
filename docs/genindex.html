@@ -1515,10 +1515,10 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Cpus">Cpus (class in node.resources.resource)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.cpus">cpus (node.resources.node_resources.NodeResources attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">cpus_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
@@ -1716,6 +1716,8 @@
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.create_pull_command">create_pull_command() (in module job.tasks.pull_task)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.purge_jobs.create_purge_jobs_messages">create_purge_jobs_messages() (in module job.messages.purge_jobs)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.create_purge_recipe_message">create_purge_recipe_message() (in module recipe.messages.purge_recipe)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.utils.create_queue">create_queue() (in module queue.test.utils)</a>
 </li>
@@ -2894,6 +2896,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.process_recipe_input.ProcessRecipeInput.execute">(recipe.messages.process_recipe_input.ProcessRecipeInput method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe.execute">(recipe.messages.purge_recipe.PurgeRecipe method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.reprocess_recipes.ReprocessRecipes.execute">(recipe.messages.reprocess_recipes.ReprocessRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.supersede_recipe_nodes.SupersedeRecipeNodes.execute">(recipe.messages.supersede_recipe_nodes.SupersedeRecipeNodes method)</a>
@@ -3263,6 +3267,8 @@
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.create_recipes.CreateRecipes.from_json">(recipe.messages.create_recipes.CreateRecipes static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.process_recipe_input.ProcessRecipeInput.from_json">(recipe.messages.process_recipe_input.ProcessRecipeInput static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe.from_json">(recipe.messages.purge_recipe.PurgeRecipe static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.reprocess_recipes.ReprocessRecipes.from_json">(recipe.messages.reprocess_recipes.ReprocessRecipes static method)</a>
 </li>
@@ -4300,6 +4306,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_old_definition">get_old_definition() (batch.models.Batch method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_old_definition_json">get_old_definition_json() (batch.models.Batch method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.instance.html#recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes">get_original_leaf_nodes() (recipe.instance.recipe.RecipeInstance method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionOutput.get_output">get_output() (job.models.JobExecutionOutput method)</a>
 </li>
@@ -9437,6 +9445,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.purge_jobs.PurgeJobs">PurgeJobs (class in job.messages.purge_jobs)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe">PurgeRecipe (class in recipe.messages.purge_recipe)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.push_to_database">push_to_database() (scheduler.task.manager.TaskUpdateManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.types.SeedJson.python_type">python_type (job.seed.types.SeedJson attribute)</a>
@@ -9945,6 +9955,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#module-recipe.messages.process_recipe_input">recipe.messages.process_recipe_input (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#module-recipe.messages.purge_recipe">recipe.messages.purge_recipe (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#module-recipe.messages.reprocess_recipes">recipe.messages.reprocess_recipes (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#module-recipe.messages.supersede_recipe_nodes">recipe.messages.supersede_recipe_nodes (module)</a>
@@ -10075,6 +10087,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#module-recipe.test.messages.test_process_recipe_input">recipe.test.messages.test_process_recipe_input (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#module-recipe.test.messages.test_purge_recipe">recipe.test.messages.test_purge_recipe (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#module-recipe.test.messages.test_reprocess_recipes">recipe.test.messages.test_reprocess_recipes (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#module-recipe.test.messages.test_supersede_recipe_nodes">recipe.test.messages.test_supersede_recipe_nodes (module)</a>
@@ -10195,10 +10209,10 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.deprecation.RecipeDefinitionSunset">RecipeDefinitionSunset (class in recipe.deprecation)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v1.RecipeDefinitionV1">RecipeDefinitionV1 (class in recipe.definition.json.definition_v1)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v1.RecipeDefinitionV1">RecipeDefinitionV1 (class in recipe.definition.json.definition_v1)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.RecipeDefinitionV6">RecipeDefinitionV6 (class in recipe.definition.json.definition_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeDetailsInputSerializer">RecipeDetailsInputSerializer (class in recipe.serializers)</a>
@@ -11753,6 +11767,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.setUp">(recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.setUp">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.setUp">(recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.setUp">(recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes method)</a>
 </li>
@@ -13835,6 +13851,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob.test_execute_no_job">test_execute_no_job() (job.test.messages.test_spawn_delete_files_job.TestSpawnDeleteFilesJob method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_no_leaf_nodes">test_execute_no_leaf_nodes() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute_recursively">test_execute_recursively() (recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes">test_execute_subrecipes() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
@@ -13847,6 +13865,10 @@
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute_with_data">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_jobs">test_execute_with_jobs() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_parent_recipe">test_execute_with_parent_recipe() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe">test_execute_with_recipe() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 
       <ul>
@@ -13861,12 +13883,16 @@
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute_with_recipe_legacy">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_sub_recipe">test_execute_with_sub_recipe() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.messages.html#batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics.test_execute_with_sub_recipes">test_execute_with_sub_recipes() (batch.test.messages.test_update_batch_metrics.TestUpdateBatchMetrics method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes.test_execute_with_sub_recipes">(recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_superseded_recipe">test_execute_with_superseded_recipe() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes.test_execute_with_top_level_recipe">test_execute_with_top_level_recipe() (recipe.test.messages.test_update_recipe_metrics.TestUpdateRecipes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_extra_products_are_fine">test_extra_products_are_fine() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
@@ -14153,6 +14179,8 @@
         <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsViewV6.test_get_node_success">(node.test.test_views.TestNodeDetailsViewV6 method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.test.instance.html#recipe.test.instance.test_recipe.TestRecipe.test_get_original_leaf_nodes">test_get_original_leaf_nodes() (recipe.test.instance.test_recipe.TestRecipe method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_handler.TestRecipeHandler.test_get_pending_jobs">test_get_pending_jobs() (recipe.test.handlers.test_handler.TestRecipeHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_plot_data">test_get_plot_data() (metrics.test.test_models.TestMetricsError method)</a>
@@ -14866,6 +14894,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_json">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_json">(recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes.test_json">(recipe.test.messages.test_reprocess_recipes.TestReprocessRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_json">(recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes method)</a>
@@ -15465,12 +15495,12 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_missing">test_parse_duration_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_optional">test_parse_duration_optional() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float">test_parse_float() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_accepted_none">test_parse_float_accepted_none() (util.test.test_rest.TestRest method)</a>
@@ -17527,6 +17557,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs">TestPurgeJobs (class in job.test.messages.test_purge_jobs)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe">TestPurgeRecipe (class in recipe.test.messages.test_purge_recipe)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator">TestQueuedExecutionConfigurator (class in job.test.execution.configuration.test_configurators)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.messages.html#queue.test.messages.test_queued_jobs.TestQueuedJobs">TestQueuedJobs (class in queue.test.messages.test_queued_jobs)</a>
@@ -17963,6 +17995,8 @@
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.create_recipes.CreateRecipes.to_json">(recipe.messages.create_recipes.CreateRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.process_recipe_input.ProcessRecipeInput.to_json">(recipe.messages.process_recipe_input.ProcessRecipeInput method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe.to_json">(recipe.messages.purge_recipe.PurgeRecipe method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.reprocess_recipes.ReprocessRecipes.to_json">(recipe.messages.reprocess_recipes.ReprocessRecipes method)</a>
 </li>
