@@ -429,7 +429,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
 
-        url = '/%s/recipe-types/100/' % self.api
+        url = '/%s/recipe-types/2345908/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -675,7 +675,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
 
-        url = '/%s/recipe-types/100/' % self.api
+        url = '/%s/recipe-types/1235134/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)

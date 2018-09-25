@@ -85,6 +85,7 @@ class SpawnDeleteFilesJob(CommandMessage):
 
             inputs = Data()
             inputs.add_value(JsonValue('job_id', str(self.job_id)))
+            inputs.add_value(JsonValue('trigger_id', str(self.trigger_id)))
             inputs.add_value(JsonValue('purge', str(self.purge)))
             inputs.add_value(JsonValue('files', json.dumps(files)))
             inputs.add_value(JsonValue('workspaces', json.dumps(workspaces)))

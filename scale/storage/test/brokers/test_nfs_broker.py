@@ -118,7 +118,7 @@ class TestNfsBrokerMoveFiles(TestCase):
         self.broker = NfsBroker()
         self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
 
-    @patch('storage.brokers.nfs_broker.os.makedirs')
+    @patch('storage.brokers.nfs_broker.makedirs')
     @patch('storage.brokers.nfs_broker.os.path.exists')
     @patch('storage.brokers.nfs_broker.os.chmod')
     @patch('storage.brokers.nfs_broker.shutil.move')
@@ -171,7 +171,7 @@ class TestNfsBrokerUploadFiles(TestCase):
         self.broker = NfsBroker()
         self.broker.load_configuration({'type': NfsBroker().broker_type, 'nfs_path': 'host:/path'})
 
-    @patch('storage.brokers.nfs_broker.os.makedirs')
+    @patch('storage.brokers.nfs_broker.makedirs')
     @patch('storage.brokers.nfs_broker.os.path.exists')
     @patch('storage.brokers.nfs_broker.os.chmod')
     @patch('storage.brokers.nfs_broker.shutil.copy')

@@ -27,7 +27,7 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         self.prod2 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp1, job_exe=self.job_exe)
         self.prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp2, job_exe=self.job_exe)
         self.event = trigger_test_utils.create_trigger_event()
-    
+
     def test_json(self):
         """Tests coverting a SpawnDeleteFilesJob message to and from JSON"""
 

@@ -4,12 +4,12 @@ import os
 
 import django
 from django.test import TestCase
-from mock import call, patch
 
 from job.test import utils as job_test_utils
 from storage.messages.delete_files import create_delete_files_messages, DeleteFiles
 from storage.models import ScaleFile
 from storage.test import utils as storage_test_utils
+import trigger.test.utils as trigger_test_utils
 
 
 class TestDeleteFiles(TestCase):
@@ -126,6 +126,8 @@ class TestDeleteFiles(TestCase):
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
 
+        trigger = trigger_test_utils.create_trigger_event()
+
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file1.json')
         file_path_3 = os.path.join('my_dir', 'my_file2.json')
@@ -139,4 +141,4 @@ class TestDeleteFiles(TestCase):
         files = [file_1, file_2, file_3, file_4]
 
         # No exception is success
-        create_delete_files_messages(files=files, job_id=job.id, purge=True)
+        create_delete_files_messages(files=files, job_id=job.id, trigger_id=trigger.id, purge=True)

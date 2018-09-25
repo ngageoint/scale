@@ -24,6 +24,7 @@ class NodeInstance(object):
         self.parents = {}  # {Name: Node}
         self.children = {}  # {Name: Node}
         self.blocks_child_jobs = False  # Whether this node blocks child jobs from running
+        self.is_original = False # Whether this node is the original version (not superseded)
 
     def add_dependency(self, node):
         """Adds a dependency that this node has on the given node
@@ -55,18 +56,21 @@ class JobNodeInstance(NodeInstance):
     """Represents a job within a recipe
     """
 
-    def __init__(self, definition, job):
+    def __init__(self, definition, job, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.JobNodeDefinition`
         :param job: The job model
         :type job: :class:`job.models.Job`
+        :param is_original: The bool designator to determine if job is original
+        :type is_original: bool
         """
 
         super(JobNodeInstance, self).__init__(definition)
 
         self.job = job
+        self.is_original = is_original
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`
@@ -92,18 +96,21 @@ class RecipeNodeInstance(NodeInstance):
     """Represents a recipe within a recipe
     """
 
-    def __init__(self, definition, recipe):
+    def __init__(self, definition, recipe, is_original):
         """Constructor
 
         :param definition: The definition of this node in the recipe
         :type definition: :class:`recipe.definition.node.RecipeNodeDefinition`
         :param recipe: The recipe model
         :type recipe: :class:`recipe.models.Recipe`
+        :param is_original: The bool designator to determine if recipe is original
+        :type is_original: bool
         """
 
         super(RecipeNodeInstance, self).__init__(definition)
 
         self.recipe = recipe
+        self.is_original = is_original
 
     def get_jobs_to_update(self, pending_job_ids, blocked_job_ids):
         """See :meth:`recipe.instance.node.NodeInstance.get_jobs_to_update`
