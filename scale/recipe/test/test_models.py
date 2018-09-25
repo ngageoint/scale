@@ -793,7 +793,7 @@ class TestRecipeManagerCreateRecipev6(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(self.recipe_type, self.recipe_type.revision,
+        handler = Recipe.objects.create_recipe_v6(self.recipe_type, self.recipe_type.revision,
                                                                 event.pk, LegacyRecipeData(self.data))
 
         # Make sure the recipe jobs get created with the correct job types

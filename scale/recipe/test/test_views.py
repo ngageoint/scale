@@ -1667,6 +1667,172 @@ class TestRecipesViewV6(TransactionTestCase):
         self.assertEqual(len(result['jobs']), 1)
         for recipe_job in result['jobs']:
             self.assertFalse(recipe_job['is_original'])
+            
+class TestRecipesPostViewV6(TransactionTestCase):
+    
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator')
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'media_types': [
+                    'image/x-hdf5-image',
+                ],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'jobs': [{
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+                'name': 'kml',
+                'recipe_inputs': [{
+                    'job_input': 'input_file',
+                    'recipe_input': 'input_file',
+                }],
+            }],
+        }
+
+        workspace1 = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file(workspace=workspace1)
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': file1.id,
+            }],
+            'workspace_id': workspace1.id,
+        }
+
+        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        self.recipe1 = recipe_handler.recipe
+        self.recipe1_jobs = recipe_handler.recipe_jobs
+
+        self.recipe2 = recipe_test_utils.create_recipe()
+        self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
+
+    def test_successful_all(self):
+        """Tests getting recipes"""
+
+        url = '/%s/recipes/' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 2)
+
+    def test_successful_batch(self):
+        """Tests getting recipes by batch id"""
+
+        batch = batch_test_utils.create_batch()
+        self.recipe1.batch_id = batch.id
+        self.recipe1.save()
+
+        url = '/%s/recipes/?batch_id=%d' % (self.api, batch.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 1)
+        self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
+
+    def test_successful_type_name(self):
+        """Tests getting recipes by type name"""
+
+        url = '/%s/recipes/?type_name=my-type' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 1)
+        self.assertEqual(results['results'][0]['recipe_type']['name'], 'my-type')
+
+    def test_successful_type_id(self):
+        """Tests getting recipes by type id"""
+
+        url = '/%s/recipes/?type_id=%s' % (self.api, self.recipe_type.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 1)
+        self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
+
+    def test_successful_superseded(self):
+        """Tests getting superseded recipes"""
+
+        url = '/%s/recipes/?include_superseded=true' % self.api
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 3)
+
+    def test_successful_details(self):
+        """Tests getting recipe details"""
+
+        url = '/%s/recipes/%s/' % (self.api, self.recipe1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], self.recipe1.id)
+        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertEqual(results['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertEqual(results['jobs'][0]['job']['job_type_rev']['revision_num'], self.job_type1.revision_num)
+
+    def test_superseded(self):
+        """Tests successfully calling the recipe details view for superseded recipes."""
+
+        graph1 = RecipeGraph()
+        graph1.add_job('kml', self.job_type1.name, self.job_type1.version)
+        graph2 = RecipeGraph()
+        graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
+        delta = RecipeGraphDelta(graph1, graph2)
+
+        superseded_jobs = {recipe_job.node_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        new_recipe = recipe_test_utils.create_recipe_handler(
+            recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
+        ).recipe
+
+        # Make sure the original recipe was updated
+        url = '/%s/recipes/%i/' % (self.api, self.recipe1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(result['is_superseded'])
+        self.assertIsNone(result['root_superseded_recipe'])
+        self.assertIsNotNone(result['superseded_by_recipe'])
+        self.assertEqual(result['superseded_by_recipe']['id'], new_recipe.id)
+        self.assertIsNotNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertTrue(recipe_job['is_original'])
+
+        # Make sure the new recipe has the expected relations
+        url = '/%s/recipes/%i/' % (self.api, new_recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertFalse(result['is_superseded'])
+        self.assertIsNotNone(result['root_superseded_recipe'])
+        self.assertEqual(result['root_superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNotNone(result['superseded_recipe'])
+        self.assertEqual(result['superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertFalse(recipe_job['is_original'])
 
             
 class TestRecipeDetailsViewV6(TransactionTestCase):

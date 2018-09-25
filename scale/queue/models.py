@@ -552,6 +552,7 @@ class QueueManager(models.Manager):
         recipe_type_rev =  RecipeTypeRevisionManager.get_revision(recipe_type.name, recipe_type.revision_num)
         
         recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input)
+       
         # jobs_to_queue = []
         # for job_tuple in handler.get_existing_jobs_to_queue():
         #     job = job_tuple[0]
