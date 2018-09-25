@@ -348,10 +348,7 @@ class RecipesView(ListAPIView):
 
         try:
             # TODO: remove this check when REST API v5 is removed
-            if request.version == 'v6':
-                recipe = Recipe.objects.get_details(handler.recipe.id)
-            else:
-                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+            recipe = Recipe.objects.get_details(handler.recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
             

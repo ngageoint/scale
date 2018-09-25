@@ -19,7 +19,7 @@ from job.models import Job, JobType
 from job.models import JobExecution, JobTypeRevision
 from node.resources.json.resources import Resources
 from product.models import ProductFile
-from recipe.models import Recipe
+from recipe.models import Recipe, RecipeTypeRevisionManager
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 from data.data.json import data_v6
@@ -503,7 +503,6 @@ class QueueManager(models.Manager):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
-
         handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, superseded_recipe, delta,
                                                    superseded_jobs, priority)
         jobs_to_queue = []
@@ -529,8 +528,8 @@ class QueueManager(models.Manager):
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
+        :type recipe_input: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
         :param batch_id: The ID of the batch that contains this recipe
@@ -549,22 +548,24 @@ class QueueManager(models.Manager):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
-        #self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None)
-        handler = Recipe.objects.create_recipe(recipe_type, recipe_type.revision_num, event.pk, recipe_input)
-        jobs_to_queue = []
-        for job_tuple in handler.get_existing_jobs_to_queue():
-            job = job_tuple[0]
-            job_data = job_tuple[1]
-            try:
-                #Job.objects.create_job_v6()
-                Job.objects.populate_job_data(job, job_data)
-            except InvalidData as ex:
-                raise Exception('Scale created invalid job data: %s' % str(ex))
-            jobs_to_queue.append(job)
-        if jobs_to_queue:
-            self.queue_jobs(jobs_to_queue)
+        
+        recipe_type_rev =  RecipeTypeRevisionManager.get_revision(recipe_type.name, recipe_type.revision_num)
+        
+        recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input)
+        # jobs_to_queue = []
+        # for job_tuple in handler.get_existing_jobs_to_queue():
+        #     job = job_tuple[0]
+        #     job_data = job_tuple[1]
+        #     try:
+        #         #Job.objects.create_job_v6()
+        #         Job.objects.populate_job_data(job, job_data)
+        #     except InvalidData as ex:
+        #         raise Exception('Scale created invalid job data: %s' % str(ex))
+        #     jobs_to_queue.append(job)
+        # if jobs_to_queue:
+        #     self.queue_jobs(jobs_to_queue)
 
-        return handler
+        return recipe
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
