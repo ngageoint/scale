@@ -24,15 +24,13 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_purge_jobs_messages(purge_job_ids, trigger_id, purge):
+def create_purge_jobs_messages(purge_job_ids, trigger_id):
     """Creates messages to remove the given job IDs
 
     :param purge_job_ids: The job IDs
     :type purge_job_ids: list
     :param trigger_id: The trigger event id for the purge operation
     :type trigger_id: int
-    :param purge: Boolean value to determine if files should be purged from workspace
-    :type purge: bool
     :return: The list of messages
     :rtype: list
     """
@@ -48,7 +46,6 @@ def create_purge_jobs_messages(purge_job_ids, trigger_id, purge):
             message = PurgeJobs()
         message.add_job(job_id)
         message.trigger_id = trigger_id
-        message.purge = purge
     if message:
         messages.append(message)
 
@@ -68,7 +65,6 @@ class PurgeJobs(CommandMessage):
         self._count = 0
         self._purge_job_ids = []
         self.trigger_id = None
-        self.purge = False
 
     def add_job(self, job_id):
         """Adds the given job ID to this message
@@ -93,7 +89,7 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'job_ids': self._purge_job_ids, 'trigger_id': self.trigger_id, 'purge': str(self.purge)}
+        return {'job_ids': self._purge_job_ids, 'trigger_id': self.trigger_id}
 
     @staticmethod
     def from_json(json_dict):
@@ -102,7 +98,6 @@ class PurgeJobs(CommandMessage):
 
         message = PurgeJobs()
         message.trigger_id = json_dict['trigger_id']
-        message.purge = bool(json_dict['purge'])
         for job_id in json_dict['job_ids']:
             message.add_job(job_id)
 
@@ -113,19 +108,19 @@ class PurgeJobs(CommandMessage):
         """
 
         # Kick off purge_source_file for all source file inputs
-        input_source_files = JobInputFile.objects.filter(job__in=self._purge_job_ids, job__recipe__isnull=True)
+        input_source_files = JobInputFile.objects.filter(job__in=self._purge_job_ids,
+                                                         job__recipe__isnull=True,
+                                                         input_file__file_type='SOURCE')
         input_source_files.select_related('input_file')
         for source_file in input_source_files:
             self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.input_file.id,
-                                                                      trigger_id=self.trigger_id,
-                                                                      purge=self.purge))
-        
+                                                                      trigger_id=self.trigger_id))
+    
         # Kick off purge_recipe for recipe with node job
         parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
         for recipe_node in parent_recipes:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe.id,
-                                                                 trigger_id=self.trigger_id),
-                                                                 purge=self.purge)
+                                                                 trigger_id=self.trigger_id))
 
         with transaction.atomic():
             job_exe_queryset = JobExecution.objects.filter(job__in=self._purge_job_ids)
