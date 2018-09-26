@@ -71,27 +71,27 @@ class PurgeSourceFile(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        jobs = JobInputFile.objects.filter(input_file=self.source_file_id,
-                                           job__recipe__isnull=True).select_related('job')
-        recipes = RecipeInputFile.objects.filter(input_file=self.source_file_id,
-                                                 recipe__is_superseded=False).select_related('recipe')
+        job_inputs = JobInputFile.objects.filter(input_file=self.source_file_id,
+                                                 job__recipe__isnull=True).select_related('job')
+        recipe_inputs = RecipeInputFile.objects.filter(input_file=self.source_file_id,
+                                                       recipe__is_superseded=False).select_related('recipe')
 
-        # Kick off spawn_delete_job_files for jobs that are not in a recipe and have given source_file as input
-        for job in jobs:
+        # Kick off spawn_delete_job_files for jobs that are not in a recipe and have the given source_file as input
+        for job_input in job_inputs:
             from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
-            self.new_messages.append(create_spawn_delete_files_job(job_id=job.id,
+            self.new_messages.append(create_spawn_delete_files_job(job_id=job_input.job.id,
                                                                    trigger_id=self.trigger_id,
                                                                    purge=self.purge))
 
         # Kick off purge_recipe for recipes that are not superseded and have the given source_file as input
-        for recipe in recipes:
+        for recipe_input in recipe_inputs:
             from recipe.messages.purge_recipe import create_purge_recipe_message
-            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.id,
+            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_input.recipe.id,
                                                                  trigger_id=self.trigger_id,
                                                                  purge=self.purge))
 
         # Delete Ingest and ScaleFile
-        if not jobs and not recipes:
+        if not job_inputs and not recipe_inputs:
             Ingest.objects.filter(source_file=self.source_file_id).delete()
             ScaleFile.objects.filter(id=self.source_file_id).delete()
 
