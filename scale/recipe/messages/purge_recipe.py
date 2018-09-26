@@ -87,7 +87,7 @@ class PurgeRecipe(CommandMessage):
         recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
         recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
         parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
-        
+
         if recipe_nodes:
             # Kick off a delete_files job for leaf node jobs
             leaf_jobs = [node for node in recipe_nodes.values() if node.node_type == JobNodeDefinition.NODE_TYPE]
