@@ -120,8 +120,8 @@ class DeleteFiles(CommandMessage):
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],
-                                                                trigger_id=self.trigger_id),
-                                                                purge=self.purge)
+                                                                trigger_id=self.trigger_id,
+                                                                purge=self.purge))
         else:
             files_to_delete.update(is_deleted=True, deleted=when, is_published=False, unpublished=when)
 

@@ -10,7 +10,7 @@ from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.models import Recipe, RecipeInputFile, RecipeNode
-from source.message.purge_source_file import create_purge_source_file_message
+from source.messages.purge_source_file import create_purge_source_file_message
 
 
 logger = logging.getLogger(__name__)
@@ -74,9 +74,6 @@ class PurgeRecipe(CommandMessage):
         """
 
         recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
-        recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
-        recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
-        parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
 
         # Kick off purge_source_file for source file inputs of the given recipe
         input_source_files = RecipeInputFile.objects.filter(Q(recipe__root_superseded_recipe=recipe) |
@@ -87,6 +84,10 @@ class PurgeRecipe(CommandMessage):
                                                                       trigger_id=self.trigger_id,
                                                                       purge=self.purge))
 
+        recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
+        recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
+        parent_recipes = RecipeNode.objects.filter(sub_recipe=recipe, is_original=True)
+        
         if recipe_nodes:
             # Kick off a delete_files job for leaf node jobs
             leaf_jobs = [node for node in recipe_nodes.values() if node.node_type == JobNodeDefinition.NODE_TYPE]

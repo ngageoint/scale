@@ -114,7 +114,7 @@ class PurgeJobs(CommandMessage):
 
         # Kick off purge_source_file for all source file inputs
         input_source_files = JobInputFile.objects.filter(job__in=self._purge_job_ids, job__recipe__isnull=True)
-        input_source_files.select_relate('input_file')
+        input_source_files.select_related('input_file')
         for source_file in input_source_files:
             self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.input_file.id,
                                                                       trigger_id=self.trigger_id,

@@ -4,10 +4,8 @@ from __future__ import unicode_literals
 import logging
 
 from ingest.models import Ingest
-from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from job.models import JobInputFile
 from messaging.messages.message import CommandMessage
-from recipe.messages.purge_recipe import create_purge_recipe_message
 from recipe.models import RecipeInputFile
 from storage.models import ScaleFile
 
@@ -80,12 +78,14 @@ class PurgeSourceFile(CommandMessage):
 
         # Kick off spawn_delete_job_files for jobs that are not in a recipe and have given source_file as input
         for job in jobs:
+            from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
             self.new_messages.append(create_spawn_delete_files_job(job_id=job.id,
                                                                    trigger_id=self.trigger_id,
                                                                    purge=self.purge))
 
         # Kick off purge_recipe for recipes that are not superseded and have the given source_file as input
         for recipe in recipes:
+            from recipe.messages.purge_recipe import create_purge_recipe_message
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.id,
                                                                  trigger_id=self.trigger_id,
                                                                  purge=self.purge))
