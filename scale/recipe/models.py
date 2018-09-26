@@ -47,12 +47,13 @@ class RecipeManager(models.Manager):
         """Marks the recipes with the given IDs as being completed
 
         :param recipe_ids: The recipe IDs
-        :type recipe_ids: :int
+        :type recipe_ids: list
         :param when: The time that the recipes were completed
         :type when: :class:`datetime.datetime`
         """
 
-        self.filter(id__in=recipe_ids).update(is_completed=True, completed=when, last_modified=now())
+        qry = self.filter(id__in=recipe_ids, is_completed=False)
+        qry.update(is_completed=True, completed=when, last_modified=now())
 
     def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
         """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
@@ -574,7 +575,7 @@ class RecipeManager(models.Manager):
 
         recipe = Recipe.objects.select_related('recipe_type_rev').get(id=recipe_id)
         recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe_id)
-        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe_nodes)
+        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
 
     def get_recipe_instance_from_root(self, root_recipe_id):
         """Returns the non-superseded recipe instance for the given root recipe ID
@@ -589,7 +590,7 @@ class RecipeManager(models.Manager):
         qry = qry.filter(models.Q(id=root_recipe_id) | models.Q(root_superseded_recipe_id=root_recipe_id))
         recipe = qry.filter(is_superseded=False).order_by('-created').first()
         recipe_nodes = RecipeNode.objects.get_recipe_nodes(recipe.id)
-        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe_nodes)
+        return RecipeInstance(recipe.recipe_type_rev.get_definition(), recipe, recipe_nodes)
 
     def get_recipe_with_interfaces(self, recipe_id):
         """Gets the recipe model for the given ID with related recipe_type_rev and recipe__recipe_type_rev models

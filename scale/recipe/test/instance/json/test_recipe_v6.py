@@ -22,8 +22,9 @@ class TestRecipeInstanceV6(TestCase):
     def test_convert_recipe_to_v6_json_empty(self):
         """Tests calling convert_recipe_to_v6_json() with an empty recipe instance"""
 
+        recipe = recipe_test_utils.create_recipe()
         definition = RecipeDefinition(Interface())
-        recipe_instance = RecipeInstance(definition, [])
+        recipe_instance = RecipeInstance(definition, recipe, [])
         json = convert_recipe_to_v6_json(recipe_instance)
         RecipeInstanceV6(json=json.get_dict(), do_validate=True)  # Revalidate
         self.assertDictEqual(json.get_dict()['nodes'], {})
@@ -72,7 +73,7 @@ class TestRecipeInstanceV6(TestCase):
         recipe_node_e = recipe_test_utils.create_recipe_node(recipe=recipe, node_name='E', job=job_e, save=False)
         recipe_nodes = [recipe_node_a, recipe_node_b, recipe_node_c, recipe_node_d, recipe_node_e]
 
-        recipe_instance = RecipeInstance(definition, recipe_nodes)
+        recipe_instance = RecipeInstance(definition, recipe, recipe_nodes)
         json = convert_recipe_to_v6_json(recipe_instance)
         RecipeInstanceV6(json=json.get_dict(), do_validate=True)  # Revalidate
         self.assertSetEqual(set(json.get_dict()['nodes'].keys()), {'A', 'B', 'C', 'D', 'E'})

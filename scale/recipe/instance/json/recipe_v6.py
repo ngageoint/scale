@@ -178,7 +178,7 @@ def convert_recipe_to_v6_json(recipe):
     :rtype: :class:`recipe.instance.json.recipe_v6.RecipeInstanceV6`
     """
 
-    json_dict = {'nodes': {n.name: convert_node_to_v6_json(n) for n in recipe.graph.values()}}
+    json_dict = {'nodes': {n.name: convert_node_to_v6_json(n) for n in recipe.graph.values() if n.is_real_node}}
 
     return RecipeInstanceV6(json=json_dict, do_validate=False)
 
