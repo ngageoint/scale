@@ -22,7 +22,7 @@ def create_purge_source_file_message(source_file_id, trigger_id, purge):
     :type source_file_id: int
     :param trigger_id: The trigger event ID for the purge operation
     :type trigger_id: int
-    :param purge: Boolean value to determine if the files should be purged
+    :param purge: Boolean value to determine if files should be purged from workspace
     :type purge: bool
     :return: The purge source file message
     :rtype: :class:`storage.messages.purge_source_file.PurgeSourceFile`
@@ -80,15 +80,17 @@ class PurgeSourceFile(CommandMessage):
 
         # Kick off spawn_delete_job_files for jobs that are not in a recipe and have given source_file as input
         for job in jobs:
-            self.new_messages.extend(create_spawn_delete_files_job(job_id=job.id,
+            self.new_messages.append(create_spawn_delete_files_job(job_id=job.id,
                                                                    trigger_id=self.trigger_id,
                                                                    purge=self.purge))
 
         # Kick off purge_recipe for recipes that are not superseded and have the given source_file as input
         for recipe in recipes:
-            self.new_messages.extend(create_purge_recipe(recipe_id=recipe.id, trigger_id=self.trigger_id))
+            self.new_messages.append(create_purge_recipe(recipe_id=recipe.id,
+                                                         trigger_id=self.trigger_id,
+                                                         purge=self.purge))
 
-        # Delete Ingest and ScaleFile models for the given source_file
+        # Delete Ingest and ScaleFile
         if not jobs and not recipes:
             Ingest.objects.filter(source_file__id=self.source_file_id).delete()
             ScaleFile.objects.filter(id=self.source_file_id).delete()
