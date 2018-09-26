@@ -106,7 +106,14 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # Kick off a purge_recipe for recipe with node job
+        """
+        The purge_jobs message should send purge_source_file messages for all source file inputs going into non-recipe jobs.
+        """
+
+        # Kick off purge_source_file for 
+        source_files = 
+        
+        # Kick off purge_recipe for recipe with node job
         parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
         for recipe_node in parent_recipes:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe.id,
