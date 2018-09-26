@@ -122,7 +122,7 @@ class TestPurgeRecipe(TransactionTestCase):
         self.old_job_2_ids = [self.job_1_2.id, self.job_2_2.id]
 
     def test_json(self):
-        """Tests coverting a ReprocessRecipes message to and from JSON"""
+        """Tests coverting a PurgeRecipe message to and from JSON"""
 
         # Create message
         message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id, purge=False)
