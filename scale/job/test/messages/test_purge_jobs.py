@@ -24,6 +24,7 @@ class TestPurgeJobs(TransactionTestCase):
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
         message.status_change = timezone.now()
+        message.purge = False
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -45,6 +46,7 @@ class TestPurgeJobs(TransactionTestCase):
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
         message.status_change = timezone.now()
+        message.purge = False
 
         # Execute message
         result = message.execute()
