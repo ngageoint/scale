@@ -13,15 +13,13 @@ from storage.models import ScaleFile
 logger = logging.getLogger(__name__)
 
 
-def create_purge_source_file_message(source_file_id, trigger_id, purge):
+def create_purge_source_file_message(source_file_id, trigger_id):
     """Creates messages to removes a source file form Scale
 
     :param source_file_id: The source file ID
     :type source_file_id: int
     :param trigger_id: The trigger event ID for the purge operation
     :type trigger_id: int
-    :param purge: Boolean value to determine if files should be purged from workspace
-    :type purge: bool
     :return: The purge source file message
     :rtype: :class:`storage.messages.purge_source_file.PurgeSourceFile`
     """
@@ -29,7 +27,6 @@ def create_purge_source_file_message(source_file_id, trigger_id, purge):
     message = PurgeSourceFile()
     message.source_file_id = source_file_id
     message.trigger_id = trigger_id
-    message.purge = purge
 
     return message
 
@@ -46,14 +43,13 @@ class PurgeSourceFile(CommandMessage):
 
         self.source_file_id = None
         self.trigger_id = None
-        self.purge = False
 
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'source_file_id': self.source_file_id, 'trigger_id': self.trigger_id, 'purge': str(self.purge)}
+        return {'source_file_id': self.source_file_id, 'trigger_id': self.trigger_id}
 
     @staticmethod
     def from_json(json_dict):
@@ -63,7 +59,6 @@ class PurgeSourceFile(CommandMessage):
         message = PurgeSourceFile()
         message.source_file_id = json_dict['source_file_id']
         message.trigger_id = json_dict['trigger_id']
-        message.purge = bool(json_dict['purge'])
 
         return message
 
@@ -81,14 +76,13 @@ class PurgeSourceFile(CommandMessage):
             from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
             self.new_messages.append(create_spawn_delete_files_job(job_id=job_input.job.id,
                                                                    trigger_id=self.trigger_id,
-                                                                   purge=self.purge))
+                                                                   purge=True))
 
         # Kick off purge_recipe for recipes that are not superseded and have the given source_file as input
         for recipe_input in recipe_inputs:
             from recipe.messages.purge_recipe import create_purge_recipe_message
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_input.recipe.id,
-                                                                 trigger_id=self.trigger_id,
-                                                                 purge=self.purge))
+                                                                 trigger_id=self.trigger_id))
 
         # Delete Ingest and ScaleFile
         if not job_inputs and not recipe_inputs:

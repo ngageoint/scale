@@ -27,8 +27,7 @@ class TestPurgeSourceFile(TransactionTestCase):
         source_file = storage_test_utils.create_file(file_type='SOURCE')
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id,
-                                                   purge=False)
+                                                   trigger_id=self.trigger.id)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -45,8 +44,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id,
-                                                   purge=False)
+                                                   trigger_id=self.trigger.id)
         # Execute message
         result = message.execute()
         self.assertTrue(result)
@@ -67,8 +65,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id,
-                                                   purge=False)
+                                                   trigger_id=self.trigger.id)
         # Execute message
         result = message.execute()
         self.assertTrue(result)
@@ -91,8 +88,7 @@ class TestPurgeSourceFile(TransactionTestCase):
 
         # Create message
         message = create_purge_source_file_message(source_file_id=source_file.id,
-                                                   trigger_id=self.trigger.id,
-                                                   purge=False)
+                                                   trigger_id=self.trigger.id)
 
         # Execute message
         result = message.execute()
