@@ -83,7 +83,7 @@ class PurgeRecipe(CommandMessage):
                                                             Q(recipe__root_superseded_recipe__isnull=True))
         input_source_files.select_related('input_file')
         for source_file in input_source_files:
-            self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.id,
+            self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.input_file.id,
                                                                       trigger_id=self.trigger_id,
                                                                       purge=self.purge))
 
