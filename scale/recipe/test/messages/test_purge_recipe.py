@@ -125,7 +125,8 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests coverting a PurgeRecipe message to and from JSON"""
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -138,7 +139,8 @@ class TestPurgeRecipe(TransactionTestCase):
         """Tests calling PurgeRecipe.execute() successfully"""
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Execute message
         result = message.execute()
@@ -159,7 +161,8 @@ class TestPurgeRecipe(TransactionTestCase):
         recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', save=True)
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Execute message
         result = message.execute()
@@ -184,7 +187,8 @@ class TestPurgeRecipe(TransactionTestCase):
         recipe_test_utils.create_recipe_node(recipe=parent_recipe, node_name='A', sub_recipe=recipe, save=True)
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Execute message
         result = message.execute()
@@ -224,7 +228,8 @@ class TestPurgeRecipe(TransactionTestCase):
         RecipeNode.objects.bulk_create([recipe_node_a])
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Execute message
         result = message.execute()
@@ -244,7 +249,8 @@ class TestPurgeRecipe(TransactionTestCase):
         recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
         # Create message
-        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id)
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
 
         # Execute message
         result = message.execute()

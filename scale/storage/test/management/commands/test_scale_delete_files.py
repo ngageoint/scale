@@ -22,6 +22,7 @@ class TestCallScaleDeleteFiles(TestCase):
         self.trigger_1 = trigger_test_utils.create_trigger_event()
         self.job_exe_1 = job_test_utils.create_job_exe(job=self.job_1)
         self.file_1 = storage_test_utils.create_file(job_exe=self.job_exe_1)
+        self.source_file = storage_test_utils.create_file(file_type='SOURCE')
         self.workspace = storage_test_utils.create_workspace()
 
     @patch('storage.management.commands.scale_delete_files.delete_files_job')
@@ -40,6 +41,7 @@ class TestCallScaleDeleteFiles(TestCase):
         os.environ['PURGE'] = str(False)
         os.environ['JOB_ID'] = str(self.job_1.id)
         os.environ['TRIGGER_ID'] = str(self.trigger_1.id)
+        os.environ['SOURCE_FILE_ID'] = str(self.source_file.id)
 
         with self.assertRaises(SystemExit):
             django.core.management.call_command('scale_delete_files')
