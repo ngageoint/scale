@@ -16,13 +16,15 @@ from source.messages.purge_source_file import create_purge_source_file_message
 logger = logging.getLogger(__name__)
 
 
-def create_purge_recipe_message(recipe_id, trigger_id):
+def create_purge_recipe_message(recipe_id, trigger_id, source_file_id):
     """Creates messages to remove the given recipe by ID
 
     :param recipe_id: The recipe ID
     :type purge_job_ids: int
     :param trigger_id: The trigger event ID for the purge operation
     :type trigger_id: int
+    :param source_file_id: The source file id for the original file being purged
+    :type source_file_id: int
     :return: The purge recipe message
     :rtype: :class:`recipe.messages.purge_recipe.PurgeRecipe`
     """
@@ -30,6 +32,7 @@ def create_purge_recipe_message(recipe_id, trigger_id):
     message = PurgeRecipe()
     message.recipe_id = recipe_id
     message.trigger_id = trigger_id
+    message.source_file_id = source_file_id
 
     return message
 
@@ -46,12 +49,13 @@ class PurgeRecipe(CommandMessage):
 
         self.recipe_id = None
         self.trigger_id = None
+        self.source_file_id = None
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'recipe_id': self.recipe_id, 'trigger_id': self.trigger_id}
+        return {'recipe_id': self.recipe_id, 'trigger_id': self.trigger_id, 'source_file_id': self.source_file_id}
 
     @staticmethod
     def from_json(json_dict):
@@ -61,6 +65,7 @@ class PurgeRecipe(CommandMessage):
         message = PurgeRecipe()
         message.recipe_id = json_dict['recipe_id']
         message.trigger_id = json_dict['trigger_id']
+        message.source_file_id = json_dict['source_file_id']
 
         return message
 
@@ -70,13 +75,9 @@ class PurgeRecipe(CommandMessage):
 
         recipe = Recipe.objects.select_related('superseded_recipe').get(id=self.recipe_id)
 
-        # Kick off purge_source_file for source file inputs of the given recipe
-        input_source_files = RecipeInputFile.objects.filter(Q(recipe__root_superseded_recipe=recipe) |
-                                                            Q(recipe__root_superseded_recipe__isnull=True))
-        input_source_files.select_related('input_file')
-        for source_file in input_source_files:
-            self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.input_file.id,
-                                                                      trigger_id=self.trigger_id))
+        # Kick off purge_source_file for the source file
+        self.new_messages.append(create_purge_source_file_message(source_file_id=self.source_file_id,
+                                                                  trigger_id=self.trigger_id))
 
         recipe_inst = Recipe.objects.get_recipe_instance(self.recipe_id)
         recipe_nodes = recipe_inst.get_original_leaf_nodes()  # {Node_Name: Node}
@@ -88,25 +89,29 @@ class PurgeRecipe(CommandMessage):
             for node in leaf_jobs:
                 self.new_messages.append(create_spawn_delete_files_job(job_id=node.job.id,
                                                                        trigger_id=self.trigger_id,
+                                                                       source_file_id=self.source_file_id,
                                                                        purge=True))
 
             # Kick off a purge_recipe for leaf node recipes
             leaf_recipes = [node for node in recipe_nodes.values() if node.node_type == RecipeNodeDefinition.NODE_TYPE]
             for node in leaf_recipes:
                 self.new_messages.append(create_purge_recipe_message(recipe_id=node.recipe.id,
-                                                                     trigger_id=self.trigger_id))
+                                                                     trigger_id=self.trigger_id,
+                                                                     source_file_id=self.source_file_id))
         else:
             # Kick off a purge_recipe for a parent recipe
             if parent_recipes:
                 for parent_recipe in parent_recipes:
                     self.new_messages.append(create_purge_recipe_message(recipe_id=parent_recipe.recipe.id,
-                                                                         trigger_id=self.trigger_id))
+                                                                         trigger_id=self.trigger_id,
+                                                                         source_file_id=self.source_file_id))
                     RecipeNode.objects.filter(sub_recipe=recipe).delete()
 
             # Kick off purge_recipe for a superseded recipe
             elif recipe.superseded_recipe:
                 self.new_messages.append(create_purge_recipe_message(recipe_id=recipe.superseded_recipe.id,
-                                                                     trigger_id=self.trigger_id))
+                                                                     trigger_id=self.trigger_id,
+                                                                     source_file_id=self.source_file_id))
 
             # Delete BatchRecipe, RecipeNode, RecipeInputFile, and Recipe
             BatchRecipe.objects.filter(recipe=recipe).delete()
