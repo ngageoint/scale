@@ -7,8 +7,8 @@ import logging
 from data.data.data import Data
 from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import JsonValue
-from job.data.job_data import JobData
 
+from job.messages.create_jobs import create_jobs_message
 from messaging.messages.message import CommandMessage
 from storage.models import ScaleFile
 
@@ -21,10 +21,10 @@ def create_spawn_delete_files_job(job_id, trigger_id, purge):
 
     :param job_id: The job ID whose files will be deleted
     :type job_id: int
-    :param purge: Boolean value to determine if the files should be purged
-    :type purge: bool
     :param trigger_id: The trigger event id for the purge operation
     :type trigger_id: int
+    :param purge: Boolean value to determine if files should be purged from workspace
+    :type purge: bool
     :return: The spawn delete files job message
     :rtype: :class:`job.messages.spawn_delete_files_job.SpawnDeleteFilesJob`
     """
@@ -33,6 +33,7 @@ def create_spawn_delete_files_job(job_id, trigger_id, purge):
     message.job_id = job_id
     message.trigger_id = trigger_id
     message.purge = purge
+
     return message
 
 
@@ -74,7 +75,7 @@ class SpawnDeleteFilesJob(CommandMessage):
         files_to_delete = ScaleFile.objects.filter_files(job_ids=[self.job_id])
 
         if files_to_delete:
-            # Construct input data list
+            # Construct input data
             files = []
             workspaces = []
 
@@ -93,8 +94,7 @@ class SpawnDeleteFilesJob(CommandMessage):
             inputs.add_value(JsonValue('workspaces', json.dumps(workspaces)))
             inputs_json = convert_data_to_v6_json(inputs)
 
-            # Send message to create system job
-            from job.messages.create_jobs import create_jobs_message
+            # Send message to create system job to delete files
             msg = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0",
                                       event_id=self.trigger_id, job_type_rev_num=1,
                                       input_data_dict=inputs_json.get_dict())

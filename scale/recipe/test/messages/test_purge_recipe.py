@@ -122,7 +122,7 @@ class TestPurgeRecipe(TransactionTestCase):
         self.old_job_2_ids = [self.job_1_2.id, self.job_2_2.id]
 
     def test_json(self):
-        """Tests coverting a ReprocessRecipes message to and from JSON"""
+        """Tests coverting a PurgeRecipe message to and from JSON"""
 
         # Create message
         message = create_purge_recipe_message(recipe_id=self.recipe_1.id, trigger_id=self.trigger.id)
@@ -145,10 +145,10 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertTrue(result)
 
         # Test to see that the two jobs in this recipe were called to be purged
-        self.assertEqual(len(message.new_messages), 2)
-        for msg in message.new_messages:
+        msgs = [msg for msg in message.new_messages if msg.type == 'spawn_delete_files_job']
+        self.assertEqual(len(msgs), 2)
+        for msg in msgs:
             self.assertIn(msg.job_id, [self.job_1_1.id, self.job_1_2.id])
-            self.assertEqual(msg.type, 'spawn_delete_files_job')
 
     def test_execute_with_superseded_recipe(self):
         """Tests calling PurgeRecipe.execute() successfully"""
@@ -166,10 +166,10 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertTrue(result)
 
         # Test to see that a message to purge the superseded recipe was sent
-        self.assertEqual(len(message.new_messages), 1)
-        for msg in message.new_messages:
+        msgs = [msg for msg in message.new_messages if msg.type == 'purge_recipe']
+        self.assertEqual(len(msgs), 1)
+        for msg in msgs:
             self.assertEqual(msg.recipe_id, superseded_recipe.id)
-            self.assertEqual(msg.type, 'purge_recipe')
 
         # Assert models were deleted
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
@@ -191,10 +191,10 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertTrue(result)
 
         # Test to see that a message to purge the parent recipe was sent
-        self.assertEqual(len(message.new_messages), 1)
-        for msg in message.new_messages:
+        msgs = [msg for msg in message.new_messages if msg.type == 'purge_recipe']
+        self.assertEqual(len(msgs), 1)
+        for msg in msgs:
             self.assertEqual(msg.recipe_id, parent_recipe.id)
-            self.assertEqual(msg.type, 'purge_recipe')
 
         # Assert models were deleted
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
@@ -231,11 +231,11 @@ class TestPurgeRecipe(TransactionTestCase):
         self.assertTrue(result)
 
         # Test to see that a message to purge the parent recipe was sent
-        self.assertEqual(len(message.new_messages), 1)
-        for msg in message.new_messages:
+        msgs = [msg for msg in message.new_messages if msg.type == 'purge_recipe']
+        self.assertEqual(len(msgs), 1)
+        for msg in msgs:
             self.assertEqual(msg.recipe_id, recipe_node_a.sub_recipe.id)
-            self.assertEqual(msg.type, 'purge_recipe')
-            
+
     def test_execute_no_leaf_nodes(self):
         """Tests calling PurgeRecipe.execute() successfully"""
 

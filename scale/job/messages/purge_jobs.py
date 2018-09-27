@@ -8,11 +8,12 @@ from django.utils.timezone import now
 
 from batch.models import BatchJob
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
+from messaging.messages.message import CommandMessage
 from product.models import FileAncestryLink
 from queue.models import Queue
 from recipe.models import RecipeNode
 from recipe.messages.purge_recipe import create_purge_recipe_message
-from messaging.messages.message import CommandMessage
+from source.messages.purge_source_file import create_purge_source_file_message
 from util.parse import datetime_to_string, parse_datetime
 
 # This is the maximum number of job models that can fit in one message. This maximum ensures that every message of this
@@ -43,8 +44,8 @@ def create_purge_jobs_messages(purge_job_ids, trigger_id):
         elif not message.can_fit_more():
             messages.append(message)
             message = PurgeJobs()
-        message.trigger_id = trigger_id
         message.add_job(job_id)
+        message.trigger_id = trigger_id
     if message:
         messages.append(message)
 
@@ -106,7 +107,16 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # Kick off a purge_recipe for recipe with node job
+        # Kick off purge_source_file for all source file inputs
+        input_source_files = JobInputFile.objects.filter(job__in=self._purge_job_ids,
+                                                         job__recipe__isnull=True,
+                                                         input_file__file_type='SOURCE')
+        input_source_files.select_related('input_file')
+        for source_file in input_source_files:
+            self.new_messages.append(create_purge_source_file_message(source_file_id=source_file.input_file.id,
+                                                                      trigger_id=self.trigger_id))
+    
+        # Kick off purge_recipe for recipe with node job
         parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
         for recipe_node in parent_recipes:
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe.id,
