@@ -288,17 +288,6 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         last_status_change = timezone.now()
     if num_exes == 0:
         input_file_size = None
-    if not input:
-        if num_exes == 0:
-            input = {}
-        else:
-            input = {
-                'version': '1.0',
-                'input_data': [],
-                'output_data': [],
-            }
-    if not output:
-        output = dict()
 
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs_old([superseded_job], timezone.now())

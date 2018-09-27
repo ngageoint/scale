@@ -73,7 +73,7 @@ class QueuedExecutionConfigurator(object):
             task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
         else:
             # Set any output workspaces needed
-            if 'version' in job.input and job.input['version'] == '1.0':
+            if job.input and 'version' in job.input and job.input['version'] == '1.0':
                 # Set output workspaces using legacy job data
                 self._cache_workspace_names(data.get_output_workspace_ids())
                 output_workspaces = {}

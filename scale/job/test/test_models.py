@@ -14,6 +14,8 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
@@ -331,7 +333,9 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input={}, started=timezone.now(),
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input=data_dict, started=timezone.now(),
                                         ended=timezone.now())
 
         Job.objects.update_jobs_to_queued([job], timezone.now(), requeue=True)
