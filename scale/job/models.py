@@ -1298,9 +1298,14 @@ class Job(models.Model):
     input_file_size = models.FloatField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(blank=True, null=True)
 
-    # Optional geospatial fields
-    source_started = models.DateTimeField(blank=True, null=True)
-    source_ended = models.DateTimeField(blank=True, null=True)
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
+
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField(blank=True, null=True)
@@ -3478,14 +3483,6 @@ class JobType(models.Model):
     deprecated = models.DateTimeField(blank=True, null=True)
     paused = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
-
-    # Supplemental sensor metadata fields
-    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
-    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
-    source_sensor = models.TextField(blank=True, null=True, db_index=True)
-    source_collection = models.TextField(blank=True, null=True, db_index=True)
-    source_task = models.TextField(blank=True, null=True, db_index=True)
 
     # TODO: remove with v5 API and/or legacy job types
     category = models.CharField(db_index=True, blank=True, max_length=50, null=True)
