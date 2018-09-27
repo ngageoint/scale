@@ -430,7 +430,7 @@
 
 <dl class="function">
 <dt id="recipe.messages.purge_recipe.create_purge_recipe_message">
-<code class="descclassname">recipe.messages.purge_recipe.</code><code class="descname">create_purge_recipe_message</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.create_purge_recipe_message" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.messages.purge_recipe.</code><code class="descname">create_purge_recipe_message</code><span class="sig-paren">(</span><em>recipe_id</em>, <em>trigger_id</em>, <em>source_file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.purge_recipe.create_purge_recipe_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to remove the given recipe by ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -439,6 +439,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>recipe_id</strong> &#8211; The recipe ID</li>
 <li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event ID for the purge operation</li>
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file id for the original file being purged</li>
 </ul>
 </td>
 </tr>

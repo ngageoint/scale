@@ -1086,7 +1086,7 @@ model locks on the given jobs.</p>
 
 <dl class="function">
 <dt id="job.messages.purge_jobs.create_purge_jobs_messages">
-<code class="descclassname">job.messages.purge_jobs.</code><code class="descname">create_purge_jobs_messages</code><span class="sig-paren">(</span><em>purge_job_ids</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.create_purge_jobs_messages" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.messages.purge_jobs.</code><code class="descname">create_purge_jobs_messages</code><span class="sig-paren">(</span><em>purge_job_ids</em>, <em>trigger_id</em>, <em>source_file_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.purge_jobs.create_purge_jobs_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to remove the given job IDs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1095,6 +1095,7 @@ model locks on the given jobs.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>purge_job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</li>
 <li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event id for the purge operation</li>
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file id for the original file being purged</li>
 </ul>
 </td>
 </tr>
@@ -1222,7 +1223,7 @@ time)</p>
 
 <dl class="function">
 <dt id="job.messages.spawn_delete_files_job.create_spawn_delete_files_job">
-<code class="descclassname">job.messages.spawn_delete_files_job.</code><code class="descname">create_spawn_delete_files_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>trigger_id</em>, <em>purge</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.create_spawn_delete_files_job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.messages.spawn_delete_files_job.</code><code class="descname">create_spawn_delete_files_job</code><span class="sig-paren">(</span><em>job_id</em>, <em>trigger_id</em>, <em>source_file_id</em>, <em>purge</em><span class="sig-paren">)</span><a class="headerlink" href="#job.messages.spawn_delete_files_job.create_spawn_delete_files_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a spawn delete files job message</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1232,6 +1233,7 @@ time)</p>
 <li><strong>job_id</strong> (<em>int</em>) &#8211; The job ID whose files will be deleted</li>
 <li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event id for the purge operation</li>
 <li><strong>purge</strong> (<em>bool</em>) &#8211; Boolean value to determine if files should be purged from workspace</li>
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file id for the original file being purged</li>
 </ul>
 </td>
 </tr>
