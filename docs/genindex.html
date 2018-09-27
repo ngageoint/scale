@@ -1719,6 +1719,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.create_purge_recipe_message">create_purge_recipe_message() (in module recipe.messages.purge_recipe)</a>
 </li>
+      <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.create_purge_source_file_message">create_purge_source_file_message() (in module source.messages.purge_source_file)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.utils.create_queue">create_queue() (in module queue.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.messages.html#queue.messages.queued_jobs.create_queued_jobs_messages">create_queued_jobs_messages() (in module queue.messages.queued_jobs)</a>
@@ -2908,6 +2910,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.messages.html#scheduler.messages.restart_scheduler.RestartScheduler.execute">(scheduler.messages.restart_scheduler.RestartScheduler method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile.execute">(source.messages.purge_source_file.PurgeSourceFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.execute">(storage.messages.delete_files.DeleteFiles method)</a>
 </li>
       </ul></li>
@@ -3279,6 +3283,8 @@
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.UpdateRecipes.from_json">(recipe.messages.update_recipes.UpdateRecipes static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.messages.html#scheduler.messages.restart_scheduler.RestartScheduler.from_json">(scheduler.messages.restart_scheduler.RestartScheduler static method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile.from_json">(source.messages.purge_source_file.PurgeSourceFile static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.from_json">(storage.messages.delete_files.DeleteFiles static method)</a>
 </li>
@@ -9447,6 +9453,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe">PurgeRecipe (class in recipe.messages.purge_recipe)</a>
 </li>
+      <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile">PurgeSourceFile (class in source.messages.purge_source_file)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.push_to_database">push_to_database() (scheduler.task.manager.TaskUpdateManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.seed.html#job.seed.types.SeedJson.python_type">python_type (job.seed.types.SeedJson attribute)</a>
@@ -11858,6 +11866,8 @@
 </li>
         <li><a href="architecture/django/code_docs/source.test.configuration.html#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp">(source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.setUp">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.setUp">(source.test.test_models.TestSourceFileManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.setUp">(source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
@@ -12065,6 +12075,10 @@
 </li>
       <li><a href="architecture/django/code_docs/source.configuration.html#module-source.configuration.source_data_file">source.configuration.source_data_file (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/source.messages.html#module-source.messages">source.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/source.messages.html#module-source.messages.purge_source_file">source.messages.purge_source_file (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/source.migrations.html#module-source.migrations">source.migrations (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.migrations.html#module-source.migrations.0001_initial">source.migrations.0001_initial (module)</a>
@@ -12084,6 +12098,10 @@
       <li><a href="architecture/django/code_docs/source.test.configuration.html#module-source.test.configuration">source.test.configuration (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.configuration.html#module-source.test.configuration.test_source_data_file">source.test.configuration.test_source_data_file (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/source.test.messages.html#module-source.test.messages">source.test.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/source.test.messages.html#module-source.test.messages.test_purge_source_file">source.test.messages.test_purge_source_file (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#module-source.test.test_models">source.test.test_models (module)</a>
 </li>
@@ -13840,6 +13858,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.messages.html#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_execute">(scheduler.test.messages.test_restart_scheduler.TestRestartScheduler method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
 </li>
       </ul></li>
@@ -13865,16 +13885,26 @@
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute_with_data">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_with_input_file">test_execute_with_input_file() (job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_job">test_execute_with_job() (source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_jobs">test_execute_with_jobs() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_with_parent_recipe">test_execute_with_parent_recipe() (recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_with_product_input_file">test_execute_with_product_input_file() (job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe">test_execute_with_recipe() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_process_job_input.TestProcessJobInput.test_execute_with_recipe">(job.test.messages.test_process_job_input.TestProcessJobInput method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_with_recipe">(job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
+</li>
         <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput.test_execute_with_recipe">(recipe.test.messages.test_process_recipe_input.TestProcessRecipeInput method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_recipe">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_process_job_input.TestProcessJobInput.test_execute_with_recipe_legacy">test_execute_with_recipe_legacy() (job.test.messages.test_process_job_input.TestProcessJobInput method)</a>
@@ -14906,6 +14936,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.messages.html#scheduler.test.messages.test_restart_scheduler.TestRestartScheduler.test_json">(scheduler.test.messages.test_restart_scheduler.TestRestartScheduler method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_json">(source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_json">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
 </li>
       </ul></li>
@@ -15487,6 +15519,8 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_default">test_parse_duration_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration_invalid">test_parse_duration_invalid() (util.test.test_parse.TestParse method)</a>
@@ -15495,8 +15529,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_missing">test_parse_duration_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_duration_optional">test_parse_duration_optional() (util.test.test_rest.TestRest method)</a>
@@ -17559,6 +17591,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe">TestPurgeRecipe (class in recipe.test.messages.test_purge_recipe)</a>
 </li>
+      <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile">TestPurgeSourceFile (class in source.test.messages.test_purge_source_file)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator">TestQueuedExecutionConfigurator (class in job.test.execution.configuration.test_configurators)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.messages.html#queue.test.messages.test_queued_jobs.TestQueuedJobs">TestQueuedJobs (class in queue.test.messages.test_queued_jobs)</a>
@@ -18007,6 +18041,8 @@
         <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.update_recipes.UpdateRecipes.to_json">(recipe.messages.update_recipes.UpdateRecipes method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.messages.html#scheduler.messages.restart_scheduler.RestartScheduler.to_json">(scheduler.messages.restart_scheduler.RestartScheduler method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile.to_json">(source.messages.purge_source_file.PurgeSourceFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.messages.html#storage.messages.delete_files.DeleteFiles.to_json">(storage.messages.delete_files.DeleteFiles method)</a>
 </li>

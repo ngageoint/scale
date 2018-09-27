@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>source.test.configuration package &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>source.test.messages package &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="source.test.messages package" href="source.test.messages.html" />
-    <link rel="prev" title="source.test package" href="source.test.html" />
+    <link rel="next" title="source.test.triggers package" href="source.test.triggers.html" />
+    <link rel="prev" title="source.test.configuration package" href="source.test.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -198,13 +198,13 @@
         
           <li><a href="source.test.html">source.test package</a> &raquo;</li>
         
-      <li>source.test.configuration package</li>
+      <li>source.test.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/source.test.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/source.test.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -217,33 +217,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="source-test-configuration-package">
-<h1>source.test.configuration package<a class="headerlink" href="#source-test-configuration-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="source-test-messages-package">
+<h1>source.test.messages package<a class="headerlink" href="#source-test-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-source.test.configuration.test_source_data_file">
-<span id="source-test-configuration-test-source-data-file-module"></span><h2>source.test.configuration.test_source_data_file module<a class="headerlink" href="#module-source.test.configuration.test_source_data_file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-source.test.messages.test_purge_source_file">
+<span id="source-test-messages-test-purge-source-file-module"></span><h2>source.test.messages.test_purge_source_file module<a class="headerlink" href="#module-source.test.messages.test_purge_source_file" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults">
-<em class="property">class </em><code class="descclassname">source.test.configuration.test_source_data_file.</code><code class="descname">TestSourceDataFileParseSaverSaveParseResults</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile">
+<em class="property">class </em><code class="descclassname">source.test.messages.test_purge_source_file.</code><code class="descname">TestPurgeSourceFile</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling SourceDataFileParseSaver.save_parse_results() successfully</p>
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute">
+<code class="descname">test_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PurgeSourceFile.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_job">
+<code class="descname">test_execute_with_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PurgeSourceFile.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_recipe">
+<code class="descname">test_execute_with_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_with_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling PurgeSourceFile.execute() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_json">
+<code class="descname">test_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests coverting a PurgeSourceFile message to and from JSON</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-source.test.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-source.test.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-source.test.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-source.test.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -255,10 +273,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="source.test.messages.html" class="btn btn-neutral float-right" title="source.test.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="source.test.triggers.html" class="btn btn-neutral float-right" title="source.test.triggers package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="source.test.html" class="btn btn-neutral" title="source.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="source.test.configuration.html" class="btn btn-neutral" title="source.test.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

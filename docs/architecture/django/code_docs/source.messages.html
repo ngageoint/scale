@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>source.test.configuration package &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>source.messages package &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="source.test.messages package" href="source.test.messages.html" />
-    <link rel="prev" title="source.test package" href="source.test.html" />
+    <link rel="next" title="source.migrations package" href="source.migrations.html" />
+    <link rel="prev" title="source.configuration package" href="source.configuration.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -196,15 +196,13 @@
         
           <li><a href="source.html">source package</a> &raquo;</li>
         
-          <li><a href="source.test.html">source.test package</a> &raquo;</li>
-        
-      <li>source.test.configuration package</li>
+      <li>source.messages package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/source.test.configuration.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/source.messages.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -217,33 +215,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="source-test-configuration-package">
-<h1>source.test.configuration package<a class="headerlink" href="#source-test-configuration-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="source-messages-package">
+<h1>source.messages package<a class="headerlink" href="#source-messages-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-source.test.configuration.test_source_data_file">
-<span id="source-test-configuration-test-source-data-file-module"></span><h2>source.test.configuration.test_source_data_file module<a class="headerlink" href="#module-source.test.configuration.test_source_data_file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-source.messages.purge_source_file">
+<span id="source-messages-purge-source-file-module"></span><h2>source.messages.purge_source_file module<a class="headerlink" href="#module-source.messages.purge_source_file" title="Permalink to this headline">¶</a></h2>
+<p>Defines a command message that purges a source file</p>
 <dl class="class">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults">
-<em class="property">class </em><code class="descclassname">source.test.configuration.test_source_data_file.</code><code class="descname">TestSourceDataFileParseSaverSaveParseResults</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dt id="source.messages.purge_source_file.PurgeSourceFile">
+<em class="property">class </em><code class="descclassname">source.messages.purge_source_file.</code><code class="descname">PurgeSourceFile</code><a class="headerlink" href="#source.messages.purge_source_file.PurgeSourceFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<p>Command message that removes source file models</p>
 <dl class="method">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling SourceDataFileParseSaver.save_parse_results() successfully</p>
+<dt id="source.messages.purge_source_file.PurgeSourceFile.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.messages.purge_source_file.PurgeSourceFile.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="source.messages.purge_source_file.PurgeSourceFile.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#source.messages.purge_source_file.PurgeSourceFile.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.messages.purge_source_file.PurgeSourceFile.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.messages.purge_source_file.PurgeSourceFile.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="source.messages.purge_source_file.create_purge_source_file_message">
+<code class="descclassname">source.messages.purge_source_file.</code><code class="descname">create_purge_source_file_message</code><span class="sig-paren">(</span><em>source_file_id</em>, <em>trigger_id</em><span class="sig-paren">)</span><a class="headerlink" href="#source.messages.purge_source_file.create_purge_source_file_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to removes a source file form Scale</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID</li>
+<li><strong>trigger_id</strong> (<em>int</em>) &#8211; The trigger event ID for the purge operation</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The purge source file message</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">storage.messages.purge_source_file.PurgeSourceFile</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
-<div class="section" id="module-source.test.configuration">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-source.test.configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-source.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-source.messages" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -255,10 +286,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="source.test.messages.html" class="btn btn-neutral float-right" title="source.test.messages package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="source.migrations.html" class="btn btn-neutral float-right" title="source.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="source.test.html" class="btn btn-neutral" title="source.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="source.configuration.html" class="btn btn-neutral" title="source.configuration package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

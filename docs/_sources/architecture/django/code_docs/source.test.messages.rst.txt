@@ -1,0 +1,22 @@
+source\.test\.messages package
+==============================
+
+Submodules
+----------
+
+source\.test\.messages\.test\_purge\_source\_file module
+--------------------------------------------------------
+
+.. automodule:: source.test.messages.test_purge_source_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source.test.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

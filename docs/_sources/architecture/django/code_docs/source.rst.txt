@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     source.configuration
+    source.messages
     source.migrations
     source.test
     source.triggers
