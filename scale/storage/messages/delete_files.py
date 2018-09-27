@@ -18,7 +18,7 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_delete_files_messages(files, job_id, trigger_id, purge):
+def create_delete_files_messages(files, job_id, trigger_id, source_file_id, purge):
     """Creates messages to delete the given files
 
     :param files: The list of file IDs to delete
@@ -27,6 +27,8 @@ def create_delete_files_messages(files, job_id, trigger_id, purge):
     :type job_id: int
     :param trigger_id: The trigger event id for the purge operation
     :type trigger_id: int
+    :param source_file_id: The source file id for the original file being purged
+    :type source_file_id: int
     :param purge: Boolean value to determine if files should be purged from workspace
     :type purge: bool
     :return: The list of messages
@@ -45,6 +47,7 @@ def create_delete_files_messages(files, job_id, trigger_id, purge):
         message.add_file(scale_file.id)
         message.job_id = job_id
         message.trigger_id = trigger_id
+        message.source_file_id = source_file_id
         message.purge = purge
     if message:
         messages.append(message)
@@ -64,6 +67,7 @@ class DeleteFiles(CommandMessage):
         self._file_ids = []
         self.job_id = None
         self.trigger_id = None
+        self.source_file_id = None
         self.purge = False
 
     def add_file(self, file_id):
@@ -92,6 +96,7 @@ class DeleteFiles(CommandMessage):
             'file_ids': self._file_ids,
             'job_id': self.job_id,
             'trigger_id': self.trigger_id,
+            'source_file_id': self.source_file_id,
             'purge': str(self.purge)
         }
 
@@ -103,6 +108,7 @@ class DeleteFiles(CommandMessage):
         message = DeleteFiles()
         message.job_id = json_dict['job_id']
         message.trigger_id = json_dict['trigger_id']
+        message.source_file_id = json_dict['source_file_id']
         message.purge = bool(json_dict['purge'])
         for file_id in json_dict['file_ids']:
             message.add_file(file_id)
@@ -120,7 +126,8 @@ class DeleteFiles(CommandMessage):
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],
-                                                                trigger_id=self.trigger_id))
+                                                                trigger_id=self.trigger_id,
+                                                                source_file_id=self.source_file_id))
         else:
             files_to_delete.update(is_deleted=True, deleted=when, is_published=False, unpublished=when)
 

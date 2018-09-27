@@ -17,6 +17,8 @@ class TestDeleteFiles(TestCase):
     def setUp(self):
         django.setup()
 
+        self.source_file = storage_test_utils.create_file(file_type='SOURCE')
+
     def test_json(self):
         """Tests coverting a DeleteFiles message to and from JSON"""
 
@@ -33,6 +35,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = True
         message.job_id = job.id
+        message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_1.id)
         if message.can_fit_more():
@@ -56,7 +59,7 @@ class TestDeleteFiles(TestCase):
 
         job = job_test_utils.create_job()
         job_exe = job_test_utils.create_job_exe(job=job)
-        
+
         file_path_1 = os.path.join('my_dir', 'my_file.txt')
         file_path_2 = os.path.join('my_dir', 'my_file1.json')
         file_path_3 = os.path.join('my_dir', 'my_file2.json')
@@ -99,6 +102,7 @@ class TestDeleteFiles(TestCase):
         message = DeleteFiles()
         message.purge = True
         message.job_id = job.id
+        message.source_file_id = self.source_file.id
         if message.can_fit_more():
             message.add_file(file_5.id)
         if message.can_fit_more():
@@ -133,6 +137,7 @@ class TestDeleteFiles(TestCase):
         file_path_3 = os.path.join('my_dir', 'my_file2.json')
         file_path_4 = os.path.join('my_dir', 'my_file3.json')
 
+
         file_1 = storage_test_utils.create_file(file_path=file_path_1, job_exe=job_exe)
         file_2 = storage_test_utils.create_file(file_path=file_path_2, job_exe=job_exe)
         file_3 = storage_test_utils.create_file(file_path=file_path_3, job_exe=job_exe)
@@ -141,4 +146,5 @@ class TestDeleteFiles(TestCase):
         files = [file_1, file_2, file_3, file_4]
 
         # No exception is success
-        create_delete_files_messages(files=files, job_id=job.id, trigger_id=trigger.id, purge=True)
+        create_delete_files_messages(files=files, job_id=job.id, trigger_id=trigger.id,
+                                     source_file_id=self.source_file.id, purge=True)

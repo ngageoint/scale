@@ -67,6 +67,7 @@ class TestPurgeJobs(TransactionTestCase):
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.source_file_id = input_file.id
         message.status_change = timezone.now()
 
         # Execute message
@@ -79,27 +80,6 @@ class TestPurgeJobs(TransactionTestCase):
         for msg in msgs:
             self.assertEqual(msg.source_file_id, input_file.id)
 
-    def test_execute_with_product_input_file(self):
-        """Tests calling PurgeJobs.execute() successfully"""
-
-        input_file = storage_test_utils.create_file(file_type='PRODUCT')
-        job_exe = job_test_utils.create_job_exe(status='COMPLETED')
-        job = job_exe.job
-        job_test_utils.create_input_file(job=job, input_file=input_file)
-
-        # Add job to message
-        message = PurgeJobs()
-        message._purge_job_ids = [job.id]
-        message.status_change = timezone.now()
-
-        # Execute message
-        result = message.execute()
-        self.assertTrue(result)
-
-        # Check that a new message to purge source file was created
-        msgs = [msg for msg in message.new_messages if msg.type == 'purge_source_file']
-        self.assertEqual(len(msgs), 0)
-
     def test_execute_with_recipe(self):
         """Tests calling PurgeJobs.execute() successfully"""
 
@@ -107,10 +87,12 @@ class TestPurgeJobs(TransactionTestCase):
         job_exe = job_test_utils.create_job_exe(status='COMPLETED')
         job = job_exe.job
         recipe_test_utils.create_recipe_node(recipe=recipe, node_name='A', job=job, save=True)
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
 
         # Add job to message
         message = PurgeJobs()
         message._purge_job_ids = [job.id]
+        message.source_file_id = input_file.id
         message.status_change = timezone.now()
 
         # Execute message

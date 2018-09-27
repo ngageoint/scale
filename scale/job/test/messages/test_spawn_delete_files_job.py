@@ -27,12 +27,14 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         self.prod2 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp1, job_exe=self.job_exe)
         self.prod3 = storage_test_utils.create_file(file_type='PRODUCT', workspace=self.wp2, job_exe=self.job_exe)
         self.event = trigger_test_utils.create_trigger_event()
+        self.file_1 = storage_test_utils.create_file(file_type='SOURCE')
 
     def test_json(self):
         """Tests coverting a SpawnDeleteFilesJob message to and from JSON"""
 
         # Make the message
-        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()
@@ -53,7 +55,8 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
 
         # Make the message
-        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=self.job.pk, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Capture message that creates job
         result = message.execute()
@@ -71,7 +74,8 @@ class TestSpawnDeleteFilesJob(TransactionTestCase):
         job_type_id = JobType.objects.values_list('id', flat=True).get(name='scale-delete-files')
         job_id = 1234574223462
         # Make the message
-        message = create_spawn_delete_files_job(job_id=job_id, trigger_id=self.event.id, purge=True)
+        message = create_spawn_delete_files_job(job_id=job_id, trigger_id=self.event.id,
+                                                source_file_id=self.file_1.id, purge=True)
 
         # Capture message that creates job
         result = message.execute()
