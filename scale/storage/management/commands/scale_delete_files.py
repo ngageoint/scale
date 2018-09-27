@@ -40,6 +40,7 @@ class Command(BaseCommand):
         workspaces_list = json.loads(os.environ.get('WORKSPACES'))
         job_id = int(os.environ.get('JOB_ID'))
         trigger_id = int(os.environ.get('TRIGGER_ID'))
+        source_file_id = int(os.environ.get('SOURCE_FILE_ID'))
         purge = os.environ.get('PURGE', 'true').lower() in ('yes', 'true', 't', '1')
 
         workspaces = self._configure_workspaces(workspaces_list)
@@ -52,7 +53,8 @@ class Command(BaseCommand):
             delete_files_job.delete_files(files=[f for f in files if f.workspace == wrkspc_name],
                                           broker=wrkspc['broker'], volume_path=wrkspc['volume_path'])
 
-        messages = create_delete_files_messages(files=files, purge=purge, job_id=job_id, trigger_id=trigger_id)
+        messages = create_delete_files_messages(files=files, job_id=job_id, trigger_id=trigger_id,
+                                                source_file_id=source_file_id, purge=purge)
         CommandMessageManager().send_messages(messages)
 
         logger.info('Command completed: scale_delete_files')

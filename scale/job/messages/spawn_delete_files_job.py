@@ -16,7 +16,7 @@ from storage.models import ScaleFile
 logger = logging.getLogger(__name__)
 
 
-def create_spawn_delete_files_job(job_id, trigger_id, purge):
+def create_spawn_delete_files_job(job_id, trigger_id, source_file_id, purge):
     """Creates a spawn delete files job message
 
     :param job_id: The job ID whose files will be deleted
@@ -25,6 +25,8 @@ def create_spawn_delete_files_job(job_id, trigger_id, purge):
     :type trigger_id: int
     :param purge: Boolean value to determine if files should be purged from workspace
     :type purge: bool
+    :param source_file_id: The source file id for the original file being purged
+    :type source_file_id: int
     :return: The spawn delete files job message
     :rtype: :class:`job.messages.spawn_delete_files_job.SpawnDeleteFilesJob`
     """
@@ -32,6 +34,7 @@ def create_spawn_delete_files_job(job_id, trigger_id, purge):
     message = SpawnDeleteFilesJob()
     message.job_id = job_id
     message.trigger_id = trigger_id
+    message.source_file_id = source_file_id
     message.purge = purge
 
     return message
@@ -49,13 +52,18 @@ class SpawnDeleteFilesJob(CommandMessage):
 
         self.job_id = None
         self.trigger_id = None
+        self.source_file_id = None
         self.purge = False
 
     def to_json(self):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'job_id': self.job_id, 'trigger_id': self.trigger_id, 'purge': str(self.purge)}
+        return {'job_id': self.job_id,
+                'trigger_id': self.trigger_id,
+                'source_file_id': self.source_file_id,
+                'purge': str(self.purge)
+               }
 
     @staticmethod
     def from_json(json_dict):
@@ -65,6 +73,7 @@ class SpawnDeleteFilesJob(CommandMessage):
         message = SpawnDeleteFilesJob()
         message.job_id = json_dict['job_id']
         message.trigger_id = json_dict['trigger_id']
+        message.source_file_id = json_dict['source_file_id']
         message.purge = bool(json_dict['purge'])
         return message
 
@@ -89,6 +98,7 @@ class SpawnDeleteFilesJob(CommandMessage):
             inputs = Data()
             inputs.add_value(JsonValue('job_id', str(self.job_id)))
             inputs.add_value(JsonValue('trigger_id', str(self.trigger_id)))
+            inputs.add_value(JsonValue('source_file_id', str(self.source_file_id)))
             inputs.add_value(JsonValue('purge', str(self.purge)))
             inputs.add_value(JsonValue('files', json.dumps(files)))
             inputs.add_value(JsonValue('workspaces', json.dumps(workspaces)))

@@ -76,13 +76,15 @@ class PurgeSourceFile(CommandMessage):
             from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
             self.new_messages.append(create_spawn_delete_files_job(job_id=job_input.job.id,
                                                                    trigger_id=self.trigger_id,
+                                                                   source_file_id=self.source_file_id,
                                                                    purge=True))
 
         # Kick off purge_recipe for recipes that are not superseded and have the given source_file as input
         for recipe_input in recipe_inputs:
             from recipe.messages.purge_recipe import create_purge_recipe_message
             self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_input.recipe.id,
-                                                                 trigger_id=self.trigger_id))
+                                                                 trigger_id=self.trigger_id,
+                                                                 source_file_id=self.source_file_id))
 
         # Delete Ingest and ScaleFile
         if not job_inputs and not recipe_inputs:
