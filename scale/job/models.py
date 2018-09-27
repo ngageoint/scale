@@ -799,9 +799,12 @@ class JobManager(models.Manager):
         # Set input meta-data fields on the job
         # Total input file size is in MiB rounded up to the nearest whole MiB
         qry = 'UPDATE job j SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
-        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s, '
+        qry += 'source_sensor_class = s.source_sensor_class, source_sensor = s.source_sensor, '
+        qry += 'source_collection = s.source_collection, source_task = s.source_task FROM ('
         qry += 'SELECT jif.job_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
-        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size, f.source_sensor_class AS source_sensor_class, '
+        qry += 'f.source_sensor AS source_sensor, f.source_collection AS source_collection, f.source_task AS source_task '
         qry += 'FROM scale_file f JOIN job_input_file jif ON f.id = jif.input_file_id '
         qry += 'WHERE jif.job_id = %s GROUP BY jif.job_id) s '
         qry += 'WHERE j.id = s.job_id'
