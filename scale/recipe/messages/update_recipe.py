@@ -27,8 +27,8 @@ def create_update_recipe_message(root_recipe_id, forced_nodes=None):
     :type root_recipe_id: int
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
-    :return: The list of messages
-    :rtype: list
+    :return: The messages
+    :rtype: :class:`recipe.messages.update_recipe.UpdateRecipe`
     """
 
     message = UpdateRecipe()

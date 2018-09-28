@@ -10,6 +10,7 @@ from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.diff.forced_nodes import ForcedNodes
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
 from recipe.messages.create_recipes import create_subrecipes_messages, CreateRecipes, SubRecipe
 from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
@@ -45,7 +46,7 @@ class TestCreateRecipes(TransactionTestCase):
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=sub_definition_b_dict)
         top_recipe = recipe_test_utils.create_recipe(recipe_type=top_recipe_type, event=event, save=True)
 
-        # Create message to create sub-recipes A and B for top_recipe which supersedes prev_top_recipe
+        # Create message to create sub-recipes A and B for top_recipe
         sub_recipes = [SubRecipe(recipe_type_a.name, recipe_type_a.revision_num, 'node_a', True),
                        SubRecipe(recipe_type_b.name, recipe_type_b.revision_num, 'node_b', False)]
         message = create_subrecipes_messages(top_recipe, sub_recipes)[0]
@@ -69,20 +70,28 @@ class TestCreateRecipes(TransactionTestCase):
         self.assertEqual(sub_recipe_b.recipe_type_id, recipe_type_b.id)
         self.assertIsNone(sub_recipe_b.superseded_recipe_id)
 
-        # Should be two messages, one for processing recipe input, and one for updating metrics for the recipe
+        # Should be three messages, one for processing recipe input, and one for updating metrics for the recipe
         # containing the new sub-recipes
-        self.assertEqual(len(new_message.new_messages), 2)
+        self.assertEqual(len(new_message.new_messages), 3)
         process_recipe_input_msg = None
         update_metrics_msg = None
+        update_recipe_msg = None
         for msg in new_message.new_messages:
             if msg.type == 'process_recipe_input':
                 process_recipe_input_msg = msg
+            elif msg.type == 'update_recipe':
+                update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_metrics_msg = msg
         self.assertIsNotNone(process_recipe_input_msg)
+        self.assertIsNotNone(update_recipe_msg)
         self.assertIsNotNone(update_metrics_msg)
         # Check message to process recipe input for new sub-recipe A
         self.assertEqual(process_recipe_input_msg.recipe_id, sub_recipe_a.id)
+        self.assertIsNone(process_recipe_input_msg.forced_nodes)
+        # Check message to update new sub-recipe B
+        self.assertEqual(update_recipe_msg.root_recipe_id, sub_recipe_b.id)
+        self.assertIsNone(update_recipe_msg.forced_nodes)
         # Check message to update recipe metrics for the recipe containing the new sub-recipes
         self.assertListEqual(update_metrics_msg._recipe_ids, [top_recipe.id])
 
@@ -181,13 +190,14 @@ class TestCreateRecipes(TransactionTestCase):
         self.assertEqual(recipe_nodes[0].node_name, 'node_x')
         self.assertFalse(recipe_nodes[0].is_original)
 
-        # Should be four messages, two for superseding recipe nodes, one for processing recipe input, and one for
-        # updating metrics for the recipe containing the new sub-recipes
-        self.assertEqual(len(new_message.new_messages), 4)
+        # Should be five messages, two for superseding recipe nodes, one for processing recipe input, one for updating
+        # the other sub-recipe, and one for updating metrics for the recipe containing the new sub-recipes
+        self.assertEqual(len(new_message.new_messages), 5)
         supersede_recipe_a_msg = None
         supersede_recipe_b_msg = None
         process_recipe_input_msg = None
         update_metrics_msg = None
+        update_recipe_msg = None
         for msg in new_message.new_messages:
             if msg.type == 'supersede_recipe_nodes':
                 if msg._recipe_ids[0] == prev_recipe_a.id:
@@ -196,12 +206,15 @@ class TestCreateRecipes(TransactionTestCase):
                     supersede_recipe_b_msg = msg
             elif msg.type == 'process_recipe_input':
                 process_recipe_input_msg = msg
+            elif msg.type == 'update_recipe':
+                update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_metrics_msg = msg
         self.assertIsNotNone(supersede_recipe_a_msg)
         self.assertIsNotNone(supersede_recipe_b_msg)
         self.assertIsNotNone(process_recipe_input_msg)
         self.assertIsNotNone(update_metrics_msg)
+        self.assertIsNotNone(update_recipe_msg)
         # Check message for superseding previous sub-recipe A
         self.assertFalse(supersede_recipe_a_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_a_msg.supersede_jobs, {'node_1', 'node_2'})
@@ -224,6 +237,14 @@ class TestCreateRecipes(TransactionTestCase):
         self.assertSetEqual(supersede_recipe_b_msg.unpublish_recursive, set())
         # Check message to process recipe input for new sub-recipe A
         self.assertEqual(process_recipe_input_msg.recipe_id, sub_recipe_a.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_msg.forced_nodes).get_dict()
+        forced_nodes_a_dict = convert_forced_nodes_to_v6(sub_forced_nodes_a).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_a_dict)
+        # Check message to update new sub-recipe B
+        self.assertEqual(update_recipe_msg.root_recipe_id, sub_recipe_b.root_superseded_recipe_id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(update_recipe_msg.forced_nodes).get_dict()
+        forced_nodes_b_dict = convert_forced_nodes_to_v6(sub_forced_nodes_b).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_b_dict)
         # Check message to update recipe metrics for the recipe containing the new sub-recipes
         self.assertListEqual(update_metrics_msg._recipe_ids, [new_top_recipe.id])
 
@@ -231,7 +252,6 @@ class TestCreateRecipes(TransactionTestCase):
         """Tests calling CreateRecipes.execute() successfully when creating sub-recipes"""
 
         # Creates definitions for sub-recipe A and sub-recipe B
-        event = trigger_test_utils.create_trigger_event()
         top_recipe_type = recipe_test_utils.create_recipe_type()
         job_type_a_1 = job_test_utils.create_seed_job_type()
         job_type_a_2 = job_test_utils.create_seed_job_type()
