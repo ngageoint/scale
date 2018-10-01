@@ -789,26 +789,6 @@ class TestRecipeManagerCreateRecipev6(TransactionTestCase):
             'workspace_id': self.workspace.id,
         }
 
-    def test_successful_v6(self):
-        """Tests calling RecipeManager.create_recipe() successfully."""
-
-        event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe_v6(self.recipe_type, self.recipe_type.revision,
-                                                                event.pk, LegacyRecipeData(self.data))
-
-        # Make sure the recipe jobs get created with the correct job types
-        recipe_job_1 = RecipeNode.objects.get(recipe_id=handler.recipe.id, node_name='Job 1')
-        recipe_job_2 = RecipeNode.objects.get(recipe_id=handler.recipe.id, node_name='Job 2')
-        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
-        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
-
-        # Make sure the recipe jobs get created in the correct order
-        self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
-
-        recipe_files = RecipeInputFile.objects.filter(recipe=handler.recipe)
-        self.assertEqual(len(recipe_files), 1)
-        self.assertEqual(recipe_files[0].input_file_id, self.file.id)
-
 class TestRecipeManagerReprocessRecipe(TransactionTestCase):
 
     fixtures = ['basic_errors.json']

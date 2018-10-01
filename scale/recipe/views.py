@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 import trigger.handler as trigger_handler
 import util.rest as rest_util
 from recipe.models import Recipe, RecipeInputFile, RecipeType
-from recipe.configuration.data.exceptions import InvalidRecipeConnection
+from recipe.configuration.data.exceptions import InvalidRecipeConnection, InvalidRecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.exceptions import ReprocessError
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,  
@@ -330,27 +330,18 @@ class RecipesView(ListAPIView):
         if request.version != 'v6':
             raise Http404
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
-        #recipe_data = rest_util.parse_dict(request, 'recipe_data', {})
         recipe_data = rest_util.parse_dict(request, 'input', {})
         recipe_config = rest_util.parse_dict(request, 'config', {})
-
-        #recipe_input = DataV6(recipe_data)
 
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
 
-        # try:
-        handler = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipe_data, recipe_config)
-        # except InvalidRecipeData as err:
-        #     return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
-
         try:
-            # TODO: remove this check when REST API v5 is removed
-            recipe = Recipe.objects.get_details(handler.recipe.id)
-        except Recipe.DoesNotExist:
-            raise Http404
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipe_data, recipe_config)
+        except InvalidRecipeData as err:
+            return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
             
         serializer = self.get_serializer(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)

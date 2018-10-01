@@ -19,7 +19,7 @@ from job.models import Job, JobType
 from job.models import JobExecution, JobTypeRevision
 from node.resources.json.resources import Resources
 from product.models import ProductFile
-from recipe.models import Recipe, RecipeTypeRevisionManager
+from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 from data.data.json import data_v6
@@ -391,7 +391,7 @@ class QueueManager(models.Manager):
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
-        Job.objects.populate_job_data(job, data)
+        Job.objects.populate_job_data_v5(job, data)
         self.queue_jobs([job])
         job = Job.objects.get(id=job.id)
 
@@ -510,7 +510,7 @@ class QueueManager(models.Manager):
             job = job_tuple[0]
             job_data = job_tuple[1]
             try:
-                Job.objects.populate_job_data(job, job_data)
+                Job.objects.populate_job_data_v5(job, job_data)
             except InvalidData as ex:
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
@@ -519,7 +519,7 @@ class QueueManager(models.Manager):
 
         return handler
 
-    def queue_new_recipe_v6(self, recipe_type, recipe_input, recipe_config, event, batch_id=None, superseded_recipe=None, delta=None,
+    def queue_new_recipe_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None, delta=None,
                          superseded_jobs=None, priority=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
@@ -549,23 +549,12 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
         
-        recipe_type_rev =  RecipeTypeRevisionManager.get_revision(recipe_type.name, recipe_type.revision_num)
+        recipe_type_rev =  RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         
         recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input)
-       
-        # jobs_to_queue = []
-        # for job_tuple in handler.get_existing_jobs_to_queue():
-        #     job = job_tuple[0]
-        #     job_data = job_tuple[1]
-        #     try:
-        #         #Job.objects.create_job_v6()
-        #         Job.objects.populate_job_data(job, job_data)
-        #     except InvalidData as ex:
-        #         raise Exception('Scale created invalid job data: %s' % str(ex))
-        #     jobs_to_queue.append(job)
-        # if jobs_to_queue:
-        #     self.queue_jobs(jobs_to_queue)
-
+        recipe.save()
+        Recipe.objects.process_recipe_input(recipe)
+        
         return recipe
 
     # TODO: once Django user auth is used, have the user information passed into here
@@ -590,7 +579,7 @@ class QueueManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        return self.queue_new_recipe_v6(recipe_type, recipe_input, recipe_config, event)
+        return self.queue_new_recipe_v6(recipe_type, recipe_input, event, recipe_config)
 
     def queue_new_recipe_for_user(self, recipe_type, data):
         """Creates a new recipe for the given type and data at the request of a user.

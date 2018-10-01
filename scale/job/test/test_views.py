@@ -358,16 +358,9 @@ class TestJobsPostViewV6(TestCase):
         self.api = "v6"
         self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
 
-
-
     def test_successful(self):
         """Tests successfully calling POST jobs view to queue a new job"""
-        # data = Data()
-        # data.add_value(FileValue('input_a', [1234]))
-        # data.add_value(FileValue('input_b', [1235, 1236]))
-        # data.add_value(JsonValue('input_c', 'hello'))
-        # data.add_value(JsonValue('input_d', 11.9))
-        # json = convert_data_to_v6_json(data)
+
         json_data = { 
             "input" : {},
             "job_type_id" : self.job_type1.pk

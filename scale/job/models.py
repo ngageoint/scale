@@ -698,30 +698,31 @@ class JobManager(models.Manager):
         # two queries in get_locked_jobs_with_related().
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
-    # def populate_job_data(self, job, data):
-    #     """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
-    #     on the job model. The job should have its related job_type and job_type_rev models populated.
+    def populate_job_data_v5(self, job, data):
+        #TODO remove method when v5 api is removed
+        """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
+        on the job model. The job should have its related job_type and job_type_rev models populated.
 
-    #     :param job: The job
-    #     :type job: :class:`job.models.Job`
-    #     :param data: JSON description defining the job data to run on
-    #     :type data: :class:`job.configuration.data.job_data.JobData`
-    #     :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
-    #     """
+        :param job: The job
+        :type job: :class:`job.models.Job`
+        :param data: JSON description defining the job data to run on
+        :type data: :class:`job.configuration.data.job_data.JobData`
+        :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
+        """
 
-    #     # Validate job data
-    #     interface = job.get_job_interface()
-    #     data = JobDataSunset.create(interface, data=data.get_dict())
-    #     interface.validate_data(data)
+        # Validate job data
+        interface = job.get_job_interface()
+        data = JobDataSunset.create(interface, data=data.get_dict())
+        interface.validate_data(data)
 
-    #     # Update job model in memory
-    #     job.input = data.get_dict()
+        # Update job model in memory
+        job.input = data.get_dict()
 
-    #     # Update job model in database with single query
-    #     self.filter(id=job.id).update(input=data.get_dict())
+        # Update job model in database with single query
+        self.filter(id=job.id).update(input=data.get_dict())
 
-    #     # Process job inputs
-    #     self.process_job_input(job)
+        # Process job inputs
+        self.process_job_input(job)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".

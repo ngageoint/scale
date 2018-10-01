@@ -445,6 +445,27 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.data = LegacyRecipeData(data)
 
     def test_successful(self):
+        workspace = storage_test_utils.create_workspace()
+        source_file = source_test_utils.create_source(workspace=workspace)
+        event = trigger_test_utils.create_trigger_event()
+        recipetype1 = recipe_test_utils.create_recipe_type()
+ 
+        data_dict = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_a',
+                'file_id': source_file.id,
+            }],
+            'output_data': [{
+                'name': 'output_a',
+                'workspace_id': workspace.id
+            }]
+        }
+        data = JobDataV6(data_dict)
+
+        created_recipe = Queue.objects.queue_new_recipe_v6(recipetype1, data._new_data, event)
+
+    def test_successful_legacy(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
 
         handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
