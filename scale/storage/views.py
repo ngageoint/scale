@@ -223,27 +223,27 @@ class PurgeSourceFileView(APIView):
 
         if self.request.version in ['v4', 'v5']:
             content = 'This endpoint is supported with REST API v6+'
-            return Response(status=status.HTTP_400_BAD_REQUEST, content=content)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
-        file_id = rest_util.parse_dict(request, 'file_id')
+        file_id = rest_util.parse_int(request, 'file_id')
 
         try:
             file_id = int(file_id)
         except ValueError:
             content = 'The given file_id is not valid: %i' % (file_id)
-            return Response(status=status.HTTP_400_BAD_REQUEST, content=content)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
         # Attempt to fetch the ScaleFile model
         try:
             source_file = ScaleFile.objects.get(id=file_id)
         except ScaleFile.DoesNotExist:
             content = 'No file record exists for the given file_id: %i' % (file_id)
-            return Response(status=status.HTTP_400_BAD_REQUEST, content=content)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
         # Inspect the file to ensure it will purge correctly
         if source_file.file_type != 'SOURCE':
             content = 'The given file_id does not correspond to a SOURCE file_type: %i' % (file_id)
-            return Response(status=status.HTTP_400_BAD_REQUEST, content=content)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         CommandMessageManager().send_messages([create_purge_source_file_message(source_file_id=file_id,
