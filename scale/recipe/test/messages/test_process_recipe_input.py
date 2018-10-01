@@ -13,7 +13,8 @@ from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
-from recipe.messages.process_recipe_input import ProcessRecipeInput
+from recipe.diff.forced_nodes import ForcedNodes
+from recipe.messages.process_recipe_input import create_process_recipe_input_messages, ProcessRecipeInput
 from recipe.models import Recipe, RecipeInputFile, RecipeNode
 from recipe.test import utils as recipe_test_utils
 from storage.test import utils as storage_test_utils
@@ -33,6 +34,29 @@ class TestProcessRecipeInput(TransactionTestCase):
         # Create message
         message = ProcessRecipeInput()
         message.recipe_id = recipe.id
+
+        # Convert message to JSON and back, and then execute
+        message_json_dict = message.to_json()
+        new_message = ProcessRecipeInput.from_json(message_json_dict)
+        result = new_message.execute()
+
+        self.assertTrue(result)
+        recipe = Recipe.objects.get(id=recipe.id)
+        self.assertEqual(len(new_message.new_messages), 1)
+        self.assertEqual(new_message.new_messages[0].type, 'update_recipes')
+        # Recipe should have input_file_size set to 0 (no input files)
+        self.assertEqual(recipe.input_file_size, 0.0)
+
+    def test_json_forced_nodes(self):
+        """Tests coverting a ProcessRecipeInput message to and from JSON with forced nodes provided"""
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        recipe = recipe_test_utils.create_recipe(input=data_dict)
+        forced_nodes = ForcedNodes()
+        forced_nodes.set_all_nodes()
+
+        # Create message
+        message = create_process_recipe_input_messages([recipe.id], forced_nodes=forced_nodes)[0]
 
         # Convert message to JSON and back, and then execute
         message_json_dict = message.to_json()

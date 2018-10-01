@@ -3872,7 +3872,30 @@ class JobTypeRevisionManager(models.Manager):
         """
 
         return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
-        
+
+    def get_revisions(self, revision_tuples):
+        """Returns a dict that maps revision ID to job type revision for the job type revisions that match the
+        given values. Each revision model will have its related job type model populated.
+
+        :param revision_tuples: A list of tuples (job type name, job type version, revision num) for additional
+            revisions to return
+        :type revision_tuples: list
+        :returns: The revisions stored by revision ID
+        :rtype: dict
+        """
+
+        revisions = {}
+        qry_filter = None
+        for revision_tuple in revision_tuples:
+            f = Q(job_type__name=revision_tuple[0], job_type__version=revision_tuple[1], revision_num=revision_tuple[2])
+            if qry_filter:
+                qry_filter = qry_filter | f
+            else:
+                qry_filter = f
+        for rev in self.select_related('job_type').filter(qry_filter):
+            revisions[rev.id] = rev
+        return revisions
+
     def get_job_type_revisions_v6(self, name, version, order=None):
         """Returns a list of the versions of the job type with the given name
 

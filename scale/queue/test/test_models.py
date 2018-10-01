@@ -15,6 +15,8 @@ import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import reset_error_cache
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from job.configuration.data.job_data import JobData
 from job.configuration.results.job_results import JobResults
 from job.models import Job
@@ -734,11 +736,14 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
     def setUp(self):
         django.setup()
 
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
         self.new_priority = 200
-        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', num_exes=3, priority=100)
-        self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', num_exes=1)
-        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', num_exes=1, priority=100)
-        self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED')
+        self.standalone_failed_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=3,
+                                                               priority=100)
+        self.standalone_superseded_job = job_test_utils.create_job(status='FAILED', input=data_dict, num_exes=1)
+        self.standalone_canceled_job = job_test_utils.create_job(status='CANCELED', input=data_dict, num_exes=1,
+                                                                 priority=100)
+        self.standalone_completed_job = job_test_utils.create_job(status='COMPLETED', input=data_dict,)
         Job.objects.supersede_jobs_old([self.standalone_superseded_job], now())
 
         # Create recipe for re-queing a job that should now be PENDING (and its dependencies)
@@ -765,7 +770,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             }],
         }
         recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
-        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', num_exes=1)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', input=data_dict, num_exes=1)
         self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED')
         data_a = {
             'version': '1.0',
@@ -810,7 +815,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             }],
         }
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
-        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED')
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED', input=data_dict)
         self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0)
         self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0)
         data_b = {

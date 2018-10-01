@@ -5,7 +5,6 @@ import json
 import logging
 
 from data.data.data import Data
-from data.data.json.data_v6 import convert_data_to_v6_json
 from data.data.value import JsonValue
 
 from job.messages.create_jobs import create_jobs_message
@@ -102,12 +101,10 @@ class SpawnDeleteFilesJob(CommandMessage):
             inputs.add_value(JsonValue('purge', str(self.purge)))
             inputs.add_value(JsonValue('files', json.dumps(files)))
             inputs.add_value(JsonValue('workspaces', json.dumps(workspaces)))
-            inputs_json = convert_data_to_v6_json(inputs)
 
             # Send message to create system job to delete files
             msg = create_jobs_message(job_type_name="scale-delete-files", job_type_version="1.0.0",
-                                      event_id=self.trigger_id, job_type_rev_num=1,
-                                      input_data_dict=inputs_json.get_dict())
+                                      event_id=self.trigger_id, job_type_rev_num=1, input_data=inputs)
             self.new_messages.append(msg)
 
         return True
