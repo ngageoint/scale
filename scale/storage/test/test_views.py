@@ -16,7 +16,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 
-from storage.messages import PurgeSourceFile
+from source.messages.purge_source_file import PurgeSourceFile
 from storage.models import Workspace
 
 
@@ -1099,81 +1099,44 @@ class TestPurgeSourceFileView(TestCase):
             'file_id': input_file.id
         }
 
-        url = '/%s/purge-source/' % self.api
+        url = '/%s/files/purge-source/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
         # Check that create_batch_recipes message was created and sent
-        mock_create.assert_called_with(input_file.id, )
+        mock_create.assert_called_once()
 
-    # def test_missing_configuration(self):
-    #     """Tests validating a new workspace with missing configuration."""
+    def test_bad_file_id(self):
+        """Tests purging a source file."""
 
-    #     json_data = {
-    #         'title': 'Workspace Title',
-    #         'description': 'Workspace description',
-    #     }
+        json_data = {
+            'file_id': 123463764563
+        }
 
-    #     url = '/%s/workspaces/validation/' % self.api
-    #     response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+    def test_no_file_id(self):
+        """Tests purging a source file."""
 
-    # def test_configuration_bad_type(self):
-    #     """Tests validating a new workspace with configuration that is not a dict."""
+        json_data = {
+            'file_id': 'not_a_file_id'
+        }
 
-    #     json_data = {
-    #         'title': 'Workspace Title',
-    #         'description': 'Workspace description',
-    #         'configuration': 123,
-    #     }
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    #     url = '/%s/workspaces/validation/' % self.api
-    #     response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+    def test_product_file_id(self):
+        """Tests purging a source file."""
 
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        input_file = storage_test_utils.create_file(file_type='PRODUCT')
 
-    # def test_invalid_configuration(self):
-    #     """Tests validating a new workspace with invalid configuration."""
+        json_data = {
+            'file_id': input_file.id
+        }
 
-    #     json_data = {
-    #         'title': 'Workspace Title',
-    #         'description': 'Workspace description',
-    #         'configuration': {
-    #             'broker': 123,
-    #         },
-    #     }
-
-    #     url = '/%s/workspaces/validation/' % self.api
-    #     response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
-    # def test_warnings(self):
-    #     """Tests validating a new workspace where the broker type is changed."""
-
-    #     json_config = {
-    #         'broker': {
-    #             'type': 'host',
-    #             'host_path': '/host/path',
-    #         },
-    #     }
-    #     storage_test_utils.create_workspace(name='ws-test', json_config=json_config)
-
-    #     json_data = {
-    #         'name': 'ws-test',
-    #         'title': 'ws test',
-    #         'configuration': {
-    #             'broker': {
-    #                 'type': 'nfs',
-    #                 'nfs_path': 'host:/dir',
-    #             },
-    #         },
-    #     }
-
-    #     url = '/%s/workspaces/validation/' % self.api
-    #     response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-    #     results = json.loads(response.content)
-    #     self.assertEqual(len(results['warnings']), 1)
-    #     self.assertEqual(results['warnings'][0]['name'], 'broker_type')
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
