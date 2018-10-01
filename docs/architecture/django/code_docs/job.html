@@ -6274,6 +6274,26 @@ with all detail fields included.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.JobTypeRevisionManager.get_revisions">
+<code class="descname">get_revisions</code><span class="sig-paren">(</span><em>revision_tuples</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevisionManager.get_revisions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict that maps revision ID to job type revision for the job type revisions that match the
+given values. Each revision model will have its related job type model populated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>revision_tuples</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; A list of tuples (job type name, job type version, revision num) for additional
+revisions to return</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The revisions stored by revision ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

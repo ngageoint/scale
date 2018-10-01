@@ -249,6 +249,19 @@
 <span id="recipe-instance-node-module"></span><h2>recipe.instance.node module<a class="headerlink" href="#module-recipe.instance.node" title="Permalink to this headline">¶</a></h2>
 <p>Defines the classes for representing nodes within a recipe</p>
 <dl class="class">
+<dt id="recipe.instance.node.DummyNodeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">DummyNodeInstance</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
+<p>Represents a placeholder node that stands in for a node that doesn&#8217;t exist in this recipe instance</p>
+<dl class="method">
+<dt id="recipe.instance.node.DummyNodeInstance.needs_to_be_created">
+<code class="descname">needs_to_be_created</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance.needs_to_be_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.needs_to_be_created" title="recipe.instance.node.NodeInstance.needs_to_be_created"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.needs_to_be_created()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.instance.node.JobNodeInstance">
 <em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">JobNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>job</em>, <em>is_original</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
@@ -259,11 +272,23 @@
 <dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.get_jobs_to_update" title="recipe.instance.node.NodeInstance.get_jobs_to_update"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.get_jobs_to_update()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.instance.node.JobNodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.JobNodeInstance.needs_to_process_input">
+<code class="descname">needs_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance.needs_to_process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.needs_to_process_input" title="recipe.instance.node.NodeInstance.needs_to_process_input"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.needs_to_process_input()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="recipe.instance.node.NodeInstance">
-<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">NodeInstance</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">NodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>is_original</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a node within a recipe</p>
 <dl class="method">
@@ -298,6 +323,54 @@
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node has completed and is ready for its children to process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node has completed, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.needs_to_be_created">
+<code class="descname">needs_to_be_created</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.needs_to_be_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node needs to be created</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node needs to be created, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.needs_to_process_input">
+<code class="descname">needs_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.needs_to_process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node needs to process its input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node needs to process its input, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -311,6 +384,18 @@
 <dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.get_jobs_to_update" title="recipe.instance.node.NodeInstance.get_jobs_to_update"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.get_jobs_to_update()</span></code></a></p>
 </dd></dl>
 
+<dl class="method">
+<dt id="recipe.instance.node.RecipeNodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.RecipeNodeInstance.needs_to_process_input">
+<code class="descname">needs_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance.needs_to_process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.needs_to_process_input" title="recipe.instance.node.NodeInstance.needs_to_process_input"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.needs_to_process_input()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -319,7 +404,7 @@
 <p>Defines the class for representing an instance of an executing recipe</p>
 <dl class="class">
 <dt id="recipe.instance.recipe.RecipeInstance">
-<em class="property">class </em><code class="descclassname">recipe.instance.recipe.</code><code class="descname">RecipeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">recipe.instance.recipe.</code><code class="descname">RecipeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>recipe_model</em>, <em>recipe_nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents an executing recipe</p>
 <dl class="method">
@@ -339,16 +424,64 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes">
-<code class="descname">get_original_leaf_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a mapping of non-superseded job and recipe IDs</p>
+<dt id="recipe.instance.recipe.RecipeInstance.get_nodes_to_create">
+<code class="descname">get_nodes_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_nodes_to_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the node definitions within this recipe for nodes that should be created</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with node mapping of recipe leafs</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict where node names map to node definitions</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.recipe.RecipeInstance.get_nodes_to_process_input">
+<code class="descname">get_nodes_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_nodes_to_process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the node instances within this recipe for nodes that need to process their input</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict where node names map to node instances</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes">
+<code class="descname">get_original_leaf_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.get_original_leaf_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a mapping of original leaf nodes with the recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict with node name mapping to original leaf nodes</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.recipe.RecipeInstance.has_completed">
+<code class="descname">has_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.recipe.RecipeInstance.has_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this recipe has completed</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this recipe has completed, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>

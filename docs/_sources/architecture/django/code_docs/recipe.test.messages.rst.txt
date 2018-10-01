@@ -44,6 +44,14 @@ recipe\.test\.messages\.test\_supersede\_recipe\_nodes module
     :undoc-members:
     :show-inheritance:
 
+recipe\.test\.messages\.test\_update\_recipe module
+---------------------------------------------------
+
+.. automodule:: recipe.test.messages.test_update_recipe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe\.test\.messages\.test\_update\_recipe\_metrics module
 ------------------------------------------------------------
 

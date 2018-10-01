@@ -541,6 +541,25 @@ been saved in the database (it must have an ID). The returned trigger event mode
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="trigger.models.TriggerEventManager.get_locked_event">
+<code class="descname">get_locked_event</code><span class="sig-paren">(</span><em>event_id</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEventManager.get_locked_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Locks and returns the event model for the given ID with no related fields. Caller must be within an atomic
+transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event_id</strong> (<em>int</em>) &#8211; The event ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The event model</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">event.models.TriggerEvent</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">

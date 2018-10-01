@@ -342,27 +342,46 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_invalid_data">
-<code class="descname">test_execute_invalid_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_invalid_data" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data">
+<code class="descname">test_execute_input_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateJobs.execute() with input data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data_invalid">
+<code class="descname">test_execute_input_data_invalid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data_invalid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling CreateJobs.execute() when the input data is invalid</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe">
-<code class="descname">test_execute_with_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_with_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling CreateJobs.execute() successfully with a recipe that supersedes another recipe</p>
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe">
+<code class="descname">test_execute_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateJobs.execute() successfully for jobs within a recipe</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_no_recipe">
-<code class="descname">test_json_no_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_no_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests converting a CreateJobs message (without a recipe) to and from JSON</p>
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe_superseded">
+<code class="descname">test_execute_recipe_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateJobs.execute() successfully for jobs within a recipe that supersedes another recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_input_data">
+<code class="descname">test_json_input_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_input_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateJobs message to and from JSON when creating a job from input data</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe">
 <code class="descname">test_json_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests converting a CreateJobs message (with a recipe) to and from JSON</p>
+<dd><p>Tests converting a CreateJobs message to and from JSON when creating jobs for a recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe_superseded">
+<code class="descname">test_json_recipe_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateJobs message to and from JSON when creating jobs for a recipe that supersedes
+another recipe</p>
 </dd></dl>
 
 </dd></dl>
