@@ -444,7 +444,7 @@ Data:
  
     { 
         "file_id": 123, 
-    |
+    }
 
 Response: 204 NO CONTENT
     
