@@ -169,6 +169,34 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_details'
+  /v6/files/purge-source/:
+    post:
+      operationId: _rest_v6_purge_source
+      summary: Purge Source File
+      description: Removes all records related to the given source file. This includes records for the
+       following models - BatchJob, BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution,
+       JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue, Recipe, RecipeInputFile, RecipeNode,
+       ScaleFile, and TaskUpdate. **This will also delete any product files from their respective
+       workspace.**  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              title: Purge File Request
+              type: object
+              properties:
+                file_id:
+                  type: integer
+                  description: The file id of the ScaleFile SOURCE file to purge.
+                  example: 123
+      responses:
+        '204':
+          description: |-
+            204 no content - The message was recieved and the purge process has started.
+        '400':
+          description: |-
+            400 bad request - There was an issue with the request, see error details for relevant details.
 
 components:
   schemas:

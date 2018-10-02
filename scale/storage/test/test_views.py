@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import datetime as dt
 import json
+from mock import patch
 
 import django
 from django.test import TestCase
@@ -14,6 +15,8 @@ import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
+
+from source.messages.purge_source_file import PurgeSourceFile
 from storage.models import Workspace
 
 
@@ -1072,3 +1075,68 @@ class TestWorkspacesValidationViewV6(TestCase):
         results = json.loads(response.content)
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['name'], 'broker_type')
+
+
+class TestPurgeSourceFileView(TestCase):
+    """Tests related to the purge source endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    @patch('storage.views.CommandMessageManager')
+    @patch('storage.views.create_purge_source_file_message')
+    def test_successful(self, mock_create, mock_msg_mgr):
+        """Tests purging a source file."""
+
+        msg = PurgeSourceFile()
+        mock_create.return_value = msg
+
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+        # Check that create_batch_recipes message was created and sent
+        mock_create.assert_called_once()
+
+    def test_bad_file_id(self):
+        """Tests purging a source file."""
+
+        json_data = {
+            'file_id': 123463764563
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_no_file_id(self):
+        """Tests purging a source file."""
+
+        json_data = {
+            'file_id': 'not_a_file_id'
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_product_file_id(self):
+        """Tests purging a source file."""
+
+        input_file = storage_test_utils.create_file(file_type='PRODUCT')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
