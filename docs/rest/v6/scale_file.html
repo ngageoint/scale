@@ -112,6 +112,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Scale File Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#v6-scale-files">v6 Scale Files</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#v6-scale-file-details">v6 Scale File Details</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#v6-purge-source-file">v6 Purge Source File</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
@@ -835,6 +836,53 @@ contained in the geographic boundary of this file.</td>
 <tr class="row-even"><td colspan="2">superseded</td>
 <td>ISO-8601 Datetime</td>
 <td>When the file became superseded by another file.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="v6-purge-source-file">
+<span id="rest-v6-purge-source"></span><h2>v6 Purge Source File<a class="headerlink" href="#v6-purge-source-file" title="Permalink to this headline">¶</a></h2>
+<p><strong>Example POST /v6/files/purge-source/ API call</strong></p>
+<p>Request: POST <a class="reference external" href="http://.../v6/files/purge-source/">http://.../v6/files/purge-source/</a></p>
+<p>Data:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">123</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Response: 204 NO CONTENT</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="13%" />
+<col width="9%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Purge Source File</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Removes all records related to the given source file.  This includes records for the following models: BatchJob,
+BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue,
+Recipe, RecipeInputFile, RecipeNode, ScaleFile, and TaskUpdate. <strong>This will also delete any product files from their
+respective workspace.</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>POST</strong> /files/purge-source/</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Content Type</strong>    | <em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>file_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>The file id of the ScaleFile SOURCE file to purge.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">204 NO CONTENT</td>
 </tr>
 </tbody>
 </table>

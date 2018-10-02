@@ -511,10 +511,10 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.create_recipes.CreateRecipes.add_recipe_to_reprocess">add_recipe_to_reprocess() (recipe.messages.create_recipes.CreateRecipes method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.add_rule">add_rule() (ingest.handlers.file_handler.FileHandler method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.running_jobs.RunningJobs.add_running_job">add_running_job() (job.messages.running_jobs.RunningJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.add_running_job_exes">add_running_job_exes() (job.execution.metrics.TotalJobExeMetrics method)</a>
@@ -767,6 +767,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV5.api">(storage.test.test_views.TestFilesViewV5 attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.api">(storage.test.test_views.TestFilesViewV6 attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.api">(storage.test.test_views.TestPurgeSourceFileView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV5.api">(storage.test.test_views.TestWorkspaceCreateViewV5 attribute)</a>
 </li>
@@ -9282,6 +9284,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeTypesView.post">(recipe.views.RecipeTypesView method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.views.PurgeSourceFileView.post">(storage.views.PurgeSourceFileView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesValidationView.post">(storage.views.WorkspacesValidationView method)</a>
 </li>
       </ul></li>
@@ -9518,6 +9522,8 @@
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe">PurgeRecipe (class in recipe.messages.purge_recipe)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile">PurgeSourceFile (class in source.messages.purge_source_file)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.views.PurgeSourceFileView">PurgeSourceFileView (class in storage.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.push_to_database">push_to_database() (scheduler.task.manager.TaskUpdateManager method)</a>
 </li>
@@ -12036,6 +12042,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.setUp">(storage.test.test_views.TestFilesViewV6 method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.setUp">(storage.test.test_views.TestPurgeSourceFileView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV5.setUp">(storage.test.test_views.TestWorkspaceCreateViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV6.setUp">(storage.test.test_views.TestWorkspaceCreateViewV6 method)</a>
@@ -12929,6 +12937,8 @@
         <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_file_id">(job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.data.html#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_file_id">(recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_bad_file_id">(storage.test.test_views.TestPurgeSourceFileView method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobInputFilesViewV5.test_bad_file_name">test_bad_file_name() (job.test.test_views.TestJobInputFilesViewV5 method)</a>
@@ -15439,6 +15449,8 @@
         <li><a href="architecture/django/code_docs/source.test.triggers.html#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_no_conditions">(source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_no_file_id">test_no_file_id() (storage.test.test_views.TestPurgeSourceFileView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files">test_no_files() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files_flat_walk">test_no_files_flat_walk() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
@@ -15601,10 +15613,10 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration">test_parse_duration() (util.test.test_parse.TestParse method)</a>
@@ -15804,6 +15816,8 @@
       <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_no_rule_match">test_process_scanned_no_rule_match() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_successfully">test_process_scanned_successfully() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_product_file_id">test_product_file_id() (storage.test.test_views.TestPurgeSourceFileView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_products">test_products() (product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks method)</a>
 </li>
@@ -16435,6 +16449,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestWorkspaceManager.test_successful">(storage.test.test_models.TestWorkspaceManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestFilesViewV6.test_successful">(storage.test.test_views.TestFilesViewV6 method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_successful">(storage.test.test_views.TestPurgeSourceFileView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceCreateViewV5.test_successful">(storage.test.test_views.TestWorkspaceCreateViewV5 method)</a>
 </li>
@@ -17684,6 +17700,8 @@
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe">TestPurgeRecipe (class in recipe.test.messages.test_purge_recipe)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile">TestPurgeSourceFile (class in source.test.messages.test_purge_source_file)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView">TestPurgeSourceFileView (class in storage.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.configuration.html#job.test.execution.configuration.test_configurators.TestQueuedExecutionConfigurator">TestQueuedExecutionConfigurator (class in job.test.execution.configuration.test_configurators)</a>
 </li>
