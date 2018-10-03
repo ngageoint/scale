@@ -2647,7 +2647,7 @@ class JobTypeManager(models.Manager):
     def convert_manifest_to_v5_interface(self, manifest):
         """Parses a Seed manifest interface definition and reshapes it to match the format of the old style
         interface.  This is done so that v5 API calls to get job details can still receive information about
-        new style Seed job types.
+        new Seed style job types.
 
         :param manifest: The Seed Manifest interface definition
         :type manifest: dict
