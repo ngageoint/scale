@@ -13,14 +13,15 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
-from recipe.models import Recipe, RecipeInputFile, RecipeType
+from job.models import JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.exceptions import ReprocessError
+from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,  
-                                RecipeSerializerV5,RecipeSerializerV6,
+                                RecipeSerializerV5, RecipeSerializerV6,
                                 RecipeTypeDetailsSerializerV5, RecipeTypeDetailsSerializerV6,
-                                RecipeTypeSerializerV5, RecipeTypeSerializerV6 )
+                                RecipeTypeSerializerV5, RecipeTypeSerializerV6)
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
@@ -33,7 +34,7 @@ logger = logging.getLogger(__name__)
 class RecipeTypesView(GenericAPIView):
     """This view is the endpoint for retrieving the list of all recipe types"""
     queryset = RecipeType.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 
@@ -150,6 +151,12 @@ class RecipeTypeDetailsView(GenericAPIView):
             recipe_type = RecipeType.objects.get_details(recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
+
+        # TODO: remove this check when REST API v5 is remmoved 
+        if self.request.version != 'v6':
+            for jt in recipe_type.job_types:
+                if jt.is_seed_job_type():
+                    jt.manifest = JobType.objects.convert_manifest_to_v5_interface(jt.manifest)
 
         serializer = self.get_serializer(recipe_type)
         return Response(serializer.data)
@@ -441,7 +448,7 @@ class RecipeReprocessView(GenericAPIView):
             return RecipeDetailsSerializerV6
         else:
             return OldRecipeDetailsSerializer
-    
+
     def post(self, request, recipe_id):
         """Schedules a recipe for reprocessing and returns it in JSON form
 

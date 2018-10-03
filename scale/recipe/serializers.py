@@ -67,7 +67,7 @@ class RecipeTypeDetailsSerializerV5(RecipeTypeSerializerV5):
     from trigger.serializers import TriggerRuleDetailsSerializer
 
     class RecipeTypeDetailsJobSerializer(JobTypeBaseSerializerV5):
-        interface = serializers.JSONField(default=dict)
+        interface = serializers.JSONField(default=dict, source='manifest')
 
     trigger_rule = TriggerRuleDetailsSerializer()
     job_types = RecipeTypeDetailsJobSerializer(many=True)
