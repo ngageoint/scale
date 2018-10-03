@@ -126,6 +126,9 @@ class QueueNewRecipeView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
+        if request.version == 'v6':
+            raise Http404
+
         recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
         recipe_data = rest_util.parse_dict(request, 'recipe_data', {})
 
@@ -140,11 +143,7 @@ class QueueNewRecipeView(GenericAPIView):
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # TODO: remove this check when REST API v5 is removed
-            if request.version == 'v6':
-                recipe = Recipe.objects.get_details(handler.recipe.id)
-            else:
-                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+            recipe = Recipe.objects.get_details_v5(handler.recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
             

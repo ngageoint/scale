@@ -219,6 +219,8 @@ class TestQueueNewJobView(TransactionTestCase):
         self.assertEqual(len(result['outputs']), 1)
 
     def test_v6_404(self):
+        """Tests v6 call will return 404 error"""
+
         json_data = {
         }
         
@@ -297,6 +299,15 @@ class TestQueueNewRecipeView(TestCase):
         self.assertTrue(response['Location'])
         self.assertEqual(result['recipe_type']['id'], recipe_type.id)
 
+    def test_v6_404(self):
+        """Tests v6 call will return 404 error"""
+
+        json_data = {
+        }
+
+        url = 'v6/queue/new-recipe/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 class TestQueueStatusView(TransactionTestCase):
 

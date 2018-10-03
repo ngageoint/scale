@@ -420,6 +420,7 @@ class QueueManager(models.Manager):
         # No lock needed for this job since it doesn't exist outside this transaction yet
         self.queue_jobs([job])
         job = Job.objects.get(id=job.id)
+        Job.objects.process_job_input(job)
 
         return job
 
@@ -548,13 +549,13 @@ class QueueManager(models.Manager):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
-        
+
         recipe_type_rev =  RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         
         recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input)
         recipe.save()
         Recipe.objects.process_recipe_input(recipe)
-        
+
         return recipe
 
     # TODO: once Django user auth is used, have the user information passed into here
