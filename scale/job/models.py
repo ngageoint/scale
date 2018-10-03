@@ -398,7 +398,7 @@ class JobManager(models.Manager):
                                            order=order)
 
     def get_jobs_v6(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, 
-                    job_type_names=None, =None, recipe_ids=None, error_categories=None, error_ids=None,
+                    job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None, error_ids=None,
                     is_superseded=None, order=None):
         """Returns a list of jobs within the given time range.
 
@@ -2643,7 +2643,31 @@ class JobTypeManager(models.Manager):
 
         return job_type
 
+    # TODO: remove this when REST API v5 is removed
+    def convert_manifest_to_v5_interface(self, manifest):
+        """Parses a Seed manifest interface definition and reshapes it to match the format of the old style
+        interface.  This is done so that v5 API calls to get job details can still receive information about
+        new style Seed job types.
 
+        :param manifest: The Seed Manifest interface definition
+        :type manifest: dict
+        :returns: The converted manifest
+        :rtype: dict
+        """
+
+        interface = {}
+        interface['settings'] = manifest['settings']
+        interface['mounts'] = manifest['mounts']
+        interface['output_data'] = manifest['outputs']['files'] if 'files' in manifest['outputs'] else []
+        interface['input_data'] = manifest['inputs']['files'] if 'files' in manifest['inputs'] else []
+        interface['env_vars'] = manifest['inputs']['json'] if 'json' in manifest['inputs'] else []
+        interface['shared_resources'] = []
+        interface['version'] = '1.4'
+        interface['command'] = ''
+        interface['command_arguments'] = manifest['command']
+
+        return interface
+    
     @transaction.atomic
     def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
                          error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
@@ -3696,15 +3720,6 @@ class JobType(models.Model):
 
         return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_job_configuration()).get_dict())
 
-    def natural_key(self):
-        """Django method to define the natural key for a job type as the
-        combination of name and version
-
-        :returns: A tuple representing the natural key
-        :rtype: tuple(string, string)
-        """
-        return self.name, self.version
-
     def get_cpus_required(self):
         """Either returns field value or pulls from Seed resources
 
@@ -3770,6 +3785,26 @@ class JobType(models.Model):
         """
 
         return self._get_legacy_resource('disk', self.disk_out_mult_required, False)
+
+    def is_seed_job_type(self):
+        """Checks if the JobType object is a Seed job type (True) or legacy job type (False)
+
+        :returns: Whether this job type is legacy or Seed
+        :rtype: bool
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.manifest):
+            return True
+        return False
+
+    def natural_key(self):
+        """Django method to define the natural key for a job type as the
+        combination of name and version
+
+        :returns: A tuple representing the natural key
+        :rtype: tuple(string, string)
+        """
+        return self.name, self.version
 
     def populate_from_manifest(self, manifest):
         """Set job type fields with values from given seed manifest
