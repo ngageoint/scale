@@ -2655,6 +2655,8 @@ class JobTypeManager(models.Manager):
         :rtype: dict
         """
 
+        manifest = manifest['job']['interface']
+
         interface = {}
         interface['settings'] = manifest['settings']
         interface['mounts'] = manifest['mounts']
@@ -2667,7 +2669,7 @@ class JobTypeManager(models.Manager):
         interface['command_arguments'] = manifest['command']
 
         return interface
-    
+
     @transaction.atomic
     def edit_job_type_v5(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
                          error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
