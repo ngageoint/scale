@@ -18,7 +18,7 @@ from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.exceptions import ReprocessError
 from recipe.models import Recipe, RecipeInputFile, RecipeType
-from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,  
+from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
                                 RecipeSerializerV5, RecipeSerializerV6,
                                 RecipeTypeDetailsSerializerV5, RecipeTypeDetailsSerializerV6,
                                 RecipeTypeSerializerV5, RecipeTypeSerializerV6)
@@ -152,7 +152,7 @@ class RecipeTypeDetailsView(GenericAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        # TODO: remove this check when REST API v5 is remmoved 
+        # TODO: remove this check when REST API v5 is remmoved
         if self.request.version != 'v6':
             for jt in recipe_type.job_types:
                 if jt.is_seed_job_type():
@@ -291,7 +291,7 @@ class RecipeTypesValidationView(APIView):
 class RecipesView(ListAPIView):
     """This view is the endpoint for retrieving the list of all recipes"""
     queryset = Recipe.objects.all()
-    
+
     def get_serializer_class(self):
         """Returns the appropriate serializer based off the requests version of the REST API. """
 

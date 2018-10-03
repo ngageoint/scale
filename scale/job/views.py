@@ -405,6 +405,9 @@ class JobTypeIDDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
+        if job_type.is_seed_job_type():
+            job_type.manifest = JobType.objects.convert_manifest_to_v5_interface(job_type.manifest)
+
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
