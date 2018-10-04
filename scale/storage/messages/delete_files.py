@@ -4,11 +4,12 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
+from django.db.models import F
 from django.utils import timezone
 
 from job.messages.purge_jobs import create_purge_jobs_messages
 from messaging.messages.message import CommandMessage
-from storage.models import ScaleFile
+from storage.models import PurgeResults, ScaleFile
 
 # This is the maximum number of file models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long.
@@ -123,6 +124,8 @@ class DeleteFiles(CommandMessage):
 
         if self.purge:
             files_to_delete.delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                num_products_deleted=F('num_products_deleted') + len(self._file_ids))
 
             # Kick off purge_jobs for the given job_id
             self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],

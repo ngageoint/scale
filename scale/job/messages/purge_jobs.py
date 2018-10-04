@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
+from django.db.models import F
 
 from batch.models import BatchJob
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
@@ -13,6 +14,7 @@ from queue.models import Queue
 from recipe.models import RecipeNode
 from recipe.messages.purge_recipe import create_purge_recipe_message
 from source.messages.purge_source_file import create_purge_source_file_message
+from storage.models import PurgeResults
 
 # This is the maximum number of job models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long.
@@ -133,5 +135,7 @@ class PurgeJobs(CommandMessage):
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
             Job.objects.filter(id__in=self._purge_job_ids).delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                num_jobs_deleted=F('num_jobs_deleted') + len(self._purge_job_ids))
 
         return True

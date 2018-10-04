@@ -17,7 +17,7 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 
 from source.messages.purge_source_file import PurgeSourceFile
-from storage.models import Workspace
+from storage.models import PurgeResults, Workspace
 
 
 class TestFilesViewV5(TestCase):
@@ -1102,9 +1102,30 @@ class TestPurgeSourceFileView(TestCase):
         url = '/%s/files/purge-source/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        
+
         # Check that create_batch_recipes message was created and sent
         mock_create.assert_called_once()
+
+    @patch('storage.views.CommandMessageManager')
+    @patch('storage.views.create_purge_source_file_message')
+    def test_successful_db_check(self, mock_create, mock_msg_mgr):
+        """Tests purging a source file."""
+
+        msg = PurgeSourceFile()
+        mock_create.return_value = msg
+
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Check that PurgeResults entry was made
+        self.assertEqual(PurgeResults.objects.filter(source_file_id=input_file.id).count(), 1)
 
     def test_bad_file_id(self):
         """Tests purging a source file."""

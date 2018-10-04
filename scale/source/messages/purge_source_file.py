@@ -3,11 +3,13 @@ from __future__ import unicode_literals
 
 import logging
 
+from django.utils import timezone
+
 from ingest.models import Ingest
 from job.models import JobInputFile
 from messaging.messages.message import CommandMessage
 from recipe.models import RecipeInputFile
-from storage.models import ScaleFile
+from storage.models import PurgeResults, ScaleFile
 
 
 logger = logging.getLogger(__name__)
@@ -90,5 +92,7 @@ class PurgeSourceFile(CommandMessage):
         if not job_inputs and not recipe_inputs:
             Ingest.objects.filter(source_file=self.source_file_id).delete()
             ScaleFile.objects.filter(id=self.source_file_id).delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                purge_completed=timezone.now())
 
         return True

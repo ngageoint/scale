@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.db.models import Q
+from django.db.models import F, Q
 
 from batch.models import BatchRecipe
 from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
@@ -11,6 +11,7 @@ from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 from recipe.models import Recipe, RecipeInputFile, RecipeNode
 from source.messages.purge_source_file import create_purge_source_file_message
+from storage.models import PurgeResults
 
 
 logger = logging.getLogger(__name__)
@@ -118,5 +119,7 @@ class PurgeRecipe(CommandMessage):
             RecipeNode.objects.filter(Q(recipe=recipe) | Q(sub_recipe=recipe)).delete()
             RecipeInputFile.objects.filter(recipe=recipe).delete()
             recipe.delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                num_recipes_deleted=F('num_recipes_deleted') + 1)
 
         return True
