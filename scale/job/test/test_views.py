@@ -2589,6 +2589,61 @@ class TestJobTypeDetailsViewV5(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_get_seed_job_type_v5(self):
+        """Tests getting a Seed job from the v5 API"""
+        
+        manifest = job_test_utils.COMPLETE_MANIFEST
+        expected_cmd_args = "${CUSTOM_COMMAND}"
+        manifest['job']['interface']['command'] = expected_cmd_args
+
+        configuration = {
+            'version': '6',
+            'mounts': {
+                'MOUNT_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+                'WRITE_PATH': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
+        }
+
+        workspace = storage_test_utils.create_workspace()
+        trigger_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'input_file',
+                'workspace_name': workspace.name,
+            }
+        }
+        trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type='PARSE', is_active=True,
+                                                              configuration=trigger_config)
+
+        job_type = job_test_utils.create_seed_job_type(manifest=manifest,
+                                                       trigger_rule=trigger_rule, max_scheduled=2,
+                                                       configuration=configuration)
+
+        url = '/%s/job-types/%d/' % (self.api, job_type.id)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['id'], job_type.id)
+        self.assertEqual(result['name'], job_type.name)
+        self.assertEqual(result['version'], job_type.version)
+        self.assertEqual(result['interface']['command_arguments'], expected_cmd_args)
+
+
 class TestJobTypeDetailsViewV6(TestCase):
 
     api = 'v6'

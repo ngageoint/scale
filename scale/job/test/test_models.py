@@ -784,6 +784,10 @@ class TestJobType(TransactionTestCase):
         value = job_type.get_job_version_array(version)
         self.assertEqual([0,0,0,0], value)
 
+    def test_is_seed_job_type(self):
+        self.assertTrue(self.seed_job_type.is_seed_job_type())
+        self.assertFalse(self.legacy_job_type.is_seed_job_type())
+
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
     def setUp(self):
