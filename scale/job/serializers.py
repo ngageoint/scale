@@ -107,6 +107,13 @@ class JobSerializerV6(JobBaseSerializerV6):
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
+
 
 class JobRevisionSerializerV5(JobSerializerV5):
     """Converts job model fields to REST output."""
