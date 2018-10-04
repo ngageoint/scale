@@ -2446,6 +2446,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0012_auto_20180920_1320.Migration.dependencies">(storage.migrations.0012_auto_20180920_1320.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration.dependencies">(storage.migrations.0013_purgeresults.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.dependencies">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration.dependencies">(trigger.migrations.0002_auto_20151125_1438.Migration attribute)</a>
@@ -4283,6 +4285,8 @@
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.get_next_by_occurred">(trigger.models.TriggerEvent method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.get_next_by_purge_started">get_next_by_purge_started() (storage.models.PurgeResults method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_next_by_queued">get_next_by_queued() (job.models.JobExecution method)</a>
 
       <ul>
@@ -4513,6 +4517,8 @@
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.get_previous_by_occurred">(trigger.models.TriggerEvent method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.get_previous_by_purge_started">get_previous_by_purge_started() (storage.models.PurgeResults method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_previous_by_queued">get_previous_by_queued() (job.models.JobExecution method)</a>
 
       <ul>
@@ -5374,6 +5380,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.id">(storage.models.CountryData attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.id">(storage.models.PurgeResults attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.id">(storage.models.ScaleFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.id">(storage.models.Workspace attribute)</a>
@@ -5613,10 +5621,10 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_min">ingest_time_min (metrics.models.MetricsIngest attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_sum">ingest_time_sum (metrics.models.MetricsIngest attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_sum">ingest_time_sum (metrics.models.MetricsIngest attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestBaseSerializer">IngestBaseSerializer (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.apps.IngestConfig">IngestConfig (class in ingest.apps)</a>
@@ -8072,6 +8080,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0012_auto_20180920_1320.Migration">(class in storage.migrations.0012_auto_20180920_1320)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration">(class in storage.migrations.0013_purgeresults)</a>
+</li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration">(class in trigger.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0002_auto_20151125_1438.Migration">(class in trigger.migrations.0002_auto_20151125_1438)</a>
@@ -8343,10 +8353,10 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 (module)</a>
@@ -8497,7 +8507,13 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.num_exes">num_exes (job.models.Job attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.num_jobs_deleted">num_jobs_deleted (storage.models.PurgeResults attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.num_message_handlers">num_message_handlers (scheduler.models.Scheduler attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.num_products_deleted">num_products_deleted (storage.models.PurgeResults attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.num_recipes_deleted">num_recipes_deleted (storage.models.PurgeResults attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -8573,6 +8589,8 @@
         <li><a href="architecture/django/code_docs/source.html#source.models.SourceFile.objects">(source.models.SourceFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.objects">(storage.models.CountryData attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.objects">(storage.models.PurgeResults attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.objects">(storage.models.ScaleFile attribute)</a>
 </li>
@@ -8947,6 +8965,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0011_auto_20180821_1439.Migration.operations">(storage.migrations.0011_auto_20180821_1439.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0012_auto_20180920_1320.Migration.operations">(storage.migrations.0012_auto_20180920_1320.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0013_purgeresults.Migration.operations">(storage.migrations.0013_purgeresults.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.operations">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9529,9 +9549,21 @@
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.PullTask">(class in job.tasks.pull_task)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.purge_completed">purge_completed (storage.models.PurgeResults attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.purge_started">purge_started (storage.models.PurgeResults attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.messages.html#job.messages.purge_jobs.PurgeJobs">PurgeJobs (class in job.messages.purge_jobs)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.purge_recipe.PurgeRecipe">PurgeRecipe (class in recipe.messages.purge_recipe)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults">PurgeResults (class in storage.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.DoesNotExist">PurgeResults.DoesNotExist</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.MultipleObjectsReturned">PurgeResults.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.purgeresults_set">purgeresults_set (trigger.models.TriggerEvent attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.messages.html#source.messages.purge_source_file.PurgeSourceFile">PurgeSourceFile (class in source.messages.purge_source_file)</a>
 </li>
@@ -12030,6 +12062,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.setUp">(storage.test.test_models.TestCountryData method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults.setUp">(storage.test.test_models.TestPurgeResults method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.setUp">(storage.test.test_models.TestScaleFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileAddDataTypeTag.setUp">(storage.test.test_models.TestScaleFileAddDataTypeTag method)</a>
@@ -12244,7 +12278,11 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.source_file">source_file (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.source_file_id">source_file_id (ingest.models.Ingest attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.source_file_id">(storage.models.PurgeResults attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.source_sensor">source_sensor (job.models.Job attribute)</a>
 
       <ul>
@@ -12500,6 +12538,8 @@
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0011_auto_20180821_1439">storage.migrations.0011_auto_20180821_1439 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0012_auto_20180920_1320">storage.migrations.0012_auto_20180920_1320 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0013_purgeresults">storage.migrations.0013_purgeresults (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
@@ -12856,7 +12896,11 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific">test_accept_specific() (job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.test_access">test_access() (storage.test.test_models.TestCountryData method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults.test_access">(storage.test.test_models.TestPurgeResults method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers">test_add_allocated_offers() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_all_tasks">test_add_allocated_offers_remove_all_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
@@ -13977,6 +14021,16 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.messages.html#queue.test.messages.test_requeue_jobs_bulk.TestRequeueJobsBulk.test_execute_canceled">test_execute_canceled() (queue.test.messages.test_requeue_jobs_bulk.TestRequeueJobsBulk method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_purge_jobs.TestPurgeJobs.test_execute_check_results">test_execute_check_results() (job.test.messages.test_purge_jobs.TestPurgeJobs method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe.test_execute_check_results">(recipe.test.messages.test_purge_recipe.TestPurgeRecipe method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute_check_results">(storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/storage.test.messages.html#storage.test.messages.test_delete_files.TestDeleteFiles.test_execute_check_results_no_purge">test_execute_check_results_no_purge() (storage.test.messages.test_delete_files.TestDeleteFiles method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute_create_jobs">test_execute_create_jobs() (recipe.test.messages.test_update_recipes.TestUpdateRecipes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data">test_execute_input_data() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
@@ -13992,6 +14046,8 @@
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe_superseded">test_execute_recipe_superseded() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute_recursively">test_execute_recursively() (recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_results_check">test_execute_results_check() (source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes">test_execute_subrecipes() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
 </li>
@@ -15558,6 +15614,8 @@
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.test_not_found">(storage.test.test_models.TestCountryData method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults.test_not_found">(storage.test.test_models.TestPurgeResults method)</a>
+</li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsViewV5.test_not_found">(storage.test.test_views.TestWorkspaceDetailsViewV5 method)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsViewV6.test_not_found">(storage.test.test_views.TestWorkspaceDetailsViewV6 method)</a>
@@ -16530,6 +16588,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.test_successful_data_time_save">test_successful_data_time_save() (source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_successful_db_check">test_successful_db_check() (storage.test.test_views.TestPurgeSourceFileView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeRevisionsViewV6.test_successful_details">test_successful_details() (job.test.test_views.TestJobTypeRevisionsViewV6 method)</a>
 
@@ -17733,6 +17793,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_purge_recipe.TestPurgeRecipe">TestPurgeRecipe (class in recipe.test.messages.test_purge_recipe)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestPurgeResults">TestPurgeResults (class in storage.test.test_models)</a>
+</li>
       <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile">TestPurgeSourceFile (class in source.test.messages.test_purge_source_file)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView">TestPurgeSourceFileView (class in storage.test.test_views)</a>
@@ -18274,6 +18336,10 @@
       <li><a href="architecture/django/code_docs/trigger.test.html#module-trigger.test.tests">trigger.test.tests (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/trigger.test.html#module-trigger.test.utils">trigger.test.utils (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.trigger_event">trigger_event (storage.models.PurgeResults attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.PurgeResults.trigger_event_id">trigger_event_id (storage.models.PurgeResults attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.trigger_rule">trigger_rule (job.models.JobType attribute)</a>
 

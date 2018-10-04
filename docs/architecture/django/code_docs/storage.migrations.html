@@ -458,6 +458,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-storage.migrations.0013_purgeresults">
+<span id="storage-migrations-0013-purgeresults-module"></span><h2>storage.migrations.0013_purgeresults module<a class="headerlink" href="#module-storage.migrations.0013_purgeresults" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.migrations.0013_purgeresults.Migration">
+<em class="property">class </em><code class="descclassname">storage.migrations.0013_purgeresults.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0013_purgeresults.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="storage.migrations.0013_purgeresults.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'trigger', u'0005_auto_20170412_1225'), (u'storage', u'0012_auto_20180920_1320')]</em><a class="headerlink" href="#storage.migrations.0013_purgeresults.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.migrations.0013_purgeresults.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'source_file_id', &lt;django.db.models.fields.PositiveIntegerField&gt;), (u'num_jobs_deleted', &lt;django.db.models.fields.PositiveIntegerField&gt;), (u'num_recipes_deleted', &lt;django.db.models.fields.PositiveIntegerField&gt;), (u'num_products_deleted', &lt;django.db.models.fields.PositiveIntegerField&gt;), (u'purge_started', &lt;django.db.models.fields.DateTimeField&gt;), (u'purge_completed', &lt;django.db.models.fields.DateTimeField&gt;), (u'trigger_event', &lt;django.db.models.fields.related.ForeignKey&gt;)], options={u'db_table': u'purge_results'}, name=u'PurgeResults'&gt;]</em><a class="headerlink" href="#storage.migrations.0013_purgeresults.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-storage.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

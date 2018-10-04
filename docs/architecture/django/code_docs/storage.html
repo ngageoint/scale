@@ -290,6 +290,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0010_auto_20180613_1947">storage.migrations.0010_auto_20180613_1947 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0011_auto_20180821_1439">storage.migrations.0011_auto_20180821_1439 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0012_auto_20180920_1320">storage.migrations.0012_auto_20180920_1320 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0013_purgeresults">storage.migrations.0013_purgeresults module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -821,6 +822,126 @@ is before the target.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.models.PurgeResults">
+<em class="property">class </em><code class="descclassname">storage.models.</code><code class="descname">PurgeResults</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.PurgeResults" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents the results from purge operations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>source_file_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.PositiveIntegerField</span></code>) &#8211; The ID of the source file purged</li>
+<li><strong>trigger_event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of the purge process</li>
+<li><strong>num_jobs_deleted</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.PositiveIntegerField</span></code>) &#8211; The number of jobs deleted as part of the purge process</li>
+<li><strong>num_recipes_deleted</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.PositiveIntegerField</span></code>) &#8211; The number of recipes deleted as part of the purge process</li>
+<li><strong>num_products_deleted</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.PositiveIntegerField</span></code>) &#8211; The number of products deleted as part of the purge process</li>
+<li><strong>purge_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The datetime that the purge process began</li>
+<li><strong>purge_completed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The datetime that the purge process completed</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="storage.models.PurgeResults.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#storage.models.PurgeResults.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="storage.models.PurgeResults.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.PurgeResults.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.models.PurgeResults.get_next_by_purge_started">
+<code class="descname">get_next_by_purge_started</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.PurgeResults.get_next_by_purge_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.models.PurgeResults.get_previous_by_purge_started">
+<code class="descname">get_previous_by_purge_started</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.PurgeResults.get_previous_by_purge_started" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.id">
+<code class="descname">id</code><a class="headerlink" href="#storage.models.PurgeResults.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.num_jobs_deleted">
+<code class="descname">num_jobs_deleted</code><a class="headerlink" href="#storage.models.PurgeResults.num_jobs_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.num_products_deleted">
+<code class="descname">num_products_deleted</code><a class="headerlink" href="#storage.models.PurgeResults.num_products_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.num_recipes_deleted">
+<code class="descname">num_recipes_deleted</code><a class="headerlink" href="#storage.models.PurgeResults.num_recipes_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#storage.models.PurgeResults.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.purge_completed">
+<code class="descname">purge_completed</code><a class="headerlink" href="#storage.models.PurgeResults.purge_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.purge_started">
+<code class="descname">purge_started</code><a class="headerlink" href="#storage.models.PurgeResults.purge_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.source_file_id">
+<code class="descname">source_file_id</code><a class="headerlink" href="#storage.models.PurgeResults.source_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.trigger_event">
+<code class="descname">trigger_event</code><a class="headerlink" href="#storage.models.PurgeResults.trigger_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.PurgeResults.trigger_event_id">
+<code class="descname">trigger_event_id</code><a class="headerlink" href="#storage.models.PurgeResults.trigger_event_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 </dd></dl>
