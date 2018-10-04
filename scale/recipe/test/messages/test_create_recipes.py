@@ -1,26 +1,278 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TransactionTestCase
+from django.test import TestCase
 
 from batch.test import utils as batch_test_utils
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
+from data.data.value import FileValue
 from data.interface.interface import Interface
+from data.interface.parameter import FileParameter
 from job.models import Job
 from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
-from recipe.messages.create_recipes import create_subrecipes_messages, CreateRecipes, SubRecipe
+from recipe.messages.create_recipes import create_reprocess_messages, create_subrecipes_messages, CreateRecipes, \
+    SubRecipe
 from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
+from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
 
 
-class TestCreateRecipes(TransactionTestCase):
+class TestCreateRecipes(TestCase):
 
     def setUp(self):
         django.setup()
+
+    def test_json_reprocess(self):
+        """Tests converting a CreateRecipes message to and from JSON when re-processing"""
+
+        file_1 = storage_test_utils.create_file()
+        file_2 = storage_test_utils.create_file()
+
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]}
+        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        recipe_interface = Interface()
+        recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))
+        definition = RecipeDefinition(recipe_interface)
+        definition.add_job_node('Job 1', job_type_1.name, job_type_1.version, job_type_1.revision_num)
+        definition.add_recipe_input_connection('Job 1', 'Test Input 1', 'Recipe Input')
+        definition.add_job_node('Job 2', job_type_2.name, job_type_2.version, job_type_2.revision_num)
+        definition.add_dependency('Job 1', 'Job 2')
+        definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
+        definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+
+        input_1 = Data()
+        input_1.add_value(FileValue('Recipe Input', [file_1.id]))
+        input_1_dict = convert_data_to_v6_json(input_1).get_dict()
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_1_dict)
+        job_1_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 1', job=job_1_1)
+        job_1_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 2', job=job_1_2)
+
+        input_2 = Data()
+        input_2.add_value(FileValue('Recipe Input', [file_2.id]))
+        input_2_dict = convert_data_to_v6_json(input_2).get_dict()
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_2_dict)
+        job_2_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 1', job=job_2_1)
+        job_2_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 2', job=job_2_2)
+
+        event = trigger_test_utils.create_trigger_event()
+
+        # Create message to reprocess recipe 1 and 2
+        reprocess_recipe_ids = [recipe_1.id, recipe_2.id]
+        reprocess_job_ids = [job_1_1.id, job_1_2.id, job_2_1.id, job_2_2.id]
+        message = create_reprocess_messages(reprocess_recipe_ids, recipe_1.recipe_type.name,
+                                            recipe_1.recipe_type.revision_num, event.id)[0]
+
+        # Convert message to JSON and back, and then execute
+        message_json_dict = message.to_json()
+        new_message = CreateRecipes.from_json(message_json_dict)
+        result = new_message.execute()
+        self.assertTrue(result)
+
+        # Make sure new recipes supersede the old ones
+        for recipe in Recipe.objects.filter(id__in=reprocess_recipe_ids):
+            self.assertTrue(recipe.is_superseded)
+        new_recipe_1 = Recipe.objects.get(superseded_recipe_id=recipe_1.id)
+        self.assertEqual(new_recipe_1.event_id, event.id)
+        self.assertDictEqual(new_recipe_1.input, recipe_1.input)
+        new_recipe_2 = Recipe.objects.get(superseded_recipe_id=recipe_2.id)
+        self.assertEqual(new_recipe_2.event_id, event.id)
+        self.assertDictEqual(new_recipe_2.input, recipe_2.input)
+        # Nothing changed in recipe type revision, so reprocessed jobs should all be copied to new recipes
+        for job in Job.objects.filter(id__in=reprocess_job_ids):
+            self.assertFalse(job.is_superseded)
+        recipe_nodes = RecipeNode.objects.filter(recipe_id__in=[new_recipe_1.id, new_recipe_2.id])
+        self.assertEqual(len(recipe_nodes), 4)
+        for recipe_node in recipe_nodes:
+            if recipe_node.recipe_id == new_recipe_1.id:
+                self.assertTrue(recipe_node.job_id in [job_1_1.id, job_1_2.id])
+            elif recipe_node.recipe_id == new_recipe_2.id:
+                self.assertTrue(recipe_node.job_id in [job_2_1.id, job_2_2.id])
+            self.assertFalse(recipe_node.is_original)
+
+        # Should be two messages for processing the input for the new recipes
+        self.assertEqual(len(new_message.new_messages), 2)
+        for msg in new_message.new_messages:
+            self.assertEqual(msg.type, 'process_recipe_input')
+            self.assertTrue(msg.recipe_id in [new_recipe_1.id, new_recipe_2.id])
+            self.assertIsNone(msg.forced_nodes)
+
+    def test_json_reprocess_forced_nodes(self):
+        """Tests converting a CreateRecipes message to and from JSON when re-processing with forced nodes"""
+
+        file_1 = storage_test_utils.create_file()
+        file_2 = storage_test_utils.create_file()
+
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]}
+        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        recipe_interface = Interface()
+        recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))
+        definition = RecipeDefinition(recipe_interface)
+        definition.add_job_node('Job 1', job_type_1.name, job_type_1.version, job_type_1.revision_num)
+        definition.add_recipe_input_connection('Job 1', 'Test Input 1', 'Recipe Input')
+        definition.add_job_node('Job 2', job_type_2.name, job_type_2.version, job_type_2.revision_num)
+        definition.add_dependency('Job 1', 'Job 2')
+        definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
+        definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+
+        input_1 = Data()
+        input_1.add_value(FileValue('Recipe Input', [file_1.id]))
+        input_1_dict = convert_data_to_v6_json(input_1).get_dict()
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_1_dict)
+        job_1_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 1', job=job_1_1)
+        job_1_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 2', job=job_1_2)
+
+        input_2 = Data()
+        input_2.add_value(FileValue('Recipe Input', [file_2.id]))
+        input_2_dict = convert_data_to_v6_json(input_2).get_dict()
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_2_dict)
+        job_2_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 1', job=job_2_1)
+        job_2_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 2', job=job_2_2)
+
+        event = trigger_test_utils.create_trigger_event()
+        batch = batch_test_utils.create_batch()
+        forced_nodes = ForcedNodes()
+        forced_nodes.set_all_nodes()
+
+        # Create message to reprocess recipe 1 and 2
+        reprocess_recipe_ids = [recipe_1.id, recipe_2.id]
+        reprocess_job_ids = [job_1_1.id, job_1_2.id, job_2_1.id, job_2_2.id]
+        message = create_reprocess_messages(reprocess_recipe_ids, recipe_1.recipe_type.name,
+                                            recipe_1.recipe_type.revision_num, event.id, batch_id=batch.id,
+                                            forced_nodes=forced_nodes)[0]
+
+        # Convert message to JSON and back, and then execute
+        message_json_dict = message.to_json()
+        new_message = CreateRecipes.from_json(message_json_dict)
+        result = new_message.execute()
+        self.assertTrue(result)
+
+        # Make sure new recipes supersede the old ones
+        for recipe in Recipe.objects.filter(id__in=reprocess_recipe_ids):
+            self.assertTrue(recipe.is_superseded)
+        new_recipe_1 = Recipe.objects.get(superseded_recipe_id=recipe_1.id)
+        self.assertEqual(new_recipe_1.batch_id, batch.id)
+        self.assertEqual(new_recipe_1.event_id, event.id)
+        self.assertDictEqual(new_recipe_1.input, recipe_1.input)
+        new_recipe_2 = Recipe.objects.get(superseded_recipe_id=recipe_2.id)
+        self.assertEqual(new_recipe_2.batch_id, batch.id)
+        self.assertEqual(new_recipe_2.event_id, event.id)
+        self.assertDictEqual(new_recipe_2.input, recipe_2.input)
+        # All nodes were forced to reprocess, new recipes should have no copied jobs
+        self.assertEqual(RecipeNode.objects.filter(recipe_id__in=[new_recipe_1.id, new_recipe_2.id]).count(), 0)
+        for job in Job.objects.filter(id__in=reprocess_job_ids):
+            self.assertFalse(job.is_superseded)
+
+        # Should be three messages, one for superseding recipe nodes and two for processing recipe input
+        self.assertEqual(len(new_message.new_messages), 3)
+        supersede_recipe_msg = None
+        process_recipe_input_1_msg = None
+        process_recipe_input_2_msg = None
+        for msg in new_message.new_messages:
+            if msg.type == 'supersede_recipe_nodes':
+                supersede_recipe_msg = msg
+            elif msg.type == 'process_recipe_input':
+                if msg.recipe_id == new_recipe_1.id:
+                    process_recipe_input_1_msg = msg
+                if msg.recipe_id == new_recipe_2.id:
+                    process_recipe_input_2_msg = msg
+        self.assertIsNotNone(supersede_recipe_msg)
+        self.assertIsNotNone(process_recipe_input_1_msg)
+        self.assertIsNotNone(process_recipe_input_2_msg)
+        # Check message for superseding recipes 1 and 2
+        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertFalse(supersede_recipe_msg.supersede_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 1', 'Job 2'})
+        self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_jobs, set())
+        self.assertFalse(supersede_recipe_msg.supersede_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_recursive, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_recursive, set())
+        # Check message to process recipe input for new recipe 1
+        self.assertEqual(process_recipe_input_1_msg.recipe_id, new_recipe_1.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_1_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+        # Check message to process recipe input for new recipe 2
+        self.assertEqual(process_recipe_input_2_msg.recipe_id, new_recipe_2.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_2_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
 
     def test_json_subrecipes(self):
         """Tests converting a CreateRecipes message to and from JSON when creating sub-recipes"""
@@ -248,6 +500,215 @@ class TestCreateRecipes(TransactionTestCase):
         # Check message to update recipe metrics for the recipe containing the new sub-recipes
         self.assertListEqual(update_metrics_msg._recipe_ids, [new_top_recipe.id])
 
+    def test_execute_reprocess(self):
+        """Tests calling CreateRecipes.execute() successfully when reprocessing recipes"""
+
+        file_1 = storage_test_utils.create_file()
+        file_2 = storage_test_utils.create_file()
+
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]}
+        job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        recipe_interface = Interface()
+        recipe_interface.add_parameter(FileParameter('Recipe Input', ['text/plain']))
+        definition = RecipeDefinition(recipe_interface)
+        definition.add_job_node('Job 1', job_type_1.name, job_type_1.version, job_type_1.revision_num)
+        definition.add_recipe_input_connection('Job 1', 'Test Input 1', 'Recipe Input')
+        definition.add_job_node('Job 2', job_type_2.name, job_type_2.version, job_type_2.revision_num)
+        definition.add_dependency('Job 1', 'Job 2')
+        definition.add_dependency_input_connection('Job 2', 'Test Input 2', 'Job 1', 'Test Output 1')
+        definition_dict = convert_recipe_definition_to_v6_json(definition).get_dict()
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition_dict)
+
+        input_1 = Data()
+        input_1.add_value(FileValue('Recipe Input', [file_1.id]))
+        input_1_dict = convert_data_to_v6_json(input_1).get_dict()
+        recipe_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_1_dict)
+        job_1_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 1', job=job_1_1)
+        job_1_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_1, job_name='Job 2', job=job_1_2)
+
+        input_2 = Data()
+        input_2.add_value(FileValue('Recipe Input', [file_2.id]))
+        input_2_dict = convert_data_to_v6_json(input_2).get_dict()
+        recipe_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type, input=input_2_dict)
+        job_2_1 = job_test_utils.create_job(job_type=job_type_1, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 1', job=job_2_1)
+        job_2_2 = job_test_utils.create_job(job_type=job_type_2, status='COMPLETED')
+        recipe_test_utils.create_recipe_job(recipe=recipe_2, job_name='Job 2', job=job_2_2)
+
+        event = trigger_test_utils.create_trigger_event()
+        batch = batch_test_utils.create_batch()
+        forced_nodes = ForcedNodes()
+        forced_nodes.add_node('Job 2')
+
+        # Create and execute message to reprocess recipe 1 and 2
+        reprocess_recipe_ids = [recipe_1.id, recipe_2.id]
+        copied_job_ids = [job_1_1.id, job_2_1.id]
+        message = create_reprocess_messages(reprocess_recipe_ids, recipe_1.recipe_type.name,
+                                            recipe_1.recipe_type.revision_num, event.id, batch_id=batch.id,
+                                            forced_nodes=forced_nodes)[0]
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Make sure new recipes supersede the old ones
+        for recipe in Recipe.objects.filter(id__in=reprocess_recipe_ids):
+            self.assertTrue(recipe.is_superseded)
+        new_recipe_1 = Recipe.objects.get(superseded_recipe_id=recipe_1.id)
+        self.assertEqual(new_recipe_1.batch_id, batch.id)
+        self.assertEqual(new_recipe_1.event_id, event.id)
+        self.assertDictEqual(new_recipe_1.input, recipe_1.input)
+        new_recipe_2 = Recipe.objects.get(superseded_recipe_id=recipe_2.id)
+        self.assertEqual(new_recipe_2.batch_id, batch.id)
+        self.assertEqual(new_recipe_2.event_id, event.id)
+        self.assertDictEqual(new_recipe_2.input, recipe_2.input)
+        # Job 1 was not force reprocessed so it should be copied to the new recipes
+        for job in Job.objects.filter(id__in=copied_job_ids):
+            self.assertFalse(job.is_superseded)
+        recipe_nodes = RecipeNode.objects.filter(recipe_id__in=[new_recipe_1.id, new_recipe_2.id])
+        self.assertEqual(len(recipe_nodes), 2)
+        for recipe_node in recipe_nodes:
+            if recipe_node.recipe_id == new_recipe_1.id:
+                self.assertEqual(recipe_node.job_id, job_1_1.id)
+            elif recipe_node.recipe_id == new_recipe_2.id:
+                self.assertEqual(recipe_node.job_id, job_2_1.id)
+            self.assertFalse(recipe_node.is_original)
+
+        # Should be three messages, one for superseding recipe nodes and two for processing recipe input
+        self.assertEqual(len(message.new_messages), 3)
+        supersede_recipe_msg = None
+        process_recipe_input_1_msg = None
+        process_recipe_input_2_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'supersede_recipe_nodes':
+                supersede_recipe_msg = msg
+            elif msg.type == 'process_recipe_input':
+                if msg.recipe_id == new_recipe_1.id:
+                    process_recipe_input_1_msg = msg
+                if msg.recipe_id == new_recipe_2.id:
+                    process_recipe_input_2_msg = msg
+        self.assertIsNotNone(supersede_recipe_msg)
+        self.assertIsNotNone(process_recipe_input_1_msg)
+        self.assertIsNotNone(process_recipe_input_2_msg)
+        # Check message for superseding recipes 1 and 2
+        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertFalse(supersede_recipe_msg.supersede_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 2'})
+        self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_jobs, set())
+        self.assertFalse(supersede_recipe_msg.supersede_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_recursive, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_recursive, set())
+        # Check message to process recipe input for new recipe 1
+        self.assertEqual(process_recipe_input_1_msg.recipe_id, new_recipe_1.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_1_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+        # Check message to process recipe input for new recipe 2
+        self.assertEqual(process_recipe_input_2_msg.recipe_id, new_recipe_2.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_2_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+
+        # Test executing message again
+        message_json_dict = message.to_json()
+        message = CreateRecipes.from_json(message_json_dict)
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Make sure new recipes supersede the old ones
+        for recipe in Recipe.objects.filter(id__in=reprocess_recipe_ids):
+            self.assertTrue(recipe.is_superseded)
+        new_recipe_1 = Recipe.objects.get(superseded_recipe_id=recipe_1.id)
+        self.assertEqual(new_recipe_1.batch_id, batch.id)
+        self.assertEqual(new_recipe_1.event_id, event.id)
+        self.assertDictEqual(new_recipe_1.input, recipe_1.input)
+        new_recipe_2 = Recipe.objects.get(superseded_recipe_id=recipe_2.id)
+        self.assertEqual(new_recipe_2.batch_id, batch.id)
+        self.assertEqual(new_recipe_2.event_id, event.id)
+        self.assertDictEqual(new_recipe_2.input, recipe_2.input)
+        # Job 1 was not force reprocessed so it should be copied to the new recipes
+        for job in Job.objects.filter(id__in=copied_job_ids):
+            self.assertFalse(job.is_superseded)
+        recipe_nodes = RecipeNode.objects.filter(recipe_id__in=[new_recipe_1.id, new_recipe_2.id])
+        self.assertEqual(len(recipe_nodes), 2)
+        for recipe_node in recipe_nodes:
+            if recipe_node.recipe_id == new_recipe_1.id:
+                self.assertEqual(recipe_node.job_id, job_1_1.id)
+            elif recipe_node.recipe_id == new_recipe_2.id:
+                self.assertEqual(recipe_node.job_id, job_2_1.id)
+            self.assertFalse(recipe_node.is_original)
+
+        # Check messages again
+        # Should be three messages, one for superseding recipe nodes and two for processing recipe input
+        self.assertEqual(len(message.new_messages), 3)
+        supersede_recipe_msg = None
+        process_recipe_input_1_msg = None
+        process_recipe_input_2_msg = None
+        for msg in message.new_messages:
+            if msg.type == 'supersede_recipe_nodes':
+                supersede_recipe_msg = msg
+            elif msg.type == 'process_recipe_input':
+                if msg.recipe_id == new_recipe_1.id:
+                    process_recipe_input_1_msg = msg
+                if msg.recipe_id == new_recipe_2.id:
+                    process_recipe_input_2_msg = msg
+        self.assertIsNotNone(supersede_recipe_msg)
+        self.assertIsNotNone(process_recipe_input_1_msg)
+        self.assertIsNotNone(process_recipe_input_2_msg)
+        # Check message for superseding recipes 1 and 2
+        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertFalse(supersede_recipe_msg.supersede_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 2'})
+        self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_jobs, set())
+        self.assertFalse(supersede_recipe_msg.supersede_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.supersede_recursive, set())
+        self.assertFalse(supersede_recipe_msg.unpublish_recursive_all)
+        self.assertSetEqual(supersede_recipe_msg.unpublish_recursive, set())
+        # Check message to process recipe input for new recipe 1
+        self.assertEqual(process_recipe_input_1_msg.recipe_id, new_recipe_1.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_1_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+        # Check message to process recipe input for new recipe 2
+        self.assertEqual(process_recipe_input_2_msg.recipe_id, new_recipe_2.id)
+        msg_forced_nodes = convert_forced_nodes_to_v6(process_recipe_input_2_msg.forced_nodes).get_dict()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
+        self.assertDictEqual(msg_forced_nodes, forced_nodes_dict)
+
     def test_execute_subrecipes(self):
         """Tests calling CreateRecipes.execute() successfully when creating sub-recipes"""
 
@@ -468,18 +929,15 @@ class TestCreateRecipes(TransactionTestCase):
         self.assertEqual(recipe_nodes[0].node_name, 'node_x')
         self.assertFalse(recipe_nodes[0].is_original)
 
-        # Should be five messages, two for superseding recipe nodes, one for processing recipe input, one for updating
+        # Should be four messages, one for superseding recipe B nodes, one for processing recipe input, one for updating
         # the other sub-recipe, and one for updating metrics for the recipe containing the new sub-recipes
-        self.assertEqual(len(message.new_messages), 5)
-        supersede_recipe_a_msg = None
+        self.assertEqual(len(message.new_messages), 4)
         supersede_recipe_b_msg = None
         process_recipe_input_msg = None
         update_metrics_msg = None
         update_recipe_msg = None
         for msg in message.new_messages:
             if msg.type == 'supersede_recipe_nodes':
-                if msg._recipe_ids[0] == prev_recipe_a.id:
-                    supersede_recipe_a_msg = msg
                 if msg._recipe_ids[0] == prev_recipe_b.id:
                     supersede_recipe_b_msg = msg
             elif msg.type == 'process_recipe_input':
@@ -488,21 +946,10 @@ class TestCreateRecipes(TransactionTestCase):
                 update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_metrics_msg = msg
-        self.assertIsNotNone(supersede_recipe_a_msg)
         self.assertIsNotNone(supersede_recipe_b_msg)
         self.assertIsNotNone(process_recipe_input_msg)
         self.assertIsNotNone(update_metrics_msg)
         self.assertIsNotNone(update_recipe_msg)
-        # Check message for superseding previous sub-recipe A
-        self.assertFalse(supersede_recipe_a_msg.supersede_all)
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_jobs, set())
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_subrecipes, set())
-        self.assertFalse(supersede_recipe_a_msg.unpublish_all)
-        self.assertSetEqual(supersede_recipe_a_msg.unpublish_jobs, set())
-        self.assertFalse(supersede_recipe_a_msg.supersede_recursive_all)
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_recursive, set())
-        self.assertFalse(supersede_recipe_a_msg.unpublish_recursive_all)
-        self.assertSetEqual(supersede_recipe_a_msg.unpublish_recursive, set())
         # Check message for superseding previous sub-recipe B
         self.assertFalse(supersede_recipe_b_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_b_msg.supersede_jobs, {'node_y'})
@@ -561,18 +1008,15 @@ class TestCreateRecipes(TransactionTestCase):
         self.assertFalse(recipe_nodes[0].is_original)
 
         # Check messages again
-        # Should be five messages, two for superseding recipe nodes, one for processing recipe input, one for updating
+        # Should be four messages, one for superseding recipe B nodes, one for processing recipe input, one for updating
         # the other sub-recipe, and one for updating metrics for the recipe containing the new sub-recipes
-        self.assertEqual(len(message.new_messages), 5)
-        supersede_recipe_a_msg = None
+        self.assertEqual(len(message.new_messages), 4)
         supersede_recipe_b_msg = None
         process_recipe_input_msg = None
         update_metrics_msg = None
         update_recipe_msg = None
         for msg in message.new_messages:
             if msg.type == 'supersede_recipe_nodes':
-                if msg._recipe_ids[0] == prev_recipe_a.id:
-                    supersede_recipe_a_msg = msg
                 if msg._recipe_ids[0] == prev_recipe_b.id:
                     supersede_recipe_b_msg = msg
             elif msg.type == 'process_recipe_input':
@@ -581,21 +1025,10 @@ class TestCreateRecipes(TransactionTestCase):
                 update_recipe_msg = msg
             elif msg.type == 'update_recipe_metrics':
                 update_metrics_msg = msg
-        self.assertIsNotNone(supersede_recipe_a_msg)
         self.assertIsNotNone(supersede_recipe_b_msg)
         self.assertIsNotNone(process_recipe_input_msg)
         self.assertIsNotNone(update_metrics_msg)
         self.assertIsNotNone(update_recipe_msg)
-        # Check message for superseding previous sub-recipe A
-        self.assertFalse(supersede_recipe_a_msg.supersede_all)
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_jobs, set())
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_subrecipes, set())
-        self.assertFalse(supersede_recipe_a_msg.unpublish_all)
-        self.assertSetEqual(supersede_recipe_a_msg.unpublish_jobs, set())
-        self.assertFalse(supersede_recipe_a_msg.supersede_recursive_all)
-        self.assertSetEqual(supersede_recipe_a_msg.supersede_recursive, set())
-        self.assertFalse(supersede_recipe_a_msg.unpublish_recursive_all)
-        self.assertSetEqual(supersede_recipe_a_msg.unpublish_recursive, set())
         # Check message for superseding previous sub-recipe B
         self.assertFalse(supersede_recipe_b_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_b_msg.supersede_jobs, {'node_y'})
