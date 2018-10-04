@@ -520,8 +520,7 @@ class QueueManager(models.Manager):
 
         return handler
 
-    def queue_new_recipe_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None, delta=None,
-                         superseded_jobs=None, priority=None):
+    def queue_new_recipe_v6(self, recipe_type, recipe_input, event, recipe_config=None, batch_id=None, superseded_recipe=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
         caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
@@ -533,26 +532,20 @@ class QueueManager(models.Manager):
         :type recipe_input: :class:`recipe.data.recipe_data.RecipeData`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
+        :param recipe_config: config of the recipe
         :param batch_id: The ID of the batch that contains this recipe
         :type batch_id: int
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
-        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
-        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
-        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
-            supersede
-        :type superseded_jobs: {string: :class:`job.models.Job`}
-        :param priority: An optional argument to reset the priority of associated jobs before they are queued
-        :type priority: int
-        :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+        :returns: New recipe type
+        :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
         recipe_type_rev =  RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         
-        recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input)
+        recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
         recipe.save()
         Recipe.objects.process_recipe_input(recipe)
 
@@ -569,8 +562,8 @@ class QueueManager(models.Manager):
 
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param data: The recipe data to run on, should be None if superseded_recipe is provided
-        :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
+        :type recipe_input: :class:`recipe.data.recipe_data.RecipeData`
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
