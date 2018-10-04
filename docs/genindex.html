@@ -1469,6 +1469,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v1.convert_job_to_v1_json">convert_job_to_v1_json() (in module recipe.definition.json.definition_v1)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.convert_manifest_to_v5_interface">convert_manifest_to_v5_interface() (job.models.JobTypeManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.diff.json.html#recipe.diff.json.diff_v6.convert_node_diff_to_v6_json">convert_node_diff_to_v6_json() (in module recipe.diff.json.diff_v6)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.definition.json.html#recipe.definition.json.definition_v6.convert_node_to_v6_json">convert_node_to_v6_json() (in module recipe.definition.json.definition_v6)</a>
@@ -1523,6 +1525,8 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.cpus">cpus (node.resources.node_resources.NodeResources attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">cpus_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
@@ -1533,8 +1537,6 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
@@ -5609,10 +5611,10 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_min">ingest_time_min (metrics.models.MetricsIngest attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsIngest.ingest_time_sum">ingest_time_sum (metrics.models.MetricsIngest attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.serializers.IngestBaseSerializer">IngestBaseSerializer (class in ingest.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.apps.IngestConfig">IngestConfig (class in ingest.apps)</a>
@@ -5917,6 +5919,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.deprecation.RecipeDefinitionSunset.is_seed_dict">(recipe.deprecation.RecipeDefinitionSunset static method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.is_seed_job_type">is_seed_job_type() (job.models.JobType method)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.is_sufficient_to_meet">is_sufficient_to_meet() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.is_superseded">is_superseded (batch.models.Batch attribute)</a>
@@ -14119,6 +14123,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobManager.test_get_details">test_get_details() (job.test.test_models.TestJobManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsViewV5.test_get_details_with_seed_job">test_get_details_with_seed_job() (recipe.test.test_views.TestRecipeTypeDetailsViewV5 method)</a>
+</li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorDetailsViewV5.test_get_error_not_found">test_get_error_not_found() (error.test.test_views.TestErrorDetailsViewV5 method)</a>
 
       <ul>
@@ -14342,6 +14348,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJob.test_get_seed_job_results">test_get_seed_job_results() (job.test.test_models.TestJob method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsViewV5.test_get_seed_job_type_v5">test_get_seed_job_type_v5() (job.test.test_views.TestJobTypeDetailsViewV5 method)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_source_ingests">test_get_source_ingests() (source.test.test_models.TestSourceFileManager method)</a>
 </li>
@@ -14830,6 +14838,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJob.test_is_ready_to_requeue">test_is_ready_to_requeue() (job.test.test_models.TestJob method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobType.test_is_seed_job_type">test_is_seed_job_type() (job.test.test_models.TestJobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesViewV6.test_is_system">test_is_system() (job.test.test_views.TestJobTypesViewV6 method)</a>
 </li>
@@ -15611,12 +15621,12 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_duration">test_parse_duration() (util.test.test_parse.TestParse method)</a>

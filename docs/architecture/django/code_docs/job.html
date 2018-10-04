@@ -5105,6 +5105,22 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.JobType.is_seed_job_type">
+<code class="descname">is_seed_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.is_seed_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the JobType object is a Seed job type (True) or legacy job type (False)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this job type is legacy or Seed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.JobType.is_system">
 <code class="descname">is_system</code><a class="headerlink" href="#job.models.JobType.is_system" title="Permalink to this definition">¶</a></dt>
@@ -5459,11 +5475,30 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling job types</p>
 <dl class="method">
+<dt id="job.models.JobTypeManager.convert_manifest_to_v5_interface">
+<code class="descname">convert_manifest_to_v5_interface</code><span class="sig-paren">(</span><em>manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.convert_manifest_to_v5_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a Seed manifest interface definition and reshapes it to match the format of the old style
+interface.  This is done so that v5 API calls to get job details can still receive information about
+new Seed style job types.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>manifest</strong> (<em>dict</em>) &#8211; The Seed Manifest interface definition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The converted manifest</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobTypeManager.create_job_type_v5">
 <code class="descname">create_job_type_v5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.create_job_type_v5" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
 transaction.</p>
-<p># TODO remove with v5</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -5566,7 +5601,7 @@ invalidates any existing recipe type definitions</p>
 <dl class="method">
 <dt id="job.models.JobTypeManager.edit_job_type_v6">
 <code class="descname">edit_job_type_v6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.edit_job_type_v6" title="Permalink to this definition">¶</a></dt>
-<dd><p>Edits the given job type and saves the changes in the database. 
+<dd><p>Edits the given job type and saves the changes in the database.
 All database changes occur in an atomic transaction. An argument of None for a field
 indicates that the field should not change.</p>
 <table class="docutils field-list" frame="void" rules="none">
