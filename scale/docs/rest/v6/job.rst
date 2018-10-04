@@ -81,6 +81,10 @@ Response: 200 OK
           "input_file_size": 64,
           "source_started": "2015-08-28T17:55:41.005Z",
           "source_ended": "2015-08-28T17:56:41.005Z",
+          "source_sensor_class": "classA",
+          "source_sensor": "1",
+          "source_collection": "12345",
+          "source_task": "my-task",
           "created": "2015-08-28T17:55:41.005Z",
           "queued": "2015-08-28T17:56:41.005Z",
           "started": "2015-08-28T17:57:41.005Z",
@@ -200,6 +204,14 @@ Response: 200 OK
 | .source_started     | ISO-8601 Datetime | When collection of the source file started.                                   |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_sensor_class| String            | The class of sensor used to produce the source file.                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_sensor      | String            | The specific identifier of the sensor used to produce the source file.        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_collection  | String            | The collection of the source file.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_task        | String            | The task that produced the source file.                                       |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -359,6 +371,10 @@ Response: 200 OK
       },
       "source_started": "2015-08-28T17:55:41.005Z",
       "source_ended": "2015-08-28T17:56:41.005Z",
+      "source_sensor_class": "classA",
+      "source_sensor": "1",
+      "source_collection": "12345",
+      "source_task": "my-task",
       "created": "2015-08-28T17:55:41.005Z",
       "queued": "2015-08-28T17:56:41.005Z",
       "started": "2015-08-28T17:57:41.005Z",
@@ -435,6 +451,14 @@ Response: 200 OK
 | source_started     | ISO-8601 Datetime | When collection of the source file started.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_sensor_class| String            | The class of sensor used to produce the source file.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_sensor      | String            | The specific identifier of the sensor used to produce the source file.         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_collection  | String            | The collection of the source file.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_task        | String            | The task that produced the source file.                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
