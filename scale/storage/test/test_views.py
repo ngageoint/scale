@@ -1102,12 +1102,17 @@ class TestPurgeSourceFileView(TestCase):
         url = '/%s/files/purge-source/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        
+
         # Check that create_batch_recipes message was created and sent
         mock_create.assert_called_once()
 
-    def test_successful_db_check(self):
+    @patch('storage.views.CommandMessageManager')
+    @patch('storage.views.create_purge_source_file_message')
+    def test_successful_db_check(self, mock_create, mock_msg_mgr):
         """Tests purging a source file."""
+
+        msg = PurgeSourceFile()
+        mock_create.return_value = msg
 
         input_file = storage_test_utils.create_file(file_type='SOURCE')
 
