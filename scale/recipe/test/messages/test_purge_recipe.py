@@ -8,8 +8,9 @@ from job.test import utils as job_test_utils
 from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
 from recipe.messages.purge_recipe import create_purge_recipe_message, PurgeRecipe
-from recipe.models import Recipe, RecipeInputFile, RecipeNode
+from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
+from storage.models import PurgeResults
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
 
@@ -255,7 +256,31 @@ class TestPurgeRecipe(TransactionTestCase):
         # Execute message
         result = message.execute()
         self.assertTrue(result)
-        
+
         # Assert models were deleted
         self.assertEqual(Recipe.objects.filter(id=recipe.id).count(), 0)
         self.assertEqual(RecipeNode.objects.filter(recipe=recipe).count(), 0)
+
+    def test_execute_check_results(self):
+        """Tests calling PurgeRecipe.execute() successfully"""
+
+        # Create PurgeResults entry
+        PurgeResults.objects.create(source_file_id=self.file_1.id, trigger_event=self.trigger)
+        self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
+            source_file_id=self.file_1.id), 0)
+
+        # Create recipes
+        recipe_type = recipe_test_utils.create_recipe_type()
+        recipe = recipe_test_utils.create_recipe(recipe_type=recipe_type)
+
+        # Create message
+        message = create_purge_recipe_message(recipe_id=recipe.id, trigger_id=self.trigger.id,
+                                              source_file_id=self.file_1.id)
+
+        # Execute message
+        result = message.execute()
+        self.assertTrue(result)
+
+        # Check results are accurate
+        self.assertEqual(PurgeResults.objects.values_list('num_recipes_deleted', flat=True).get(
+            source_file_id=self.file_1.id), 1)
