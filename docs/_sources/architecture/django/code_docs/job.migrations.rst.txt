@@ -388,6 +388,14 @@ job\.migrations\.0048\_auto\_20180913\_1632 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0049\_auto\_20180927\_1531 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0049_auto_20180927_1531
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
