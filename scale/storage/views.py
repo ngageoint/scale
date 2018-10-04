@@ -21,7 +21,7 @@ from storage.configuration.workspace_configuration import WorkspaceConfiguration
 from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
 from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
 from storage.configuration.exceptions import InvalidWorkspaceConfiguration
-from storage.models import ScaleFile, Workspace
+from storage.models import PurgeResults, ScaleFile, Workspace
 from storage.serializers import ScaleFileSerializerV5, ScaleFileSerializerV6, ScaleFileDetailsSerializerV6
 from storage.serializers import (WorkspaceDetailsSerializerV5, WorkspaceSerializerV5, WorkspaceDetailsSerializerV6,
                                  WorkspaceSerializerV6)
@@ -246,6 +246,7 @@ class PurgeSourceFileView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data=content)
 
         event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
+        PurgeResults.objects.create(source_file_id=file_id, trigger_event=event)
         CommandMessageManager().send_messages([create_purge_source_file_message(source_file_id=file_id,
                                                                                 trigger_id=event.id)])
 
