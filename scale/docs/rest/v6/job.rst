@@ -118,6 +118,26 @@ Response: 200 OK
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_started     | ISO-8601 Datetime | Optional | The start of the source file time range to query.                   |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_ended       | ISO-8601 Datetime | Optional | End of the source file time range to query, default is current time.|
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor_class| String            | Optional | Return only jobs for the given source sensor class                 |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor      | String            | Optional | Return only jobs for the given source sensor                       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_collection  | String            | Optional | Return only jobs for the given source collection                   |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_task        | String            | Optional | Return only jobs for the given source task                         |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
