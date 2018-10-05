@@ -63,6 +63,12 @@ paths:
           description: Return only files for the given source collection. |
             Duplicate it to filter by multiple values.
         -in: query
+          name: source_task
+          schema:
+            type: string
+          description: Return only files for the given source task. |
+            Duplicate it to filter by multiple values.
+        -in: query
           name: job_output
           schema:
             type: string
