@@ -307,8 +307,8 @@ class ScaleFileManager(models.Manager):
         :type source_sensor: list
         :param source_collection: Query files with the given source class.
         :type source_collection: list
-        :param source_task: Query files with the given source task.
-        :type source_task: list
+        :param source_tasks: Query files with the given source tasks.
+        :type source_tasks: list
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
