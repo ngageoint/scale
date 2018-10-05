@@ -404,6 +404,22 @@ components:
             format: date-time
             description: When collection of the source file ended. 
             example: 2015-09-10T15:24:53.503Z
+          source_sensor_class:
+            type: string
+            description: The class of sensor used to produce the source file.
+            example: classA
+          source_sensor:
+            type: string
+            description: The specific identifier of the sensor used to produce the source file.
+            example: 1
+          source_collection:
+            type: string
+            description: The collection of the source file.
+            example: 12345
+          source_task:
+            type: string
+            description: The task that produced the source file.
+            example: my-task
           created:
             type: string
             format: date-time
