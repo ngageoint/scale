@@ -1069,9 +1069,13 @@ class Recipe(models.Model):
     input = django.contrib.postgres.fields.JSONField(default=dict)
     input_file_size = models.FloatField(blank=True, null=True)
 
-    # Optional geospatial fields
-    source_started = models.DateTimeField(blank=True, null=True)
-    source_ended = models.DateTimeField(blank=True, null=True)
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
 
     # Metrics fields
     jobs_total = models.IntegerField(default=0)
