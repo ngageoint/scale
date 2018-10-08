@@ -765,9 +765,15 @@ class RecipeManager(models.Manager):
         # Set input meta-data fields on the recipe
         # Total input file size is in MiB rounded up to the nearest whole MiB
         qry = 'UPDATE recipe r SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
-        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s, '
+        qry += 'source_sensor_class = s.source_sensor_class, source_sensor = s.source_sensor, '
+        qry += 'source_collection = s.source_collection, source_task = s.source_task FROM ('
         qry += 'SELECT rif.recipe_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
-        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size, '
+        qry += 'MAX(f.source_sensor_class) AS source_sensor_class, '
+        qry += 'MAX(f.source_sensor) AS source_sensor, '
+        qry += 'MAX(f.source_collection) AS source_collection, '
+        qry += 'MAX(f.source_task) AS source_task '
         qry += 'FROM scale_file f JOIN recipe_input_file rif ON f.id = rif.input_file_id '
         qry += 'WHERE rif.recipe_id = %s GROUP BY rif.recipe_id) s '
         qry += 'WHERE r.id = s.recipe_id'
@@ -1016,6 +1022,14 @@ class Recipe(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The end time of the source data for this recipe
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file for this recipe
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file for this recipe
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file for this recipe
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file for this recipe
+    :type source_task: :class:`django.db.models.CharField`
 
     :keyword jobs_total: The total count of all jobs within this recipe
     :type jobs_total: :class:`django.db.models.IntegerField`

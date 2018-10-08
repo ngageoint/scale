@@ -142,6 +142,13 @@ class RecipeSerializerV6(RecipeBaseSerializerV6):
     superseded_recipe = ModelIdSerializer()
     superseded_by_recipe = ModelIdSerializer()
 
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
+
     created = serializers.DateTimeField()
     completed = serializers.DateTimeField()
     superseded = serializers.DateTimeField()

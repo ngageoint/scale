@@ -1245,6 +1245,14 @@ class Job(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The end time of the source data for this job
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file for this job
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file for this job
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file for this job
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file for this job
+    :type source_task: :class:`django.db.models.CharField`
 
     :keyword created: When the job was created
     :type created: :class:`django.db.models.DateTimeField`
