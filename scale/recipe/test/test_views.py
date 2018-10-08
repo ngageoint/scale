@@ -15,7 +15,7 @@ import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import RecipeNode, RecipeType
+from recipe.models import Recipe, RecipeNode, RecipeType
 from rest_framework import status
 
 
@@ -1670,7 +1670,23 @@ class TestRecipesViewV6(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator')
+        self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.date_3 = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.date_4 = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.s_class = 'A'
+        self.s_sensor = '1'
+        self.collection = '12345'
+        self.task = 'abcd'
+        self.s_class2 = 'B'
+        self.s_sensor2 = '2'
+        self.collection2 = '123456'
+        self.task2 = 'abcde'
+
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'scale-batch-creator'
+
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
 
         definition = {
             'version': '1.0',
@@ -1695,15 +1711,21 @@ class TestRecipesViewV6(TransactionTestCase):
         }
 
         workspace1 = storage_test_utils.create_workspace()
-        file1 = storage_test_utils.create_file(workspace=workspace1)
+        file1 = storage_test_utils.create_file(workspace=workspace1, file_size=104857600.0,
+                                               source_started=self.date_1, source_ended=self.date_2,
+                                               source_sensor_class=self.s_class, source_sensor=self.s_sensor,
+                                               source_collection=self.collection, source_task=self.task)
 
         data = {
             'version': '1.0',
             'input_data': [{
-                'name': 'input_file',
+                'name': 'INPUT_FILE',
                 'file_id': file1.id,
             }],
-            'workspace_id': workspace1.id,
+            'output_data': [{
+                'name': 'output_file_pngs',
+                'workspace_id': self.workspace.id
+            }]
         }
 
         self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
@@ -1714,6 +1736,9 @@ class TestRecipesViewV6(TransactionTestCase):
         self.recipe2 = recipe_test_utils.create_recipe()
         self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
 
+        Recipe.objects.process_recipe_input(self.recipe1)
+        Recipe.objects.process_recipe_input(self.recipe2)
+
     def test_successful_all(self):
         """Tests getting recipes"""
 
@@ -1723,6 +1748,57 @@ class TestRecipesViewV6(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['count'], 2)
+
+    def test_source_time_successful(self):
+        """Tests successfully calling the get jobs by source time"""
+        url = '/%s/recipes/?source_started=%s&source_ended=%s' % (self.api,
+                                                               '2016-01-01T00:00:00Z',
+                                                               '2016-01-02T00:00:00Z')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        for result in results:
+            self.assertTrue(result['id'] in [self.job1.id])
+
+    def test_source_sensor_class(self):
+        """Tests successfully calling the jobs view filtered by source sensor class."""
+        url = '/%s/recipes/?source_sensor_class=%s' % (self.api, self.s_class)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor_class'], self.s_class)
+
+    def test_source_sensor(self):
+        """Tests successfully calling the jobs view filtered by source sensor."""
+        url = '/%s/recipes/?source_sensor=%s' % (self.api, self.s_sensor)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor'], self.s_sensor)
+
+    def test_source_collection(self):
+        """Tests successfully calling the jobs view filtered by source collection."""
+        url = '/%s/recipes/?source_collection=%s' % (self.api, self.collection)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_collection'], self.collection)
+
+    def test_source_task(self):
+        """Tests successfully calling the jobs view filtered by source task."""
+        url = '/%s/recipes/?source_task=%s' % (self.api, self.task)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_task'], self.task)
 
     def test_successful_batch(self):
         """Tests getting recipes by batch id"""

@@ -603,7 +603,9 @@ class RecipeManager(models.Manager):
 
         return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
 
-    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
+    def get_recipes(self, started=None, ended=None, source_started=None, source_ended=None,
+                    source_sensor_classes=None, source_sensors=None, source_collections=None,
+                    source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
                     include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.
 
@@ -611,6 +613,18 @@ class RecipeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query recipes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query recipes where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query recipes where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query recipes with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query recipes with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query recipes with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query recipes with the given source tasks.
+        :type source_tasks: list
         :param type_ids: Query recipes of the type associated with the identifier.
         :type type_ids: [int]
         :param type_names: Query recipes of the type associated with the name.
@@ -636,6 +650,19 @@ class RecipeManager(models.Manager):
             recipes = recipes.filter(last_modified__gte=started)
         if ended:
             recipes = recipes.filter(last_modified__lte=ended)
+
+        if source_started:
+            recipes = recipes.filter(source_started__gte=source_started)
+        if source_ended:
+            recipes = recipes.filter(source_ended__lte=source_ended)
+        if source_sensor_classes:
+            recipes = recipes.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            recipes = recipes.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            recipes = recipes.filter(source_collection__in=source_collections)
+        if source_tasks:
+            recipes = recipes.filter(source_task__in=source_tasks)
 
         # Apply type filtering
         if type_ids:
