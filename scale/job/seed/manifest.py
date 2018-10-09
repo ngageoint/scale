@@ -395,6 +395,16 @@ class SeedManifest(object):
         if len(self.get_output_files()) and not job_conn.has_workspace():
             raise InvalidConnection('No workspace provided for output files')
         return warnings
+        
+    def validate_output_workspaces(self, exe_config):
+        """Validates the given job's output workspaces
+        :param exe_config: The job configuration
+        
+        :raises :class:`job.data.exceptions.InvalidConnection`: If thre is a configuration problem.
+        """
+
+        if self.get_outputs() and not exe_config.get_output_workspace_names():
+            raise InvalidConnection('No workspace provided for output files')
 
     def validate_data(self, job_data):
         """Ensures that the job_data matches the job_interface description

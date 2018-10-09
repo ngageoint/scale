@@ -44,11 +44,15 @@ class Command(BaseCommand):
             job_interface.validate_populated_mounts(exe_config)
             logger.info('Validating settings...')
             job_interface.validate_populated_settings(exe_config)
+            logger.info('Validating output workspaces...')
+            job_interface.validate_output_workspaces(exe_config)
+
             job_data = job_exe.job.get_job_data()
             job_data = JobDataSunset.create(job_interface, job_data.get_dict())
             logger.info('Setting up input files...')
+            
             job_interface.perform_pre_steps(job_data)
-
+            
             logger.info('Ready to execute job: %s', exe_config.get_args('main'))
         except ScaleError as err:
             err.log()
