@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 import datetime
 import django
 import json
@@ -1695,7 +1696,7 @@ class TestRecipesViewV6(TransactionTestCase):
                     'image/x-hdf5-image',
                 ],
                 'type': 'file',
-                'name': 'input_file',
+                'name': 'INPUT_FILE',
             }],
             'jobs': [{
                 'job_type': {
@@ -1704,14 +1705,14 @@ class TestRecipesViewV6(TransactionTestCase):
                 },
                 'name': 'kml',
                 'recipe_inputs': [{
-                    'job_input': 'input_file',
-                    'recipe_input': 'input_file',
+                    'job_input': 'INPUT_FILE',
+                    'recipe_input': 'INPUT_FILE',
                 }],
             }],
         }
 
-        workspace1 = storage_test_utils.create_workspace()
-        file1 = storage_test_utils.create_file(workspace=workspace1, file_size=104857600.0,
+        self.workspace = storage_test_utils.create_workspace()
+        self.file1 = storage_test_utils.create_file(workspace=self.workspace, file_size=104857600.0,
                                                source_started=self.date_1, source_ended=self.date_2,
                                                source_sensor_class=self.s_class, source_sensor=self.s_sensor,
                                                source_collection=self.collection, source_task=self.task)
@@ -1720,8 +1721,9 @@ class TestRecipesViewV6(TransactionTestCase):
             'version': '1.0',
             'input_data': [{
                 'name': 'INPUT_FILE',
-                'file_id': file1.id,
+                'file_id': self.file1.id
             }],
+            'workspace_id': self.workspace.id,
             'output_data': [{
                 'name': 'output_file_pngs',
                 'workspace_id': self.workspace.id
