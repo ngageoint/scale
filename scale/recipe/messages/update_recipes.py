@@ -62,6 +62,7 @@ def create_update_recipes_messages_from_jobs(job_ids):
     return create_update_recipes_messages(recipe_ids)
 
 
+# TODO: This message is deprecated and should no longer be used. Use the update_recipe message instead.
 class UpdateRecipes(CommandMessage):
     """Command message that evaluates and updates recipes
     """

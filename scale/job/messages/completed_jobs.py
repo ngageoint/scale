@@ -73,8 +73,12 @@ def process_completed_jobs_with_output(job_ids, when):
         logger.info('Found %d COMPLETED job(s) with output', len(completed_job_ids_with_output))
 
         # Create messages to update recipes
-        from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
-        messages.extend(create_update_recipes_messages_from_jobs(completed_job_ids_with_output))
+        from recipe.messages.update_recipe import create_update_recipe_messages_from_node
+        root_recipe_ids = set()
+        for job in Job.objects.filter(id__in=completed_job_ids_with_output):
+            if job.root_recipe_id:
+                root_recipe_ids.add(job.root_recipe_id)
+        messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
 
         # Create messages to publish each job
         for job_id in completed_job_ids_with_output:

@@ -99,10 +99,14 @@ class CancelJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
+        root_recipe_ids = set()
+
         with transaction.atomic():
             jobs_to_canceled = []
             # Retrieve locked job models
             for job_model in Job.objects.get_locked_jobs(self._job_ids):
+                if job_model.root_recipe_id:
+                    root_recipe_ids.add(job_model.root_recipe_id)
                 if job_model.can_be_canceled():
                     jobs_to_canceled.append(job_model)
 
@@ -115,8 +119,9 @@ class CancelJobs(CommandMessage):
 
         # Need to update recipes of canceled jobs so that dependent jobs are BLOCKED and update recipe metrics
         from recipe.messages.update_recipe_metrics import create_update_recipe_metrics_messages_from_jobs
-        from recipe.messages.update_recipes import create_update_recipes_messages_from_jobs
+        from recipe.messages.update_recipe import create_update_recipe_messages_from_node
         self.new_messages.extend(create_update_recipe_metrics_messages_from_jobs(self._job_ids))
-        self.new_messages.extend(create_update_recipes_messages_from_jobs(self._job_ids))
+        if root_recipe_ids:
+            self.new_messages.extend(create_update_recipe_messages_from_node(root_recipe_ids))
 
         return True
