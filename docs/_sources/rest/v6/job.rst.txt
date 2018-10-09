@@ -81,6 +81,10 @@ Response: 200 OK
           "input_file_size": 64,
           "source_started": "2015-08-28T17:55:41.005Z",
           "source_ended": "2015-08-28T17:56:41.005Z",
+          "source_sensor_class": "classA",
+          "source_sensor": "1",
+          "source_collection": "12345",
+          "source_task": "my-task",
           "created": "2015-08-28T17:55:41.005Z",
           "queued": "2015-08-28T17:56:41.005Z",
           "started": "2015-08-28T17:57:41.005Z",
@@ -113,6 +117,26 @@ Response: 200 OK
 | ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_started     | ISO-8601 Datetime | Optional | The start of the source file time range to query.                   |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_ended       | ISO-8601 Datetime | Optional | End of the source file time range to query, default is current time.|
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor_class| String            | Optional | Return only jobs for the given source sensor class                  |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_sensor      | String            | Optional | Return only jobs for the given source sensor                        |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_collection  | String            | Optional | Return only jobs for the given source collection                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| source_tasks       | String            | Optional | Return only jobs for the given source task                          |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
@@ -200,6 +224,14 @@ Response: 200 OK
 | .source_started     | ISO-8601 Datetime | When collection of the source file started.                                   |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_sensor_class| String            | The class of sensor used to produce the source file.                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_sensor      | String            | The specific identifier of the sensor used to produce the source file.        |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_collection  | String            | The collection of the source file.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .source_task        | String            | The task that produced the source file.                                       |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
 | .created            | ISO-8601 Datetime | When the associated database model was initially created.                     |
 +---------------------+-------------------+-------------------------------------------------------------------------------+
@@ -359,6 +391,10 @@ Response: 200 OK
       },
       "source_started": "2015-08-28T17:55:41.005Z",
       "source_ended": "2015-08-28T17:56:41.005Z",
+      "source_sensor_class": "classA",
+      "source_sensor": "1",
+      "source_collection": "12345",
+      "source_task": "my-task",
       "created": "2015-08-28T17:55:41.005Z",
       "queued": "2015-08-28T17:56:41.005Z",
       "started": "2015-08-28T17:57:41.005Z",
@@ -435,6 +471,14 @@ Response: 200 OK
 | source_started     | ISO-8601 Datetime | When collection of the source file started.                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | source_ended       | ISO-8601 Datetime | When collection of the source file ended.                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_sensor_class| String            | The class of sensor used to produce the source file.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_sensor      | String            | The specific identifier of the sensor used to produce the source file.         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_collection  | String            | The collection of the source file.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_task        | String            | The task that produced the source file.                                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
