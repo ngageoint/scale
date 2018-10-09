@@ -439,7 +439,8 @@ class CreateRecipes(CommandMessage):
                 pairs_by_rev_id[rev_id] = []
             pairs_by_rev_id[rev_id].append(pair)
         for rev_id, diff in diffs.items():
-            self._recipe_diffs.append(_RecipeDiff(diff, pairs_by_rev_id[rev_id]))
+            if rev_id in pairs_by_rev_id:
+                self._recipe_diffs.append(_RecipeDiff(diff, pairs_by_rev_id[rev_id]))
 
         return recipes
 
