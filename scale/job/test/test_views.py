@@ -284,7 +284,7 @@ class TestJobsViewV6(TestCase):
     def test_source_sensor_class(self):
         """Tests successfully calling the jobs view filtered by source sensor class."""
 
-        url = '/%s/files/?source_sensor_class=%s' % (self.api, self.s_class)
+        url = '/%s/jobs/?source_sensor_class=%s' % (self.api, self.s_class)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -295,7 +295,7 @@ class TestJobsViewV6(TestCase):
     def test_source_sensor(self):
         """Tests successfully calling the jobs view filtered by source sensor."""
 
-        url = '/%s/files/?source_sensor=%s' % (self.api, self.s_sensor)
+        url = '/%s/jobs/?source_sensor=%s' % (self.api, self.s_sensor)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -306,7 +306,7 @@ class TestJobsViewV6(TestCase):
     def test_source_collection(self):
         """Tests successfully calling the jobs view filtered by source collection."""
 
-        url = '/%s/files/?source_collection=%s' % (self.api, self.collection)
+        url = '/%s/jobs/?source_collection=%s' % (self.api, self.collection)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         
@@ -317,7 +317,7 @@ class TestJobsViewV6(TestCase):
     def test_source_task(self):
         """Tests successfully calling the jobs view filtered by source task."""
 
-        url = '/%s/files/?source_task=%s' % (self.api, self.task)
+        url = '/%s/jobs/?source_task=%s' % (self.api, self.task)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         
