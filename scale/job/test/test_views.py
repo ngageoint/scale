@@ -21,7 +21,7 @@ import recipe.test.utils as recipe_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import Error
 from job.messages.cancel_jobs_bulk import CancelJobsBulk
-from job.models import JobType
+from job.models import Job, JobType
 from queue.messages.requeue_jobs_bulk import RequeueJobsBulk
 from util.parse import datetime_to_string
 from vault.secrets_handler import SecretsHandler
@@ -183,12 +183,63 @@ class TestJobsViewV6(TestCase):
     
     def setUp(self):
         django.setup()
+        
+        self.date_1 = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        self.date_2 = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.date_3 = datetime.datetime(2016, 1, 2, tzinfo=utc)
+        self.date_4 = datetime.datetime(2016, 1, 3, tzinfo=utc)
+        self.s_class = 'A'
+        self.s_sensor = '1'
+        self.collection = '12345'
+        self.task = 'abcd'
+        self.s_class2 = 'B'
+        self.s_sensor2 = '2'
+        self.collection2 = '123456'
+        self.task2 = 'abcde'
+        
+        self.workspace = storage_test_utils.create_workspace()
+        self.file_1 = storage_test_utils.create_file(workspace=self.workspace, file_size=104857600.0,
+                                                source_started=self.date_1, source_ended=self.date_2,
+                                                source_sensor_class=self.s_class, source_sensor=self.s_sensor,
+                                                source_collection=self.collection, source_task=self.task)
+        self.file_2 = storage_test_utils.create_file(workspace=self.workspace, file_size=0.154, 
+                                                 source_started=self.date_3, source_ended=self.date_4,
+                                                 source_sensor_class=self.s_class2, source_sensor=self.s_sensor2,
+                                                 source_collection=self.collection2, source_task=self.task2)
+        
+        self.data_1 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_FILE',
+                'file_id': self.file_1.id
+            }],
+            'output_data': [{
+                'name': 'output_file_pngs',
+                'workspace_id': self.workspace.id
+            }]}
+        self.data_2 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'INPUT_FILE',
+                'file_id': self.file_2.id
+            }],
+            'output_data': [{
+                'name': 'output_file_pngs',
+                'workspace_id': self.workspace.id
+            }]}
 
-        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
-        self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
+        manifest = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest['job']['name'] = 'scale-batch-creator'
+        self.job_type1 = job_test_utils.create_seed_job_type(manifest=manifest)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', input=self.data_1, input_file_size=None)
 
-        self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
-        self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
+        manifest2 = copy.deepcopy(job_test_utils.COMPLETE_MANIFEST)
+        manifest2['job']['name'] = 'test2'
+        self.job_type2 = job_test_utils.create_seed_job_type(manifest=manifest2)
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING', input=self.data_2, input_file_size=None)
+        
+        Job.objects.process_job_input(self.job1)
+        Job.objects.process_job_input(self.job2)
 
         self.job3 = job_test_utils.create_job(is_superseded=True)
 
@@ -215,7 +266,65 @@ class TestJobsViewV6(TestCase):
             self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
             self.assertEqual(entry['is_superseded'], expected.is_superseded)
 
+    def test_source_time_successful(self):
+        """Tests successfully calling the get jobs by source time"""
 
+        url = '/%s/jobs/?source_started=%s&source_ended=%s' % ( self.api, 
+                                                                 '2016-01-01T00:00:00Z',
+                                                                 '2016-01-02T00:00:00Z')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        results = result['results']
+        self.assertEqual(len(results), 1)
+        for result in results:
+            self.assertTrue(result['id'] in [self.job1.id])
+
+    def test_source_sensor_class(self):
+        """Tests successfully calling the jobs view filtered by source sensor class."""
+
+        url = '/%s/jobs/?source_sensor_class=%s' % (self.api, self.s_class)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor_class'], self.s_class)
+        
+    def test_source_sensor(self):
+        """Tests successfully calling the jobs view filtered by source sensor."""
+
+        url = '/%s/jobs/?source_sensor=%s' % (self.api, self.s_sensor)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_sensor'], self.s_sensor)
+        
+    def test_source_collection(self):
+        """Tests successfully calling the jobs view filtered by source collection."""
+
+        url = '/%s/jobs/?source_collection=%s' % (self.api, self.collection)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_collection'], self.collection)
+        
+    def test_source_task(self):
+        """Tests successfully calling the jobs view filtered by source task."""
+
+        url = '/%s/jobs/?source_task=%s' % (self.api, self.task)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['source_task'], self.task)
+        
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 

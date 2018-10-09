@@ -183,15 +183,28 @@ class JobManager(models.Manager):
 
         return job
 
-    def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, batch_ids=None, recipe_ids=None, error_categories=None, error_ids=None,
-                    is_superseded=False, order=None):
+    def filter_jobs(self, started=None, ended=None, source_started=None, source_ended=None, source_sensor_classes=None,
+                    source_sensors=None, source_collections=None, source_tasks=None,statuses=None, job_ids=None, 
+                    job_type_ids=None, job_type_names=None,job_type_categories=None, batch_ids=None, recipe_ids=None, 
+                    error_categories=None, error_ids=None, is_superseded=False, order=None):
         """Returns a query for job models that filters on the given fields
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source tasks.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific status.
         :type statuses: list
         :param job_ids: Query jobs associated with the identifier.
@@ -226,6 +239,20 @@ class JobManager(models.Manager):
             jobs = jobs.filter(last_modified__gte=started)
         if ended:
             jobs = jobs.filter(last_modified__lte=ended)
+            
+        if source_started:
+            jobs = jobs.filter(source_started__gte=source_started)
+        if source_ended:
+            jobs = jobs.filter(source_ended__lte=source_ended)
+
+        if source_sensor_classes:
+            jobs = jobs.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            jobs = jobs.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            jobs = jobs.filter(source_collection__in=source_collections)
+        if source_tasks:
+            jobs = jobs.filter(source_task__in=source_tasks)
 
         # Apply additional filters
         if statuses:
@@ -304,7 +331,9 @@ class JobManager(models.Manager):
         jobs = jobs.defer('job_type__manifest', 'job_type_rev__job_type', 'job_type_rev__manifest')
         return jobs
 
-    def filter_jobs_related_v6(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
+    def filter_jobs_related_v6(self, started=None, ended=None, source_started=None, source_ended=None,
+                               source_sensor_classes=None, source_sensors=None, source_collections=None,
+                               source_tasks=None, statuses=None, job_ids=None, job_type_ids=None,
                                job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None,
                                error_ids=None, is_superseded=None, order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
@@ -315,6 +344,18 @@ class JobManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source tasks.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -339,8 +380,10 @@ class JobManager(models.Manager):
         :rtype: :class:`django.db.models.QuerySet`
         """
 
-        jobs = self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
-                                job_type_ids=job_type_ids, job_type_names=job_type_names,
+        jobs = self.filter_jobs(started=started, ended=ended, source_started=source_started, source_ended=source_ended, 
+                                source_sensor_classes=source_sensor_classes, source_sensors=source_sensors, 
+                                source_collections=source_collections, source_tasks=source_tasks, statuses=statuses, 
+                                job_ids=job_ids, job_type_ids=job_type_ids,  job_type_names=job_type_names,
                                 batch_ids=batch_ids, recipe_ids=recipe_ids, error_ids=error_ids,
                                 error_categories=error_categories, is_superseded=is_superseded,
                                 order=order)
@@ -397,15 +440,28 @@ class JobManager(models.Manager):
                                            error_categories=error_categories, include_superseded=include_superseded,
                                            order=order)
 
-    def get_jobs_v6(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, 
-                    job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None, error_ids=None,
-                    is_superseded=None, order=None):
+    def get_jobs_v6(self, started=None, ended=None, source_started=None, source_ended=None, source_sensor_classes=None, 
+                    source_sensors=None, source_collections=None, source_tasks=None, statuses=None, job_ids=None, 
+                    job_type_ids=None, job_type_names=None, batch_ids=None, recipe_ids=None, error_categories=None, 
+                    error_ids=None, is_superseded=None, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query jobs updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query jobs where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query jobs where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query jobs with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query jobs with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query jobs with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query jobs with the given source task.
+        :type source_tasks: list
         :param statuses: Query jobs with the a specific execution status.
         :type statuses: [string]
         :param job_ids: Query jobs associated with the identifier.
@@ -430,7 +486,10 @@ class JobManager(models.Manager):
         :rtype: [:class:`job.models.Job`]
         """
 
-        return self.filter_jobs_related_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+        return self.filter_jobs_related_v6(started=started, ended=ended, source_started=source_started, 
+                                           source_ended=source_ended, source_sensor_classes=source_sensor_classes, 
+                                           source_sensors=source_sensors, source_collections=source_collections, 
+                                           source_tasks=source_tasks, statuses=statuses, job_ids=job_ids,
                                            job_type_ids=job_type_ids, job_type_names=job_type_names,
                                            batch_ids=batch_ids, recipe_ids=recipe_ids,
                                            error_categories=error_categories, error_ids=error_ids,

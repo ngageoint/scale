@@ -33,6 +33,42 @@ paths:
             format: date-time
           description: End of the time range to query, defaults to the current time
         -in: query
+          name: source_started
+          schema:
+            type: string
+            format: date-time
+          description: The start of the source time range to query
+        -in: query
+          name: source_ended
+          schema:
+            type: string
+            format: date-time
+          description: End of the source time range to query, defaults to the current time
+        -in: query
+          name: source_sensor_class
+          schema:
+            type: string
+          description: Return only jobs for the given source sensor class. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: source_sensor
+          schema:
+            type: string
+          description: Return only jobs for the given source sensor. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: source_collection
+          schema:
+            type: string
+          description: Return only jobs for the given source collection. |
+            Duplicate it to filter by multiple values.
+        -in: query
+          name: source_task
+          schema:
+            type: string
+          description: Return only jobs for the given source task. |
+            Duplicate it to filter by multiple values.
+        -in: query
           name: order
           schema:
             type: string
@@ -404,6 +440,22 @@ components:
             format: date-time
             description: When collection of the source file ended. 
             example: 2015-09-10T15:24:53.503Z
+          source_sensor_class:
+            type: string
+            description: The class of sensor used to produce the source file.
+            example: classA
+          source_sensor:
+            type: string
+            description: The specific identifier of the sensor used to produce the source file.
+            example: 1
+          source_collection:
+            type: string
+            description: The collection of the source file.
+            example: 12345
+          source_task:
+            type: string
+            description: The task that produced the source file.
+            example: my-task
           created:
             type: string
             format: date-time
