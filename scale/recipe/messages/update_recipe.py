@@ -11,6 +11,7 @@ from job.messages.pending_jobs import create_pending_jobs_messages
 from job.messages.process_job_input import create_process_job_input_messages
 from messaging.messages.message import CommandMessage
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
+from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
 from recipe.messages.create_recipes import create_subrecipes_messages, SubRecipe
 from recipe.messages.process_recipe_input import create_process_recipe_input_messages
@@ -27,7 +28,7 @@ def create_update_recipe_message(root_recipe_id, forced_nodes=None):
     :type root_recipe_id: int
     :param forced_nodes: Describes the nodes that have been forced to reprocess
     :type forced_nodes: :class:`recipe.diff.forced_nodes.ForcedNodes`
-    :return: The messages
+    :return: The message
     :rtype: :class:`recipe.messages.update_recipe.UpdateRecipe`
     """
 
@@ -35,6 +36,28 @@ def create_update_recipe_message(root_recipe_id, forced_nodes=None):
     message.root_recipe_id = root_recipe_id
     message.forced_nodes = forced_nodes
     return message
+
+
+def create_update_recipe_messages_from_node(root_recipe_ids):
+    """Creates messages to update the given recipes from the root IDs. This is intended to be used by recipe nodes that
+    have been updated and need to then update the recipes that contain the nodes.
+
+    :param root_recipe_ids: The root recipe IDs
+    :type root_recipe_ids: list
+    :return: The list of messages
+    :rtype: list
+    """
+
+    # We force all nodes to reprocess because if we are updating due to a recipe node update (completed job, failed job,
+    # completed recipe, etc) then we want all new nodes to be created, not copied. Copying should only occur in the
+    # initial creation messages of a reprocess when recipe diffs are being evaluated.
+    force_all_nodes = ForcedNodes()
+    force_all_nodes.set_all_nodes()
+
+    messages = []
+    for root_recipe_id in root_recipe_ids:
+        messages.append(create_update_recipe_message(root_recipe_id, forced_nodes=force_all_nodes))
+    return messages
 
 
 def create_update_recipe_messages(root_recipe_ids):
