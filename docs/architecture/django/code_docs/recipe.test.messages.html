@@ -228,11 +228,24 @@
 <dl class="class">
 <dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes">
 <em class="property">class </em><code class="descclassname">recipe.test.messages.test_create_recipes.</code><code class="descname">TestCreateRecipes</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
 <dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_entire_reprocess">
+<code class="descname">test_execute_entire_reprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_entire_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests performing an entire reprocess by starting with a reprocess create_recipes message and executing all
+resulting messages</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_reprocess">
+<code class="descname">test_execute_reprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling CreateRecipes.execute() successfully when reprocessing recipes</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes">
@@ -244,6 +257,18 @@
 <dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes_superseded">
 <code class="descname">test_execute_subrecipes_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_subrecipes_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling CreateRecipes.execute() successfully when creating sub-recipes that supersede other sub-recipes</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess">
+<code class="descname">test_json_reprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateRecipes message to and from JSON when re-processing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess_forced_nodes">
+<code class="descname">test_json_reprocess_forced_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess_forced_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests converting a CreateRecipes message to and from JSON when re-processing with forced nodes</p>
 </dd></dl>
 
 <dl class="method">
@@ -550,7 +575,7 @@ top-level recipe</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, NGA.
+        &copy; Copyright 2015, NGA
 
     </p>
   </div>
@@ -569,20 +594,23 @@ top-level recipe</p>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'5.7.1-snapshot',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.7.1-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
 
   
 

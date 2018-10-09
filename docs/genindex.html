@@ -1525,8 +1525,6 @@
 </li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.cpus">cpus (node.resources.node_resources.NodeResources attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializerV5.JobSerializerV5.cpus_required">cpus_required (batch.serializers.BatchDetailsSerializerV5.JobSerializerV5 attribute)</a>
 
       <ul>
@@ -1537,6 +1535,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5.cpus_required">(recipe.serializers.RecipeJobsSerializerV5.JobSerializerV5 attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
@@ -1760,6 +1760,8 @@
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.create_recipe_v6">create_recipe_v6() (recipe.models.RecipeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.create_recipes_for_reprocess">create_recipes_for_reprocess() (recipe.models.RecipeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.create_recipes.create_reprocess_messages">create_reprocess_messages() (in module recipe.messages.create_recipes)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.messages.html#recipe.messages.reprocess_recipes.create_reprocess_recipes_messages">create_reprocess_recipes_messages() (in module recipe.messages.reprocess_recipes)</a>
 </li>
@@ -14033,6 +14035,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_update_recipes.TestUpdateRecipes.test_execute_create_jobs">test_execute_create_jobs() (recipe.test.messages.test_update_recipes.TestUpdateRecipes method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_entire_reprocess">test_execute_entire_reprocess() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data">test_execute_input_data() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_input_data_invalid">test_execute_input_data_invalid() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
@@ -14046,6 +14050,8 @@
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_execute_recipe_superseded">test_execute_recipe_superseded() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes.test_execute_recursively">test_execute_recursively() (recipe.test.messages.test_supersede_recipe_nodes.TestSupersedeRecipeNodes method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_execute_reprocess">test_execute_reprocess() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.messages.html#source.test.messages.test_purge_source_file.TestPurgeSourceFile.test_execute_results_check">test_execute_results_check() (source.test.messages.test_purge_source_file.TestPurgeSourceFile method)</a>
 </li>
@@ -15137,6 +15143,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_create_jobs.TestCreateJobs.test_json_recipe_superseded">test_json_recipe_superseded() (job.test.messages.test_create_jobs.TestCreateJobs method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess">test_json_reprocess() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_reprocess_forced_nodes">test_json_reprocess_forced_nodes() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes">test_json_subrecipes() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.messages.html#recipe.test.messages.test_create_recipes.TestCreateRecipes.test_json_subrecipes_superseded">test_json_subrecipes_superseded() (recipe.test.messages.test_create_recipes.TestCreateRecipes method)</a>
@@ -15695,6 +15705,8 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_invalid">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing">test_parse_datetime_missing() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.test_parse_datetime_missing_timezone">test_parse_datetime_missing_timezone() (util.test.test_parse.TestParse method)</a>
@@ -15703,8 +15715,6 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
@@ -19138,7 +19148,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, NGA.
+        &copy; Copyright 2015, NGA
 
     </p>
   </div>
@@ -19157,20 +19167,23 @@
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'5.7.1-snapshot',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'5.7.1-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
 
   
 

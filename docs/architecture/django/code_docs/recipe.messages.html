@@ -324,6 +324,34 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="recipe.messages.create_recipes.create_reprocess_messages">
+<code class="descclassname">recipe.messages.create_recipes.</code><code class="descname">create_reprocess_messages</code><span class="sig-paren">(</span><em>root_recipe_ids</em>, <em>recipe_type_name</em>, <em>revision_num</em>, <em>event_id</em>, <em>batch_id=None</em>, <em>forced_nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_recipes.create_reprocess_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to reprocess the given recipes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>root_recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The root recipe IDs</li>
+<li><strong>recipe_type_name</strong> (<em>string</em>) &#8211; The new recipe type name</li>
+<li><strong>revision_num</strong> (<em>int</em>) &#8211; The new recipe type revision number</li>
+<li><strong>event_id</strong> (<em>int</em>) &#8211; The event ID</li>
+<li><strong>batch_id</strong> (<em>int</em>) &#8211; The batch ID</li>
+<li><strong>forced_nodes</strong> (<a class="reference internal" href="recipe.diff.html#recipe.diff.forced_nodes.ForcedNodes" title="recipe.diff.forced_nodes.ForcedNodes"><code class="xref py py-class docutils literal"><span class="pre">recipe.diff.forced_nodes.ForcedNodes</span></code></a>) &#8211; Describes the nodes that have been forced to reprocess</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="recipe.messages.create_recipes.create_subrecipes_messages">
 <code class="descclassname">recipe.messages.create_recipes.</code><code class="descname">create_subrecipes_messages</code><span class="sig-paren">(</span><em>recipe</em>, <em>sub_recipes</em>, <em>forced_nodes=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.create_recipes.create_subrecipes_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates messages to create sub-recipes for the given recipe</p>
@@ -936,7 +964,7 @@ nodes</li>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, NGA.
+        &copy; Copyright 2015, NGA
 
     </p>
   </div>
@@ -955,20 +983,23 @@ nodes</li>
 
   
 
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'5.7.1-snapshot',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'5.7.1-snapshot',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
 
   
 
