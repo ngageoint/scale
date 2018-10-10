@@ -77,7 +77,7 @@ class Command(BaseCommand):
             self.run_scheduler(mesos_master)
 
     def run_scheduler(self, mesos_master):
-        logger.info("I am the leader...")
+        logger.info("Scale rising...")
         self.scheduler = ScaleScheduler()
         self.scheduler.initialize()
         scheduler_mgr.hostname = socket.getfqdn()
@@ -89,6 +89,9 @@ class Command(BaseCommand):
         capability.type = mesos_pb2.FrameworkInfo.Capability.GPU_RESOURCES
         webserver_address = os.getenv('SCALE_WEBSERVER_ADDRESS')
 
+        principal = os.getenv('PRINCIPAL')
+        secret = os.getenv('SECRET')
+
         if webserver_address:
             framework.webui_url = webserver_address
 
@@ -99,23 +102,17 @@ class Command(BaseCommand):
             logger.info('Enabling checkpoint for the framework')
             framework.checkpoint = True
 
-        if MESOS_AUTHENTICATE:
+        if principal and secret:
             logger.info('Enabling authentication for the framework')
 
-            if not DEFAULT_PRINCIPLE:
-                logger.error('Expecting authentication principal in the environment')
-                sys.exit(1)
-
-            if not DEFAULT_SECRET:
-                logger.error('Expecting authentication secret in the environment')
-                sys.exit(1)
-
             credential = mesos_pb2.Credential()
-            credential.principal = DEFAULT_PRINCIPLE
-            credential.secret = DEFAULT_SECRET
+            credential.principal = principal
+            credential.secret = secret
 
             self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master, credential)
         else:
+            logger.info('Framework authentication skipped due to missing PRINCIPAL and SECRET env variables')
+
             self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master)
 
         try:
