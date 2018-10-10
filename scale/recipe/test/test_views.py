@@ -19,7 +19,6 @@ from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode, RecipeType
 from rest_framework import status
 
-
 class TestRecipeTypesViewV5(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
     
@@ -1709,6 +1708,19 @@ class TestRecipesViewV6(TransactionTestCase):
                     'recipe_input': 'INPUT_FILE',
                 }],
             }],
+        }
+        
+        def_v6_dict = {'version': '6',
+                       'input': {'files': [{'name': 'INPUT_FILE', 'media_types': ['image/tiff'], 'required': True,
+                                            'multiple': True}],
+                                 'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                       'nodes': {'node_a': {'dependencies': [],
+                                            'input': {'input_a': {'type': 'recipe', 'input': 'INPUT_FILE'}},
+                                            'node_type': {'node_type': 'job', 'job_type_name': self.job_type1.name,
+                                                          'job_type_version': self.job_type1.version, 'job_type_revision': 1}}
+                           
+                       }
+            
         }
 
         self.workspace = storage_test_utils.create_workspace()

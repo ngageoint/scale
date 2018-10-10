@@ -275,6 +275,24 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
 
     return Recipe.objects.create_recipe_old(recipe_type, data, event, superseded_recipe=superseded_recipe,
                                             delta=delta, superseded_jobs=superseded_jobs)
+                                            
+def create_recipe_handler_v6(recipe_type_rev=None, data=None, event=None, superseded_recipe=None):
+    """Creates a recipe along with its declared jobs for unit testing
+
+    :returns: The recipe handler with created recipe and jobs
+    :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+    """
+
+    if not recipe_type_rev:
+        recipe_type_rev = create_recipe_type_revision()
+    if not data:
+        data = {}
+    if not isinstance(data, RecipeData):
+        data = RecipeData(data)
+    if not event:
+        event = trigger_test_utils.create_trigger_event()
+
+    return Recipe.objects.create_recipe_v6(recipe_type_rev, event.id, input_data=data, superseded_recipe=superseded_recipe)
 
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
                       file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
