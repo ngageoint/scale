@@ -73,7 +73,7 @@ class QueuedExecutionConfigurator(object):
             task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
         else:
             # Set any output workspaces needed
-            if 'version' in job.input and job.input['version'] == '1.0':
+            if job.input and 'version' in job.input and job.input['version'] == '1.0':
                 # Set output workspaces using legacy job data
                 self._cache_workspace_names(data.get_output_workspace_ids())
                 output_workspaces = {}
@@ -313,6 +313,22 @@ class ScheduledExecutionConfigurator(object):
                     workspace_volumes[task_workspace.name] = volume
 
             config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
+
+        # Labels for metric grouping
+        job_id_label = DockerParameter('label', 'scale-job-id={}'.format(job_exe.job_id))
+        job_execution_id_label = DockerParameter('label', 'scale-job-execution-id={}'.format(job_exe.exe_num))
+        job_type_name_label = DockerParameter('label', 'scale-job-type-name={}'.format(job_type.name))
+        job_type_version_label = DockerParameter('label', 'scale-job-type-version={}'.format(job_type.version))
+        main_label = DockerParameter('label', 'scale-task-type=main')
+        config.add_to_task('main', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                  job_execution_id_label, main_label])
+        if not job_type.is_system:
+            pre_label = DockerParameter('label', 'scale-task-type=pre')
+            post_label = DockerParameter('label', 'scale-task-type=post')
+            config.add_to_task('pre', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                     job_execution_id_label, pre_label])
+            config.add_to_task('post', docker_params=[job_id_label, job_type_name_label, job_type_version_label,
+                                                  job_execution_id_label, post_label])
 
         # Configure tasks for logging
         if settings.LOGGING_ADDRESS is not None:

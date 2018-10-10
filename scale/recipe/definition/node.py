@@ -29,6 +29,7 @@ class NodeDefinition(object):
         self.parents = {}  # {Name: Node}
         self.connections = {}  # {Input name: InputConnection}
         self.children = {}  # {Name: Node}
+        self.allows_child_creation = True  # Indicates whether children of this node can be created immediately
 
     def add_connection(self, connection):
         """Adds a connection that connects a parameter to one of this node's inputs

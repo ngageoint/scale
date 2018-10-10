@@ -7,6 +7,7 @@ from data.interface.interface import Interface
 from data.interface.parameter import FileParameter, JsonParameter
 from recipe.definition.definition import RecipeDefinition
 from recipe.diff.diff import RecipeDiff
+from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.node import NodeDiff
 
 
@@ -319,10 +320,14 @@ class TestRecipeDiff(TestCase):
         definition_2.add_recipe_input_connection('D', 'd_input_2', 'json_param_1')
         definition_2.add_dependency_input_connection('E', 'e_input_1', 'C', 'c_output_1')
 
-        recipe_d_reprocess_dict = {'1': {}, '2': {}}
-        top_reprocess_dict = {'C': {}, 'D': recipe_d_reprocess_dict}
+        recipe_d_forced_nodes = ForcedNodes()
+        recipe_d_forced_nodes.add_node('1')
+        recipe_d_forced_nodes.add_node('2')
+        top_forced_nodes = ForcedNodes()
+        top_forced_nodes.add_node('C')
+        top_forced_nodes.add_subrecipe('D', recipe_d_forced_nodes)
         diff = RecipeDiff(definition_1, definition_2)
-        diff.set_force_reprocess(top_reprocess_dict)
+        diff.set_force_reprocess(top_forced_nodes)
 
         # No recipe input changes so recipe can be reprocessed
         self.assertTrue(diff.can_be_reprocessed)
@@ -344,8 +349,8 @@ class TestRecipeDiff(TestCase):
         self.assertEqual(node_d.status, NodeDiff.UNCHANGED)
         self.assertTrue(node_d.reprocess_new_node)  # Force reprocess
         self.assertListEqual(node_d.changes, [])
-        # Check reprocess node dict that got passed to recipe node D
-        self.assertDictEqual(node_d.force_reprocess_nodes, recipe_d_reprocess_dict)
+        # Check forced nodes object that got passed to recipe node D
+        self.assertEqual(node_d.force_reprocess_nodes, recipe_d_forced_nodes)
         node_e = diff.graph['E']
         self.assertEqual(node_e.status, NodeDiff.UNCHANGED)
         self.assertTrue(node_e.reprocess_new_node)  # Force reprocess due to C being forced

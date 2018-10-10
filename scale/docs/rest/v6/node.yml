@@ -146,7 +146,7 @@ components:
               Remaining tasks for a previously executing job will complete.
             example: False
           is_active:
-            type: string
+            type: boolean
             description: True if the node is actively participating in the cluster.
             example: True
           deprecated:

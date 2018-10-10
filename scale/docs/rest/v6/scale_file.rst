@@ -119,16 +119,16 @@ Response: 200 OK
 |                      |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                      |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
-| .source_sensor_class | String            | Optional | Return only files for the given source sensor class                 |
+| source_sensor_class  | String            | Optional | Return only files for the given source sensor class                 |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
-| .source_sensor       | String            | Optional | Return only files for the given source sensor                       |
+| source_sensor        | String            | Optional | Return only files for the given source sensor                       |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
-| .source_collection   | String            | Optional | Return only files for the given source collection                   |
+| source_collection    | String            | Optional | Return only files for the given source collection                   |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
-| .source_task         | String            | Optional | Return only files for the given source task                         |
+| source_task          | String            | Optional | Return only files for the given source task                         |
 |                      |                   |          | Duplicate it to filter by multiple values.                          |
 +----------------------+-------------------+----------+---------------------------------------------------------------------+
 | modified_started     | ISO-8601 Datetime | Optional | The start of the last modified time range to query.                 |
@@ -428,3 +428,43 @@ Response: 200 OK
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | superseded           | ISO-8601 Datetime | When the file became superseded by another file.                               |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
+
+.. _rest_v6_purge_source:
+
+v6 Purge Source File
+---------------------
+
+**Example POST /v6/files/purge-source/ API call**
+
+Request: POST http://.../v6/files/purge-source/
+
+Data:
+
+.. code-block:: javascript 
+ 
+    { 
+        "file_id": 123, 
+    }
+
+Response: 204 NO CONTENT
+    
++---------------------------------------------------------------------------------------------------------------------------+
+| **Purge Source File**                                                                                                     |
++===========================================================================================================================+
+| Removes all records related to the given source file.  This includes records for the following models: BatchJob,          |
+| BatchRecipe, FileAncestryLink, Ingest, Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, Queue,       |
+| Recipe, RecipeInputFile, RecipeNode, ScaleFile, and TaskUpdate. **This will also delete any product files from their      |
+| respective workspace.**                                                                                                   |
++---------------------------------------------------------------------------------------------------------------------------+
+| **POST** /files/purge-source/                                                                                             |
++---------------------------------------------------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                  |
++---------------------+-----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                           |
++---------------------+---------------+-----------+-------------------------------------------------------------------------+
+| file_id             | Integer       | Required  | The file id of the ScaleFile SOURCE file to purge.                      |
++---------------------+---------------+-----------+-------------------------------------------------------------------------+
+| **Successful Response**                                                                                                   |
++---------------------+-----------------------------------------------------------------------------------------------------+
+| **Status**          | 204 NO CONTENT                                                                                      |
++---------------------+-----------------------------------------------------------------------------------------------------+

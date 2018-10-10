@@ -202,7 +202,7 @@ class TestRecipeTypesViewV5(TransactionTestCase):
 
 class TestRecipeTypesViewV6(TransactionTestCase):
     """Tests related to the recipe-types base endpoint"""
-    
+
     api = 'v6'
 
     def setUp(self):
@@ -429,7 +429,7 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
 
-        url = '/%s/recipe-types/100/' % self.api
+        url = '/%s/recipe-types/2345908/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -626,6 +626,167 @@ class TestRecipeTypeDetailsViewV5(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_get_details_with_seed_job(self):
+        """Tests getting recipe details for a recipe that contains a seed recipe"""
+
+        seed_interface_str = \
+        """
+            {
+            "seedVersion": "1.0.0",
+            "job": {
+                "name": "test",
+                "jobVersion": "1.0.0",
+                "packageVersion": "1.0.0",
+                "title": "Test job to exercise Seed functionality",
+                "description": "Reads input file and ",
+                "tags": [
+                "testing",
+                "seed"
+                ],
+                "maintainer": {
+                "name": "John Doe",
+                "organization": "E-corp",
+                "email": "jdoe@example.com",
+                "url": "http://www.example.com",
+                "phone": "666-555-4321"
+                },
+                "timeout": 3600,
+                "interface": {
+                "command": "${INPUT_TEXT} ${INPUT_FILES} ${READ_LENGTH}",
+                "inputs": {
+                    "files": [
+                    {
+                        "name": "INPUT_TEXT",
+                        "mediaTypes": [
+                        "text/plain"
+                        ],
+                        "partial": true
+                    },
+                    {
+                        "name": "INPUT_FILES",
+                        "multiple": true
+                    }
+                    ],
+                    "json": [
+                    {
+                        "name": "READ_LENGTH",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "OUTPUT_COUNT",
+                        "type": "integer"
+                    }
+                    ]
+                },
+                "outputs": {
+                    "files": [
+                    {
+                        "name": "OUTPUT_FILES",
+                        "mediaType": "text/plain",
+                        "multiple": true,
+                        "pattern": "output_files*.txt"
+                    },
+                    {
+                        "name": "OUTPUT_TEXT",
+                        "mediaType": "text/plain",
+                        "pattern": "output_text.txt"
+                    }
+                    ],
+                    "json": [
+                    {
+                        "name": "cell_count",
+                        "key": "cellCount",
+                        "type": "integer"
+                    }
+                    ]
+                },
+                "mounts": [
+                    {
+                    "name": "MOUNT_PATH",
+                    "path": "/the/container/path",
+                    "mode": "ro"
+                    }
+                ],
+                "settings": [
+                    {
+                    "name": "DB_HOST",
+                    "secret": false
+                    }
+                ]
+                },
+                "resources": {
+                "scalar": [
+                    { "name": "cpus", "value": 1.5 },
+                    { "name": "mem", "value": 244.0 },
+                    { "name": "sharedMem", "value": 1.0 },
+                    { "name": "disk", "value": 11.0, "inputMultiplier": 4.0 }
+                ]
+                },
+                "errors": [
+                {
+                    "code": 1,
+                    "name": "data-issue",
+                    "title": "Data Issue discovered",
+                    "description": "There was a problem with input data",
+                    "category": "data"
+                },
+                {
+                    "code": 2,
+                    "name": "missing-mount",
+                    "title": "Missing mount",
+                    "description": "Expected mount point not available at run time",
+                    "category": "job"
+                },
+                {
+                    "code": 3,
+                    "name": "missing-setting",
+                    "title": "Missing setting",
+                    "description": "Expected setting not defined in environment variable",
+                    "category": "job"
+                },
+                {
+                    "code": 4,
+                    "name": "missing-env",
+                    "title": "Missing environment",
+                    "description": "Expected environment not provided",
+                    "category": "job"
+                }
+                ]
+            }
+            }
+        """
+
+        expected_cmd_args = "${INPUT_TEXT} ${INPUT_FILES} ${READ_LENGTH}"
+
+        seed_job_type = job_test_utils.create_job_type(interface=json.loads(seed_interface_str))
+
+        definition = {
+            'version': '1.0',
+            'input_data': [],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': seed_job_type.name,
+                    'version': seed_job_type.version,
+                },
+            }],
+        }
+
+        recipe_type = recipe_test_utils.create_recipe_type(definition=definition)
+
+        url = '/%s/recipe-types/%d/' % (self.api, recipe_type.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], recipe_type.id)
+        self.assertIsNotNone(result['definition'])
+        self.assertEqual(len(result['job_types']), 1)
+        for entry in result['job_types']:
+            self.assertTrue(entry['id'], [seed_job_type.id])
+            self.assertEqual(entry['interface']['command_arguments'], expected_cmd_args)
+
 
 class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     """Tests related to the recipe-types details endpoint"""
@@ -675,7 +836,7 @@ class TestRecipeTypeDetailsViewV6(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
 
-        url = '/%s/recipe-types/100/' % self.api
+        url = '/%s/recipe-types/1235134/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)

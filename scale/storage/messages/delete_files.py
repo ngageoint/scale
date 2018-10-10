@@ -4,10 +4,12 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
+from django.db.models import F
 from django.utils import timezone
 
+from job.messages.purge_jobs import create_purge_jobs_messages
 from messaging.messages.message import CommandMessage
-from storage.models import ScaleFile
+from storage.models import PurgeResults, ScaleFile
 
 # This is the maximum number of file models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long.
@@ -17,15 +19,19 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_delete_files_messages(files, purge, job_id):
+def create_delete_files_messages(files, job_id, trigger_id, source_file_id, purge):
     """Creates messages to delete the given files
 
     :param files: The list of file IDs to delete
     :type files: [collections.namedtuple]
-    :param purge: Boolean value to determine if the files should be purged
-    :type purge: bool
     :param job_id: The id of the job that produced the files
     :type job_id: int
+    :param trigger_id: The trigger event id for the purge operation
+    :type trigger_id: int
+    :param source_file_id: The source file id for the original file being purged
+    :type source_file_id: int
+    :param purge: Boolean value to determine if files should be purged from workspace
+    :type purge: bool
     :return: The list of messages
     :rtype: list
     """
@@ -39,9 +45,11 @@ def create_delete_files_messages(files, purge, job_id):
         elif not message.can_fit_more():
             messages.append(message)
             message = DeleteFiles()
-        message.job_id = job_id
-        message.purge = purge
         message.add_file(scale_file.id)
+        message.job_id = job_id
+        message.trigger_id = trigger_id
+        message.source_file_id = source_file_id
+        message.purge = purge
     if message:
         messages.append(message)
 
@@ -59,6 +67,8 @@ class DeleteFiles(CommandMessage):
 
         self._file_ids = []
         self.job_id = None
+        self.trigger_id = None
+        self.source_file_id = None
         self.purge = False
 
     def add_file(self, file_id):
@@ -83,7 +93,13 @@ class DeleteFiles(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'file_ids': self._file_ids, 'job_id': self.job_id, 'purge': str(self.purge)}
+        return {
+            'file_ids': self._file_ids,
+            'job_id': self.job_id,
+            'trigger_id': self.trigger_id,
+            'source_file_id': self.source_file_id,
+            'purge': str(self.purge)
+        }
 
     @staticmethod
     def from_json(json_dict):
@@ -92,6 +108,8 @@ class DeleteFiles(CommandMessage):
 
         message = DeleteFiles()
         message.job_id = json_dict['job_id']
+        message.trigger_id = json_dict['trigger_id']
+        message.source_file_id = json_dict['source_file_id']
         message.purge = bool(json_dict['purge'])
         for file_id in json_dict['file_ids']:
             message.add_file(file_id)
@@ -106,10 +124,13 @@ class DeleteFiles(CommandMessage):
 
         if self.purge:
             files_to_delete.delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                num_products_deleted=F('num_products_deleted') + len(self._file_ids))
 
-            # Send messages to purge jobs
-            from job.messages.purge_jobs import create_purge_jobs_messages
-            self.new_messages.extend(create_purge_jobs_messages([self.job_id], when))
+            # Kick off purge_jobs for the given job_id
+            self.new_messages.extend(create_purge_jobs_messages(purge_job_ids=[self.job_id],
+                                                                trigger_id=self.trigger_id,
+                                                                source_file_id=self.source_file_id))
         else:
             files_to_delete.update(is_deleted=True, deleted=when, is_published=False, unpublished=when)
 

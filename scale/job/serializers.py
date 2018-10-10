@@ -14,6 +14,7 @@ from job.job_type_serializers import JobTypeRevisionDetailsSerializerV6
 from node.serializers import NodeBaseSerializer
 from util.rest import ModelIdSerializer
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -76,7 +77,7 @@ class JobSerializerV5(JobBaseSerializerV5):
     last_status_change = serializers.DateTimeField()
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
-    
+
 class JobSerializerV6(JobBaseSerializerV6):
     """Converts job model fields to REST output."""
     from batch.serializers import BatchBaseSerializerV6
@@ -98,6 +99,10 @@ class JobSerializerV6(JobBaseSerializerV6):
 
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
@@ -106,11 +111,18 @@ class JobSerializerV6(JobBaseSerializerV6):
     superseded = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
+    source_started = serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
+
 
 class JobRevisionSerializerV5(JobSerializerV5):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializerV5()
-    
+
 class JobRevisionSerializerV6(JobSerializerV6):
     """Converts job model fields to REST output."""
     job_type_rev = JobTypeRevisionSerializerV6()
@@ -225,7 +237,7 @@ class JobDetailsSerializerV5(JobSerializerV5):
     root_superseded_job = JobBaseSerializerV5()
     superseded_job = JobBaseSerializerV5()
     superseded_by_job = JobBaseSerializerV5()
-    
+
     recipes = RecipeSerializerV5(many=True)
 
     job_exes = JobExecutionBaseSerializerV5(many=True)
@@ -280,8 +292,8 @@ class JobExecutionDetailsSerializerV5(JobExecutionSerializerV5):
     job = JobSerializerV5()
     node = NodeSerializerV4()
     error = ErrorSerializerV5(source='jobexecutionend.error')
-    
-    
+
+
 class JobExecutionDetailsSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
 
@@ -298,7 +310,7 @@ class JobDetailsSerializerV6(JobSerializerV6):
     superseded_job = JobBaseSerializerV6()
     superseded_by_job = JobBaseSerializerV6()
     resources = serializers.JSONField(source='get_v6_resources_json')
-    
+
     execution = JobExecutionDetailsSerializerV6()
     input = serializers.JSONField(source='get_v6_input_data_json')
     output = serializers.JSONField(source='get_v6_output_data_json')
@@ -308,7 +320,7 @@ class JobExecutionLogSerializerV5(JobExecutionSerializerV5):
     is_finished = serializers.BooleanField()
     stdout = serializers.CharField()
     stderr = serializers.CharField()
-    
+
 class JobExecutionLogSerializerV6(JobExecutionSerializerV6):
     """Converts job execution model fields to REST output"""
     is_finished = serializers.BooleanField()

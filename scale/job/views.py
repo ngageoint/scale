@@ -405,6 +405,9 @@ class JobTypeIDDetailsView(GenericAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
+        if job_type.is_seed_job_type():
+            job_type.manifest = JobType.objects.convert_manifest_to_v5_interface(job_type.manifest)
+
         serializer = self.get_serializer(job_type)
         return Response(serializer.data)
 
@@ -1111,6 +1114,15 @@ class JobsView(ListAPIView):
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
 
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
+
+        source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
+        source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
+        source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
+
         statuses = rest_util.parse_string_list(request, 'status', required=False)
         job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
@@ -1123,7 +1135,11 @@ class JobsView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        jobs = Job.objects.get_jobs_v6(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+        jobs = Job.objects.get_jobs_v6( started=started, ended=ended,
+                                       source_started=source_started, source_ended=source_ended,
+                                       source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+                                       source_collections=source_collections, source_tasks=source_tasks,
+                                       statuses=statuses, job_ids=job_ids,
                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
                                        batch_ids=batch_ids, recipe_ids=recipe_ids,
                                        error_categories=error_categories, error_ids=error_ids,

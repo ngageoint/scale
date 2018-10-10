@@ -11,11 +11,11 @@ from botocore.exceptions import ClientError, NoCredentialsError
 import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
-from storage.configuration.workspace_configuration import ValidationWarning
 from storage.exceptions import MissingFile
 from util.aws import S3Client, AWSClient
 from util.command import execute_command_line
 from util.exceptions import FileDoesNotExist
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ class S3Broker(Broker):
 
         warnings = []
         if 'bucket_name' not in config or not config['bucket_name']:
-            raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
+            raise InvalidBrokerConfiguration('INVALID_BROKER', 'S3 broker requires "bucket_name" to be populated')
         region_name = config.get('region_name')
 
         credentials = AWSClient.instantiate_credentials_from_config(config)

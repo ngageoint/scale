@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import logging
 
+from storage.brokers.exceptions import InvalidBrokerConfiguration
+
 logger = logging.getLogger(__name__)
 
 _BROKERS = {}
@@ -32,7 +34,7 @@ def get_broker(broker_type):
 
     if broker_type in _BROKERS:
         return _BROKERS[broker_type]()
-    raise KeyError('\'%s\' is an invalid broker type' % broker_type)
+    raise InvalidBrokerConfiguration('INVALID_BROKER', '\'%s\' is an invalid broker type' % broker_type)
 
 
 def get_broker_types():

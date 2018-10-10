@@ -220,6 +220,10 @@ class TestNodeManager(TestCase):
         manager.lost_node(self.agent_2.agent_id)
         manager.register_agents([self.agent_3])
         manager.sync_with_database(scheduler_mgr.config)
+        for node in manager.get_nodes():
+            node._last_heath_task = when
+            node._initial_cleanup_completed()
+            node._update_state()
 
         # Should get new Docker pull task for node 2
         tasks = manager.get_next_tasks(when)

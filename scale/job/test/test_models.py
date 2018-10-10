@@ -14,6 +14,8 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from data.data.data import Data
+from data.data.json.data_v6 import convert_data_to_v6_json
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
@@ -180,10 +182,18 @@ class TestJobManager(TransactionTestCase):
         date_4 = date_1 + datetime.timedelta(minutes=50)
         min_src_started_job_2 = date_1 - datetime.timedelta(days=500)
         max_src_ended_job_2 = date_1 + datetime.timedelta(days=500)
+        s_class = 'A'
+        s_sensor = '1'
+        collection = '12345'
+        task = 'abcd'
         workspace = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0)
-        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0, source_started=date_2,
-                                                source_ended=date_3)
+        file_1 = storage_test_utils.create_file(workspace=workspace, file_size=10485760.0,
+                                                source_sensor_class=s_class, source_sensor=s_sensor,
+                                                source_collection=collection, source_task=task)
+        file_2 = storage_test_utils.create_file(workspace=workspace, file_size=104857600.0,
+                                                source_started=date_2, source_ended=date_3,
+                                                source_sensor_class = s_class, source_sensor = s_sensor,
+                                                source_collection = collection, source_task=task)
         file_3 = storage_test_utils.create_file(workspace=workspace, file_size=987654321.0,
                                                 source_started=min_src_started_job_1, source_ended=date_4)
         file_4 = storage_test_utils.create_file(workspace=workspace, file_size=46546.0,
@@ -195,7 +205,9 @@ class TestJobManager(TransactionTestCase):
                                                 source_started=min_src_started_job_2)
         file_9 = storage_test_utils.create_file(workspace=workspace, file_size=545.0, source_started=date_3,
                                                 source_ended=max_src_ended_job_2)
-        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4)
+        file_10 = storage_test_utils.create_file(workspace=workspace, file_size=0.154, source_ended=date_4,
+                                                 source_sensor_class=s_class, source_sensor=s_sensor,
+                                                 source_collection=collection, source_task=task)
         interface = {
             'version': '1.0',
             'command': 'my_command',
@@ -261,9 +273,17 @@ class TestJobManager(TransactionTestCase):
         self.assertEqual(job_1.input_file_size, 1053.0)
         self.assertEqual(job_1.source_started, min_src_started_job_1)
         self.assertEqual(job_1.source_ended, max_src_ended_job_1)
+        self.assertEqual(job_1.source_sensor_class, s_class)
+        self.assertEqual(job_1.source_sensor, s_sensor)
+        self.assertEqual(job_1.source_collection, collection)
+        self.assertEqual(job_1.source_task, task)
         self.assertEqual(job_2.input_file_size, 113269857.0)
         self.assertEqual(job_2.source_started, min_src_started_job_2)
         self.assertEqual(job_2.source_ended, max_src_ended_job_2)
+        self.assertEqual(job_2.source_sensor_class, s_class)
+        self.assertEqual(job_2.source_sensor, s_sensor)
+        self.assertEqual(job_2.source_collection, collection)
+        self.assertEqual(job_2.source_task, task)
 
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job_1.id)
@@ -331,7 +351,9 @@ class TestJobManager(TransactionTestCase):
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
-        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input={}, started=timezone.now(),
+
+        data_dict = convert_data_to_v6_json(Data()).get_dict()
+        job = job_test_utils.create_job(num_exes=1, status='CANCELED', input=data_dict, started=timezone.now(),
                                         ended=timezone.now())
 
         Job.objects.update_jobs_to_queued([job], timezone.now(), requeue=True)
@@ -779,6 +801,10 @@ class TestJobType(TransactionTestCase):
         version = '1.0'
         value = job_type.get_job_version_array(version)
         self.assertEqual([0,0,0,0], value)
+
+    def test_is_seed_job_type(self):
+        self.assertTrue(self.seed_job_type.is_seed_job_type())
+        self.assertFalse(self.legacy_job_type.is_seed_job_type())
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
@@ -1486,13 +1512,13 @@ class TestJobTypeTagManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_seed_job_type(name="test-type1")
+        self.job_type1 = job_test_utils.create_seed_job_type()
         self.tag_set1 = ["tag1", "tag2", "oneandfour"]
-        self.job_type2 = job_test_utils.create_seed_job_type(name="test-type2")
+        self.job_type2 = job_test_utils.create_seed_job_type()
         self.tag_set2 = ["tag3", "tag4"]
-        self.job_type3 = job_test_utils.create_seed_job_type(name="test-type3")
+        self.job_type3 = job_test_utils.create_seed_job_type()
         self.tag_set3 = ["tag5", "tag6"]
-        self.job_type4 = job_test_utils.create_seed_job_type(name="test-type4")
+        self.job_type4 = job_test_utils.create_seed_job_type()
         self.tag_set4 = ["tag7", "tag8", "oneandfour"]
         JobTypeTag.objects.create_job_type_tags(self.job_type1, self.tag_set1)
         JobTypeTag.objects.create_job_type_tags(self.job_type3, self.tag_set3)

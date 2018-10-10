@@ -4,16 +4,17 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
-from django.utils.timezone import now
+from django.db.models import F
 
 from batch.models import BatchJob
-from job.messages.spawn_delete_files_job import create_spawn_delete_files_job
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobInputFile, TaskUpdate
+from messaging.messages.message import CommandMessage
 from product.models import FileAncestryLink
 from queue.models import Queue
 from recipe.models import RecipeNode
-from messaging.messages.message import CommandMessage
-from util.parse import datetime_to_string, parse_datetime
+from recipe.messages.purge_recipe import create_purge_recipe_message
+from source.messages.purge_source_file import create_purge_source_file_message
+from storage.models import PurgeResults
 
 # This is the maximum number of job models that can fit in one message. This maximum ensures that every message of this
 # type is less than 25 KiB long.
@@ -23,13 +24,15 @@ MAX_NUM = 100
 logger = logging.getLogger(__name__)
 
 
-def create_purge_jobs_messages(purge_job_ids, when):
+def create_purge_jobs_messages(purge_job_ids, trigger_id, source_file_id):
     """Creates messages to remove the given job IDs
 
     :param purge_job_ids: The job IDs
     :type purge_job_ids: list
-    :param when: The current time
-    :type when: :class:`datetime.datetime`
+    :param trigger_id: The trigger event id for the purge operation
+    :type trigger_id: int
+    :param source_file_id: The source file id for the original file being purged
+    :type source_file_id: int
     :return: The list of messages
     :rtype: list
     """
@@ -43,8 +46,9 @@ def create_purge_jobs_messages(purge_job_ids, when):
         elif not message.can_fit_more():
             messages.append(message)
             message = PurgeJobs()
-        message.status_change = when
         message.add_job(job_id)
+        message.trigger_id = trigger_id
+        message.source_file_id = source_file_id
     if message:
         messages.append(message)
 
@@ -63,7 +67,8 @@ class PurgeJobs(CommandMessage):
 
         self._count = 0
         self._purge_job_ids = []
-        self.status_change = None
+        self.trigger_id = None
+        self.source_file_id = None
 
     def add_job(self, job_id):
         """Adds the given job ID to this message
@@ -88,17 +93,16 @@ class PurgeJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.to_json`
         """
 
-        return {'status_change': datetime_to_string(self.status_change), 'job_ids': self._purge_job_ids}
+        return {'job_ids': self._purge_job_ids, 'trigger_id': self.trigger_id, 'source_file_id': self.source_file_id}
 
     @staticmethod
     def from_json(json_dict):
         """See :meth:`messaging.messages.message.CommandMessage.from_json`
         """
 
-        status_change = parse_datetime(json_dict['status_change'])
-
         message = PurgeJobs()
-        message.status_change = status_change
+        message.trigger_id = json_dict['trigger_id']
+        message.source_file_id = json_dict['source_file_id']
         for job_id in json_dict['job_ids']:
             message.add_job(job_id)
 
@@ -107,6 +111,17 @@ class PurgeJobs(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
+
+        # Kick off purge_source_file for the source file input
+        self.new_messages.append(create_purge_source_file_message(source_file_id=self.source_file_id,
+                                                                  trigger_id=self.trigger_id))
+
+        # Kick off purge_recipe for recipe with node job
+        parent_recipes = RecipeNode.objects.filter(job__in=self._purge_job_ids, is_original=True)
+        for recipe_node in parent_recipes:
+            self.new_messages.append(create_purge_recipe_message(recipe_id=recipe_node.recipe.id,
+                                                                 trigger_id=self.trigger_id,
+                                                                 source_file_id=self.source_file_id))
 
         with transaction.atomic():
             job_exe_queryset = JobExecution.objects.filter(job__in=self._purge_job_ids)
@@ -120,5 +135,7 @@ class PurgeJobs(CommandMessage):
             JobInputFile.objects.filter(job__in=self._purge_job_ids).delete()
             Queue.objects.filter(job__in=self._purge_job_ids).delete()
             Job.objects.filter(id__in=self._purge_job_ids).delete()
+            PurgeResults.objects.filter(source_file_id=self.source_file_id).update(
+                num_jobs_deleted=F('num_jobs_deleted') + len(self._purge_job_ids))
 
         return True

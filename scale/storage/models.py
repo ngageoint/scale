@@ -5,6 +5,7 @@ import hashlib
 import logging
 import os
 import re
+from collections import namedtuple
 
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
@@ -14,10 +15,16 @@ from django.db import transaction
 
 import storage.geospatial_utils as geospatial_utils
 from storage.brokers.factory import get_broker
-from storage.configuration.workspace_configuration import ValidationWarning, WorkspaceConfiguration
+from storage.configuration.workspace_configuration import WorkspaceConfiguration
+from storage.configuration.exceptions import InvalidWorkspaceConfiguration
+from storage.configuration.json.workspace_config_1_0 import WorkspaceConfigurationV1
+from storage.configuration.json.workspace_config_v6 import convert_config_to_v6_json, WorkspaceConfigurationV6
 from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
+from util.os_helper import makedirs
+from util import rest as rest_utils
+from util.validation import ValidationWarning
 
 logger = logging.getLogger(__name__)
 
@@ -148,6 +155,38 @@ class CountryData(models.Model):
         db_table = 'country_data'
         unique_together = ("name", "effective")
         index_together = ["name", "effective"]
+
+
+class PurgeResults(models.Model):
+    """Represents the results from purge operations
+
+    :keyword source_file_id: The ID of the source file purged
+    :type source_file_id: :class:`django.db.models.PositiveIntegerField`
+    :keyword trigger_event: The event that triggered the creation of the purge process
+    :type trigger_event: :class:`django.db.models.ForeignKey`
+    :keyword num_jobs_deleted: The number of jobs deleted as part of the purge process
+    :type num_jobs_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword num_recipes_deleted: The number of recipes deleted as part of the purge process
+    :type num_recipes_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword num_products_deleted: The number of products deleted as part of the purge process
+    :type num_products_deleted: :class:`django.db.models.PositiveIntegerField`
+    :keyword purge_started: The datetime that the purge process began 
+    :type purge_started: :class:`django.db.models.DateTimeField`
+    :keyword purge_completed: The datetime that the purge process completed
+    :type purge_completed: :class:`django.db.models.DateTimeField`
+    """
+
+    source_file_id = models.PositiveIntegerField(default=0)
+    trigger_event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
+    num_jobs_deleted = models.PositiveIntegerField(default=0)
+    num_recipes_deleted = models.PositiveIntegerField(default=0)
+    num_products_deleted = models.PositiveIntegerField(default=0)
+    purge_started = models.DateTimeField(auto_now_add=True)
+    purge_completed = models.DateTimeField(blank=True, null=True)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'purge_results'
 
 
 class ScaleFileManager(models.Manager):
@@ -300,8 +339,8 @@ class ScaleFileManager(models.Manager):
         :type source_sensor: list
         :param source_collection: Query files with the given source class.
         :type source_collection: list
-        :param source_task: Query files with the given source task.
-        :type source_task: list
+        :param source_tasks: Query files with the given source tasks.
+        :type source_tasks: list
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
@@ -795,12 +834,13 @@ class ScaleFile(models.Model):
         """meta information for the db"""
         db_table = 'scale_file'
 
+WorkspaceValidation = namedtuple('WorkspaceValidation', ['is_valid', 'errors', 'warnings'])
 
 class WorkspaceManager(models.Manager):
     """Provides additional methods for handling workspaces."""
 
     @transaction.atomic
-    def create_workspace(self, name, title, description, json_config, base_url=None, is_active=True):
+    def create_workspace(self, name, title, description, configuration, base_url=None, is_active=True):
         """Creates a new Workspace with the given configuration and returns the new Workspace model.
         The Workspace model will be saved in the database and all changes to the database will occur in an atomic
         transaction.
@@ -811,8 +851,8 @@ class WorkspaceManager(models.Manager):
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
+        :param configuration: The Workspace configuration
+        :type configuration: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
         :param base_url: The URL prefix used to download files stored in the Workspace.
         :type base_url: string
         :param is_active: Whether or not the Workspace is available for use.
@@ -824,21 +864,20 @@ class WorkspaceManager(models.Manager):
         """
 
         # Validate the configuration, no exception is success
-        config = WorkspaceConfiguration(json_config)
-        config.validate_broker()
+        configuration.validate_broker()
 
         workspace = Workspace()
         workspace.name = name
         workspace.title = title
         workspace.description = description
-        workspace.json_config = config.get_dict()
+        workspace.json_config = configuration.get_dict()
         workspace.base_url = base_url
         workspace.is_active = is_active
         workspace.save()
         return workspace
 
     @transaction.atomic
-    def edit_workspace(self, workspace_id, title=None, description=None, json_config=None, base_url=None,
+    def edit_workspace(self, workspace_id, title=None, description=None, configuration=None, base_url=None,
                        is_active=None):
         """Edits the given Workspace and saves the changes in the database. All database changes occur in an atomic
         transaction. An argument of None for a field indicates that the field should not change.
@@ -849,8 +888,8 @@ class WorkspaceManager(models.Manager):
         :type title: string
         :param description: A description of this Workspace
         :type description: string
-        :param json_config: The Workspace configuration
-        :type json_config: dict
+        :param configuration: The Workspace configuration
+        :type configuration: :class:`storage.configuration.workspace_configuration.WorkspaceConfiguration`
         :param base_url: The URL prefix used to download files stored in the Workspace.
         :type base_url: string
         :param is_active: Whether or not the Workspace is available for use.
@@ -862,10 +901,9 @@ class WorkspaceManager(models.Manager):
         workspace = Workspace.objects.get(pk=workspace_id)
 
         # Validate the configuration, no exception is success
-        if json_config:
-            config = WorkspaceConfiguration(json_config)
-            config.validate_broker()
-            workspace.json_config = config.get_dict()
+        if configuration:
+            configuration.validate_broker()
+            workspace.json_config = configuration.get_dict()
 
         # Update editable fields
         if title:
@@ -929,7 +967,7 @@ class WorkspaceManager(models.Manager):
             workspaces = workspaces.order_by('last_modified')
         return workspaces
 
-    def validate_workspace(self, name, json_config):
+    def validate_workspace_v5(self, name, json_config):
         """Validates a new workspace prior to attempting a save
 
         :param name: The identifying name of a Workspace to validate
@@ -944,7 +982,7 @@ class WorkspaceManager(models.Manager):
         warnings = []
 
         # Validate the configuration, no exception is success
-        config = WorkspaceConfiguration(json_config)
+        config = WorkspaceConfigurationV1(json_config, do_validate=True).get_configuration()
 
         # Check for issues when changing an existing workspace configuration
         try:
@@ -963,6 +1001,52 @@ class WorkspaceManager(models.Manager):
         # Add broker-specific warnings
         warnings.extend(config.validate_broker())
         return warnings
+        
+    def validate_workspace_v6(self, name, configuration):
+        """Validates a new workspace prior to attempting a save
+
+        :param name: The identifying name of a Workspace to validate
+        :type name: string
+        :param configuration: The Workspace configuration
+        :type configuration: dict
+        :returns: The workspace validation.
+        :rtype: :class:`storage.models.WorkspaceValidation`
+        """
+        
+        is_valid = True
+        errors = []
+        warnings = []
+        
+        config = None
+
+        # Validate the configuration, no exception is success
+        try:
+            config = WorkspaceConfigurationV6(configuration, do_validate=True).get_configuration()
+            # Add broker-specific warnings
+            warnings.extend(config.validate_broker())
+        except InvalidWorkspaceConfiguration as ex:
+            is_valid = False
+            errors.append(ex.error)
+            message = 'Workspace configuration invalid'
+            logger.exception(message)
+            pass
+
+        # Check for issues when changing an existing workspace configuration
+        try:
+            workspace = Workspace.objects.get(name=name)
+
+            # Assign to short names in the interest of single-line conditional
+            old_conf = workspace.json_config
+            new_conf = configuration
+
+            if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
+                warnings.append(ValidationWarning('broker_type',
+                                                  'Changing the broker type may disrupt queued/running jobs.'))
+        except Workspace.DoesNotExist:
+            pass
+
+        return WorkspaceValidation(is_valid, errors, warnings)
+
 
 
 class Workspace(models.Model):
@@ -985,15 +1069,10 @@ class Workspace(models.Model):
     :keyword is_move_enabled: Whether the workspace allows files to be moved within it
     :type is_move_enabled: :class:`django.db.models.BooleanField`
 
-    :keyword used_size: The number of used bytes, may be None (unknown)
-    :type used_size: :class:`django.db.models.BigIntegerField`
-    :keyword total_size: The total size of the workspace file system in bytes, may be None (unknown)
-    :type total_size: :class:`django.db.models.BigIntegerField`
-
     :keyword created: When the workspace was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the workspace was archived (no longer active)
-    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword deprecated: When the workspace was archived (no longer active)
+    :type deprecated: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the workspace was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1007,14 +1086,19 @@ class Workspace(models.Model):
     json_config = django.contrib.postgres.fields.JSONField(default=dict)
     is_move_enabled = models.BooleanField(default=True)
 
-    used_size = models.BigIntegerField(blank=True, null=True)
-    total_size = models.BigIntegerField(blank=True, null=True)
-
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    deprecated = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = WorkspaceManager()
+
+    #TODO remove with v5
+    @property
+    def zero_size(self):
+        """hack to get a zero value returned for removed total_size and used_size fields
+        """
+
+        return 0
 
     @property
     def volume(self):
@@ -1070,7 +1154,7 @@ class Workspace(models.Model):
             file_download_dir = os.path.dirname(file_download.local_path)
             if not os.path.exists(file_download_dir):
                 logger.info('Creating %s', file_download_dir)
-                os.makedirs(file_download_dir, mode=0755)
+                makedirs(file_download_dir, mode=0755)
 
         self.get_broker().download_files(volume_path, file_downloads)
 
@@ -1082,7 +1166,7 @@ class Workspace(models.Model):
         """
 
         if not hasattr(self, '_broker'):
-            ws_config = WorkspaceConfiguration(self.json_config)
+            ws_config = WorkspaceConfigurationV6(self.json_config).get_configuration()
             ws_config.validate_broker()
 
             broker_config = self.json_config['broker']
@@ -1105,6 +1189,24 @@ class Workspace(models.Model):
 
         volume_path = self._get_volume_path()
         return self.get_broker().get_file_system_paths(volume_path, files)
+
+    def get_configuration(self):
+        """Returns the workspace configuration object
+
+        :returns: The configuration in v2 of the JSON schema
+        :rtype: dict
+        """
+
+        return WorkspaceConfigurationV6(self.json_config).get_configuration()
+
+    def get_v6_configuration_json(self):
+        """Returns the workspace configuration in v6 of the JSON schema
+
+        :returns: The workspace configuration in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_config_to_v6_json(self.get_configuration()).get_dict())
 
     def list_files(self, recursive):
         """Lists files within a workspace, with optional full tree recursion.

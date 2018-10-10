@@ -14,8 +14,10 @@ from mock import MagicMock, patch
 import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag
-from storage.models import CountryData, ScaleFile, Workspace
+from storage.models import CountryData, PurgeResults, ScaleFile, Workspace
 from storage.brokers.exceptions import InvalidBrokerConfiguration
+from storage.configuration.json.workspace_config_v6 import WorkspaceConfigurationV6
+from trigger.test import utils as trigger_test_utils
 
 
 class TestScaleFileUpdateUUID(TestCase):
@@ -387,7 +389,7 @@ class TestScaleFileManagerUploadFiles(TestCase):
         self.assertEqual(workspace.id, models[1].workspace_id)
 
     @patch('storage.models.os.path.getsize')
-    @patch('storage.models.os.makedirs')
+    @patch('storage.models.makedirs')
     def test_fails(self, mock_makedirs, mock_getsize):
         """Tests calling ScaleFileManager.upload_files() when Workspace.upload_files() fails"""
         def new_getsize(path):
@@ -500,11 +502,11 @@ class TestCountryData(TestCase):
         self.assertEqual(tmp[0].iso_num, 42)
         self.assertEqual(tmp[0].border, self.testborder)
         self.assertEqual(tmp[0].effective, self.testeffective)
-    
+
     def test_not_found(self):
         tmp = CountryData.objects.filter(name='Kerblekistan')
         self.assertEqual(tmp.count(), 0)
-    
+
     def test_border_update(self):
         newborder = geos.Polygon(((0, 0), (42, 0), (42, 42), (0, 42), (0, 0)))
         neweffective = datetime.datetime(2010, 4, 5, 18, 26, 0, tzinfo=utc)
@@ -519,6 +521,26 @@ class TestCountryData(TestCase):
         self.assertRaises(CountryData.DoesNotExist, CountryData.objects.update_border, 'Kerblekistan', newborder)
 
 
+class TestPurgeResults(TestCase):
+
+    def setUp(self):
+        django.setup()
+        self.source_file_id = 1234321
+        trigger_event = trigger_test_utils.create_trigger_event()
+        PurgeResults.objects.create(source_file_id=self.source_file_id, trigger_event=trigger_event)
+
+    def test_access(self):
+        tmp = PurgeResults.objects.filter(source_file_id=self.source_file_id)
+        self.assertEqual(tmp.count(), 1)
+        self.assertEqual(tmp[0].num_jobs_deleted, 0)
+        self.assertEqual(tmp[0].num_recipes_deleted, 0)
+        self.assertEqual(tmp[0].num_products_deleted, 0)
+
+    def test_not_found(self):
+        tmp = PurgeResults.objects.filter(source_file_id=4321234)
+        self.assertEqual(tmp.count(), 0)
+
+
 class TestWorkspaceManager(TransactionTestCase):
 
     def setUp(self):
@@ -527,13 +549,15 @@ class TestWorkspaceManager(TransactionTestCase):
     def test_successful(self):
         """Tests calling WorkspaceManager.create_workspace() successfully"""
 
-        config = {
+        config_dict = {
             'version': '1.0',
             'broker': {
                 'type': 'host',
                 'host_path': '/host/path'
             },
         }
+
+        config = WorkspaceConfigurationV6(config_dict, do_validate=True).get_configuration()
 
         workspace = Workspace.objects.create_workspace('my_name', 'my_title', 'my_description', config)
         self.assertEqual(workspace.name, 'my_name')

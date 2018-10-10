@@ -24,6 +24,8 @@ MODEL_BATCH_SIZE = 500  # Maximum batch size for creating models
 logger = logging.getLogger(__name__)
 
 
+# TODO: this command message is deprecated and will be removed in v6. Please use the create_recipes command message
+# instead
 def create_reprocess_recipes_messages(root_recipe_ids, revision_id, event_id, all_jobs=False, job_names=None,
                                       batch_id=None):
     """Creates messages to reprocess the given root recipes
@@ -144,8 +146,8 @@ class ReprocessRecipes(CommandMessage):
 
         with transaction.atomic():
             # Lock recipes
-            superseded_recipes = Recipe.objects.get_locked_recipes_from_root(self._root_recipe_ids,
-                                                                             event_id=self.event_id)
+            superseded_recipes = Recipe.objects.get_locked_recipes_from_root_old(self._root_recipe_ids,
+                                                                                 event_id=self.event_id)
 
             if not superseded_recipes:
                 # The database transaction has already been completed, just need to resend messages
@@ -156,7 +158,7 @@ class ReprocessRecipes(CommandMessage):
                 superseded_recipes = Recipe.objects.get_locked_recipes([r.superseded_recipe_id for r in recipes])
 
             # Get revisions and filter out invalid recipes (wrong recipe type)
-            revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess(superseded_recipes, self.revision_id)
+            revisions = RecipeTypeRevision.objects.get_revisions_for_reprocess_old(superseded_recipes, self.revision_id)
             recipe_type = revisions.values()[0].recipe_type
             superseded_recipes = [recipe for recipe in superseded_recipes if recipe.recipe_type_id == recipe_type.id]
             if len(superseded_recipes) < len(self._root_recipe_ids):

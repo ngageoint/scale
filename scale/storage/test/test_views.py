@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import datetime as dt
 import json
+from mock import patch
 
 import django
 from django.test import TestCase
@@ -14,7 +15,9 @@ import product.test.utils as product_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
-from storage.models import Workspace
+
+from source.messages.purge_source_file import PurgeSourceFile
+from storage.models import PurgeResults, Workspace
 
 
 class TestFilesViewV5(TestCase):
@@ -353,7 +356,9 @@ class TestFileDetailsViewV6(TestCase):
 
 
 
-class TestWorkspacesView(TestCase):
+class TestWorkspacesViewV5(TestCase):
+
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -364,7 +369,7 @@ class TestWorkspacesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all workspaces view."""
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -384,7 +389,7 @@ class TestWorkspacesView(TestCase):
     def test_name(self):
         """Tests successfully calling the workspaces view filtered by workspace name."""
 
-        url = rest_util.get_url('/workspaces/?name=%s' % self.workspace1.name)
+        url = '/%s/workspaces/?name=%s' % (self.api, self.workspace1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -395,7 +400,7 @@ class TestWorkspacesView(TestCase):
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = rest_util.get_url('/workspaces/?order=name')
+        url = '/%s/workspaces/?order=name' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -407,7 +412,7 @@ class TestWorkspacesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_util.get_url('/workspaces/?order=-name')
+        url = '/%s/workspaces/?order=-name' % self.api
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -417,7 +422,80 @@ class TestWorkspacesView(TestCase):
         self.assertEqual(result['results'][0]['title'], self.workspace2.title)
 
 
-class TestWorkspaceCreateView(TestCase):
+class TestWorkspacesViewV6(TestCase):
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace1 = storage_test_utils.create_workspace(name='ws1')
+        self.workspace2 = storage_test_utils.create_workspace(name='ws2')
+
+    def test_successful(self):
+        """Tests successfully calling the get all workspaces view."""
+
+        url = '/%s/workspaces/' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            expected = None
+            if entry['id'] == self.workspace1.id:
+                expected = self.workspace1
+            elif entry['id'] == self.workspace2.id:
+                expected = self.workspace2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['name'], expected.name)
+            self.assertEqual(entry['title'], expected.title)
+            self.assertNotIn('total_size', entry)
+            self.assertNotIn('used_size', entry)
+
+    def test_name(self):
+        """Tests successfully calling the workspaces view filtered by workspace name."""
+
+        url = '/%s/workspaces/?name=%s' % (self.api, self.workspace1.name)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['name'], self.workspace1.name)
+
+    def test_sorting(self):
+        """Tests custom sorting."""
+
+        url = '/%s/workspaces/?order=name' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.workspace1.name)
+        self.assertEqual(result['results'][0]['title'], self.workspace1.title)
+        self.assertNotIn('total_size', result['results'][0])
+        self.assertNotIn('used_size', result['results'][0])
+
+    def test_reverse_sorting(self):
+        """Tests custom sorting in reverse."""
+
+        url = '/%s/workspaces/?order=-name' % self.api
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['name'], self.workspace2.name)
+        self.assertEqual(result['results'][0]['title'], self.workspace2.title)
+        self.assertNotIn('total_size', result['results'][0])
+        self.assertNotIn('used_size', result['results'][0])
+
+
+class TestWorkspaceCreateViewV5(TestCase):
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -431,7 +509,7 @@ class TestWorkspaceCreateView(TestCase):
             'description': 'Workspace description',
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -446,7 +524,7 @@ class TestWorkspaceCreateView(TestCase):
             'json_config': 123,
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -463,7 +541,7 @@ class TestWorkspaceCreateView(TestCase):
             }
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -485,7 +563,7 @@ class TestWorkspaceCreateView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/')
+        url = '/%s/workspaces/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
@@ -501,7 +579,90 @@ class TestWorkspaceCreateView(TestCase):
         self.assertFalse(workspaces[0].is_active)
 
 
-class TestWorkspaceDetailsView(TestCase):
+class TestWorkspaceCreateViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    def test_missing_configuration(self):
+        """Tests calling the create Workspace view with missing configuration."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+        }
+
+        url = '/%s/workspaces/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests calling the create Workspace view with configuration that is not a dict."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'json_config': 123,
+        }
+
+        url = '/%s/workspaces/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests calling the create Workspace view with invalid configuration."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'json_config': {
+                'broker': 123,
+            }
+        }
+
+        url = '/%s/workspaces/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_successful(self):
+        """Tests calling the create Workspace view successfully."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'base_url': 'http://host/my/path/',
+            'is_active': False,
+            'configuration': {
+                'broker': {
+                    'type': 'host',
+                    'host_path': '/host/path',
+                },
+            },
+        }
+
+        url = '/%s/workspaces/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        workspaces = Workspace.objects.filter(name='workspace-title')
+        self.assertEqual(len(workspaces), 1)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['name'], 'workspace-title')
+        self.assertEqual(result['title'], workspaces[0].title)
+        self.assertEqual(result['description'], workspaces[0].description)
+        self.assertDictEqual(result['configuration'], workspaces[0].get_v6_configuration_json())
+        self.assertEqual(result['base_url'], workspaces[0].base_url)
+        self.assertEqual(result['is_active'], workspaces[0].is_active)
+        self.assertFalse(workspaces[0].is_active)
+
+
+class TestWorkspaceDetailsViewV5(TestCase):
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -518,7 +679,7 @@ class TestWorkspaceDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
 
-        url = rest_util.get_url('/workspaces/999999/')
+        url = '/%s/workspaces/999999/' % self.api
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -526,7 +687,7 @@ class TestWorkspaceDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get workspace details view."""
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -535,6 +696,9 @@ class TestWorkspaceDetailsView(TestCase):
         self.assertEqual(result['id'], self.workspace.id)
         self.assertEqual(result['name'], self.workspace.name)
         self.assertEqual(result['title'], self.workspace.title)
+        self.assertIn('archived', result)
+        self.assertEqual(result['total_size'], 0)
+        self.assertEqual(result['used_size'], 0)
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a workspace"""
@@ -545,7 +709,7 @@ class TestWorkspaceDetailsView(TestCase):
             'is_active': False,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -577,7 +741,7 @@ class TestWorkspaceDetailsView(TestCase):
             'json_config': config,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -605,14 +769,107 @@ class TestWorkspaceDetailsView(TestCase):
             'json_config': config,
         }
 
-        url = rest_util.get_url('/workspaces/%d/' % self.workspace.id)
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestWorkspacesValidationView(TestCase):
+class TestWorkspaceDetailsViewV6(TestCase):
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+        self.config = {
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path',
+            },
+        }
+
+        self.workspace = storage_test_utils.create_workspace(json_config=self.config)
+
+    def test_not_found(self):
+        """Tests successfully calling the get workspace details view with a workspace id that does not exist."""
+
+        url = '/%s/workspaces/999999/' % self.api
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the get workspace details view."""
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertEqual(result['id'], self.workspace.id)
+        self.assertEqual(result['name'], self.workspace.name)
+        self.assertEqual(result['title'], self.workspace.title)
+        self.assertIn('deprecated', result)
+
+    def test_edit_simple(self):
+        """Tests editing only the basic attributes of a workspace"""
+
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+            'is_active': False,
+        }
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+
+    def test_edit_config(self):
+        """Tests editing the configuration of a workspace"""
+
+        config = {
+            'version': '6',
+            'broker': {
+                'type': 'nfs',
+                'nfs_path': 'host:/dir',
+            },
+        }
+
+        json_data = {
+            'configuration': config,
+        }
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+
+    def test_edit_bad_config(self):
+        """Tests attempting to edit a workspace using an invalid configuration"""
+
+        config = {
+            'version': 'BAD',
+            'broker': {
+                'type': 'nfs',
+                'host_path': 'host:/dir',
+            },
+        }
+
+        json_data = {
+            'configuration': config,
+        }
+
+        url = '/%s/workspaces/%d/' % (self.api, self.workspace.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+class TestWorkspacesValidationViewV5(TestCase):
     """Tests related to the workspaces validation endpoint"""
+
+    api = 'v5'
 
     def setUp(self):
         django.setup()
@@ -633,7 +890,7 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -649,7 +906,7 @@ class TestWorkspacesValidationView(TestCase):
             'description': 'Workspace description',
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -664,7 +921,7 @@ class TestWorkspacesValidationView(TestCase):
             'json_config': 123,
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -681,7 +938,7 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -707,10 +964,200 @@ class TestWorkspacesValidationView(TestCase):
             },
         }
 
-        url = rest_util.get_url('/workspaces/validation/')
+        url = '/%s/workspaces/validation/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
         self.assertEqual(len(results['warnings']), 1)
         self.assertEqual(results['warnings'][0]['id'], 'broker_type')
+
+
+class TestWorkspacesValidationViewV6(TestCase):
+    """Tests related to the workspaces validation endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    def test_successful(self):
+        """Tests validating a new workspace."""
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'base_url': 'http://host/my/path/',
+            'is_active': False,
+            'configuration': {
+                'broker': {
+                    'type': 'host',
+                    'host_path': '/host/path',
+                },
+            },
+        }
+
+        url = '/%s/workspaces/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {u'errors': [], u'is_valid': True, u'warnings': []})
+
+    def test_missing_configuration(self):
+        """Tests validating a new workspace with missing configuration."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+        }
+
+        url = '/%s/workspaces/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_configuration_bad_type(self):
+        """Tests validating a new workspace with configuration that is not a dict."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'configuration': 123,
+        }
+
+        url = '/%s/workspaces/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_configuration(self):
+        """Tests validating a new workspace with invalid configuration."""
+
+        json_data = {
+            'title': 'Workspace Title',
+            'description': 'Workspace description',
+            'configuration': {
+                'broker': 123,
+            },
+        }
+
+        url = '/%s/workspaces/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_warnings(self):
+        """Tests validating a new workspace where the broker type is changed."""
+
+        json_config = {
+            'broker': {
+                'type': 'host',
+                'host_path': '/host/path',
+            },
+        }
+        storage_test_utils.create_workspace(name='ws-test', json_config=json_config)
+
+        json_data = {
+            'name': 'ws-test',
+            'title': 'ws test',
+            'configuration': {
+                'broker': {
+                    'type': 'nfs',
+                    'nfs_path': 'host:/dir',
+                },
+            },
+        }
+
+        url = '/%s/workspaces/validation/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['name'], 'broker_type')
+
+
+class TestPurgeSourceFileView(TestCase):
+    """Tests related to the purge source endpoint"""
+
+    api = 'v6'
+
+    def setUp(self):
+        django.setup()
+
+    @patch('storage.views.CommandMessageManager')
+    @patch('storage.views.create_purge_source_file_message')
+    def test_successful(self, mock_create, mock_msg_mgr):
+        """Tests purging a source file."""
+
+        msg = PurgeSourceFile()
+        mock_create.return_value = msg
+
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Check that create_batch_recipes message was created and sent
+        mock_create.assert_called_once()
+
+    @patch('storage.views.CommandMessageManager')
+    @patch('storage.views.create_purge_source_file_message')
+    def test_successful_db_check(self, mock_create, mock_msg_mgr):
+        """Tests purging a source file."""
+
+        msg = PurgeSourceFile()
+        mock_create.return_value = msg
+
+        input_file = storage_test_utils.create_file(file_type='SOURCE')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Check that PurgeResults entry was made
+        self.assertEqual(PurgeResults.objects.filter(source_file_id=input_file.id).count(), 1)
+
+    def test_bad_file_id(self):
+        """Tests purging a source file."""
+
+        json_data = {
+            'file_id': 123463764563
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_no_file_id(self):
+        """Tests purging a source file."""
+
+        json_data = {
+            'file_id': 'not_a_file_id'
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_product_file_id(self):
+        """Tests purging a source file."""
+
+        input_file = storage_test_utils.create_file(file_type='PRODUCT')
+
+        json_data = {
+            'file_id': input_file.id
+        }
+
+        url = '/%s/files/purge-source/' % self.api
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

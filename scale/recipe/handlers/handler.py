@@ -253,6 +253,6 @@ class RecipeHandler(object):
         """
 
         for recipe_job in self._jobs_by_name.values():
-            if recipe_job.job.status != 'COMPLETED':
+            if recipe_job.job and recipe_job.job.status != 'COMPLETED':
                 return False
         return True

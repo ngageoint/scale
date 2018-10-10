@@ -490,8 +490,13 @@ class Node(object):
         Caller must have obtained the node's thread lock.
         """
 
+        self._cleanup = NodeCleanup()
+        self._cleanup_task = None
+        self._health_task = None
         self._is_image_pulled = False
         self._is_initial_cleanup_completed = False
+        self._last_heath_task = None
+        self._pull_task = None
 
     def _update_state(self):
         """Updates the node's state. Caller must have obtained the node's thread lock.

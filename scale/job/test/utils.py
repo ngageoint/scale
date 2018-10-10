@@ -288,17 +288,6 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, input=No
         last_status_change = timezone.now()
     if num_exes == 0:
         input_file_size = None
-    if not input:
-        if num_exes == 0:
-            input = {}
-        else:
-            input = {
-                'version': '1.0',
-                'input_data': [],
-                'output_data': [],
-            }
-    if not output:
-        output = dict()
 
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs_old([superseded_job], timezone.now())
@@ -401,9 +390,12 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
     return job_exe
 
 
-def create_seed_job_type(name='image-watermark', manifest=None, priority=50, max_tries=3, max_scheduled=None,
+def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=None,
                          is_active=True, is_operational=True, trigger_rule=None, configuration=None, docker_image='fake'):
     if not manifest:
+        global JOB_TYPE_NAME_COUNTER
+        name = 'test-job-type-%i' % JOB_TYPE_NAME_COUNTER
+        JOB_TYPE_NAME_COUNTER += 1
         manifest = {
             'seedVersion': '1.0.0',
             'job': {
