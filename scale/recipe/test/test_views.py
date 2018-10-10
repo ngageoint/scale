@@ -1717,7 +1717,7 @@ class TestRecipesViewV6(TransactionTestCase):
                                                source_sensor_class=self.s_class, source_sensor=self.s_sensor,
                                                source_collection=self.collection, source_task=self.task)
 
-        data = {
+        self.data = {
             'version': '1.0',
             'input_data': [{
                 'name': 'INPUT_FILE',
@@ -1731,7 +1731,7 @@ class TestRecipesViewV6(TransactionTestCase):
         }
 
         self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
-        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=self.data)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
 
@@ -1762,7 +1762,7 @@ class TestRecipesViewV6(TransactionTestCase):
         results = result['results']
         self.assertEqual(len(results), 1)
         for result in results:
-            self.assertTrue(result['id'] in [self.job1.id])
+            self.assertTrue(result['id'] in [self.recipe1.id])
 
     def test_source_sensor_class(self):
         """Tests successfully calling the jobs view filtered by source sensor class."""
