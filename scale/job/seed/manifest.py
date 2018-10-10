@@ -402,9 +402,9 @@ class SeedManifest(object):
         
         :raises :class:`job.data.exceptions.InvalidConnection`: If thre is a configuration problem.
         """
-
-        if self.get_outputs() and not exe_config.get_output_workspace_names():
-            raise InvalidConnection('No workspace provided for output files')
+        
+        if len(self.get_output_files()) and not exe_config.get_output_workspace_names():
+            raise InvalidConnection('No workspace defined for output files')
 
     def validate_data(self, job_data):
         """Ensures that the job_data matches the job_interface description

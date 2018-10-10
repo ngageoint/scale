@@ -46,9 +46,10 @@ class TestPreJobSteps(TransactionTestCase):
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', timeout=timeout, queued=now())
         self.seed_exe = job_utils.create_job_exe(job=self.seed_job, status='RUNNING', timeout=timeout, queued=now())
         
+    
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.os.environ.get')
-    def test_seed_pre_steps(self, mock_env_vars, mock_sysexit):
+    def test_seed_pre_steps_no_workspace(self, mock_env_vars, mock_sysexit):
         
         # Set up mocks
         def get_env_vars(name, *args, **kwargs):
@@ -61,7 +62,8 @@ class TestPreJobSteps(TransactionTestCase):
         
         # Make sure we get an exit code of 1
         mock_sysexit.assert_called_with(1)
-
+        
+ 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.os.environ.get')
     def test_scale_pre_steps_successful(self, mock_env_vars, mock_sysexit):

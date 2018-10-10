@@ -178,7 +178,6 @@ class TestJobConfiguration(TestCase):
         configuration = JobConfiguration()
 
         # No workspaces defined
-        print 'Test validate_output_workspaces Configuration: ', configuration
         warnings = configuration.validate(manifest)
         self.assertEqual(len(warnings), 2)
         self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')
@@ -240,7 +239,7 @@ class TestJobConfiguration(TestCase):
         manifest = SeedManifest(manifest_dict)
         configuration = JobConfiguration()
 
-        # No workspaces defined
+        # No workspaces defined for outputs
         warnings = configuration.validate(manifest)
         self.assertEqual(len(warnings), 2)
         self.assertEqual(warnings[0].name, 'MISSING_WORKSPACE')

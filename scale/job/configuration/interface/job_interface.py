@@ -659,6 +659,16 @@ class JobInterface(object):
             if value is None:
                 raise MissingSetting('Required setting %s was not provided' % name)
 
+    def validate_output_workspaces(self, exe_configuration):
+        """Ensures that all required output workspaces are defined in the execution configuration
+
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
+        """
+
+        if self.definition['output_data'] and not exe_configuration.get_output_workspace_names():
+            raise InvalidConnection('No workspace provided for output data')
+
     def _check_env_var_uniqueness(self):
         """Ensures all the environmental variable names are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
