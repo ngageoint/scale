@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -44,19 +44,19 @@ paths:
           name: status
           schema:
             type: string
-          description: "Return only ingests with a status matching this string. |
+          description: "Return only ingests with a status matching this string.
                         Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
         - in: query
           name: scan_id
           schema:
             type: integer
-          description: Return only ingests created by a given scan process identifier. |
+          description: Return only ingests created by a given scan process identifier.
             Duplicate it to filter by multiple values.
         - in: query
           name: strike_id
           schema:
             type: integer
-          description: Return only ingests created by a given strike process identifier. |
+          description: Return only ingests created by a given strike process identifier.
             Duplicate it to filter by multiple values.
         - in: query
           name: file_name
@@ -65,8 +65,7 @@ paths:
           description: Return only ingests with a specific file name. 
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -84,8 +83,7 @@ paths:
           description: id of an existing node
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -94,7 +92,7 @@ paths:
     get:
       operationId: _rest_v6_ingest_status
       summary: Ingest Status
-      description: "Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots. |
+      description: "Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots.
                     NOTE: Time range must be within a one month period (31 days)."
       parameters:
         - in: query
@@ -106,7 +104,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -124,9 +122,9 @@ paths:
           name: use_ingest_time
           schema:
             type: boolean
-          description: Whether to group counts by ingest time or data time. |
-            Ingest time is when the strike process registered the file. |
-            Data time is the time when the data was collected by a sensor. |
+          description: Whether to group counts by ingest time or data time.
+            Ingest time is when the strike process registered the file.
+            Data time is the time when the data was collected by a sensor.
             Defaults to False (data time).  
       responses:
         '200':
@@ -216,13 +214,13 @@ components:
           description: The relative path of the file in the workspace.
           example: the/current/path/file_name.txt
         workspace:
-          $ref: '#/components/schemas/workspace'
+          $ref: '#/components/schemas/workspace_base'
         new_file_path:
           type: string
           description: The relative path for where the file should be moved as part of ingesting.
           example: the/new/path/file_name.txt
         new_workspace:
-          $ref: '#/components/schemas/workspace'
+          $ref: '#/components/schemas/workspace_base'
         job:
           $ref: '#/components/schemas/job'
         ingest_started:
@@ -314,14 +312,14 @@ components:
       properties:
         type:
           type: string
-          description: The type is a required string that specifies the type of the scanner to use. |
-            The other fields that configure the scanner are based upon the type of the scanner in the type field. |
+          description: The type is a required string that specifies the type of the scanner to use.
+            The other fields that configure the scanner are based upon the type of the scanner in the type field.
             Certain scanner types may only be used on workspaces with corresponding broker types. The valid scanner types are dir and s3
           example: dir
         transfer_suffix:
           type: string
-          description: The transfer_suffix field is an optional string that defines a suffix that is |
-            used on the file names to indicate that files are still transferring and have not yet finished |
+          description: The transfer_suffix field is an optional string that defines a suffix that is
+            used on the file names to indicate that files are still transferring and have not yet finished
             being copied into the scanned directory. Only used with dir scanners.
           example: _tmp
       required:
@@ -333,10 +331,10 @@ components:
       properties:
         filename_regex:
           type: string
-          description: The filename_regex field is a required string that defines a regular expression to check against |
-            the names of new files in the scanned workspace. When a new file appears in the workspace, the file’s name |
-            is checked against each expression in order of the files_to_ingest array. If an expression matches the new |
-            file name in the workspace, that file is ingested according to the other fields in the JSON object and all |
+          description: The filename_regex field is a required string that defines a regular expression to check against
+            the names of new files in the scanned workspace. When a new file appears in the workspace, the file’s name
+            is checked against each expression in order of the files_to_ingest array. If an expression matches the new
+            file name in the workspace, that file is ingested according to the other fields in the JSON object and all
             subsequent rules in the list are ignored (first rule matched is applied).
           example: "*.txt"
         data_types:
@@ -344,23 +342,23 @@ components:
           style: simple
           items:
             type: string  
-          description: The data_types field is an optional list of strings. Any file that matches the corresponding file |
-            name regular expression will have these data type strings “tagged” with the file. If not provided, data_types |
+          description: The data_types field is an optional list of strings. Any file that matches the corresponding file
+            name regular expression will have these data type strings “tagged” with the file. If not provided, data_types
             defaults to an empty array.
           example: []
         new_workspace:
           type: string
-          description: The new_workspace field optionally specifies the name of a new workspace to which the file should |
-            be copied. This allows the ingest process to move files to a different workspace after they appear in the |
+          description: The new_workspace field optionally specifies the name of a new workspace to which the file should
+            be copied. This allows the ingest process to move files to a different workspace after they appear in the
             scanned workspace.
           example: my-new-workspace
         new_file_path:
           type: string
-          description: The new_file_path field is an optional string that specifies a new relative path for storing new |
-            files. If new_workspace is also specified, the file is moved to the new workspace at this new path location |
-            (instead of using the current path the new file originally came in on). If new_workspace is not specified, |
-            the file is moved to this new path location within the original scanned workspace. In either of these cases, |
-            three additional and dynamically named directories, for the current year, month, and day, will be appended to |
+          description: The new_file_path field is an optional string that specifies a new relative path for storing new
+            files. If new_workspace is also specified, the file is moved to the new workspace at this new path location
+            (instead of using the current path the new file originally came in on). If new_workspace is not specified,
+            the file is moved to this new path location within the original scanned workspace. In either of these cases,
+            three additional and dynamically named directories, for the current year, month, and day, will be appended to
             the new_file_path value automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).
           example: the/new/path/
 
@@ -370,15 +368,15 @@ components:
       properties:
         type:
           type: string
-          description: The type is a required string that specifies the type of monitor to use. |
-            The other fields that configure the monitor are based upon the type of the monitor in the type field. |
-            Certain monitor types may only be used on workspaces with corresponding broker types. The valid |
+          description: The type is a required string that specifies the type of monitor to use.
+            The other fields that configure the monitor are based upon the type of the monitor in the type field.
+            Certain monitor types may only be used on workspaces with corresponding broker types. The valid
             monitor types are dir-watcher and s3
           example: dir-watcher
         transfer_suffix:
           type: string
-          description: The transfer_suffix field is an optional string that defines a suffix that is |
-            used on the file names to indicate that files are still transferring and have not yet finished |
+          description: The transfer_suffix field is an optional string that defines a suffix that is
+            used on the file names to indicate that files are still transferring and have not yet finished
             being copied into the scanned directory. Only used with dir monitors.
           example: _tmp
       required:
@@ -390,14 +388,14 @@ components:
       properties:
         type:
           type: string
-          description: The type is a required string that specifies the type of monitor to use. |
-            The other fields that configure the monitor are based upon the type of the monitor in the type field. |
-            Certain monitor types may only be used on workspaces with corresponding broker types. The valid |
+          description: The type is a required string that specifies the type of monitor to use.
+            The other fields that configure the monitor are based upon the type of the monitor in the type field.
+            Certain monitor types may only be used on workspaces with corresponding broker types. The valid
             monitor types are dir-watcher and s3
           example: dir-watcher
         sqs_name:
           type: string
-          description: The sqs_name field is a required string that defines the name of the SQS queue |
+          description: The sqs_name field is a required string that defines the name of the SQS queue
             that should be polled for object creation notifications that describe new files in the S3 bucket.
           example: my-sqs
         # Commenting out until added
@@ -405,9 +403,9 @@ components:
         #   $ref: '#/components/schemas/credentials'
         region_name:
           type: string
-          description: The region_name is an optional string that specifies the AWS region where the |
-            SQS Queue is located. This is not always required, as environment variables or configuration |
-            files could set the default region, but it is a highly recommended setting for explicitly |
+          description: The region_name is an optional string that specifies the AWS region where the
+            SQS Queue is located. This is not always required, as environment variables or configuration
+            files could set the default region, but it is a highly recommended setting for explicitly
             indicating the SQS region.
           example: us-east-1
       required:
@@ -483,14 +481,15 @@ components:
           type: string
           description: The central geospatial location of the source file.
           example: POINT(11 -11)
-        meta_data:
-          $ref: '#/components/schemas/metadata'
+        # Commenting out until added
+        # meta_data:
+        #   $ref: '#/components/schemas/metadata'
         countries:
           type: array
           style: simple
           items:
             type: string  
-          description: A list of zero or more strings with the ISO3 country codes for countries |
+          description: A list of zero or more strings with the ISO3 country codes for countries
             contained in the geographic boundary of this file.
         last_modified:
           type: string

@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -36,7 +36,7 @@ paths:
           name: name
           schema:
             type: string
-          description: Return only Scan processes with a given name. |
+          description: Return only Scan processes with a given name.
             Duplicate it to filter by multiple values.
         - in: query
           name: order
@@ -48,8 +48,7 @@ paths:
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -66,8 +65,7 @@ paths:
               $ref: '#/components/schemas/scan_post'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful request 
+          description: The 201 CREATED response indicates a successful request 
           content:
             application/json: 
               schema:
@@ -86,8 +84,7 @@ paths:
           description: id of an existing scan process
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -110,7 +107,7 @@ paths:
               $ref: '#/components/schemas/scan_post'
       responses:
         '204':
-          description: |-
+          description:-
             The 204 No content response indicates a successful edit 
 
   /scans/validation/:
@@ -126,8 +123,7 @@ paths:
               $ref: '#/components/schemas/scan_process'
       responses:
         '200':
-          description: |-
-            The 200 OK response indicates a valid scan configuration 
+          description: The 200 OK response indicates a valid scan configuration 
           content:
             application/json: 
               schema:
@@ -152,8 +148,7 @@ paths:
               $ref: '#/components/schemas/scan_process'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful request  
+          description: The 201 CREATED response indicates a successful request  
           content:
             application/json: 
               schema:
@@ -230,7 +225,7 @@ components:
       properties:
         title:
           type: string
-          description: The human readable display name of the Scan process. |
+          description: The human readable display name of the Scan process.
             This will be used to generate the name field
           example: My Scan Process
         description:
@@ -246,7 +241,7 @@ components:
       properties:
         ingest:
           type: boolean
-          description: Whether a dry run or ingest triggering scan should be run. |
+          description: Whether a dry run or ingest triggering scan should be run.
             Defaults to false when unset.
           example: true
           
@@ -265,17 +260,17 @@ components:
       properties:
         workspace:
           type: string
-          description: The workspace field is a required string that specifies |
-            the name of the workspace that is being scanned. The type of the |
-            workspace (its broker type) will determine which types of monitor |
+          description: The workspace field is a required string that specifies
+            the name of the workspace that is being scanned. The type of the
+            workspace (its broker type) will determine which types of monitor
             can be used.
           example: my-host-workspace
         scanner:
           $ref: '#/components/schemas/scanner'
         recursive:
           type: boolean
-          description: Indicates whether a scanner should be limited to the root |
-            of a workspace or traverse the entire tree. If ommitted, the default |
+          description: Indicates whether a scanner should be limited to the root
+            of a workspace or traverse the entire tree. If ommitted, the default
             is true for full tree recursion.
         files_to_ingest:
           type: array

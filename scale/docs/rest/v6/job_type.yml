@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: keyword
@@ -37,8 +37,7 @@ paths:
           description: if provided, only return names with a least one version that matches is_system
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -55,8 +54,7 @@ paths:
               $ref: '#/components/schemas/job_type_post'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful event
+          description: The 201 CREATED response indicates a successful event
           headers:
             location:
               schema:
@@ -86,7 +84,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: is_active
@@ -95,8 +93,7 @@ paths:
           description: if provided, only return names with a least one version that matches is_active
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -119,8 +116,7 @@ paths:
           description: version of an existing job type
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -148,8 +144,7 @@ paths:
           description: version of an existing job type
       responses:
         '204':
-          description: |-
-            204 no content
+          description: 204 no content
   /job-types/{name}/{version}/revisions/:
     get:
       operationId: _rest_v6_job_type_revisions
@@ -175,12 +170,11 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -208,8 +202,7 @@ paths:
           description: revision number of the job type
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -228,8 +221,7 @@ paths:
               $ref: '#/components/schemas/job_type_validation_post'
       responses:
         '200':
-          description: |-
-            The 200 OK response indicates a successful event
+          description: The 200 OK response indicates a successful event
           content:
             application/json: 
               schema:
@@ -400,11 +392,11 @@ components:
       properties:
         version:
           type: string
-          description: The version is an optional string value that defines the version of the |
-            configuration used. This allows updates to be made to the specification while |
-            maintaining backwards compatibility by allowing Scale to recognize an older version |
-            and convert it to the current version. The default value for version if it is not included |
-            is the latest version, which is currently 6. It is recommended, though not required, that |
+          description: The version is an optional string value that defines the version of the
+            configuration used. This allows updates to be made to the specification while
+            maintaining backwards compatibility by allowing Scale to recognize an older version
+            and convert it to the current version. The default value for version if it is not included
+            is the latest version, which is currently 6. It is recommended, though not required, that
             you include the version so that future changes to the specification will still accept your configuration.
           example: 6
         mounts:
@@ -415,7 +407,7 @@ components:
             - $ref: '#/components/schemas/volume_mount'
         priority:
           type: integer
-          description: The priority to use for scheduling the job off of the queue. |
+          description: The priority to use for scheduling the job off of the queue.
             Jobs with a lower value will be processed before those with higher values
           example: 100
         output_workspaces:
@@ -424,8 +416,8 @@ components:
             $ref: '#/components/schemas/output_workspace'
         settings:
           type: object
-          description: A JSON object representing the configuration for each setting |
-            to provide to the job. Each key is the name of a setting defined in the |
+          description: A JSON object representing the configuration for each setting
+            to provide to the job. Each key is the name of a setting defined in the
             job’s Seed manifest and each value is the value to provide for that setting.
           additionalProperties:
             type: string
@@ -460,13 +452,13 @@ components:
       properties:
         default:
           type: string
-          description: The unique name of the default workspace to use for storing |
+          description: The unique name of the default workspace to use for storing
             any output files that don’t belong to an output configured in 'outputs'.
         outputs:
           type: object
-          description: A JSON object representing the workspaces to use for storing |
-            the job’s output files for specific job file outputs. Each key is the |
-            name of a file output defined in the job’s Seed manifest and each value |
+          description: A JSON object representing the workspaces to use for storing
+            the job’s output files for specific job file outputs. Each key is the
+            name of a file output defined in the job’s Seed manifest and each value
             is the unique name of the workspace to use.
           additionalPropterties:
             type: string

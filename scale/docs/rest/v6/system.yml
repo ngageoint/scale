@@ -10,14 +10,13 @@ paths:
       description: Returns the current status of the scheduler, including information about nodes and running jobs.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/status'
         '204':
-          description: |-
+          description:-
             The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
   /version:
     get:
@@ -26,8 +25,7 @@ paths:
       description: Returns the current version of the scheduler
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -190,12 +188,12 @@ components:
     resources:
       title: Resources
       type: object
-      description: Describes the resource totals across all of Scale's nodes. Each resource name  |
-            is a key and its corresponding object breaks down the resource into several    |
-            categories. *running* resources are used by current Scale tasks, *offered*     |
-            resources are currently offered to Scale, *free* resources are available on    |
-            the node and may be offered to Scale soon, *unavailable* resources are used by |
-            other tasks and cannot be used by Scale, and *total* resources are the total   |
+      description: Describes the resource totals across all of Scale's nodes. Each resource name 
+            is a key and its corresponding object breaks down the resource into several   
+            categories. *running* resources are used by current Scale tasks, *offered*    
+            resources are currently offered to Scale, *free* resources are available on   
+            the node and may be offered to Scale soon, *unavailable* resources are used by
+            other tasks and cannot be used by Scale, and *total* resources are the total  
             amounts for the node. 
       properties:
         mem:
@@ -379,11 +377,11 @@ components:
     job_executions:
       title: Job Executions
       type: object
-      description: The job executions related to this node. The *running* field describes the |
-            jobs currently running on the node, with a total count and count per job type. |
-            The *completed* field describes job executions that have completed on the node |
-            in the last 3 hours, with a total count and count per job type. The *failed*   |
-            field is similar to *completed*, just with failed executions grouped by error  |
+      description: The job executions related to this node. The *running* field describes the
+            jobs currently running on the node, with a total count and count per job type.
+            The *completed* field describes job executions that have completed on the node
+            in the last 3 hours, with a total count and count per job type. The *failed*  
+            field is similar to *completed*, just with failed executions grouped by error 
             category. 
       properties:
         running:
@@ -395,11 +393,11 @@ components:
     job_execution:
       title: Job Execution
       type: object
-      description: The job executions related to this node. The *running* field describes the |
-            jobs currently running on the node, with a total count and count per job type. |
-            The *completed* field describes job executions that have completed on the node |
-            in the last 3 hours, with a total count and count per job type. The *failed*   |
-            field is similar to *completed*, just with failed executions grouped by error  |
+      description: The job executions related to this node. The *running* field describes the
+            jobs currently running on the node, with a total count and count per job type.
+            The *completed* field describes job executions that have completed on the node
+            in the last 3 hours, with a total count and count per job type. The *failed*  
+            field is similar to *completed*, just with failed executions grouped by error 
             category. 
       properties:
         running:

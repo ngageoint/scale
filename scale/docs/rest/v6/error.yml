@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: is_builtin
@@ -42,8 +42,7 @@ paths:
           description: if provided, only return errors matching the given category
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -62,8 +61,7 @@ paths:
           description: id of an existing error
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:

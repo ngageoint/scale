@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -36,20 +36,19 @@ paths:
           name: name
           schema:
             type: string
-          description: Return only Strike processes with a given name. |
+          description: Return only Strike processes with a given name.
             Duplicate it to filter by multiple values.
         - in: query
           name: order
           schema:
             type: string
-          description: "One or more fields to use when ordering the results. |
-                        Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
                         Nested objects require a delimiter (ex: order=source_file__created)
                         Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -66,7 +65,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '201':
-          description: |-
+          description:-
             The 201 CREATED response indicates a successful request 
             
   /strikes/{id}/:
@@ -82,8 +81,7 @@ paths:
           description: id of an existing strike process
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -106,8 +104,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit 
 
   /strikes/validation/:
     post:
@@ -122,8 +119,7 @@ paths:
               $ref: '#/components/schemas/strike_post'
       responses:
         '200':
-          description: |-
-            The 200 OK response indicates a valid strike configuration 
+          description: The 200 OK response indicates a valid strike configuration 
           content:
             application/json: 
               schema:
@@ -194,7 +190,7 @@ components:
       properties:
         title:
           type: string
-          description: The human readable display name of the Strike process. |
+          description: The human readable display name of the Strike process.
             This will be used to generate the name field
           example: My Strike Process
         description:
@@ -219,7 +215,7 @@ components:
       properties:
         workspace:
           type: string
-          description: The workspace field is a required string that specifies the name of the |
+          description: The workspace field is a required string that specifies the name of the
             workspace that is being scanned. The type of the workspace (its broker type) will determine which types of monitor can be used.
           example: my-host-workspace
         monitor:

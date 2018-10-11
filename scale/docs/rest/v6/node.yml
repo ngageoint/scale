@@ -18,7 +18,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -46,8 +46,7 @@ paths:
           description: If True, all nodes in the database are returned including those marked inactive. Default is False
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -65,8 +64,7 @@ paths:
           description: id of an existing node
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -89,8 +87,7 @@ paths:
           description: id of an existing node
       responses:
         '204':
-          description: |-
-            204 no content
+          description: 204 no content
 
 components:
   schemas:
@@ -137,12 +134,12 @@ components:
           properties:
             pause_reason:
               type: string
-              description: The reason this node is paused if is_paused is true. |
+              description: The reason this node is paused if is_paused is true.
                 This is a descriptive field for presentation to the user
               example: Node is undergoing scheduled maintenance
             is_paused:
               type: boolean
-              description: True if the node is paused and will not accept new jobs for execution. |
+              description: True if the node is paused and will not accept new jobs for execution.
                 Remaining tasks for a previously executing job will complete.
               example: False
             is_active:
@@ -167,12 +164,12 @@ components:
       properties:
         pause_reason:
           type: string
-          description: The reason this node is paused if is_paused is true. |
+          description: The reason this node is paused if is_paused is true.
             This is a descriptive field for presentation to the user
           example: Node is undergoing scheduled maintenance
         is_paused:
           type: boolean
-          description: True if the node is paused and will not accept new jobs for execution. |
+          description: True if the node is paused and will not accept new jobs for execution.
             Remaining tasks for a previously executing job will complete.
           example: False
         is_active:

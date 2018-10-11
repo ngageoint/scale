@@ -18,12 +18,11 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -41,8 +40,7 @@ paths:
           description: system name of an existing model
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -67,7 +65,7 @@ paths:
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
         - in: query
           name: started
@@ -85,25 +83,24 @@ paths:
           name: choice_id
           schema:
             type: integer
-          description: Return only metrics associated with the related model choice. |
-            Each of these values must be one of the items in the choices list. Duplicate it to filter by multiple values. |
+          description: Return only metrics associated with the related model choice.
+            Each of these values must be one of the items in the choices list. Duplicate it to filter by multiple values.
             When no choice filters are used, then values are aggregated across all the choice by date.
         - in: query
           name: column
           schema:
             type: string
-          description: Include only metrics with the given column name. The column name |
-            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
+          description: Include only metrics with the given column name. The column name
+            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values.
         - in: query
           name: group
           schema:
             type: string
-          description: Include only metrics with the given group name. The column name |
-            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
+          description: Include only metrics with the given group name. The column name
+            corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -250,9 +247,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/choice'
-          description: The related model choices that can be used to filter the metrics records. All |
-            of the filter parameters described above are fields within the model. The list |
-            of choices allow clients to restrict filtering to only valid combinations. Each|
+          description: The related model choices that can be used to filter the metrics records. All
+            of the filter parameters described above are fields within the model. The list
+            of choices allow clients to restrict filtering to only valid combinations. Each
             choice model is specific to a metrics type and so the actual fields vary.
     choice: #TODO: Update to reflect open-ended nature of this field
       title: Choice
@@ -318,7 +315,7 @@ components:
       properties:
         id:
           type: integer
-          description: The unique identifier of the related choice model for this data value. |
+          description: The unique identifier of the related choice model for this data value.
             This field is omitted when there are no choice filters or only 1 specified.
         date:
           type: string

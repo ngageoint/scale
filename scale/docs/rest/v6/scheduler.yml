@@ -10,14 +10,13 @@ paths:
       description: Returns data for the scheduler
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/scheduler_data'
         '204':
-          description: |-
+          description:-
             The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
     patch:
       operationId: _rest_v6_scheduler_update
@@ -31,13 +30,13 @@ paths:
               $ref: '#/components/schemas/scheduler_data'
       responses:
         '204':
-          description: |-
+          description:-
             The 204 NO CONTENT response indicates a successful update
         '400':
-          description: |-
+          description:-
             The 400 BAD REQUEST response indicates an error in the privded update fields
         '404':
-          description: |-
+          description:-
             The 404 response indicates the scheduler does not exist
             
 components:
@@ -48,8 +47,8 @@ components:
       properties:
         is_paused:
           type: boolean
-          description: True if the scheduler is paused. This functions like individually pausing |
-            all nodes but maintains separated state so toggling this back to unpaused    |
+          description: True if the scheduler is paused. This functions like individually pausing
+            all nodes but maintains separated state so toggling this back to unpaused   
             results in the previous individual node pause state.
           example: false
         num_message_handlers:

@@ -48,25 +48,25 @@ paths:
         name: source_sensor_class
         schema:
           type: string
-        description: Return only jobs for the given source sensor class. |
+        description: Return only jobs for the given source sensor class.
             Duplicate it to filter by multiple values.
       - in: query
         name: source_sensor
         schema:
           type: string
-        description: Return only jobs for the given source sensor. |
+        description: Return only jobs for the given source sensor.
             Duplicate it to filter by multiple values.
       - in: query
         name: source_collection
         schema:
           type: string
-        description: Return only jobs for the given source collection. |
+        description: Return only jobs for the given source collection.
             Duplicate it to filter by multiple values.
       - in: query
         name: source_task
         schema:
           type: string
-        description: Return only jobs for the given source task. |
+        description: Return only jobs for the given source task.
             Duplicate it to filter by multiple values.
       - in: query
         name: order
@@ -86,31 +86,31 @@ paths:
         name: job_id
         schema:
           type: integer
-        description: Return only jobs with a given identifier. |
+        description: Return only jobs with a given identifier.
             Duplicate it to filter by multiple values. 
       - in: query
         name: job_type_id
         schema:
           type: integer
-        description: Return only jobs with a given job type identifier. |
+        description: Return only jobs with a given job type identifier.
             Duplicate it to filter by multiple values. 
       - in: query
         name: job_type_name
         schema:
           type: string
-        description: Return only jobs with a given job type name. |
+        description: Return only jobs with a given job type name.
             Duplicate it to filter by multiple values. 
       - in: query
         name: batch_id
         schema:
           type: integer
-        description: Return only jobs with the given batch identifier. |
+        description: Return only jobs with the given batch identifier.
             Duplicate it to filter by multiple values. 
       - in: query
         name: recipe_id
         schema:
           type: integer
-        description: Return only jobs with the given recipe identifier. |
+        description: Return only jobs with the given recipe identifier.
             Duplicate it to filter by multiple values. 
       - in: query
         name: error_category
@@ -123,7 +123,7 @@ paths:
         name: error_id
         schema:
           type: integer
-        description: Return only jobs that failed with this error. |
+        description: Return only jobs that failed with this error.
             Duplicate it to filter by multiple values. 
       responses:
         '200':
@@ -172,7 +172,7 @@ paths:
         name: page_size
         schema:
           type: integer
-        description: The size of the page to use for pagination of results. |
+        description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
       - in: query
         name: started
@@ -231,7 +231,7 @@ paths:
         name: page_size
         schema:
           type: integer
-        description: The size of the page to use for pagination of results. |
+        description: The size of the page to use for pagination of results.
           Defaults to 100, and can be anywhere from 1-1000.
       - in: query
         name: status
@@ -244,19 +244,19 @@ paths:
         name: node_id
         schema:
           type: integer
-        description: Return only executions run on the given node. |
+        description: Return only executions run on the given node.
             Duplicate it to filter by multiple values.
       - in: query
         name: error_id
         schema:
           type: integer
-        description: Return only excutions with the given error. |
+        description: Return only excutions with the given error.
             Duplicate it to filter by multiple values.
       - in: query
         name: error_category
         schema:
           type: string
-        description: Return only excutions with errors of the given category. |
+        description: Return only excutions with errors of the given category.
             Duplicate it to filter by multiple values.
       responses:
         '200':
@@ -270,7 +270,7 @@ paths:
     get:
       operationId: _rest_v6_job_execution_details
       summary: Job Execution Details
-      description: Returns a specific job execution and all its related model |
+      description: Returns a specific job execution and all its related model
         information including job, node, environment, and results.
       parameters:
       - in: path
@@ -295,8 +295,8 @@ paths:
     post:
       operationId: _rest_v6_job_cancel
       summary: Cancel Jobs
-      description: Cancels the jobs that fit the given filter criteria. |
-        The canceling will be done asynchronously, so the response will just |
+      description: Cancels the jobs that fit the given filter criteria.
+        The canceling will be done asynchronously, so the response will just
         indicate that the cancel request has been accepted.
       requestBody:
         required: false
@@ -306,15 +306,15 @@ paths:
               $ref: '#/components/schemas/job_cancel_post'
       responses:
         '202':
-          description: |-
+          description:-
             202 ACCEPTED response
   
   /jobs/requeue/:
     post:
       operationId: _rest_v6_job_requeue
       summary: Requeue Jobs
-      description: Re-queues the jobs that fit the given filter criteria. |
-        The re-queuing will be done asynchronously, so the response will just |
+      description: Re-queues the jobs that fit the given filter criteria.
+        The re-queuing will be done asynchronously, so the response will just
         indicate that the re-queue request has been accepted.
       requestBody:
         required: false
@@ -729,9 +729,9 @@ components:
           description: path of the input file within the workspace
         local_file_name:
           type: string
-          description: Alternate file name to use when passing the |
-            input file to the executing container. This is used to |
-            deconflict identical input file names when multiple |
+          description: Alternate file name to use when passing the
+            input file to the executing container. This is used to
+            deconflict identical input file names when multiple
             files with the same name are passed to the same input.
         is_deleted:
           type: boolean
@@ -752,7 +752,7 @@ components:
           description: command arguments that will be passed to the task
         env_vars:
           type: object
-          description: optional object where each key is the name of an environment |
+          description: optional object where each key is the name of an environment
             variable and each corresponding value is the value passed to that environment variable
           additionalProperties:
             type: string
@@ -762,22 +762,22 @@ components:
             $ref: '#/components/schemas/task_workspace'
         mounts:
           type: object
-          description: Optional object where each key is the name of a mount |
-            variable and each corresponding value is the name of the docker  |
-            volume that will be mounted into the task's container. A null value |
+          description: Optional object where each key is the name of a mount
+            variable and each corresponding value is the name of the docker 
+            volume that will be mounted into the task's container. A null value
             indicates a required mount that was not provided.
           additionalProperties:
             type: string
         settings:
           type: object
-          description: optional object where each key is the name of a setting |
-            variable and each corresponding value is the value passed to that |
+          description: optional object where each key is the name of a setting
+            variable and each corresponding value is the value passed to that
             setting. A null value indicates a required setting that was not provided.
           additionalProperties:
             type: string
         volumes:
           type: object
-          description: Optional object where each key is the name of a Docker |
+          description: Optional object where each key is the name of a Docker
             volume being mounted into the task.
           additionalProperties:
             $ref: '#/components/schemas/task_volume'
@@ -796,7 +796,7 @@ components:
                         values: “ro” for read-only mode and “rw” for read-write mode."
         volume_name:
           type: string
-          description: The name of Docker volume that will be mounted into the |
+          description: The name of Docker volume that will be mounted into the
             task’s container in order to make the workspace available.
       required:
       - mode
@@ -837,9 +837,9 @@ components:
       properties:
         flag:
           type: string
-          description: The command line flag (long form) to use for passing the |
-            parameter without the preceding dashes (e.g. use “volume” for passing|
-            “–volume=...”).
+          description: "The command line flag (long form) to use for passing the
+            parameter without the preceding dashes (e.g. use “volume” for passing
+            “–volume=...”)."
           example: volume
         value:
           type: string
@@ -928,7 +928,7 @@ components:
           properties:
             priority:
               type: integer
-              description: Change the priority of matching jobs when adding them |
+              description: Change the priority of matching jobs when adding them
                 to the queue. Defaults to jobs current priority; lower number is higher priority.
               
     job_execution_log:
@@ -946,7 +946,7 @@ components:
           example: 2015-08-28T17:57:41.033Z
         scale_order_num:
           type: integer
-          description: A sequence number used to indicate correct log message |
+          description: A sequence number used to indicate correct log message
             order when multiple messages share the same @timestamp value.
           example: 1
         scale_task:
