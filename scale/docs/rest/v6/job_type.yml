@@ -3,34 +3,34 @@ info:
   title: Job Type Services
   version: v6
 paths:
-  /v6/job-types/:
+  /job-types/:
     get:
       operationId: _rest_v6_job_type_list
       summary: Job Type Names
       description: Returns a list of all job type names
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: keyword
           schema:
             type: string
           description: Keyword to perform a 'like' search on name, title, description, and tag
-        -in: query
+        - in: query
           name: is_active
           schema:
             type: boolean
           description: if provided, only return names with a least one version that matches is_active
-        -in: query
+        - in: query
           name: is_system
           schema:
             type: boolean
@@ -66,29 +66,29 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_detail'
-  /v6/job-types/{name}/:
+  /job-types/{name}/:
     get:
       operationId: _rest_v6_job_type_versions
       summary: Job Type Versions
       description: Returns a list of the versions of a job type
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: name of an existing job type
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: is_active
           schema:
             type: boolean
@@ -101,18 +101,18 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_versions'
- /v6/job-types/{name}/{version}/:
+  /job-types/{name}/{version}/:
     get:
       operationId: _rest_v6_job_type_details
       summary: Job Type Details
       description: Returns detailed information about the job type with the specified name and version
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: name of an existing job type
-        -in: path
+        - in: path
           name: version
           schema:
             type: string
@@ -136,12 +136,12 @@ paths:
             schema:
               $ref: '#/components/schemas/job_type_update'
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: name of an existing job type
-        -in: path
+        - in: path
           name: version
           schema:
             type: string
@@ -150,28 +150,28 @@ paths:
         '204':
           description: |-
             204 no content
-  /v6/job-types/{name}/{version}/revisions/:
+  /job-types/{name}/{version}/revisions/:
     get:
       operationId: _rest_v6_job_type_revisions
       summary: Job Type Revisions
       description: Returns a list of the revisions of a job type
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: name of an existing job type
-        -in: path
+        - in: path
           name: version
           schema:
             type: string
           description: version of an existing job type
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
@@ -185,23 +185,23 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_type_revisions'
- /v6/job-types/{name}/{version}/revisions/{revision_num}/:
+  /job-types/{name}/{version}/revisions/{revision_num}/:
     get:
       operationId: _rest_v6_job_type_revision_details
       summary: Job Type Revision Details
       description: Returns detailed information about the job type revision with the specified name, version and revision number
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: name of an existing job type
-        -in: path
+        - in: path
           name: version
           schema:
             type: string
           description: version of an existing job type
-        -in: path
+        - in: path
           name: revision_num
           schema:
             type: integer
@@ -215,7 +215,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/job_type_revision_detail'
 
-  /v6/job-types/validation/:
+  /job-types/validation/:
     post:
       operationId: _rest_v6_job_type_validation
       summary: Job Type Validation
@@ -384,15 +384,16 @@ components:
           description: When the associated database model was last saved.
           example: 2015-09-10T15:24:53.987Z
     job_type_detail:
+      title: Job Type Details
       allof:
         - ref: '#/components/schemas/job_type'
-        - title: Job Type Details
         - type: object
-        properties:      
-          manifest:
-            $ref: '#/components/schemas/seed_manifest'
-          configuration:
-            $ref: '#/components/schemas/job_type_config'
+          properties:      
+            # Commenting out until added
+            # manifest:
+            #   $ref: '#/components/schemas/seed_manifest'
+            configuration:
+              $ref: '#/components/schemas/job_type_config'
     job_type_config:
       title: Job Type Configuration
       type: object
@@ -496,6 +497,7 @@ components:
     model:
       title: Model
       type: object
+      properties:
         id:
           type: integer
           description: The unique identifier of the model. Can be passed to the details API call 
@@ -503,6 +505,7 @@ components:
     job_type_revision_base:
       title: Job Type Revision Base
       type: object
+      properties:
         id:
           type: integer
           description: The unique identifier of the model. Can be passed to the details API call 
@@ -513,9 +516,9 @@ components:
           type: integer
           example: 1
     job_type_revision:
+      title: Job Type Revision
       allof:
         - ref: '#/components/schemas/job_type_revision_base'
-        - title: Job Type Revision
         - type: object
           properties:   
           job_type:
@@ -549,8 +552,9 @@ components:
           format: date-time
           description: When the associated database model was initially created.
           example: 2015-09-10T15:24:53.503Z
-        manifest:
-          $ref: '#/components/schemas/seed_manifest'
+        # Commenting out until added
+        # manifest:
+        #   $ref: '#/components/schemas/seed_manifest'
           
     job_type_update:
       title: Job Type Update
@@ -584,8 +588,9 @@ components:
         docker_image:
           type: string
           example: "my-job-1.0.0-seed:1.0.0"
-        manifest:
-          $ref: '#/components/schemas/seed_manifest'
+        # Commenting out until added
+        # manifest:
+        #   $ref: '#/components/schemas/seed_manifest'
         configuration:
           $ref: '#/components/schemas/job_type_config'
       required:
@@ -596,8 +601,9 @@ components:
       title: Job Type Validation Post
       type: object
       properties:      
-        manifest:
-          $ref: '#/components/schemas/seed_manifest'
+        # Commenting out until added
+        # manifest:
+        #   $ref: '#/components/schemas/seed_manifest'
         configuration:
           $ref: '#/components/schemas/job_type_config'
       required:
@@ -611,9 +617,9 @@ components:
           type: boolean
           description: The job type is valid
           example: true
-        errors:
+        validation_error:
           type: array
-            $ref: '#/components/schemas/validation_error'
-        errors:
+          $ref: '#/components/schemas/validation_error'
+        validation_warning:
           type: array
-            $ref: '#/components/schemas/validation_warning'
+          $ref: '#/components/schemas/validation_warning'
