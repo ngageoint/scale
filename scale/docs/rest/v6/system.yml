@@ -3,7 +3,7 @@ info:
   title: System Services
   version: v6
 paths:
-  /v6/status:
+  /status:
     get:
       operationId: _rest_v6_system_status
       summary: Get System Status
@@ -19,7 +19,7 @@ paths:
         '204':
           description: |-
             The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
-  /v6/version:
+  /version:
     get:
       operationId: _rest_v6_system_version
       summary: Get System Version

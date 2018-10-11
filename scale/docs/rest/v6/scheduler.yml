@@ -3,7 +3,7 @@ info:
   title: Scheduler Services
   version: v6
 paths:
-  /v6/scheduler:
+  /scheduler:
     get:
       operationId: _rest_v6_scheduler_details
       summary: Get Scheduler Details

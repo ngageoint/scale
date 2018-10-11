@@ -3,7 +3,7 @@ info:
   title: Diagnostic Services
   version: v6
 paths:
-  /v6/diagnostics/job/bake/:
+  /diagnostics/job/bake/:
     post:
       operationId: _rest_v6_queue_scale_bake_jobs
       summary: Queue Scale Bake Jobs
@@ -20,7 +20,7 @@ paths:
           description: |-
             The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/recipe/casino/:
+  /diagnostics/recipe/casino/:
     post:
       operationId: _rest_v6_queue_scale_casino_recipies
       summary: Queue Scale Casino Recipies
@@ -37,7 +37,7 @@ paths:
           description: |-
             The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/job/hello/:
+  /diagnostics/job/hello/:
     post:
       operationId: _rest_v6_queue_scale_hello_jobs
       summary: Queue Scale Hello Jobs
@@ -54,7 +54,7 @@ paths:
           description: |-
             The 202 ACCEPTED response indicates a successful request
             
-  /v6/diagnostics/job/roulette/:
+  /diagnostics/job/roulette/:
     post:
       operationId: _rest_v6_queue_scale_roulette_jobs
       summary: Queue Scale Roulette Jobs
