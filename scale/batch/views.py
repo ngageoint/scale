@@ -21,7 +21,7 @@ from batch.messages.create_batch_recipes import create_batch_recipes_message
 from batch.models import Batch
 from batch.serializers import BatchDetailsSerializerV5, BatchDetailsSerializerV6, BatchSerializerV5, BatchSerializerV6
 from messaging.manager import CommandMessageManager
-from recipe.diff.json.diff_v6 import convert_diff_to_v6
+from recipe.diff.json.diff_v6 import convert_recipe_diff_to_v6_json
 from recipe.models import RecipeType
 from recipe.serializers import RecipeTypeBaseSerializerV6, RecipeTypeRevisionBaseSerializerV6
 from trigger.models import TriggerEvent
@@ -475,6 +475,7 @@ class BatchesValidationView(APIView):
             prev_batch_dict = {'recipe_type_rev': recipe_type_rev_serializer.data}
             resp_dict['prev_batch'] = prev_batch_dict
             if definition.prev_batch_diff:
-                diff = rest_util.strip_schema_version(convert_diff_to_v6(definition.prev_batch_diff).get_dict())
-                prev_batch_dict['diff'] = diff
+                diff_v6 = convert_recipe_diff_to_v6_json(definition.prev_batch_diff)
+                diff_dict = rest_util.strip_schema_version(diff_v6.get_dict())
+                prev_batch_dict['diff'] = diff_dict
         return Response(resp_dict)

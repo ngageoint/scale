@@ -18,6 +18,7 @@ from batch.definition.definition import BatchDefinition
 from batch.messages.create_batch_recipes import CreateBatchRecipes
 from batch.models import Batch, BatchMetrics
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.diff.forced_nodes import ForcedNodes
 from recipe.models import RecipeType
 from util.parse import datetime_to_string, duration_to_string
 
@@ -494,8 +495,9 @@ class TestBatchDetailsViewV5(TestCase):
         prev_batch = batch_test_utils.create_batch(recipe_type=recipe_type, is_creation_done=True, recipes_total=10)
         definition = BatchDefinition()
         definition.root_batch_id = prev_batch.root_batch_id
-        definition.job_names = ['job_a', 'job_b']
-        definition.all_jobs = True
+        definition.forced_nodes = ForcedNodes()
+        definition.forced_nodes.add_node('job_a')
+        definition.forced_nodes.add_node('job_b')
         new_batch = batch_test_utils.create_batch(recipe_type=recipe_type, definition=definition, recipes_total=10)
 
         url = '/v5/batches/%d/' % new_batch.id
@@ -509,7 +511,7 @@ class TestBatchDetailsViewV5(TestCase):
         self.assertEqual(result['created_count'], 10)
         self.assertEqual(result['total_count'], 10)
         self.assertDictEqual(result['definition'], {'version': '1.0', 'job_names': ['job_a', 'job_b'],
-                                                    'all_jobs': True})
+                                                    'all_jobs': False})
 
 
 class TestBatchDetailsViewV6(TestCase):

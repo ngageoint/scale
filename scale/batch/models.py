@@ -20,7 +20,8 @@ from job.models import JobType
 from messaging.manager import CommandMessageManager
 from queue.models import Queue
 from recipe.configuration.data.recipe_data import LegacyRecipeData
-from recipe.messages.reprocess_recipes import create_reprocess_recipes_messages
+from recipe.diff.forced_nodes import ForcedNodes
+from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
@@ -494,10 +495,14 @@ class BatchManager(models.Manager):
             root_id = old_recipe.root_superseded_recipe_id if old_recipe.root_superseded_recipe_id else old_recipe.id
             root_recipe_ids.append(root_id)
         if root_recipe_ids:
-            all_jobs = batch_definition.all_jobs
-            job_names = batch_definition.job_names
-            messages = create_reprocess_recipes_messages(root_recipe_ids, new_rev.id, batch.event_id, all_jobs=all_jobs,
-                                                         job_names=job_names, batch_id=batch.id)
+            forced_nodes = ForcedNodes()
+            if batch_definition.all_jobs:
+                forced_nodes.set_all_nodes()
+            elif batch_definition.job_names:
+                for job_name in batch_definition.job_names:
+                    forced_nodes.add_node(job_name)
+            messages = create_reprocess_messages(root_recipe_ids, new_rev.recipe_type.name, new_rev.revision_num,
+                                                 batch.event_id, batch_id=batch.id, forced_nodes=forced_nodes)
             CommandMessageManager().send_messages(messages)
             # Update the overall batch status
             batch.created_count += old_recipes_count
@@ -576,7 +581,7 @@ class BatchManager(models.Manager):
         """
 
         # Fetch all the recipes of the requested type that are not already superseded
-        old_recipes = Recipe.objects.filter(recipe_type=recipe_type, is_superseded=False)
+        old_recipes = Recipe.objects.filter(recipe_type=recipe_type, is_superseded=False, recipe__isnull=True)
 
         # Exclude recipes that have not actually changed unless requested
         if not (definition.job_names or definition.all_jobs):
@@ -876,10 +881,12 @@ class Batch(models.Model):
             json_dict = {'version': '1.0'}
             if 'previous_batch' in self.definition:
                 prev_batch_dict = self.definition['previous_batch']
-                if 'job_names' in prev_batch_dict:
-                    json_dict['job_names'] = prev_batch_dict['job_names']
-                if 'all_jobs' in prev_batch_dict:
-                    json_dict['all_jobs'] = prev_batch_dict['all_jobs']
+                if 'forced_nodes' in prev_batch_dict:
+                    if 'nodes' in prev_batch_dict['forced_nodes']:
+                        json_dict['job_names'] = prev_batch_dict['forced_nodes']['nodes']
+                    else:
+                        json_dict['job_names'] = []
+                    json_dict['all_jobs'] = prev_batch_dict['forced_nodes']['all']
             return json_dict
 
         return self.definition
