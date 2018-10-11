@@ -3,18 +3,18 @@ info:
   title: Metrics Services
   version: v6
 paths:
-  /v6/metrics:
+  /metrics:
     get:
       operationId: _rest_v6_metrics_list
       summary: Metrics List
       description: Returns a list of all metrics types
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
@@ -28,13 +28,13 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/metrics_list'
-  /v6/metrics/{name}/:
+  /metrics/{name}/:
     get:
       operationId: _rest_v6_metrics_details
       summary: Metrics Details
       description: Returns a specific metrics type and all its related model information including possible filter choices
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
@@ -47,60 +47,59 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/metrics_type_plus_model'
-  /v6/metrics/{name}/plot-data/:
+  /metrics/{name}/plot-data/:
     get:
       operationId: _rest_v6_metrics_plot
       summary: Metric Plot Data
       description: Returns all the plot values for a metrics type based on optional query parameters
       parameters:
-        -in: path
+        - in: path
           name: name
           schema:
             type: string
           description: system name of an existing model
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: choice_id
           schema:
             type: integer
           description: Return only metrics associated with the related model choice. |
             Each of these values must be one of the items in the choices list. Duplicate it to filter by multiple values. |
             When no choice filters are used, then values are aggregated across all the choice by date.
-        -in: query
+        - in: query
           name: column
           schema:
             type: string
           description: Include only metrics with the given column name. The column name |
             corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
-        -in: query
+        - in: query
           name: group
           schema:
             type: string
           description: Include only metrics with the given group name. The column name |
             corresponds with a single statistic, such as completed count. Duplicate it to filter by multiple values. |
-
       responses:
         '200':
           description: |-
@@ -291,7 +290,8 @@ components:
       properties:
         column:
           type: array
-          $ref: '#/components/schemas/column'
+          items:
+            $ref: '#/components/schemas/column'
           description: The column definition of the selected plot data values 
         min_x:
           type: string

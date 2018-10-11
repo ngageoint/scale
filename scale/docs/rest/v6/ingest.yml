@@ -3,62 +3,62 @@ info:
   title: Ingest Services
   version: v6
 paths:
-  /v6/ingests:
+  /ingests:
     get:
       operationId: _rest_v6_ingest_list
       summary: Ingest List
       description: Returns a list of all ingests
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
-        -in: query
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
           name: status
           schema:
             type: string
-          description: Return only ingests with a status matching this string. |
-            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]
-        -in: query
+          description: "Return only ingests with a status matching this string. |
+                        Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
+        - in: query
           name: scan_id
           schema:
             type: integer
           description: Return only ingests created by a given scan process identifier. |
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: strike_id
           schema:
             type: integer
           description: Return only ingests created by a given strike process identifier. |
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: file_name
           schema:
             type: string
@@ -71,13 +71,13 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/ingest_list'
-  /v6/ingests/{id}/:
+  /ingests/{id}/:
     get:
       operationId: _rest_v6_ingest_details
       summary: Ingest Details
       description: Returns a specific ingest and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -90,37 +90,37 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/ingest_details'
- /v6/ingests/status/:
+  /ingests/status/:
     get:
       operationId: _rest_v6_ingest_status
       summary: Ingest Status
-      description: Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots. |
-        NOTE: Time range must be within a one month period (31 days).
+      description: "Returns status summary information (counts, file sizes) for completed ingests grouped into 1 hour time slots. |
+                    NOTE: Time range must be within a one month period (31 days)."
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: use_ingest_time
           schema:
             type: boolean
@@ -130,12 +130,12 @@ paths:
             Defaults to False (data time).  
       responses:
         '200':
-          description: |-
-            200 response
-          content:
-            application/json: 
-              schema:
-                $ref: '#/components/schemas/ingest_status'
+          description: 200 response
+          # Commenting out until added
+          # content:
+          #   application/json: 
+          #     schema:
+          #       $ref: '#/components/schemas/ingest_status'
 
 components:
   schemas:
@@ -180,8 +180,8 @@ components:
           $ref: '#/components/schemas/strike_details'
         status:
           type: string
-          description: The current status of the ingest. |
-            Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]
+          description: "The current status of the ingest.
+                        Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED, DUPLICATE]"
           example: INGESTED
         bytes_transferred:
           type: integer
@@ -338,7 +338,7 @@ components:
             is checked against each expression in order of the files_to_ingest array. If an expression matches the new |
             file name in the workspace, that file is ingested according to the other fields in the JSON object and all |
             subsequent rules in the list are ignored (first rule matched is applied).
-          example: *.txt
+          example: "*.txt"
         data_types:
           type: array
           style: simple
@@ -400,8 +400,9 @@ components:
           description: The sqs_name field is a required string that defines the name of the SQS queue |
             that should be polled for object creation notifications that describe new files in the S3 bucket.
           example: my-sqs
-        credentials:
-          $ref: '#/components/schemas/credentials'
+        # Commenting out until added
+        # credentials:
+        #   $ref: '#/components/schemas/credentials'
         region_name:
           type: string
           description: The region_name is an optional string that specifies the AWS region where the |
@@ -422,7 +423,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: '#/components/schemas/workspace'
+          $ref: '#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
