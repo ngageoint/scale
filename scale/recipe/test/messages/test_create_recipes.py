@@ -706,9 +706,6 @@ class TestCreateRecipes(TestCase):
         messages = [message]
         while messages:
             msg = messages.pop(0)
-            # TODO: remove this once 'process_recipe_input' has been updated to use 'update_recipe' message instead
-            if msg.type == 'update_recipes':
-                continue
             result = msg.execute()
             self.assertTrue(result)
             messages.extend(msg.new_messages)
@@ -718,12 +715,6 @@ class TestCreateRecipes(TestCase):
                               job_c_z_1.id, job_c_z_2.id, job_e_x_1.id, job_e_x_2.id, job_e_y_1.id, job_e_y_2.id]
         non_superseded_job_ids = [job_a_x_1.id, job_a_x_2.id, job_b_x_1.id, job_b_x_2.id, job_c_x_1.id, job_c_x_2.id,
                                   job_d_x_1.id, job_d_x_2.id, job_d_y_1.id, job_d_y_2.id, job_d_z_1.id, job_d_z_2.id]
-        # TODO: this is temporary until logic is switched to use update_recipe message
-        superseded_job_ids = [job_e_x_1.id, job_e_x_2.id, job_e_y_1.id, job_e_y_2.id]
-        non_superseded_job_ids = [job_a_x_1.id, job_a_x_2.id, job_b_x_1.id, job_b_x_2.id, job_c_x_1.id, job_c_x_2.id,
-                                  job_d_x_1.id, job_d_x_2.id, job_d_y_1.id, job_d_y_2.id, job_d_z_1.id, job_d_z_2.id,
-                                  job_b_y_1.id, job_b_y_2.id, job_b_z_1.id, job_b_z_2.id, job_c_y_1.id, job_c_y_2.id,
-                                  job_c_z_1.id, job_c_z_2.id,]
         for job in Job.objects.filter(id__in=superseded_job_ids):
             self.assertTrue(job.is_superseded, 'Job %d should be superseded, but is not' % job.id)
         for job in Job.objects.filter(id__in=non_superseded_job_ids):
@@ -733,10 +724,6 @@ class TestCreateRecipes(TestCase):
         superseded_recipe_ids = [recipe_a_1.id, recipe_a_2.id, recipe_b_1.id, recipe_b_2.id, recipe_c_1.id,
                                  recipe_c_2.id, recipe_e_1.id, recipe_e_2.id]
         non_superseded_recipe_ids = [recipe_d_1.id, recipe_d_2.id]
-        # TODO: this is temporary until logic is switched to use update_recipe message
-        superseded_recipe_ids = [recipe_a_1.id, recipe_a_2.id, recipe_b_1.id, recipe_b_2.id, recipe_e_1.id,
-                                 recipe_e_2.id]
-        non_superseded_recipe_ids = [recipe_d_1.id, recipe_d_2.id, recipe_c_1.id, recipe_c_2.id]
         for recipe in Recipe.objects.filter(id__in=superseded_recipe_ids):
             self.assertTrue(recipe.is_superseded, 'Recipe %d should be superseded, but is not' % recipe.id)
         for recipe in Recipe.objects.filter(id__in=non_superseded_recipe_ids):

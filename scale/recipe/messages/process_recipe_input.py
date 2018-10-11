@@ -8,7 +8,6 @@ from django.db import transaction
 from data.data.exceptions import InvalidData
 from messaging.messages.message import CommandMessage
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
-from recipe.messages.update_recipes import create_update_recipes_messages
 from recipe.models import Recipe, RecipeNode
 
 
@@ -94,12 +93,13 @@ class ProcessRecipeInput(CommandMessage):
         # Lock recipe model and process recipe's input data
         with transaction.atomic():
             recipe = Recipe.objects.get_locked_recipe(self.recipe_id)
+            root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
             Recipe.objects.process_recipe_input(recipe)
 
         # Create message to update the recipe
-        # TODO: switch to new update_recipe message and send forced_nodes
+        from recipe.messages.update_recipe import create_update_recipe_message
         logger.info('Processed input for recipe %d, sending message to update recipe', self.recipe_id)
-        self.new_messages.extend(create_update_recipes_messages([self.recipe_id]))
+        self.new_messages.append(create_update_recipe_message(root_recipe_id, forced_nodes=self.forced_nodes))
 
         return True
 

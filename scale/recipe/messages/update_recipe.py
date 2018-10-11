@@ -60,25 +60,6 @@ def create_update_recipe_messages_from_node(root_recipe_ids):
     return messages
 
 
-def create_update_recipe_messages(root_recipe_ids):
-    """Creates messages to update the given recipes from their root IDs
-
-    :param root_recipe_ids: The root recipe IDs
-    :type root_recipe_ids: list
-    :return: The list of messages
-    :rtype: list
-    """
-
-    messages = []
-
-    for root_recipe_id in root_recipe_ids:
-        msg = UpdateRecipe()
-        msg.root_recipe_id = root_recipe_id
-        messages.append(msg)
-
-    return messages
-
-
 class UpdateRecipe(CommandMessage):
     """Command message that evaluates and updates a recipe
     """
