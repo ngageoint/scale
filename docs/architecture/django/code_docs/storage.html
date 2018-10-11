@@ -988,6 +988,10 @@ record will result in the same UUID, which can then be used as a stable permanen
 <li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The identifier of the batch this file is associated with</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The earliest start time from all source files</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The latest end time from all source files</li>
+<li><strong>source_sensor_class</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The class of sensor used to produce the source file.</li>
+<li><strong>source_sensor</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The specific identifier of the sensor used to produce the source file.</li>
+<li><strong>source_collection</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The collection of the source file.</li>
+<li><strong>source_task</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The task that produced the source file.</li>
 <li><strong>is_operational</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product was produced by an operational job type (True) or by a job type that
 is still in a research &amp; development (R&amp;D) phase (False)</li>
 <li><strong>has_been_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has ever been published. A product becomes published when its job

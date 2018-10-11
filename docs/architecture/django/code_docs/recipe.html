@@ -349,6 +349,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0024_auto_20180523_2057">recipe.migrations.0024_auto_20180523_2057 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0025_auto_20180608_0114">recipe.migrations.0025_auto_20180608_0114 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0026_auto_20180723_1914">recipe.migrations.0026_auto_20180723_1914 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0027_auto_20181008_1756">recipe.migrations.0027_auto_20181008_1756 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -669,6 +670,10 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total size in MiB for all input files in this recipe</li>
 <li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The start time of the source data for this recipe</li>
 <li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the source data for this recipe</li>
+<li><strong>source_sensor_class</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The class of sensor used to produce the source file for this recipe</li>
+<li><strong>source_sensor</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The specific identifier of the sensor used to produce the source file for this recipe</li>
+<li><strong>source_collection</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The collection of the source file for this recipe</li>
+<li><strong>source_task</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The task that produced the source file for this recipe</li>
 <li><strong>jobs_total</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The total count of all jobs within this recipe</li>
 <li><strong>jobs_pending</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all PENDING jobs within this recipe</li>
 <li><strong>jobs_blocked</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The count of all BLOCKED jobs within this recipe</li>
@@ -1194,6 +1199,13 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.Recipe.source_collection">
+<code class="descname">source_collection</code><a class="headerlink" href="#recipe.models.Recipe.source_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.Recipe.source_ended">
 <code class="descname">source_ended</code><a class="headerlink" href="#recipe.models.Recipe.source_ended" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -1201,8 +1213,29 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.Recipe.source_sensor">
+<code class="descname">source_sensor</code><a class="headerlink" href="#recipe.models.Recipe.source_sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.source_sensor_class">
+<code class="descname">source_sensor_class</code><a class="headerlink" href="#recipe.models.Recipe.source_sensor_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.Recipe.source_started">
 <code class="descname">source_started</code><a class="headerlink" href="#recipe.models.Recipe.source_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.source_task">
+<code class="descname">source_task</code><a class="headerlink" href="#recipe.models.Recipe.source_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1908,7 +1941,7 @@ recipes.</p>
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes">
-<code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>source_started=None</em>, <em>source_ended=None</em>, <em>source_sensor_classes=None</em>, <em>source_sensors=None</em>, <em>source_collections=None</em>, <em>source_tasks=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1917,6 +1950,12 @@ recipes.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated before this amount of time.</li>
+<li><strong>source_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes where source collection started after this time.</li>
+<li><strong>source_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes where source collection ended before this time.</li>
+<li><strong>source_sensor_classes</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source sensor class.</li>
+<li><strong>source_sensor</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source sensor.</li>
+<li><strong>source_collection</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source class.</li>
+<li><strong>source_tasks</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; Query recipes with the given source tasks.</li>
 <li><strong>type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes of the type associated with the identifier.</li>
 <li><strong>type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query recipes of the type associated with the name.</li>
 <li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with batches with the given identifiers.</li>
