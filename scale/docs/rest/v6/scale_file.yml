@@ -235,7 +235,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: './workspace.yml#/components/schemas/workspace_base'
+          $ref: '#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.

@@ -209,7 +209,7 @@ paths:
           content:
             application/json: 
               schema:
-                $ref: './scale_file.yml#/components/schemas/file_list'
+                $ref: '#/components/schemas/file_list'
 
   /jobs/{id}/executions/:
     get:
@@ -384,7 +384,7 @@ components:
           type: integer
           example: 1
         job_type:
-          $ref: './job_type.yml#/components/schemas/job_type_base'
+          $ref: '#/components/schemas/job_type_base'
         status:
           type: string
           description: "The current status of the job. Choices: [QUEUED, RUNNING,
@@ -397,7 +397,7 @@ components:
         - type: object
           properties:      
             job_type_rev:
-              $ref: './job_type.yml#/components/schemas/job_type_revision_base'
+              $ref: '#/components/schemas/job_type_revision_base'
             # Commenting out until defined
             # event:
             #   $ref: '#/components/schemas/event_base'
@@ -417,10 +417,10 @@ components:
               description: "The current status of the job. Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]."
             node:
               description: The node that the job is/was running on. 
-              $ref: './node.yml#/components/schemas/node_base'
+              $ref: '#/components/schemas/node_base'
             error:
               description: The error that is associated with the job
-              $ref: './error.yml#/components/schemas/error_base'
+              $ref: '#/components/schemas/error_base'
             num_exes:
               type: integer
               description: The number of executions this job has had.  
@@ -498,13 +498,13 @@ components:
         - type: object
           properties:      
           job_type_rev:
-            $ref: './job_type.yml#/components/schemas/job_type_revision_detail'
+            $ref: '#/components/schemas/job_type_revision_detail'
           superseded_by_job:
             description: The next job in the chain that superseded this job.
             $ref: '#/components/schemas/job_base'
           resources:
             description: JSON description describing the resources required for this job.
-            $ref: './system.yml#/components/schemas/resources'
+            $ref: '#/components/schemas/resources'
           execution:
             description: The most recent execution of the job.
             $ref: '#/components/schemas/job_execution_details'
@@ -585,13 +585,13 @@ components:
           $ref: '#/components/schemas/job_base'
         node:
           description: The node that ran the execution.
-          $ref: './node.yml#/components/schemas/node_base'
+          $ref: '#/components/schemas/node_base'
         error:
           description: The last error that was recorded for the execution.
-          $ref: './error.yml#/components/schemas/error_base'
+          $ref: '#/components/schemas/error_base'
         job_type:
           description: The job type that is associated with the execution.
-          $ref: './job_type.yml#/components/schemas/job_type_base'
+          $ref: '#/components/schemas/job_type_base'
     job_execution:
       title: Job Execution
       allof:
@@ -600,13 +600,13 @@ components:
           properties:
             node:
               description: The node that ran the execution.
-              $ref: './node.yml#/components/schemas/node_base'
+              $ref: '#/components/schemas/node_base'
             error:
               description: The last error that was recorded for the execution.
-              $ref: './error.yml#/components/schemas/error_base'
+              $ref: '#/components/schemas/error_base'
             job_type:
               description: The job type that is associated with the execution.
-              $ref: './job_type.yml#/components/schemas/job_type_base'
+              $ref: '#/components/schemas/job_type_base'
             timeout:
               type: integer
               description: The maximum amount of time this job can run before being killed (in seconds).
