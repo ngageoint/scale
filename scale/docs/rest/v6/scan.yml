@@ -107,8 +107,7 @@ paths:
               $ref: '#/components/schemas/scan_post'
       responses:
         '204':
-          description:-
-            The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit 
 
   /scans/validation/:
     post:

@@ -306,8 +306,7 @@ paths:
               $ref: '#/components/schemas/job_cancel_post'
       responses:
         '202':
-          description:-
-            202 ACCEPTED response
+          description: 202 ACCEPTED response
   
   /jobs/requeue/:
     post:

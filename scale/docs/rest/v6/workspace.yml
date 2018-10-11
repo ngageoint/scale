@@ -65,8 +65,7 @@ paths:
               $ref: '#/components/schemas/workspace_post'
       responses:
         '201':
-          description:-
-            The 201 CREATED response indicates a successful request 
+          description: The 201 CREATED response indicates a successful request 
             
   /workspaces/{id}/:
     get:
@@ -104,8 +103,7 @@ paths:
               $ref: '#/components/schemas/workspace_post'
       responses:
         '204':
-          description:-
-            The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit 
 
   /workspaces/validation/:
     post:

@@ -16,8 +16,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/scheduler_data'
         '204':
-          description:-
-            The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
+          description: The 204 NO CONTENT response indicates that the Scale scheduler is currently
+            offline, so there is no status content to provide.
     patch:
       operationId: _rest_v6_scheduler_update
       summary: Update Scheduler Details
@@ -30,14 +30,11 @@ paths:
               $ref: '#/components/schemas/scheduler_data'
       responses:
         '204':
-          description:-
-            The 204 NO CONTENT response indicates a successful update
+          description: The 204 NO CONTENT response indicates a successful update
         '400':
-          description:-
-            The 400 BAD REQUEST response indicates an error in the privded update fields
+          description: The 400 BAD REQUEST response indicates an error in the privded update fields
         '404':
-          description:-
-            The 404 response indicates the scheduler does not exist
+          description: The 404 response indicates the scheduler does not exist
             
 components:
   schemas:

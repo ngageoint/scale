@@ -16,8 +16,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/status'
         '204':
-          description:-
-            The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to provide.
+          description: The 204 NO CONTENT response indicates that the Scale scheduler is
+            currently offline, so there is no status content to provide.
   /version:
     get:
       operationId: _rest_v6_system_version
