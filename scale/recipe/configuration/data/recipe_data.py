@@ -48,7 +48,6 @@ class LegacyRecipeData(object):
         if not 'version' in self.data_dict:
             self.data_dict['version'] = DEFAULT_VERSION
         if not self.data_dict['version'] == '1.0':
-            print data
             raise InvalidRecipeData('Invalid recipe data: %s is an unsupported version number' % self.data_dict['version'])
 
         if not 'input_data' in self.data_dict:
