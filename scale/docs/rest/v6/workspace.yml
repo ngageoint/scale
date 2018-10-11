@@ -3,53 +3,52 @@ info:
   title: Workspace Services
   version: v6
 paths:
-  /v6/workspaces/:
+  /workspaces/:
     get:
       operationId: _rest_v6_workspace_list
       summary: Workspace List
       description: Returns a list of all workspaces
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
-          description: Return only workspaces with a given name. |
+          description: Return only workspaces with a given name.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -66,56 +65,32 @@ paths:
               $ref: '#/components/schemas/workspace_post'
       responses:
         '201':
-          description: |-
-            The 201 CREATED response indicates a successful request 
+          description: The 201 CREATED response indicates a successful request 
             
-  /v6/workspaces/{id}/:
+  /workspaces/{id}/:
     get:
       operationId: _rest_v6_workspace_details
       summary: Workspace Details
       description: Returns a specific workspace and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
           description: id of an existing workspace
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/workspace_details'
-
-  /v6/workspaces/validation/:
-    post:
-      operationId: _rest_v6_workspace_validate
-      summary: Validate Workspace
-      description: Validates a new workspace configuration without actually saving it.  
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/workspace_post'
-      responses:
-        '200':
-          description: |-
-            The 200 OK response indicates a valid workspace configuration 
-          content:
-            application/json: 
-              schema:
-                $ref: '#/components/schemas/validation'
-            
-  /v6/workspaces/{id}/:
     patch:
       operationId: _rest_v6_workspace_edit
       summary: Edit Workspace
       description: Edits an existing Workspace with associated configuration. 
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -128,8 +103,26 @@ paths:
               $ref: '#/components/schemas/workspace_post'
       responses:
         '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
+          description: The 204 No content response indicates a successful edit 
+
+  /workspaces/validation/:
+    post:
+      operationId: _rest_v6_workspace_validate
+      summary: Validate Workspace
+      description: Validates a new workspace configuration without actually saving it.  
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/workspace_post'
+      responses:
+        '200':
+          description: The 200 OK response indicates a valid workspace configuration 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/validation'
 
 components:
   schemas:
@@ -179,7 +172,7 @@ components:
           example: Raw Source Workspace
         base_url:
           type: string
-          description:  The URL prefix used to access all files within the workspace. |
+          description:  The URL prefix used to access all files within the workspace.
             This field can be null if the workspace is not web-accessible.
           example: http://host.com/rs
         is_active:
@@ -208,12 +201,12 @@ components:
       properties:
         name:
           type: string
-          description: The identifying name of the workspace used for queries. |
+          description: The identifying name of the workspace used for queries.
             Used for validation of changes to existing workspace
           example: raw-source
         title:
           type: string
-          description: The human readable display name of the workspace. |
+          description: The human readable display name of the workspace.
             This will be used to generate the name field
           example: Raw Source
         description:
@@ -222,7 +215,7 @@ components:
           example: Raw source workspace
         base_url:
           type: string
-          description:  The URL prefix used to access all files within the workspace. |
+          description:  The URL prefix used to access all files within the workspace.
             This field can be null if the workspace is not web-accessible.
           example: http://host.com/rs
         is_active:
@@ -234,12 +227,12 @@ components:
 
     workspace_details:
       allof:
-        - ref: '#/components/schemas/workspace_base'
+        - $ref: '#/components/schemas/workspace_base'
         - title: Workspace Details
         - type: object
-        properties: 
-          configuration:
-            $ref: '#/components/schemas/workspace_config'          
+          properties: 
+            configuration:
+              $ref: '#/components/schemas/workspace_config'          
           
     workspace_config:
       title: Workspace Configuration
@@ -247,13 +240,13 @@ components:
       properties:
         version:
           type: string
-          description: The version is an optional string value that defines the |
-            version of the configuration used. This allows updates to be made to |
-            the specification while maintaining backwards compatibility by allowing |
-            Scale to recognize an older version and convert it to the current version. |
-            The default value for version if it is not included is the latest version, |
-            which is currently 1.0. It is recommended, though not required, that you |
-            include the version so that future changes to the specification will still |
+          description: The version is an optional string value that defines the
+            version of the configuration used. This allows updates to be made to
+            the specification while maintaining backwards compatibility by allowing
+            Scale to recognize an older version and convert it to the current version.
+            The default value for version if it is not included is the latest version,
+            which is currently 1.0. It is recommended, though not required, that you
+            include the version so that future changes to the specification will still
             accept your workspace configuration.
           example: 1.0
         broker:
@@ -271,8 +264,8 @@ components:
       properties:
         type:
           type: string
-          description: The type is a required string that specifies the type of the broker to use. |
-            The other fields that configure the broker are based upon the type of the broker in the|
+          description: The type is a required string that specifies the type of the broker to use.
+            The other fields that configure the broker are based upon the type of the broker in the
             type field. The valid broker types are host, nfs, and s3
           example: nfs
       required:
@@ -285,8 +278,8 @@ components:
       properties: 
         host_path:
           type: string
-          description: The host_path is a required string that specifies the absolute path of the |
-            host’s local directory that should be mounted into a job’s container in order to |
+          description: The host_path is a required string that specifies the absolute path of the
+            host’s local directory that should be mounted into a job’s container in order to
             access the workspace’s files.
           example: /the/absolute/host/path
       required:
@@ -299,7 +292,7 @@ components:
       properties:
         nfs_path:
           type: string
-          description: The nfs_path is a required string that specifies the remote NFS path to use |
+          description: The nfs_path is a required string that specifies the remote NFS path to use
             for storing and retrieving the workspace files. It should be in the format host:/path.
           example: host:/my/path
       required:
@@ -312,26 +305,26 @@ components:
       properties:
         bucket_name:
           type: string
-          description: Specifies the globally unique |
+          description: Specifies the globally unique
             name of a storage bucket within S3. The bucket should be created before attempting to use it here.
           example: my_bucket.domain.com
         credentials:
           $ref: '#/components/schemas/credentials'
         host_path:
           type: string
-          description: The host_path is an optional string that adds S3 workspace support for |
-            locally mounted buckets and partial file read-only access. If a FUSE file system |
-            (such as s3fs or goofys) mounts the S3 bucket at the host_path location on all nodes, |
-            an alternative to downloading large files is available to jobs that use only portions |
-            of a file. The job interface must indicate partial equal to true for any input files |
-            to take advantage of host_path. Only read operations are performed using the mount, |
+          description: The host_path is an optional string that adds S3 workspace support for
+            locally mounted buckets and partial file read-only access. If a FUSE file system
+            (such as s3fs or goofys) mounts the S3 bucket at the host_path location on all nodes,
+            an alternative to downloading large files is available to jobs that use only portions
+            of a file. The job interface must indicate partial equal to true for any input files
+            to take advantage of host_path. Only read operations are performed using the mount,
             all write operations will use the S3 REST API.
           example: /my_bucket
         region_name:
           type: string
-          description: The region_name is an optional string that specifies the AWS region where the |
-            SQS Queue is located. This is not always required, as environment variables or configuration |
-            files could set the default region, but it is a highly recommended setting for explicitly |
+          description: The region_name is an optional string that specifies the AWS region where the
+            SQS Queue is located. This is not always required, as environment variables or configuration
+            files could set the default region, but it is a highly recommended setting for explicitly
             indicating the SQS region.
           example: us-east-1
       required:
@@ -340,20 +333,20 @@ components:
     credentials:
       title: Credentials
       type: object
-      description: The credentials is a JSON object that provides the necessary information to access |
-        the bucket. This attribute should be omitted when using IAM role-based security. If it is |
-        included for key-based security, then both sub-attributes must be included. An IAM account |
+      description: The credentials is a JSON object that provides the necessary information to access
+        the bucket. This attribute should be omitted when using IAM role-based security. If it is
+        included for key-based security, then both sub-attributes must be included. An IAM account
         should be created and granted the appropriate permissions to the bucket before attempting to use it here.
       properties:
         access_key_id:
           type: string
-          description: The access_key_id is a unique identifier for the user account in IAM that will |
+          description: The access_key_id is a unique identifier for the user account in IAM that will
             be used as a proxy for read and write operations within Scale.
           example: AKIAIOSFODNN7EXAMPLE
         secret_access_key:
           type: string
-          description: The secret_access_key is a generated token that the system can use to prove it |
-            should be able to make requests on behalf of the associated IAM account without requiring |
+          description: The secret_access_key is a generated token that the system can use to prove it
+            should be able to make requests on behalf of the associated IAM account without requiring
             the actual password used by that account.
           example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
       required:

@@ -3,67 +3,65 @@ info:
   title: Error Services
   version: v6
 paths:
-  /v6/errors/:
+  /errors/:
     get:
       operationId: _rest_v6_error_list
       summary: Error List
       description: Returns a list of all errors
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: is_builtin
           schema:
             type: boolean
           description: if provided, only return errors matching is_builtin
-        -in: query
+        - in: query
           name: job_type_name
           schema:
             type: string
           description: if provided, only return errors for job types with the given name (any version)
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
           description: if provided, only return errors with the given name
-        -in: query
+        - in: query
           name: category
           schema:
             type: string
           description: if provided, only return errors matching the given category
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/error_list'
 
- /v6/ingests/errors/{id}/:
+  /ingests/errors/{id}/:
     get:
       operationId: _rest_v6_error_details
       summary: Error Details
       description: Returns detailed information about the error with the specified id
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
           description: id of an existing error
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
@@ -126,14 +124,14 @@ components:
         - ref: '#/components/schemas/error_details'
         - title: Error Details
         - type: object
-        properties:
-          created:
-            type: string
-            format: date-time
-            description: When the associated database model was initially created.
-            example: 2015-09-10T15:24:53.503Z
-          last_modified:
-            type: string
-            format: date-time
-            description: When the associated database model was last saved.
-            example: 2015-09-10T15:24:53.987Z
+          properties:
+            created:
+              type: string
+              format: date-time
+              description: When the associated database model was initially created.
+              example: 2015-09-10T15:24:53.503Z
+            last_modified:
+              type: string
+              format: date-time
+              description: When the associated database model was last saved.
+              example: 2015-09-10T15:24:53.987Z

@@ -3,302 +3,300 @@ info:
   title: Job Services
   version: v6
 paths:
-  /v6/jobs/:
+  /jobs/:
     get:
       operationId: _rest_v6_job_list
       summary: Job List
       description: Returns a list of all jobs
       parameters:
-        -in: query
-          name: page
-          schema:
-            type: integer
-          description: The page of the results to return. Defaults to 1.
-        -in: query
-          name: page_size
-          schema:
-            type: integer
-          description: The size of the page to use for pagination of results. |
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: The page of the results to return. Defaults to 1.
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: The size of the page to use for pagination of results. 
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
-          name: started
-          schema:
-            type: string
-            format: date-time
-          description: The start of the time range to query
-        -in: query
-          name: ended
-          schema:
-            type: string
-            format: date-time
-          description: End of the time range to query, defaults to the current time
-        -in: query
-          name: source_started
-          schema:
-            type: string
-            format: date-time
-          description: The start of the source time range to query
-        -in: query
-          name: source_ended
-          schema:
-            type: string
-            format: date-time
-          description: End of the source time range to query, defaults to the current time
-        -in: query
-          name: source_sensor_class
-          schema:
-            type: string
-          description: Return only jobs for the given source sensor class. |
+      - in: query
+        name: started
+        schema:
+          type: string
+          format: date-time
+        description: The start of the time range to query
+      - in: query
+        name: ended
+        schema:
+          type: string
+          format: date-time
+        description: End of the time range to query, defaults to the current time
+      - in: query
+        name: source_started
+        schema:
+          type: string
+          format: date-time
+        description: The start of the source time range to query
+      - in: query
+        name: source_ended
+        schema:
+          type: string
+          format: date-time
+        description: End of the source time range to query, defaults to the current time
+      - in: query
+        name: source_sensor_class
+        schema:
+          type: string
+        description: Return only jobs for the given source sensor class.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: source_sensor
-          schema:
-            type: string
-          description: Return only jobs for the given source sensor. |
+      - in: query
+        name: source_sensor
+        schema:
+          type: string
+        description: Return only jobs for the given source sensor.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: source_collection
-          schema:
-            type: string
-          description: Return only jobs for the given source collection. |
+      - in: query
+        name: source_collection
+        schema:
+          type: string
+        description: Return only jobs for the given source collection.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: source_task
-          schema:
-            type: string
-          description: Return only jobs for the given source task. |
+      - in: query
+        name: source_task
+        schema:
+          type: string
+        description: Return only jobs for the given source task.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: order
-          schema:
-            type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
-        -in: query
-          name: status
-          schema:
-            type: string
-          description: Return only jobs with a status matching this string. |
-            Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. |
+      - in: query
+        name: order
+        schema:
+          type: string
+        description: "One or more fields to use when ordering the results.
+                      Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                      Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: "Return only jobs with a status matching this string.
+                      Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].
+                      Duplicate it to filter by multiple values."
+      - in: query
+        name: job_id
+        schema:
+          type: integer
+        description: Return only jobs with a given identifier.
             Duplicate it to filter by multiple values. 
-        -in: query
-          name: job_id
-          schema:
-            type: integer
-          description: Return only jobs with a given identifier. |
+      - in: query
+        name: job_type_id
+        schema:
+          type: integer
+        description: Return only jobs with a given job type identifier.
             Duplicate it to filter by multiple values. 
-        -in: query
-          name: job_type_id
-          schema:
-            type: integer
-          description: Return only jobs with a given job type identifier. |
+      - in: query
+        name: job_type_name
+        schema:
+          type: string
+        description: Return only jobs with a given job type name.
             Duplicate it to filter by multiple values. 
-        -in: query
-          name: job_type_name
-          schema:
-            type: string
-          description: Return only jobs with a given job type name. |
+      - in: query
+        name: batch_id
+        schema:
+          type: integer
+        description: Return only jobs with the given batch identifier.
             Duplicate it to filter by multiple values. 
-        -in: query
-          name: batch_id
-          schema:
-            type: integer
-          description: Return only jobs with the given batch identifier. |
+      - in: query
+        name: recipe_id
+        schema:
+          type: integer
+        description: Return only jobs with the given recipe identifier.
             Duplicate it to filter by multiple values. 
-        -in: query
-          name: recipe_id
-          schema:
-            type: integer
-          description: Return only jobs with the given recipe identifier. |
-            Duplicate it to filter by multiple values. 
-        -in: query
-          name: error_category
-          schema:
-            type: string
-          description: Return only jobs that failed due to an error with the given category. |
-            Choices: [SYSTEM, DATA, ALGORITHM]. |
-            Duplicate it to filter by multiple values. 
-        -in: query
-          name: error_id
-          schema:
-            type: integer
-          description: Return only jobs that failed with this error. |
+      - in: query
+        name: error_category
+        schema:
+          type: string
+        description: "Return only jobs that failed due to an error with the given category.
+                      Choices: [SYSTEM, DATA, ALGORITHM].
+                      Duplicate it to filter by multiple values."
+      - in: query
+        name: error_id
+        schema:
+          type: integer
+        description: Return only jobs that failed with this error.
             Duplicate it to filter by multiple values. 
       responses:
         '200':
-          description: |-
-            200 response
-          content:
-            application/json: 
-              schema:
+          description: 200 response
+          content: 
+            application/json:
+              schema: 
                 $ref: '#/components/schemas/job_list'
 
-  /v6/jobs/{id}/:
+  /jobs/{id}/:
     get:
       operationId: _rest_v6_job_details
       summary: Job Details
       description: Returns a specific job and all its related model information.  
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
           description: id of an existing job
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/job_details'
-                
-  /v6/jobs/{id}/input_files/:
+
+  /jobs/{id}/input_files/:
     get:
       operationId: _rest_v6_job_input_files
       summary: Job Input Files
       description: Returns detailed information about input files associated with a given Job ID.  
       parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing job
-        -in: query
-          name: page
-          schema:
-            type: integer
-          description: The page of the results to return. Defaults to 1.
-        -in: query
-          name: page_size
-          schema:
-            type: integer
-          description: The size of the page to use for pagination of results. |
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: id of an existing job
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: The page of the results to return. Defaults to 1.
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
-          name: started
-          schema:
-            type: string
-            format: date-time
-          description: The start of the time range to query
-        -in: query
-          name: ended
-          schema:
-            type: string
-            format: date-time
-          description: End of the time range to query, defaults to the current time
-        -in: query
-          name: time_field
-          schema:
-            type: string
-          description: Indicates the time field(s) that *started* and *ended* | 
-            will use for time filtering. Valid values are: *last_modified*, |
-            *data* and *source*. The default value is *last_modified*.
-        -in: query
-          name: file_name
-          schema:
-            type: string
-          description: Returns only input files with this file name.
-        -in: query
-          name: job_input
-          schema:
-            type: string
-          description: Returns files for this job input.
+      - in: query
+        name: started
+        schema:
+          type: string
+          format: date-time
+        description: The start of the time range to query
+      - in: query
+        name: ended
+        schema:
+          type: string
+          format: date-time
+        description: End of the time range to query, defaults to the current time
+      - in: query
+        name: time_field
+        schema:
+          type: string
+        description: "Indicates the time field(s) that *started* and *ended*
+                      will use for time filtering. Valid values are: *last_modified*,
+                      *data* and *source*. The default value is *last_modified*."
+      - in: query
+        name: file_name
+        schema:
+          type: string
+        description: Returns only input files with this file name.
+      - in: query
+        name: job_input
+        schema:
+          type: string
+        description: Returns files for this job input.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_list'
-  /v6/jobs/{id}/executions/:
+
+  /jobs/{id}/executions/:
     get:
       operationId: _rest_v6_job_executions
       summary: Job Executions
       description: Returns a list of job executions associated with a given Job ID
       parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing job
-        -in: query
-          name: page
-          schema:
-            type: integer
-          description: The page of the results to return. Defaults to 1.
-        -in: query
-          name: page_size
-          schema:
-            type: integer
-          description: The size of the page to use for pagination of results. |
-            Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
-          name: status
-          schema:
-            type: string
-          description: Return only executions with a status matching this string. |
-            Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. |
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: id of an existing job
+      - in: query
+        name: page
+        schema:
+          type: integer
+        description: The page of the results to return. Defaults to 1.
+      - in: query
+        name: page_size
+        schema:
+          type: integer
+        description: The size of the page to use for pagination of results.
+          Defaults to 100, and can be anywhere from 1-1000.
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: "Return only executions with a status matching this string.
+                      Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].
+                      Duplicate it to filter by multiple values."
+      - in: query
+        name: node_id
+        schema:
+          type: integer
+        description: Return only executions run on the given node.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: node_id
-          schema:
-            type: integer
-          description: Return only executions run on the given node. |
+      - in: query
+        name: error_id
+        schema:
+          type: integer
+        description: Return only excutions with the given error.
             Duplicate it to filter by multiple values.
-        -in: query
-          name: error_id
-          schema:
-            type: integer
-          description: Return only excutions with the given error. |
-            Duplicate it to filter by multiple values.
-        -in: query
-          name: error_category
-          schema:
-            type: string
-          description: Return only excutions with errors of the given category. |
+      - in: query
+        name: error_category
+        schema:
+          type: string
+        description: Return only excutions with errors of the given category.
             Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/job_execution_list'
-  /v6/jobs/{id}/executions/{exe_num}:
+  
+  /jobs/{id}/executions/{exe_num}:
     get:
       operationId: _rest_v6_job_execution_details
       summary: Job Execution Details
-      description: Returns a specific job execution and all its related model |
+      description: Returns a specific job execution and all its related model
         information including job, node, environment, and results.
       parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing job
-        -in: path
-          name: exe_num
-          schema:
-            type: integer
-          description: execution number of a job execution
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: id of an existing job
+      - in: path
+        name: exe_num
+        schema:
+          type: integer
+        description: execution number of a job execution
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/job_execution_details'
-  /v6/jobs/cancel/:
+  
+  /jobs/cancel/:
     post:
       operationId: _rest_v6_job_cancel
       summary: Cancel Jobs
-      description: Cancels the jobs that fit the given filter criteria. |
-        The canceling will be done asynchronously, so the response will just |
+      description: Cancels the jobs that fit the given filter criteria.
+        The canceling will be done asynchronously, so the response will just
         indicate that the cancel request has been accepted.
       requestBody:
         required: false
@@ -308,14 +306,14 @@ paths:
               $ref: '#/components/schemas/job_cancel_post'
       responses:
         '202':
-          description: |-
-            202 ACCEPTED response
-  /v6/jobs/requeue/:
+          description: 202 ACCEPTED response
+  
+  /jobs/requeue/:
     post:
       operationId: _rest_v6_job_requeue
       summary: Requeue Jobs
-      description: Re-queues the jobs that fit the given filter criteria. |
-        The re-queuing will be done asynchronously, so the response will just |
+      description: Re-queues the jobs that fit the given filter criteria.
+        The re-queuing will be done asynchronously, so the response will just
         indicate that the re-queue request has been accepted.
       requestBody:
         required: false
@@ -325,32 +323,31 @@ paths:
               $ref: '#/components/schemas/job_requeue_post'
       responses:
         '202':
-          description: |-
-            202 ACCEPTED response
-  /v6/job-executions/{job_exe_id}/logs/{log_name}:
+          description: 202 ACCEPTED response
+  
+  /job-executions/{job_exe_id}/logs/{log_name}:
     get:
       operationId: _rest_v6_job_execution_logs
       summary: Job Execution Logs
       description: Returns a specific job execution log
       parameters:
-        -in: path
-          name: job_exe_id
-          schema:
-            type: integer
-          description: id of a job execution
-        -in: path
-          name: log_name
-          schema:
-            type: string
-          description: Name of the log to get (stdout, stderr, or combined)
+      - in: path
+        name: job_exe_id
+        schema:
+          type: integer
+        description: id of a job execution
+      - in: path
+        name: log_name
+        schema:
+          type: string
+        description: Name of the log to get (stdout, stderr, or combined)
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/job_execution_log'
+                  $ref: '#/components/schemas/job_execution_log'
 
 components:
   schemas:
@@ -389,115 +386,116 @@ components:
           $ref: '#/components/schemas/job_type_base'
         status:
           type: string
-          description: The current status of the job. Choices: [QUEUED, RUNNING, |
-            FAILED, COMPLETED, CANCELED].
+          description: "The current status of the job. Choices: [QUEUED, RUNNING,
+                        FAILED, COMPLETED, CANCELED]."
           example: QUEUED
     job:
+      title: Job
       allof:
-        - ref: '#/components/schemas/job_base'
-        - title: Job
+        - $ref: '#/components/schemas/job_base'
         - type: object
-        properties:      
-          job_type_rev:
-            $ref: '#/components/schemas/job_type_revision_base'
-          event:
-            $ref: '#/components/schemas/event_base'
-          recipe:
-            $ref: '#/components/schemas/recipe_base'
-          batch:
-            $ref: '#/components/schemas/batch_base'
-          is_superseded: 
-            type: boolean
-            description: Whether this job has been replaced and is now obsolete.
-            example: false
-          superseded_job:
-            description: The previous job in the chain that was superseded by this job.
-            $ref: '#/components/schemas/job_base'
-          status:
-            type: string
-            description: The current status of the job. Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. 
-          node:
-            description: The node that the job is/was running on. 
-            $ref: '#/components/schemas/node_base'
-          error:
-            description: The error that is associated with the job
-            $ref: '#/components/schemas/error_base'
-          num_exes:
-            type: integer
-            description: The number of executions this job has had.  
-            example: 1
-          input_file_size:
-            type: integer
-            description: The amount of disk space in MiB required for input files for this job. 
-            example: 1
-          source_started:
-            type: string
-            format: date-time
-            description: When collection of the source file started. 
-            example: 2015-09-10T15:24:53.503Z
-          source_ended:
-            type: string
-            format: date-time
-            description: When collection of the source file ended. 
-            example: 2015-09-10T15:24:53.503Z
-          source_sensor_class:
-            type: string
-            description: The class of sensor used to produce the source file.
-            example: classA
-          source_sensor:
-            type: string
-            description: The specific identifier of the sensor used to produce the source file.
-            example: 1
-          source_collection:
-            type: string
-            description: The collection of the source file.
-            example: 12345
-          source_task:
-            type: string
-            description: The task that produced the source file.
-            example: my-task
-          created:
-            type: string
-            format: date-time
-            description: When the associated database model was initially created.
-            example: 2015-09-10T15:24:53.503Z
-          queued:
-            type: string
-            format: date-time
-            description: When the job was added to the queue to be run when resources are available.
-            example: 2015-09-10T15:24:53.987Z
-          started:
-            type: string
-            format: date-time
-            description: When the job started running
-            example: 2015-09-10T15:24:53.987Z
-          ended:
-            type: string
-            format: date-time
-            description: When the job stopped running
-            example: 2015-09-10T15:24:53.987Z
-          last_status_change:
-            type: string
-            format: date-time
-            description: When the job's status last changed
-            example: 2015-09-10T15:24:53.987Z
-          superseded:
-            type: string
-            format: date-time
-            description: When the job was superseded.
-            example: 2015-09-10T15:24:53.503Z
-          last_modified:
-            type: string
-            format: date-time
-            description: When the associated database model was last saved.
-            example: 2015-09-10T15:24:53.987Z
+          properties:      
+            job_type_rev:
+              $ref: '#/components/schemas/job_type_revision_base'
+            # Commenting out until defined
+            # event:
+            #   $ref: '#/components/schemas/event_base'
+            # recipe:
+            #   $ref: '#/components/schemas/recipe_base'
+            # batch:
+            #   $ref: '#/components/schemas/batch_base'
+            is_superseded: 
+              type: boolean
+              description: Whether this job has been replaced and is now obsolete.
+              example: false
+            superseded_job:
+              description: The previous job in the chain that was superseded by this job.
+              $ref: '#/components/schemas/job_base'
+            status:
+              type: string
+              description: "The current status of the job. Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]."
+            node:
+              description: The node that the job is/was running on. 
+              $ref: '#/components/schemas/node_base'
+            error:
+              description: The error that is associated with the job
+              $ref: '#/components/schemas/error_base'
+            num_exes:
+              type: integer
+              description: The number of executions this job has had.  
+              example: 1
+            input_file_size:
+              type: integer
+              description: The amount of disk space in MiB required for input files for this job. 
+              example: 1
+            source_started:
+              type: string
+              format: date-time
+              description: When collection of the source file started. 
+              example: 2015-09-10T15:24:53.503Z
+            source_ended:
+              type: string
+              format: date-time
+              description: When collection of the source file ended. 
+              example: 2015-09-10T15:24:53.503Z
+            source_sensor_class:
+              type: string
+              description: The class of sensor used to produce the source file.
+              example: classA
+            source_sensor:
+              type: string
+              description: The specific identifier of the sensor used to produce the source file.
+              example: 1
+            source_collection:
+              type: string
+              description: The collection of the source file.
+              example: 12345
+            source_task:
+              type: string
+              description: The task that produced the source file.
+              example: my-task
+            created:
+              type: string
+              format: date-time
+              description: When the associated database model was initially created.
+              example: 2015-09-10T15:24:53.503Z
+            queued:
+              type: string
+              format: date-time
+              description: When the job was added to the queue to be run when resources are available.
+              example: 2015-09-10T15:24:53.987Z
+            started:
+              type: string
+              format: date-time
+              description: When the job started running
+              example: 2015-09-10T15:24:53.987Z
+            ended:
+              type: string
+              format: date-time
+              description: When the job stopped running
+              example: 2015-09-10T15:24:53.987Z
+            last_status_change:
+              type: string
+              format: date-time
+              description: When the job's status last changed
+              example: 2015-09-10T15:24:53.987Z
+            superseded:
+              type: string
+              format: date-time
+              description: When the job was superseded.
+              example: 2015-09-10T15:24:53.503Z
+            last_modified:
+              type: string
+              format: date-time
+              description: When the associated database model was last saved.
+              example: 2015-09-10T15:24:53.987Z
 
     job_details:
+      title: Job Details
       allof:
-        - ref: '#/components/schemas/job'
-        - title: Job Details
+        - $ref: '#/components/schemas/job'
         - type: object
-        properties:      
+          properties:      
           job_type_rev:
             $ref: '#/components/schemas/job_type_revision_detail'
           superseded_by_job:
@@ -508,13 +506,14 @@ components:
             $ref: '#/components/schemas/resources'
           execution:
             description: The most recent execution of the job.
-            $ref: '#/components/schemas/execution_details'
-          input:
-            description:The input data for the job.
-            $ref: '#/components/schemas/data'
-          output:
-            description: The output data for the job.
-            $ref: '#/components/schemas/data'
+            $ref: '#/components/schemas/job_execution_details'
+          # Commenting out until defined
+          # input:
+          #   description: The input data for the job.
+          #   $ref: '#/components/schemas/data'
+          # output:
+          #   description: The output data for the job.
+          #   $ref: '#data.yml/components/schemas/data'
 
     job_execution_list:
       title: Job Execution List
@@ -582,58 +581,58 @@ components:
           example: 2015-09-10T15:24:53.987Z
         job:
           description: The job that is associated with the execution.
-          $ref: '#/components/schemas/model'
+          $ref: '#/components/schemas/job_base'
         node:
           description: The node that ran the execution.
-          $ref: '#/components/schemas/model'
+          $ref: '#/components/schemas/node_base'
         error:
           description: The last error that was recorded for the execution.
-          $ref: '#/components/schemas/model'
+          $ref: '#/components/schemas/error_base'
         job_type:
           description: The job type that is associated with the execution.
-          $ref: '#/components/schemas/model'
+          $ref: '#/components/schemas/job_type_base'
     job_execution:
+      title: Job Execution
       allof:
-        - ref: '#/components/schemas/job_execution_base'
-        - title: Job Execution
+        - $ref: '#/components/schemas/job_execution_base'
         - type: object
-        properties:
-          node:
-            description: The node that ran the execution.
-            $ref: '#/components/schemas/node_base'
-          error:
-            description: The last error that was recorded for the execution.
-            $ref: '#/components/schemas/error_base'
-          job_type:
-            description: The job type that is associated with the execution.
-            $ref: '#/components/schemas/job_type_base'
-          timeout:
-            type: integer
-            description: The maximum amount of time this job can run before being killed (in seconds).
-            example: 1800
-          input_file_size:
-            type: number
-            format: float
-            description: The total amount of disk space in MiB for all input files for this execution.
-            example: 10.0
+          properties:
+            node:
+              description: The node that ran the execution.
+              $ref: '#/components/schemas/node_base'
+            error:
+              description: The last error that was recorded for the execution.
+              $ref: '#/components/schemas/error_base'
+            job_type:
+              description: The job type that is associated with the execution.
+              $ref: '#/components/schemas/job_type_base'
+            timeout:
+              type: integer
+              description: The maximum amount of time this job can run before being killed (in seconds).
+              example: 1800
+            input_file_size:
+              type: number
+              format: float
+              description: The total amount of disk space in MiB for all input files for this execution.
+              example: 10.0
     job_execution_details:
+      title: Job Execution Details
       allof:
-        - ref: '#/components/schemas/job_execution'
-        - title: Job Execution Details
+        - $ref: '#/components/schemas/job_execution'
         - type: object
-        properties:
-          task_results:
-            description: JSON description of the task results for this execution.
-            $ref: '#/components/schemas/exe_task_results'
-          resources:
-            description: JSON description describing the resources allocated to this execution.
-            $ref: '#/components/schemas/resources_wrapper'
-          configuration:
-            description: JSON description of the configuration for running the job
-            $ref: '#/components/schemas/exe_config'
-          output:
-            description: JSON description of the job output.
-            $ref: '#/components/schemas/exe_output'
+          properties:
+            task_results:
+              description: JSON description of the task results for this execution.
+              $ref: '#/components/schemas/exe_task_results'
+            resources:
+              description: JSON description describing the resources allocated to this execution.
+              $ref: '#/components/schemas/resources_wrapper'
+            configuration:
+              description: JSON description of the configuration for running the job
+              $ref: '#/components/schemas/exe_config'
+            output:
+              description: JSON description of the job output.
+              $ref: '#/components/schemas/exe_output'
     exe_task_results:
       title: Task Results
       type: object
@@ -729,9 +728,9 @@ components:
           description: path of the input file within the workspace
         local_file_name:
           type: string
-          description: Alternate file name to use when passing the |
-            input file to the executing container. This is used to |
-            deconflict identical input file names when multiple |
+          description: Alternate file name to use when passing the
+            input file to the executing container. This is used to
+            deconflict identical input file names when multiple
             files with the same name are passed to the same input.
         is_deleted:
           type: boolean
@@ -752,52 +751,51 @@ components:
           description: command arguments that will be passed to the task
         env_vars:
           type: object
-          description: optional object where each key is the name of an environment |
+          description: optional object where each key is the name of an environment
             variable and each corresponding value is the value passed to that environment variable
           additionalProperties:
             type: string
         workspaces:
           type: object
           additionalProperties:
-            $ref:'#/components/schemas/task_workspace'
+            $ref: '#/components/schemas/task_workspace'
         mounts:
           type: object
-          description: Optional object where each key is the name of a mount |
-            variable and each corresponding value is the name of the docker  |
-            volume that will be mounted into the task's container. A null value |
+          description: Optional object where each key is the name of a mount
+            variable and each corresponding value is the name of the docker 
+            volume that will be mounted into the task's container. A null value
             indicates a required mount that was not provided.
           additionalProperties:
             type: string
         settings:
           type: object
-          description: optional object where each key is the name of a setting |
-            variable and each corresponding value is the value passed to that |
+          description: optional object where each key is the name of a setting
+            variable and each corresponding value is the value passed to that
             setting. A null value indicates a required setting that was not provided.
           additionalProperties:
             type: string
         volumes:
           type: object
-          description: Optional object where each key is the name of a Docker |
+          description: Optional object where each key is the name of a Docker
             volume being mounted into the task.
           additionalProperties:
-            $ref:'#/components/schemas/task_volume'
+            $ref: '#/components/schemas/task_volume'
         docker_params:
           type: array
           description: Objects that describe each Docker parameter to pass to the container
           items:
-            $ref:'#/components/schemas/docker_param'
-            type: string
+            $ref: '#/components/schemas/docker_param'
     task_workspace:
       title: Task Workspace
       type: object
       properties:
         mode:
           type: string
-          description: Mode to use for the workspace. There are two valid |
-            values: “ro” for read-only mode and “rw” for read-write mode.
+          description: "Mode to use for the workspace. There are two valid
+                        values: “ro” for read-only mode and “rw” for read-write mode."
         volume_name:
           type: string
-          description: The name of Docker volume that will be mounted into the |
+          description: The name of Docker volume that will be mounted into the
             task’s container in order to make the workspace available.
       required:
       - mode
@@ -807,27 +805,27 @@ components:
       properties:
         mode:
           type: string
-          description: Mode to use for mounting the volume. There are two valid |
-            values: “ro” for read-only mode and “rw” for read-write mode.
+          description: "Mode to use for mounting the volume. There are two valid
+                        values: “ro” for read-only mode and “rw” for read-write mode."
         type:
           type: string
-          description: The type of the volume: “volume” for normal Docker volume |
-            mounts and “host” for Docker host path mounts.
+          description: "The type of the volume: “volume” for normal Docker volume
+                        mounts and “host” for Docker host path mounts."
         host_path:
           type: string
-          description: The path on the host machine that should be mounted into |
-            the container. This field should only be specified when type is “host”.
+          description: "The path on the host machine that should be mounted into
+                        the container. This field should only be specified when type is “host”."
         driver:
           type: string
-          description: Custom Docker volume driver to use for the volume. This |
-            field should only be specified when type is “volume”.
+          description: "Custom Docker volume driver to use for the volume. This
+                        field should only be specified when type is “volume”."
         driver_opts:
           type: object
-          description: Name and value of a Docker volume driver argument option |
-            that should be passed to the volume driver. This field should only |
-            be specified when type is “volume”.
-          additionalPropterties:
-            type: string
+          description: "Name and value of a Docker volume driver argument option
+                        that should be passed to the volume driver. This field should only
+                        be specified when type is “volume”."
+        additionalPropterties:
+          type: string
       required:
       - type
       - mode
@@ -838,9 +836,9 @@ components:
       properties:
         flag:
           type: string
-          description: The command line flag (long form) to use for passing the |
-            parameter without the preceding dashes (e.g. use “volume” for passing|
-            “–volume=...”).
+          description: "The command line flag (long form) to use for passing the
+            parameter without the preceding dashes (e.g. use “volume” for passing
+            “–volume=...”)."
           example: volume
         value:
           type: string
@@ -869,68 +867,68 @@ components:
       title: Cancel Jobs Post
       type: object
       properties:
-          started:
-            type: string
-            format: date-time
-            description: Cancel only jobs that ran after this datetime
-            example: 2015-09-10T15:24:53.503Z
-          ended:
-            type: string
-            format: date-time
-            description: Cancel only jobs that ran before this datetime
-            example: 2015-09-10T15:24:53.503Z
-          status:
-            type: string
-            description: Cancel only jobs with this status. |
-              Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]. 
-          job_ids:
-            description: Cancel only jobs with these ids
-            type: array
-            items:
-              type: integer
-          job_type_ids:
-            description: Cancel only jobs with these job type ids
-            type: array
-            items:
-              type: integer
-          job_type_names:
-            description: Cancel only jobs with these job type names
-            type: array
-            items:
-              type: string
-          batch_ids:
-            description: Cancel only jobs with these batch ids
-            type: array
-            items:
-              type: integer
-          recipe_ids:
-            description: Cancel only jobs with these recipe ids
-            type: array
-            items:
-              type: integer
-          error_categories:
-            description: Cancel only jobs with an error in these categories
-            type: array
-            items:
-              type: string
-          error_ids:
-            description: Cancel only jobs with an error with one of these ids
-            type: array
-            items:
-              type: integer
-          is_superseded: 
-            type: boolean
-            description: Cancel only jobs with matching is_superseded flag.
-    job_requeue_post:
-      allof:
-        - ref: '#/components/schemas/job_cancel_post'
-        - title: Requeue Jobs Post
-        - type: object
-        properties:
-          priority:
+        started:
+          type: string
+          format: date-time
+          description: Cancel only jobs that ran after this datetime
+          example: 2015-09-10T15:24:53.503Z
+        ended:
+          type: string
+          format: date-time
+          description: Cancel only jobs that ran before this datetime
+          example: 2015-09-10T15:24:53.503Z
+        status:
+          type: string
+          description: "Cancel only jobs with this status.
+                        Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED]."
+        job_ids:
+          description: Cancel only jobs with these ids
+          type: array
+          items:
             type: integer
-            description: Change the priority of matching jobs when adding them |
-              to the queue. Defaults to jobs current priority; lower number is higher priority.
+        job_type_ids:
+          description: Cancel only jobs with these job type ids
+          type: array
+          items:
+            type: integer
+        job_type_names:
+          description: Cancel only jobs with these job type names
+          type: array
+          items:
+            type: string
+        batch_ids:
+          description: Cancel only jobs with these batch ids
+          type: array
+          items:
+            type: integer
+        recipe_ids:
+          description: Cancel only jobs with these recipe ids
+          type: array
+          items:
+            type: integer
+        error_categories:
+          description: Cancel only jobs with an error in these categories
+          type: array
+          items:
+            type: string
+        error_ids:
+          description: Cancel only jobs with an error with one of these ids
+          type: array
+          items:
+            type: integer
+        is_superseded: 
+          type: boolean
+          description: Cancel only jobs with matching is_superseded flag.
+    job_requeue_post:
+      title: Requeue Jobs Post
+      allof:
+        - $ref: '#/components/schemas/job_cancel_post'
+        - type: object
+          properties:
+            priority:
+              type: integer
+              description: Change the priority of matching jobs when adding them
+                to the queue. Defaults to jobs current priority; lower number is higher priority.
               
     job_execution_log:
       title: Job Execution Log
@@ -940,14 +938,14 @@ components:
           type: string
           description: The log message
           example: INFO - Starting job execution
-        @timestamp:
+        timestamp:
           type: string
           format: date-time
           description: The ISO-8601 timestamp marking when the message was logged.
           example: 2015-08-28T17:57:41.033Z
         scale_order_num:
           type: integer
-          description: A sequence number used to indicate correct log message |
+          description: A sequence number used to indicate correct log message
             order when multiple messages share the same @timestamp value.
           example: 1
         scale_task:
