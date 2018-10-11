@@ -3,49 +3,49 @@ info:
   title: Scan Services
   version: v6
 paths:
-  /v6/scans/:
+  /scans/:
     get:
       operationId: _rest_v6_scan_list
       summary: Scan List
       description: Returns a list of all scan processes
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
           description: Return only Scan processes with a given name. |
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: |-
@@ -73,13 +73,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/scan_details'
                 
-  /v6/scans/{id}/:
+  /scans/{id}/:
     get:
       operationId: _rest_v6_scan_details
       summary: Scan Details
       description: Returns a specific scan process and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -92,7 +92,28 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/scan_details'
-  /v6/scans/validation/:
+    patch:
+      operationId: _rest_v6_scan_edit
+      summary: Edit Scan
+      description: Edits an existing Scan process with associated configuration. 
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing scan process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/scan_post'
+      responses:
+        '204':
+          description: |-
+            The 204 No content response indicates a successful edit 
+
+  /scans/validation/:
     post:
       operationId: _rest_v6_scan_validate
       summary: Validate Scan
@@ -112,35 +133,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/validation'
             
-  /v6/scans/{id}/:
-    patch:
-      operationId: _rest_v6_scan_edit
-      summary: Edit Scan
-      description: Edits an existing Scan process with associated configuration. 
-      parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing scan process
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/scan_post'
-      responses:
-        '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
-            
-  /v6/scans/{id}/process/:
+  /scans/{id}/process/:
     patch:
       operationId: _rest_v6_scan_process
       summary: Process Scan
       description: Launches an existing Scan with associated configuration    
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -256,9 +255,9 @@ components:
         - ref: '#/components/schemas/scan_base'
         - title: Scan Details
         - type: object
-        properties: 
-          configuration:
-            $ref: '#/components/schemas/scan_config'
+          properties: 
+            configuration:
+              $ref: '#/components/schemas/scan_config'
           
     scan_config:
       title: Scan Configuration

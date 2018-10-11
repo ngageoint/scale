@@ -3,49 +3,49 @@ info:
   title: Strike Services
   version: v6
 paths:
-  /v6/strikes:
+  /strikes:
     get:
       operationId: _rest_v6_strike_list
       summary: Strike List
       description: Returns a list of all strike processes
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
           description: Return only Strike processes with a given name. |
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results. |
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created) |
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: |-
@@ -69,13 +69,13 @@ paths:
           description: |-
             The 201 CREATED response indicates a successful request 
             
-  /v6/strikes/{id}/:
+  /strikes/{id}/:
     get:
       operationId: _rest_v6_strike_details
       summary: Strike Details
       description: Returns a specific strike process and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -88,8 +88,28 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/strike_details'
+    patch:
+      operationId: _rest_v6_strike_edit
+      summary: Edit Strike
+      description: Edits an existing Strike process with associated configuration. 
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing strike process
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/strike_post'
+      responses:
+        '204':
+          description: |-
+            The 204 No content response indicates a successful edit 
 
-  /v6/strikes/validation/:
+  /strikes/validation/:
     post:
       operationId: _rest_v6_strike_validate
       summary: Validate Strike
@@ -108,28 +128,6 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/validation'
-            
-  /v6/strikes/{id}/:
-    patch:
-      operationId: _rest_v6_strike_edit
-      summary: Edit Strike
-      description: Edits an existing Strike process with associated configuration. 
-      parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing strike process
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/strike_post'
-      responses:
-        '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
 
 components:
   schemas:
@@ -211,10 +209,10 @@ components:
         - ref: '#/components/schemas/strike_base'
         - title: Strike Details
         - type: object
-        properties: 
-          configuration:
-            $ref: '#/components/schemas/strike_config'          
-          
+          properties: 
+            configuration:
+              $ref: '#/components/schemas/strike_config'          
+  
     strike_config:
       title: Strike Configuration
       type: object
@@ -244,9 +242,11 @@ components:
           example: true
         errors:
           type: array
+          items:
             $ref: '#/components/schemas/validation_error'
         warnings:
           type: array
+          items:
             $ref: '#/components/schemas/validation_warning'
             
     validation_error:
