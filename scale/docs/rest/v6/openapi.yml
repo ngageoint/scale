@@ -1,0 +1,31 @@
+openapi: '3.0.0'
+
+info:
+  title: Scale API
+  description: Scale API Overview
+  version: v6
+  contact: 
+      name: "Scale Team"
+      url: "gitter.com/ngageoint/scale"
+  x-logo:
+    url: "http://ngageoint.github.io/scale/images/scale3-transparent-128.png"
+    altText: "Scale logo"
+
+servers:
+  - url: http://scale.nga.gov/api/v6
+
+tags:
+- name: "job"
+  description: "Everything about your Pets"
+  externalDocs:
+    description: "Find out more"
+    url: "link to markdown docs"
+- name: "recipe"
+  description: "Everything about your Pets"
+  externalDocs:
+    description: "Find out more"
+    url: "link to markdown docs"
+
+# To be appended: 
+#  - paths
+#  - components

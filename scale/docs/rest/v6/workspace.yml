@@ -3,49 +3,49 @@ info:
   title: Workspace Services
   version: v6
 paths:
-  /v6/workspaces/:
+  /workspaces/:
     get:
       operationId: _rest_v6_workspace_list
       summary: Workspace List
       description: Returns a list of all workspaces
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
           description: The size of the page to use for pagination of results. |
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: started
           schema:
             type: string
             format: date-time
           description: The start of the time range to query
-        -in: query
+        - in: query
           name: ended
           schema:
             type: string
             format: date-time
           description: End of the time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: name
           schema:
             type: string
           description: Return only workspaces with a given name. |
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
       responses:
         '200':
           description: |-
@@ -69,13 +69,13 @@ paths:
           description: |-
             The 201 CREATED response indicates a successful request 
             
-  /v6/workspaces/{id}/:
+  /workspaces/{id}/:
     get:
       operationId: _rest_v6_workspace_details
       summary: Workspace Details
       description: Returns a specific workspace and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
@@ -88,8 +88,28 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/workspace_details'
+    patch:
+      operationId: _rest_v6_workspace_edit
+      summary: Edit Workspace
+      description: Edits an existing Workspace with associated configuration. 
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          description: id of an existing workspace
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/workspace_post'
+      responses:
+        '204':
+          description: |-
+            The 204 No content response indicates a successful edit 
 
-  /v6/workspaces/validation/:
+  /workspaces/validation/:
     post:
       operationId: _rest_v6_workspace_validate
       summary: Validate Workspace
@@ -108,28 +128,6 @@ paths:
             application/json: 
               schema:
                 $ref: '#/components/schemas/validation'
-            
-  /v6/workspaces/{id}/:
-    patch:
-      operationId: _rest_v6_workspace_edit
-      summary: Edit Workspace
-      description: Edits an existing Workspace with associated configuration. 
-      parameters:
-        -in: path
-          name: id
-          schema:
-            type: integer
-          description: id of an existing workspace
-      requestBody:
-        required: true
-        content:
-          application/json: 
-            schema:
-              $ref: '#/components/schemas/workspace_post'
-      responses:
-        '204':
-          description: |-
-            The 204 No content response indicates a successful edit 
 
 components:
   schemas:
@@ -234,12 +232,12 @@ components:
 
     workspace_details:
       allof:
-        - ref: '#/components/schemas/workspace_base'
+        - $ref: '#/components/schemas/workspace_base'
         - title: Workspace Details
         - type: object
-        properties: 
-          configuration:
-            $ref: '#/components/schemas/workspace_config'          
+          properties: 
+            configuration:
+              $ref: '#/components/schemas/workspace_config'          
           
     workspace_config:
       title: Workspace Configuration
