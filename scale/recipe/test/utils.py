@@ -7,6 +7,9 @@ import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.data.recipe_data import LegacyRecipeData
+from recipe.seed.recipe_data import  RecipeData
+from data.data.json.data_v6 import DataV6
+from data.data.data import Data
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -276,22 +279,23 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
     return Recipe.objects.create_recipe_old(recipe_type, data, event, superseded_recipe=superseded_recipe,
                                             delta=delta, superseded_jobs=superseded_jobs)
                                             
-def create_recipe_handler_v6(recipe_type_rev=None, data=None, event=None, superseded_recipe=None):
+def create_recipe_handler_v6(recipe_type=None, data=None, event=None, superseded_recipe=None):
     """Creates a recipe along with its declared jobs for unit testing
 
     :returns: The recipe handler with created recipe and jobs
     :rtype: :class:`recipe.handlers.handler.RecipeHandler`
     """
 
-    if not recipe_type_rev:
-        recipe_type_rev = create_recipe_type_revision()
+    if not recipe_type:
+        recipe_type = create_recipe_type()
     if not data:
         data = {}
-    if not isinstance(data, RecipeData):
-        data = RecipeData(data)
+    if not isinstance(data, Data):
+        data = DataV6(data).get_data()
     if not event:
         event = trigger_test_utils.create_trigger_event()
 
+    recipe_type_rev = RecipeTypeRevision.objects.get_by_natural_key(recipe_type, recipe_type.revision_num)
     return Recipe.objects.create_recipe_v6(recipe_type_rev, event.id, input_data=data, superseded_recipe=superseded_recipe)
 
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
