@@ -30,6 +30,7 @@ from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.tasks.manager import system_task_mgr
 from util.retry import retry_database_query
+from job.configuration.data.exceptions import InvalidConnection
 
 # Warning threshold for queue processing duration
 PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
@@ -67,7 +68,6 @@ class SchedulingManager(object):
         :returns: The number of tasks that were scheduled
         :rtype: int
         """
-
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
         if not framework_id or not driver:
@@ -79,7 +79,6 @@ class SchedulingManager(object):
         tasks = task_mgr.get_all_tasks()
         running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
-
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
@@ -316,7 +315,7 @@ class SchedulingManager(object):
 
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             job_exe = QueuedJobExecution(queue)
-
+            
             # Canceled job executions get processed as scheduled executions
             if job_exe.is_canceled:
                 scheduled_job_executions.append(job_exe)
@@ -330,8 +329,21 @@ class SchedulingManager(object):
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
                 continue
+            
+            # validate output workspaces
+            outputs_invalid = False
+            try:
+                job_exe.interface.validate_outputs_and_workspaces(job_exe.configuration)
+            except InvalidConnection:
+                outputs_invalid = True
+                logger.exception('Output workspace not found for defined outputs')
+            
+            if outputs_invalid:    
+                continue
+                
             workspace_names = job_exe.configuration.get_input_workspace_names()
             workspace_names.extend(job_exe.configuration.get_output_workspace_names())
+            
             missing_workspace = False
             for name in workspace_names:
                 missing_workspace = missing_workspace or name not in workspaces

@@ -44,8 +44,8 @@ class Command(BaseCommand):
             job_interface.validate_populated_mounts(exe_config)
             logger.info('Validating settings...')
             job_interface.validate_populated_settings(exe_config)
-            logger.info('Validating output workspaces...')
-            job_interface.validate_output_workspaces(exe_config)
+            logger.info('Validating outputs and workspaces...')
+            job_interface.validate_outputs_and_workspaces(exe_config)
 
             job_data = job_exe.job.get_job_data()
             job_data = JobDataSunset.create(job_interface, job_data.get_dict())

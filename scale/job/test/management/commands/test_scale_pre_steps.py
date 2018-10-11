@@ -7,7 +7,7 @@ from django.test import TransactionTestCase
 from mock import patch
 
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
-from job.data.exceptions import InvalidConnection
+from job.configuration.data.exceptions import InvalidConnection
 from job.management.commands.scale_pre_steps import Command as PreCommand
 from job.test import utils as job_utils
 from trigger.models import TriggerEvent

@@ -11,7 +11,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import InterfaceV6
-from job.data.exceptions import InvalidData, InvalidConnection
+from job.configuration.data.exceptions import InvalidConnection
+from job.data.exceptions import InvalidData
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
 from job.execution.configuration.exceptions import MissingMount, MissingSetting
@@ -396,13 +397,12 @@ class SeedManifest(object):
             raise InvalidConnection('No workspace provided for output files')
         return warnings
         
-    def validate_output_workspaces(self, exe_config):
+    def validate_outputs_and_workspaces(self, exe_config):
         """Validates the given job's output workspaces
         :param exe_config: The job configuration
         
         :raises :class:`job.data.exceptions.InvalidConnection`: If thre is a configuration problem.
         """
-        
         if len(self.get_output_files()) and not exe_config.get_output_workspace_names():
             raise InvalidConnection('No workspace defined for output files')
 

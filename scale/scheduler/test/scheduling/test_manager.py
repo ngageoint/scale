@@ -25,7 +25,7 @@ from scheduler.resources.offer import ResourceOffer
 from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.tasks.manager import system_task_mgr
-
+from job.configuration.data.exceptions import InvalidConnection
 
 class TestSchedulingManager(TestCase):
 
@@ -40,7 +40,7 @@ class TestSchedulingManager(TestCase):
         Scheduler.objects.initialize_scheduler()
         Scheduler.objects.update(num_message_handlers=0)  # Prevent message handler tasks from scheduling
         self._driver = MagicMock()
-
+        
         scheduler_mgr.sync_with_database()
         scheduler_mgr.update_from_mesos(framework_id=self.framework_id)
         resource_mgr.clear()
@@ -196,6 +196,47 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_no_default_workspace(self, mock_taskinfo):
+        """Tests calling perform_scheduling() when a queued job's workspace has not been synced to the scheduler"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+        
+        # Add workspaces to the queued jobs
+        queue_1 = Queue.objects.get(id=self.queue_1.id)
+        queue_1.get_job_interface().definition['output_data'] = [{'name': 'my_output', 'type': 'file'}]
+        config = queue_1.get_execution_configuration()
+        queue_1.configuration = config.get_dict()
+        queue_1.save()
+        queue_2 = Queue.objects.get(id=self.queue_2.id)
+        config = queue_2.get_execution_configuration()
+        queue_2.configuration = config.get_dict()
+        queue_2.save()
+        
+        scheduling_manager = SchedulingManager()
+        
+        # Set a workspace on the manager
+        with patch('scheduler.scheduling.manager.workspace_mgr.get_workspaces') as mock_get_workspaces:
+            mock_get_workspaces.return_value = {
+                'name': 'my_workspace',
+                'title': 'My Workspace',
+                'description': 'My workspaces',
+                'is_active': True,
+                'json_config': {'version': '1.0','broker': {'type': 'host','host_path': '/host/path'}},
+            }
+            num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        
+        # Only queue_2 should be scheduled
+        self.assertEqual(num_tasks, 1)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 1)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_job_type(self, mock_taskinfo):
