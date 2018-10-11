@@ -14,18 +14,3 @@ info:
 servers:
   - url: http://scale.nga.gov/api/v6
 
-tags:
-- name: "job"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "link to markdown docs"
-- name: "recipe"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "link to markdown docs"
-
-# To be appended: 
-#  - paths
-#  - components
