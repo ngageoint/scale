@@ -603,7 +603,9 @@ class RecipeManager(models.Manager):
 
         return self.select_related('recipe_type_rev', 'recipe__recipe_type_rev').get(id=recipe_id)
 
-    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
+    def get_recipes(self, started=None, ended=None, source_started=None, source_ended=None,
+                    source_sensor_classes=None, source_sensors=None, source_collections=None,
+                    source_tasks=None, type_ids=None, type_names=None, batch_ids=None,
                     include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.
 
@@ -611,6 +613,18 @@ class RecipeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query recipes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param source_started: Query recipes where source collection started after this time.
+        :type source_started: :class:`datetime.datetime`
+        :param source_ended: Query recipes where source collection ended before this time.
+        :type source_ended: :class:`datetime.datetime`
+        :param source_sensor_classes: Query recipes with the given source sensor class.
+        :type source_sensor_classes: list
+        :param source_sensor: Query recipes with the given source sensor.
+        :type source_sensor: list
+        :param source_collection: Query recipes with the given source class.
+        :type source_collection: list
+        :param source_tasks: Query recipes with the given source tasks.
+        :type source_tasks: list
         :param type_ids: Query recipes of the type associated with the identifier.
         :type type_ids: [int]
         :param type_names: Query recipes of the type associated with the name.
@@ -636,6 +650,19 @@ class RecipeManager(models.Manager):
             recipes = recipes.filter(last_modified__gte=started)
         if ended:
             recipes = recipes.filter(last_modified__lte=ended)
+
+        if source_started:
+            recipes = recipes.filter(source_started__gte=source_started)
+        if source_ended:
+            recipes = recipes.filter(source_ended__lte=source_ended)
+        if source_sensor_classes:
+            recipes = recipes.filter(source_sensor_class__in=source_sensor_classes)
+        if source_sensors:
+            recipes = recipes.filter(source_sensor__in=source_sensors)
+        if source_collections:
+            recipes = recipes.filter(source_collection__in=source_collections)
+        if source_tasks:
+            recipes = recipes.filter(source_task__in=source_tasks)
 
         # Apply type filtering
         if type_ids:
@@ -765,9 +792,15 @@ class RecipeManager(models.Manager):
         # Set input meta-data fields on the recipe
         # Total input file size is in MiB rounded up to the nearest whole MiB
         qry = 'UPDATE recipe r SET input_file_size = CEILING(s.total_file_size / (1024.0 * 1024.0)), '
-        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s FROM ('
+        qry += 'source_started = s.source_started, source_ended = s.source_ended, last_modified = %s, '
+        qry += 'source_sensor_class = s.source_sensor_class, source_sensor = s.source_sensor, '
+        qry += 'source_collection = s.source_collection, source_task = s.source_task FROM ('
         qry += 'SELECT rif.recipe_id, MIN(f.source_started) AS source_started, MAX(f.source_ended) AS source_ended, '
-        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size '
+        qry += 'COALESCE(SUM(f.file_size), 0.0) AS total_file_size, '
+        qry += 'MAX(f.source_sensor_class) AS source_sensor_class, '
+        qry += 'MAX(f.source_sensor) AS source_sensor, '
+        qry += 'MAX(f.source_collection) AS source_collection, '
+        qry += 'MAX(f.source_task) AS source_task '
         qry += 'FROM scale_file f JOIN recipe_input_file rif ON f.id = rif.input_file_id '
         qry += 'WHERE rif.recipe_id = %s GROUP BY rif.recipe_id) s '
         qry += 'WHERE r.id = s.recipe_id'
@@ -1016,6 +1049,14 @@ class Recipe(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The end time of the source data for this recipe
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file for this recipe
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file for this recipe
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file for this recipe
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file for this recipe
+    :type source_task: :class:`django.db.models.CharField`
 
     :keyword jobs_total: The total count of all jobs within this recipe
     :type jobs_total: :class:`django.db.models.IntegerField`
@@ -1069,9 +1110,13 @@ class Recipe(models.Model):
     input = django.contrib.postgres.fields.JSONField(default=dict)
     input_file_size = models.FloatField(blank=True, null=True)
 
-    # Optional geospatial fields
-    source_started = models.DateTimeField(blank=True, null=True)
-    source_ended = models.DateTimeField(blank=True, null=True)
+    # Supplemental sensor metadata fields
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_sensor_class = models.TextField(blank=True, null=True, db_index=True)
+    source_sensor = models.TextField(blank=True, null=True, db_index=True)
+    source_collection = models.TextField(blank=True, null=True, db_index=True)
+    source_task = models.TextField(blank=True, null=True, db_index=True)
 
     # Metrics fields
     jobs_total = models.IntegerField(default=0)

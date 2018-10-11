@@ -276,6 +276,7 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
     return Recipe.objects.create_recipe_old(recipe_type, data, event, superseded_recipe=superseded_recipe,
                                             delta=delta, superseded_jobs=superseded_jobs)
 
+
 def create_input_file(recipe=None, input_file=None, recipe_input=None, file_name='my_test_file.txt', media_type='text/plain',
                       file_size=100, file_path=None, workspace=None, countries=None, is_deleted=False, data_type='',
                       last_modified=None, source_started=None, source_ended=None):
