@@ -425,6 +425,10 @@ class TestProductFileManagerUploadFiles(TestCase):
         data.add_property_input('property1', 'value1')
         data.add_property_input('property2', 'value2')
         self.job_exe.job.input = data.get_dict()
+        self.job_exe.job.source_sensor_class = 'classA'
+        self.job_exe.job.source_sensor = '1'
+        self.job_exe.job.source_collection = '12345'
+        self.job_exe.job.source_task = 'my-task'
         self.job_exe.job.save()
         self.job_exe_no = job_test_utils.create_job_exe()
         with transaction.atomic():
@@ -438,11 +442,15 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
 
         self.files = [
-            ProductFileMetadata('output_name_1', self.local_path_1, remote_path='remote/1/file.txt'),
-            ProductFileMetadata('output_name_2', self.local_path_2, 'application/x-custom-json', 'remote/2/file.json'),
+            ProductFileMetadata(output_name='output_name_1', local_path=self.local_path_1, 
+            remote_path='remote/1/file.txt'),
+            ProductFileMetadata(output_name='output_name_2', local_path=self.local_path_2, 
+            media_type='application/x-custom-json', remote_path='remote/2/file.json',
+            source_sensor_class='classB', source_sensor='2', source_collection='12346', 
+            source_task='my-task-2'),
         ]
         self.files_no = [
-            ProductFileMetadata('output_name_3', self.local_path_3, 'image/x-hdf5-image', 'remote/3/file.h5')
+            ProductFileMetadata(output_name='output_name_3', local_path=self.local_path_3, media_type='image/x-hdf5-image', remote_path='remote/3/file.h5')
         ]
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
@@ -461,6 +469,10 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertIsNone(products[0].meta_data.get('package_version'))
         self.assertIsNotNone(products[0].uuid)
         self.assertTrue(products[0].is_operational)
+        self.assertEqual(products[0].source_sensor_class, 'classA')
+        self.assertEqual(products[0].source_sensor, '1')
+        self.assertEqual(products[0].source_collection, '12345')
+        self.assertEqual(products[0].source_task, 'my-task')
 
         self.assertEqual('file.json', products[1].file_name)
         self.assertEqual('PRODUCT', products[1].file_type)
@@ -473,6 +485,10 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertIsNone(products[1].meta_data.get('package_version'))
         self.assertIsNotNone(products[1].uuid)
         self.assertTrue(products[1].is_operational)
+        self.assertEqual(products[1].source_sensor_class, 'classB')
+        self.assertEqual(products[1].source_sensor, '2')
+        self.assertEqual(products[1].source_collection, '12346')
+        self.assertEqual(products[1].source_task, 'my-task-2')
 
         self.assertNotEqual(products[0].uuid, products[1].uuid)
 
