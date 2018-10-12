@@ -505,6 +505,10 @@ class TestCreateRecipes(TestCase):
         resulting messages
         """
 
+        file_1 = storage_test_utils.create_file()
+        input_data = Data()
+        input_data.add_value(FileValue('value_a', [file_1.id]))
+        input_data_dict = convert_data_to_v6_json(input_data).get_dict()
         event = trigger_test_utils.create_trigger_event()
         batch = batch_test_utils.create_batch()
         forced_nodes_b = ForcedNodes()
@@ -592,7 +596,9 @@ class TestCreateRecipes(TestCase):
 
         # Set up recipe type A (with revision change AA)
         job_type_a_x = job_test_utils.create_seed_job_type()
-        definition_a = RecipeDefinition(Interface())
+        interface_a = Interface()
+        interface_a.add_parameter(FileParameter('value_a', []))
+        definition_a = RecipeDefinition(interface_a)
         definition_a.add_job_node('job_a_x', job_type_a_x.name, job_type_a_x.version, job_type_a_x.revision_num)
         definition_a.add_recipe_node('recipe_b', recipe_type_b.name, recipe_type_b.revision_num)
         definition_a.add_recipe_node('recipe_d', recipe_type_d.name, recipe_type_d.revision_num)
@@ -603,7 +609,7 @@ class TestCreateRecipes(TestCase):
         definition_a.add_dependency('recipe_b', 'recipe_e')
         definition_a_dict = convert_recipe_definition_to_v6_json(definition_a).get_dict()
         recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a_dict)
-        definition_aa = RecipeDefinition(Interface())
+        definition_aa = RecipeDefinition(interface_a)
         definition_aa.add_job_node('job_a_x', job_type_a_x.name, job_type_a_x.version, job_type_a_x.revision_num)
         definition_aa.add_recipe_node('recipe_b', recipe_type_bb.name, recipe_type_bb.revision_num)
         definition_aa.add_recipe_node('recipe_d', recipe_type_d.name, recipe_type_d.revision_num)
@@ -655,8 +661,8 @@ class TestCreateRecipes(TestCase):
         recipe_c_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_c, save=False)
         recipe_b_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, save=False)
         recipe_b_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, save=False)
-        recipe_a_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, save=False)
-        recipe_a_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, save=False)
+        recipe_a_1 = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, input=input_data_dict, save=False)
+        recipe_a_2 = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, input=input_data_dict, save=False)
         Recipe.objects.bulk_create([recipe_a_1, recipe_a_2, recipe_b_1, recipe_b_2, recipe_c_1, recipe_c_2, recipe_d_1,
                                     recipe_d_2, recipe_e_1, recipe_e_2])
         node_a_x_1 = recipe_test_utils.create_recipe_node(recipe=recipe_a_1, node_name='job_a_x', job=job_a_x_1)
@@ -728,6 +734,82 @@ class TestCreateRecipes(TestCase):
             self.assertTrue(recipe.is_superseded, 'Recipe %d should be superseded, but is not' % recipe.id)
         for recipe in Recipe.objects.filter(id__in=non_superseded_recipe_ids):
             self.assertFalse(recipe.is_superseded, 'Recipe %d should not be superseded, but is' % recipe.id)
+
+        # Check superseded A recipes and new A recipes
+        for recipe in Recipe.objects.filter(id__in=reprocess_recipe_ids):
+            if recipe.id == recipe_a_1.id:
+                recipe_a_1 = recipe
+            elif recipe.id == recipe_a_2.id:
+                recipe_a_2 = recipe
+        self.assertTrue(recipe_a_1.is_superseded)
+        self.assertTrue(recipe_a_2.is_superseded)
+        for recipe in Recipe.objects.filter(superseded_recipe_id__in=reprocess_recipe_ids):
+            if recipe.superseded_recipe_id == recipe_a_1.id:
+                new_recipe_a_1 = recipe
+            elif recipe.superseded_recipe_id == recipe_a_2.id:
+                new_recipe_a_2 = recipe
+        self.assertFalse(new_recipe_a_1.is_superseded)
+        self.assertDictEqual(recipe_a_1.input, new_recipe_a_1.input)
+        self.assertFalse(new_recipe_a_2.is_superseded)
+        self.assertDictEqual(recipe_a_2.input, new_recipe_a_2.input)
+
+        # Check nodes for new_recipe_a_1
+        recipe_nodes = RecipeNode.objects.filter(recipe_id=new_recipe_a_1).order_by('node_name')
+        self.assertEqual(len(recipe_nodes), 4)
+        self.assertEqual(recipe_nodes[0].node_name, 'job_a_x')  # Job A X should be copied
+        self.assertEqual(recipe_nodes[0].job_id, job_a_x_1.id)
+        self.assertFalse(recipe_nodes[0].is_original)
+        self.assertEqual(recipe_nodes[1].node_name, 'recipe_b')  # Recipe B should be new
+        self.assertNotEqual(recipe_nodes[1].sub_recipe_id, recipe_b_1.id)
+        new_recipe_b_1 = recipe_nodes[1].sub_recipe
+        self.assertTrue(recipe_nodes[1].is_original)
+        self.assertEqual(recipe_nodes[2].node_name, 'recipe_d')  # Recipe D should be copied
+        self.assertEqual(recipe_nodes[2].sub_recipe_id, recipe_d_1.id)
+        self.assertFalse(recipe_nodes[2].is_original)
+        self.assertEqual(recipe_nodes[3].node_name, 'recipe_e')  # Recipe E should be new
+        self.assertNotEqual(recipe_nodes[3].sub_recipe_id, recipe_e_1.id)
+        new_recipe_e_1 = recipe_nodes[3].sub_recipe
+        self.assertTrue(recipe_nodes[3].is_original)
+
+        # Check nodes for new_recipe_b_1
+        recipe_nodes = RecipeNode.objects.filter(recipe_id=new_recipe_b_1).order_by('node_name')
+        self.assertEqual(len(recipe_nodes), 4)
+        self.assertEqual(recipe_nodes[0].node_name, 'job_b_x')  # Job B X should be copied
+        self.assertEqual(recipe_nodes[0].job_id, job_b_x_1.id)
+        self.assertFalse(recipe_nodes[0].is_original)
+        self.assertEqual(recipe_nodes[1].node_name, 'job_b_y')  # Job B Y should be new
+        self.assertNotEqual(recipe_nodes[1].job_id, job_b_y_1.id)
+        self.assertTrue(recipe_nodes[1].is_original)
+        self.assertEqual(recipe_nodes[2].node_name, 'job_b_z')  # Job B Z should be new
+        self.assertNotEqual(recipe_nodes[2].job_id, job_b_z_1.id)
+        self.assertTrue(recipe_nodes[2].is_original)
+        self.assertEqual(recipe_nodes[3].node_name, 'recipe_c')  # Recipe C should be new
+        self.assertNotEqual(recipe_nodes[3].sub_recipe_id, recipe_c_1.id)
+        new_recipe_c_1 = recipe_nodes[3].sub_recipe
+        self.assertTrue(recipe_nodes[3].is_original)
+
+        # Check nodes for new_recipe_c_1
+        recipe_nodes = RecipeNode.objects.filter(recipe_id=new_recipe_c_1).order_by('node_name')
+        self.assertEqual(len(recipe_nodes), 3)
+        self.assertEqual(recipe_nodes[0].node_name, 'job_c_x')  # Job C X should be copied
+        self.assertEqual(recipe_nodes[0].job_id, job_c_x_1.id)
+        self.assertFalse(recipe_nodes[0].is_original)
+        self.assertEqual(recipe_nodes[1].node_name, 'job_c_y')  # Job C Y should be new
+        self.assertNotEqual(recipe_nodes[1].job_id, job_c_y_1.id)
+        self.assertTrue(recipe_nodes[1].is_original)
+        self.assertEqual(recipe_nodes[2].node_name, 'job_c_z')  # Job C Z should be new
+        self.assertNotEqual(recipe_nodes[2].job_id, job_c_z_1.id)
+        self.assertTrue(recipe_nodes[2].is_original)
+
+        # Check nodes for new_recipe_e_1
+        recipe_nodes = RecipeNode.objects.filter(recipe_id=new_recipe_e_1).order_by('node_name')
+        self.assertEqual(len(recipe_nodes), 2)
+        self.assertEqual(recipe_nodes[0].node_name, 'job_e_x')  # Job E X should be new
+        self.assertNotEqual(recipe_nodes[0].job_id, job_e_x_1.id)
+        self.assertTrue(recipe_nodes[0].is_original)
+        self.assertEqual(recipe_nodes[1].node_name, 'job_e_y')  # Job E Y should be new
+        self.assertNotEqual(recipe_nodes[1].job_id, job_e_y_1.id)
+        self.assertTrue(recipe_nodes[1].is_original)
 
     def test_execute_reprocess(self):
         """Tests calling CreateRecipes.execute() successfully when reprocessing recipes"""
