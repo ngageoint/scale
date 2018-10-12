@@ -2725,8 +2725,7 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'other_scale_db'})
         self.assertEqual(result['configuration']['mounts']['MOUNT_PATH'], {'type': 'host', 'host_path': '/some/new/path'})
-        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
-        
+
     def test_edit_seed_simple(self):
         """Tests editing the configuration of a seed job type"""
         json_data = {
