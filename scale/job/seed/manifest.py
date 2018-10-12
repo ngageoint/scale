@@ -397,7 +397,7 @@ class SeedManifest(object):
             raise InvalidConnection('No workspace provided for output files')
         return warnings
         
-    def validate_outputs_and_workspaces(self, exe_config):
+    def validate_workspace_for_outputs(self, exe_config):
         """Validates the given job's output workspaces
         :param exe_config: The job configuration
         

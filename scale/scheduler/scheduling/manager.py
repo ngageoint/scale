@@ -333,7 +333,7 @@ class SchedulingManager(object):
             # validate output workspaces
             outputs_invalid = False
             try:
-                job_exe.interface.validate_outputs_and_workspaces(job_exe.configuration)
+                job_exe.interface.validate_workspace_for_outputs(job_exe.configuration)
             except InvalidConnection:
                 outputs_invalid = True
                 logger.exception('Output workspace not found for defined outputs')
