@@ -25,7 +25,6 @@ from scheduler.resources.offer import ResourceOffer
 from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.tasks.manager import system_task_mgr
-from job.configuration.data.exceptions import InvalidConnection
 
 class TestSchedulingManager(TestCase):
 
@@ -208,12 +207,14 @@ class TestSchedulingManager(TestCase):
                                 NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
         
-        # Add workspaces to the queued jobs
+        # Add output data to the first queued job:
+        # output data + no workspace defined = fail
         queue_1 = Queue.objects.get(id=self.queue_1.id)
         queue_1.get_job_interface().definition['output_data'] = [{'name': 'my_output', 'type': 'file'}]
         config = queue_1.get_execution_configuration()
         queue_1.configuration = config.get_dict()
         queue_1.save()
+        # No output data + no workspace = pass
         queue_2 = Queue.objects.get(id=self.queue_2.id)
         config = queue_2.get_execution_configuration()
         queue_2.configuration = config.get_dict()
