@@ -10,6 +10,7 @@ from django.db.utils import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
+from job.configuration.data.exceptions import InvalidConfiguration
 from job.execution.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
@@ -30,7 +31,6 @@ from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.tasks.manager import system_task_mgr
 from util.retry import retry_database_query
-from job.configuration.data.exceptions import InvalidConnection
 
 # Warning threshold for queue processing duration
 PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
@@ -334,7 +334,7 @@ class SchedulingManager(object):
             outputs_invalid = False
             try:
                 job_exe.interface.validate_workspace_for_outputs(job_exe.configuration)
-            except InvalidConnection:
+            except InvalidConfiguration:
                 outputs_invalid = True
                 logger.exception('Output workspace not found for defined outputs')
             

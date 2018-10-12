@@ -11,7 +11,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from data.interface.json.interface_v6 import InterfaceV6
-from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.data.exceptions import InvalidConfiguration
 from job.data.exceptions import InvalidData
 from job.error.error import JobError
 from job.error.mapping import JobErrorMapping
@@ -401,10 +401,10 @@ class SeedManifest(object):
         """Validates the given job's output workspaces
         :param exe_config: The job configuration
         
-        :raises :class:`job.data.exceptions.InvalidConnection`: If thre is a configuration problem.
+        :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
         """
         if len(self.get_output_files()) and not exe_config.get_output_workspace_names():
-            raise InvalidConnection('No workspace defined for output files')
+            raise InvalidConfiguration('No workspace defined for output files')
 
     def validate_data(self, job_data):
         """Ensures that the job_data matches the job_interface description
