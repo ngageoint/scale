@@ -2706,7 +2706,7 @@ class TestJobTypeDetailsViewV5(TestCase):
         configuration = self.configuration.copy()
         configuration['settings'] = {'DB_HOST': 'other_scale_db'}
         configuration['mounts'] = {
-            'dted': {
+            'MOUNT_PATH': {
                 'type': 'host',
                 'host_path': '/some/new/path'
                 }
@@ -2724,14 +2724,13 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.assertEqual(result['title'], self.seed_job_type.title)
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'other_scale_db'})
-        self.assertEqual(result['configuration']['mounts']['dted'], {'type': 'host', 'host_path': '/some/new/path'})
+        self.assertEqual(result['configuration']['mounts']['MOUNT_PATH'], {'type': 'host', 'host_path': '/some/new/path'})
         self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
         
     def test_edit_seed_simple(self):
         """Tests editing the configuration of a seed job type"""
         json_data = {
             'icon_code': 'BEEF',
-            'is_active': False,
             'is_paused': True,
             'max_scheduled': 9
         }
@@ -2745,7 +2744,6 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.assertEqual(result['title'], self.seed_job_type.title)
         self.assertEqual(result['revision_num'], 1)
         self.assertEqual(result['icon_code'], 'BEEF')
-        self.assertFalse(result['is_active'])
         self.assertTrue(result['is_paused'])
         self.assertEqual(result['max_scheduled'], 9)
         
