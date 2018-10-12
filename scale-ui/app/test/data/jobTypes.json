@@ -19,7 +19,7 @@
             "is_paused": false,
             "icon_code": "f090",
             "uses_docker": false,
-            "docker_privileged": false,
+            "docker_privileged": true,
             "docker_image": null,
             "priority": 10,
             "timeout": 0,

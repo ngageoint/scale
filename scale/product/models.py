@@ -540,6 +540,10 @@ class ProductFileManager(models.GeoManager):
 
         source_started = job_exe.job.source_started
         source_ended = job_exe.job.source_ended
+        source_sensor_class = job_exe.job.source_sensor_class
+        source_sensor = job_exe.job.source_sensor
+        source_collection = job_exe.job.source_collection
+        source_task = job_exe.job.source_task
         if not source_started:
             # Compute the overall start and stop times for all file_entries
             source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
@@ -601,10 +605,10 @@ class ProductFileManager(models.GeoManager):
             product.source_ended = entry.source_ended if entry.source_ended else source_ended
 
             # Supplemental source metadata
-            product.source_sensor_class = entry.source_sensor_class
-            product.source_sensor = entry.source_sensor
-            product.source_collection = entry.source_collection
-            product.source_task = entry.source_task
+            product.source_sensor_class = entry.source_sensor_class if entry.source_sensor_class else source_sensor_class
+            product.source_sensor = entry.source_sensor if entry.source_sensor else source_sensor
+            product.source_collection = entry.source_collection if entry.source_collection else source_collection
+            product.source_task = entry.source_task if entry.source_task else source_task
 
             # Update product model with details derived from the job_type
             product.meta_data['url'] = product.url

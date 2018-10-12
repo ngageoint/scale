@@ -611,6 +611,14 @@ class ScaleFile(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The latest end time from all source files
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file.
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file.
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file.
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file.
+    :type source_task: :class:`django.db.models.CharField`
     :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
         is still in a research & development (R&D) phase (False)
     :type is_operational: :class:`django.db.models.BooleanField`

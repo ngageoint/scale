@@ -9,7 +9,7 @@
   "category": "Landsat",
   "is_operational": true,
   "icon_code": "f248",
-  "docker_privileged": false,
+  "docker_privileged": true,
   "docker_image": "10.4.4.10:5000/landsat-parse_1.0:dev",
   "priority": 1,
   "timeout": 30,
