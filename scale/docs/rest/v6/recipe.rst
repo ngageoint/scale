@@ -237,6 +237,49 @@ which pieces (nodes) within the recipe will be reprocessed when a newer recipe t
 |                            |                |          | revision, if changed in the newer revision                         |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 
+.. _rest_v6_recipe_json_forced_nodes:
+
+Recipe Forced Nodes JSON
+------------------------
+
+A recipe forced nodes JSON describes the set of recipe nodes (jobs, sub-recipes, etc) that should be forced to
+re-process even if there are no changes to the node.
+
+**Example recipe forced nodes:**
+
+.. code-block:: javascript
+
+   {
+      "all": False,
+      "nodes": ["job_a_1", "job_a_2", "recipe_b", "recipe_c"],
+      "sub_recipes": {
+         "recipe_b": {
+            "all": True
+         },
+         "recipe_c": {
+            "all": False,
+            "nodes": ["job_c_1", "job_c_2"]
+         }
+      }
+   }
+
++-----------------------------------------------------------------------------------------------------------------------------+
+| **Recipe Forced Nodes**                                                                                                     |
++============================+================+==========+====================================================================+
+| all                        | Boolean        | Required | If true, then all nodes within the recipe should be forced to      |
+|                            |                |          | re-process and the 'nodes' and 'sub_recipes' fields should be      |
+|                            |                |          | omitted. If false, then the 'nodes' array is used to indicate which|
+|                            |                |          | nodes should be forced to re-process.                              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| nodes                      | Array          | Optional | An array listing the names of the recipe nodes that should be      |
+|                            |                |          | forced to re-process.                                              |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| sub_recipes                | JSON object    | Optional | A JSON object where the key names are the sub-recipe node names    |
+|                            |                |          | that are being forced to re-process. The values are forced nodes   |
+|                            |                |          | JSON objects that recursively define the nodes with the sub-recipe |
+|                            |                |          | to force to reprocess.                                             |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+
 .. _rest_v6_recipe_json_instance:
 
 Recipe Instance JSON
