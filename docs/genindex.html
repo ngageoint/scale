@@ -5737,7 +5737,7 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.html#messaging.exceptions.InvalidCommandMessage">InvalidCommandMessage</a>
 </li>
-      <li><a href="architecture/django/code_docs/batch.configuration.html#batch.configuration.exceptions.InvalidConfiguration">InvalidConfiguration</a>, <a href="architecture/django/code_docs/port.html#port.schema.InvalidConfiguration">[1]</a>
+      <li><a href="architecture/django/code_docs/batch.configuration.html#batch.configuration.exceptions.InvalidConfiguration">InvalidConfiguration</a>, <a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.exceptions.InvalidConfiguration">[1]</a>, <a href="architecture/django/code_docs/port.html#port.schema.InvalidConfiguration">[2]</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection">InvalidConnection</a>, <a href="architecture/django/code_docs/job.data.html#job.data.exceptions.InvalidConnection">[1]</a>
 </li>
@@ -15565,6 +15565,12 @@
         <li><a href="architecture/django/code_docs/source.test.triggers.html#source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet.test_no_conditions">(source.test.triggers.test_parse_trigger_condition.TestParseTriggerConditionIsConditionMet method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.configuration.html#job.test.configuration.test_configuration.TestJobConfiguration.test_no_default_workspace">test_no_default_workspace() (job.test.configuration.test_configuration.TestJobConfiguration method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_no_default_workspace">(scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestPurgeSourceFileView.test_no_file_id">test_no_file_id() (storage.test.test_views.TestPurgeSourceFileView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files">test_no_files() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
@@ -15729,10 +15735,10 @@
         <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_missing_timezone">(util.test.test_rest.TestRest method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_datetime_optional">test_parse_datetime_optional() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict">test_parse_dict() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_dict_optional">test_parse_dict_optional() (util.test.test_rest.TestRest method)</a>
@@ -16185,6 +16191,8 @@
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationViewV6.test_secret_setting">(job.test.test_views.TestJobTypesValidationViewV6 method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.test_seed_pre_steps_no_workspace">test_seed_pre_steps_no_workspace() (job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
+</li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_manager.TestCommandMessageManager.test_send_message">test_send_message() (messaging.test.test_manager.TestCommandMessageManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_manager.TestCommandMessageManager.test_send_message_no_serializer">test_send_message_no_serializer() (messaging.test.test_manager.TestCommandMessageManager method)</a>
@@ -18945,6 +18953,12 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/recipe.seed.html#recipe.seed.recipe_data.RecipeData.validate_workspace">(recipe.seed.recipe_data.RecipeData method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.validate_workspace_for_outputs">validate_workspace_for_outputs() (job.configuration.interface.job_interface.JobInterface method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/job.seed.html#job.seed.manifest.SeedManifest.validate_workspace_for_outputs">(job.seed.manifest.SeedManifest method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.WorkspaceManager.validate_workspace_v5">validate_workspace_v5() (storage.models.WorkspaceManager method)</a>
