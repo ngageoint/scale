@@ -10,6 +10,7 @@ from django.db.utils import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
+from job.configuration.data.exceptions import InvalidConfiguration
 from job.execution.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
@@ -67,7 +68,6 @@ class SchedulingManager(object):
         :returns: The number of tasks that were scheduled
         :rtype: int
         """
-
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
         if not framework_id or not driver:
@@ -79,7 +79,6 @@ class SchedulingManager(object):
         tasks = task_mgr.get_all_tasks()
         running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
-
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
@@ -316,7 +315,7 @@ class SchedulingManager(object):
 
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             job_exe = QueuedJobExecution(queue)
-
+            
             # Canceled job executions get processed as scheduled executions
             if job_exe.is_canceled:
                 scheduled_job_executions.append(job_exe)
@@ -330,8 +329,21 @@ class SchedulingManager(object):
             job_type_id = queue.job_type_id
             if job_type_id not in job_types:
                 continue
+            
+            # validate output workspaces
+            outputs_invalid = False
+            try:
+                job_exe.interface.validate_workspace_for_outputs(job_exe.configuration)
+            except InvalidConfiguration:
+                outputs_invalid = True
+                logger.exception('Output workspace not found for defined outputs')
+            
+            if outputs_invalid:    
+                continue
+                
             workspace_names = job_exe.configuration.get_input_workspace_names()
             workspace_names.extend(job_exe.configuration.get_output_workspace_names())
+            
             missing_workspace = False
             for name in workspace_names:
                 missing_workspace = missing_workspace or name not in workspaces
