@@ -416,7 +416,28 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
                     },
                     'outputs': {
                         'files': [{'name': 'OUTPUT_IMAGE', 'pattern': '*_watermark.png'}]
-                    }
+                    },
+                    'mounts': [
+                      {
+                        'name': 'MOUNT_PATH',
+                        'path': '/the/container/path',
+                        'mode': 'ro'
+                      }
+                    ],
+                    'settings': [
+                      {
+                        'name': 'VERSION',
+                        'secret': False
+                      },
+                      {
+                        'name': 'DB_HOST',
+                        'secret': False
+                      },
+                      {
+                        'name': 'DB_PASS',
+                       'secret': True
+                      }
+                    ]
                 },
                 'resources': {
                     'scalar': [
@@ -437,7 +458,17 @@ def create_seed_job_type(manifest=None, priority=50, max_tries=3, max_scheduled=
         }
 
     if not trigger_rule:
-        trigger_rule = trigger_test_utils.create_trigger_rule()
+        trig_config = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'INPUT_IMAGE',
+                'workspace_name': storage_test_utils.create_workspace().name,
+            }
+        }
+        trigger_rule = trigger_test_utils.create_trigger_rule(configuration=trig_config)
 
     if not configuration:
         configuration = {

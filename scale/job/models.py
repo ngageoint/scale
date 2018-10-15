@@ -2736,8 +2736,8 @@ class JobTypeManager(models.Manager):
         manifest = manifest['job']['interface']
 
         interface = {}
-        interface['settings'] = manifest['settings']
-        interface['mounts'] = manifest['mounts']
+        interface['settings'] = manifest['settings'] if 'settings' in manifest else []
+        interface['mounts'] = manifest['mounts'] if 'mounts' in manifest else []
         interface['output_data'] = manifest['outputs']['files'] if 'files' in manifest['outputs'] else []
         interface['input_data'] = manifest['inputs']['files'] if 'files' in manifest['inputs'] else []
         interface['env_vars'] = manifest['inputs']['json'] if 'json' in manifest['inputs'] else []
@@ -2790,17 +2790,26 @@ class JobTypeManager(models.Manager):
                 raise Exception('%s is not an editable field' % field_name)
         self._validate_job_type_fields(**kwargs)
 
-        recipe_types = []
-        if interface:
-            # Lock all recipe types so they can be validated after changing job type interface
-            from recipe.models import RecipeType
-            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
-
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
             if len(kwargs) > 1 or 'is_paused' not in kwargs:
                 raise InvalidJobField('You can only modify the is_paused field for a System Job')
+                
+        # Check for backdoor editing of seed job types
+        if job_type.is_seed_job_type():
+            v6_fields = {'icon_code', 'is_active', 'is_paused', 'max_scheduled', 'configuration'}
+            for field_name in kwargs:
+                if field_name not in v6_fields:
+                    raise InvalidJobField('Invalid field: %s \n Only the following fields are editable for seed job types: %s ' % (field_name, v6_fields))
+            if interface or trigger_rule or remove_trigger_rule or error_mapping or custom_resources or secrets:
+                raise InvalidJobField('Only the following fields are editable for seed job types: %s ' % v6_fields)
+                
+        recipe_types = []
+        if interface:
+            # Lock all recipe types so they can be validated after changing job type interface
+            from recipe.models import RecipeType
+            recipe_types = list(RecipeType.objects.select_for_update().order_by('id').iterator())
 
         if interface:
             # New job interface, validate all existing recipes

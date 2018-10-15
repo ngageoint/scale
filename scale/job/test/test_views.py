@@ -2264,6 +2264,9 @@ class TestJobTypeDetailsViewV5(TestCase):
         self.job_type = job_test_utils.create_job_type(interface=self.interface, error_mapping=self.error_mapping,
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
+                                                       
+        self.seed_job_type = job_test_utils.create_seed_job_type()
+        
         self.error1 = error_test_utils.create_error()
         self.error2 = error_test_utils.create_error()
 
@@ -2694,6 +2697,61 @@ class TestJobTypeDetailsViewV5(TestCase):
         }
         self.job_type.is_system = True
         self.job_type.save()
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+        
+    def test_edit_seed_configuration(self):
+        """Tests editing the configuration of a seed job type"""
+        configuration = self.configuration.copy()
+        configuration['settings'] = {'DB_HOST': 'other_scale_db'}
+        configuration['mounts'] = {
+            'MOUNT_PATH': {
+                'type': 'host',
+                'host_path': '/some/new/path'
+                }
+            }
+
+        url = '/%s/job-types/%d/' % (self.api, self.seed_job_type.id)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.seed_job_type.id)
+        self.assertEqual(result['title'], self.seed_job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'other_scale_db'})
+        self.assertEqual(result['configuration']['mounts']['MOUNT_PATH'], {'type': 'host', 'host_path': '/some/new/path'})
+
+    def test_edit_seed_simple(self):
+        """Tests editing the configuration of a seed job type"""
+        json_data = {
+            'icon_code': 'BEEF',
+            'is_paused': True,
+            'max_scheduled': 9
+        }
+
+        url = '/%s/job-types/%d/' % (self.api, self.seed_job_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.seed_job_type.id)
+        self.assertEqual(result['title'], self.seed_job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['icon_code'], 'BEEF')
+        self.assertTrue(result['is_paused'])
+        self.assertEqual(result['max_scheduled'], 9)
+        
+    def test_edit_seed_invalid_field(self):
+        """Tests updating an invalid seed field"""
+        url = '/%s/job-types/%d/' % (self.api, self.seed_job_type.id)
+        json_data = {
+            'title': 'Invalid title change'
+        }
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

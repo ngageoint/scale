@@ -437,7 +437,8 @@ class JobTypeIDDetailsView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
-
+                
+                
         # Validate the job interface
         interface_dict = rest_util.parse_dict(request, 'interface', required=False)
         interface = None
