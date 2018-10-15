@@ -426,8 +426,7 @@ class QueueManager(models.Manager):
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
-    def queue_new_job_for_user_v6(self, job_type, job_input, job_configuration=None):
-        # TODO split into v5 and v6
+    def queue_new_job_for_user_v6(self, job_type, job_data, job_configuration=None):
         """Creates a new job for the given type and data at the request of a user. The new job is immediately placed on
         the queue. The given job_type model must have already been saved in the database (it must have an ID). The new
         job, event, job_exe, and queue models are saved in the database in an atomic transaction. If the data is
@@ -435,17 +434,16 @@ class QueueManager(models.Manager):
 
         :param job_type: The type of the new job to create and queue
         :type job_type: :class:`job.models.JobType`
-        :param job_input: JSON description defining the job data to run on
-        :type job_input: dict
+        :param job_data: JSON description defining the job data to run on
+        :type job_data: data.data.data.data
         :returns: The ID of the new job
         :rtype: int
         """
 
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
-        job_data = JobData(job_input)
 
-        job_id = self.queue_new_job_v6(job_type, job_data._new_data, event).id
+        job_id = self.queue_new_job_v6(job_type, job_data, event).id
         return job_id
 
     def queue_new_job_for_user(self, job_type, data):
@@ -466,10 +464,10 @@ class QueueManager(models.Manager):
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         # TODO: Remove old JobData in v6 when we transition to only Seed job types
-        # if 'version' in data and '6' == data['version']:
-        #     job_data = JobData(data)
-        # else:
-        job_data = JobData_1_0(data)
+        if 'version' in data and '6' == data['version']:
+            job_data = JobData(data)
+        else:
+            job_data = JobData_1_0(data)
 
         job_id = self.queue_new_job(job_type, job_data, event).id
         return job_id

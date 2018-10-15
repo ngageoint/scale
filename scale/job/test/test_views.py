@@ -369,7 +369,12 @@ class TestJobsPostViewV6(TestCase):
         url = '/%s/jobs/' % self.api
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+
         #Response should be new v6 job detail response
+        self.assertEqual(result['execution'], None)
+        self.assertTrue('http://testserver/scale-dev/api/v6/jobs/' in response._headers['location'][1])
 
 
 # TODO: remove when REST API v5 is removed

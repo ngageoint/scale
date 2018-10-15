@@ -1147,10 +1147,9 @@ class JobsView(ListAPIView):
         if request.version != 'v6':
             raise Http404
         job_type_id = rest_util.parse_int(request, 'job_type_id')
-        job_data = rest_util.parse_dict(request, 'input', {})
-        job_config = rest_util.parse_dict(request, 'config', {})
+        job_data = rest_util.parse_dict(request, 'job_data', {})
 
-        #job_input = DataV6(job_data)
+        jobData = DataV6(job_data)
 
         try:
             job_type = JobType.objects.get(pk=job_type_id)
@@ -1158,7 +1157,7 @@ class JobsView(ListAPIView):
             raise Http404
 
         try:
-            job_id = Queue.objects.queue_new_job_for_user_v6(job_type, job_data)
+            job_id = Queue.objects.queue_new_job_for_user_v6(job_type, jobData.get_data())
         except InvalidData as err:
             logger.exception('Invalid job data.')
             return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
@@ -1168,7 +1167,7 @@ class JobsView(ListAPIView):
         except Job.DoesNotExist:
             raise Http404
 
-        serializer = self.get_serializer(job_details) # mightb e getting v5?
+        serializer = JobDetailsSerializerV6(job_details)
         job_url = reverse('job_details_view', args=[job_id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_url))
 
