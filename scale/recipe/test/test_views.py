@@ -1705,7 +1705,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
         workspace1 = storage_test_utils.create_workspace()
         file1 = storage_test_utils.create_file(workspace=workspace1)
 
-        data = {
+        self.jsonData = {
             'version': '1.0',
             'input_data': [{
                 'name': 'input_file',
@@ -1715,7 +1715,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
         }
 
         self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
-        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=self.jsonData)
         self.recipe1 = recipe_handler.recipe
         self.recipe1_jobs = recipe_handler.recipe_jobs
 
@@ -1726,7 +1726,7 @@ class TestRecipesPostViewV6(TransactionTestCase):
 
         
         json_data = { 
-            "input" : {},
+            "recipe_data" : self.jsonData,
             "recipe_type_id" : self.recipe_type.pk
         }
 
@@ -1735,6 +1735,9 @@ class TestRecipesPostViewV6(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         #Response should be new v6 job detail response
+        result = json.loads(response.content)
+        self.assertTrue('data' not in  result)
+        self.assertTrue('http://testserver/scale-dev/api/v6/recipes/' in response._headers['location'][1])
 
             
 class TestRecipeDetailsViewV6(TransactionTestCase):

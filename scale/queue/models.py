@@ -527,7 +527,7 @@ class QueueManager(models.Manager):
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
-        :type recipe_input: :class:`recipe.data.recipe_data.RecipeData`
+        :type recipe_input: :class:`data.data.data.data`
         :param event: The event that triggered the creation of this recipe
         :type event: :class:`trigger.models.TriggerEvent`
         :param recipe_config: config of the recipe
@@ -561,7 +561,7 @@ class QueueManager(models.Manager):
         :param recipe_type: The type of the new recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param recipe_input: The recipe data to run on, should be None if superseded_recipe is provided
-        :type recipe_input: :class:`recipe.data.recipe_data.RecipeData`
+        :type recipe_input: :class:`data.data.data.data`
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 

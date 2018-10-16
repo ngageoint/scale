@@ -329,21 +329,21 @@ class RecipesView(ListAPIView):
         """
         if request.version != 'v6':
             raise Http404
-        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
-        recipe_data = rest_util.parse_dict(request, 'input', {})
-        recipe_config = rest_util.parse_dict(request, 'config', {})
 
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+        recipe_data = rest_util.parse_dict(request, 'recipe_data', {})
+        recipeData = DataV6(recipe_data)
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
             raise Http404
 
         try:
-            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipe_data, recipe_config)
+            recipe = Queue.objects.queue_new_recipe_for_user_v6(recipe_type, recipeData.get_data())
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
             
-        serializer = self.get_serializer(recipe)
+        serializer = RecipeSerializerV6(recipe)
         recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
