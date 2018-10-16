@@ -5,6 +5,7 @@ import logging
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
+from django.utils.timezone import now
 from recipe.deprecation import RecipeDefinitionSunset
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
@@ -13,10 +14,12 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 import util.rest as rest_util
-from job.models import JobType
+from job.models import Job, JobType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
+from recipe.diff.forced_nodes import ForcedNodes
 from recipe.exceptions import ReprocessError
+from recipe.messages.create_recipes import create_reprocess_messages
 from recipe.models import Recipe, RecipeInputFile, RecipeType
 from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSerializerV6,
                                 RecipeSerializerV5, RecipeSerializerV6,
@@ -25,6 +28,7 @@ from recipe.serializers import (OldRecipeDetailsSerializer, RecipeDetailsSeriali
 from storage.models import ScaleFile
 from storage.serializers import ScaleFileSerializerV5
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
+from trigger.models import TriggerEvent
 from util.rest import BadParameter
 
 
@@ -465,19 +469,45 @@ class RecipeReprocessView(GenericAPIView):
         priority = rest_util.parse_int(request, 'priority', required=False)
 
         try:
-            handler = Recipe.objects.reprocess_recipe(recipe_id, job_names=job_names, all_jobs=all_jobs,
-                                                      priority=priority)
+            recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(id=recipe_id)
         except Recipe.DoesNotExist:
             raise Http404
-        except ReprocessError as err:
-            raise BadParameter(unicode(err))
+        if recipe.is_superseded:
+            raise BadParameter('Cannot reprocess a superseded recipe')
+        event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
+        root_recipe_id = recipe.root_superseded_recipe_id if recipe.root_superseded_recipe_id else recipe.id
+        recipe_type_name = recipe.recipe_type.name
+        revision_num = recipe.recipe_type_rev.revision_num
+        forced_nodes = ForcedNodes()
+        if all_jobs:
+            forced_nodes.set_all_nodes()
+        elif job_names:
+            for job_name in job_names:
+                forced_nodes.add_node(job_name)
 
+        # Execute all of the messages to perform the reprocess
+        messages = create_reprocess_messages([root_recipe_id], recipe_type_name, revision_num, event.id,
+                                             forced_nodes=forced_nodes)
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                raise Exception('Reprocess failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
+
+        # Update job priorities
+        if priority is not None:
+            Job.objects.filter(event_id=event.id).update(priority=priority)
+            from queue.models import Queue
+            Queue.objects.filter(job__event_id=event.id).update(priority=priority)
+
+        new_recipe = Recipe.objects.get(root_superseded_recipe_id=root_recipe_id, is_superseded=False)
         try:
             # TODO: remove this check when REST API v5 is removed
             if request.version == 'v6':
-                new_recipe = Recipe.objects.get_details(handler.recipe.id)
+                new_recipe = Recipe.objects.get_details(new_recipe.id)
             else:
-                new_recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+                new_recipe = Recipe.objects.get_details_v5(new_recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
 

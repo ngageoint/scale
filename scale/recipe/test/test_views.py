@@ -2147,16 +2147,6 @@ class TestRecipeReprocessViewV5(TransactionTestCase):
         recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], node_name='kml')
         self.assertEqual(recipe_job_1.job.priority, 1111)
 
-    def test_no_changes(self):
-        """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
-
-        json_data = {}
-
-        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
-
     def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
 
@@ -2269,16 +2259,6 @@ class TestRecipeReprocessViewV6(TransactionTestCase):
 
         recipe_job_1 = RecipeNode.objects.get(recipe_id=results['id'], node_name='kml')
         self.assertEqual(recipe_job_1.job.priority, 1111)
-
-    def test_no_changes(self):
-        """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
-
-        json_data = {}
-
-        url = '/%s/recipes/%i/reprocess/' % (self.api, self.recipe1.id)
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""

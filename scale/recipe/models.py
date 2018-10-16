@@ -14,16 +14,16 @@ from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
+from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
-from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
 from recipe.instance.recipe import RecipeInstance
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
-from trigger.models import TriggerEvent, TriggerRule
+from trigger.models import TriggerRule
 
 
 RecipeNodeCopy = namedtuple('RecipeNodeCopy', ['superseded_recipe_id', 'recipe_id', 'node_names'])
@@ -55,6 +55,7 @@ class RecipeManager(models.Manager):
         qry = self.filter(id__in=recipe_ids, is_completed=False)
         qry.update(is_completed=True, completed=when, last_modified=now())
 
+    # TODO: remove this in Scale v6 when the deprecated message reprocess_recipes is removed
     def create_recipe(self, recipe_type, revision, event_id, input, batch_id=None, superseded_recipe=None):
         """Creates a new recipe model for the given type and returns it. The model will not be saved in the database.
         :param recipe_type: The type of the recipe to create
@@ -243,6 +244,7 @@ class RecipeManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
         return handler
 
+    # TODO: remove this in Scale v6 when the deprecated message reprocess_recipes is removed
     def create_recipes_for_reprocess(self, recipe_type, revisions, superseded_recipes, event_id, batch_id=None):
         """Creates and returns new recipe models for reprocessing. The models will not be saved in the database.
 
@@ -709,14 +711,18 @@ class RecipeManager(models.Manager):
         ).get(pk=recipe_id)
 
         # Update the recipe with source file models
-        input_file_ids = recipe.get_recipe_data().get_input_file_ids()
+        input_file_ids = []
+        for file_value in recipe.get_input_data().values.values():
+            if file_value.param_type != FileParameter.PARAM_TYPE:
+                continue
+            input_file_ids.extend(file_value.file_ids)
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace').defer('workspace__json_config')
         input_files = input_files.order_by('id').distinct('id')
 
-        recipe_definition_dict = recipe.get_recipe_definition().get_dict()
-        recipe_data_dict = recipe.get_recipe_data().get_dict()
-        recipe.inputs = self._merge_recipe_data(recipe_definition_dict['input_data'], recipe_data_dict['input_data'],
+        recipe_def_dict = convert_recipe_definition_to_v1_json(recipe.recipe_type_rev.get_definition()).get_dict()
+        recipe_data_dict = convert_data_to_v1_json(recipe.get_input_data()).get_dict()
+        recipe.inputs = self._merge_recipe_data(recipe_def_dict['input_data'], recipe_data_dict['input_data'],
                                                 input_files)
 
         # Update the recipe with job models
@@ -773,79 +779,6 @@ class RecipeManager(models.Manager):
         qry += 'WHERE r.id = s.recipe_id'
         with connection.cursor() as cursor:
             cursor.execute(qry, [now(), recipe.id])
-
-    @transaction.atomic
-    def reprocess_recipe(self, recipe_id, batch_id=None, job_names=None, all_jobs=False, priority=None):
-        """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
-        revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
-        transaction. A recipe instance that is already superseded cannot be re-processed again.
-
-        :param recipe_id: The identifier of the recipe to re-process
-        :type recipe_id: int
-        :param batch_id: The ID of the batch that contains the new recipe
-        :type batch_id: int
-        :param job_names: A list of job names from the recipe that should be forced to re-process even if the latest
-            recipe revision left them unchanged. If none are passed, then only jobs that changed are scheduled.
-        :type job_names: [string]
-        :param all_jobs: Indicates all jobs should be forced to re-process even if the latest recipe revision left them
-            unchanged. This is a convenience for passing all the individual names in the job_names parameter and this
-            parameter will override any values passed there.
-        :type all_jobs: bool
-        :param priority: An optional argument to reset the priority of associated jobs before they are queued
-        :type priority: int
-        :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
-
-        :raises :class:`recipe.exceptions.ReprocessError`: If recipe cannot be re-processed
-        """
-
-        # Determine the old recipe graph
-        prev_recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(pk=recipe_id)
-        prev_graph = prev_recipe.get_recipe_definition().get_graph()
-
-        # Superseded recipes cannot be reprocessed
-        if prev_recipe.is_superseded:
-            raise ReprocessError('Unable to re-process a recipe that is already superseded')
-
-        # Populate the list of all job names in the recipe as a shortcut
-        if all_jobs:
-            job_names = prev_graph.get_topological_order()
-
-        # Determine the current recipe graph
-        current_type = prev_recipe.recipe_type
-        current_graph = current_type.get_recipe_definition().get_graph()
-
-        # Make sure that something is different to reprocess
-        if current_type.revision_num == prev_recipe.recipe_type_rev.revision_num and not job_names:
-            raise ReprocessError('Job names must be provided when the recipe type has not changed')
-
-        # Compute the job differences between recipe revisions including forced ones
-        graph_delta = RecipeGraphDelta(prev_graph, current_graph)
-        if job_names:
-            for job_name in job_names:
-                graph_delta.reprocess_identical_node(job_name)
-
-        # Get the old recipe jobs that will be superseded
-        prev_recipe_jobs = RecipeNode.objects.filter(recipe=prev_recipe)
-
-        # Acquire model locks
-        superseded_recipe = Recipe.objects.select_for_update().get(pk=recipe_id)
-        prev_jobs = Job.objects.select_for_update().filter(pk__in=[rj.job_id for rj in prev_recipe_jobs])
-        prev_jobs_dict = {j.id: j for j in prev_jobs}
-        superseded_jobs = {rj.node_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
-
-        # Create an event to represent this request
-        description = {'user': 'Anonymous'}
-        event = TriggerEvent.objects.create_trigger_event('USER', None, description, now())
-
-        # Create the new recipe while superseding the old one and queuing the associated jobs
-        try:
-            from queue.models import Queue
-            return Queue.objects.queue_new_recipe(current_type, None, event, batch_id=batch_id,
-                                                  superseded_recipe=superseded_recipe, delta=graph_delta,
-                                                  superseded_jobs=superseded_jobs, priority=priority)
-        except ImportError:
-            raise ReprocessError('Unable to import from queue application')
 
     def set_recipe_input_data_v6(self, recipe, input_data):
         """Sets the given input data as a v6 JSON for the given recipe. The recipe model must have its related
