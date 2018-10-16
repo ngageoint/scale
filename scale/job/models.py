@@ -1421,11 +1421,11 @@ class Job(models.Model):
     def get_v6_input_data_json(self):
         """Returns the input data for this job as v6 json with the version stripped
 
-        :returns: The input data for this job
-        :rtype: :class:`data.data.data.Data`
+        :returns: The v6 JSON input data dict for this job
+        :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(DataV6(data=self.input, do_validate=False).get_dict())
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
 
     # TODO: deprecated in favor of get_input_data(), remove this when all uses of it have been removed
     def get_job_data(self):
@@ -1486,11 +1486,11 @@ class Job(models.Model):
     def get_v6_output_data_json(self):
         """Returns the output data for this job as v6 json with the version stripped
 
-        :returns: The output data for this job
-        :rtype: :class:`data.data.data.Data`
+        :returns: The v6 JSON output data dict for this job
+        :rtype: dict
         """
 
-        return rest_utils.strip_schema_version(DataV6(data=self.output, do_validate=False).get_dict())
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_output_data()).get_dict())
 
     def get_resources(self):
         """Returns the resources required for this job

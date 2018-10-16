@@ -14,7 +14,7 @@ from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
-from recipe.definition.json.definition_v6 import RecipeDefinitionV6
+from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
 from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -1112,6 +1112,7 @@ class Recipe(models.Model):
 
         return RecipeDataSunset.create(self.get_recipe_definition(), self.input)
 
+    # TODO: deprecated
     def get_recipe_definition(self):
         """Returns the definition for this recipe
 
@@ -1121,6 +1122,15 @@ class Recipe(models.Model):
         """
 
         return RecipeDefinitionSunset.create(self.recipe_type_rev.definition)
+
+    def get_v6_input_data_json(self):
+        """Returns the input data for this recipe as v6 json with the version stripped
+
+        :returns: The v6 JSON input data dict for this recipe
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_data_to_v6_json(self.get_input_data()).get_dict())
 
     def has_input(self):
         """Indicates whether this recipe has its input
@@ -1804,6 +1814,16 @@ class RecipeType(models.Model):
 
     objects = RecipeTypeManager()
 
+    def get_definition(self):
+        """Returns the definition for this recipe type
+
+        :returns: The definition for this recipe type
+        :rtype: :class:`recipe.definition.definition.RecipeDefinition`
+        """
+
+        return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
+
+    # TODO: this is old and deprecated, use get_definition() instead
     def get_recipe_definition(self):
         """Returns the definition for running recipes of this type
 
@@ -1812,6 +1832,15 @@ class RecipeType(models.Model):
         """
 
         return RecipeDefinitionSunset.create(self.definition)
+
+    def get_v6_definition_json(self):
+        """Returns the recipe type definition in v6 of the JSON schema
+
+        :returns: The recipe type definition in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type as the combination of name and version
@@ -1988,7 +2017,7 @@ class RecipeTypeRevision(models.Model):
 
         return self.get_definition().input_interface
 
-    # TODO: this is deprecated
+    # TODO: this is deprecated, use get_definition() instead
     def get_recipe_definition(self):
         """Returns the recipe type definition for this revision
 
@@ -1997,6 +2026,15 @@ class RecipeTypeRevision(models.Model):
         """
 
         return RecipeDefinitionSunset.create(self.definition)
+
+    def get_v6_definition_json(self):
+        """Returns the revision definition in v6 of the JSON schema
+
+        :returns: The revision definition in v6 of the JSON schema
+        :rtype: dict
+        """
+
+        return rest_utils.strip_schema_version(convert_recipe_definition_to_v6_json(self.get_definition()).get_dict())
 
     def natural_key(self):
         """Django method to define the natural key for a recipe type revision as the combination of job type and
