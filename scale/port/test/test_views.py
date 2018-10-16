@@ -209,14 +209,13 @@ class TestConfigurationViewExportV5(TransactionTestCase):
     def test_recipe_types_by_name(self):
         """Tests exporting recipe types by name."""
         recipe_test_utils.create_recipe_type(name='recipe-name')
-        recipe_test_utils.create_recipe_type(name='recipe-name')
 
         url = '/v5/configuration/?recipe_type_name=recipe-name'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(len(results['recipe_types']), 2)
+        self.assertEqual(len(results['recipe_types']), 1)
 
     def test_all(self):
         """Tests exporting all the relevant models."""

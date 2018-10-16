@@ -91,10 +91,10 @@ class TestBatchesViewV5(TestCase):
     def test_order_by(self):
         """Tests successfully calling the batches view with sorting."""
 
-        recipe_type1b = recipe_test_utils.create_recipe_type(name='test1', version='2.0')
+        recipe_type1b = recipe_test_utils.create_recipe_type(name='2test2', version='2.0')
         batch_test_utils.create_batch_old(recipe_type=recipe_type1b)
 
-        recipe_type1c = recipe_test_utils.create_recipe_type(name='test1', version='3.0')
+        recipe_type1c = recipe_test_utils.create_recipe_type(name='1test1', version='3.0')
         batch_test_utils.create_batch_old(recipe_type=recipe_type1c)
 
         url = '/v5/batches/?order=recipe_type__name&order=-recipe_type__version'

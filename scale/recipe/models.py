@@ -1785,7 +1785,7 @@ class RecipeType(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    name = models.CharField(db_index=True, max_length=50)
+    name = models.CharField(unique=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.CharField(blank=True, max_length=500, null=True)
@@ -1794,6 +1794,8 @@ class RecipeType(models.Model):
     is_active = models.BooleanField(default=True)
     definition = django.contrib.postgres.fields.JSONField(default=dict)
     revision_num = models.IntegerField(default=1)
+
+    # TODO: remove this when going to Scale v6
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -1823,7 +1825,6 @@ class RecipeType(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'recipe_type'
-        unique_together = ('name', 'version')
 
 
 class RecipeTypeRevisionManager(models.Manager):
