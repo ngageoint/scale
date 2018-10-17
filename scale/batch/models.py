@@ -94,7 +94,7 @@ class BatchManager(models.Manager):
 
         # Create models for batch metrics
         batch_metrics_models = []
-        for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+        for job_name in recipe_type.get_definition().get_topological_order():
             batch_metrics_model = BatchMetrics()
             batch_metrics_model.batch_id = batch.id
             batch_metrics_model.job_name = job_name
@@ -158,7 +158,7 @@ class BatchManager(models.Manager):
 
             # Create models for batch metrics
             batch_metrics_models = []
-            for job_name in recipe_type.get_recipe_definition().get_graph().get_topological_order():
+            for job_name in recipe_type.get_definition().get_topological_order():
                 batch_metrics_model = BatchMetrics()
                 batch_metrics_model.batch_id = batch.id
                 batch_metrics_model.job_name = job_name

@@ -24,6 +24,7 @@ from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfigur
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
+from util import rest as rest_utils
 
 
 RecipeNodeCopy = namedtuple('RecipeNodeCopy', ['superseded_recipe_id', 'recipe_id', 'node_names'])
@@ -1045,7 +1046,7 @@ class Recipe(models.Model):
 
         return RecipeDataSunset.create(self.get_recipe_definition(), self.input)
 
-    # TODO: deprecated
+    # TODO: deprecated, remove in Scale v6 once the trigger system is gone
     def get_recipe_definition(self):
         """Returns the definition for this recipe
 
@@ -1756,7 +1757,7 @@ class RecipeType(models.Model):
 
         return RecipeDefinitionV6(definition=self.definition, do_validate=False).get_definition()
 
-    # TODO: this is old and deprecated, use get_definition() instead
+    # TODO: deprecated, remove in Scale v6 once the trigger system is gone, use get_definition() instead
     def get_recipe_definition(self):
         """Returns the definition for running recipes of this type
 
@@ -1950,7 +1951,7 @@ class RecipeTypeRevision(models.Model):
 
         return self.get_definition().input_interface
 
-    # TODO: this is deprecated, use get_definition() instead
+    # TODO: deprecated, remove in Scale v6 once the trigger system is gone, use get_definition() instead
     def get_recipe_definition(self):
         """Returns the recipe type definition for this revision
 
