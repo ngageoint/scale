@@ -286,7 +286,7 @@ class CreateJobs(CommandMessage):
         superseded_jobs = {}
         # Get superseded jobs from superseded recipe
         if self.superseded_recipe_id:
-            superseded_jobs = RecipeNode.objects.get_superseded_recipe_jobs(self.superseded_recipe_id)
+            superseded_jobs = RecipeNode.objects.get_recipe_jobs(self.superseded_recipe_id)
 
         # Get job type revisions
         revision_tuples = [(j.job_type_name, j.job_type_version, j.job_type_rev_num) for j in self.recipe_jobs]

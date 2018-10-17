@@ -7,7 +7,6 @@ import django.utils.timezone as timezone
 import django.contrib.postgres.fields
 from django.db import models, transaction
 
-from error.models import Error
 from job.execution.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData as JobData_1_0
@@ -16,9 +15,8 @@ from job.data.job_data import JobData
 from job.deprecation import JobInterfaceSunset
 from job.seed.manifest import SeedManifest
 from job.models import Job, JobType
-from job.models import JobExecution
+from messaging.manager import CommandMessageManager
 from node.resources.json.resources import Resources
-from product.models import ProductFile
 from recipe.models import Recipe
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
@@ -358,15 +356,16 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        Job.objects.update_jobs_to_canceled_old([job_id], when)
+        from recipe.messages.update_recipe import create_update_recipe_messages_from_node
 
+        Job.objects.update_jobs_to_canceled_old([job_id], when)
         self.cancel_queued_jobs([job_id])
 
-        # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
-        if handler:
-            jobs_to_blocked = handler.get_blocked_jobs()
-            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+        # Create and send messages to update dependent jobs so that they are BLOCKED
+        job = Job.objects.get(id=job_id)
+        if job.root_recipe_id:
+            msgs = create_update_recipe_messages_from_node([job.root_recipe_ids])
+            CommandMessageManager().send_messages(msgs)
 
     @transaction.atomic
     def queue_new_job(self, job_type, data, event):
@@ -424,8 +423,7 @@ class QueueManager(models.Manager):
         return job_id
 
     @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event, batch_id=None, superseded_recipe=None, delta=None,
-                         superseded_jobs=None, priority=None):
+    def queue_new_recipe(self, recipe_type, data, event, batch_id=None, priority=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
         caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
@@ -439,23 +437,15 @@ class QueueManager(models.Manager):
         :type event: :class:`trigger.models.TriggerEvent`
         :param batch_id: The ID of the batch that contains this recipe
         :type batch_id: int
-        :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
-        :type superseded_recipe: :class:`recipe.models.Recipe`
-        :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
-        :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
-        :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
-            supersede
-        :type superseded_jobs: {string: :class:`job.models.Job`}
         :param priority: An optional argument to reset the priority of associated jobs before they are queued
         :type priority: int
-        :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+        :returns: The new recipe
+        :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, superseded_recipe, delta,
-                                                   superseded_jobs, priority)
+        handler = Recipe.objects.create_recipe_old(recipe_type, data, event, batch_id, None, None, None, priority)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -468,7 +458,7 @@ class QueueManager(models.Manager):
         if jobs_to_queue:
             self.queue_jobs(jobs_to_queue)
 
-        return handler
+        return handler.recipe
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -483,8 +473,8 @@ class QueueManager(models.Manager):
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param data: The recipe data to run on, should be None if superseded_recipe is provided
         :type data: :class:`recipe.data.recipe_data.RecipeData`
-        :returns: A handler for the new recipe
-        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+        :returns: The new recipe
+        :rtype: :class:`recipe.models.Recipe`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
@@ -494,7 +484,7 @@ class QueueManager(models.Manager):
 
         return self.queue_new_recipe(recipe_type, data, event)
 
-    # TODO: remove this (and old functions used here) when REST API v5 is removed
+    # TODO: remove this when REST API v5 is removed
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
@@ -506,36 +496,20 @@ class QueueManager(models.Manager):
         :type priority: int
         """
 
-        jobs_to_requeue = Job.objects.get_locked_jobs_with_related(job_ids)
-        all_valid_job_ids = []
-        jobs_to_queue = []
-        jobs_to_blocked = []
-        jobs_to_pending = []
-        for job in jobs_to_requeue:
-            if not job.is_ready_to_requeue or job.is_superseded:
-                continue
-            all_valid_job_ids.append(job.id)
-            if job.num_exes == 0:
-                # Never been queued before, job should either be PENDING or BLOCKED depending on parent jobs
-                # Assume BLOCKED and it will get switched to PENDING later if needed
-                jobs_to_blocked.append(job)
-            else:
-                # Queued before, go back on queue
-                jobs_to_queue.append(job)
+        from queue.messages.queued_jobs import QueuedJob
+        from queue.messages.requeue_jobs import create_requeue_jobs_messages
 
-        # Update jobs that are being re-queued
-        if jobs_to_queue:
-            Job.objects.increment_max_tries_old(jobs_to_queue)
-            self.queue_jobs(jobs_to_queue, requeue=True, priority=priority)
-        when = timezone.now()
-        if jobs_to_blocked:
-            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
-
-        # Update dependent recipe jobs (with model locks) that should now go back to PENDING
-        for handler in Recipe.objects.get_recipe_handlers_for_jobs(all_valid_job_ids):
-            jobs_to_pending.extend(handler.get_pending_jobs())
-        if jobs_to_pending:
-            Job.objects.update_status(jobs_to_pending, 'PENDING', when)
+        queued_jobs = []
+        for job in Job.objects.filter(id__in=job_ids):
+            queued_jobs.append(QueuedJob(job.id, job.num_exes))
+        # Execute all messages to perform requeue
+        messages = create_requeue_jobs_messages(queued_jobs, priority=priority)
+        while messages:
+            msg = messages.pop(0)
+            result = msg.execute()
+            if not result:
+                raise Exception('Requeue failed on message type \'%s\'' % msg.type)
+            messages.extend(msg.new_messages)
 
 
 class Queue(models.Model):

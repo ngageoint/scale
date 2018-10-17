@@ -160,7 +160,7 @@ class JobManager(models.Manager):
 
         job = Job()
         job.job_type = job_type
-        job.job_type_rev = JobTypeRevision.objects.get_revision_old(job_type.id, job_type.revision_num)
+        job.job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
         job.event_id = event_id
         job.root_recipe_id = root_recipe_id if root_recipe_id else recipe_id
         job.recipe_id = recipe_id
@@ -634,19 +634,6 @@ class JobManager(models.Manager):
         # Job models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
-    def get_locked_jobs_with_related(self, job_ids):
-        """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
-
-        :param job_ids: The job IDs
-        :type job_ids: [int]
-        :returns: The job models
-        :rtype: [:class:`job.models.Job`]
-        """
-
-        self.lock_jobs(job_ids)
-
-        return list(self.get_jobs_with_related(job_ids))
-
     def increment_max_tries(self, job_ids, when):
         """Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
         setting of their associated job type.
@@ -662,41 +649,6 @@ class JobManager(models.Manager):
             qry += ' WHERE j.job_type_id = jt.id AND j.id IN %s'
             with connection.cursor() as cursor:
                 cursor.execute(qry, [when, tuple(job_ids)])
-
-    # TODO: remove this when no longer used (should be when v5 is removed)
-    def increment_max_tries_old(self, jobs):
-        """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
-        caller must have obtained model locks on the job models.
-
-        :param jobs: The jobs to update
-        :type jobs: [:class:`job.models.Job`]
-        """
-
-        modified = timezone.now()
-
-        # Update job models in memory and collect job IDs
-        job_ids = set()
-        for job in jobs:
-            job_ids.add(job.id)
-            job.max_tries = job.num_exes + 1
-            job.last_modified = modified
-
-        # Update job models in database with single query
-        self.filter(id__in=job_ids).update(max_tries=models.F('num_exes') + 1, last_modified=modified)
-
-    # TODO: remove this once get_recipe_handlers_for_jobs() is refactored
-    def lock_jobs(self, job_ids):
-        """Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)
-
-        :param job_ids: The IDs of the jobs to lock
-        :type job_ids: [int]
-        """
-
-        # Dummy list is used here to force query execution
-        # Unfortunately this query can't usually be combined with other queries since using select_related() with
-        # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
-        # two queries in get_locked_jobs_with_related().
-        list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
     def populate_job_data(self, job, data):
         """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
@@ -3907,19 +3859,6 @@ class JobTypeRevisionManager(models.Manager):
 
         qry = self.select_related('job_type')
         return qry.get(job_type__name=job_type_name, job_type__version=job_type_version, revision_num=revision_num)
-
-    def get_revision_old(self, job_type_id, revision_num):
-        """Returns the revision for the given job type and revision number
-
-        :param job_type_id: The ID of the job type
-        :type job_type_id: int
-        :param revision_num: The revision number
-        :type revision_num: int
-        :returns: The revision
-        :rtype: :class:`job.models.JobTypeRevision`
-        """
-
-        return JobTypeRevision.objects.get(job_type_id=job_type_id, revision_num=revision_num)
 
     def get_revisions(self, revision_tuples):
         """Returns a dict that maps revision ID to job type revision for the job type revisions that match the

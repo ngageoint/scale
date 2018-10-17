@@ -32,8 +32,7 @@ def create_batch(title=None, description=None, recipe_type=None, definition=None
         # TODO: this can be replaced by a DataSet once they are implemented
         prev_batch = Batch()
         prev_batch.recipe_type = recipe_type
-        prev_batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id,
-                                                                                 recipe_type.revision_num)
+        prev_batch.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
         prev_batch.event = TriggerEvent.objects.create_trigger_event('USER', None, {'user': 'Anonymous'}, now())
         prev_batch.is_creation_done = True
         prev_batch.recipes_total = 10

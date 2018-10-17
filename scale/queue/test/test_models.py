@@ -23,7 +23,6 @@ from job.models import Job
 from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
-from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeNode
 
 
@@ -446,28 +445,28 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
 
-        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        recipe = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
 
         # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 1')
+        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
 
-        recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 2')
+        recipe_job_2 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 2')
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
         self.assertEqual(recipe_job_2.job.status, 'PENDING')
 
-        recipe = Recipe.objects.get(pk=handler.recipe.id)
+        recipe = Recipe.objects.get(pk=recipe.id)
         self.assertIsNone(recipe.completed)
 
     def test_successful_priority(self):
         """Tests calling QueueManager.queue_new_recipe() successfully with an override priority."""
 
-        handler = Queue.objects.queue_new_recipe(recipe_type=self.recipe_type, data=self.data, event=self.event,
-                                                 priority=1111)
+        recipe = Queue.objects.queue_new_recipe(recipe_type=self.recipe_type, data=self.data, event=self.event,
+                                                priority=1111)
 
         # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=handler.recipe.id, node_name='Job 1')
+        recipe_job_1 = RecipeNode.objects.select_related('job').get(recipe_id=recipe.id, node_name='Job 1')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
         self.assertEqual(recipe_job_1.job.priority, 1111)
@@ -512,14 +511,15 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             }],
         }
         recipe_type_a = recipe_test_utils.create_recipe_type(definition=definition_a)
-        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', input=data_dict, num_exes=1)
-        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED')
         data_a = {
             'version': '1.0',
             'input_data': [],
             'workspace_id': 1,
         }
         recipe_a = recipe_test_utils.create_recipe(recipe_type=recipe_type_a, input=data_a)
+        self.job_a_1 = job_test_utils.create_job(job_type=job_type_a_1, status='FAILED', input=data_dict, num_exes=1,
+                                                 recipe=recipe_a)
+        self.job_a_2 = job_test_utils.create_job(job_type=job_type_a_2, status='BLOCKED', recipe=recipe_a)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 1', job=self.job_a_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_a, job_name='Job 2', job=self.job_a_2)
 
@@ -557,15 +557,17 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
             }],
         }
         recipe_type_b = recipe_test_utils.create_recipe_type(definition=definition_b)
-        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED', input=data_dict)
-        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0)
-        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0)
         data_b = {
             'version': '1.0',
             'input_data': [],
             'workspace_id': 1,
         }
         recipe_b = recipe_test_utils.create_recipe(recipe_type=recipe_type_b, input=data_b)
+        self.job_b_1 = job_test_utils.create_job(job_type=job_type_b_1, status='FAILED', input=data_dict,
+                                                 recipe=recipe_b)
+        self.job_b_2 = job_test_utils.create_job(job_type=job_type_b_2, status='CANCELED', num_exes=0, recipe=recipe_b)
+        self.job_b_3 = job_test_utils.create_job(job_type=job_type_b_3, status='BLOCKED', num_exes=0, recipe=recipe_b)
+
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 1', job=self.job_b_1)
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 2', job=self.job_b_2)
         recipe_test_utils.create_recipe_job(recipe=recipe_b, job_name='Job 3', job=self.job_b_3)
@@ -581,11 +583,11 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
 
         standalone_failed_job = Job.objects.get(id=self.standalone_failed_job.id)
         self.assertEqual(standalone_failed_job.status, 'QUEUED')
-        self.assertEqual(standalone_failed_job.max_tries, 4)
+        self.assertEqual(standalone_failed_job.max_tries, 6)
 
         standalone_canceled_job = Job.objects.get(id=self.standalone_canceled_job.id)
         self.assertEqual(standalone_canceled_job.status, 'QUEUED')
-        self.assertEqual(standalone_canceled_job.max_tries, 2)
+        self.assertEqual(standalone_canceled_job.max_tries, 4)
 
         # Superseded job should not be re-queued
         standalone_superseded_job = Job.objects.get(id=self.standalone_superseded_job.id)
@@ -598,7 +600,7 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         job_a_1 = Job.objects.get(id=self.job_a_1.id)
         self.assertEqual(job_a_1.status, 'QUEUED')
         job_a_2 = Job.objects.get(id=self.job_a_2.id)
-        self.assertEqual(job_a_2.status, 'PENDING')
+        self.assertEqual(job_a_2.status, 'BLOCKED')
 
         job_b_1 = Job.objects.get(id=self.job_b_1.id)
         self.assertEqual(job_b_1.status, 'FAILED')
