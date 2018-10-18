@@ -702,7 +702,7 @@ nodes</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The messages</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The message</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#recipe.messages.update_recipe.UpdateRecipe" title="recipe.messages.update_recipe.UpdateRecipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.messages.update_recipe.UpdateRecipe</span></code></a></p>
@@ -713,9 +713,10 @@ nodes</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="recipe.messages.update_recipe.create_update_recipe_messages">
-<code class="descclassname">recipe.messages.update_recipe.</code><code class="descname">create_update_recipe_messages</code><span class="sig-paren">(</span><em>root_recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe.create_update_recipe_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates messages to update the given recipes from their root IDs</p>
+<dt id="recipe.messages.update_recipe.create_update_recipe_messages_from_node">
+<code class="descclassname">recipe.messages.update_recipe.</code><code class="descname">create_update_recipe_messages_from_node</code><span class="sig-paren">(</span><em>root_recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipe.create_update_recipe_messages_from_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates messages to update the given recipes from the root IDs. This is intended to be used by recipe nodes that
+have been updated and need to then update the recipes that contain the nodes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -900,42 +901,6 @@ nodes</li>
 <dd><p>See <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="recipe.messages.update_recipes.create_update_recipes_messages">
-<code class="descclassname">recipe.messages.update_recipes.</code><code class="descname">create_update_recipes_messages</code><span class="sig-paren">(</span><em>recipe_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.create_update_recipes_messages" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates messages to update the given recipes</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The recipe IDs</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="recipe.messages.update_recipes.create_update_recipes_messages_from_jobs">
-<code class="descclassname">recipe.messages.update_recipes.</code><code class="descname">create_update_recipes_messages_from_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.messages.update_recipes.create_update_recipes_messages_from_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates messages to update the recipes for the given jobs</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job IDs</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of messages</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </div>

@@ -1197,8 +1197,10 @@ batch that re-processes the same set of recipes that ran in a previous batch.</p
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;previous_batch&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;root_batch_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
-      <span class="s2">&quot;job_names&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;job_a&#39;</span><span class="p">,</span> <span class="s1">&#39;job_b&#39;</span><span class="p">],</span>
-      <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">false</span>
+      <span class="s2">&quot;forced_nodes&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+         <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;job_a&#39;</span><span class="p">,</span> <span class="s1">&#39;job_b&#39;</span><span class="p">],</span>
+      <span class="p">}</span>
    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -1231,22 +1233,12 @@ finished creating all of its recipes.</td>
 (non-superseded) batch with this root ID and it will be
 re-processed by this batch.</td>
 </tr>
-<tr class="row-even"><td>job_names</td>
-<td>Array</td>
+<tr class="row-even"><td>forced_nodes</td>
+<td>JSON object</td>
 <td>Optional</td>
-<td>A list of strings that define specific jobs within the recipes
-that will be re-processed. Any job that has changed between the
-previously run recipe revision and the current revision will
-automatically be included in the batch, however this parameter can
-be used to include additional jobs that did not have a revision
-change. If a job is selected to be re-processed, all of its
-dependent jobs will automatically be re-processed as well.</td>
-</tr>
-<tr class="row-odd"><td>all_jobs</td>
-<td>Boolean</td>
-<td>Optional</td>
-<td>If true, then <em>job_names</em> is ignored and ALL jobs within the batch
-recipes will be re-processed.</td>
+<td>A forced nodes JSON object that defines the batch recipe nodes to
+force to re-process even if there are no changes to them.
+See <a class="reference internal" href="recipe.html#rest-v6-recipe-json-forced-nodes"><span class="std std-ref">Recipe Forced Nodes JSON</span></a></td>
 </tr>
 </tbody>
 </table>

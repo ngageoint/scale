@@ -417,19 +417,6 @@
 <dd><p>Tests calling QueueManager.queue_new_recipe() successfully with an override priority.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede">
-<code class="descname">test_successful_supersede</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede_mixed">
-<code class="descname">test_successful_supersede_mixed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede_mixed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe where the results of a
-Seed job get passed to the input of a legacy job</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -703,7 +690,7 @@ Seed job get passed to the input of a legacy job</p>
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>gpus_required=0</em>, <em>queued=datetime.datetime(2018</em>, <em>10</em>, <em>15</em>, <em>13</em>, <em>19</em>, <em>25</em>, <em>646502</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>gpus_required=0</em>, <em>queued=datetime.datetime(2018</em>, <em>10</em>, <em>18</em>, <em>14</em>, <em>6</em>, <em>53</em>, <em>268253</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

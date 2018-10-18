@@ -1571,9 +1571,9 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data for this job</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The v6 JSON input data dict for this job</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -1587,9 +1587,9 @@ object the first time, the query is executed.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The output data for this job</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The v6 JSON output data dict for this job</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -4132,24 +4132,6 @@ transaction.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.models.JobManager.get_locked_jobs_with_related">
-<code class="descname">get_locked_jobs_with_related</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_locked_jobs_with_related" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; The job IDs</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job models</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.models.JobManager.increment_max_tries">
 <code class="descname">increment_max_tries</code><span class="sig-paren">(</span><em>job_ids</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.increment_max_tries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Increments the max_tries of the given jobs to be their current number of executions plus the max_tries
@@ -4163,35 +4145,6 @@ setting of their associated job type.</p>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
 </ul>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.increment_max_tries_old">
-<code class="descname">increment_max_tries_old</code><span class="sig-paren">(</span><em>jobs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.increment_max_tries_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increments the max_tries of the given jobs to be one greater than their current number of executions. The
-caller must have obtained model locks on the job models.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>jobs</strong> ([<a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]) &#8211; The jobs to update</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobManager.lock_jobs">
-<code class="descname">lock_jobs</code><span class="sig-paren">(</span><em>job_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.lock_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtains model locks on the job models with the given IDs (in ID order to prevent deadlocks)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; The IDs of the jobs to lock</td>
 </tr>
 </tbody>
 </table>
@@ -6322,30 +6275,6 @@ with all detail fields included.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>job_type_name</strong> (<em>string</em>) &#8211; The name of the job type</li>
 <li><strong>job_type_version</strong> (<em>string</em>) &#8211; The version of the job type</li>
-<li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The revision</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.JobTypeRevision" title="job.models.JobTypeRevision"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobTypeRevision</span></code></a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobTypeRevisionManager.get_revision_old">
-<code class="descname">get_revision_old</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeRevisionManager.get_revision_old" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the revision for the given job type and revision number</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The ID of the job type</li>
 <li><strong>revision_num</strong> (<em>int</em>) &#8211; The revision number</li>
 </ul>
 </td>

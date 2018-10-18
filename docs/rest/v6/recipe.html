@@ -110,6 +110,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">v6 Recipe Services</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-definition-json">Recipe Definition JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-diff-json">Recipe Diff JSON</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#recipe-forced-nodes-json">Recipe Forced Nodes JSON</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-instance-json">Recipe Instance JSON</a></li>
 </ul>
 </li>
@@ -548,6 +549,63 @@ revision, if changed in the newer revision</td>
 <td>Optional</td>
 <td>(&#8216;recipe&#8217; node) The revision of the recipe type in the previous
 revision, if changed in the newer revision</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="recipe-forced-nodes-json">
+<span id="rest-v6-recipe-json-forced-nodes"></span><h2>Recipe Forced Nodes JSON<a class="headerlink" href="#recipe-forced-nodes-json" title="Permalink to this headline">¶</a></h2>
+<p>A recipe forced nodes JSON describes the set of recipe nodes (jobs, sub-recipes, etc) that should be forced to
+re-process even if there are no changes to the node.</p>
+<p><strong>Example recipe forced nodes:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+   <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;job_a_1&quot;</span><span class="p">,</span> <span class="s2">&quot;job_a_2&quot;</span><span class="p">,</span> <span class="s2">&quot;recipe_b&quot;</span><span class="p">,</span> <span class="s2">&quot;recipe_c&quot;</span><span class="p">],</span>
+   <span class="s2">&quot;sub_recipes&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;recipe_b&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">True</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;recipe_c&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;all&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+         <span class="s2">&quot;nodes&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;job_c_1&quot;</span><span class="p">,</span> <span class="s2">&quot;job_c_2&quot;</span><span class="p">]</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="13%" />
+<col width="8%" />
+<col width="56%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Recipe Forced Nodes</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>all</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>If true, then all nodes within the recipe should be forced to
+re-process and the &#8216;nodes&#8217; and &#8216;sub_recipes&#8217; fields should be
+omitted. If false, then the &#8216;nodes&#8217; array is used to indicate which
+nodes should be forced to re-process.</td>
+</tr>
+<tr class="row-odd"><td>nodes</td>
+<td>Array</td>
+<td>Optional</td>
+<td>An array listing the names of the recipe nodes that should be
+forced to re-process.</td>
+</tr>
+<tr class="row-even"><td>sub_recipes</td>
+<td>JSON object</td>
+<td>Optional</td>
+<td>A JSON object where the key names are the sub-recipe node names
+that are being forced to re-process. The values are forced nodes
+JSON objects that recursively define the nodes with the sub-recipe
+to force to reprocess.</td>
 </tr>
 </tbody>
 </table>

@@ -376,103 +376,9 @@ change is made</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs">
-<code class="descname">test_get_recipe_handlers_for_jobs</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeManager.get_recipe_handlers_for_jobs() successfully</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_models.TestRecipeManager.test_process_recipe_input">
 <code class="descname">test_process_recipe_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManager.test_process_recipe_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeManager.process_recipe_input()</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManagerCreateRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeManager.create_recipe() successfully.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_different_recipe_type">
-<code class="descname">test_successful_supersede_different_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_different_recipe_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeManager.create_recipe() to supersede a recipe with a different recipe type version that
-has one identical node, and deletes another node to replace it with a new one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type">
-<code class="descname">test_successful_supersede_same_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe">
-<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManagerReprocessRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="attribute">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.fixtures">
-<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json']</em><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.fixtures" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_blocked_job">
-<code class="descname">test_blocked_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_blocked_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe where a new job should be blocked due to a previously failed job</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type">
-<code class="descname">test_different_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that was updated to a new revision since it originally ran.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_all_job">
-<code class="descname">test_forced_all_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_all_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe without any changes by forcing all jobs.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job">
-<code class="descname">test_forced_specific_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe without any changes by forcing a single job.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes">
-<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority">
-<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe with a job priority override.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_reprocess_superseded_recipe">
-<code class="descname">test_reprocess_superseded_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_reprocess_superseded_recipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
 </dd></dl>
 
 </dd></dl>
@@ -760,12 +666,6 @@ has one identical node, and deletes another node to replace it with a new one.</
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_no_changes">
-<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_no_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="recipe.test.test_views.TestRecipeReprocessViewV5.test_priority">
 <code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV5.test_priority" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing all jobs in an existing recipe with a priority override</p>
@@ -803,12 +703,6 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_job">
 <code class="descname">test_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing one job in an existing recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipeReprocessViewV6.test_no_changes">
-<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessViewV6.test_no_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
 </dd></dl>
 
 <dl class="method">

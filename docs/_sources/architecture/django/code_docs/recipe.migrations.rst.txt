@@ -228,6 +228,30 @@ recipe\.migrations\.0027\_auto\_20181008\_1756 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0027\_auto\_20181016\_1344 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0027_auto_20181016_1344
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.migrations\.0028\_auto\_20181016\_1349 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0028_auto_20181016_1349
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.migrations\.0029\_auto\_20181016\_1431 module
+-----------------------------------------------------
+
+.. automodule:: recipe.migrations.0029_auto_20181016_1431
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
