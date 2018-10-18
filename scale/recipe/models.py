@@ -1840,3 +1840,141 @@ class RecipeTypeRevision(models.Model):
         """meta information for the db"""
         db_table = 'recipe_type_revision'
         unique_together = ('recipe_type', 'revision_num')
+
+class RecipeTypeSubLinkManager(models.Manager):
+    """Provides additional methods for handling recipe type sub links
+    """
+
+    @transaction.atomic
+    def create_recipe_type_sub_links(self, recipe_type_ids, sub_recipe_type_ids):
+        """Creates the appropriate links for the given parent and child recipe types. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_ids: List of parent recipe type IDs
+        :type recipe_type_ids: list of int
+        :param sub_recipe_type_ids: List of child recipe type IDs.
+        :type sub_recipe_type_ids: list of int
+        """
+
+        if len(recipe_type_ids) != len(sub_recipe_type_ids):
+            raise Exception('Recipe Type and Sub recipe type lists must be equal length!')
+
+        new_links = []
+
+        for id, sub in zip(recipe_type_ids, sub_recipe_type_ids):
+            link = RecipeTypeSubLink(recipe_type=id, sub_recipe_type=sub)
+            new_links.append(link)
+
+        RecipeTypeSubLink.objects.bulk_create(new_links)
+
+    def get_recipe_type_ids(self, sub_recipe_type_ids):
+        """Returns a list of the parent recipe_type IDs for the given sub recipe type IDs.
+
+        :param sub_recipe_type_ids: The sub recipe type IDs
+        :type sub_recipe_type_ids: list
+        :returns: The list of parent recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeSubLink.objects.filter(sub_recipe_type__in=list(sub_recipe_type_ids)).only('recipe_type')
+        return [result.recipe_type for result in query]
+
+    def get_sub_recipe_type_ids(self, recipe_type_ids):
+        """Returns a list of the sub recipe type IDs for the given recipe type IDs.
+
+        :param recipe_type_ids: The recipe type IDs
+        :type recipe_type_ids: list
+        :returns: The list of sub recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeSubLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('sub_recipe_type')
+        return [result.sub_recipe_type for result in query]
+
+class RecipeTypeSubLink(models.Model):
+    """Represents a link between a recipe type and a sub-recipe type.
+
+    :keyword recipe_type: The related recipe type
+    :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword sub_recipe_type: The related sub recipe type
+    :type sub_recipe_type: :class:`django.db.models.ForeignKey`
+    """
+
+    recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='parent_recipe_type')
+    sub_recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='sub_recipe_type')
+
+    objects = RecipeTypeSubLinkManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_type_sub_link'
+        unique_together = ('recipe_type', 'sub_recipe_type')
+
+class RecipeTypeJobLinkManager(models.Manager):
+    """Provides additional methods for handling recipe type to job type links
+    """
+
+    @transaction.atomic
+    def create_recipe_type_job_links(self, recipe_type_ids, job_type_ids):
+        """Creates the appropriate links for the given recipe and job types. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_ids: List of recipe type IDs
+        :type recipe_type_ids: list of int
+        :param job_type_ids: List of job type IDs.
+        :type job_type_ids: list of int
+        """
+
+        if len(recipe_type_ids) != len(job_type_ids):
+            raise Exception('Recipe Type and Job Type lists must be equal length!')
+
+        new_links = []
+
+        for id, job in zip(recipe_type_ids, job_type_ids):
+            link = RecipeTypeJobLink(recipe_type=id, job_type=job)
+            new_links.append(link)
+
+        RecipeTypeJobLink.objects.bulk_create(new_links)
+
+    def get_recipe_type_ids(self, job_type_ids):
+        """Returns a list of recipe_type IDs for the given job type IDs.
+
+        :param job_type_ids: The sub recipe type IDs
+        :type job_type_ids: list
+        :returns: The list of recipe type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeJobLink.objects.filter(job_type__in=list(job_type_ids)).only('recipe_type')
+        return [result.recipe_type for result in query]
+
+    def get_job_type_ids(self, recipe_type_ids):
+        """Returns a list of the job type IDs for the given recipe type IDs.
+
+        :param recipe_type_ids: The recipe type IDs
+        :type recipe_type_ids: list
+        :returns: The list of job type IDs
+        :rtype: list
+        """
+
+        query = RecipeTypeJobLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('job_type')
+        return [result.job_type for result in query]
+
+class RecipeTypeJobLink(models.Model):
+    """Represents a link between a recipe type and a job type.
+
+    :keyword recipe_type: The related recipe type
+    :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The related job type
+    :type job_type: :class:`django.db.models.ForeignKey`
+    """
+
+    recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT, related_name='recipe_types_for_job_type')
+    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT, related_name='job_types_for_recipe_type')
+
+    objects = RecipeTypeJobLinkManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_type_job_link'
+        unique_together = ('recipe_type', 'job_type')
