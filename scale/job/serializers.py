@@ -99,6 +99,10 @@ class JobSerializerV6(JobBaseSerializerV6):
 
     source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
+    source_sensor_class = serializers.CharField()
+    source_sensor = serializers.CharField()
+    source_collection = serializers.CharField()
+    source_task = serializers.CharField()
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()

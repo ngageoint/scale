@@ -3,173 +3,177 @@ info:
   title: Scale File Services
   version: v6
 paths:
-  /v6/ingests:
+  /ingests:
     get:
       operationId: _rest_v6_scale_file_list
       summary: Scale File List
       description: Returns a list of all scale files
       parameters:
-        -in: query
+        - in: query
           name: page
           schema:
             type: integer
           description: The page of the results to return. Defaults to 1.
-        -in: query
+        - in: query
           name: page_size
           schema:
             type: integer
-          description: The size of the page to use for pagination of results. |
+          description: The size of the page to use for pagination of results.
             Defaults to 100, and can be anywhere from 1-1000.
-        -in: query
+        - in: query
           name: data_started
           schema:
             type: string
             format: date-time
           description: The start of the data time range to query
-        -in: query
+        - in: query
           name: data_ended
           schema:
             type: string
             format: date-time
           description: End of the data time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: source_started
           schema:
             type: string
             format: date-time
           description: The start of the source time range to query
-        -in: query
+        - in: query
           name: source_ended
           schema:
             type: string
             format: date-time
           description: End of the source time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: source_sensor_class
           schema:
             type: string
-          description: Return only files for the given source sensor class. |
+          description: Return only files for the given source sensor class.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: source_sensor
           schema:
             type: string
-          description: Return only files for the given source sensor. |
+          description: Return only files for the given source sensor.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: source_collection
           schema:
             type: string
-          description: Return only files for the given source collection. |
+          description: Return only files for the given source collection.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
+          name: source_task
+          schema:
+            type: string
+          description: Return only files for the given source task.
+            Duplicate it to filter by multiple values.
+        - in: query
           name: job_output
           schema:
             type: string
-          description: Return only files for the given source task. |
+          description: Return only files for the given source task.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: modified_started
           schema:
             type: string
             format: date-time
           description: The start of the last modified time range to query
-        -in: query
+        - in: query
           name: modified_ended
           schema:
             type: string
             format: date-time
           description: End of the last modified time range to query, defaults to the current time
-        -in: query
+        - in: query
           name: order
           schema:
             type: string
-          description: One or more fields to use when ordering the results. |
-            Duplicate it to multi-sort, (ex: order=host_name&order=created) |
-            Nested objects require a delimiter (ex: order=source_file__created)
-            Prefix fields with a dash to reverse the sort, (ex: order=-created)
-        -in: query
+          description: "One or more fields to use when ordering the results.
+                        Duplicate it to multi-sort, (ex: order=host_name&order=created)
+                        Nested objects require a delimiter (ex: order=source_file__created)
+                        Prefix fields with a dash to reverse the sort, (ex: order=-created)"
+        - in: query
           name: job_output
           schema:
             type: string
-          description: Return only files for the given job output. |
+          description: Return only files for the given job output.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: job_type_id
           schema:
             type: integer
-          description: Return only files associated with a given job type identifier. |
+          description: Return only files associated with a given job type identifier.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: job_type_name
           schema:
             type: string
-          description: Return only files with a given job type name. Duplicate it |
+          description: Return only files with a given job type name. Duplicate it
             to filter by multiple values.
-        -in: query
+        - in: query
           name: job_id
           schema:
             type: integer
-          description: Return only files produced by the given job identifier. |
+          description: Return only files produced by the given job identifier.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: recipe_id
           schema:
             type: integer
-          description: Return only files associated with a given recipe identifier. |
+          description: Return only files associated with a given recipe identifier.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: recipe_node
           schema:
             type: string
-          description: Return only files produced by the given recipe node. |
+          description: Return only files produced by the given recipe node.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: recipe_type_id
           schema:
             type: integer
-          description: Return only files associated with a given recipe type identifier. |
+          description: Return only files associated with a given recipe type identifier.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: batch_id
           schema:
             type: integer
-          description: Return only files associated with a given batch identifier. |
+          description: Return only files associated with a given batch identifier.
             Duplicate it to filter by multiple values.
-        -in: query
+        - in: query
           name: file_name
           schema:
             type: string
-          description: Return only files with a given file name. |
+          description: Return only files with a given file name.
             Duplicate it to filter by multiple values.
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_list'
-  /v6/files/{id}/:
+  /files/{id}/:
     get:
       operationId: _rest_v6_file_details
       summary: File Details
       description: Returns a specific file and all its related model information
       parameters:
-        -in: path
+        - in: path
           name: id
           schema:
             type: integer
           description: id of an existing scale file
       responses:
         '200':
-          description: |-
-            200 response
+          description: 200 response
           content:
             application/json: 
               schema:
                 $ref: '#/components/schemas/file_details'
-  /v6/files/purge-source/:
+  /files/purge-source/:
     post:
       operationId: _rest_v6_purge_source
       summary: Purge Source File
@@ -192,11 +196,9 @@ paths:
                   example: 123
       responses:
         '204':
-          description: |-
-            204 no content - The message was recieved and the purge process has started.
+          description: 204 no content - The message was recieved and the purge process has started.
         '400':
-          description: |-
-            400 bad request - There was an issue with the request, see error details for relevant details.
+          description: 400 bad request - There was an issue with the request, see error details for relevant details.
 
 components:
   schemas:
@@ -223,7 +225,7 @@ components:
           items:
             $ref: '#/components/schemas/file'
           description: List of ingest objects
-          
+
     file:
       title: File
       type: object
@@ -233,7 +235,7 @@ components:
           description: The unique identifier of the model. Can be passed to the details API call 
           example: 4
         workspace:
-          $ref: '#/components/schemas/workspace'
+          $ref: '#/components/schemas/workspace_base'
         file_name:
           type: string
           description: The name of the source file.
@@ -298,7 +300,7 @@ components:
           style: simple
           items:
             type: string  
-          description: A list of zero or more strings with the ISO3 country codes for countries |
+          description: A list of zero or more strings with the ISO3 country codes for countries
             contained in the geographic boundary of this file.
         last_modified:
           type: string
@@ -471,7 +473,7 @@ components:
           example: My batch of recipes
         status:
           type: string
-          description: The current status of the batch. Choices: [SUBMITTED, CREATED].
+          description: "The current status of the batch. Choices: [SUBMITTED, CREATED]."
           example: SUBMITTED
         recipe_type:
           type: integer
@@ -491,9 +493,10 @@ components:
         - ref: '#/components/schemas/file'
         - title: File Details
         - type: object
-        properties:      
-          meta_data:
-            $ref: '#/components/schemas/metadata'
+          # Commenting out until added
+          # properties:      
+          #   meta_data:
+          #     $ref: '#/components/schemas/metadata'
             
     job_type_details:
       title: Job Type
@@ -537,8 +540,8 @@ components:
           example: False
         is_long_running:
           type: boolean
-          description: Whether this type is long running. A job of this type is |
-            intended to run for a long time, potentially indefinitely, without |
+          description: Whether this type is long running. A job of this type is
+            intended to run for a long time, potentially indefinitely, without
             timing out and always being re-queued after a failure.
           example: False
         is_active:

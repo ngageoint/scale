@@ -339,8 +339,8 @@ class ScaleFileManager(models.Manager):
         :type source_sensor: list
         :param source_collection: Query files with the given source class.
         :type source_collection: list
-        :param source_task: Query files with the given source task.
-        :type source_task: list
+        :param source_tasks: Query files with the given source tasks.
+        :type source_tasks: list
         :param mod_started: Query files where the last modified date is after this time.
         :type mod_started: :class:`datetime.datetime`
         :param mod_ended: Query files where the last modified date is before this time.
@@ -611,6 +611,14 @@ class ScaleFile(models.Model):
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The latest end time from all source files
     :type source_ended: :class:`django.db.models.DateTimeField`
+    :keyword source_sensor_class: The class of sensor used to produce the source file.
+    :type source_sensor_class: :class:`django.db.models.CharField`
+    :keyword source_sensor: The specific identifier of the sensor used to produce the source file.
+    :type source_sensor: :class:`django.db.models.CharField`
+    :keyword source_collection: The collection of the source file.
+    :type source_collection: :class:`django.db.models.CharField`
+    :keyword source_task: The task that produced the source file.
+    :type source_task: :class:`django.db.models.CharField`
     :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
         is still in a research & development (R&D) phase (False)
     :type is_operational: :class:`django.db.models.BooleanField`

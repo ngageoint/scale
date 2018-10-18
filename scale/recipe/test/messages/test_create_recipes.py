@@ -253,7 +253,7 @@ class TestCreateRecipes(TestCase):
         self.assertIsNotNone(process_recipe_input_1_msg)
         self.assertIsNotNone(process_recipe_input_2_msg)
         # Check message for superseding recipes 1 and 2
-        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertSetEqual(set(supersede_recipe_msg._recipe_ids), set(reprocess_recipe_ids))
         self.assertFalse(supersede_recipe_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 1', 'Job 2'})
         self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())
@@ -931,7 +931,7 @@ class TestCreateRecipes(TestCase):
         self.assertIsNotNone(process_recipe_input_1_msg)
         self.assertIsNotNone(process_recipe_input_2_msg)
         # Check message for superseding recipes 1 and 2
-        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertSetEqual(set(supersede_recipe_msg._recipe_ids), set(reprocess_recipe_ids))
         self.assertFalse(supersede_recipe_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 2'})
         self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())
@@ -999,7 +999,7 @@ class TestCreateRecipes(TestCase):
         self.assertIsNotNone(process_recipe_input_1_msg)
         self.assertIsNotNone(process_recipe_input_2_msg)
         # Check message for superseding recipes 1 and 2
-        self.assertListEqual(supersede_recipe_msg._recipe_ids, reprocess_recipe_ids)
+        self.assertSetEqual(set(supersede_recipe_msg._recipe_ids), set(reprocess_recipe_ids))
         self.assertFalse(supersede_recipe_msg.supersede_all)
         self.assertSetEqual(supersede_recipe_msg.supersede_jobs, {'Job 2'})
         self.assertSetEqual(supersede_recipe_msg.supersede_subrecipes, set())

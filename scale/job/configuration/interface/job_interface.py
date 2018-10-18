@@ -9,7 +9,7 @@ import re
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.data.exceptions import InvalidData, InvalidConnection
+from job.configuration.data.exceptions import InvalidData, InvalidConnection, InvalidConfiguration
 from job.configuration.interface import job_interface_1_3 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
@@ -658,6 +658,17 @@ class JobInterface(object):
         for name, value in exe_configuration.get_settings('main').items():
             if value is None:
                 raise MissingSetting('Required setting %s was not provided' % name)
+
+    def validate_workspace_for_outputs(self, exe_configuration):
+        """Ensures that all required output workspaces are defined in the execution configuration
+
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.execution.configuration.json.exe_config.ExecutionConfiguration`
+        
+        :raises :class:`job.configuration.data.exceptions.InvalidConfiguration`: If there is a configuration problem.
+        """
+        if self.definition['output_data'] and not exe_configuration.get_output_workspace_names():
+            raise InvalidConfiguration('No workspace defined for output files')
 
     def _check_env_var_uniqueness(self):
         """Ensures all the environmental variable names are unique, and throws a

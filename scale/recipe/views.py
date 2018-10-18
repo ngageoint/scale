@@ -312,6 +312,60 @@ class RecipesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+        if request.version == 'v6':
+            return self._list_v6(request)
+        elif request.version == 'v5':
+            return self._list_v5(request)
+        elif request.version == 'v4':
+            return self._list_v5(request)
+
+        raise Http404()
+
+    def _list_v6(self, request):
+        """Retrieves the list of all recipes and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
+        source_sensor_classes = rest_util.parse_string_list(request, 'source_sensor_class', required=False)
+        source_sensors = rest_util.parse_string_list(request, 'source_sensor', required=False)
+        source_collections = rest_util.parse_string_list(request, 'source_collection', required=False)
+        source_tasks = rest_util.parse_string_list(request, 'source_task', required=False)
+
+        type_ids = rest_util.parse_int_list(request, 'type_id', required=False)
+        type_names = rest_util.parse_string_list(request, 'type_name', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
+        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        recipes = Recipe.objects.get_recipes(started=started, ended=ended,
+                                             source_started=source_started, source_ended=source_ended,
+                                             source_sensor_classes=source_sensor_classes, source_sensors=source_sensors,
+                                             source_collections=source_collections, source_tasks=source_tasks,
+                                             type_ids=type_ids, type_names=type_names,
+                                             batch_ids=batch_ids, include_superseded=include_superseded, order=order)
+
+        page = self.paginate_queryset(recipes)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def _list_v5(self, request):
+        """Retrieves the list of all recipes and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)

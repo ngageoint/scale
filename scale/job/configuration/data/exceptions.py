@@ -12,6 +12,10 @@ class InvalidData(Exception):
     """
     pass
 
+class InvalidConfiguration(Exception):
+    """Exception indicating that the provided job configuration was invalid
+    """
+    pass
 
 class StatusError(Exception):
     """Exception indicating that an operation cannot be completed due to the current job status.
