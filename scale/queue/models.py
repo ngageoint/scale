@@ -23,6 +23,10 @@ from recipe.models import Recipe, RecipeTypeRevision
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 from data.data.json import data_v6
+from messaging.manager import CommandMessageManager
+from job.messages.create_jobs import create_jobs_message
+from recipe.messages.create_recipes import CreateRecipes
+from util.rest import BadParameter
 
 
 logger = logging.getLogger(__name__)
@@ -413,13 +417,19 @@ class QueueManager(models.Manager):
         :raises job.configuration.data.exceptions.InvalidData: If the job data is invalid
         """
 
-        job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
-        job = Job.objects.create_job_v6(job_type_rev, event.id, data)
-        job.save()
+        try:
+            job_type_rev = JobTypeRevision.objects.get_revision(job_type.name, job_type.version, job_type.revision_num)
+            with transaction.atomic():
+                job = Job.objects.create_job_v6(job_type_rev, event.id, data)
+                job.save()
+                CommandMessageManager().send_messages([create_jobs_message(job_type.name, job_type.version,job_type_rev.pk, event.id)])
+        except InvalidData as ex:
+            raise BadParameter(unicode(ex))
+
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
         self.queue_jobs([job])
-        job = Job.objects.get(id=job.id)
+        job = Job.objects.get_details(job.id)
         Job.objects.process_job_input(job)
 
         return job
@@ -541,12 +551,11 @@ class QueueManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        recipe_type_rev =  RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
-        
-        recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
-        recipe.save()
-        Recipe.objects.process_recipe_input(recipe)
-
+        recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
+        with transaction.atomic():
+            recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
+            recipe.save()
+            Recipe.objects.process_recipe_input(recipe)
         return recipe
 
     # TODO: once Django user auth is used, have the user information passed into here
