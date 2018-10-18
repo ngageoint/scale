@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from batch.definition.exceptions import InvalidDefinition
-from recipe.handlers.graph_delta import RecipeGraphDelta
+from recipe.diff.diff import RecipeDiff
 
 
 class BatchDefinition(object):
@@ -13,8 +13,7 @@ class BatchDefinition(object):
         """
 
         self.root_batch_id = None
-        self.job_names = []
-        self.all_jobs = False
+        self.forced_nodes = None
 
         # Derived fields
         self.estimated_recipes = 0
@@ -42,14 +41,11 @@ class BatchDefinition(object):
                                         'Previous batch must have completed creating all of its recipes')
 
             # Generate recipe diff against the previous batch
-            recipe_graph = batch.recipe_type_rev.get_recipe_definition().get_graph()
-            prev_recipe_graph = batch.superseded_batch.recipe_type_rev.get_recipe_definition().get_graph()
-            self.prev_batch_diff = RecipeGraphDelta(prev_recipe_graph, recipe_graph)
-            if self.all_jobs:
-                self.job_names = recipe_graph.get_topological_order()
-            if self.job_names:
-                for job_name in self.job_names:
-                    self.prev_batch_diff.reprocess_identical_node(job_name)
+            recipe_def = batch.recipe_type_rev.get_definition()
+            prev_recipe_def = batch.superseded_batch.recipe_type_rev.get_definition()
+            self.prev_batch_diff = RecipeDiff(prev_recipe_def, recipe_def)
+            if self.forced_nodes:
+                self.prev_batch_diff.set_force_reprocess(self.forced_nodes)
             if not self.prev_batch_diff.can_be_reprocessed:
                 raise InvalidDefinition('PREV_BATCH_NO_REPROCESS', 'Previous batch cannot be reprocessed')
 

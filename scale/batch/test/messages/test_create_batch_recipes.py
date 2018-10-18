@@ -37,11 +37,11 @@ class TestCreateBatchRecipes(TestCase):
         result = new_message.execute()
 
         self.assertTrue(result)
-        # Should be one reprocess_recipes message for the three recipes
+        # Should be one create_recipes message for the three recipes
         self.assertEqual(len(new_message.new_messages), 1)
         message = new_message.new_messages[0]
-        self.assertEqual(message.type, 'reprocess_recipes')
-        self.assertSetEqual(set(message._root_recipe_ids), {recipe_1.id, recipe_2.id, recipe_3.id})
+        self.assertEqual(message.type, 'create_recipes')
+        self.assertSetEqual(set(message.root_recipe_ids), {recipe_1.id, recipe_2.id, recipe_3.id})
 
     def test_execute(self):
         """Tests calling CreateBatchRecipes.execute() successfully"""
@@ -78,14 +78,19 @@ class TestCreateBatchRecipes(TestCase):
         # Should be two messages, one for next create_batch_recipes and one for re-processing recipes
         self.assertEqual(len(message.new_messages), 2)
         batch_recipes_message = message.new_messages[0]
-        reprocess_message = message.new_messages[1]
+        create_recipes_message = message.new_messages[1]
         self.assertEqual(batch_recipes_message.type, 'create_batch_recipes')
         self.assertEqual(batch_recipes_message.batch_id, new_batch.id)
         self.assertFalse(batch_recipes_message.is_prev_batch_done)
         self.assertEqual(batch_recipes_message.current_recipe_id, recipe_2.id)
-        self.assertEqual(reprocess_message.type, 'reprocess_recipes')
-        self.assertSetEqual(set(reprocess_message._root_recipe_ids), {recipe_2.id, recipe_3.id, recipe_4.id,
-                                                                      recipe_5.id, recipe_6.id})
+        self.assertEqual(create_recipes_message.type, 'create_recipes')
+        self.assertSetEqual(set(create_recipes_message.root_recipe_ids), {recipe_2.id, recipe_3.id, recipe_4.id,
+                                                                          recipe_5.id, recipe_6.id})
+        self.assertEqual(create_recipes_message.batch_id, new_batch.id)
+        self.assertEqual(create_recipes_message.event_id, new_batch.event_id)
+        self.assertIsNone(create_recipes_message.forced_nodes)
+        self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
+        self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)
 
         # Test executing message again
         message = batch.messages.create_batch_recipes.CreateBatchRecipes.from_json(message_json)
@@ -95,22 +100,32 @@ class TestCreateBatchRecipes(TestCase):
         # Should have same messages returned
         self.assertEqual(len(message.new_messages), 2)
         batch_recipes_message = message.new_messages[0]
-        reprocess_message = message.new_messages[1]
+        create_recipes_message = message.new_messages[1]
         self.assertEqual(batch_recipes_message.type, 'create_batch_recipes')
         self.assertEqual(batch_recipes_message.batch_id, new_batch.id)
         self.assertFalse(batch_recipes_message.is_prev_batch_done)
         self.assertEqual(batch_recipes_message.current_recipe_id, recipe_2.id)
-        self.assertEqual(reprocess_message.type, 'reprocess_recipes')
-        self.assertSetEqual(set(reprocess_message._root_recipe_ids), {recipe_2.id, recipe_3.id, recipe_4.id,
-                                                                      recipe_5.id, recipe_6.id})
+        self.assertEqual(create_recipes_message.type, 'create_recipes')
+        self.assertSetEqual(set(create_recipes_message.root_recipe_ids), {recipe_2.id, recipe_3.id, recipe_4.id,
+                                                                          recipe_5.id, recipe_6.id})
+        self.assertEqual(create_recipes_message.batch_id, new_batch.id)
+        self.assertEqual(create_recipes_message.event_id, new_batch.event_id)
+        self.assertIsNone(create_recipes_message.forced_nodes)
+        self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
+        self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)
 
         # Execute next create_batch_recipes messages
         result = batch_recipes_message.execute()
         self.assertTrue(result)
 
-        # Should only have one last reprocess message
+        # Should only have one last rcreate_recipes message
         self.assertEqual(len(batch_recipes_message.new_messages), 1)
-        reprocess_message = batch_recipes_message.new_messages[0]
+        create_recipes_message = batch_recipes_message.new_messages[0]
         self.assertTrue(batch_recipes_message.is_prev_batch_done)
-        self.assertEqual(reprocess_message.type, 'reprocess_recipes')
-        self.assertSetEqual(set(reprocess_message._root_recipe_ids), {recipe_1.id})
+        self.assertEqual(create_recipes_message.type, 'create_recipes')
+        self.assertSetEqual(set(create_recipes_message.root_recipe_ids), {recipe_1.id})
+        self.assertEqual(create_recipes_message.batch_id, new_batch.id)
+        self.assertEqual(create_recipes_message.event_id, new_batch.event_id)
+        self.assertIsNone(create_recipes_message.forced_nodes)
+        self.assertEqual(create_recipes_message.recipe_type_name, new_batch.recipe_type.name)
+        self.assertEqual(create_recipes_message.recipe_type_rev_num, new_batch.recipe_type.revision_num)

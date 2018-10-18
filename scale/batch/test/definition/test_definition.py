@@ -19,8 +19,7 @@ class TestBatchDefinition(TestCase):
         """Tests creating a BatchDefinition from a JSON"""
 
         # Valid previous batch definition
-        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234, 'job_names': ['job_a', 'job_b'],
-                                                         'all_jobs': True}}
+        definition = {'version': '6', 'previous_batch': {'root_batch_id': 1234, 'forced_nodes': {'all': True}}}
         json = BatchDefinitionV6(definition=definition, do_validate=True)
         self.assertIsNotNone(json.get_definition())
 
@@ -63,7 +62,7 @@ class TestBatchDefinition(TestCase):
         definition = json.get_definition()
         batch.superseded_batch = prev_batch
 
-        with patch('batch.definition.definition.RecipeGraphDelta') as mock_delta:
+        with patch('batch.definition.definition.RecipeDiff') as mock_delta:
             instance = mock_delta.return_value
             instance.can_be_reprocessed = False
             self.assertRaises(InvalidDefinition, definition.validate, batch)

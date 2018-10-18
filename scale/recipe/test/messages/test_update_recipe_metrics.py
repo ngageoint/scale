@@ -6,6 +6,8 @@ from django.test import TestCase
 from batch.test import utils as batch_test_utils
 from job.models import Job
 from job.test import utils as job_test_utils
+from recipe.diff.forced_nodes import ForcedNodes
+from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
 from recipe.messages.update_recipe_metrics import UpdateRecipeMetrics
 from recipe.models import Recipe, RecipeNode
 from recipe.test import utils as recipe_test_utils
@@ -325,16 +327,20 @@ class TestUpdateRecipes(TestCase):
         self.assertListEqual(msg._batch_ids, [batch.id])
 
     def test_execute_with_top_level_recipe(self):
-        """Tests calling UpdateRecipeMetrics.execute() successfully where a message needs to be sent to update a
-        top-level recipe
+        """Tests calling UpdateRecipeMetrics.execute() successfully where messages need to be sent to update a top-level
+        recipe
         """
 
         batch = batch_test_utils.create_batch()
         top_recipe = recipe_test_utils.create_recipe(batch=batch)
         recipe = recipe_test_utils.create_recipe(batch=batch)
         recipe.recipe = top_recipe
+        recipe.root_recipe = top_recipe
         recipe.save()
         recipe_node_1 = recipe_test_utils.create_recipe_node(recipe=top_recipe, sub_recipe=recipe)
+        forced_nodes = ForcedNodes()
+        forced_nodes.set_all_nodes()
+        forced_nodes_dict = convert_forced_nodes_to_v6(forced_nodes).get_dict()
 
         # Recipe jobs
         job_1 = job_test_utils.create_job(status='FAILED', save=False)
@@ -374,12 +380,16 @@ class TestUpdateRecipes(TestCase):
         self.assertEqual(recipe.sub_recipes_total, 0)
         self.assertEqual(recipe.sub_recipes_completed, 0)
 
-        # Make sure message is created to update top-level recipe metrics
+        # Make sure message is created to update top-level recipe and recipe metrics
         # There should be no message to update batch metrics since we did not update a top-level recipe
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'update_recipe_metrics')
-        self.assertListEqual(msg._recipe_ids, [top_recipe.id])
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipe_metrics_msg = message.new_messages[0]
+        update_recipe_msg = message.new_messages[1]
+        self.assertEqual(update_recipe_metrics_msg.type, 'update_recipe_metrics')
+        self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [top_recipe.id])
+        self.assertEqual(update_recipe_msg.type, 'update_recipe')
+        self.assertEqual(update_recipe_msg.root_recipe_id, top_recipe.id)
+        self.assertDictEqual(convert_forced_nodes_to_v6(update_recipe_msg.forced_nodes).get_dict(), forced_nodes_dict)
 
         # Test executing message again
         message_json_dict = message.to_json()
@@ -399,9 +409,13 @@ class TestUpdateRecipes(TestCase):
         self.assertEqual(recipe.sub_recipes_total, 0)
         self.assertEqual(recipe.sub_recipes_completed, 0)
 
-        # Make sure message is created to update top-level recipe metrics
+        # Make sure message is created to update top-level recipe and recipe metrics
         # There should be no message to update batch metrics since we did not update a top-level recipe
-        self.assertEqual(len(message.new_messages), 1)
-        msg = message.new_messages[0]
-        self.assertEqual(msg.type, 'update_recipe_metrics')
-        self.assertListEqual(msg._recipe_ids, [top_recipe.id])
+        self.assertEqual(len(message.new_messages), 2)
+        update_recipe_metrics_msg = message.new_messages[0]
+        update_recipe_msg = message.new_messages[1]
+        self.assertEqual(update_recipe_metrics_msg.type, 'update_recipe_metrics')
+        self.assertListEqual(update_recipe_metrics_msg._recipe_ids, [top_recipe.id])
+        self.assertEqual(update_recipe_msg.type, 'update_recipe')
+        self.assertEqual(update_recipe_msg.root_recipe_id, top_recipe.id)
+        self.assertDictEqual(convert_forced_nodes_to_v6(update_recipe_msg.forced_nodes).get_dict(), forced_nodes_dict)

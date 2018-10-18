@@ -162,7 +162,7 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
 
     recipe = Recipe()
     recipe.recipe_type = recipe_type
-    recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision_old(recipe_type.id, recipe_type.revision_num)
+    recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.name, recipe_type.revision_num)
     recipe.event = event
     recipe.input = input
     recipe.is_superseded = is_superseded

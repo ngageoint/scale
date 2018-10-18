@@ -142,16 +142,16 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         try:
-            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData(recipe_data))
+            recipe = Queue.objects.queue_new_recipe_for_user(recipe_type, LegacyRecipeData(recipe_data))
         except InvalidRecipeData as err:
             return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # TODO: remove this check when REST API v5 is removed
             if request.version == 'v6':
-                recipe = Recipe.objects.get_details(handler.recipe.id)
+                recipe = Recipe.objects.get_details(recipe.id)
             else:
-                recipe = Recipe.objects.get_details_v5(handler.recipe.id)
+                recipe = Recipe.objects.get_details_v5(recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
             
