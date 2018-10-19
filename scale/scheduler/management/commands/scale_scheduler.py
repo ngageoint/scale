@@ -96,20 +96,22 @@ class Command(BaseCommand):
             framework.webui_url = webserver_address
 
         logger.info('Connecting to Mesos master at %s', mesos_master)
-    
-        # TODO(vinod): Make checkpointing the default when it is default on the slave.
-        if MESOS_CHECKPOINT:
-            logger.info('Enabling checkpoint for the framework')
-            framework.checkpoint = True
 
         if principal and secret:
             logger.info('Enabling authentication for the framework')
 
-            credential = mesos_pb2.Credential()
-            credential.principal = principal
-            credential.secret = secret
+            credentials = mesos_pb2.Credential()
+            logger.info('%s:%s' % (principal, secret))
+            credentials.principal = principal
+            credentials.secret = secret
+            #cred = credentials.credentials.add()
+            #cred.principal = principal
+            #cred.secret = secret
+            #framework.principal = cred.principal
+            logger.info(credentials)
+            logger.info(mesos_master)
 
-            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master, credential)
+            self.driver = MesosSchedulerDriver(self.scheduler, framework, mesos_master, credentials)
         else:
             logger.info('Framework authentication skipped due to missing PRINCIPAL and SECRET env variables')
 
