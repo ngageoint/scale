@@ -1016,6 +1016,57 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
+class RecipeConditionManager(models.Manager):
+    """Provides additional methods for handling recipe conditions
+    """
+
+    pass
+
+
+class RecipeCondition(models.Model):
+    """Represents a conditional decision within a recipe. If the condition is accepted then the dependent nodes will be
+    created and processed, while if the condition is not accepted the dependent nodes will never be created.
+
+    :keyword root_recipe: The root recipe that contains this condition
+    :type root_recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe: The original recipe that created this condition
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch that contains this condition
+    :type batch: :class:`django.db.models.ForeignKey`
+
+    :keyword is_processed: Whether the condition has been processed
+    :type is_processed: :class:`django.db.models.BooleanField`
+    :keyword is_accepted: Whether the condition has been accepted
+    :type is_accepted: :class:`django.db.models.BooleanField`
+
+    :keyword created: When this condition was created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword processed: When this condition was processed
+    :type processed: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When the condition was last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+    """
+
+    root_recipe = models.ForeignKey('recipe.Recipe', related_name='conditions_for_root_recipe',
+                                    on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', related_name='conditions_for_recipe', on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', related_name='conditions_for_batch', blank=True, null=True,
+                              on_delete=models.PROTECT)
+
+    is_processed = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    processed = models.DateTimeField(blank=True, null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    objects = RecipeConditionManager()
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_condition'
+
+
 class RecipeInputFileManager(models.Manager):
     """Provides additional methods for handleing RecipeInputFiles"""
 
@@ -1309,6 +1360,8 @@ class RecipeNode(models.Model):
     :keyword is_original: Whether this is the original recipe for the node (True) or the node is copied from a
         superseded recipe (False)
     :type is_original: :class:`django.db.models.BooleanField`
+    :keyword condition: If not null, this node is a condition node and this field is the condition within the recipe
+    :type condition: :class:`django.db.models.ForeignKey`
     :keyword job: If not null, this node is a job node and this field is the job that the recipe contains
     :type job: :class:`django.db.models.ForeignKey`
     :keyword sub_recipe: If not null, this node is a recipe node and this field is the sub-recipe that the recipe
@@ -1319,6 +1372,7 @@ class RecipeNode(models.Model):
     recipe = models.ForeignKey('recipe.Recipe', related_name='contains', on_delete=models.PROTECT)
     node_name = models.CharField(max_length=100)
     is_original = models.BooleanField(default=True)
+    condition = models.ForeignKey('recipe.RecipeCondition', blank=True, null=True, on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
     sub_recipe = models.ForeignKey('recipe.Recipe', related_name='contained_by', blank=True, null=True,
                                    on_delete=models.PROTECT)
