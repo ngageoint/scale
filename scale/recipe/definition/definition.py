@@ -87,6 +87,30 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
+    def update_job_nodes(self, job_type_name, job_type_version, revision_num):
+        """Updates the revision of job nodes with the given name and version
+
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
+        :param job_type_version: The version of the job type
+        :type job_type_version: string
+        :param revision_num: The new revision number of the job type
+        :type revision_num: int
+        :returns: True if a node was updated, otherwise false
+        :rtype: bool
+        """
+
+        found = False
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, JobNodeDefinition):
+                if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
+                    if node.revision_num >= revision_num:
+                        continue
+                    else:
+                        node.revision_num = revision_num
+                        found = True
+
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
         """Adds a connection from a recipe input to the input of a node
 
@@ -121,6 +145,28 @@ class RecipeDefinition(object):
         """
 
         self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
+
+    def update_recipe_nodes(self, recipe_type_name, revision_num):
+        """Updates the revision of recipe nodes with the given name to the specified revision_num
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :param revision_num: The new revision number of the recipe type
+        :type revision_num: int
+        :returns: True if a node was updated, otherwise false
+        :rtype: bool
+        """
+
+        found = False
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, RecipeNodeDefinition):
+                if node.recipe_type_name == recipe_type_name:
+                    if node.revision_num >= revision_num:
+                        continue
+                    else:
+                        node.revision_num = revision_num
+                        found = True
 
     def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
         """Generates the input data for the node with the given name
