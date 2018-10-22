@@ -99,7 +99,8 @@ class UpdateRecipeDefinition(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        recipe_type = RecipeType.objects.get(pk=self.recipe_type_id)
+        # Acquire model lock
+        recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe_type_id)
 
         definition = recipe_type.get_definition()
 
@@ -113,8 +114,22 @@ class UpdateRecipeDefinition(CommandMessage):
             updated_node = definition.update_job_nodes(job_type_name=jt.name, job_type_version=jt.version,
                                         revision_num=jt.revision_num)
 
+        valid = False
+        
         if updated_node:
-            RecipeType.objects.edit_recipe_type(definition=definition)
+            #RecipeType.objects.edit_recipe_type(definition=definition)
+            for n in definition.graph.values():
+                n.
 
-
+        if valid:
+            recipe_type.definition = definition.get_dict()
+            recipe_type.revision_num = recipe_type.revision_num + 1
+            recipe_type.save()
+            RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+            parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
+            for p in parents:
+                #avoid infinite recursion
+                if p != self.sub_recipe_type_id:
+                    msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
+                    self.new_messages.extend(msg)
         return True
