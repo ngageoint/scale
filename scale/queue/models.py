@@ -24,8 +24,8 @@ from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 from data.data.json import data_v6
 from messaging.manager import CommandMessageManager
-from job.messages.create_jobs import create_jobs_message
-from recipe.messages.create_recipes import CreateRecipes
+from job.messages.process_job_input import create_process_job_input_messages
+from recipe.messages.process_recipe_input import create_process_recipe_input_messages
 from util.rest import BadParameter
 
 
@@ -422,7 +422,7 @@ class QueueManager(models.Manager):
             with transaction.atomic():
                 job = Job.objects.create_job_v6(job_type_rev, event.id, data)
                 job.save()
-                CommandMessageManager().send_messages([create_jobs_message(job_type.name, job_type.version,job_type_rev.pk, event.id)])
+                CommandMessageManager().send_messages([create_process_job_input_messages([job.pk])])
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
 
@@ -555,6 +555,7 @@ class QueueManager(models.Manager):
         with transaction.atomic():
             recipe = Recipe.objects.create_recipe_v6(recipe_type_rev, event.pk, recipe_input,None,None, batch_id=None, superseded_recipe=None )
             recipe.save()
+            CommandMessageManager().send_messages(create_process_recipe_input_messages([recipe.pk]))
             Recipe.objects.process_recipe_input(recipe)
         return recipe
 
