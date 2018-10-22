@@ -117,12 +117,14 @@ class UpdateRecipeDefinition(CommandMessage):
         valid = False
         
         if updated_node:
-            #RecipeType.objects.edit_recipe_type(definition=definition)
-            for n in definition.graph.values():
-                n.
+            inputs = {}
+            outputs = {}
+            for node_name in definition.get_topological_order():
+                inputs[node_name] = Interface()
+                
 
         if valid:
-            recipe_type.definition = definition.get_dict()
+            recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
             recipe_type.revision_num = recipe_type.revision_num + 1
             recipe_type.save()
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
