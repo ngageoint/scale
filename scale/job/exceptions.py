@@ -7,3 +7,8 @@ class InvalidJobField(Exception):
     """
 
     pass
+
+class NonSeedJobType(Exception):
+    """Exception indicating that a job type is not a seed job type
+    """
+    pass

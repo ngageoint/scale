@@ -2855,6 +2855,8 @@ class TestJobTypeDetailsViewV6(TestCase):
                                                        trigger_rule=self.trigger_rule, max_scheduled=2,
                                                        configuration=self.configuration)
 
+        self.old_job_type = job_test_utils.create_job_type()
+        
     def test_not_found(self):
         """Tests calling the get job type details view with a job name/version that does not exist."""
 
@@ -2863,6 +2865,12 @@ class TestJobTypeDetailsViewV6(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
+    def test_non_seed(self):
+        """Tests calling the get v6 job type details view with a non seed job name/version."""
+        url = '/%s/job-types/%s/%s/' % (self.api, self.old_job_type.name, self.old_job_type.version)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+    
     def test_successful(self):
         """Tests successfully calling the get job type details view."""
 
