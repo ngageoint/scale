@@ -805,6 +805,34 @@ class TestJobType(TransactionTestCase):
     def test_is_seed_job_type(self):
         self.assertTrue(self.seed_job_type.is_seed_job_type())
         self.assertFalse(self.legacy_job_type.is_seed_job_type())
+        
+class TestJobTypeRevision(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.seed_job_type = job_test_utils.create_seed_job_type()
+        self.seed_job_type_rev = JobTypeRevision.objects.get_revision(self.seed_job_type.name, 
+                                                                      self.seed_job_type.version, 
+                                                                      self.seed_job_type.revision_num)
+        self.legacy_job_type = job_test_utils.create_job_type()
+        self.legacy_job_type.cpus_required = 5.0
+        self.legacy_job_type.mem_const_required = 6.0
+        self.legacy_job_type.mem_mult_required = 7.0
+        self.legacy_job_type.shared_mem_required = 8.0
+        self.legacy_job_type.disk_out_const_required = 9.0
+        self.legacy_job_type.disk_out_mult_required = 10.0
+        self.legacy_job_type_rev = JobTypeRevision.objects.get_revision(self.legacy_job_type.name, 
+                                                                        self.legacy_job_type.version, 
+                                                                        self.legacy_job_type.revision_num)
+        
+    def test_revision_get_input_interface(self):
+        self.assertEqual(self.seed_job_type_rev.get_input_interface().parameters['INPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(self.legacy_job_type_rev.get_input_interface().parameters, {})
+        
+    def test_revision_get_output_interface(self):
+        self.assertEqual(self.seed_job_type_rev.get_output_interface().parameters['OUTPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(self.legacy_job_type_rev.get_output_interface().parameters, {})
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):
 
