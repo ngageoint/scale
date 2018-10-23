@@ -19,6 +19,8 @@ class DataFilter(object):
         # TODO: take out accept param and do real implementation
         self.accept = accept
 
+        # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
+
     def is_data_accepted(self, data):
         """Indicates whether the given data passes the filter or not
 
