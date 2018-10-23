@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 import logging
 
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
-from recipe.instance.node import DummyNodeInstance, JobNodeInstance, RecipeNodeInstance
+from recipe.definition.node import ConditionNodeDefinition, JobNodeDefinition, RecipeNodeDefinition
+from recipe.instance.node import ConditionNodeInstance, DummyNodeInstance, JobNodeInstance, RecipeNodeInstance
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,8 @@ class RecipeInstance(object):
                     node = JobNodeInstance(node_definition, recipe_node_model.job, is_original)
                 elif node_definition.node_type == RecipeNodeDefinition.NODE_TYPE:
                     node = RecipeNodeInstance(node_definition, recipe_node_model.sub_recipe, is_original)
+                elif node_definition.node_type == ConditionNodeDefinition.NODE_TYPE:
+                    node = ConditionNodeInstance(node_definition, recipe_node_model.condition, is_original)
             else:
                 node = DummyNodeInstance(node_definition)
             self.graph[node.name] = node
@@ -124,7 +126,7 @@ class RecipeInstance(object):
         for node_name in self._definition.get_topological_order():
             if node_name in self.graph:
                 node = self.graph[node_name]
-                if not node.is_ready_for_children():
+                if not node.is_completed():
                     # A node has not yet completed, so recipe has not completed
                     return False
             else:

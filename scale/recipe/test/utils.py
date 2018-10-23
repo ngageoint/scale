@@ -10,7 +10,7 @@ from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeCondition, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -181,6 +181,42 @@ def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False,
     return recipe
 
 
+def create_recipe_condition(root_recipe=None, recipe=None, batch=None, is_processed=None, is_accepted=None, save=False):
+    """Creates a recipe_node model for unit testing
+
+    :param root_recipe: The root recipe containing the condition
+    :type root_recipe: :class:'recipe.models.Recipe'
+    :param recipe: The recipe containing the condition
+    :type recipe: :class:'recipe.models.Recipe'
+    :param batch: The batch
+    :type batch: :class:'batch.models.Batch'
+    :param is_processed: Whether the condition has been processed
+    :type is_processed: bool
+    :param is_accepted: Whether the condition has been accepted
+    :type is_accepted: bool
+    :returns: The recipe_node model
+    :rtype: :class:`recipe.models.RecipeNode`
+    """
+
+    if not recipe:
+        recipe = create_recipe()
+
+    condition = RecipeCondition()
+    condition.root_recipe = root_recipe if root_recipe else recipe
+    condition.recipe = recipe
+    condition.batch = batch
+    condition.is_processed = is_processed
+    condition.is_accepted = is_accepted
+
+    if condition.is_processed:
+        condition.processed = timezone.now()
+
+    if save:
+        condition.save()
+
+    return condition
+
+
 # TODO: this is deprecated and should be replaced with create_recipe_node()
 def create_recipe_job(recipe=None, job_name=None, job=None):
     """Creates a job type model for unit testing
@@ -211,13 +247,16 @@ def create_recipe_job(recipe=None, job_name=None, job=None):
     return recipe_job
 
 
-def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, save=False, is_original=True):
+def create_recipe_node(recipe=None, node_name=None, condition=None, job=None, sub_recipe=None, save=False,
+                       is_original=True):
     """Creates a recipe_node model for unit testing
 
     :param recipe: The recipe containing the node
     :type recipe: :class:'recipe.models.Recipe'
     :param node_name: The node name
     :type node_name: string
+    :param condition: The condition in the node
+    :type condition: :class:'recipe.models.RecipeCondition'
     :param job: The job in the node
     :type job: :class:'job.models.Job'
     :param sub_recipe: The recipe in the node
@@ -243,9 +282,11 @@ def create_recipe_node(recipe=None, node_name=None, job=None, sub_recipe=None, s
     recipe_node.recipe = recipe
     recipe_node.node_name = node_name
     recipe_node.is_original = is_original
-    if job:
+    if condition:
+        recipe_node.condition = condition
+    elif job:
         recipe_node.job = job
-    else:
+    elif sub_recipe:
         recipe_node.sub_recipe = sub_recipe
 
     if save:

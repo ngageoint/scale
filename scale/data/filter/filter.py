@@ -9,6 +9,13 @@ class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
+    # TODO:
+    #  - implement in recipe instance
+    #    - rework how output data is passed around, must be generated for condition node
+    #  - add to v6 recipe instance JSON
+    #  - implement in recipe diff
+    #  - add to v6 recipe diff JSON
+
     def __init__(self, accept):
         """Constructor
 

@@ -1163,14 +1163,16 @@ class RecipeNodeManager(models.Manager):
             superseded_recipe_id = recipe_copy.superseded_recipe_id
             recipe_id = recipe_copy.recipe_id
             node_names = recipe_copy.node_names
-            sub_qry = 'SELECT node_name, false, %d, job_id, sub_recipe_id FROM recipe_node WHERE recipe_id = %d'
+            sub_qry = 'SELECT node_name, false, %d, condition_id, job_id, sub_recipe_id '
+            sub_qry += 'FROM recipe_node WHERE recipe_id = %d'
             sub_qry = sub_qry % (recipe_id, superseded_recipe_id)
             if node_names:
                 node_sub_qry = ', '.join('\'%s\'' % node_name for node_name in node_names)
                 sub_qry = '%s AND node_name IN (%s)' % (sub_qry, node_sub_qry)
             sub_queries.append(sub_qry)
         union_sub_qry = ' UNION ALL '.join(sub_queries)
-        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, job_id, sub_recipe_id) %s' % union_sub_qry
+        qry = 'INSERT INTO recipe_node (node_name, is_original, recipe_id, condition_id, job_id, sub_recipe_id) %s'
+        qry = qry % union_sub_qry
 
         with connection.cursor() as cursor:
             cursor.execute(qry)
@@ -1259,7 +1261,7 @@ class RecipeNodeManager(models.Manager):
         return {rn.node_name: rn.job for rn in qry}
 
     def get_recipe_nodes(self, recipe_id):
-        """Returns the recipe_node models with related sub_recipe and job models for the given recipe ID
+        """Returns the recipe_node models with related condition, job, and sub_recipe models for the given recipe ID
 
         :param recipe_id: The recipe ID
         :type recipe_id: int
@@ -1267,7 +1269,7 @@ class RecipeNodeManager(models.Manager):
         :rtype: list
         """
 
-        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
+        return self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
 
     def get_recipe_node_outputs(self, recipe_id):
         """Returns the output data for each recipe node for the given recipe ID
