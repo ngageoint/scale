@@ -3,22 +3,12 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.utils.timezone import now
-
-from job.messages.blocked_jobs import create_blocked_jobs_messages
-from job.messages.create_jobs import create_jobs_messages_for_recipe, RecipeJob
-from job.messages.pending_jobs import create_pending_jobs_messages
-from job.messages.process_job_input import create_process_job_input_messages
 from job.models import JobType
 from messaging.messages.message import CommandMessage
-from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
-from recipe.diff.forced_nodes import ForcedNodes
-from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6, ForcedNodesV6
-from recipe.messages.create_recipes import create_subrecipes_messages, SubRecipe
-from recipe.messages.process_recipe_input import create_process_recipe_input_messages
-from recipe.models import Recipe, RecipeType, RecipeTypeRevision
-from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
-
+from recipe.definition.definition import InvalidDefinition
+from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json
+from recipe.models import RecipeType, RecipeTypeRevision
+from recipe.models import RecipeTypeSubLink
 
 logger = logging.getLogger(__name__)
 
@@ -108,23 +98,26 @@ class UpdateRecipeDefinition(CommandMessage):
         if self.sub_recipe_type_id:
             sub = RecipeType.objects.get(pk=self.sub_recipe_type_id)
             updated_node = definition.update_recipe_nodes(recipe_type_name=sub.name,
-                                           revision_num=sub.revision_num)
+                                                          revision_num=sub.revision_num)
         if self.job_type_id:
             jt = JobType.objects.get(pk=self.job_type_id)
             updated_node = definition.update_job_nodes(job_type_name=jt.name, job_type_version=jt.version,
-                                        revision_num=jt.revision_num)
+                                                       revision_num=jt.revision_num)
 
         valid = False
-        
+
         if updated_node:
             inputs, outputs = definition.get_interfaces()
             warnings = []
-            try
+            try:
                 warnings = definition.validate(inputs, outputs)
                 valid = True
             except InvalidDefinition as ex:
-                logger.exception("Invalid definition while updating recipe type with id=%i: %s", self.recipe_type_id, ex)
+                logger.exception("Invalid definition updating recipe type with id=%i: %s", self.recipe_type_id, ex)
                 valid = False
+
+            if len(warnings) > 0:
+                logger.warning('Warnings found when validating updated recipe definition: %s', warnings)
 
         if valid:
             recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
@@ -133,7 +126,7 @@ class UpdateRecipeDefinition(CommandMessage):
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
             parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
             for p in parents:
-                #avoid infinite recursion
+                # avoid infinite recursion
                 if p != self.sub_recipe_type_id:
                     msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
                     self.new_messages.extend(msg)
