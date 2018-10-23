@@ -110,6 +110,8 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
+                        
+        return found
 
     def add_recipe_input_connection(self, node_name, node_input_name, recipe_input_name):
         """Adds a connection from a recipe input to the input of a node
@@ -167,6 +169,8 @@ class RecipeDefinition(object):
                     else:
                         node.revision_num = revision_num
                         found = True
+                        
+        return found
 
     def generate_node_input_data(self, node_name, recipe_input_data, node_outputs):
         """Generates the input data for the node with the given name

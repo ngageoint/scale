@@ -1858,6 +1858,9 @@ class RecipeTypeSubLinkManager(models.Manager):
 
         if len(recipe_type_ids) != len(sub_recipe_type_ids):
             raise Exception('Recipe Type and Sub recipe type lists must be equal length!')
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeSubLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
 
         new_links = []
 
@@ -1866,6 +1869,23 @@ class RecipeTypeSubLinkManager(models.Manager):
             new_links.append(link)
 
         RecipeTypeSubLink.objects.bulk_create(new_links)
+        
+    @transaction.atomic
+    def create_recipe_type_job_link(self, recipe_type_id, sub_recipe_type_id):
+        """Creates the appropriate link for the given recipe and job type. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_id: recipe type ID
+        :type recipe_type_id: int
+        :param sub_recipe_type_id: sub recipe type ID.
+        :type sub_recipe_type_id: int
+        """
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeSubLink.objects.filter(recipe_type_id=recipe_type_id).delete()
+        
+        link = RecipeTypeSubLink(recipe_type_id=recipe_type_id, sub_recipe_type_id=sub_recipe_type_id)
+        link.save()
 
     def get_recipe_type_ids(self, sub_recipe_type_ids):
         """Returns a list of the parent recipe_type IDs for the given sub recipe type IDs.
@@ -1876,7 +1896,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeSubLink.objects.filter(sub_recipe_type__in=list(sub_recipe_type_ids)).only('recipe_type_id')
+        query = RecipeTypeSubLink.objects.filter(sub_recipe_type_id__in=list(sub_recipe_type_ids)).only('recipe_type_id')
         return [result.recipe_type_id for result in query]
 
     def get_sub_recipe_type_ids(self, recipe_type_ids):
@@ -1888,7 +1908,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeSubLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('sub_recipe_type_id')
+        query = RecipeTypeSubLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('sub_recipe_type_id')
         return [result.sub_recipe_type_id for result in query]
 
 class RecipeTypeSubLink(models.Model):
@@ -1927,6 +1947,9 @@ class RecipeTypeJobLinkManager(models.Manager):
 
         if len(recipe_type_ids) != len(job_type_ids):
             raise Exception('Recipe Type and Job Type lists must be equal length!')
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeJobLink.objects.filter(recipe_type_id__in=recipe_type_ids).delete()
 
         new_links = []
 
@@ -1935,6 +1958,23 @@ class RecipeTypeJobLinkManager(models.Manager):
             new_links.append(link)
 
         RecipeTypeJobLink.objects.bulk_create(new_links)
+        
+    @transaction.atomic
+    def create_recipe_type_job_link(self, recipe_type_id, job_type_id):
+        """Creates the appropriate link for the given recipe and job type. All database changes are
+        made in an atomic transaction.
+
+        :param recipe_type_id: recipe type ID
+        :type recipe_type_id: int
+        :param job_type_id: job type ID.
+        :type job_type_id: int
+        """
+            
+        # Delete any previous links for the given recipe
+        RecipeTypeJobLink.objects.filter(recipe_type_id=recipe_type_id).delete()
+        
+        link = RecipeTypeJobLink(recipe_type_id=recipe_type_id, job_type_id=job_type_id)
+        link.save()
 
     def get_recipe_type_ids(self, job_type_ids):
         """Returns a list of recipe_type IDs for the given job type IDs.
@@ -1945,7 +1985,7 @@ class RecipeTypeJobLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeJobLink.objects.filter(job_type__in=list(job_type_ids)).only('recipe_type_id')
+        query = RecipeTypeJobLink.objects.filter(job_type_id__in=list(job_type_ids)).only('recipe_type_id')
         return [result.recipe_type_id for result in query]
 
     def get_job_type_ids(self, recipe_type_ids):
@@ -1957,7 +1997,7 @@ class RecipeTypeJobLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeJobLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('job_type_id')
+        query = RecipeTypeJobLink.objects.filter(recipe_type_id__in=list(recipe_type_ids)).only('job_type_id')
         return [result.job_type_id for result in query]
 
 class RecipeTypeJobLink(models.Model):
