@@ -215,6 +215,16 @@ class SeedManifest(object):
                     del file_dict['partial']
         return InterfaceV6(interface=input_dict, do_validate=False).get_interface()
 
+    def get_output_interface(self):
+        """Returns the output interface for this manifest
+
+        :returns: The output interface for this manifest
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        output_dict = copy.deepcopy(self.get_outputs())
+        return InterfaceV6(interface=output_dict, do_validate=False).get_interface()
+        
     def get_inputs(self):
         """Gets the inputs defined in the interface
 

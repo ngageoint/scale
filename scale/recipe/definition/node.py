@@ -123,6 +123,17 @@ class NodeDefinition(object):
 
         return warnings
 
+    def get_input_interface(self):
+        """Gets the input interface for a node
+        """
+    
+        raise NotImplementedError()
+    
+    def get_output_interface(self):
+        """Gets the output interface for a node
+        """
+    
+        raise NotImplementedError()
 
 class JobNodeDefinition(NodeDefinition):
     """Represents a job within a recipe definition
@@ -149,6 +160,29 @@ class JobNodeDefinition(NodeDefinition):
         self.job_type_version = job_type_version
         self.revision_num = revision_num
 
+    def get_input_interface(self):
+        """Gets the input interface for a job type node
+        """
+        
+        from job.models import JobTypeRevision
+        interface = Interface()
+        jtr = JobTypeRevision.objects.get_details_v6(self.job_type_name, self.job_type_version, self.revision_num)
+        if jtr:
+            interface = jtr.get_input_interface()
+            
+        return interface
+        
+    def get_output_interface(self):
+        """Gets the output interface for a job type node
+        """
+        
+        from job.models import JobTypeRevision
+        interface = Interface()
+        jtr = JobTypeRevision.objects.get_details_v6(self.job_type_name, self.job_type_version, self.revision_num)
+        if jtr:
+            interface = jtr.get_output_interface()
+            
+        return interface
 
 class RecipeNodeDefinition(NodeDefinition):
     """Represents a recipe within a recipe definition
@@ -171,3 +205,20 @@ class RecipeNodeDefinition(NodeDefinition):
 
         self.recipe_type_name = recipe_type_name
         self.revision_num = revision_num
+
+    def get_input_interface(self):
+        """Gets the input interface for a recipe type node
+        """
+        
+        from recipe.models import RecipeTypeRevision
+        interface = Interface()
+        rtr = RecipeTypeRevision.objects.get_revision(self.recipe_type_name, self.revision_num)
+        if rtr:
+            interface = rtr.get_input_interface()
+            
+        return interface
+        
+    def get_output_interface(self):
+        """Gets the output interface for a recipe type node
+        """
+        return Interface()

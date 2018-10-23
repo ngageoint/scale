@@ -117,11 +117,14 @@ class UpdateRecipeDefinition(CommandMessage):
         valid = False
         
         if updated_node:
-            inputs = {}
-            outputs = {}
-            for node_name in definition.get_topological_order():
-                inputs[node_name] = Interface()
-                
+            inputs, outputs = definition.get_interfaces()
+            warnings = []
+            try
+                warnings = definition.validate(inputs, outputs)
+                valid = True
+            except InvalidDefinition as ex:
+                logger.exception("Invalid definition while updating recipe type with id=%i: %s", self.recipe_type_id, ex)
+                valid = False
 
         if valid:
             recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()

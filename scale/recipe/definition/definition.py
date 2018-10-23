@@ -200,6 +200,23 @@ class RecipeDefinition(object):
 
         return self._topological_order
 
+    def get_interfaces(self):
+        """Gets the input and output interfaces for each node in this recipe
+
+        :returns: A dict of input interfaces and a dict of output interfaces
+        :rtype: dict, dict
+        """
+
+        inputs = {}
+        outputs = {}
+        
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            inputs[node_name] = node.get_input_interface()
+            outputs[node_name] = node.get_output_interface()
+
+        return inputs, outputs
+
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition
 

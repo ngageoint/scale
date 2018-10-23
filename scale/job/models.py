@@ -4057,6 +4057,31 @@ class JobTypeRevision(models.Model):
             elif input_dict['type'] == 'property':
                 interface.add_parameter(JsonParameter(input_dict['name'], 'string', required))
         return interface
+        
+    def get_output_interface(self):
+        """Returns the output interface for this revision
+
+        :returns: The output interface for this revision
+        :rtype: :class:`data.interface.interface.Interface`
+        """
+
+        if JobInterfaceSunset.is_seed_dict(self.manifest):
+            return SeedManifest(self.manifest, do_validate=False).get_output_interface()
+
+        # TODO: This can be removed when support for legacy job types is removed
+        interface = Interface()
+        for output_dict in self.manifest['output_data']:
+            media_types = output_dict['media_types'] if 'media_types' in output_dict else []
+            required = output_dict['required'] if 'required' in output_dict else True
+            if output_dict['type'] == 'file':
+                param = FileParameter(output_dict['name'], media_types, required, False)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'files':
+                param = FileParameter(input_dict['name'], media_types, required, True)
+                interface.add_parameter(param)
+            elif output_dict['type'] == 'property':
+                interface.add_parameter(JsonParameter(output_dict['name'], 'string', required))
+        return interface
 
     def get_job_interface(self):
         """Returns the job type interface for this revision
