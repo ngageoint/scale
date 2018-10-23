@@ -29,6 +29,7 @@ from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
+from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 from storage.models import ScaleFile
 from trigger.models import TriggerRule
 
@@ -815,3 +816,66 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         self.assertTrue(trigger_rule.is_active)
         num_of_revs = RecipeTypeRevision.objects.filter(recipe_type_id=recipe_type.id).count()
         self.assertEqual(num_of_revs, 1)
+
+class TestRecipeTypeSubLinkManager(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.rt1 = recipe_test_utils.create_recipe_type()
+        self.rt2 = recipe_test_utils.create_recipe_type()
+        self.rt3 = recipe_test_utils.create_recipe_type()
+        self.rt4 = recipe_test_utils.create_recipe_type()
+        self.rt5 = recipe_test_utils.create_recipe_type()
+        self.rt6 = recipe_test_utils.create_recipe_type()
+        self.parents = [self.rt1.id,self.rt1.id,self.rt2.id]
+        self.children = [self.rt3.id,self.rt4.id,self.rt5.id]
+        
+        RecipeTypeSubLink.objects.create_recipe_type_sub_links(self.parents, self.children)
+
+    def test_get_recipe_type_ids(self):
+        """Tests calling RecipeTypeSubLinkManager.get_recipe_type_ids()"""
+
+        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt3.id]), [self.rt1.id])
+        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt4.id]), [self.rt1.id])
+        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt5.id]), [self.rt2.id])
+        self.assertListEqual(RecipeTypeSubLink.objects.get_recipe_type_ids([self.rt6.id]), [])
+        
+    def test_get_sub_recipe_type_ids(self):
+        """Tests calling RecipeTypeSubLinkManager.get_sub_recipe_type_ids()"""
+
+        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt1.id]), [self.rt3.id,self.rt4.id])
+        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt2.id]), [self.rt5.id])
+        self.assertListEqual(RecipeTypeSubLink.objects.get_sub_recipe_type_ids([self.rt5.id]), [])
+
+class TestRecipeTypeJobLinkManager(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.rt1 = recipe_test_utils.create_recipe_type()
+        self.rt2 = recipe_test_utils.create_recipe_type()
+        self.rt3 = recipe_test_utils.create_recipe_type()
+        self.jt3 = job_test_utils.create_job_type()
+        self.jt4 = job_test_utils.create_job_type()
+        self.jt5 = job_test_utils.create_job_type()
+        self.jt6 = job_test_utils.create_job_type()
+        self.parents = [self.rt1.id,self.rt1.id,self.rt2.id]
+        self.children = [self.jt3.id,self.jt4.id,self.jt5.id]
+        
+        RecipeTypeJobLink.objects.create_recipe_type_job_links(self.parents, self.children)
+
+    def test_get_recipe_type_ids(self):
+        """Tests calling RecipeTypeJobLinkManager.get_recipe_type_ids()"""
+
+        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt3.id]), [self.rt1.id])
+        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt4.id]), [self.rt1.id])
+        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt5.id]), [self.rt2.id])
+        self.assertListEqual(RecipeTypeJobLink.objects.get_recipe_type_ids([self.jt6.id]), [])
+        
+    def test_get_job_type_ids(self):
+        """Tests calling RecipeTypeJobLinkManager.get_job_type_ids()"""
+
+        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt1.id]), [self.jt3.id,self.jt4.id])
+        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt2.id]), [self.jt5.id])
+        self.assertListEqual(RecipeTypeJobLink.objects.get_job_type_ids([self.rt3.id]), [])

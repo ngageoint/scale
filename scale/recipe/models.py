@@ -1862,7 +1862,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         new_links = []
 
         for id, sub in zip(recipe_type_ids, sub_recipe_type_ids):
-            link = RecipeTypeSubLink(recipe_type=id, sub_recipe_type=sub)
+            link = RecipeTypeSubLink(recipe_type_id=id, sub_recipe_type_id=sub)
             new_links.append(link)
 
         RecipeTypeSubLink.objects.bulk_create(new_links)
@@ -1876,8 +1876,8 @@ class RecipeTypeSubLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeSubLink.objects.filter(sub_recipe_type__in=list(sub_recipe_type_ids)).only('recipe_type')
-        return [result.recipe_type for result in query]
+        query = RecipeTypeSubLink.objects.filter(sub_recipe_type__in=list(sub_recipe_type_ids)).only('recipe_type_id')
+        return [result.recipe_type_id for result in query]
 
     def get_sub_recipe_type_ids(self, recipe_type_ids):
         """Returns a list of the sub recipe type IDs for the given recipe type IDs.
@@ -1888,8 +1888,8 @@ class RecipeTypeSubLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeSubLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('sub_recipe_type')
-        return [result.sub_recipe_type for result in query]
+        query = RecipeTypeSubLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('sub_recipe_type_id')
+        return [result.sub_recipe_type_id for result in query]
 
 class RecipeTypeSubLink(models.Model):
     """Represents a link between a recipe type and a sub-recipe type.
@@ -1931,7 +1931,7 @@ class RecipeTypeJobLinkManager(models.Manager):
         new_links = []
 
         for id, job in zip(recipe_type_ids, job_type_ids):
-            link = RecipeTypeJobLink(recipe_type=id, job_type=job)
+            link = RecipeTypeJobLink(recipe_type_id=id, job_type_id=job)
             new_links.append(link)
 
         RecipeTypeJobLink.objects.bulk_create(new_links)
@@ -1945,8 +1945,8 @@ class RecipeTypeJobLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeJobLink.objects.filter(job_type__in=list(job_type_ids)).only('recipe_type')
-        return [result.recipe_type for result in query]
+        query = RecipeTypeJobLink.objects.filter(job_type__in=list(job_type_ids)).only('recipe_type_id')
+        return [result.recipe_type_id for result in query]
 
     def get_job_type_ids(self, recipe_type_ids):
         """Returns a list of the job type IDs for the given recipe type IDs.
@@ -1957,8 +1957,8 @@ class RecipeTypeJobLinkManager(models.Manager):
         :rtype: list
         """
 
-        query = RecipeTypeJobLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('job_type')
-        return [result.job_type for result in query]
+        query = RecipeTypeJobLink.objects.filter(recipe_type__in=list(recipe_type_ids)).only('job_type_id')
+        return [result.job_type_id for result in query]
 
 class RecipeTypeJobLink(models.Model):
     """Represents a link between a recipe type and a job type.

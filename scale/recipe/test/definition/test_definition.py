@@ -4,6 +4,8 @@ import django
 from django.test import TestCase
 from mock import MagicMock
 
+import job.test.utils as job_test_utils
+import recipe.test.utils as recipe_test_utils
 from data.data.data import Data
 from data.data.value import FileValue, JsonValue
 from data.interface.exceptions import InvalidInterface, InvalidInterfaceConnection
@@ -282,3 +284,53 @@ class TestRecipeDefinition(TestCase):
 
         warnings = definition.validate(mocked_interfaces, mocked_interfaces)
         self.assertListEqual(warnings, [])
+
+    def test_update_job_node(self):
+        """Tests calling RecipeDefinition.update_job_node() successfully"""
+
+        input_interface = Interface()
+        definition = RecipeDefinition(input_interface)
+        definition.add_job_node('A', 'job_type_1', '1.0', 1)
+        definition.add_recipe_node('B', 'recipe_type_1', 1)
+        definition.add_dependency('A', 'B')
+        definition.add_dependency_input_connection('B', 'input_1', 'A', 'output_1')
+        definition.update_job_nodes('job_type_1', '1.0', 2)
+        mocked_interfaces = {'A': MagicMock(), 'B': MagicMock()}
+
+        warnings = definition.validate(mocked_interfaces, mocked_interfaces)
+        self.assertListEqual(warnings, [])
+        
+    def test_update_recipe_node(self):
+        """Tests calling RecipeDefinition.update_recipe_node() successfully"""
+
+        input_interface = Interface()
+        definition = RecipeDefinition(input_interface)
+        definition.add_job_node('A', 'job_type_1', '1.0', 1)
+        definition.add_recipe_node('B', 'recipe_type_1', 1)
+        definition.add_dependency('A', 'B')
+        definition.add_dependency_input_connection('B', 'input_1', 'A', 'output_1')
+        definition.update_recipe_nodes('recipe_type_1', 2)
+        mocked_interfaces = {'A': MagicMock(), 'B': MagicMock()}
+
+        warnings = definition.validate(mocked_interfaces, mocked_interfaces)
+        self.assertListEqual(warnings, [])
+
+    def test_get_interfaces(self):
+        """Tests calling RecipeDefinition.get_interfaces() successfully"""
+
+        input_interface = Interface()
+        definition = RecipeDefinition(input_interface)
+        jt = job_test_utils.create_seed_job_type()
+        definition.add_job_node('A', jt.name, jt.version, jt.revision_num)
+        rt = recipe_test_utils.create_recipe_type()
+        definition.add_recipe_node('B', rt.name, rt.revision_num)
+        definition.add_dependency('A', 'B')
+        definition.add_dependency_input_connection('B', 'input_1', 'A', 'output_1')
+        recipe_test_utils.edit_recipe_type(rt, rt.definition)
+        definition.update_recipe_nodes(rt.name, rt.revision_num + 1)
+        inputs, outputs = definition.get_interfaces()
+        
+        self.assertEqual(inputs['A'].parameters['INPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(outputs['A'].parameters['OUTPUT_IMAGE'].PARAM_TYPE, 'file')
+        self.assertEqual(inputs['B'].parameters, {})
+        self.assertEqual(outputs['B'].parameters, {})
