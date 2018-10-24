@@ -1,6 +1,8 @@
 """Manages the v6 recipe definition schema"""
 from __future__ import unicode_literals
 
+import copy
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
@@ -226,7 +228,7 @@ class RecipeDefinitionV6(object):
 
         if not definition:
             definition = {}
-        self._definition = definition
+        self._definition = copy.deepcopy(definition)
 
         if 'version' not in self._definition:
             self._definition['version'] = SCHEMA_VERSION

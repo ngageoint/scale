@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import copy
 import datetime
 
 import django
@@ -468,7 +467,7 @@ class TestRecipeTypeManagerCreateRecipeType(TransactionTestCase):
         version = '1.0'
         title = 'Test Recipe'
         desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), None)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, None)
 
         results_recipe_type = RecipeType.objects.get(pk=recipe_type.id)
         self.assertEqual(results_recipe_type.name, name)
@@ -610,7 +609,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         version = '1.0'
         title = 'Test Recipe'
         desc = 'Test description'
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), None)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, None)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -639,7 +638,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -668,11 +667,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, copy.deepcopy(self.new_recipe_def), None, False)
+            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, None, False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
         # Check results
@@ -701,7 +700,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
         new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -732,7 +731,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         trigger_rule_id = trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
@@ -764,11 +763,11 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
         new_trigger_rule_id = new_trigger_rule.id
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
-            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, copy.deepcopy(self.new_recipe_def), new_trigger_rule,
+            RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, self.new_recipe_def, new_trigger_rule,
                                                 False)
         recipe_type = RecipeType.objects.select_related('trigger_rule').get(pk=recipe_type.id)
 
@@ -799,7 +798,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         trigger_rule_id = trigger_rule.id
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=recipe_test_utils.MOCK_ERROR_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
-        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, copy.deepcopy(self.recipe_def), trigger_rule)
+        recipe_type = RecipeType.objects.create_recipe_type(name, version, title, desc, self.recipe_def, trigger_rule)
         with transaction.atomic():
             recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type.id)
             # Edit the recipe
