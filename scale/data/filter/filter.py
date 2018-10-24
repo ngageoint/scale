@@ -10,8 +10,6 @@ class DataFilter(object):
     """
 
     # TODO:
-    #  - implement in recipe instance
-    #    - rework how output data is passed around, must be generated for condition node
     #  - add to v6 recipe instance JSON
     #  - implement in recipe diff
     #  - add to v6 recipe diff JSON

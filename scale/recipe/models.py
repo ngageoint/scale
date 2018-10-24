@@ -1034,6 +1034,8 @@ class RecipeCondition(models.Model):
     :keyword batch: The batch that contains this condition
     :type batch: :class:`django.db.models.ForeignKey`
 
+    :keyword data: JSON description defining the data processed by this condition
+    :type data: :class:`django.contrib.postgres.fields.JSONField`
     :keyword is_processed: Whether the condition has been processed
     :type is_processed: :class:`django.db.models.BooleanField`
     :keyword is_accepted: Whether the condition has been accepted
@@ -1053,6 +1055,7 @@ class RecipeCondition(models.Model):
     batch = models.ForeignKey('batch.Batch', related_name='conditions_for_batch', blank=True, null=True,
                               on_delete=models.PROTECT)
 
+    data = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     is_processed = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
 
@@ -1061,6 +1064,15 @@ class RecipeCondition(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = RecipeConditionManager()
+
+    def get_data(self):
+        """Returns the data for this condition
+
+        :returns: The data for this condition
+        :rtype: :class:`data.data.data.Data`
+        """
+
+        return DataV6(data=self.data, do_validate=False).get_data()
 
     class Meta(object):
         """meta information for the db"""
@@ -1282,9 +1294,13 @@ class RecipeNodeManager(models.Manager):
 
         node_outputs = {}
 
-        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job')
-        for node in qry.only('node_name', 'job', 'sub_recipe', 'job__output'):
+        qry = self.filter(recipe_id=recipe_id).select_related('sub_recipe', 'job', 'condition')
+        for node in qry.only('node_name', 'condition', 'job', 'sub_recipe', 'condition__data', 'job__output'):
             node_type = None
+            if node.condition:
+                node_type = 'condition'
+                node_id = node.condition_id
+                output_data = node.condition.get_data()
             if node.job:
                 node_type = 'job'
                 node_id = node.job_id
