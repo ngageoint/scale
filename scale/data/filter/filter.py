@@ -10,7 +10,6 @@ class DataFilter(object):
     """
 
     # TODO:
-    #  - add to v6 recipe instance JSON
     #  - implement in recipe diff
     #  - add to v6 recipe diff JSON
 

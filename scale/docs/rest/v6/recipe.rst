@@ -334,6 +334,15 @@ A recipe instance JSON describes an instance of a running recipe.
                "sub_recipes_total": 3,
                "sub_recipes_completed": 1
             }
+         },
+         "node_d": {
+            "dependencies": [{"name": "node_a"}],
+            "node_type": {
+               "node_type": "condition",
+               "condition_id": 999,
+               "is_processed": true,
+               "is_accepted": false
+            }
          }
       }
    }
@@ -350,6 +359,16 @@ A recipe instance JSON describes an instance of a running recipe.
 | node_type                  | JSON object    | Required | An object describing the type of the node                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | node_type                  | String         | Required | The type of the node, either 'job' or 'recipe'                     |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| condition_id               | Integer        | Required | ('condition' node) The unique ID of the condition                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| is_processed               | Boolean        | Required | ('condition' node) Whether the condition has been processed        |
+|                            |                |          | (evaluated)                                                        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| is_accepted                | Boolean        | Required | ('condition' node) Whether the condition has been accepted. If     |
+|                            |                |          | accepted, the nodes depending on the condition will be created and |
+|                            |                |          | processed. If not accepted, the nodes depending on the condition   |
+|                            |                |          | will not be created or processed.                                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | job_type_name              | String         | Required | ('job' node) The name of the job type                              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
