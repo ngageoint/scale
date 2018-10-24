@@ -1364,13 +1364,15 @@ class RecipeTypeManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If the trigger rule connection to
             the recipe type definition is invalid
         """
-
+        from recipe.configuration.definition.exceptions import InvalidDefinition
         # Must lock job type interfaces so the new recipe type definition can be validated
         _ = definition.get_job_types(lock=True)
         if isinstance(definition, LegacyRecipeDefinition):
             definition.validate_job_interfaces()
         elif isinstance(definition, RecipeDefinition):
             definition.validate_interfaces()
+        else:
+            raise InvalidDefinition('This version of the recipe definition is invalid to save')
 
         # Validate the trigger rule
         if trigger_rule:
@@ -1387,12 +1389,12 @@ class RecipeTypeManager(models.Manager):
         recipe_type.description = description
         if isinstance(definition, LegacyRecipeDefinition):
             if definition.get_dict()['version'] == '2.0':
-                from recipe.configuration.definition.exceptions import InvalidDefinition
                 raise InvalidDefinition('This version of the recipe definition is invalid to save')
             recipe_type.definition = definition.get_dict()
         elif isinstance(definition, RecipeDefinition):
-            import pdb; pdb.set_trace()
             definition = convert_recipe_definition_to_v6_json(definition).get_dict()
+        else:
+            raise InvalidDefinition('This version of the recipe definition is invalid to save')
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
 
@@ -1435,6 +1437,8 @@ class RecipeTypeManager(models.Manager):
             the recipe type definition is invalid
         """
 
+        from recipe.configuration.definition.exceptions import InvalidDefinition
+        
         # Acquire model lock
         recipe_type = RecipeType.objects.select_for_update().get(pk=recipe_type_id)
 
@@ -1450,13 +1454,13 @@ class RecipeTypeManager(models.Manager):
             if isinstance(definition, LegacyRecipeDefinition):
                 definition.validate_job_interfaces()
                 if definition.get_dict()['version'] == '2.0':
-                    from recipe.configuration.definition.exceptions import InvalidDefinition
                     raise InvalidDefinition('This version of the recipe definition is invalid to save')
                 recipe_type.definition = definition.get_dict()
             elif isinstance(definition, RecipeDefinition):
-                import pdb; pdb.set_trace()
                 definition.validate_interfaces()
                 recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
+            else:
+                raise InvalidDefinition('This version of the recipe definition is invalid to save')
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         if trigger_rule or remove_trigger_rule:
@@ -1505,7 +1509,7 @@ class RecipeTypeManager(models.Manager):
 
         return trigger_rules
 
-    def get_by_natural_key(self, name):
+    def get_by_natural_key(self, name, version):
         """Django method to retrieve a recipe type for the given natural key
 
         :param name: The human-readable name of the recipe type
@@ -1514,7 +1518,7 @@ class RecipeTypeManager(models.Manager):
         :rtype: :class:`recipe.models.RecipeType`
         """
 
-        return self.get(name=name)
+        return self.get(name=name, version=version)
 
     def get_details(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
