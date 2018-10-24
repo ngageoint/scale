@@ -9,9 +9,6 @@ class DataFilter(object):
     """Represents a filter that either accepts or denies a set of data values
     """
 
-    # TODO:
-    #  - add to v6 recipe diff JSON
-
     def __init__(self, accept):
         """Constructor
 
