@@ -14,6 +14,8 @@ from data.data.json.data_v1 import convert_data_to_v1_json
 from data.data.json.data_v6 import convert_data_to_v6_json, DataV6
 from data.interface.parameter import FileParameter
 from job.models import Job, JobType
+from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition
+from recipe.definition.definition import RecipeDefinition
 from recipe.definition.json.definition_v1 import convert_recipe_definition_to_v1_json
 from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6_json, RecipeDefinitionV6
 from recipe.deprecation import RecipeDefinitionSunset, RecipeDataSunset
@@ -1365,7 +1367,10 @@ class RecipeTypeManager(models.Manager):
 
         # Must lock job type interfaces so the new recipe type definition can be validated
         _ = definition.get_job_types(lock=True)
-        definition.validate_job_interfaces()
+        if isinstance(definition, LegacyRecipeDefinition):
+            definition.validate_job_interfaces()
+        elif isinstance(definition, RecipeDefinition):
+            definition.validate_interfaces()
 
         # Validate the trigger rule
         if trigger_rule:
@@ -1380,15 +1385,22 @@ class RecipeTypeManager(models.Manager):
         recipe_type.version = version
         recipe_type.title = title
         recipe_type.description = description
-        if definition.get_dict()['version'] == '2.0':
-            from recipe.configuration.definition.exceptions import InvalidDefinition
-            raise InvalidDefinition('This version of the recipe definition is invalid to save')
-        recipe_type.definition = definition.get_dict()
+        if isinstance(definition, LegacyRecipeDefinition):
+            if definition.get_dict()['version'] == '2.0':
+                from recipe.configuration.definition.exceptions import InvalidDefinition
+                raise InvalidDefinition('This version of the recipe definition is invalid to save')
+            recipe_type.definition = definition.get_dict()
+        elif isinstance(definition, RecipeDefinition):
+            import pdb; pdb.set_trace()
+            definition = convert_recipe_definition_to_v6_json(definition).get_dict()
         recipe_type.trigger_rule = trigger_rule
         recipe_type.save()
 
         # Create first revision of the recipe type
         RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+        
+        RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
+        RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
         return recipe_type
 
@@ -1435,11 +1447,16 @@ class RecipeTypeManager(models.Manager):
         if definition:
             # Must lock job type interfaces so the new recipe type definition can be validated
             _ = definition.get_job_types(lock=True)
-            definition.validate_job_interfaces()
-            if definition.get_dict()['version'] == '2.0':
-                from recipe.configuration.definition.exceptions import InvalidDefinition
-                raise InvalidDefinition('This version of the recipe definition is invalid to save')
-            recipe_type.definition = definition.get_dict()
+            if isinstance(definition, LegacyRecipeDefinition):
+                definition.validate_job_interfaces()
+                if definition.get_dict()['version'] == '2.0':
+                    from recipe.configuration.definition.exceptions import InvalidDefinition
+                    raise InvalidDefinition('This version of the recipe definition is invalid to save')
+                recipe_type.definition = definition.get_dict()
+            elif isinstance(definition, RecipeDefinition):
+                import pdb; pdb.set_trace()
+                definition.validate_interfaces()
+                recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
             recipe_type.revision_num = recipe_type.revision_num + 1
 
         if trigger_rule or remove_trigger_rule:
@@ -1461,6 +1478,8 @@ class RecipeTypeManager(models.Manager):
         if definition:
             # Create new revision of the recipe type for new definition
             RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+            RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
+            RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
     def get_active_trigger_rules(self, trigger_type):
         """Returns the active trigger rules with the given trigger type that create jobs and recipes
@@ -1486,18 +1505,16 @@ class RecipeTypeManager(models.Manager):
 
         return trigger_rules
 
-    def get_by_natural_key(self, name, version):
+    def get_by_natural_key(self, name):
         """Django method to retrieve a recipe type for the given natural key
 
         :param name: The human-readable name of the recipe type
         :type name: string
-        :param version: The version of the recipe type
-        :type version: string
         :returns: The recipe type defined by the natural key
         :rtype: :class:`recipe.models.RecipeType`
         """
 
-        return self.get(name=name, version=version)
+        return self.get(name=name)
 
     def get_details(self, recipe_type_id):
         """Gets additional details for the given recipe type model based on related model attributes.
@@ -1844,6 +1861,23 @@ class RecipeTypeRevision(models.Model):
 class RecipeTypeSubLinkManager(models.Manager):
     """Provides additional methods for handling recipe type sub links
     """
+    
+    def create_recipe_type_sub_links_from_definition(self, recipe_type):
+        """Goes through a recipe type definition, gets all the recipe types it contains and creates the appropriate links
+
+        :param recipe_type: New/updated recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        
+        :raises :class:`recipe.models.RecipeType.DoesNotExist`: If it contains a sub recipe type that does not exist
+        """
+
+        definition = recipe_type.get_definition()
+        
+        sub_type_ids = definition.get_recipe_type_ids()
+        
+        if len(sub_type_ids) > 0:
+            recipe_type_ids = [recipe_type.id] * len(sub_type_ids)
+            self.create_recipe_type_sub_links(recipe_type_ids, sub_type_ids)
 
     @transaction.atomic
     def create_recipe_type_sub_links(self, recipe_type_ids, sub_recipe_type_ids):
@@ -1871,7 +1905,7 @@ class RecipeTypeSubLinkManager(models.Manager):
         RecipeTypeSubLink.objects.bulk_create(new_links)
         
     @transaction.atomic
-    def create_recipe_type_job_link(self, recipe_type_id, sub_recipe_type_id):
+    def create_recipe_type_sub_link(self, recipe_type_id, sub_recipe_type_id):
         """Creates the appropriate link for the given recipe and job type. All database changes are
         made in an atomic transaction.
 
@@ -1933,6 +1967,24 @@ class RecipeTypeSubLink(models.Model):
 class RecipeTypeJobLinkManager(models.Manager):
     """Provides additional methods for handling recipe type to job type links
     """
+
+    def create_recipe_type_job_links_from_definition(self, recipe_type):
+        """Goes through a recipe type definition and gets all the job types it contains and creates the appropriate links
+
+        :param recipe_type: New/updated recipe type
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        
+        :raises :class:`recipe.models.JobType.DoesNotExist`: If it contains a job type that does not exist
+        """
+
+        definition = recipe_type.get_definition()
+        
+        job_type_ids = definition.get_job_type_ids()
+        
+        if len(job_type_ids) > 0:
+            recipe_type_ids = [recipe_type.id] * len(job_type_ids)
+            self.create_recipe_type_job_links(recipe_type_ids, job_type_ids)
+        
 
     @transaction.atomic
     def create_recipe_type_job_links(self, recipe_type_ids, job_type_ids):

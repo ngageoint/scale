@@ -621,6 +621,7 @@ class TestRecipeTypeManagerEditRecipeType(TransactionTestCase):
         # Check results
         self.assertEqual(recipe_type.title, new_title)
         self.assertEqual(recipe_type.description, new_desc)
+        import pdb; pdb.set_trace()
         self.assertDictEqual(recipe_type.get_recipe_definition().get_dict(), self.recipe_def.get_dict())
         self.assertEqual(recipe_type.revision_num, 1)
         self.assertIsNone(recipe_type.trigger_rule)
@@ -822,12 +823,12 @@ class TestRecipeTypeSubLinkManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.rt1 = recipe_test_utils.create_recipe_type()
-        self.rt2 = recipe_test_utils.create_recipe_type()
-        self.rt3 = recipe_test_utils.create_recipe_type()
-        self.rt4 = recipe_test_utils.create_recipe_type()
-        self.rt5 = recipe_test_utils.create_recipe_type()
-        self.rt6 = recipe_test_utils.create_recipe_type()
+        self.rt1 = recipe_test_utils.create_recipe_type_v6()
+        self.rt2 = recipe_test_utils.create_recipe_type_v6()
+        self.rt3 = recipe_test_utils.create_recipe_type_v6()
+        self.rt4 = recipe_test_utils.create_recipe_type_v6()
+        self.rt5 = recipe_test_utils.create_recipe_type_v6()
+        self.rt6 = recipe_test_utils.create_recipe_type_v6()
         self.parents = [self.rt1.id,self.rt1.id,self.rt2.id]
         self.children = [self.rt3.id,self.rt4.id,self.rt5.id]
         
@@ -853,9 +854,9 @@ class TestRecipeTypeJobLinkManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.rt1 = recipe_test_utils.create_recipe_type()
-        self.rt2 = recipe_test_utils.create_recipe_type()
-        self.rt3 = recipe_test_utils.create_recipe_type()
+        self.rt1 = recipe_test_utils.create_recipe_type_v6()
+        self.rt2 = recipe_test_utils.create_recipe_type_v6()
+        self.rt3 = recipe_test_utils.create_recipe_type_v6()
         self.jt3 = job_test_utils.create_job_type()
         self.jt4 = job_test_utils.create_job_type()
         self.jt5 = job_test_utils.create_job_type()

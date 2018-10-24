@@ -13,7 +13,9 @@ from recipe.definition.json.definition_v6 import convert_recipe_definition_to_v6
 from recipe.diff.forced_nodes import ForcedNodes
 from recipe.diff.json.forced_nodes_v6 import convert_forced_nodes_to_v6
 from recipe.messages.create_recipes import SUB_RECIPE_TYPE, SubRecipe
-from recipe.messages.update_recipe import create_sub_update_recipe_definition_message, create_job_update_recipe_definition_message, UpdateRecipeDefinition
+from recipe.messages.update_recipe_definition import (create_sub_update_recipe_definition_message, 
+                                                      create_job_update_recipe_definition_message, 
+                                                      UpdateRecipeDefinition)
 from recipe.models import RecipeNode
 from recipe.test import utils as recipe_test_utils
 
@@ -27,13 +29,14 @@ class TestUpdateRecipeDefinition(TestCase):
         self.jt2 = job_test_utils.create_job_type(name='job-type-2', version='2.0')
 
         def_v6_dict_sub = {'version': '6',
-                       'input': {'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
+                       'input': { 'files': [],
+                                  'json': [{'name': 'bar', 'type': 'string', 'required': False}]},
                        'nodes': {'node_a': {'dependencies': [],
                                             'input': {'input_a': {'type': 'recipe', 'input': 'bar'}},
                                             'node_type': {'node_type': 'job', 'job_type_name': self.jt2.name,
                                                           'job_type_version': self.jt2.version, 'job_type_revision': self.jt2.revision_num}}}}
         
-        self.sub = recipe_test_utils.create_recipe_type()
+        self.sub = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_sub)
         
         def_v6_dict_main = {'version': '6',
                        'input': {'files': [{'name': 'INPUT_IMAGE', 'media_types': ['image/tiff'], 'required': True,
@@ -55,7 +58,7 @@ class TestUpdateRecipeDefinition(TestCase):
                                             'node_type': {'node_type': 'recipe', 'recipe_type_name': self.sub.name,
                                                           'recipe_type_revision': self.sub.revision_num}}}}
                                                           
-        self.rt = recipe_test_utils.create_recipe_type(definition=def_v6_dict_main)
+        self.rt = recipe_test_utils.create_recipe_type_v6(definition=def_v6_dict_main)
         
     def test_json(self):
         """Tests converting an UpdateRecipeDefinition message to and from JSON"""
@@ -81,8 +84,8 @@ class TestUpdateRecipeDefinition(TestCase):
         """Tests calling UpdateRecipeDefinition.execute() successfully"""
         
         # Create new revisions of sub recipe and job type
-        recipe_test_utils.edit_recipe_type(self.sub, self.sub.definition)
-        job_test_utils.edit_job_type_v6(self.jt, manifest_dict=jt.manifest)
+        recipe_test_utils.edit_recipe_type_v6(self.sub, self.sub.definition)
+        job_test_utils.edit_job_type_v6(self.jt, manifest_dict=self.jt.manifest)
         
         # Create message
         sub_message = create_sub_update_recipe_definition_message(self.rt.id, self.sub.id)

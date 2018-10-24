@@ -6,7 +6,6 @@ from recipe.definition.connection import DependencyInputConnection, RecipeInputC
 from recipe.definition.exceptions import InvalidDefinition
 from recipe.definition.node import JobNodeDefinition, RecipeNodeDefinition
 
-
 class RecipeDefinition(object):
     """Represents a recipe definition, which consists of an input interface and a directed acyclic graph of recipe nodes
     """
@@ -87,6 +86,46 @@ class RecipeDefinition(object):
 
         self._add_node(JobNodeDefinition(name, job_type_name, job_type_version, revision_num))
 
+    def get_job_type_ids(self):
+        """Gets the model ids of the job types contained in this RecipeDefinition
+
+        :returns: set of JobType ids
+        :rtype: set[int]
+        """
+
+        from job.models import JobType
+        ids = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, JobNodeDefinition):
+                jt = JobType.objects.all().get(name=node.job_type_name, version=node.job_type_version)
+                ids.append(jt.id)
+                        
+        return set(ids)
+        
+    def get_job_types(self, lock=False):
+        """Returns a set of job types for each job in the recipe
+
+        :param lock: Whether to obtain select_for_update() locks on the job type models
+        :type lock: bool
+        :returns: Set of referenced job types
+        :rtype: set[:class:`job.models.JobType`]
+        """
+            
+        from job.models import JobType
+        ids = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, JobNodeDefinition):
+                jt = JobType.objects.all().get(name=node.job_type_name, version=node.job_type_version)
+                ids.append(jt.id)
+        
+        if lock:
+            job_types = JobType.objects.all().select_for_update().filter(id__in=ids).order_by('id')
+        else:
+            job_types = JobType.objects.all().filter(id__in=ids).order_by('id')
+        return job_types
+
     def update_job_nodes(self, job_type_name, job_type_version, revision_num):
         """Updates the revision of job nodes with the given name and version
 
@@ -147,6 +186,23 @@ class RecipeDefinition(object):
         """
 
         self._add_node(RecipeNodeDefinition(name, recipe_type_name, revision_num))
+
+    def get_recipe_type_ids(self):
+        """Gets the model ids of the sub recipe types contained in this RecipeDefinition
+
+        :returns: set of RecipeType ids
+        :rtype: set[int]
+        """
+        
+        from recipe.models import RecipeType
+        ids = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, RecipeNodeDefinition):
+                rt = RecipeType.objects.all().get(name=node.recipe_type_name)
+                ids.append(rt.id)
+                        
+        return set(ids)
 
     def update_recipe_nodes(self, recipe_type_name, revision_num):
         """Updates the revision of recipe nodes with the given name to the specified revision_num
@@ -220,6 +276,20 @@ class RecipeDefinition(object):
             outputs[node_name] = node.get_output_interface()
 
         return inputs, outputs
+
+    def validate_interfaces(self):
+        """Validates the interfaces of the recipe jobs in the definition to ensure that all of the input and output
+        connections are valid
+
+        :returns: A list of warnings discovered during validation.
+        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+
+        :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`:
+            If there are any invalid job connections in the definition
+        """
+        
+        inputs, outputs = self.get_interfaces()
+        return self.validate(inputs, outputs)
 
     def validate(self, node_input_interfaces, node_output_interfaces):
         """Validates this recipe definition

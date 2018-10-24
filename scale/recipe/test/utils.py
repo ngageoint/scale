@@ -8,6 +8,7 @@ import trigger.test.utils as trigger_test_utils
 from recipe.configuration.definition.recipe_definition import LegacyRecipeDefinition as RecipeDefinition
 from recipe.configuration.data.recipe_data import LegacyRecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
+from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
@@ -136,12 +137,62 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
 
     return recipe_type
 
+def create_recipe_type_v6(name=None, version=None, title=None, description=None, definition=None):
+    """Creates a recipe type for unit testing
+
+    :returns: The RecipeType model
+    :rtype: :class:`recipe.models.RecipeType`
+    """
+
+    if not name:
+        global NAME_COUNTER
+        name = 'test-recipe-type-%i' % NAME_COUNTER
+        NAME_COUNTER += 1
+
+    if not version:
+        global VERSION_COUNTER
+        version = '%i.0.0' % VERSION_COUNTER
+        VERSION_COUNTER += 1
+
+    if not title:
+        global TITLE_COUNTER
+        title = 'Test Recipe Type %i' % TITLE_COUNTER
+        TITLE_COUNTER += 1
+
+    if not description:
+        global DESCRIPTION_COUNTER
+        description = 'Test Description %i' % DESCRIPTION_COUNTER
+        DESCRIPTION_COUNTER += 1
+
+    if not definition:
+        definition = {
+            'version': '6',
+            'input': {},
+            'nodes': {}}
+
+
+    recipe_type = RecipeType()
+    recipe_type.name = name
+    recipe_type.version = version
+    recipe_type.title = title
+    recipe_type.description = description
+    recipe_type.definition = definition
+    recipe_type.save()
+
+    RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+
+    return recipe_type
+
 
 def edit_recipe_type(recipe_type, definition):
     """Updates the definition of a recipe type, including creating a new revision for unit testing
     """
     RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(definition), None, False)
 
+def edit_recipe_type_v6(recipe_type, definition):
+    """Updates the definition of a recipe type, including creating a new revision for unit testing
+    """
+    RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinitionV6(definition).get_definition(), None, False)
 
 def create_recipe(recipe_type=None, input=None, event=None, is_superseded=False, superseded=None,
                   superseded_recipe=None, batch=None, save=True):
