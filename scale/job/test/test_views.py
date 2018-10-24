@@ -362,7 +362,7 @@ class TestJobsPostViewV6(TestCase):
         """Tests successfully calling POST jobs view to queue a new job"""
 
         json_data = { 
-            "input" : {},
+            "job_data" : {},
             "job_type_id" : self.job_type1.pk
         }
 

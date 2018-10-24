@@ -422,7 +422,7 @@ class QueueManager(models.Manager):
             with transaction.atomic():
                 job = Job.objects.create_job_v6(job_type_rev, event.id, data)
                 job.save()
-                CommandMessageManager().send_messages([create_process_job_input_messages([job.pk])])
+                CommandMessageManager().send_messages(create_process_job_input_messages([job.pk]))
         except InvalidData as ex:
             raise BadParameter(unicode(ex))
 

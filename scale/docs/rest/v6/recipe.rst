@@ -346,3 +346,232 @@ A recipe instance JSON describes an instance of a running recipe.
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | sub_recipes_completed      | Integer        | Required | ('recipe' node) The number of completed sub-recipes in the recipe  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
+
+.. _rest_v6_recipe_queue_new_recipe:
+
+Recipe Queue New Recipe
+----------------
+
+**Example POST /v6/recipe/ API call**
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Queue New Recipe**                                                                                                    |
++=========================================================================================================================+
+| Creates a new recipe and places it onto the queue                                                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This documentation describes the API **v5** version of the Queue New Recipe endpoint response.  Starting |
+|                with API **v6** the *inputs* section will be removed, the *data* section will be renamed to *input*,     |
+|                and the *recipe_type* section will only contain *id*, *name*, *version*, *title*, and *description*.     |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /v6/recipe/                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_type_id     | Integer           | The ID of the recipe type to queue                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| recipe_data        | JSON Object       | Defines the data to run the recipe, see :ref:`architecture_jobs_recipe_data`   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "recipe_type_id": 1234,                                                                                          |
+|        "recipe_data": {                                                                                                 |
+|            "version": "1.0",                                                                                            |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "name": "image",                                                                                     |
+|                    "file_id": 1234                                                                                      |
+|                },                                                                                                       |
+|                {                                                                                                        |
+|                    "name": "georeference_data",                                                                         |
+|                    "file_id": 1235                                                                                      |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "workspace_id": 12                                                                                           |
+|        }                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details for the newly queued recipe data                                       |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+|                    | JSON Object       | All fields are the same as the recipe details model.                           |
+|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "id": 72,                                                                                                        |
+|        "recipe_type": {                                                                                                 |
+|            "id": 1,                                                                                                     |
+|            "name": "MyRecipe",                                                                                          |
+|            "version": "1.0.0",                                                                                          |
+|            "description": "This is a description of the recipe",                                                        |
+|            "is_active": true,                                                                                           |
+|            "definition": {                                                                                              |
+|                "input_data": [                                                                                          |
+|                    {                                                                                                    |
+|                        "media_types": [                                                                                 |
+|                            "image/png"                                                                                  |
+|                        ],                                                                                               |
+|                        "type": "file",                                                                                  |
+|                        "name": "input_file"                                                                             |
+|                    }                                                                                                    |
+|                ],                                                                                                       |
+|                "version": "1.0",                                                                                        |
+|                "jobs": [                                                                                                |
+|                    {                                                                                                    |
+|                        "recipe_inputs": [                                                                               |
+|                            {                                                                                            |
+|                                "job_input": "input_file",                                                               |
+|                                "recipe_input": "input_file"                                                             |
+|                            }                                                                                            |
+|                        ],                                                                                               |
+|                        "name": "kml",                                                                                   |
+|                        "job_type": {                                                                                    |
+|                            "name": "kml-footprint",                                                                     |
+|                            "version": "1.2.3"                                                                           |
+|                        }                                                                                                |
+|                    }                                                                                                    |
+|                ]                                                                                                        |
+|            },                                                                                                           |
+|            "created": "2015-06-15T19:03:26.346Z",                                                                       |
+|            "last_modified": "2015-06-15T19:03:26.346Z",                                                                 |
+|            "archived": null                                                                                             |
+|        },                                                                                                               |
+|        "event": {                                                                                                       |
+|            "id": 7,                                                                                                     |
+|            "type": "PARSE",                                                                                             |
+|            "rule": {                                                                                                    |
+|                "id": 8,                                                                                                 |
+|                "type": "PARSE",                                                                                         |
+|                "is_active": true,                                                                                       |
+|                "configuration": {                                                                                       |
+|                    "version": "1.0",                                                                                    |
+|                    "condition": {                                                                                       |
+|                        "media_type": "image/png",                                                                       |
+|                        "data_types": []                                                                                 |
+|                    },                                                                                                   |
+|                    "data": {                                                                                            |
+|                        "input_data_name": "input_file",                                                                 |
+|                        "workspace_name": "products"                                                                     |
+|                    }                                                                                                    |
+|                }                                                                                                        |
+|            },                                                                                                           |
+|            "occurred": "2015-08-28T19:03:59.054Z",                                                                      |
+|            "description": {                                                                                             |
+|                "file_name": "data-file.png",                                                                            |
+|                "version": "1.0",                                                                                        |
+|                "parse_id": 1                                                                                            |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "created": "2015-06-15T19:03:26.346Z",                                                                           |
+|        "completed": "2015-06-15T19:05:26.346Z",                                                                         |
+|        "last_modified": "2015-06-15T19:05:26.346Z"                                                                      |
+|        "data": {                                                                                                        |
+|            "input_data": [                                                                                              |
+|                {                                                                                                        |
+|                    "name": "input_file",                                                                                |
+|                    "file_id": 4,                                                                                        |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "version": "1.0"                                                                                             |
+|            "workspace_id": 2                                                                                            |
+|        }                                                                                                                |
+|        "input_files": [                                                                                                 |
+|            {                                                                                                            |
+|                "id": 4,                                                                                                 |
+|                "workspace": {                                                                                           |
+|                    "id": 1,                                                                                             |
+|                    "name": "Raw Source"                                                                                 |
+|                },                                                                                                       |
+|                "file_name": "input_file.txt",                                                                           | 
+|                "media_type": "text/plain",                                                                              |
+|                "file_size": 1234,                                                                                       |
+|                "data_type": [],                                                                                         | 
+|                "is_deleted": false,                                                                                     |
+|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
+|                "url": "http://host.com/input_file.txt",                                                                 |
+|                "created": "2015-09-10T15:24:53.962Z",                                                                   |
+|                "deleted": null,                                                                                         |
+|                "data_started": "2015-09-10T14:50:49Z",                                                                  |
+|                "data_ended": "2015-09-10T14:51:05Z",                                                                    |
+|                "geometry": null,                                                                                        |
+|                "center_point": null,                                                                                    |
+|                "meta_data": {...}                                                                                       |
+|                "last_modified": "2015-09-10T15:25:02.808Z"                                                              |
+|            }                                                                                                            |
+|        ],                                                                                                               |
+|        "jobs": [                                                                                                        |
+|            {                                                                                                            |
+|                "job_name": "kml",                                                                                       |
+|                "job": {                                                                                                 |
+|                    "id": 7,                                                                                             |
+|                    "job_type": {                                                                                        |
+|                        "id": 8,                                                                                         |
+|                        "name": "kml-footprint",                                                                         |
+|                        "version": "1.2.3",                                                                              |
+|                        "title": "KML Footprint",                                                                        |
+|                        "description": "Creates a KML footprint",                                                        |
+|                        "category": "footprint",                                                                         |
+|                        "author_name": null,                                                                             |
+|                        "author_url": null,                                                                              |
+|                        "is_system": false,                                                                              |
+|                        "is_long_running": false,                                                                        |
+|                        "is_active": true,                                                                               |
+|                        "is_operational": true,                                                                          |
+|                        "is_paused": false,                                                                              |
+|                        "icon_code": "f0ac"                                                                              |
+|                    },                                                                                                   |
+|                    "job_type_rev": {                                                                                    |
+|                        "id": 5,                                                                                         |
+|                        "job_type": {                                                                                    |
+|                            "id": 8                                                                                      |
+|                        },                                                                                               |
+|                        "revision_num": 1                                                                                |
+|                    },                                                                                                   |
+|                    "event": {                                                                                           |
+|                        "id": 7,                                                                                         |
+|                        "type": "PARSE",                                                                                 |
+|                        "rule": {                                                                                        |
+|                            "id": 8                                                                                      |
+|                        },                                                                                               |
+|                        "occurred": "2015-08-28T19:03:59.054Z"                                                           |
+|                    },                                                                                                   |
+|                    "error": null,                                                                                       |
+|                    "status": "COMPLETED",                                                                               |
+|                    "priority": 210,                                                                                     |
+|                    "num_exes": 1,                                                                                       |
+|                    "timeout": 1800,                                                                                     |
+|                    "max_tries": 3,                                                                                      |
+|                    "cpus_required": 1.0,                                                                                |
+|                    "mem_required": 15360.0,                                                                             |
+|                    "disk_in_required": 2.0,                                                                             |
+|                    "disk_out_required": 16.0,                                                                           |
+|                    "is_superseded": false,                                                                              |
+|                    "root_superseded_job": null,                                                                         |
+|                    "superseded_job": null,                                                                              |
+|                    "superseded_by_job": null,                                                                           |
+|                    "delete_superseded": true,                                                                           |
+|                    "created": "2015-08-28T17:55:41.005Z",                                                               |
+|                    "queued": "2015-08-28T17:56:41.005Z",                                                                |
+|                    "started": "2015-08-28T17:57:41.005Z",                                                               |
+|                    "ended": "2015-08-28T17:58:41.005Z",                                                                 |
+|                    "last_status_change": "2015-08-28T17:58:45.906Z",                                                    |
+|                    "superseded": null,                                                                                  |
+|                    "last_modified": "2015-08-28T17:58:46.001Z"                                                          |
+|                }                                                                                                        |
+|            },                                                                                                           |
+|            ...                                                                                                          |
+|        ]                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
