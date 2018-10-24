@@ -10,7 +10,6 @@ class DataFilter(object):
     """
 
     # TODO:
-    #  - implement in recipe diff
     #  - add to v6 recipe diff JSON
 
     def __init__(self, accept):
@@ -21,6 +20,8 @@ class DataFilter(object):
         """
 
         # TODO: take out accept param and do real implementation
+        # TODO: there are a number of unit tests that will need to have real DataFilters created instead of
+        # DataFilter(True) or DataFilter(False)
         self.accept = accept
 
         # TODO: after implementing this class, implement recipe.definition.node.ConditionNodeDefinition.__init__
@@ -36,6 +37,18 @@ class DataFilter(object):
 
         # TODO: provide real implementation
         return self.accept
+
+    def is_filter_equal(self, data_filter):
+        """Indicates whether the given data filter is equal to this filter or not
+
+        :param data_filter: The data filter
+        :type data_filter: :class:`data.filter.filter.DataFilter`
+        :returns: True if the data filter is equal to this one, False otherwise
+        :rtype: bool
+        """
+
+        # TODO: provide real implementation
+        return self.accept == data_filter.accept
 
     def validate(self, interface):
         """Validates this data filter against the given interface
