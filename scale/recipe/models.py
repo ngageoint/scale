@@ -1364,6 +1364,7 @@ class RecipeTypeManager(models.Manager):
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If the trigger rule connection to
             the recipe type definition is invalid
         """
+
         from recipe.configuration.definition.exceptions import InvalidDefinition
         # Must lock job type interfaces so the new recipe type definition can be validated
         _ = definition.get_job_types(lock=True)

@@ -126,6 +126,26 @@ class RecipeDefinition(object):
             job_types = JobType.objects.all().filter(id__in=ids).order_by('id')
         return job_types
 
+    def get_job_type_nodes(self, job_type_name, job_type_version):
+        """Gets the nodes for the given job type contained in this RecipeDefinition, if any
+
+        :param job_type_name: The name of the job type
+        :type job_type_name: string
+        :param job_type_version: The version of the job type
+        :type job_type_version: string
+        :returns: list of JobNodeDefinition objects
+        :rtype: list[:class:`recipe.definition.node.JobNodeDefinition`]
+        """
+
+        nodes = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, JobNodeDefinition):
+                if node.job_type_name == job_type_name and node.job_type_version == job_type_version:
+                    nodes.append(node)
+
+        return nodes
+
     def update_job_nodes(self, job_type_name, job_type_version, revision_num):
         """Updates the revision of job nodes with the given name and version
 
@@ -203,6 +223,25 @@ class RecipeDefinition(object):
                 ids.append(rt.id)
                         
         return set(ids)
+
+    def get_recipe_nodes(self, recipe_type_name):
+        """Gets the nodes for the given recipe type contained in this RecipeDefinition, if any
+
+
+        :param recipe_type_name: The name of the recipe type
+        :type recipe_type_name: string
+        :returns: list of JobNodeDefinition objects
+        :rtype: list[:class:`recipe.definition.node.JobNodeDefinition`]
+        """
+
+        nodes = []
+        for node_name in self.get_topological_order():
+            node = self.graph[node_name]
+            if isinstance(node, RecipeNodeDefinition):
+                if node.recipe_type_name == recipe_type_name:
+                    nodes.append(node)
+
+        return nodes
 
     def update_recipe_nodes(self, recipe_type_name, revision_num):
         """Updates the revision of recipe nodes with the given name to the specified revision_num

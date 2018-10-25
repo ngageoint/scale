@@ -12,6 +12,7 @@ from recipe.definition.json.definition_v6 import RecipeDefinitionV6
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeInputFile, RecipeNode, RecipeType, RecipeTypeRevision
+from recipe.models import RecipeTypeSubLink, RecipeTypeJobLink
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 import storage.test.utils as storage_test_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -180,6 +181,9 @@ def create_recipe_type_v6(name=None, version=None, title=None, description=None,
     recipe_type.save()
 
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+
+    RecipeTypeJobLink.objects.create_recipe_type_job_links_from_definition(recipe_type)
+    RecipeTypeSubLink.objects.create_recipe_type_sub_links_from_definition(recipe_type)
 
     return recipe_type
 

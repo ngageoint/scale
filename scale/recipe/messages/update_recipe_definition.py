@@ -129,5 +129,5 @@ class UpdateRecipeDefinition(CommandMessage):
                 # avoid infinite recursion
                 if p != self.sub_recipe_type_id:
                     msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
-                    self.new_messages.extend(msg)
+                    self.new_messages.append(msg)
         return True
