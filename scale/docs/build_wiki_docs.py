@@ -44,10 +44,13 @@ except ImportError:
 GITHUB_USER = "ngageoint"
 WIKI_NAME = "scale.wiki"
 GITHUB_WIKI_REPO = "github.com/%s/%s.git" % (GITHUB_USER, WIKI_NAME)
+GIT_INIT_SCRIPT = 'setup_wiki_git.sh'
 
 MKDOCS_FOLDER = "wiki"
 THIS_FILE_DIR = os.path.dirname(os.path.realpath(__file__))
 MKDOCS_DIR = os.path.join(THIS_FILE_DIR, MKDOCS_FOLDER)
+WIKI_DIR = os.path.join(MKDOCS_DIR, WIKI_NAME)
+GIT_INIT_FILE = os.path.join(WIKI_DIR, GIT_INIT_SCRIPT)
 
 DEFAULT_INDEX = 'Home'
 
@@ -65,6 +68,9 @@ def pull_wiki_repo():
         print("ERROR: Wiki repo directory is not correct: %s" % wiki_folder)
         return False
 
+    # Init git in the wiki folder
+    subprocess.call(["sh", GIT_INIT_FILE])
+    
     # Ensure the submodule is initialised, progress is printed to stderr so just
     # call subprocess with all data sent to console and error check later
     subprocess.call(["git", "submodule", "update", "--init", "--recursive"])

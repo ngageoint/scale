@@ -37,6 +37,8 @@ nav:
           - 'Job Configuration': 'Job-Configuration.md'
           - 'Job Data': 'Job-Data.md'
           - 'Job Execution': 'Job-Execution.md'
+          - 'Resources': 'Resources.md'
+          - 'Task Results': 'Task-Results.md'
         - 'Recipes':
           - 'Recipe Definition': 'Recipe-Definition.md'
           - 'Recipe Data': 'Recipe-Data.md'
