@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-from recipe.models import RecipeTypeJobLink, RecipeTypeSubLink
-
 
 class Migration(migrations.Migration):
 
@@ -14,7 +12,10 @@ class Migration(migrations.Migration):
 
     def populate_recipe_type_link_tables(apps, schema_editor):
         # Go through all of the recipe type models and create links for their sub recipes and job types
+        RecipeType = apps.get_model('job', 'JobType')
         RecipeType = apps.get_model('recipe', 'RecipeType')
+        RecipeType = apps.get_model('recipe', 'RecipeTypeJobLink')
+        RecipeType = apps.get_model('recipe', 'RecipeTypeSubLink')
 
         total_count = RecipeType.objects.all().count()
         if not total_count:
