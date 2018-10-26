@@ -249,10 +249,53 @@
 <span id="recipe-instance-node-module"></span><h2>recipe.instance.node module<a class="headerlink" href="#module-recipe.instance.node" title="Permalink to this headline">¶</a></h2>
 <p>Defines the classes for representing nodes within a recipe</p>
 <dl class="class">
+<dt id="recipe.instance.node.ConditionNodeInstance">
+<em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">ConditionNodeInstance</code><span class="sig-paren">(</span><em>definition</em>, <em>condition</em>, <em>is_original</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
+<p>Represents a condition within a recipe</p>
+<dl class="method">
+<dt id="recipe.instance.node.ConditionNodeInstance.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_completed" title="recipe.instance.node.NodeInstance.is_completed"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_completed()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.ConditionNodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.ConditionNodeInstance.needs_to_be_created">
+<code class="descname">needs_to_be_created</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.needs_to_be_created" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.needs_to_be_created" title="recipe.instance.node.NodeInstance.needs_to_be_created"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.needs_to_be_created()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.ConditionNodeInstance.needs_to_process_input">
+<code class="descname">needs_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.ConditionNodeInstance.needs_to_process_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.needs_to_process_input" title="recipe.instance.node.NodeInstance.needs_to_process_input"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.needs_to_process_input()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.instance.node.DummyNodeInstance">
 <em class="property">class </em><code class="descclassname">recipe.instance.node.</code><code class="descname">DummyNodeInstance</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.instance.node.NodeInstance" title="recipe.instance.node.NodeInstance"><code class="xref py py-class docutils literal"><span class="pre">recipe.instance.node.NodeInstance</span></code></a></p>
 <p>Represents a placeholder node that stands in for a node that doesn&#8217;t exist in this recipe instance</p>
+<dl class="method">
+<dt id="recipe.instance.node.DummyNodeInstance.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_completed" title="recipe.instance.node.NodeInstance.is_completed"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_completed()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.DummyNodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+</dd></dl>
+
 <dl class="method">
 <dt id="recipe.instance.node.DummyNodeInstance.needs_to_be_created">
 <code class="descname">needs_to_be_created</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.DummyNodeInstance.needs_to_be_created" title="Permalink to this definition">¶</a></dt>
@@ -273,9 +316,9 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.instance.node.JobNodeInstance.is_ready_for_children">
-<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+<dt id="recipe.instance.node.JobNodeInstance.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.JobNodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_completed" title="recipe.instance.node.NodeInstance.is_completed"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_completed()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
@@ -324,14 +367,30 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.instance.node.NodeInstance.is_ready_for_children">
-<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this node has completed and is ready for its children to process</p>
+<dt id="recipe.instance.node.NodeInstance.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node has completed</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node has completed, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.instance.node.NodeInstance.is_ready_for_children">
+<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is ready for its children to process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node is ready for its children to process, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -385,9 +444,9 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.instance.node.RecipeNodeInstance.is_ready_for_children">
-<code class="descname">is_ready_for_children</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance.is_ready_for_children" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_ready_for_children" title="recipe.instance.node.NodeInstance.is_ready_for_children"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_ready_for_children()</span></code></a></p>
+<dt id="recipe.instance.node.RecipeNodeInstance.is_completed">
+<code class="descname">is_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.instance.node.RecipeNodeInstance.is_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#recipe.instance.node.NodeInstance.is_completed" title="recipe.instance.node.NodeInstance.is_completed"><code class="xref py py-meth docutils literal"><span class="pre">recipe.instance.node.NodeInstance.is_completed()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">

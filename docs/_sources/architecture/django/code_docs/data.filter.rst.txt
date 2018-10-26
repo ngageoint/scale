@@ -1,0 +1,37 @@
+data\.filter package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    data.filter.json
+
+Submodules
+----------
+
+data\.filter\.exceptions module
+-------------------------------
+
+.. automodule:: data.filter.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data\.filter\.filter module
+---------------------------
+
+.. automodule:: data.filter.filter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: data.filter
+    :members:
+    :undoc-members:
+    :show-inheritance:

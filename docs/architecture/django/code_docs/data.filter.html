@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>recipe.test.instance package &mdash; Scale 5.7.1-snapshot documentation</title>
+  <title>data.filter package &mdash; Scale 5.7.1-snapshot documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="recipe.test.instance.json package" href="recipe.test.instance.json.html" />
-    <link rel="prev" title="recipe.test.handlers package" href="recipe.test.handlers.html" />
+    <link rel="next" title="data.filter.json package" href="data.filter.json.html" />
+    <link rel="prev" title="data.data.json package" href="data.data.json.html" />
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -106,7 +106,13 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="data.html">data package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="data.html">data package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="data.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data.html#module-data.apps">data.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data.html#module-data">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -118,19 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="recipe.html">recipe package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.deprecation">recipe.deprecation module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.views">recipe.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
@@ -195,17 +189,15 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="recipe.html">recipe package</a> &raquo;</li>
+          <li><a href="data.html">data package</a> &raquo;</li>
         
-          <li><a href="recipe.test.html">recipe.test package</a> &raquo;</li>
-        
-      <li>recipe.test.instance package</li>
+      <li>data.filter package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/recipe.test.instance.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/data.filter.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,16 +210,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="recipe-test-instance-package">
-<h1>recipe.test.instance package<a class="headerlink" href="#recipe-test-instance-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="data-filter-package">
+<h1>data.filter package<a class="headerlink" href="#data-filter-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="recipe.test.instance.json.html">recipe.test.instance.json package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.json.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.json.html#module-recipe.test.instance.json.test_recipe_v6">recipe.test.instance.json.test_recipe_v6 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="recipe.test.instance.json.html#module-recipe.test.instance.json">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data.filter.json.html">data.filter.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.filter.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.filter.json.html#module-data.filter.json.filter_v6">data.filter.json.filter_v6 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.filter.json.html#module-data.filter.json">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -236,64 +228,85 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-recipe.test.instance.test_recipe">
-<span id="recipe-test-instance-test-recipe-module"></span><h2>recipe.test.instance.test_recipe module<a class="headerlink" href="#module-recipe.test.instance.test_recipe" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-data.filter.exceptions">
+<span id="data-filter-exceptions-module"></span><h2>data.filter.exceptions module<a class="headerlink" href="#module-data.filter.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with data filters</p>
+<dl class="exception">
+<dt id="data.filter.exceptions.InvalidDataFilter">
+<em class="property">exception </em><code class="descclassname">data.filter.exceptions.</code><code class="descname">InvalidDataFilter</code><span class="sig-paren">(</span><em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.exceptions.InvalidDataFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.exceptions.ValidationException" title="util.exceptions.ValidationException"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ValidationException</span></code></a></p>
+<p>Exception indicating that the data filter is invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-data.filter.filter">
+<span id="data-filter-filter-module"></span><h2>data.filter.filter module<a class="headerlink" href="#module-data.filter.filter" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for filtering data</p>
 <dl class="class">
-<dt id="recipe.test.instance.test_recipe.TestRecipe">
-<em class="property">class </em><code class="descclassname">recipe.test.instance.test_recipe.</code><code class="descname">TestRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dt id="data.filter.filter.DataFilter">
+<em class="property">class </em><code class="descclassname">data.filter.filter.</code><code class="descname">DataFilter</code><span class="sig-paren">(</span><em>accept</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a filter that either accepts or denies a set of data values</p>
 <dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_get_jobs_to_update">
-<code class="descname">test_get_jobs_to_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_get_jobs_to_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.get_jobs_to_update()</p>
+<dt id="data.filter.filter.DataFilter.is_data_accepted">
+<code class="descname">is_data_accepted</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.is_data_accepted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the given data passes the filter or not</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<a class="reference internal" href="data.data.html#data.data.data.Data" title="data.data.data.Data"><code class="xref py py-class docutils literal"><span class="pre">data.data.data.Data</span></code></a>) &#8211; The data to check against the filter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the data is accepted, False if the data is denied</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_get_nodes_to_create">
-<code class="descname">test_get_nodes_to_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_get_nodes_to_create" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.get_nodes_to_create()</p>
+<dt id="data.filter.filter.DataFilter.is_filter_equal">
+<code class="descname">is_filter_equal</code><span class="sig-paren">(</span><em>data_filter</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.is_filter_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the given data filter is equal to this filter or not</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_filter</strong> (<a class="reference internal" href="#data.filter.filter.DataFilter" title="data.filter.filter.DataFilter"><code class="xref py py-class docutils literal"><span class="pre">data.filter.filter.DataFilter</span></code></a>) &#8211; The data filter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the data filter is equal to this one, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_get_nodes_to_process_input">
-<code class="descname">test_get_nodes_to_process_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_get_nodes_to_process_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.get_nodes_to_process_input()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_get_original_leaf_nodes">
-<code class="descname">test_get_original_leaf_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_get_original_leaf_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.get_original_leaf_nodes()</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_has_completed_empty">
-<code class="descname">test_has_completed_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_has_completed_empty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.has_completed() when a recipe is empty and has not created its nodes yet</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_has_completed_false">
-<code class="descname">test_has_completed_false</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_has_completed_false" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.has_completed() when an entire recipe has not completed</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.instance.test_recipe.TestRecipe.test_has_completed_true">
-<code class="descname">test_has_completed_true</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.instance.test_recipe.TestRecipe.test_has_completed_true" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling Recipe.has_completed() when an entire recipe has completed</p>
+<dt id="data.filter.filter.DataFilter.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#data.filter.filter.DataFilter.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates this data filter against the given interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The interface describing the data that will be passed to the filter</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#data.filter.exceptions.InvalidDataFilter" title="data.filter.exceptions.InvalidDataFilter"><code class="xref py py-class docutils literal"><span class="pre">data.filter.exceptions.InvalidDataFilter</span></code></a>: If the data filter is invalid</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-recipe.test.instance">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-recipe.test.instance" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-data.filter">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-data.filter" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -305,10 +318,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe.test.instance.json.html" class="btn btn-neutral float-right" title="recipe.test.instance.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="data.filter.json.html" class="btn btn-neutral float-right" title="data.filter.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="recipe.test.handlers.html" class="btn btn-neutral" title="recipe.test.handlers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="data.data.json.html" class="btn btn-neutral" title="data.data.json package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

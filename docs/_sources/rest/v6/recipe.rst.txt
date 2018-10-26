@@ -161,6 +161,30 @@ which pieces (nodes) within the recipe will be reprocessed when a newer recipe t
                "recipe_type_name": "recipe-type-1",
                "recipe_type_revision": 5
             }
+         },
+         "node_d": {
+            "status": "CHANGED",
+            "changes": [{"name": "FILTER_CHANGE", "description": "Data filter changed"}],
+            "reprocess_new_node": true,
+            "force_reprocess": false,
+            "dependencies": [{"name": "node_a"}],
+            "node_type": {
+               "node_type": "condition"
+            }
+         },
+         "node_e": {
+            "status": "CHANGED",
+            "changes": [{"name": "PARENT_CHANGED", "description": "Parent node node_d changed"}],
+            "reprocess_new_node": true,
+            "force_reprocess": false,
+            "dependencies": [{"name": "node_d"}],
+            "node_type": {
+               "node_type": "job",
+               "job_type_name": "job-type-3",
+               "job_type_version": "1.0",
+               "prev_job_type_version": "1.0",
+               "job_type_revision": 1
+            }
          }
       }
    }
@@ -209,7 +233,7 @@ which pieces (nodes) within the recipe will be reprocessed when a newer recipe t
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | node_type                  | JSON object    | Required | An object describing the type of the node                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
-| node_type                  | String         | Required | The type of the node, either 'job' or 'recipe'                     |
+| node_type                  | String         | Required | The type of the node, either 'condition', 'job' or 'recipe'        |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | job_type_name              | String         | Required | ('job' node) The name of the job type                              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
@@ -334,6 +358,15 @@ A recipe instance JSON describes an instance of a running recipe.
                "sub_recipes_total": 3,
                "sub_recipes_completed": 1
             }
+         },
+         "node_d": {
+            "dependencies": [{"name": "node_a"}],
+            "node_type": {
+               "node_type": "condition",
+               "condition_id": 999,
+               "is_processed": true,
+               "is_accepted": false
+            }
          }
       }
    }
@@ -350,6 +383,16 @@ A recipe instance JSON describes an instance of a running recipe.
 | node_type                  | JSON object    | Required | An object describing the type of the node                          |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | node_type                  | String         | Required | The type of the node, either 'job' or 'recipe'                     |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| condition_id               | Integer        | Required | ('condition' node) The unique ID of the condition                  |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| is_processed               | Boolean        | Required | ('condition' node) Whether the condition has been processed        |
+|                            |                |          | (evaluated)                                                        |
++----------------------------+----------------+----------+--------------------------------------------------------------------+
+| is_accepted                | Boolean        | Required | ('condition' node) Whether the condition has been accepted. If     |
+|                            |                |          | accepted, the nodes depending on the condition will be created and |
+|                            |                |          | processed. If not accepted, the nodes depending on the condition   |
+|                            |                |          | will not be created or processed.                                  |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+
 | job_type_name              | String         | Required | ('job' node) The name of the job type                              |
 +----------------------------+----------------+----------+--------------------------------------------------------------------+

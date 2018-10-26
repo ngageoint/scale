@@ -400,6 +400,26 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents a recipe definition, which consists of an input interface and a directed acyclic graph of recipe nodes</p>
 <dl class="method">
+<dt id="recipe.definition.definition.RecipeDefinition.add_condition_node">
+<code class="descname">add_condition_node</code><span class="sig-paren">(</span><em>name</em>, <em>input_interface</em>, <em>data_filter</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_condition_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a condition node to the recipe graph</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The node name</li>
+<li><strong>input_interface</strong> (<a class="reference internal" href="data.interface.html#data.interface.interface.Interface" title="data.interface.interface.Interface"><code class="xref py py-class docutils literal"><span class="pre">data.interface.interface.Interface</span></code></a>) &#8211; The input interface of the condition</li>
+<li><strong>data_filter</strong> (<a class="reference internal" href="data.filter.html#data.filter.filter.DataFilter" title="data.filter.filter.DataFilter"><code class="xref py py-class docutils literal"><span class="pre">data.filter.filter.DataFilter</span></code></a>) &#8211; The data filter of the condition</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#recipe.definition.exceptions.InvalidDefinition" title="recipe.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.exceptions.InvalidDefinition</span></code></a>: If the node is duplicated</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.definition.definition.RecipeDefinition.add_dependency">
 <code class="descname">add_dependency</code><span class="sig-paren">(</span><em>parent_name</em>, <em>child_name</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.definition.RecipeDefinition.add_dependency" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a dependency that one node has upon another node</p>
@@ -561,8 +581,8 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>node_input_interfaces</strong> (<em>dict</em>) &#8211; The input interface for each node stored by node name</li>
-<li><strong>node_output_interfaces</strong> (<em>dict</em>) &#8211; The output interface for each node stored by node name</li>
+<li><strong>node_input_interfaces</strong> (<em>dict</em>) &#8211; The input interface for each job/recipe node stored by node name</li>
+<li><strong>node_output_interfaces</strong> (<em>dict</em>) &#8211; The output interface for each job node stored by node name</li>
 </ul>
 </td>
 </tr>
@@ -594,6 +614,18 @@
 <div class="section" id="module-recipe.definition.node">
 <span id="recipe-definition-node-module"></span><h2>recipe.definition.node module<a class="headerlink" href="#module-recipe.definition.node" title="Permalink to this headline">¶</a></h2>
 <p>Defines the classes for representing nodes within a recipe definition</p>
+<dl class="class">
+<dt id="recipe.definition.node.ConditionNodeDefinition">
+<em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">ConditionNodeDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>input_interface</em>, <em>data_filter</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.ConditionNodeDefinition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.definition.node.NodeDefinition" title="recipe.definition.node.NodeDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.definition.node.NodeDefinition</span></code></a></p>
+<p>Represents a condition within a recipe definition</p>
+<dl class="attribute">
+<dt id="recipe.definition.node.ConditionNodeDefinition.NODE_TYPE">
+<code class="descname">NODE_TYPE</code><em class="property"> = u'condition'</em><a class="headerlink" href="#recipe.definition.node.ConditionNodeDefinition.NODE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="recipe.definition.node.JobNodeDefinition">
 <em class="property">class </em><code class="descclassname">recipe.definition.node.</code><code class="descname">JobNodeDefinition</code><span class="sig-paren">(</span><em>name</em>, <em>job_type_name</em>, <em>job_type_version</em>, <em>revision_num</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.JobNodeDefinition" title="Permalink to this definition">¶</a></dt>
@@ -668,7 +700,7 @@
 <dl class="method">
 <dt id="recipe.definition.node.NodeDefinition.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>recipe_input_interface</em>, <em>node_input_interfaces</em>, <em>node_output_interfaces</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.definition.node.NodeDefinition.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates this recipe node</p>
+<dd><p>Validates this node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

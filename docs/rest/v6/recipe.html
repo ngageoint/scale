@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="v6 Scheduler Services" href="scheduler.html" />
+    <link rel="next" title="v6 Scale File Services" href="scale_file.html" />
     <link rel="prev" title="v6 Node Services" href="node.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -114,11 +114,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#recipe-instance-json">Recipe Instance JSON</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">v6 Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">v6 Scan Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">v6 Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">v6 Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">v6 System Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspace.html">V6 Workspace Services</a></li>
 </ul>
 </li>
 </ul>
@@ -392,6 +393,30 @@ which pieces (nodes) within the recipe will be reprocessed when a newer recipe t
             <span class="s2">&quot;recipe_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;recipe-type-1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;recipe_type_revision&quot;</span><span class="o">:</span> <span class="mi">5</span>
          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_d&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;CHANGED&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;FILTER_CHANGE&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Data filter changed&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;reprocess_new_node&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;condition&quot;</span>
+         <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_e&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;CHANGED&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;changes&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;PARENT_CHANGED&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Parent node node_d changed&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;reprocess_new_node&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;force_reprocess&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_d&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;job&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_name&quot;</span><span class="o">:</span> <span class="s2">&quot;job-type-3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;prev_job_type_version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_type_revision&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
       <span class="p">}</span>
    <span class="p">}</span>
 <span class="p">}</span>
@@ -493,7 +518,7 @@ newer revision</td>
 <tr class="row-even"><td>node_type</td>
 <td>String</td>
 <td>Required</td>
-<td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
+<td>The type of the node, either &#8216;condition&#8217;, &#8216;job&#8217; or &#8216;recipe&#8217;</td>
 </tr>
 <tr class="row-odd"><td>job_type_name</td>
 <td>String</td>
@@ -657,6 +682,15 @@ to force to reprocess.</td>
             <span class="s2">&quot;sub_recipes_total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
             <span class="s2">&quot;sub_recipes_completed&quot;</span><span class="o">:</span> <span class="mi">1</span>
          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;node_d&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;node_a&quot;</span><span class="p">}],</span>
+         <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;node_type&quot;</span><span class="o">:</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;condition_id&quot;</span><span class="o">:</span> <span class="mi">999</span><span class="p">,</span>
+            <span class="s2">&quot;is_processed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_accepted&quot;</span><span class="o">:</span> <span class="kc">false</span>
+         <span class="p">}</span>
       <span class="p">}</span>
    <span class="p">}</span>
 <span class="p">}</span>
@@ -696,97 +730,116 @@ name of the dependency.</td>
 <td>Required</td>
 <td>The type of the node, either &#8216;job&#8217; or &#8216;recipe&#8217;</td>
 </tr>
-<tr class="row-even"><td>job_type_name</td>
+<tr class="row-even"><td>condition_id</td>
+<td>Integer</td>
+<td>Required</td>
+<td>(&#8216;condition&#8217; node) The unique ID of the condition</td>
+</tr>
+<tr class="row-odd"><td>is_processed</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>(&#8216;condition&#8217; node) Whether the condition has been processed
+(evaluated)</td>
+</tr>
+<tr class="row-even"><td>is_accepted</td>
+<td>Boolean</td>
+<td>Required</td>
+<td>(&#8216;condition&#8217; node) Whether the condition has been accepted. If
+accepted, the nodes depending on the condition will be created and
+processed. If not accepted, the nodes depending on the condition
+will not be created or processed.</td>
+</tr>
+<tr class="row-odd"><td>job_type_name</td>
 <td>String</td>
 <td>Required</td>
 <td>(&#8216;job&#8217; node) The name of the job type</td>
 </tr>
-<tr class="row-odd"><td>job_type_version</td>
+<tr class="row-even"><td>job_type_version</td>
 <td>String</td>
 <td>Required</td>
 <td>(&#8216;job&#8217; node) The version of the job type</td>
 </tr>
-<tr class="row-even"><td>job_type_revision</td>
+<tr class="row-odd"><td>job_type_revision</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;job&#8217; node) The revision of the job type</td>
 </tr>
-<tr class="row-odd"><td>job_id</td>
+<tr class="row-even"><td>job_id</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;job&#8217; node) The unique ID of the job</td>
 </tr>
-<tr class="row-even"><td>status</td>
+<tr class="row-odd"><td>status</td>
 <td>String</td>
 <td>Required</td>
 <td>(&#8216;job&#8217; node) The job&#8217;s status</td>
 </tr>
-<tr class="row-odd"><td>recipe_type_name</td>
+<tr class="row-even"><td>recipe_type_name</td>
 <td>String</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The name of the recipe type</td>
 </tr>
-<tr class="row-even"><td>recipe_type_revision</td>
+<tr class="row-odd"><td>recipe_type_revision</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The revision of the recipe type</td>
 </tr>
-<tr class="row-odd"><td>recipe_id</td>
+<tr class="row-even"><td>recipe_id</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The unique ID of the recipe</td>
 </tr>
-<tr class="row-even"><td>is_completed</td>
+<tr class="row-odd"><td>is_completed</td>
 <td>Boolean</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) Whether the recipe has completed or not</td>
 </tr>
-<tr class="row-odd"><td>jobs_total</td>
+<tr class="row-even"><td>jobs_total</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The total number of jobs in the recipe</td>
 </tr>
-<tr class="row-even"><td>jobs_pending</td>
+<tr class="row-odd"><td>jobs_pending</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of PENDING jobs in the recipe</td>
 </tr>
-<tr class="row-odd"><td>jobs_blocked</td>
+<tr class="row-even"><td>jobs_blocked</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of BLOCKED jobs in the recipe</td>
 </tr>
-<tr class="row-even"><td>jobs_queued</td>
+<tr class="row-odd"><td>jobs_queued</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of QUEUED jobs in the recipe</td>
 </tr>
-<tr class="row-odd"><td>jobs_running</td>
+<tr class="row-even"><td>jobs_running</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of RUNNING jobs in the recipe</td>
 </tr>
-<tr class="row-even"><td>jobs_failed</td>
+<tr class="row-odd"><td>jobs_failed</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of FAILED jobs in the recipe</td>
 </tr>
-<tr class="row-odd"><td>jobs_completed</td>
+<tr class="row-even"><td>jobs_completed</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of COMPLETED jobs in the recipe</td>
 </tr>
-<tr class="row-even"><td>jobs_canceled</td>
+<tr class="row-odd"><td>jobs_canceled</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of CANCELED jobs in the recipe</td>
 </tr>
-<tr class="row-odd"><td>sub_recipes_total</td>
+<tr class="row-even"><td>sub_recipes_total</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The total number of sub-recipes in the recipe</td>
 </tr>
-<tr class="row-even"><td>sub_recipes_completed</td>
+<tr class="row-odd"><td>sub_recipes_completed</td>
 <td>Integer</td>
 <td>Required</td>
 <td>(&#8216;recipe&#8217; node) The number of completed sub-recipes in the recipe</td>
@@ -804,7 +857,7 @@ name of the dependency.</td>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.html" class="btn btn-neutral float-right" title="v6 Scheduler Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scale_file.html" class="btn btn-neutral float-right" title="v6 Scale File Services" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="node.html" class="btn btn-neutral" title="v6 Node Services" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

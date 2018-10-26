@@ -1360,6 +1360,33 @@ change is made</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="recipe.test.utils.create_recipe_condition">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_condition</code><span class="sig-paren">(</span><em>root_recipe=None</em>, <em>recipe=None</em>, <em>batch=None</em>, <em>is_processed=None</em>, <em>is_accepted=None</em>, <em>save=False</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a recipe_node model for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>root_recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The root recipe containing the condition</li>
+<li><strong>recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe containing the condition</li>
+<li><strong>batch</strong> (<em>:class:'batch.models.Batch'</em>) &#8211; The batch</li>
+<li><strong>is_processed</strong> (<em>bool</em>) &#8211; Whether the condition has been processed</li>
+<li><strong>is_accepted</strong> (<em>bool</em>) &#8211; Whether the condition has been accepted</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The recipe_node model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.html#recipe.models.RecipeNode" title="recipe.models.RecipeNode"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeNode</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="recipe.test.utils.create_recipe_handler">
 <code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_handler</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em>, <em>superseded_recipe=None</em>, <em>delta=None</em>, <em>superseded_jobs=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_handler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe along with its declared jobs for unit testing</p>
@@ -1402,7 +1429,7 @@ change is made</p>
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe_node">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_node</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>node_name=None</em>, <em>job=None</em>, <em>sub_recipe=None</em>, <em>save=False</em>, <em>is_original=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe_node</code><span class="sig-paren">(</span><em>recipe=None</em>, <em>node_name=None</em>, <em>condition=None</em>, <em>job=None</em>, <em>sub_recipe=None</em>, <em>save=False</em>, <em>is_original=True</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe_node model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1411,6 +1438,7 @@ change is made</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe containing the node</li>
 <li><strong>node_name</strong> (<em>string</em>) &#8211; The node name</li>
+<li><strong>condition</strong> (<em>:class:'recipe.models.RecipeCondition'</em>) &#8211; The condition in the node</li>
 <li><strong>job</strong> (<em>:class:'job.models.Job'</em>) &#8211; The job in the node</li>
 <li><strong>sub_recipe</strong> (<em>:class:'recipe.models.Recipe'</em>) &#8211; The recipe in the node</li>
 <li><strong>save</strong> (<em>bool</em>) &#8211; Whether to save the model</li>
