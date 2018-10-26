@@ -88,49 +88,50 @@ class UpdateRecipeDefinition(CommandMessage):
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
-
-        # Acquire model lock
-        recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe_type_id)
-
-        definition = recipe_type.get_definition()
-
-        updated_node = True
-        if self.sub_recipe_type_id:
-            sub = RecipeType.objects.get(pk=self.sub_recipe_type_id)
-            updated_node = definition.update_recipe_nodes(recipe_type_name=sub.name,
-                                                          revision_num=sub.revision_num)
-        if self.job_type_id:
-            jt = JobType.objects.get(pk=self.job_type_id)
-            updated_node = definition.update_job_nodes(job_type_name=jt.name, job_type_version=jt.version,
-                                                       revision_num=jt.revision_num)
-
-        valid = False
-
-        if updated_node:
-            job_types = definition.get_job_type_keys()
-            inputs, outputs = self._get_interfaces(definition)
-            warnings = []
-            try:
-                warnings = definition.validate(inputs, outputs)
-                valid = True
-            except InvalidDefinition as ex:
-                logger.exception("Invalid definition updating recipe type with id=%i: %s", self.recipe_type_id, ex)
-                valid = False
-
-            if len(warnings) > 0:
-                logger.warning('Warnings found when validating updated recipe definition: %s', warnings)
-
-        if valid:
-            recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
-            recipe_type.revision_num = recipe_type.revision_num + 1
-            recipe_type.save()
-            RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
-            parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
-            for p in parents:
-                # avoid infinite recursion
-                if p != self.sub_recipe_type_id:
-                    msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
-                    self.new_messages.append(msg)
+        
+        with transaction.atomic():
+            # Acquire model lock
+            recipe_type = RecipeType.objects.select_for_update().get(pk=self.recipe_type_id)
+    
+            definition = recipe_type.get_definition()
+    
+            updated_node = True
+            if self.sub_recipe_type_id:
+                sub = RecipeType.objects.get(pk=self.sub_recipe_type_id)
+                updated_node = definition.update_recipe_nodes(recipe_type_name=sub.name,
+                                                              revision_num=sub.revision_num)
+            if self.job_type_id:
+                jt = JobType.objects.get(pk=self.job_type_id)
+                updated_node = definition.update_job_nodes(job_type_name=jt.name, job_type_version=jt.version,
+                                                           revision_num=jt.revision_num)
+    
+            valid = False
+    
+            if updated_node:
+                job_types = definition.get_job_type_keys()
+                inputs, outputs = self._get_interfaces(definition)
+                warnings = []
+                try:
+                    warnings = definition.validate(inputs, outputs)
+                    valid = True
+                except InvalidDefinition as ex:
+                    logger.info("Invalid definition automatically updating recipe type with id=%i: %s", self.recipe_type_id, ex)
+                    valid = False
+    
+                if len(warnings) > 0:
+                    logger.info('Warnings found when validating updated recipe definition: %s', warnings)
+    
+            if valid:
+                recipe_type.definition = convert_recipe_definition_to_v6_json(definition).get_dict()
+                recipe_type.revision_num = recipe_type.revision_num + 1
+                recipe_type.save()
+                RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
+                parents = RecipeTypeSubLink.objects.get_recipe_type_ids([self.recipe_type_id])
+                for p in parents:
+                    # avoid infinite recursion
+                    if p != self.sub_recipe_type_id:
+                        msg = create_sub_update_recipe_definition_message(p, self.recipe_type_id)
+                        self.new_messages.append(msg)
         return True
 
     def _get_interfaces(self, definition):
